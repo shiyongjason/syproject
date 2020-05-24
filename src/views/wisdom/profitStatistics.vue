@@ -336,7 +336,6 @@ export default {
                 selectName: ''
             }
             if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
@@ -344,13 +343,8 @@ export default {
         async backPlat (val, dis) {
             if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-                } else {
-                    this.findPlatformslist()
-                }
-                !val.value.crmDeptCode && this.linkage(dis)
+                this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }

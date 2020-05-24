@@ -22,10 +22,10 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.startTime" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.startTime" :editable="false" :clearable='false' :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endTime" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.endTime" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
             </div>
@@ -73,13 +73,13 @@
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot-scope="scope" slot="saleRatio">
-                        {{scope.data.row.saleRatio?scope.data.row.saleRatio+'%':''}}
+                        {{scope.data.row.saleRatio?scope.data.row.saleRatio+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="yearOnYearSale">
-                        {{scope.data.row.yearOnYearSale?scope.data.row.yearOnYearSale+'%':''}}
+                        {{scope.data.row.yearOnYearSale?scope.data.row.yearOnYearSale+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="grossProfitRate">
-                        {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
+                        {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="saleGross">
                         {{scope.data.row.saleGross|money}}
@@ -108,6 +108,7 @@ import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'brandSale',
     mixins: [departmentAuth],
+    components: { HAutocomplete },
     data: function () {
         return {
             deptType: DEPT_TYPE,
@@ -154,7 +155,6 @@ export default {
                     selectName: ''
                 }
             },
-            branchLoading: true,
             onLineStatus: ['1'],
             queryParams: {
                 onLineStatus: '',
@@ -169,18 +169,15 @@ export default {
                 current: 1,
                 size: 10
             },
-            activityName: {},
-            file: [],
             paginationInfo: {
                 total: 0,
                 size: 10,
                 current: 1
             },
             tableData: [],
-            brandList: [],
-            sysList: [],
-            bustype: BUS_TYPE,
-            removeValue: false
+            brandList: [], // 品牌
+            sysList: [], // 品类
+            bustype: BUS_TYPE // 业务类型
         }
     },
     computed: {
@@ -190,9 +187,6 @@ export default {
             platformData: state => state.platformData
         })
     },
-    components: {
-        HAutocomplete
-    },
     methods: {
         linkage (dis) {
             let obj = {
@@ -200,7 +194,6 @@ export default {
                 selectName: ''
             }
             if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
@@ -208,35 +201,25 @@ export default {
         async backPlat (val, dis) {
             if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-                } else {
-                    this.findPlatformslist()
-                }
-                !val.value.crmDeptCode && this.linkage(dis)
+                this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
         },
         async getPlatCategory (params) {
             this.queryParamsTemp = { ...params }
-            if (!params.startTime || !params.endTime) {
-                this.$message.warning(`时间不能为空哦`)
-                return
-            }
             const temp = { ...params }
             temp.onLineStatus = this.onLineStatus.join(',')
-            const { data } = await getPaltCategory(temp)
-            const { data: sumData } = await findPlatCategorySum(temp)
-            this.tableData = data.data.records
-            this.tableData.splice(0, 0, sumData.data)
+            const res = await Promise.all([getPaltCategory(temp), findPlatCategorySum(temp)])
+            this.tableData = res[0].data.data.records
+            let obj = Object.assign({}, res[1].data.data, { subsectionName: '合计' })
+            this.tableData.unshift(obj)
             this.paginationInfo = {
-                total: data.data.total,
-                pageSize: data.data.size,
-                pageNumber: data.data.current
+                total: res[0].data.data.total,
+                pageSize: res[0].data.data.size,
+                pageNumber: res[0].data.data.current
             }
-            // this.regionList.pop()
         },
         onCurrentChange (val) {
             this.queryParamsTemp.current = val.pageNumber

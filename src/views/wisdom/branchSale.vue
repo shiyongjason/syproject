@@ -16,13 +16,12 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-
-                    <el-date-picker v-model="queryParams.startDate" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.startDate" :editable="false" :clearable='false' :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endDate" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.endDate" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1}, 'btn')">
+                    <el-button type="primary" class="ml20" @click="onSearch()">
                         查询
                     </el-button>
                     <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
@@ -43,7 +42,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <branchSaleTable ref="brandSaleTable" :tableData="tableData" :loading="branchLoading" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchSaleTable>
+                <branchSaleTable :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchSaleTable>
             </div>
         </div>
     </div>
@@ -63,7 +62,6 @@ export default {
     mixins: [departmentAuth],
     data: function () {
         return {
-            exportAuth: AUTH_WIXDOM_BRANCH_SALE_EXPORT,
             pickerOptionsStart: {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.endDate
@@ -80,12 +78,7 @@ export default {
                     }
                 }
             },
-            branchLoading: true,
-            total: {
-                total: {}, // 后台返的合计
-                totalTable: {}, // table对应的合计
-                type: 0
-            },
+            exportAuth: AUTH_WIXDOM_BRANCH_SALE_EXPORT,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -95,10 +88,7 @@ export default {
                 endDate: new Date().toJSON().split('T')[0],
                 targetStatus: '3'
             },
-            queryParamsTemp: {
-            },
-            activityName: {},
-            file: [],
+            searchParams: {},
             paginationData: {
                 totalElements: 0,
                 pageSize: 10,
@@ -152,123 +142,41 @@ export default {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
             }
         },
-        async onFindRegionList () {
-            const { data } = await findRegionList()
-            this.regionList = data.data
-            // this.regionList.pop()
-        },
-        async onFindRegion (val) {
-            const { data } = await findRegionList({ pkDeptdoc: val })
-            if (data.data[0] && data.data[0].deptname !== '好享家总部') {
-                this.queryParams.regionCode = data.data[0].crmDeptCode
-            }
-        },
-        async onFindBranchList (value) {
-            const { data } = await findBranchList({ crmDeptCode: value })
-            this.branchList = data.data ? data.data : []
-        },
-        async getBranchSale (value) {
-            const { data } = await getBranchSale(value)
-            if (!this.total.type) {
-                this.total.total = data.data.content.respSubsectionSaleAdjectiveTotal
-            }
-            // 出参 在转移时候变动了 前缀 resp
-            this.tableData = data.data.content.subsectionSaleAdjectiveBOS
-            if (this.tableData.length > 0) {
-                let _this = this
-                data.data.content.respSubsectionSaleAdjectiveTotal.subsectionName = '合计'
-                this.total.totalTable.ranking = '-'
-                this.total.totalTable.regionName = '-'
-                Object.keys(this.total.total).forEach(function (key) {
-                    let totalKey = key.split('Total')[0]
-                    _this.total.totalTable[totalKey] = _this.total.total[key]
-                })
-                this.total.shallowCopy = this.total.totalTable
-                this.tableData.unshift(this.total.shallowCopy)
-            }
-            this.paginationData.pageNumber = data.data.pageNumber
-            this.paginationData.pageSize = data.data.pageSize
-            this.paginationData.total = data.data.totalElements
-        },
-        async getBranchSaleSum () {
-            this.total.type = 1
-            const params = {
-                regionCode: this.queryParams.regionCode,
-                subsectionCode: this.queryParams.subsectionCode,
-                startDate: this.queryParams.startDate,
-                endDate: this.queryParams.endDate,
-                targetStatus: this.queryParams.targetStatus
-            }
-            if (params.startDate === null || params.endDate === null) {
-                this.$message({
-                    message: '时间不能为空哦',
-                    type: 'warning'
-                })
-                return
-            }
-            const { data } = await getBranchSaleSum(params)
-            this.total.total = data.data
-            let _this = this
-            Object.keys(data.data).forEach(function (key) {
-                let totalKye = key.split('Total')[0]
-                _this.total.shallowCopy[totalKye] = data.data[key]
-            })
-            this.$set(this.tableData, 0, this.total.shallowCopy)
-            this.branchLoading = false
-        },
-        async onChoose () {
-            this.branchLoading = true
-            if (this.queryParams.startDate === null || this.queryParams.endDate === null) {
-                this.$message({
-                    message: '时间不能为空哦',
-                    type: 'warning'
-                })
-                return
-            }
-            this.total.type = 0
-            await this.onQuery(this.queryParams)
-            this.getBranchSaleSum()
-        },
-        async getRegionCode () {
-            // console.log('选择大区，获取大区下分部')
-            await this.onFindBranchList(this.queryParams.regionCode)
-            this.queryParams.subsectionCode = ''
+        async onChoose (val) {
+            this.searchParams.targetStatus = val
+            await this.onQuery()
         },
         async onSizeChange (val) {
-            this.branchLoading = true
-            this.queryParamsTemp.pageSize = val
-            await this.onQuery(this.queryParamsTemp)
-            this.branchLoading = false
+            this.searchParams.pageSize = val
+            await this.onQuery()
         },
         async onCurrentChange (val) {
-            this.branchLoading = true
-            this.queryParamsTemp.pageNumber = val.pageNumber
-            await this.onQuery(this.queryParamsTemp)
-            this.branchLoading = false
+            this.searchParams.pageNumber = val.pageNumber
+            await this.onQuery()
         },
-        async onQuery (params, event) {
-            this.queryParamsTemp = { ...params }
-            if (params.startDate === null || params.endDate === null) {
-                this.$message({
-                    message: '时间不能为空哦',
-                    type: 'warning'
-                })
-                return
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.onQuery()
+        },
+        async onQuery () {
+            const res = await Promise.all([getBranchSale(this.searchParams), getBranchSaleSum(this.searchParams)])
+            this.tableData = res[0].data.data.records
+            this.paginationData = {
+                total: res[0].data.data.total,
+                pageSize: res[0].data.data.size,
+                pageNumber: res[0].data.data.current
             }
-            if (event === 'btn') {
-                this.branchLoading = true
-                this.total.type = 0
-            }
-            await this.getBranchSale(params)
-            if (event === 'btn') {
-                this.getBranchSaleSum()
-            }
+            let obj = { subsectionName: '合计' }
+            Object.keys(res[1].data.data).forEach(function (key) {
+                let totalKye = key.split('Total')[0]
+                obj[totalKye] = res[1].data.data[key]
+            })
+            this.tableData.unshift(obj)
         }
     },
     async mounted () {
-        await this.onQuery(this.queryParams)
+        await this.onSearch()
         await this.newBossAuth(['D', 'F'])
-        this.getBranchSaleSum()
     }
 }
 </script>
