@@ -111,7 +111,8 @@ export default {
     },
     async  mounted () {
         this.provinceDataList = await this.findProvinceAndCity(0)
-        await this.newBossAuth(['F', 'P'])
+        this.findCompanyList(this.searchParams)
+        this.newBossAuth(['F', 'P'])
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {
@@ -129,7 +130,6 @@ export default {
             this.cityList = await this.findProvinceAndCity(this.searchParams.provinceCode)
         },
         async findCompanyList (params, val) {
-            console.log(params)
             this.queryParamsTemp = { ...params }
             if (val) {
                 this.searchParams.pageNumber = val || 1
