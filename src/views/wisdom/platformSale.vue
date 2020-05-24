@@ -2,28 +2,28 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="regionInput">
+                <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.regionCode" clearable placeholder="全部" :disabled="regionDisabled" @change='getRegionCode'>
-                            <el-option v-for="item in regionList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" clearable placeholder="全部" :disabled="branchDisabled" @change='getSubsectionCode'>
-                            <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="district">
+                    <div class="query-col-title">区域：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlat" :placeholder="'全部'" :disabled="platDisabled" :remove-value='removeValue'></HAutocomplete>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col" style="display:flex">
@@ -90,13 +90,15 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions } from 'vuex'
-import { findRegionList, findPaltList, getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
+import { getPlatformSale, queryCompanyByParams, getPlatformSaleSum } from './api/index.js'
 import platformSaleTable from './components/platformSaleTable.vue'
+import { departmentAuth } from '@/mixins/userAuth'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_SALE_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'platformSale',
+    mixins: [departmentAuth],
     data: function () {
         return {
             exportAuth: AUTH_WIXDOM_PLATFORM_SALE_EXPORT,
@@ -179,22 +181,38 @@ export default {
                 pageNumber: 1
             },
             tableData: [],
-            // regionList: [], // 大区
-            // branchList: [], // 分部
-            platList: [], // 平台公司
             regionDisabled: false,
             branchDisabled: false,
             platDisabled: false,
             subsectionCodeList: [], // 分部list
-            checked: false
+            checked: false,
+            selectAuth: {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                areaObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            regionList: state => state.regionList, // 大区
-            branchList: state => state.branchList, // 分部
-            areaList: state => state.areaList // 区域
+            regionList: state => state.regionList,
+            branchList: state => state.branchList,
+            areaList: state => state.areaList,
+            platformData: state => state.platformData
         }),
         exportHref () {
             let url = interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeExport?'
@@ -218,25 +236,6 @@ export default {
             // const { data } = await findRegionList()
             // this.regionList = data.data
             await this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc })
-        },
-        async onFindRegion (val) {
-            const { data } = await findRegionList({ pkDeptdoc: val })
-            if (data.data[0] && data.data[0].deptname !== '好享家总部') {
-                this.queryParams.regionCode = data.data[0].crmDeptCode
-            }
-        },
-        async onFindBranchList (value) {
-            await this.findAuthList({ deptType: 'F', pkDeptDoc: value || this.userInfo.pkDeptDoc })
-        },
-        async onFindPaltList (subsectionCode) {
-            const params = { subsectionCode }
-            const { data } = await findPaltList(params)
-            this.platList = []
-            for (let i of data.data.pageContent) {
-                i.value = i.companyShortName
-                i.selectCode = i.companyCode
-            }
-            this.platList = data.data.pageContent
         },
         async queryCompanyByParams (params) {
             this.platList = []
@@ -313,8 +312,54 @@ export default {
             // this.$set(this.tableData, 0, this.total.total) // 若合计不会自动更新到视图上去则解注释此代码
             this.platformLoading = false // 等待合计接口返回数据停止loading
         },
-        backPlat (value) {
-            this.queryParams.companyCode = value.value.companyCode ? value.value.companyCode : ''
+        async backPlat (val, dis) {
+            if (val.value && dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc })
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc })
+                this.linkage(dis)
+            } else if (val.value && dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
+                })
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (val.value && dis === 'Q') {
+                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findPlatformslist({ subregionCode: val.value.selectCode })
+                this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
+        },
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'D') {
+                this.queryParams.subsectionCode = ''
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.branchObj = { ...obj }
+                this.selectAuth.areaObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'F') {
+                this.queryParams.subRegionCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.areaObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'Q') {
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
         },
         async onSizeChange (val) {
             this.platformLoading = true
@@ -382,25 +427,7 @@ export default {
         }
     },
     async mounted () {
-        await this.onFindRegionList() // 大区
-        await this.onFindBranchList() // 分部
-        // if (this.userInfo.deptType === this.deptType[1]) {
-        //     this.regionDisabled = true
-        //     this.queryParams.regionCode = this.userInfo.oldDeptCode
-        //     this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        // } else if (this.userInfo.deptType === this.deptType[0]) {
-        //     this.onFindPaltList() // 平台公司
-        // } else if (this.userInfo.deptType === this.deptType[2]) {
-        //     this.regionDisabled = true
-        //     this.branchDisabled = true
-        //     this.regionInput = false
-        //     this.queryParams.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-        //     this.onFindPaltList(this.queryParams.subsectionCode) // 查分部下的公司
-        //     let region = this.branchList.find((val) => {
-        //         return val.crmDeptCode === this.queryParams.subsectionCode
-        //     })
-        //     await this.onFindRegion(region.pkFathedept) // 根据分部找大区
-        // }
+        await this.newBossAuth()
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
     }
