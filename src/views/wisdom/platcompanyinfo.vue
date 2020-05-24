@@ -10,7 +10,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
-                    <HAutocomplete @back-event="backPlat($event,'P')" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
+                    <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">城市：</div>
@@ -105,27 +105,13 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            branchList: state => state.branchList
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
     async  mounted () {
         this.provinceDataList = await this.findProvinceAndCity(0)
-        this.findCompanyList(this.searchParams)
-        // 如果 分部角色 => 查看平台下拉   1 传当前角色 组织code 平台下拉传空
-        if (this.userInfo.deptType == 2) {
-            const code = this.userInfo.oldDeptCode
-            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
-            // this.findProvinceAndCity(0, code)
-            this.platList = await this.findPaltList(code)
-        } else if (this.userInfo.deptType == 0) {
-            this.findCompanyList(this.searchParams)
-            this.platList = await this.findPaltList()
-        } else {
-            this.findCompanyList(this.searchParams)
-        }
-        this.platList.forEach((value) => {
-            value.value = value.companyShortName
-        })
+        await this.newBossAuth(['F', 'P'])
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {
@@ -143,6 +129,7 @@ export default {
             this.cityList = await this.findProvinceAndCity(this.searchParams.provinceCode)
         },
         async findCompanyList (params, val) {
+            console.log(params)
             this.queryParamsTemp = { ...params }
             if (val) {
                 this.searchParams.pageNumber = val || 1
@@ -186,28 +173,25 @@ export default {
         },
         backPlat (val, dis) {
             if (val.value && dis === 'F') {
-                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.searchParams.subsectionCode = val.value.pkDeptDoc
                 // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
                     this.findPlatformslist()
                 }
-                !val.value.pkDeptDoc && this.linkage(dis)
+                this.linkage()
             } else if (val.value && dis === 'P') {
-                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
         },
-        linkage (dis) {
+        linkage () {
             let obj = {
                 selectCode: '',
                 selectName: ''
             }
-            if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.platformObj = { ...obj }
-            }
+            this.searchParams.companyCode = ''
+            this.selectAuth.platformObj = obj
         },
         exportTable () {
             var url = ''

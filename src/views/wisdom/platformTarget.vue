@@ -279,26 +279,22 @@ export default {
         },
         backPlat (val, dis) {
             if (val.value && dis === 'F') {
-                // this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.linkage()
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
                     this.findPlatformslist()
                 }
-                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (val.value && dis === 'P') {
-                // this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
         },
-        linkage (dis) {
-            let obj = {
+        linkage () {
+            this.searchParams.companyCode = ''
+            this.selectAuth.platformObj = {
                 selectCode: '',
                 selectName: ''
-            }
-            if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.platformObj = { ...obj }
             }
         }
     }
