@@ -233,8 +233,6 @@ export default {
             findAuthList: 'findAuthList'
         }),
         async onFindRegionList () {
-            // const { data } = await findRegionList()
-            // this.regionList = data.data
             await this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc })
         },
         async queryCompanyByParams (params) {

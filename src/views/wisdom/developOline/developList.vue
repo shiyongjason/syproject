@@ -609,9 +609,6 @@ export default {
         async findBranchListNew (val = '') {
             // 平台分部
             await this.findAuthList({ deptType: 'F', pkDeptDoc: val || this.userInfo.pkDeptDoc })
-            // const { data } = await findBranchList({ crmDeptCode: val })
-            // this.branchList = data.data
-            // this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
         },
         async getSubsectionCode (val) {
             this.platComList = []

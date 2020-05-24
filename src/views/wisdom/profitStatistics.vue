@@ -59,7 +59,7 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList, findPaltList, findBranchList, total } from './api/index.js'
+import { getProfitList, findPaltList, total } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
@@ -367,12 +367,6 @@ export default {
                 i.selectCode = i.companyCode
             }
             this.platComList = data.data.pageContent
-        },
-        async findBranchListNew (val = '') {
-            // 平台分部
-            const { data } = await findBranchList({ crmDeptCode: val })
-            this.branchList = data.data
-            this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
         },
         toPercent (point) {
             if (!point) { return '-' }

@@ -69,10 +69,6 @@ export const findBranchListNew = (params) => {
         params
     })
 }
-// 大区列表查询
-export const findRegionList = (params) => {
-    return axios.get('rms/dept/queryRegionList', { params })
-}
 // 获取平台目标列表
 export const findTableList = (params) => {
     return axios.get('rms/api/company/target/pages', {
