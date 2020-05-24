@@ -64,8 +64,8 @@ export default {
             },
             component: () => import('@/views/crm/riskManage/templateDetail.vue')
         }, {
-            path: 'projectInformation',
-            name: 'projectInformation',
+            path: 'projectInformationList',
+            name: 'projectInformationList',
             meta: {
                 title: '好橙工项目资料',
                 tagName: '好橙工项目资料',
@@ -80,10 +80,25 @@ export default {
             meta: {
                 title: '好橙工项目资料详情',
                 tagName: '好橙工项目资料详情',
-                isMenu: true,
-                icon: ''
+                isMenu: false,
+                icon: '',
+                showMenuAs: '/goodwork/projectInformationList'
+
             },
             component: () => import('@/views/crm/projectInformation/detail.vue')
+        },
+        {
+            path: 'approvalDetails',
+            name: 'approvalDetails',
+            meta: {
+                title: '好橙工项目资料详情',
+                tagName: '好橙工项目资料详情',
+                isMenu: false,
+                icon: '',
+                showMenuAs: '/goodwork/projectInformationList'
+
+            },
+            component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
         }
     ]
 }
