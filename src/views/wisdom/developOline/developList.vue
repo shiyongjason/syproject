@@ -621,16 +621,6 @@ export default {
             // 平台分部
             await this.findAuthList({ deptType: 'F', pkDeptDoc: val || this.userInfo.pkDeptDoc })
         },
-        async getSubsectionCode (val) {
-            this.platComList = []
-            const { data } = await findPaltList({ subsectionCode: val }) // 根据大区获取平台公司
-            for (let i of data.data.pageContent) {
-                i.value = i.companyShortName
-                i.selectCode = i.companyCode
-            }
-            this.platComList = data.data.pageContent
-            this.platComList.unshift({ selectCode: '', value: '全部', id: 0 })
-        },
         async getList (type = '') {
             if (type === 'onSearch') this.queryParams.pageNumber = 1
             const { data } = await developBasicInfoList(this.queryParams)

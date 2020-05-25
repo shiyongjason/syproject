@@ -1,6 +1,5 @@
 <template>
     <div>
-        {{baseForm}}
         <el-form :model="baseForm" :rules="baseRules" ref="baseForm" label-width="130px" class="demo-baseForm">
             <el-form-item label="mis编码：" prop="name">
                 <el-input v-model.trim="baseForm.misCode" placeholder="输入mis编码" maxlength="10" class="deveInput"></el-input>
@@ -29,18 +28,9 @@
             </el-form-item>
             <el-form-item label="分部：" prop="subsectionCode">
                 <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                <!--                <el-select v-model.trim="baseForm.subsectionCode" placeholder="请选择分部">-->
-<!--                    <el-option label="请选择" value=""></el-option>-->
-<!--                    <el-option :label="item.organizationName" :value="item.organizationCode" v-for="(item,index) in companyData" :key=index></el-option>-->
-<!--                </el-select>-->
             </el-form-item>
             <el-form-item label="区域：">
                 <HAutocomplete :selectArr="areaListNew" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-
-                <!--                <el-select v-model.trim="baseForm.subregionCode" placeholder="请选择区域">-->
-<!--                    <el-option label="请选择" value=""></el-option>-->
-<!--                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in regionalismList" :key="item.pkDeptDoc"></el-option>-->
-<!--                </el-select>-->
             </el-form-item>
             <el-form-item label="地址：" required>
                 <el-col :span="4">
