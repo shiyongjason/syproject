@@ -291,8 +291,8 @@ export default [
                 path: 'platformPlan',
                 name: 'platformPlan',
                 meta: {
-                    title: '平台公司计划分析表 ',
-                    tagName: '平台公司计划分析表 ',
+                    title: '平台公司计划分析表',
+                    tagName: '平台公司计划分析表',
                     isMenu: true,
                     icon: ''
                 },
@@ -302,23 +302,23 @@ export default [
                 path: 'performanceIndex',
                 name: 'performanceIndex',
                 meta: {
-                    title: '履约值利润指标 ',
-                    tagName: '履约值利润指标 ',
+                    title: '履约值利润指标',
+                    tagName: '履约值利润指标',
                     isMenu: true,
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/performanceIndex')
             },
             {
-                path: 'performanceIndex',
-                name: 'performanceIndex',
+                path: 'sprintIndex',
+                name: 'sprintIndex',
                 meta: {
-                    title: '履约值利润指标 ',
-                    tagName: '履约值利润指标 ',
+                    title: '冲刺值利润指标',
+                    tagName: '冲刺值利润指标',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/performanceIndex')
+                component: () => import('@/views/wisdom/sprintIndex')
             },
             {
                 path: 'approveDeclare',
