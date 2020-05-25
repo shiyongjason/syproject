@@ -226,11 +226,8 @@ export default {
                 total: data.data.total
             }
         },
-        backFindmiscode (val) {
-            this.queryParams.misCode = val.value.misCode
-        },
         backFindcitycode (val) {
-            this.queryParams.cityCode = val.value.cityCode
+            this.searchParams.cityCode = val.value ? val.value.cityCode : ''
         },
         handleSizeChange (val) {
             this.queryParamsTemp.pageSize = val
