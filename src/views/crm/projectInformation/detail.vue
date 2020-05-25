@@ -59,7 +59,7 @@
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
-                    <el-button style="width:130px;background:#ccc;color:#fff" @click="onBack">返回</el-button>
+                    <el-button style="width:130px;" @click="onBack">返回</el-button>
                 </p>
                 <p>
                     <el-button type="primary" style="width:130px">保存</el-button>

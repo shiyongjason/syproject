@@ -19,7 +19,7 @@
                 <!-- bottom button -->
                 <div class="bottom-button">
                     <p>
-                        <el-button style="width:130px;background:#ccc;color:#fff" @click="onBack">返回</el-button>
+                        <el-button style="width:130px;" @click="onBack">返回</el-button>
                     </p>
                 </div>
             </el-card>

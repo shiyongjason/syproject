@@ -260,7 +260,7 @@ export default {
     },
     async mounted () {
         this.queryParams.jobNumber = this.userInfo.jobNumber
-        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
+        this.queryParams.authCode = JSON.parse(JSON.stringify(sessionStorage.getItem('authCode')))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
@@ -354,6 +354,7 @@ export default {
             this.imgVisible = true
         },
         async onGetbranch () {
+            // let authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
         }
