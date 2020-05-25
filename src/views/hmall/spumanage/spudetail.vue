@@ -196,9 +196,8 @@ export default {
             categoryIdName: '',
             auditForm: {
                 auditStatus: '',
-                auditOpinion: '',
-                operator: '',
-                spuCode: this.$route.query.spuCode
+                auditOpinion: ''
+                // operator: '',
             },
             auditStatus: this.$route.query.auditStatus,
             auditrules: {
@@ -384,10 +383,17 @@ export default {
                         }
                         await AuditSpu({
                             ...this.auditForm,
+                            specifications: this.form.specifications.map(v => {
+                                return {
+                                    k: v.k,
+                                    v: v.v
+                                }
+                            }) || [],
                             spuId: this.$route.query.spuId,
                             imgUrls: this.form.imgUrls || '',
-                            specifications: this.form.specifications || []
+                            detail: this.form.reqDetailList[0].content
                         })
+
                         this.$message({
                             type: 'success',
                             message: this.auditForm.auditStatus == 1 ? '商品审核成功！' : '商品审核不成功'
@@ -398,7 +404,6 @@ export default {
             })
         },
         onAudit (val) {
-            this.auditForm.operator = this.userInfo.employeeName
             this.$refs['auditForm'].validate(async (valid) => {
                 if (valid) {
                     await this.onSave()
