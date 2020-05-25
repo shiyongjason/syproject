@@ -135,16 +135,9 @@ export default {
             return platformSummarySheet
         },
         fixedHeight () {
-            let oneHeight = 48
-            let height = 600
-            if (this.tableData.length > 10) {
-                return height
-            }
-
-            if (this.tableData.length < 1) {
-                return 110 + oneHeight
-            }
-            return this.tableData.length * oneHeight
+            let oneHeight = 71
+            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
+            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
@@ -384,4 +377,7 @@ export default {
     background-color: rgba($color: #c65911, $alpha: 0.5) !important;
     color: #fff !important;
 }
+    /deep/.overdueTable td{
+        height: 71px;
+    }
 </style>
