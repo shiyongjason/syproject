@@ -179,8 +179,8 @@ export default {
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        // this.onFindTableList(this.searchParams)
-        // this.getCompanyList()
+        this.onFindTableList(this.searchParams)
+        this.getCompanyList()
         this.getCityList()
         await this.newBossAuth(['F', 'P'])
     },
