@@ -108,15 +108,8 @@ export default {
         },
         fixedHeight () {
             let oneHeight = 48
-            let height = 600
-            if (this.tableData.length > 8) {
-                return height
-            }
-
-            if (this.tableData.length < 1) {
-                return 110 + oneHeight
-            }
-            return this.tableData.length * oneHeight
+            let isHeight = 110 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
+            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
