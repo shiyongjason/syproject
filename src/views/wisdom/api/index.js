@@ -287,3 +287,49 @@ export function exportCommitment (params) {
         axios.defaults.responseType = 'json'
     })
 }
+// 分部目标导出
+export function exportBranchTarget (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`rms/api/subsection/target/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '分部目标管理.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 平台公司目标导出
+export function exportPlatTarget (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`rms/api/company/target/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '平台公司目标目标管理.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
