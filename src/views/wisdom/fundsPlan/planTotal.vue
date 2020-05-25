@@ -34,7 +34,7 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
+            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center" :height="fixedHeight"
                          :total="page.total">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
@@ -91,6 +91,18 @@ export default {
         }),
         columnData () {
             return summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth)
+        },
+        fixedHeight () {
+            let oneHeight = 48
+            let height = 600
+            if (this.planTotalList.length > 8) {
+                return height
+            }
+
+            if (this.planTotalList.length < 1) {
+                return 110 + oneHeight
+            }
+            return this.planTotalList.length * oneHeight
         }
     },
     methods: {

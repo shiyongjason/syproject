@@ -17,9 +17,9 @@ export const summarySheet = function (targetYear, targetMonth) {
     return [
         {
             prop: 'organizationName',
-            slot: 'organizationName',
             label: '分部',
             width: '100',
+            showOverflowTooltip: true,
             fixed: true
         },
         {

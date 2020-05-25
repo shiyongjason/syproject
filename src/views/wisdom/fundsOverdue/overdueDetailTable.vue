@@ -72,7 +72,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
                 </hosJoyTable>
             </div>
         </div>
@@ -161,7 +161,19 @@ export default {
             platformData: state => state.platformData
         }),
         column () {
-            return overdueDetailTable()
+            return overdueDetailTable
+        },
+        fixedHeight () {
+            let oneHeight = 48
+            let height = 600
+            if (this.tableData.length > 10) {
+                return height
+            }
+
+            if (this.tableData.length < 1) {
+                return 110 + oneHeight
+            }
+            return this.tableData.length * oneHeight
         }
     },
     methods: {
@@ -259,8 +271,28 @@ export default {
         async onQuery () {
             const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                res[1].data.standingBookNo = '合计'
-                res[0].data.records.unshift(res[1].data)
+                for (let key in res[1].data) {
+                    overdueDetailTable.forEach(value => {
+                        if (value.prop === key && res[1].data[key] != null) {
+                            value.children.forEach(value1 => {
+                                if (key === 'planProportion') {
+                                    value1.label = String(res[1].data[key]) + '%'
+                                } else {
+                                    value1.label = String(res[1].data[key])
+                                }
+                            })
+                        }
+                        if (value.label === '2020年度还款计划') {
+                            value.children.forEach(value1 => {
+                                value1.children.forEach(value2 => {
+                                    if (value2.prop === key && res[1].data[key] != null) {
+                                        value2.label = String(res[1].data[key])
+                                    }
+                                })
+                            })
+                        }
+                    })
+                }
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
