@@ -64,7 +64,7 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal, overdueDetailTable } from './const'
+import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'

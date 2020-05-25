@@ -75,7 +75,11 @@ export default {
             },
             paramsTemp: {},
             tableData: [],
-            pagination: {},
+            pagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
             branchList: [], // 分部列表
             platComList: [], // 平台公司列表
             selectObj: {
@@ -114,16 +118,21 @@ export default {
             this.onSearch()
         },
         onCurrentChange (val) {
-            this.params.pageNumber = val.pageNumber
+            this.paramsTemp.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.params.pageSize = val
+            this.paramsTemp.pageSize = val
             this.onQuery()
         },
         async onQuery () {
             const { data } = await getFundPlanAll(this.paramsTemp)
             this.tableData = data.records
+            this.pagination = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         onSearch () {
             this.paramsTemp = { ...this.params }
