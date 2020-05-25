@@ -19,7 +19,9 @@
                     <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1})">
                         搜索
                     </el-button>
-                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
+                    <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="exportHref">
+                        导出
+                    </el-button>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
@@ -42,7 +44,7 @@
 </template>
 
 <script>
-import { findBrandTargetTable } from './api/index'
+import { findBrandTargetTable, exportBranchTarget } from './api/index'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
@@ -82,23 +84,16 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo,
             branchList: state => state.branchList
-        }),
-        exportHref () {
-            const { temp } = this.queryParamsTemp
-            let url = interfaceUrl + 'rms/subsection/target/export?'
-            for (var key in temp) {
-                if (this.queryParamsTemp[key]) {
-                    url += (key + '=' + this.queryParamsTemp[key] + '&')
-                }
-            }
-            return url
-        }
+        })
     },
     components: {
         branchTable,
         HAutocomplete
     },
     methods: {
+        exportHref () {
+            exportBranchTarget(this.queryParamsTemp)
+        },
         uploadProcess (event, file, fileList) {
             this.uploadLoading = true
         },
@@ -163,12 +158,12 @@ export default {
 </script>
 
 <style scoped>
-    .download {
-        text-decoration: none;
-        color: #ffffff;
-        background: #f88825;
-        line-height: 38px;
-        border-radius: 4px;
-        padding: 0 12px;
-    }
+.download {
+    text-decoration: none;
+    color: #ffffff;
+    background: #f88825;
+    line-height: 38px;
+    border-radius: 4px;
+    padding: 0 12px;
+}
 </style>
