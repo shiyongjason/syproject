@@ -123,6 +123,137 @@ export const summarySheet = function (targetYear, targetMonth) {
         }
     ]
 }
+export const platformPlan = function (targetYear, targetMonth) {
+    return [
+        {
+            prop: 'organizationName',
+            slot: 'organizationName',
+            label: '平台公司',
+            width: '100',
+            fixed: true
+        },
+        {
+            prop: 'organizationName',
+            slot: 'organizationName',
+            label: '区域',
+            width: '100',
+            fixed: true
+        },
+        {
+            prop: 'organizationName',
+            slot: 'organizationName',
+            label: '分部',
+            width: '100',
+            fixed: true
+        },
+        {
+            prop: 'organizationName',
+            slot: 'organizationName',
+            label: '大区',
+            width: '100',
+            fixed: true
+        },
+        {
+            label: '销售',
+            children: [
+                {
+                    prop: 'annualCommitment',
+                    label: `${targetYear}年责任状目标`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'currentMonthCommitment',
+                    label: `${targetYear}年${targetMonth}月责任状目标`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'lastYearActualSales',
+                    label: `${targetYear - 1}年${targetMonth}月实际销售`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'estimateSales',
+                    label: `${targetYear}年${targetMonth}月预计销售`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                }
+            ]
+        },
+        {
+            label: '资金用款',
+            children: [
+                {
+                    prop: 'loanBalance',
+                    label: '在贷余额',
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'totalOverdue',
+                    label: '逾期额',
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'estimateRepayment',
+                    label: `${targetYear}年${targetMonth}月预计还款`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'lastYearActualUse',
+                    label: `${targetYear - 1}年${targetMonth}月实际用款`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'preBorrowCurrentMonth',
+                    label: `${targetYear}年${targetMonth}月预计用款`,
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                }
+            ]
+        },
+        {
+            label: '分析',
+            children: [
+                {
+                    prop: 'salePercentCurrent',
+                    label: `${targetYear}年${targetMonth}月销售同比`,
+                    align: 'right',
+                    className: 'wisdom-total-background',
+                    width: '150'
+                },
+                {
+                    prop: 'usedPercentCurrent',
+                    label: `${targetYear}年${targetMonth}月用款同比`,
+                    align: 'right',
+                    className: 'wisdom-total-background',
+                    width: '150'
+                },
+                {
+                    prop: 'overduePercent',
+                    label: '逾期率=（逾期额/在贷余额）',
+                    align: 'right',
+                    className: 'wisdom-total-background',
+                    width: '200'
+                }
+            ]
+        }
+    ]
+}
 
 export const approveRole = [
     {
