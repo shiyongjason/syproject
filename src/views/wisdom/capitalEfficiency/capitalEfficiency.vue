@@ -170,7 +170,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
         }

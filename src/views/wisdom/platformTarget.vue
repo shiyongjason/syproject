@@ -2,19 +2,16 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true>
-                            <el-option v-for="item in branchList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="companyList" v-if="companyList" @back-event="backFindmiscode" :placeholder="'选择公司简称'" />
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -58,7 +55,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload
                     :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
@@ -84,13 +81,15 @@
     </div>
 </template>
 <script>
-import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
+import { findTableList, getCompany, getCityList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
+    mixins: [departmentAuth],
     data () {
         return {
             uploadLoading: false,
@@ -121,8 +120,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            queryParams: {},
-            branchList: [],
             companyData: {
                 url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
                 otherParams: {
@@ -152,9 +149,18 @@ export default {
                 pageSize: 10
             },
             interfaceUrl: interfaceUrl,
-            companyList: [],
             cityList: [],
-            deptType: DEPT_TYPE
+            deptType: DEPT_TYPE,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     components: {
@@ -162,19 +168,21 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
-    mounted () {
+    async mounted () {
         if (this.userInfo.oldDeptCode !== 'top') {
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        this.onFindBranchList(this.userInfo.oldDeptCode)
-        this.onFindTableList(this.searchParams)
-        this.getCompanyList()
+        // this.onFindTableList(this.searchParams)
+        // this.getCompanyList()
         this.getCityList()
+        await this.newBossAuth(['F', 'P'])
     },
     methods: {
         uploadProcess () {
@@ -218,10 +226,6 @@ export default {
                 total: data.data.total
             }
         },
-        async onFindBranchList (value) {
-            const { data } = await findSubsectionList({ companyCode: value })
-            this.branchList = data.data
-        },
         backFindmiscode (val) {
             this.queryParams.misCode = val.value.misCode
         },
@@ -252,7 +256,7 @@ export default {
             for (var key in this.searchParams) {
                 url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
             }
-            location.href = interfaceUrl + 'rms/companyTarget/export?' + url
+            location.href = interfaceUrl + 'rms/api/company/target/export?' + url
         },
         downloadXlsx () {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
@@ -272,6 +276,26 @@ export default {
                 item.value = item.cityName
                 item.selectCode = item.cityCode
             })
+        },
+        backPlat (val, dis) {
+            if (dis === 'F') {
+                this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                !val.value.pkDeptDoc && this.linkage()
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    this.findPlatformslist()
+                }
+            } else if (val.value && dis === 'P') {
+                this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
+        },
+        linkage () {
+            this.searchParams.companyCode = ''
+            this.selectAuth.platformObj = {
+                selectCode: '',
+                selectName: ''
+            }
         }
     }
 }

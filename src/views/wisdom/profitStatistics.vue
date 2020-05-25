@@ -8,19 +8,16 @@
                         <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15" clearable></el-input>
                     </div>
                 </div>
+                <div class="query-cont-col" v-if="branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col" v-if="userInfo.deptType != 2">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" @change='getSubsectionCode'>
-                            <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
@@ -53,8 +50,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <!-- table show-summary :summary-method="getSummaries"-->
-                <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList" >
+                <hosJoyTable v-if="changeTable" ref="hosjoyTable" border stripe showPagination :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -63,34 +59,34 @@
 
 <script>
 import moment from 'moment'
-import { getProfitList, findPaltList, findBranchList, total } from './api/index.js'
+import { getProfitList, findPaltList, total } from './api/index.js'
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { interfaceUrl } from '@/api/config'
+import { departmentAuth } from '@/mixins/userAuth'
 import { AUTH_PROFIT_STATISTICS_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'profitStatistics',
+    mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
             AUTH_PROFIT_STATISTICS_EXPORT,
-            queryDate: '',
-            selectPlatObj: {
-                selectCode: '',
-                selectName: ''
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
             },
-            platComList: [], // 平台公司
-            branchList: [],
-            bustype: [],
-            platList: [],
-            targetObj: { selectName: '', selectCode: '' },
-            //
             onLineStatusTemp: ['1'],
             queryParams: {
                 misCode: '',
                 companyCode: '',
-                regionCode: '',
                 subsectionCode: '',
                 startDate: '',
                 endDate: '',
@@ -101,7 +97,6 @@ export default {
                 sizes: [10, 20, 50, 100],
                 total: 0
             },
-            multipleSelection: [],
             total: {},
             tableData: [],
             column: [
@@ -309,7 +304,9 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         }),
         pickerOptionsStart () {
             return {
@@ -333,6 +330,25 @@ export default {
         }
     },
     methods: {
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'F') {
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
+        },
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
+        },
         async getSubsectionCode (val) {
             this.platComList = []
             const { data } = await findPaltList({ subsectionCode: val }) // 根据大区获取平台公司
@@ -343,14 +359,6 @@ export default {
             this.platComList = data.data.pageContent
             this.platComList.unshift({ selectCode: '', value: '全部', id: 0 })
         },
-        backPlat (val) {
-            // 平台公司名称点击后事件
-            if (val && val.value && val.value.companyShortName) {
-                this.queryParams.companyCode = val.value.companyCode
-            } else {
-                this.queryParams.companyCode = ''
-            }
-        },
         async findPaltList () {
             // 平台公司名称
             const { data } = await findPaltList()
@@ -359,12 +367,6 @@ export default {
                 i.selectCode = i.companyCode
             }
             this.platComList = data.data.pageContent
-        },
-        async findBranchListNew (val = '') {
-            // 平台分部
-            const { data } = await findBranchList({ crmDeptCode: val })
-            this.branchList = data.data
-            this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
         },
         toPercent (point) {
             if (!point) { return '-' }
@@ -443,31 +445,14 @@ export default {
             }
         },
         async onExport (params) {
-            location.href = interfaceUrl + `rms/platform/profit-statistics/export?regionCode=${this.queryParams.regionCode}&subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}&misCode=${this.queryParams.misCode}`
+            location.href = interfaceUrl + `rms/platform/profit-statistics/export?subsectionCode=${this.queryParams.subsectionCode}&startDate=${this.queryParams.startDate}&endDate=${this.queryParams.endDate}&startDate=${this.queryParams.startDate}&onLineStatus=${this.queryParams.onLineStatus}&companyCode=${this.queryParams.companyCode}&misCode=${this.queryParams.misCode}`
         }
     },
     async mounted () {
         this.queryParams.startDate = moment().startOf('month').format('YYYY-MM-DD')
         this.queryParams.endDate = moment().endOf('days').format('YYYY-MM-DD')
-        if (this.userInfo.deptType !== 1) this.findBranchListNew()
-        // 0总部 1大区 2分部
-        if (this.userInfo.deptType === 1) {
-            this.queryParams.regionCode = this.userInfo.oldDeptCode
-        }
-        if (this.userInfo.deptType === 0) {
-            this.queryParams.regionCode = ''
-            this.queryParams.subsectionCode = ''
-        }
-
-        if (this.userInfo.deptType === 2) {
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
-            this.getSubsectionCode(this.queryParams.subsectionCode)
-        } else if (this.userInfo.deptType === 1) {
-            this.findBranchListNew(this.userInfo.oldDeptCode)
-        } else {
-            this.findPaltList()
-        }
         this.getList()
+        await this.newBossAuth(['F', 'P'])
     }
 }
 </script>
@@ -498,8 +483,21 @@ export default {
     margin-top: 5px;
     font-size: 12px;
 }
-/deep/.posr{ position: relative;}
-/deep/.posr .el-icon-question{ position: absolute;top: -3px}
-/deep/.posr .el-icon-plus{ position: absolute; left:50px;top: 2px}
-/deep/.posr .el-icon-minus{ position: absolute; left:50px;top: 2px}
+/deep/.posr {
+    position: relative;
+}
+/deep/.posr .el-icon-question {
+    position: absolute;
+    top: -3px;
+}
+/deep/.posr .el-icon-plus {
+    position: absolute;
+    left: 50px;
+    top: 2px;
+}
+/deep/.posr .el-icon-minus {
+    position: absolute;
+    left: 50px;
+    top: 2px;
+}
 </style>

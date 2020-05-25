@@ -1,19 +1,23 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-if="branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" @change='getSubsectionCode'>
-                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
-                        </el-option>
-                    </el-select>
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+
+<!--                    <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" @change='getSubsectionCode'>-->
+<!--                        <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
-                    <HAutocomplete v-if="platComList" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectPlatObj"></HAutocomplete>
+                    <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
+
+<!--                    <HAutocomplete v-if="platComList" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj"></HAutocomplete>-->
                 </div>
             </div>
             <div class="query-cont-col-double">
@@ -246,14 +250,16 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import filters from '@/utils/filters.js'
 import { interfaceUrl } from '@/api/config'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import {
-    developBasicInfoList, findPaltList, findBranchList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
+    developBasicInfoList, findProvinceAndCity, developSignscaleChange, developregisteredfundchange,
     updateDevelopsginInfo, triggerApply
 } from '../api/index.js'
+import { departmentAuth } from '@/mixins/userAuth'
 import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'developlist',
+    mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data () {
         return {
@@ -308,12 +314,18 @@ export default {
                 companyCode: '',
                 sortInfos: [{ field: 'updateTime', sort: 'desc' }]
             },
-            selectPlatObj: {
-                selectCode: '',
-                selectName: ''
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
             },
             cityList: [],
-            branchList: [],
+            // branchList: [],
             platComList: [],
             provinceDataList: [],
             page: {
@@ -460,10 +472,15 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
     methods: {
+        ...mapActions({
+            findAuthList: 'findAuthList'
+        }),
         isSuccess (response) {
             this.$message({
                 message: '批量导入成功！',
@@ -602,19 +619,7 @@ export default {
         },
         async findBranchListNew (val = '') {
             // 平台分部
-            const { data } = await findBranchList({ crmDeptCode: val })
-            this.branchList = data.data
-            this.branchList.unshift({ crmDeptCode: '', deptname: '全部', id: 0 })
-        },
-        async getSubsectionCode (val) {
-            this.platComList = []
-            const { data } = await findPaltList({ subsectionCode: val }) // 根据大区获取平台公司
-            for (let i of data.data.pageContent) {
-                i.value = i.companyShortName
-                i.selectCode = i.companyCode
-            }
-            this.platComList = data.data.pageContent
-            this.platComList.unshift({ selectCode: '', value: '全部', id: 0 })
+            await this.findAuthList({ deptType: 'F', pkDeptDoc: val || this.userInfo.pkDeptDoc })
         },
         async getList (type = '') {
             if (type === 'onSearch') this.queryParams.pageNumber = 1
@@ -629,17 +634,27 @@ export default {
             this.tableData = data.data.pageContent
             this.page.total = data.data.totalElements
         },
-        backPlat (val) {
-            this.queryParams.companyCode = val.value.selectCode
-        },
-        async findPaltList () {
-            // 平台公司名称
-            const { data } = await findPaltList()
-            for (let i of data.data.pageContent) {
-                i.value = i.companyShortName
-                i.selectCode = i.companyCode
+        backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage()
+            } else if (dis === 'P') {
+                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
-            this.platComList = data.data.pageContent
+        },
+        linkage () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.queryParams.companyCode = ''
+            this.selectAuth.platformObj = obj
         },
         // 省份证截取生日
         cutBirthday (str) {
@@ -700,11 +715,13 @@ export default {
     activated () {
         this.getList()
     },
-    async mounted () {
+    mounted () {
         this.getList()
-        this.findPaltList()
-        this.findBranchListNew()
-        this.provinceDataList = await this.findProvinceAndCity(0)
+        this.newBossAuth(['F', 'P'], {
+            isCancel: 'Y',
+            businessType: 1
+        })
+        this.provinceDataList = this.findProvinceAndCity(0)
     }
 }
 </script>

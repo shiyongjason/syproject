@@ -169,13 +169,13 @@ export default {
             setNewTags: 'setNewTags'
         }),
         handleClick (tab, event) {
-            if (tab.name == '1') {
+            if (this.activeName == '1') {
                 this.onGetdevelopbasicinfo()
             }
-            if (tab.name == '2') this.onGetdevelopotherinfo()
+            if (this.activeName == '2') this.onGetdevelopotherinfo()
 
-            if (tab.name == '3') this.onGetdevelopsigninfo()
-            if (tab.name == '4') this.onGetdevelopaccountinfo()
+            if (this.activeName == '3') this.onGetdevelopsigninfo()
+            if (this.activeName == '4') this.onGetdevelopaccountinfo()
             this.active = parseInt(tab.name)
         },
         next () {
