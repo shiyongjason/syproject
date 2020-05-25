@@ -94,15 +94,8 @@ export default {
         },
         fixedHeight () {
             let oneHeight = 48
-            let height = 600
-            if (this.planTotalList.length > 8) {
-                return height
-            }
-
-            if (this.planTotalList.length < 1) {
-                return 110 + oneHeight
-            }
-            return this.planTotalList.length * oneHeight
+            let isHeight = 110 + (this.planTotalList.length < 1 ? 1 : this.planTotalList.length) * oneHeight
+            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
