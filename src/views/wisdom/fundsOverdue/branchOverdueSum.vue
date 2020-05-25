@@ -36,7 +36,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" :height="fixedHeight" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -105,6 +105,18 @@ export default {
         }),
         column () {
             return branchSummarySheet()
+        },
+        fixedHeight () {
+            let oneHeight = 48
+            let height = 600
+            if (this.tableData.length > 8) {
+                return height
+            }
+
+            if (this.tableData.length < 1) {
+                return 110 + oneHeight
+            }
+            return this.tableData.length * oneHeight
         }
     },
     methods: {
