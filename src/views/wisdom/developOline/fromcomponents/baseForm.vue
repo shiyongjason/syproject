@@ -26,7 +26,7 @@
             <el-form-item label="公司简称：" prop="companyShortName">
                 <el-input v-model.trim="baseForm.companyShortName" placeholder="输入公司简称" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
-            <el-form-item label="分部：" prop="subsectionCode">
+            <el-form-item label="分部：" prop="ehrSubsectionCode">
                 <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
             </el-form-item>
             <el-form-item label="区域：">
@@ -96,7 +96,6 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="经营范围：">
-                <!-- <el-input v-model.trim="baseForm.businessScope" placeholder="" maxlength="64" class="deveInput"></el-input> -->
                 <el-input type="textarea" placeholder="请输入经营范围" v-model="baseForm.businessScope" maxlength="255" show-word-limit>
                 </el-input>
             </el-form-item>
@@ -175,7 +174,7 @@ export default {
                 companyShortName: [
                     { required: true, message: '输入公司简称', trigger: 'blur' }
                 ],
-                subsectionCode: [
+                ehrSubsectionCode: [
                     { required: true, message: '请选择分部' }
                 ],
                 areaCode: [
@@ -277,9 +276,9 @@ export default {
         }
     },
     watch: {
-        'baseForm.subsectionCode' (newVal) {
+        'baseForm.ehrSubsectionCode' (newVal) {
             this.selectAuth.branchObj = {
-                selectCode: this.baseForm.subsectionCode || '',
+                selectCode: this.baseForm.ehrSubsectionCode || '',
                 selectName: this.baseForm.subsectionName || ''
             }
             if (newVal) {
@@ -413,8 +412,7 @@ export default {
         },
         async backPlat (val, dis) {
             if (dis === 'F') {
-                this.baseForm.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // console.log(this.baseForm.subsectionCode)
+                this.baseForm.ehrSubsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.$refs['baseForm'].clearValidate()
                 this.findAuthList({
                     deptType: 'Q',
