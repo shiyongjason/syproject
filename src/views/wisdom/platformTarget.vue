@@ -286,8 +286,9 @@ export default {
                 } else {
                     this.findPlatformslist()
                 }
-            } else if (val.value && dis === 'P') {
+            } else if (dis === 'P') {
                 this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.searchParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         linkage () {
