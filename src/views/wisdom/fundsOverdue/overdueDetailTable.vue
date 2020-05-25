@@ -14,7 +14,8 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
+                <!-- boss公共权限包含区域，未来要是需要v-if="district" -->
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
@@ -26,47 +27,55 @@
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
+                <div class="query-cont-col">
+                    <div class="query-col-title">合同到期日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('payEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('payStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">宽限期到期日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('overdueEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('overdueStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">实际还款日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('actualPayEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('actualPayStartTime')">
+                        </el-date-picker>
+                    </div>
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
+                        <el-button type="primary" class='ml20' :loading='loading'>
+                            导入表格
+                        </el-button>
+                    </el-upload>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+            <div class="page-table overdueTable">
+                <div class="util">单位：万元</div>
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
-            <el-form :model="uploadData" :rules="rules" ref="form">
-                <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
-                    </a>
-                </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <!-- <el-button type="primary" @click="dialogFormVisible = false">导入表格</el-button> -->
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        导入表格
-                    </el-button>
-                </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -74,17 +83,20 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { tableLabel } from './const'
+import { overdueDetailTable } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
-import moment from 'moment'
+import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal, exportCompanyOverdueDetailExcel } from './api/index'
+import { OVERDUE_DETAIL_TABLE_EXPORT, OVERDUE_DETAIL_TABLE_IMPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            overdueDetailTableExport: OVERDUE_DETAIL_TABLE_EXPORT,
+            overdueDetailTableImport: OVERDUE_DETAIL_TABLE_IMPORT,
+            tableType: '0',
             uploadData: {
                 commitmentYear: ''
             },
@@ -122,20 +134,21 @@ export default {
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
-                subsectionOldCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
-                totalAreaName: '',
+                payStartTime: '',
+                payEndTime: '',
+                overdueStartTime: '',
+                overdueEndTime: '',
+                actualPayStartTime: '',
+                actualPayEndTime: ''
+            },
+            page: {
+                total: 0,
                 pageNumber: 1,
                 pageSize: 10
             },
-            page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
-            },
             total: {},
             tableData: [],
-            column: tableLabel,
             dialogFormVisible: false
         }
     },
@@ -146,9 +159,32 @@ export default {
             branchList: state => state.branchList,
             areaList: state => state.areaList,
             platformData: state => state.platformData
-        })
+        }),
+        column () {
+            return overdueDetailTable()
+        }
     },
     methods: {
+        pickerOptionsStart (val) {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams[val]
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (val) {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams[val]
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -167,10 +203,11 @@ export default {
                 this.queryParams.misCode = ''
                 this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
-                this.queryParams.misCode = ''
-                this.selectAuth.platformObj = { ...obj }
             }
+            // else if (dis === 'Q') {
+            //     this.queryParams.misCode = ''
+            //     this.selectAuth.platformObj = { ...obj }
+            // }
         },
         async backPlat (val, dis) {
             // console.log(val, dis)
@@ -182,7 +219,6 @@ export default {
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
@@ -195,61 +231,52 @@ export default {
                 }
                 !val.value.crmDeptCode && this.linkage(dis)
             } else if (dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.queryParams.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
-                    }
-                    this.findPlatformslist(params)
-                }
-                !val.value.selectCode && this.linkage(dis)
+                // this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
+                // if (val.value.selectCode) {
+                //     this.findPlatformslist({ subregionCode: val.value.selectCode })
+                // } else {
+                //     let params = null
+                //     if (this.queryParams.subsectionOldCode) {
+                //         params = {
+                //             subsectionCode: this.queryParams.subsectionOldCode
+                //         }
+                //     }
+                //     this.findPlatformslist(params)
+                // }
+                // !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            this.queryParams.totalAreaName = this.selectAuthLabelShow()
-            exportCommitment(this.queryParams)
+            exportCompanyOverdueDetailExcel(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
-            this.selectAuthLabelShow()
             this.onQuery()
         },
-        selectAuthLabelShow () {
-            if (this.selectAuth.platformObj.selectName) {
-                this.column[1].label = this.selectAuth.platformObj.selectName
-            } else if (this.selectAuth.areaObj.selectName) {
-                this.column[1].label = this.selectAuth.areaObj.selectName
-            } else if (this.selectAuth.branchObj.selectName) {
-                this.column[1].label = this.selectAuth.branchObj.selectName
-            } else if (this.selectAuth.regionObj.selectName) {
-                this.column[1].label = this.selectAuth.regionObj.selectName
-            } else {
-                this.column[1].label = '全部'
-            }
-            return this.column[1].label
-        },
         async onQuery () {
-            const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
+            const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                res[1].data.companyName = '合计'
+                res[1].data.standingBookNo = '合计'
                 res[0].data.records.unshift(res[1].data)
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
             this.tableData = data.records
-            if (data.records.length > 1) {
-                this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
-            } else {
-                this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
+            this.tableData.map(i => {
+                if (i.planProportion != null) {
+                    i.planProportion *= 100
+                    if (i.planProportion !== 0) i.planProportion = i.planProportion.toFixed(2)
+                    i.planProportion += '%'
+                }
+            })
+            this.page = {
+                total: data.total,
+                pageSize: data.size,
+                pageNumber: data.current
             }
         },
         getList (val) {
@@ -266,17 +293,21 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subsectionOldCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'payStartTime', '')
+            this.$set(this.queryParams, 'payEndTime', '')
+            this.$set(this.queryParams, 'overdueStartTime', '')
+            this.$set(this.queryParams, 'overdueEndTime', '')
+            this.$set(this.queryParams, 'actualPayStartTime', '')
+            this.$set(this.queryParams, 'actualPayEndTime', '')
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            this.selectAuth.areaObj = { ...obj }
+            // this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.newBossAuth()
+            await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
         isSuccess (response) {
@@ -295,14 +326,6 @@ export default {
             this.loading = false
         },
         handleUpload (file) {
-            this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
-                this.$message({
-                    message: '请先选择导入年份！',
-                    type: 'warning'
-                })
-                return false
-            }
             if (file.size / (1024 * 1024) > 100) {
                 this.$message({
                     message: '附件要保持100M以内',
@@ -316,17 +339,11 @@ export default {
                 return false
             }
             this.loading = true
-        },
-        onShowImport () {
-            this.dialogFormVisible = true
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
-            })
         }
     },
     async mounted () {
         this.onSearch()
-        await this.newBossAuth()
+        await this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>
@@ -334,5 +351,23 @@ export default {
 <style lang="scss" scoped>
 .upload-demo {
     display: inline-block;
+}
+.overdueTable {
+    position: relative;
+    margin-top: 10px;
+}
+.util {
+    font-size: 10px;
+    position: absolute;
+    top: -16px;
+    right: 0;
+}
+/deep/.el-table__header .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 1) !important;
+    color: #fff !important;
+}
+/deep/.el-table__row .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    color: #fff !important;
 }
 </style>

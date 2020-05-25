@@ -15,6 +15,21 @@ export const ORDER_STATUS_MAP = new Map([
     [60, '退款中'],
     [70, '已退款']
 ])
+// 商品状态
+export const PRODUCT_STATUS_OPTIONS = [
+    { label: '待发货', value: '20' },
+    { label: '待收货', value: '30' },
+    { label: '已完成', value: '40' },
+    { label: '退款中', value: '60' },
+    { label: '已退款', value: '70' }
+]
+export const PRODUCT_STATUS_MAP = new Map([
+    [20, '待发货'],
+    [30, '待收货'],
+    [40, '已完成'],
+    [60, '退款中'],
+    [70, '已退款']
+])
 // 订单渠道
 export const ORDER_CHANNERL_OPTIONS = [
     { label: '全部', value: '' },

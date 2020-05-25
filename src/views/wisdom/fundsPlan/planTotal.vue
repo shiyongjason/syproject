@@ -144,9 +144,8 @@ export default {
     },
     async mounted () {
         await this.findTargetTime()
-        // console.log(this.targetTime)
         this.params.selectTime = this.targetTime
-        await this.oldBossAuth()
+        await this.newBossAuth(['F'])
         this.queryAndChangeTime(this.params)
     },
     beforeRouteEnter (to, from, next) {

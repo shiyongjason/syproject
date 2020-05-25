@@ -14,59 +14,32 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+            <div class="page-table overdueTable">
+                <div class="util">单位：万元</div>
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
-            <el-form :model="uploadData" :rules="rules" ref="form">
-                <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
-                    </a>
-                </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <!-- <el-button type="primary" @click="dialogFormVisible = false">导入表格</el-button> -->
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        导入表格
-                    </el-button>
-                </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -74,32 +47,18 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { tableLabel } from './const'
+import { branchSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
+import { getBranchOverdueList, exportBranchOverdueDetailExcel } from './api/index'
 import moment from 'moment'
+import { BRANCH_OVERDUE_SUM_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            uploadData: {
-                commitmentYear: ''
-            },
-            rules: {
-                commitmentYear: [
-                    { required: true, message: '请选择年', trigger: 'blur' }
-                ]
-            },
-            headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
-            accept: '.xlsx,.xls',
-            loading: false,
-            interfaceUrl: interfaceUrl,
+            branchOverdueSumExport: BRANCH_OVERDUE_SUM_EXPORT,
             selectAuth: {
                 regionObj: {
                     selectCode: '',
@@ -124,19 +83,16 @@ export default {
                 subsectionCode: '',
                 subsectionOldCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
-                totalAreaName: '',
+                commitmentYear: moment().format('YYYY')
+            },
+            searchParams: {},
+            page: {
+                total: 0,
                 pageNumber: 1,
                 pageSize: 10
             },
-            page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
-            },
             total: {},
-            tableData: [],
-            column: tableLabel,
-            dialogFormVisible: false
+            tableData: []
         }
     },
     computed: {
@@ -146,7 +102,10 @@ export default {
             branchList: state => state.branchList,
             areaList: state => state.areaList,
             platformData: state => state.platformData
-        })
+        }),
+        column () {
+            return branchSummarySheet()
+        }
     },
     methods: {
         linkage (dis) {
@@ -214,43 +173,29 @@ export default {
             }
         },
         onExport () {
-            this.queryParams.totalAreaName = this.selectAuthLabelShow()
-            exportCommitment(this.queryParams)
+            exportBranchOverdueDetailExcel(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
-            this.selectAuthLabelShow()
             this.onQuery()
         },
-        selectAuthLabelShow () {
-            if (this.selectAuth.platformObj.selectName) {
-                this.column[1].label = this.selectAuth.platformObj.selectName
-            } else if (this.selectAuth.areaObj.selectName) {
-                this.column[1].label = this.selectAuth.areaObj.selectName
-            } else if (this.selectAuth.branchObj.selectName) {
-                this.column[1].label = this.selectAuth.branchObj.selectName
-            } else if (this.selectAuth.regionObj.selectName) {
-                this.column[1].label = this.selectAuth.regionObj.selectName
-            } else {
-                this.column[1].label = '全部'
-            }
-            return this.column[1].label
-        },
         async onQuery () {
-            const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
-            var data = await Promise.all(promiseArr).then((res) => {
-                res[1].data.companyName = '合计'
-                res[0].data.records.unshift(res[1].data)
-                return res[0].data
-            }).catch((error) => {
-                this.$message.error(`error:${error}`)
+            // 不分页
+            const { data } = await getBranchOverdueList(this.searchParams)
+            // console.log(data)
+            this.tableData = data
+            this.tableData.map(i => {
+                if (i.incrementProportion != null) {
+                    i.incrementProportion *= 100
+                    if (i.incrementProportion !== 0) i.incrementProportion = i.incrementProportion.toFixed(2)
+                    i.incrementProportion += '%'
+                }
+                if (i.stockPlanProportion != null) {
+                    i.stockPlanProportion *= 100
+                    if (i.stockPlanProportion !== 0) i.stockPlanProportion = i.stockPlanProportion.toFixed(2)
+                    i.stockPlanProportion += '%'
+                }
             })
-            this.tableData = data.records
-            if (data.records.length > 1) {
-                this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
-            } else {
-                this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
-            }
         },
         getList (val) {
             this.searchParams = {
@@ -276,57 +221,13 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.newBossAuth()
+            await this.newBossAuth(['D', 'F'])
             this.onSearch()
-        },
-        isSuccess (response) {
-            this.$message({
-                message: '批量导入成功！',
-                type: 'success'
-            })
-            this.loading = false
-            this.onSearch()
-        },
-        isError (response) {
-            this.$message({
-                message: '批量导入失败，' + JSON.parse(response.message).message,
-                type: 'error'
-            })
-            this.loading = false
-        },
-        handleUpload (file) {
-            this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
-                this.$message({
-                    message: '请先选择导入年份！',
-                    type: 'warning'
-                })
-                return false
-            }
-            if (file.size / (1024 * 1024) > 100) {
-                this.$message({
-                    message: '附件要保持100M以内',
-                    type: 'warning'
-                })
-                return false
-            }
-            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
-            if (this.accept.lastIndexOf(fileSuffix) == -1) {
-                this.$message.error('格式不正确！')
-                return false
-            }
-            this.loading = true
-        },
-        onShowImport () {
-            this.dialogFormVisible = true
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
-            })
         }
     },
     async mounted () {
         this.onSearch()
-        await this.newBossAuth()
+        await this.newBossAuth(['D', 'F'])
     }
 }
 </script>
@@ -334,5 +235,23 @@ export default {
 <style lang="scss" scoped>
 .upload-demo {
     display: inline-block;
+}
+.overdueTable {
+    position: relative;
+    margin-top: 10px;
+}
+.util {
+    font-size: 10px;
+    position: absolute;
+    top: -16px;
+    right: 0;
+}
+/deep/.el-table__header .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 1) !important;
+    color: #fff !important;
+}
+/deep/.el-table__row .repaymentStyle {
+    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    color: #fff !important;
 }
 </style>

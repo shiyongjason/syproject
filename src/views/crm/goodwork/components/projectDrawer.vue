@@ -2,11 +2,16 @@
     <div class="drawer-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
+
+                  <p class="drawer-by">项目提交人：{{form.createBy}}</p>
                 <el-form-item label="经销商：">
                   {{form.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(form)">查看详情</el-button>
                 </el-form-item>
                 <el-form-item label="分部：">
-                    <el-input v-model="form.deptName" disabled></el-input>
+                      <el-select v-model="form.pkDeptDoc" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
+                        </el-select>
+                    <!-- <el-input v-model="form.deptName" disabled></el-input> -->
                 </el-form-item>
                 <el-form-item label="工程项目名称：" prop="projectName">
                     <el-input v-model="form.projectName" maxlength="100" placeholder="请输入工程项目名称"></el-input>
@@ -303,8 +308,9 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters('crmmanage', {
-            projectDetail: 'projectDetail'
+        ...mapGetters({
+            projectDetail: 'crmmanage/projectDetail',
+            crmdepList: 'crmmanage/crmdepList'
         })
     },
     watch: {
@@ -337,7 +343,7 @@ export default {
             this.copyForm = { ...this.form }
         },
         handleChange (value) {
-            console.log(value)
+
         },
         onCRemarkTxt () {
             if (this.form.upstreamPayTypearr.indexOf('2') < 0) {
@@ -439,7 +445,6 @@ export default {
         },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
-            console.log('newval', newVal)
             if (newVal == 2 || newVal == 3 || newVal == 5 || newVal == 9) {
                 return false
             } else {
@@ -447,7 +452,6 @@ export default {
             }
         },
         isShowRest (val) {
-            console.log('val', val)
             const newVal = val && Object.keys(val)[0]
             if (newVal == 2) {
                 return false
@@ -476,6 +480,9 @@ export default {
             })
             this.form.attachmentUrl = JSON.stringify(this.form.projectUpload)
             this.form.upstreamPayType = this.form.upstreamPayTypearr.join(',')
+            if (this.form.pkDeptDoc) {
+                this.form.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.form.pkDeptDoc).deptName || ''
+            }
             this.loading = true
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -499,6 +506,11 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+.drawer-by{
+    color: #b9b7b7;
+    padding: 0px 0 15px 50px;
+    font-size: 13px;
+}
 .project-form {
     padding: 10px 10px 150px 10px;
 }

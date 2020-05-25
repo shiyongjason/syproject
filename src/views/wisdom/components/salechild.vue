@@ -177,14 +177,14 @@ export default {
         async sellStatistics () {
             const { data } = await sellStatistics(this.params)
             this.sellData = data.data
-            this.sellData.overallReach = parseFloat(this.sellData.overallReach).toFixed(0)
-            this.sellData.overallTarget = parseFloat(this.sellData.overallTarget).toFixed(0)
-            this.sellData.overallGap = parseFloat(this.sellData.overallGap).toFixed(0)
-            this.sellData.stockReach = parseFloat(this.sellData.stockReach).toFixed(0)
-            this.sellData.stockTarget = parseFloat(this.sellData.stockTarget).toFixed(0)
-            this.sellData.stockGap = parseFloat(this.sellData.stockGap).toFixed(0)
-            this.sellData.incrementReach = parseFloat(this.sellData.incrementReach).toFixed(0)
-            this.sellData.incrementTarget = parseFloat(this.sellData.incrementTarget).toFixed(0)
+            this.sellData.overallReach = this.sellData.overallReach ? parseFloat(this.sellData.overallReach).toFixed(0) : 0
+            this.sellData.overallTarget = this.sellData.overallTarget ? parseFloat(this.sellData.overallTarget).toFixed(0) : 0
+            this.sellData.overallGap = this.sellData.overallGap ? parseFloat(this.sellData.overallGap).toFixed(0) : 0
+            this.sellData.stockReach = this.sellData.stockReach ? parseFloat(this.sellData.stockReach).toFixed(0) : 0
+            this.sellData.stockTarget = this.sellData.stockTarget ? parseFloat(this.sellData.stockTarget).toFixed(0) : 0
+            this.sellData.stockGap = this.sellData.stockGap ? parseFloat(this.sellData.stockGap).toFixed(0) : 0
+            this.sellData.incrementReach = this.sellData.incrementReach ? parseFloat(this.sellData.incrementReach).toFixed(0) : 0
+            this.sellData.incrementTarget = this.sellData.incrementTarget ? parseFloat(this.sellData.incrementTarget).toFixed(0) : 0
             this.sellData.incrementGap = parseFloat(this.sellData.incrementGap).toFixed(0)
             this.sellData.incrementAchievingRateNew = this.sellData.incrementAchievingRate ? (parseInt(this.sellData.incrementAchievingRate) > 100 ? 100 : parseInt(this.sellData.incrementAchievingRate)) : 0
             this.sellData.overallAchievingRateNew = this.sellData.overallAchievingRate ? (parseInt(this.sellData.overallAchievingRate) > 100 ? 100 : parseInt(this.sellData.overallAchievingRate)) : 0
@@ -195,7 +195,6 @@ export default {
             const indexS = parseFloat(this.sellData.stockAchievingRate).toFixed(0) == 'NaN' ? 0 : parseFloat(this.sellData.stockAchievingRate).toFixed(0)
             const indexT = parseFloat(this.sellData.incrementAchievingRate).toFixed(0) == 'NaN' ? 0 : parseFloat(this.sellData.incrementAchievingRate).toFixed(0)
             this.markArr = [indexF, indexS, indexT]
-            console.log(this.markArr)
             this.drawaddPlat()
         },
         async hexoList () {
