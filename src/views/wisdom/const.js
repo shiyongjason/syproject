@@ -201,7 +201,7 @@ export function preformTableLabel (queryDim) {
             ]
         }
     ]
-}  
+}
 
 // 履约值
 export function sprintTableLabel (queryDim) {
@@ -305,4 +305,4 @@ export function sprintTableLabel (queryDim) {
             ]
         }
     ]
-}  
+}
