@@ -266,6 +266,61 @@ export default [
                 component: () => import('@/views/wisdom/fundsPlan/approvalList')
             },
             {
+                path: 'planCredit',
+                name: 'planCredit',
+                meta: {
+                    title: '资金用信情况统计',
+                    tagName: '资金用信情况统计',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/planCredit')
+            },
+            {
+                path: 'planApproval',
+                name: 'planApproval',
+                meta: {
+                    title: '资金计划审批额度',
+                    tagName: '资金计划审批额度',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/planApproval')
+            },
+            {
+                path: 'platformPlan',
+                name: 'platformPlan',
+                meta: {
+                    title: '平台公司计划分析表 ',
+                    tagName: '平台公司计划分析表 ',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/platformPlan')
+            },
+            {
+                path: 'performanceIndex',
+                name: 'performanceIndex',
+                meta: {
+                    title: '履约值利润指标 ',
+                    tagName: '履约值利润指标 ',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/performanceIndex')
+            },
+            {
+                path: 'performanceIndex',
+                name: 'performanceIndex',
+                meta: {
+                    title: '履约值利润指标 ',
+                    tagName: '履约值利润指标 ',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/performanceIndex')
+            },
+            {
                 path: 'approveDeclare',
                 name: 'approveDeclare',
                 meta: {
