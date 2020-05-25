@@ -59,8 +59,9 @@ export default {
             meta: {
                 title: '材料清单配置',
                 tagName: '材料清单配置',
-                isMenu: true,
-                icon: ''
+                isMenu: false,
+                icon: '',
+                showMenuAs: '/goodwork/datatemp'
             },
             component: () => import('@/views/crm/riskManage/templateDetail.vue')
         }, {
@@ -71,6 +72,7 @@ export default {
                 tagName: '好橙工项目资料',
                 isMenu: true,
                 icon: ''
+
             },
             component: () => import('@/views/crm/projectInformation/list.vue')
         },
