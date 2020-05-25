@@ -21,7 +21,7 @@
                     <span slot="label"><i class="el-icon-edit"></i> 账户信息 </span>
                 </el-tab-pane>
             </el-tabs>
-            <baseForm v-if="active==1" @backnext=nextActive :baseForm=formData ref="baseform"></baseForm>
+            <baseForm v-if="active==1" @backnext=nextActive :baseForm=formData :selectAuth='selectAuth' ref="baseform"></baseForm>
             <otherForm v-if="active==2" @backnext=nextActive :otherForm=formData.developOtherInfoCreateForm ref="otherform"></otherForm>
             <signForm v-if="active==3" @backnext=nextActive :signForm=formData.developSignInfoCreateForm ref="signform"></signForm>
             <accountForm v-if="active==4" @backadd=onAddDevelopinof :accountForm=formData.developAccountInfoCreateForm ref="accountform"></accountForm>
@@ -50,6 +50,16 @@ export default {
             type: this.$route.query.type,
             loading: false,
             companyCode: this.$route.query.companyCode,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                areaObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            },
             formData: {
                 // 基本表单数据参数
                 systemArr: [],
@@ -217,6 +227,14 @@ export default {
             this.$set(this.formData, 'companyArr', companyArr)
             this.$set(this.formData, 'systemArr', systemArr)
             this.$set(this.formData, 'developSignInfoCreateForm', newSignobj)
+            this.$set(this, 'selectAuth', {
+                branchObj: {
+                    selectName: this.formData.subsectionName
+                },
+                areaObj: {
+                    selectName: this.formData.subregionName
+                }
+            })
             this.developAccountInfoCreateForms.accountBank = this.formData.companyName
             this.developAccountInfoCreateForms.companyCode = this.formData.companyCode
         },

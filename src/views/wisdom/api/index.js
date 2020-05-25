@@ -333,3 +333,12 @@ export function exportPlatTarget (params) {
         axios.defaults.responseType = 'json'
     })
 }
+
+// 分部列表查询
+export const findAllBranchList = (params) => {
+    return axios.get('/uaa/department/subsections', { params })
+}
+// 大区列表查询
+export const findAllRegionList = (params) => {
+    return axios.get('/uaa/department/regions', { params })
+}
