@@ -176,9 +176,11 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        var shy = JSON.parse(JSON.stringify(data))
+        var shy = JSON.parse(JSON.stringify(data.splice(5, 1)))
         this.handleData(shy)
+        console.log(shy)
         this.tableList = this.handlerTableList(shy, 0)
+        // console.log(this.tableList)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
@@ -212,6 +214,7 @@ export default {
         // list必须有3级，如果不够3级，需要增加childAuthList，满足页面展示需求
         // 敏感字段和敏感操作相关配置挂载在3级菜单下面
         handlerTableList (data, level) {
+            console.log(data, level)
             return data.map(item => {
                 if (item.authTypeList) {
                     item.authTypeList = item.authTypeList.map(authType => {
@@ -221,14 +224,6 @@ export default {
                         return authType
                     })
                 }
-                // 如果只有敏感字段或者敏感操作一种配置，那么补充另外一个为空对象，方便循环
-                // if (item.authTypeList && item.authTypeList.length == 1) {
-                //     if (item.authTypeList[0].authType == 1) {
-                //         item.authTypeList.splice(0, 0, {})
-                //     } else {
-                //         item.authTypeList.push({})
-                //     }
-                // }
                 if (level < 3) {
                     if (!item.childAuthList) {
                         item.childAuthList = [{
