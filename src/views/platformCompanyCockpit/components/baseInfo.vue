@@ -57,9 +57,9 @@
             </el-select>
             <span v-else>
                 {{
-                    platformBasicInfoPO.departmentId
-                    ?getPlatform(platformBasicInfoPO.departmentId).length>0&&getPlatform(platformBasicInfoPO.departmentId)[0].subsectionName
-                    :'-'
+                    platformBasicInfoPO.departmentId ?
+                        getPlatform(platformBasicInfoPO.departmentId).length>0
+                            && getPlatform(platformBasicInfoPO.departmentId)[0].deptName :'-'
                 }}
             </span>
         </el-form-item>
@@ -104,10 +104,9 @@ export default {
     },
     methods: {
         getPlatform (code) {
-            const arr = this.branchList.filter(item => {
-                return item.subsectionCode === code
+            return this.branchList.filter(item => {
+                return item.pkDeptDoc === code
             })
-            return arr
         },
         getCodeByName (name, code = this.branchList) {
             return code.filter(item => {
