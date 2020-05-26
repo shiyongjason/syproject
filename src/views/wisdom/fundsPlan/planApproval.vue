@@ -13,12 +13,6 @@
                     <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
-            <div class="query-cont-col" v-if="district">
-                <div class="query-col-title">区域：</div>
-                <div class="query-col-input">
-                    <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                </div>
-            </div>
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
@@ -74,7 +68,6 @@ export default {
             userInfo: state => state.userInfo,
             regionList: state => state.regionList,
             branchList: state => state.branchList,
-            areaList: state => state.areaList,
             platformData: state => state.platformData
         }),
         ...mapGetters({

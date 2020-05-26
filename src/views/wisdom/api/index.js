@@ -319,6 +319,10 @@ export function getSprintIndexList (params) {
     return axios.get(`/api/overdue/annual/target/profit/list`, { params })
 }
 // 冲刺值利润指标列表
-export function getSprintIndexToatal (params) {
+export function getSprintIndexTotal (params) {
+    return axios.get(`/api/overdue/annual/target/profit/total`, { params })
+}
+// 履约值利润指标列表
+export function getPerformanceIndexList (params) {
     return axios.get(`/api/overdue/annual/target/profit/total`, { params })
 }
