@@ -51,7 +51,6 @@
 </template>
 
 <script>
-import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { getBranchSale, getBranchSaleSum, exportBranchSale } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
