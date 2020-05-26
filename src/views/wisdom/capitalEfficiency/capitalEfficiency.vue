@@ -12,7 +12,7 @@
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
                         <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' placeholder="选择" :clearable=true @change="onChange">
-                            <el-option v-for="item in branchList" :key="item.deptCode" :label="item.deptName" :value="item.crmDeptCode">
+                            <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                             </el-option>
                         </el-select>
                     </div>
@@ -227,7 +227,7 @@ export default {
             this.removeValue = !this.removeValue
             this.queryParams.loanCompanyCode = ''
             this.queryParams.loanCompanyName = ''
-            this.onFindPlatformslist(subsectionCode)
+            this.findPlatformslist({ subregionCode: subsectionCode })
         },
         onRemark (row) {
             this.rowData = { ...row }
