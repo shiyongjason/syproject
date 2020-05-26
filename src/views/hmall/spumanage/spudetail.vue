@@ -97,9 +97,9 @@
                 <div class="page-body-title">
                     <h3>商品详情</h3>
                 </div>
-                <!-- <el-form-item> -->
+                <div style="padding-left: 110px">
                     <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
-                <!-- </el-form-item> -->
+                </div>
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
                         <el-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</el-button>
@@ -454,7 +454,7 @@ export default {
             // 额外处理参数信息，而且需要强制更新视图
             await this.findSpuAttr(data.twoCategoryId)
             this.form.specifications.forEach(v1 => {
-                data.specifications.forEach(v2 => {
+                (data.specifications || []).forEach(v2 => {
                     if (v2.k === v1.k) {
                         v1.v = v2.v
                     }
@@ -492,8 +492,9 @@ export default {
 
             // 额外处理参数信息，而且需要强制更新视图
             await this.findSpuAttr(data.twoCategoryId)
+
             this.form.specifications.forEach(v1 => {
-                data.specifications.forEach(v2 => {
+                (data.specifications || []).forEach(v2 => {
                     if (v2.k === v1.k) {
                         v1.v = v2.v
                     }

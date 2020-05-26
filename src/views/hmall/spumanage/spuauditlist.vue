@@ -69,14 +69,14 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <el-button type="primary" class="ml20" @click="searchList">
                             查询
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        <el-button type="primary" class="ml20" @click="onRest">
                             重置
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onChangeStatus()">批量审核</el-button>
-                        <el-button type="primary" class="ml20" @click="onExport()">导出</el-button>
+                        <el-button type="primary" class="ml20" @click="onChangeStatus">批量审核</el-button>
+                        <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                     </div>
                 </div>
             </div>
