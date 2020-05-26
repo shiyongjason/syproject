@@ -14,12 +14,6 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
-                    <div class="query-col-title">区域：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
@@ -195,10 +189,6 @@ export default {
                     selectCode: '',
                     selectName: ''
                 },
-                areaObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
                 platformObj: {
                     selectCode: '',
                     selectName: ''
@@ -211,7 +201,6 @@ export default {
             userInfo: state => state.userInfo,
             regionList: state => state.regionList,
             branchList: state => state.branchList,
-            areaList: state => state.areaList,
             platformData: state => state.platformData
         }),
         exportHref () {
@@ -314,14 +303,9 @@ export default {
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({
-                    deptType: 'Q',
-                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
-                })
                 // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
@@ -329,10 +313,6 @@ export default {
                     this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
-            } else if (val.value && dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findPlatformslist({ subregionCode: val.value.selectCode })
-                this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
@@ -347,14 +327,9 @@ export default {
                 this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
                 this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.areaObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
                 this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
@@ -425,7 +400,7 @@ export default {
         }
     },
     async mounted () {
-        this.newBossAuth()
+        this.newBossAuth(['D', 'F', 'P'])
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
     }
