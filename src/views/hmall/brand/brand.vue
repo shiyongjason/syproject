@@ -40,7 +40,7 @@
                     <div class="flex-wrap-cont">
                         <el-input
                             type="text"
-                            v-model="queryParams.updateBy"
+                            v-model="queryParams.operator"
                             maxlength="50"
                             placeholder="请输入维护人姓名"></el-input>
                     </div>
@@ -50,6 +50,7 @@
                         <el-button type="primary" class="ml20" @click="onQuery()">
                             搜索
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                     </div>
                 </div>
             </div>
@@ -130,12 +131,13 @@ export default {
     },
     data () {
         return {
+            initParams: {},
             queryParams: {
                 name: '',
                 code: '',
                 pageNumber: 1,
                 pageSize: 10,
-                updateBy: '',
+                operator: '',
                 status: ''
             },
             subsectionCodeList: [],
@@ -196,6 +198,14 @@ export default {
             'findBrandArea',
             'findBrandDetail'
         ]),
+        onReset () {
+            this.queryParams = { ...this.initParams }
+            this.paginationData = {
+                pageNumber: 1,
+                pageSize: 10
+            }
+            this.onQuery()
+        },
         updateBrandChange (col) {
             this.modifyId = col.id
             this.findBrandDetailAsync()
@@ -284,6 +294,7 @@ export default {
         }
     },
     mounted () {
+        this.initParams = { ...this.queryParams }
         this.onQuery()
         let { ...form } = this.form
         // 用于清空弹出层的form数据

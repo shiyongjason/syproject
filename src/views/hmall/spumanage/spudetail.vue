@@ -97,9 +97,9 @@
                 <div class="page-body-title">
                     <h3>商品详情</h3>
                 </div>
-                <el-form-item>
+                <!-- <el-form-item> -->
                     <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
-                </el-form-item>
+                <!-- </el-form-item> -->
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
                         <el-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</el-button>
@@ -281,6 +281,23 @@ export default {
         } else if (this.$route.query.type === 'audit' && this.$route.query.spuId) {
             this.findSpuDetailAsync(this.$route.query.spuId)
         } else {
+            this.resetForm()
+        }
+    },
+    methods: {
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+        ...mapActions('brand', [
+            'findAllBrands'
+        ]),
+        ...mapActions({
+            findCategoryList: 'findCategoryList',
+            setNewTags: 'setNewTags'
+        }),
+
+        // 重置表单并移除验证
+        resetForm () {
             this.form = {
                 brandId: '',
                 categoryId: '',
@@ -295,19 +312,8 @@ export default {
                 imgUrls: ''
             }
             this.pictureContainer = []
-        }
-    },
-    methods: {
-        ...mapActions('category', [
-            'findAllCategory'
-        ]),
-        ...mapActions('brand', [
-            'findAllBrands'
-        ]),
-        ...mapActions({
-            findCategoryList: 'findCategoryList',
-            setNewTags: 'setNewTags'
-        }),
+            this.$refs['formmain'].resetFields()
+        },
 
         // 类目改变的方法
         productCategoryChange (val) {
@@ -365,6 +371,7 @@ export default {
                 if (valid) {
                     if (this.operate == 'add') {
                         await saveSpuTemplate(this.spuTemplateBo)
+                        this.resetForm()
                         this.$message({
                             type: 'success',
                             message: '商品新建成功！'
@@ -372,6 +379,7 @@ export default {
                         this.$router.push({ path: '/hmall/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpuTemplate(this.spuTemplateBo)
+                        this.resetForm()
                         this.$message({
                             type: 'success',
                             message: '商品更新成功！'
@@ -393,6 +401,8 @@ export default {
                             imgUrls: this.form.imgUrls || '',
                             detail: this.form.reqDetailList[0].content
                         })
+
+                        this.resetForm()
 
                         this.$message({
                             type: 'success',

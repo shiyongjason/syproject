@@ -60,7 +60,7 @@
                         placeholder="请输入类目名称"
                         maxlength="25"></el-input>
                 </el-form-item>
-                <el-form-item prop="imgUrl" label="品牌logo：" v-if="form.level === 3">
+                <el-form-item prop="imgUrl" label="类目logo：" v-if="form.level === 3">
                     <!--imgUrl-->
                     <SingleUpload
                         :upload="uploadInfo"
@@ -107,20 +107,18 @@ export default {
     data () {
         return {
             data: [],
-            brandsTitle: ['未添加品牌', '已添加品牌'],
-            paramsTitle: ['未选参数', '已选参数'],
             columns: [
                 {
                     title: '类目名称',
                     key: 'name',
-                    width: '350px'
+                    width: '300px'
                 },
                 {
                     title: '类目编码',
                     key: 'code',
                     align: 'center',
                     headerAlign: 'center',
-                    minWidth: '50px'
+                    minWidth: '80px'
                 },
                 {
                     title: '排序',
@@ -147,12 +145,12 @@ export default {
                     key: 'lastModifyTime',
                     align: 'center',
                     headerAlign: 'center',
-                    minWidth: '150px'
+                    minWidth: '160px'
                 },
                 {
                     title: '操作',
                     headerAlign: 'center',
-                    minWidth: '100px',
+                    minWidth: '150px',
                     type: 'template',
                     template: 'operations'
                 }
@@ -168,7 +166,7 @@ export default {
                     { required: true, whitespace: true, message: '此项为必填项', trigger: 'blur' }
                 ],
                 imgUrl: [
-                    { required: true, message: '请上传品牌logo' }
+                    { required: true, message: '请上传类目logo' }
                 ]
             },
             form: {

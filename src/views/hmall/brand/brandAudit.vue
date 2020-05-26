@@ -39,8 +39,8 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
+                    <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                 </div>
             </div>
         </div>
@@ -255,7 +255,7 @@ export default {
             this.search()
         },
         onReset () {
-            this.queryParams = this.initParams
+            this.queryParams = { ...this.initParams }
             this.paginationData = {
                 pageNumber: 1,
                 pageSize: 10

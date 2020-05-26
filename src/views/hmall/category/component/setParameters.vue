@@ -26,7 +26,7 @@
                   <template slot="isRequired" slot-scope="scope">
                       {{ isRequiredMap.get(scope.data.row.isRequired) || '-' }}
                   </template>
-                  <template slot="type" slot-scope="scope">
+                  <template slot="isCombobox" slot-scope="scope">
                       {{ typeMap.get(scope.data.row.isCombobox) || '-' }}
                   </template>
                   <template slot="style" slot-scope="scope">
@@ -58,10 +58,10 @@
                 :model="attributeForm"
                 :rules="attributeFormRules"
                 label-width="150px">
-                <el-form-item label="属性名称：" prop="k">
+                <el-form-item label="参数名称：" prop="k">
                      <el-input type="input" v-model="attributeForm.k" maxlength="20"></el-input>
                 </el-form-item>
-                <el-form-item label="属性类型：" prop="isCombobox">
+                <el-form-item label="参数类型：" prop="isCombobox">
                      <el-select v-model="attributeForm.isCombobox" placeholder="请选择">
                          <el-option
                             label="下拉框"
@@ -160,10 +160,10 @@ export default {
             },
             attributeFormRules: {
                 k: [
-                    { required: true, message: '属性名称不能为空！' }
+                    { required: true, message: '参数名称不能为空！' }
                 ],
                 isCombobox: [
-                    { required: true, message: '审属性类型不能为空！' }
+                    { required: true, message: '参数类型不能为空！' }
                 ],
                 isRequired: [
                     { required: true, message: '是否必填不能为空！' }
@@ -174,7 +174,7 @@ export default {
             },
             attributeInfo: {
                 type: 'add',
-                title: '属性新增'
+                title: '参数新增'
             }
         }
     },
@@ -195,13 +195,13 @@ export default {
         ]),
         onAdd () {
             this.attributeInfo.type = 'add'
-            this.attributeInfo.title = '属性新增'
+            this.attributeInfo.title = '参数新增'
             this.attributeVisible = true
         },
         // 编辑时保存行对象，用于保存时查询index
         onEdit (row) {
             this.attributeInfo.type = 'edit'
-            this.attributeInfo.title = '属性编辑'
+            this.attributeInfo.title = '参数编辑'
             this.editObj = row
             this.attributeForm = { ...row }
             this.attributeVisible = true
@@ -250,6 +250,15 @@ export default {
                     } else {
                         // 判断是否是页面的新增类型，是的话直接push，不是再做处理
                         if (this.attributeInfo.type === 'add') {
+                            // 判断参数名称是否重复，重复则不可以添加
+                            let hasRepeat = this.specificationsReq.find(v => {
+                                return v.k == this.attributeForm.k
+                            })
+                            if (hasRepeat) {
+                                this.$message.warning('参数不可重复')
+                                return
+                            }
+
                             this.specificationsReq.push(this.attributeForm)
                         } else {
                             // 判断编辑的对象所属index，并作替换操作
@@ -276,8 +285,8 @@ export default {
         // 获取原数组中不包含选中的元素数组并更新
         deleteAsync () {
             let newSpecificationsReq = this.specificationsReq.filter(v1 => {
-                return this.multiSelection.find(v2 =>
-                    v1 != v2
+                return this.multiSelection.every(v2 =>
+                    v1.k != v2.k
                 )
             }).map(v => {
                 return {
@@ -318,7 +327,12 @@ export default {
                     }
                 ]
             }
-            this.$refs['attributeForm'].resetFields()
+            // 这边存在一个问题，直接删除不出现attributeForm会报错
+            try {
+                this.$refs['attributeForm'].resetFields()
+            } catch (error) {
+
+            }
             this.attributeVisible = false
         },
         async findSpecificationsAsync () {
