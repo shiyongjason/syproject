@@ -20,6 +20,7 @@ export const summarySheet = function (targetYear, targetMonth) {
             label: '分部',
             width: '100',
             showOverflowTooltip: true,
+            slot: 'organizationName',
             fixed: true
         },
         {

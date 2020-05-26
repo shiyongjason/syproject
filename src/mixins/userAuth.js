@@ -15,7 +15,7 @@ export const departmentAuth = {
     },
     methods: {
         ...mapActions([
-            'findPlatformslist', // 平台公司
+            'findPlatformslist', // 平台公司（取自发展在线）
             'findAuthList' // 大区、分部、区域
         ]),
         async newBossAuth (arr = ['D', 'F', 'Q', 'P'], params) {
