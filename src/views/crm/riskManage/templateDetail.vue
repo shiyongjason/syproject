@@ -15,68 +15,65 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td rowspan="2"> 123</td>
-                        <td> *三证正副本</td>
-                        <td> 上传</td>
-                        <td> 复印件</td>
+                    <tr v-for="(item,index) in docTable" :key="item.templateId">
+                        <td :rowspan="computedRowspan(docTable)" v-if="index==0 ">{{item.firstCatagoryName}}</td>
+                        <td>{{item.secondCatagoryName}}</td>
+                        <td>{{item.functionName}}</td>
+                        <td>{{item.formatName}}</td>
                         <td>
-                            123123123123
+                            {{item.remark}}
                         </td>
                         <td class="table-img">
                             <template v-for="index in 6">
-                                <span :key="index"><img :src="require('../../../assets/images/img_0.png')" alt=""></span>
+                                <span :key="index">
+                                    <!-- <img :src="require('../../../assets/images/img_0.png')" alt=""></span> -->
+                                    <el-image style="width: 100px; height: 100px" :src="require('../../../assets/images/img_0.png')" :preview-src-list="srcList">
+                                    </el-image>
+                                </span>
                                 <br v-if="index==3" :key="index+'risk'">
                             </template>
                         </td>
                         <td>
-                            <el-button size="mini" type="primary" @click="onEditTem()">编辑</el-button>
+                            <el-button size="mini" type="primary" @click="onEditTem(item.templateId)">编辑</el-button>
                         </td>
-                    </tr>
-                    <tr>
-                        <td> 123</td>
-                        <td> 123</td>
-                        <td> 123</td>
-                        <td> 123</td>
-                        <td> 123</td>
-                        <td> 123</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        <el-dialog title="提示" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
+        <el-dialog title="材料详情" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
             <div class="tem-wrap">
-                <el-form :model="form" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
+                <el-form :model="formTemp" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                     <el-form-item label="一级类目：">
-                        <el-input v-model="form.deptName" disabled></el-input>
+                        <el-input v-model="formTemp.firstCatagoryName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="二级类目：">
-                        <el-input v-model="form.deptName" disabled></el-input>
+                        <el-input v-model="formTemp.secondCatagoryName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="功能：">
-                        <el-input v-model="form.deptName" disabled></el-input>
+                        <el-input v-model="formTemp.functionName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="规定格式：">
-                        <el-input v-model="form.deptName" disabled></el-input>
+                        <el-input v-model="formTemp.formatName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="必填：">
-                        <el-radio-group>
-                            <el-radio>123</el-radio>
+                        <el-radio-group v-model="formTemp.mondatoryFlag">
+                            <el-radio :label=1>是</el-radio>
+                            <el-radio :label=0>否</el-radio>
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input type="textarea" placeholder="请输入内容" v-model="textarea" maxlength="30" show-word-limit>
+                        <el-input type="textarea" placeholder="请输入内容" v-model="formTemp.remark" maxlength="500" :autosize="{ minRows: 2, maxRows: 7}" show-word-limit>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="样例：">
-                        <hosjoyUpload v-model="form.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
-                    </hosjoyUpload>
+                        <hosjoyUpload v-model="formTemp.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='6' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                        </hosjoyUpload>
                     </el-form-item>
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="onSaveTemp" :loading=loading>{{loading?'保存中':'确 定'}}</el-button>
             </span>
         </el-dialog>
     </div>
@@ -84,6 +81,7 @@
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
+import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'templatedetail',
     components: {
@@ -91,27 +89,67 @@ export default {
     },
     data () {
         return {
+            srcList: [
+                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
+                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
+            ],
+            loading: false,
             formLabelWidth: '120px',
             dialogVisible: false,
-            form: { deptName: '',
-                projectUpload: [] },
             rules: {},
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
+            },
+            queryParams: {
+                bizType: this.$route.query.bizType,
+                pageNumber: -1,
+                pageSize: -1
+            },
+            docTable: [],
+            formTemp: {
+                projectUpload: []
             }
         }
     },
+    computed: {
+        ...mapGetters({
+            docTempdata: 'riskManage/docTempdata',
+            docTempdetail: 'riskManage/docTempdetail'
+        })
+    },
+    mounted () {
+        this.onFindDoctemp()
+    },
     methods: {
+        ...mapActions({
+            findDocTemplist: 'riskManage/findDocTemplist',
+            findDocTempdetail: 'riskManage/findDocTempdetail'
+        }),
+        async onFindDoctemp () {
+            await this.findDocTemplist(this.queryParams)
+            this.docTable = this.docTempdata.records
+        },
         handleClose () {
 
         },
         onBackUpload (str) {
-            console.log()
+            this.formTemp.projectUpload && this.formTemp.projectUpload.map((val, index) => {
+                val.orderNo = index
+            })
         },
-        onEditTem () {
+        async onEditTem (val) {
+            await this.findDocTempdetail(val)
+            this.formTemp = { ...this.formTemp, ...this.docTempdetail }
             this.dialogVisible = true
+        },
+        onSaveTemp () {
+            console.log(this.formTemp)
+            this.dialogVisible = false
+        },
+        computedRowspan (list) {
+            return list.length
         }
     }
 }
@@ -153,19 +191,19 @@ export default {
         }
     }
 }
-/deep/.el-upload-dragger{
-    width:90px;
+/deep/.el-upload-dragger {
+    width: 90px;
     height: 90px;
 }
-/deep/ .default-pre-view-mask{
-     width:90px;
+/deep/ .default-pre-view-mask {
+    width: 90px;
     height: 90px;
 }
-/deep/.default-pre-view-image{
-     width:90px;
+/deep/.default-pre-view-image {
+    width: 90px;
     height: 90px;
 }
-/deep/.elupload{
+/deep/.elupload {
     height: 90px;
 }
 </style>
