@@ -1,7 +1,7 @@
 import axios from 'axios'
 //
 export function getProject (params) {
-    return axios.get(`/memeber/openapi/project/page`, { params })
+    return axios.get(`/fms/api/risk-check/page`, { params })
 }
 
 export const findCrmdep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)

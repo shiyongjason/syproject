@@ -46,7 +46,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <el-select v-model="status" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                        <el-select v-model="status" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in coopreation" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -55,20 +55,20 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">初审通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">材料审核通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
@@ -152,20 +152,18 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                companyName: '',
-                firstPartName: '',
-                maxSubmitTime: '',
-                maxUpdateTime: '',
-                minSubmitTime: '',
-                minUpdateTime: '',
-                statusList: '',
-                projectName: '',
-                projectNo: '',
-                typeList: '',
-                originType: 1,
-                deptDoc: '',
-                jobNumber: '',
-                authCode: ''
+                companyName: '', // 经销商
+                firstPartName: '', // 甲方名称
+                minFirstApproveTime: '', // 最小初审时间
+                maxFirstApproveTime: '', // 最大初审时间
+                minFinalApproveTime: '', // 最小终审时间,
+                maxFinalApproveTime: '', // 最大终审时间
+                pkDeptDoc: '', // 分部编码
+                status: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待信审 5：合作关闭 6：待签约 7：待放款 8：贷中 9：合作完成
+                projectName: '', // 项目名称
+                projectNo: '', // 项目编号
+                // projectIds: [], // 工程id列表
+                type: ''// 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
             },
             status: [],
             typeArr: [],
@@ -207,46 +205,6 @@ export default {
         projectDrawer
     },
     computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxSubmitTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minSubmitTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsMax () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxUpdateTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsMin () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minUpdateTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -259,21 +217,39 @@ export default {
         })
     },
     async mounted () {
-        this.queryParams.jobNumber = this.userInfo.jobNumber
-        this.queryParams.authCode = JSON.parse(JSON.stringify(sessionStorage.getItem('authCode')))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
     },
     methods: {
         ...mapActions({
-            findProjetpage: 'crmmanage/findProjetpage',
-            findProjectLoan: 'crmmanage/findProjectLoan',
-            findCrmdeplist: 'crmmanage/findCrmdeplist',
-            findProjectrecord: 'crmmanage/findProjectrecord',
-            findPunchlist: 'crmmanage/findPunchlist'
+            findProjetpage: 'projectInformation/findProjetpage',
+            findProjectLoan: 'projectInformation/findProjectLoan',
+            findCrmdeplist: 'crmmaprojectInformationnage/findCrmdeplist',
+            findProjectrecord: 'projectInformation/findProjectrecord',
+            findPunchlist: 'projectInformation/findPunchlist'
 
         }),
+        pickerOptionsStart (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = date
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = date
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
         fundMoneys (val) {
             if (val) {
                 return filters.money(val)
@@ -315,8 +291,8 @@ export default {
             // }
         },
         async  searchList () {
-            this.queryParams.statusList = this.status.toString()
-            this.queryParams.typeList = this.typeArr.toString()
+            this.queryParams.status = this.status.toString()
+            this.queryParams.type = this.typeArr.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []

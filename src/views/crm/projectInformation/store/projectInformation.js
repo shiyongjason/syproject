@@ -1,6 +1,6 @@
 
 import * as types from './crmTypes'
-import * as Api from './../api'
+import * as Api from '../api'
 const state = {
     projectData: {},
     projectDetail: {},
@@ -44,6 +44,7 @@ const mutations = {
 
 const actions = {
     async findProjetpage ({ commit }, params) {
+        console.log(111111)
         const { data } = await Api.getProject(params)
         commit(types.PROJECT_DATA, data)
     },
