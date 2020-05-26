@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
-                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'/>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' />
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -55,8 +55,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload
-                    :on-progress="uploadProcess">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
@@ -81,7 +80,7 @@
     </div>
 </template>
 <script>
-import { findTableList, getCompany, getCityList, exportPlatTarget } from './api/index.js'
+import { findTableList, getCompany, getCityList, exportPlatTarget, findPlatformTargetPlat } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
@@ -160,7 +159,8 @@ export default {
                     selectCode: '',
                     selectName: ''
                 }
-            }
+            },
+            platformData: []
         }
     },
     components: {
@@ -169,8 +169,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            branchList: state => state.branchList,
-            platformData: state => state.platformData
+            branchList: state => state.branchList
         })
     },
     async mounted () {
@@ -270,14 +269,20 @@ export default {
                 item.selectCode = item.cityCode
             })
         },
+        async findPlatformTargetPlat (subsectionCode) {
+            const { data } = await findPlatformTargetPlat({ subsectionCode })
+            for (let i of data.data) {
+                i.value = i.companyShortName
+                i.selectCode = i.ehrSubsectionCode
+            }
+            this.platformData = data.data
+        },
         backPlat (val, dis) {
             if (dis === 'F') {
                 this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 !val.value.pkDeptDoc && this.linkage()
                 if (val.value.pkDeptDoc) {
-                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
-                } else {
-                    this.findPlatformslist()
+                    this.findPlatformTargetPlat(val.value.pkDeptDoc)
                 }
             } else if (dis === 'P') {
                 this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
