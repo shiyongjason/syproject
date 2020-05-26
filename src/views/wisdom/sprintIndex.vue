@@ -16,7 +16,7 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="queryParams.selectYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
@@ -33,11 +33,11 @@
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
+        <el-dialog title="冲刺值利润指标导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
                     <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
+                        冲刺值利润指标导入模板导出
                     </a>
                 </el-form-item>
                 <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
@@ -46,7 +46,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + '/api/overdue/annual/target/profit/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
@@ -64,7 +64,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { sprintTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
+import { getCommitmentList, getCommitmentTotal, exportSprintIndex } from './api/index'
 import moment from 'moment'
 export default {
     name: 'sprintIndex',
@@ -150,7 +150,7 @@ export default {
         },
         onExport () {
             this.queryParams.totalAreaName = this.selectAuthLabelShow()
-            exportCommitment(this.queryParams)
+            exportSprintIndex(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -197,7 +197,7 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'selectYear ', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
@@ -205,7 +205,7 @@ export default {
             await this.oldBossAuth()
             this.onSearch()
         },
-        isSuccess (response) {
+        isSuccess () {
             this.$message({
                 message: '批量导入成功！',
                 type: 'success'

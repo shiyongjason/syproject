@@ -201,9 +201,9 @@ export function preformTableLabel (queryDim) {
             ]
         }
     ]
-}  
+}
 
-// 履约值
+// 冲刺值
 export function sprintTableLabel (queryDim) {
     return [
         { prop: 'misCode', label: '分部', fixed: true, showOverflowTooltip: true },
@@ -305,4 +305,4 @@ export function sprintTableLabel (queryDim) {
             ]
         }
     ]
-}  
+}

@@ -291,3 +291,34 @@ export function exportCommitment (params) {
         axios.defaults.responseType = 'json'
     })
 }
+// 冲刺值利润指标
+export function exportSprintIndex (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`/api/overdue/annual/target/profit/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '年度冲刺值.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 冲刺值利润指标列表
+export function getSprintIndexList (params) {
+    return axios.get(`/api/overdue/annual/target/profit/list`, { params })
+}
+// 冲刺值利润指标列表
+export function getSprintIndexToatal (params) {
+    return axios.get(`/api/overdue/annual/target/profit/total`, { params })
+}
