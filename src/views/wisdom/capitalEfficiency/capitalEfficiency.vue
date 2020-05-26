@@ -227,7 +227,7 @@ export default {
             this.removeValue = !this.removeValue
             this.queryParams.loanCompanyCode = ''
             this.queryParams.loanCompanyName = ''
-            this.findPlatformslist({ subregionCode: subsectionCode })
+            this.findPlatformslist({ subsectionCode })
         },
         onRemark (row) {
             this.rowData = { ...row }
