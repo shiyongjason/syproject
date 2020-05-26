@@ -174,14 +174,13 @@ export default {
         backPlat (val, dis) {
             if (dis === 'F') {
                 this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
                     this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage()
-            } else if (val.value && dis === 'P') {
+            } else if (dis === 'P') {
                 this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
         },

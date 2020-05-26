@@ -138,7 +138,7 @@ import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
 import { departmentAuth } from '@/mixins/userAuth'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff, findAllBranchList, findAllRegionList } from '../../api/index'
+import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff, findAllBranchList } from '../../api/index'
 export default {
     name: 'baseForm',
     mixins: [departmentAuth],

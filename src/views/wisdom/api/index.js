@@ -93,13 +93,13 @@ export const getPlatformSaleSum = (params) => {
 }
 // 获取分部销售分析列表
 export const getBranchSale = (params) => {
-    return axios.get('rms/subsection-sale/adjective', {
+    return axios.get('rms/api/subsection-sale/adjective', {
         params
     })
 }
 // 获取分部销售分析列表 合计
 export const getBranchSaleSum = (params) => {
-    return axios.get('rms/subsection-sale/total', {
+    return axios.get('rms/api/subsection-sale/total', {
         params
     })
 }
@@ -341,4 +341,32 @@ export const findAllBranchList = (params) => {
 // 大区列表查询
 export const findAllRegionList = (params) => {
     return axios.get('/uaa/department/regions', { params })
+}
+
+// 分部销售导出
+export function exportBranchSale (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`rms/api/subsection-sale/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '分部销售分析.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 平台目标管理
+export const findPlatformTargetPlat = (params) => {
+    return axios.get('rms/api/company/target/companies', { params })
 }
