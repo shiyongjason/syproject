@@ -53,7 +53,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
                 </hosJoyTable>
             </div>
         </div>
@@ -132,7 +132,12 @@ export default {
             platformData: state => state.platformData
         }),
         column () {
-            return platformSummarySheet()
+            return platformSummarySheet
+        },
+        fixedHeight () {
+            let oneHeight = 71
+            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
+            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
@@ -219,8 +224,39 @@ export default {
                 if (!res[1].data) {
                     res[1].data = platformSummarySheetTotal
                 }
-                res[1].data.misCode = '合计'
-                res[0].data.records.unshift(res[1].data)
+                let { annualRepaymentPlan, ...rest } = res[1].data
+                let temp = { ...annualRepaymentPlan, ...rest }
+                for (let key in temp) {
+                    platformSummarySheet.forEach(value => {
+                        if (value.prop === key && temp[key] != null) {
+                            value.children.forEach(value1 => {
+                                if (key === 'planProportion') {
+                                    value1.label = String(temp[key]) + '%'
+                                } else {
+                                    value1.label = String(temp[key])
+                                }
+                            })
+                        }
+                        if (value.label === '销售') {
+                            value.children.forEach(value1 => {
+                                value1.children.forEach(value2 => {
+                                    if (value2.prop === key && temp[key] != null) {
+                                        value2.label = String(temp[key])
+                                    }
+                                })
+                            })
+                        }
+                        if (value.label === '2020年度还款计划') {
+                            value.children.forEach(value1 => {
+                                value1.children.forEach(value2 => {
+                                    if (value2.prop === key && temp[key] != null) {
+                                        value2.label = String(temp[key])
+                                    }
+                                })
+                            })
+                        }
+                    })
+                }
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
@@ -341,4 +377,7 @@ export default {
     background-color: rgba($color: #c65911, $alpha: 0.5) !important;
     color: #fff !important;
 }
+    /deep/.overdueTable td{
+        height: 71px;
+    }
 </style>
