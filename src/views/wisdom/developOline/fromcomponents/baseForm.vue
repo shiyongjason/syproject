@@ -26,7 +26,7 @@
             <el-form-item label="公司简称：" prop="companyShortName">
                 <el-input v-model.trim="baseForm.companyShortName" placeholder="输入公司简称" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
-            <el-form-item label="分部：" prop="subsectionCode">
+            <el-form-item label="分部：" prop="ehrSubsectionCode">
                 <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
             </el-form-item>
             <el-form-item label="区域：">
@@ -96,7 +96,6 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="经营范围：">
-                <!-- <el-input v-model.trim="baseForm.businessScope" placeholder="" maxlength="64" class="deveInput"></el-input> -->
                 <el-input type="textarea" placeholder="请输入经营范围" v-model="baseForm.businessScope" maxlength="255" show-word-limit>
                 </el-input>
             </el-form-item>
@@ -139,7 +138,7 @@ import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
 import { departmentAuth } from '@/mixins/userAuth'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff } from '../../api/index'
+import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff, findAllBranchList, findAllRegionList } from '../../api/index'
 export default {
     name: 'baseForm',
     mixins: [departmentAuth],
@@ -150,10 +149,15 @@ export default {
         baseForm: {
             type: Object,
             default: () => { }
+        },
+        selectAuth: {
+            type: Object,
+            default: () => { }
         }
     },
     data () {
         return {
+            pageInit: 0,
             loading: false,
             type: this.$route.query.type,
             companyData: [],
@@ -175,7 +179,7 @@ export default {
                 companyShortName: [
                     { required: true, message: '输入公司简称', trigger: 'blur' }
                 ],
-                subsectionCode: [
+                ehrSubsectionCode: [
                     { required: true, message: '请选择分部' }
                 ],
                 areaCode: [
@@ -221,31 +225,13 @@ export default {
             radio: '',
             oneimageUrl: '',
             twoimageUrl: '',
-            selectAuth: {
-                regionObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
-                branchObj: {
-                    selectCode: this.baseForm.subsectionCode || '',
-                    selectName: this.baseForm.subsectionName || ''
-                },
-                areaObj: {
-                    selectCode: this.baseForm.subregionCode || '',
-                    selectName: this.baseForm.subregionName || ''
-                },
-                platformObj: {
-                    selectCode: '',
-                    selectName: ''
-                }
-            }
+            branchList: []
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
             regionalismList: state => state.areaList,
-            branchList: state => state.branchList,
             areaListNew: state => state.areaList
         }),
         ...mapGetters({
@@ -277,22 +263,12 @@ export default {
         }
     },
     watch: {
-        'baseForm.subsectionCode' (newVal) {
-            this.selectAuth.branchObj = {
-                selectCode: this.baseForm.subsectionCode || '',
-                selectName: this.baseForm.subsectionName || ''
-            }
+        'baseForm.ehrSubsectionCode' (newVal) {
             if (newVal) {
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: newVal || this.userInfo.pkDeptDoc
                 })
-            }
-        },
-        'baseForm.subregionCode' (newVal) {
-            this.selectAuth.areaObj = {
-                selectCode: this.baseForm.subregionCode || '',
-                selectName: this.baseForm.subregionName || ''
             }
         }
     },
@@ -300,9 +276,17 @@ export default {
         this.onFindNest()
         this.onFindCompanyType()
         this.onFindSystemType()
-        this.newBossAuth(['F', 'Q'])
+        this.findAllBranchList()
     },
     methods: {
+        async findAllBranchList () {
+            const { data } = await findAllBranchList()
+            for (let i of data) {
+                i.value = i.deptName
+                i.selectCode = i.pkDeptDoc
+            }
+            this.branchList = data
+        },
         ...mapActions({
             findAuthList: 'findAuthList',
             findNest: 'findNest',
@@ -413,8 +397,8 @@ export default {
         },
         async backPlat (val, dis) {
             if (dis === 'F') {
+                this.baseForm.ehrSubsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.baseForm.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // console.log(this.baseForm.subsectionCode)
                 this.$refs['baseForm'].clearValidate()
                 this.findAuthList({
                     deptType: 'Q',

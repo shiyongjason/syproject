@@ -81,7 +81,7 @@
     </div>
 </template>
 <script>
-import { findTableList, getCompany, getCityList } from './api/index.js'
+import { findTableList, getCompany, getCityList, exportPlatTarget } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
@@ -179,8 +179,8 @@ export default {
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        // this.onFindTableList(this.searchParams)
-        // this.getCompanyList()
+        this.onFindTableList(this.searchParams)
+        this.getCompanyList()
         this.getCityList()
         await this.newBossAuth(['F', 'P'])
     },
@@ -226,11 +226,8 @@ export default {
                 total: data.data.total
             }
         },
-        backFindmiscode (val) {
-            this.queryParams.misCode = val.value.misCode
-        },
         backFindcitycode (val) {
-            this.queryParams.cityCode = val.value.cityCode
+            this.searchParams.cityCode = val.value ? val.value.cityCode : ''
         },
         handleSizeChange (val) {
             this.queryParamsTemp.pageSize = val
@@ -252,11 +249,7 @@ export default {
             this.$emit('onFieldChange', val)
         },
         onExport () {
-            var url = ''
-            for (var key in this.searchParams) {
-                url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
-            }
-            location.href = interfaceUrl + 'rms/api/company/target/export?' + url
+            exportPlatTarget(this.searchParams)
         },
         downloadXlsx () {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
@@ -286,8 +279,9 @@ export default {
                 } else {
                     this.findPlatformslist()
                 }
-            } else if (val.value && dis === 'P') {
+            } else if (dis === 'P') {
                 this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.searchParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         linkage () {
