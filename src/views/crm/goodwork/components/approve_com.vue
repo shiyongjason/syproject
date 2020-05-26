@@ -37,7 +37,7 @@
         </el-form>
     </div>
 </template>
-<script>3
+<script>
 export default {
     props: {
         // colForm: {

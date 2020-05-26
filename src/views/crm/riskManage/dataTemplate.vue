@@ -5,7 +5,7 @@
                 <div class="page-risk_title">
                     材料清单配置：
                     <div class="page-risk_btn">
-                        好橙工项目材料清单 <el-button size="mini" type="primary" @click="onEdittemp">编辑</el-button>
+                        好橙工项目材料清单 <el-button size="mini" type="primary" @click="onEdittemp(1)">编辑</el-button>
                     </div>
                 </div>
                 <div class="page-risk_title">
@@ -26,14 +26,18 @@
 </template>
 <script>
 export default {
+    name: 'dataTemp',
     data () {
         return {
 
         }
     },
+    mounted () {
+
+    },
     methods: {
-        onEdittemp () {
-            this.$router.push({ path: '/goodwork/tempdetail' })
+        onEdittemp (val) {
+            this.$router.push({ path: '/goodwork/tempdetail', query: { bizType: val } })
         }
     }
 }
@@ -49,5 +53,4 @@ export default {
         }
     }
 }
-
 </style>

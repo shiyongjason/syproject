@@ -2,14 +2,14 @@
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="rules" ref="colForm" class="demo-ruleForm">
             <div class="collect-result">
-                <el-form-item label="立项结果:" prop="resource" label-width="100px">
+                <el-form-item label="终审结果：" prop="resource" label-width="100px">
                     <el-radio-group v-model="colForm.resource">
                         <el-radio label="线上品牌商赞助"></el-radio>
                         <el-radio label="线下场地免费"></el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="desc" label-width="100px">
-                    <el-input type="textarea" v-model="colForm.desc"></el-input>
+                    <el-input type="textarea" v-model="colForm.desc" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
             </div>
             <div>
@@ -23,7 +23,10 @@
                             <p>规定格式：复印件</p>
                         </div>
                     </div>
-                     <el-button type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+                    <hosjoyUpload v-if="isEdit" v-model="otherFiles.fileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('fileList','d-other')" style="margin-top:10px">
+                        <el-button type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+                    </hosjoyUpload>
+
                     <div class="collect-box">
                         <el-checkbox label="" name="type" size="medium"></el-checkbox>
                         <div class="collect-boxtxt">
@@ -37,7 +40,9 @@
         </el-form>
     </div>
 </template>
-<script>3
+<script>
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { interfaceUrl } from '@/api/config'
 export default {
     props: {
         // colForm: {
@@ -45,9 +50,17 @@ export default {
         //     default: () => {}
         // }
     },
+    components: {
+        hosjoyUpload
+    },
     data () {
         return {
-            colForm: {}
+            colForm: {},
+            action: interfaceUrl + 'tms/files/upload',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: true
+            }
         }
     }
 }
@@ -60,8 +73,8 @@ export default {
     font-size: 20px;
     color: #333333;
     border-bottom: 1px solid #e5e5e5;
-    padding: 10px 0 ;
-    font-weight: bold;;
+    padding: 10px 0;
+    font-weight: bold;
 }
 .collect-box {
     display: flex;

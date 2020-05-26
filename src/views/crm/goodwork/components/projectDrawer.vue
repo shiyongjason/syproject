@@ -7,6 +7,7 @@
             <projectCom ref="projectCom" :projectForm=form @onBackLoad = onBackLoad v-if="activeName==='1'"></projectCom>
             <datacolCom ref="datacolCom" v-if="activeName==='2'"></datacolCom>
             <approveCom ref="approveCom" v-if="activeName==='3'"></approveCom>
+            <finalCom ref="finalCom" v-if="activeName==='4'"></finalCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&status==2">
@@ -44,6 +45,7 @@
 import projectCom from './project_com'
 import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
+import finalCom from './final_com'
 import { mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 export default {
@@ -58,7 +60,7 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom
+        projectCom, datacolCom, approveCom, finalCom
     },
     data () {
         return {
