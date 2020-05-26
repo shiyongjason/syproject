@@ -12,7 +12,7 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' clearable @change="findPlatformslistByBranchList">
-                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptName" :value="item.crmDeptCode">
+                        <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                         </el-option>
                     </el-select>
                 </div>
