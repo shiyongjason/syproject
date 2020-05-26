@@ -180,7 +180,7 @@ export default {
                     this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage()
-            } else if (val.value && dis === 'P') {
+            } else if (dis === 'P') {
                 this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
             }
         },
