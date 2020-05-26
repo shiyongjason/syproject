@@ -253,7 +253,8 @@ export const branchSummarySheet = function () {
 }
 // 平台公司逾期汇总表
 export const platformSummarySheet = [
-    { prop: 'misCode',
+    {
+        prop: 'misCode',
         label: '公司编码',
         showOverflowTooltip: true,
         fixed: true,
@@ -262,8 +263,10 @@ export const platformSummarySheet = [
                 prop: 'misCode',
                 label: '合计'
             }
-        ] },
-    { prop: 'loanCompanyName',
+        ]
+    },
+    {
+        prop: 'loanCompanyName',
         label: '公司名称',
         showOverflowTooltip: true,
         fixed: true,
@@ -272,8 +275,10 @@ export const platformSummarySheet = [
                 prop: 'loanCompanyName',
                 label: '-'
             }
-        ] },
-    { prop: 'subsectionName',
+        ]
+    },
+    {
+        prop: 'subsectionName',
         label: '分部',
         showOverflowTooltip: true,
         fixed: true,
@@ -282,8 +287,10 @@ export const platformSummarySheet = [
                 prop: 'subsectionName',
                 label: '-'
             }
-        ] },
-    { prop: 'regionName',
+        ]
+    },
+    {
+        prop: 'regionName',
         label: '大区',
         showOverflowTooltip: true,
         fixed: true,
@@ -292,7 +299,8 @@ export const platformSummarySheet = [
                 prop: 'regionName',
                 label: '-'
             }
-        ] },
+        ]
+    },
     {
         label: '销售',
         children: [
@@ -324,7 +332,8 @@ export const platformSummarySheet = [
             }
         ]
     },
-    { prop: 'arrearsCount',
+    {
+        prop: 'arrearsCount',
         label: '欠款笔数',
         showOverflowTooltip: true,
         children: [
@@ -332,8 +341,10 @@ export const platformSummarySheet = [
                 prop: 'arrearsCount',
                 label: '-'
             }
-        ] },
-    { prop: 'capitalAmount',
+        ]
+    },
+    {
+        prop: 'capitalAmount',
         label: '剩余欠款',
         showOverflowTooltip: true,
         children: [
@@ -341,7 +352,8 @@ export const platformSummarySheet = [
                 prop: 'capitalAmount',
                 label: '-'
             }
-        ] },
+        ]
+    },
     {
         label: '2020年度还款计划',
         children: [
@@ -529,24 +541,28 @@ export const platformSummarySheet = [
             }
         ]
     },
-    { prop: 'planProportion',
+    {
+        prop: 'planProportion',
         label: '计划还款占比',
         showOverflowTooltip: true,
         children: [
             {
-                prop: 'total',
+                prop: 'planProportion',
                 label: '-'
             }
-        ] },
-    { prop: 'noRepaymentPlanAmount',
+        ]
+    },
+    {
+        prop: 'noRepaymentPlanAmount',
         label: '无计划金额',
         showOverflowTooltip: true,
         children: [
             {
-                prop: 'total',
+                prop: 'noRepaymentPlanAmount',
                 label: '-'
             }
-        ] }
+        ]
+    }
 ]
 // 逾期增量明细表
 export const overdueDetailTable = [
@@ -562,7 +578,8 @@ export const overdueDetailTable = [
             }
         ]
     },
-    { prop: 'misCode',
+    {
+        prop: 'misCode',
         label: '公司编码',
         fixed: true,
         showOverflowTooltip: true,
@@ -573,7 +590,8 @@ export const overdueDetailTable = [
             }
         ]
     },
-    { prop: 'loanCompanyName',
+    {
+        prop: 'loanCompanyName',
         label: '公司名称',
         fixed: true,
         showOverflowTooltip: true,
@@ -583,8 +601,10 @@ export const overdueDetailTable = [
                 prop: 'loanCompanyName',
                 label: '-'
             }
-        ] },
-    { prop: 'subsectionName',
+        ]
+    },
+    {
+        prop: 'subsectionName',
         label: '分部',
         fixed: true,
         showOverflowTooltip: true,
@@ -593,8 +613,10 @@ export const overdueDetailTable = [
                 prop: 'subsectionName',
                 label: '-'
             }
-        ] },
-    { prop: 'regionName',
+        ]
+    },
+    {
+        prop: 'regionName',
         label: '大区',
         fixed: true,
         showOverflowTooltip: true,
@@ -603,8 +625,10 @@ export const overdueDetailTable = [
                 prop: 'regionName',
                 label: '-'
             }
-        ] },
-    { prop: 'loanAmount',
+        ]
+    },
+    {
+        prop: 'loanAmount',
         label: '借款金额',
         showOverflowTooltip: true,
         children: [
@@ -612,8 +636,10 @@ export const overdueDetailTable = [
                 prop: 'loanAmount',
                 label: '合计'
             }
-        ] },
-    { prop: 'payTime',
+        ]
+    },
+    {
+        prop: 'payTime',
         label: '合同到期日',
         showOverflowTooltip: true,
         children: [
@@ -621,8 +647,10 @@ export const overdueDetailTable = [
                 prop: 'payTime',
                 label: '-'
             }
-        ] },
-    { prop: 'capitalAmount',
+        ]
+    },
+    {
+        prop: 'capitalAmount',
         label: '应还本金',
         showOverflowTooltip: true,
         children: [
@@ -630,8 +658,10 @@ export const overdueDetailTable = [
                 prop: 'capitalAmount',
                 label: '合计'
             }
-        ] },
-    { prop: 'overdueTime',
+        ]
+    },
+    {
+        prop: 'overdueTime',
         label: '宽限期到期日',
         showOverflowTooltip: true,
         children: [
@@ -639,8 +669,10 @@ export const overdueDetailTable = [
                 prop: 'overdueTime',
                 label: '-'
             }
-        ] },
-    { prop: 'actualPayTime',
+        ]
+    },
+    {
+        prop: 'actualPayTime',
         label: '实际还款日',
         showOverflowTooltip: true,
         children: [
@@ -648,8 +680,10 @@ export const overdueDetailTable = [
                 prop: 'actualPayTime',
                 label: '-'
             }
-        ] },
-    { prop: 'amountPaid',
+        ]
+    },
+    {
+        prop: 'amountPaid',
         label: '已还本金',
         showOverflowTooltip: true,
         children: [
@@ -657,8 +691,10 @@ export const overdueDetailTable = [
                 prop: 'amountPaid',
                 label: '合计'
             }
-        ] },
-    { prop: 'overdueTotal',
+        ]
+    },
+    {
+        prop: 'overdueTotal',
         label: '当前逾期合计',
         showOverflowTooltip: true,
         children: [
@@ -666,7 +702,8 @@ export const overdueDetailTable = [
                 prop: 'overdueTotal',
                 label: '合计'
             }
-        ] },
+        ]
+    },
     {
         label: '2020年度还款计划',
         children: [
@@ -854,7 +891,8 @@ export const overdueDetailTable = [
             }
         ]
     },
-    { prop: 'planProportion',
+    {
+        prop: 'planProportion',
         label: '计划占比',
         showOverflowTooltip: true,
         children: [
@@ -864,7 +902,8 @@ export const overdueDetailTable = [
             }
         ]
     },
-    { prop: 'noRepaymentPlanAmount',
+    {
+        prop: 'noRepaymentPlanAmount',
         label: '无还款计划金额',
         displayAs: 'fundMoney',
         showOverflowTooltip: true,
@@ -873,7 +912,8 @@ export const overdueDetailTable = [
                 prop: 'noRepaymentPlanAmount',
                 label: '合计'
             }
-        ] }
+        ]
+    }
 ]
 // 还款计划
 export const annualRepaymentPlan = {
