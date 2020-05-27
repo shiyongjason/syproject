@@ -130,28 +130,52 @@ export const platformPlan = function (targetYear, targetMonth) {
             slot: 'organizationName',
             label: '平台公司',
             width: '100',
-            fixed: true
+            fixed: true,
+            children: [
+                {
+                    prop: 'organizationName',
+                    label: `-`
+                }
+            ]
         },
         {
             prop: 'organizationName',
             slot: 'organizationName',
             label: '区域',
             width: '100',
-            fixed: true
+            fixed: true,
+            children: [
+                {
+                    prop: 'organizationName',
+                    label: `-`
+                }
+            ]
         },
         {
             prop: 'organizationName',
             slot: 'organizationName',
             label: '分部',
             width: '100',
-            fixed: true
+            fixed: true,
+            children: [
+                {
+                    prop: 'organizationName',
+                    label: `-`
+                }
+            ]
         },
         {
             prop: 'organizationName',
             slot: 'organizationName',
             label: '大区',
             width: '100',
-            fixed: true
+            fixed: true,
+            children: [
+                {
+                    prop: 'organizationName',
+                    label: `合计`
+                }
+            ]
         },
         {
             label: '销售',
@@ -161,28 +185,52 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: `${targetYear}年责任状目标`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'annualCommitment',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'currentMonthCommitment',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'lastYearActualSales',
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'lastYearActualSales',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'estimateSales',
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'estimateSales',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         },
@@ -194,35 +242,65 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: '在贷余额',
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'loanBalance',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'totalOverdue',
                     label: '逾期额',
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'totalOverdue',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'estimateRepayment',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'lastYearActualUse',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right'
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'preBorrowCurrentMonth',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         },
@@ -234,21 +312,39 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: `${targetYear}年${targetMonth}月销售同比`,
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '150'
+                    width: '150',
+                    children: [
+                        {
+                            prop: 'salePercentCurrent',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'usedPercentCurrent',
                     label: `${targetYear}年${targetMonth}月用款同比`,
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '150'
+                    width: '150',
+                    children: [
+                        {
+                            prop: 'usedPercentCurrent',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     prop: 'overduePercent',
                     label: '逾期率=（逾期额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '200'
+                    width: '200',
+                    children: [
+                        {
+                            prop: 'overduePercent',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         }
@@ -293,7 +389,198 @@ export const approvalListLabel = [
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
-
+export const planCreditLabel = [
+    {
+        label: '公司编码',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '公司名称',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '分部',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '大区',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本年累计销售达成额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本年累计销售达成率',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本年累计利润达成额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本年累计利润达成率',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本年累计放款额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '累计资金支持效率比',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '当月申报用款额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '当月审批用款额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本月实际放款额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本月剩余应还本金',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '在贷余额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '剩余逾期',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '存量逾期',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '增量逾期',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    },
+    {
+        label: '本月逾期发生额',
+        prop: 'planId',
+        children: [
+            {
+                label: '-',
+                prop: 'planId'
+            }
+        ]
+    }
+]
 export const approvalListHasDoneLabel = [
     { label: '流程编号', prop: 'planId' },
     { label: '申报月份', prop: 'applyMonth' },

@@ -64,7 +64,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { sprintTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal, exportSprintIndex } from './api/index'
+import { getSprintIndexList, getSprintIndexTotal, exportSprintIndex } from './api/index'
 import moment from 'moment'
 export default {
     name: 'sprintIndex',
@@ -168,7 +168,7 @@ export default {
             return totalAreaName
         },
         async onQuery () {
-            const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
+            const promiseArr = [getSprintIndexList(this.queryParams), getSprintIndexTotal(this.queryParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 res[1].data.companyName = '合计'
                 res[0].data.records.unshift(res[1].data)
