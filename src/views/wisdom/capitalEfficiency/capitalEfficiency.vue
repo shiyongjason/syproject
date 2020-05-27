@@ -172,7 +172,7 @@ export default {
         this.onSearch()
         await this.newBossAuth()
         if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+            this.queryParams.subsectionCode = this.branchList[0].pkDeptDoc
         }
     },
     methods: {
