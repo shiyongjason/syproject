@@ -17,7 +17,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -38,7 +38,7 @@
                     <div class="query-col-title">项目类别：</div>
                     <div class="query-col-input">
                         <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
-                            <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
+                            <el-option v-for="(item,index) in typeList" :key="index" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -47,7 +47,7 @@
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
                         <el-select v-model="status" multiple collapse-tags placeholder="请选择">
-                            <el-option v-for="item in coopreation" :key="item.key" :label="item.value" :value="item.key">
+                            <el-option v-for="(item,index) in coopreation" :key="index" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
@@ -55,20 +55,20 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">初审通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">材料审核通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
@@ -92,46 +92,29 @@
                     {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
                 </template>
                 <template slot="type" slot-scope="scope">
-                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
+                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']||'-'}}
                 </template>
-                <template slot="progress" slot-scope="scope">
+                <template slot="status" slot-scope="scope">
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
+
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
-                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <!-- 资料未提交，展示修改按钮与查看按钮
+
+                        资料已提交待审核，仅展示查看按钮
+
+                        资料提交后被打回，展示修改、查看查看按钮
+
+                        资料审核通过，展示查看按钮
+
+                        重置后，合作进度展示初审中，展示查看按钮
+
+                        初审、立项中、待终审、合作关闭、待签约、待放款、贷中、合作完成均只展示查看按钮 -->
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.projectId)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <el-button type="warning" size="mini" plain @click="onLookproject(scope.data.row.projectId)" v-if="hosAuthCheck(crm_goodwork_detail)">修改</el-button>
                 </template>
             </basicTable>
         </div>
-        <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></projectDrawer>
-        <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
-            <div class="project-record" v-if="title=='项目审批记录'">
-                <el-timeline>
-                    <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
-                        <el-card>
-                            <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
-                            <p><span>操作内容：</span> {{item.remark}}</p>
-                        </el-card>
-                    </el-timeline-item>
-                </el-timeline>
-            </div>
-            <div class="project-plant" v-if="title=='工地打卡记录'">
-                <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
-                    <img :src="item.punchImageUrl" alt="">
-                </div>
-
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="预览" :visible.sync="imgVisible">
-            <div class="previewimg">
-                <img :src="dialogImageUrl" alt="">
-            </div>
-
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -139,7 +122,6 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
-import projectDrawer from './components/projectDrawer'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST, COOPERATION_PROGRESS_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
 export default {
@@ -150,14 +132,16 @@ export default {
             categoryIdArr: [],
             branchArr: [],
             queryParams: {
+                authCode: '', // 菜单路由
+                jobNumber: '', // 工号
                 pageNumber: 1,
                 pageSize: 10,
                 companyName: '', // 经销商
                 firstPartName: '', // 甲方名称
                 minFirstApproveTime: '', // 最小初审时间
                 maxFirstApproveTime: '', // 最大初审时间
-                minFinalApproveTime: '', // 最小终审时间,
-                maxFinalApproveTime: '', // 最大终审时间
+                minFinalApproveTime: '', // 最小料审核通过时间,
+                maxFinalApproveTime: '', // 最大料审核通过时间
                 pkDeptDoc: '', // 分部编码
                 status: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待信审 5：合作关闭 6：待签约 7：待放款 8：贷中 9：合作完成
                 projectName: '', // 项目名称
@@ -175,48 +159,41 @@ export default {
                 { label: '项目名称', prop: 'projectName', width: '' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150' },
+                { label: '赊销总额', prop: 'contractAmount', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '180' },
                 { label: '甲方名', prop: 'firstPartName' },
                 { label: '项目类别', prop: 'type', width: '120' },
-                { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '初审通过时间', prop: 'progress', width: '120' },
-                { label: '数据更新时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料提交审核时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料审核通过时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' }
+                { label: '合作进度', prop: 'status', width: '120' },
+                { label: '初审通过时间', prop: 'firstApproveTime', width: '150', formatters: 'dateTimes' },
+                { label: '数据更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' },
+                { label: '材料提交审核时间', prop: 'checkTime', width: '150', formatters: 'dateTimes' },
+                { label: '材料审核通过时间', prop: 'finalApproveTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
-            drawer: false,
             typeList: TYPE_LIST,
             processList: PROCESS_LIST,
             statusList: STATUS_LIST,
             coopreation: COOPERATION_PROGRESS_LIST,
             loanData: {},
-            dialogVisible: false,
-            dialogRecord: [],
-            title: '',
-            imgVisible: false,
-            dialogImageUrl: '',
-            plantList: []
+            title: ''
         }
-    },
-    components: {
-        projectDrawer
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            projectData: 'crmmanage/projectData',
-            projectLoan: 'crmmanage/projectLoan',
+            projectData: 'projectInformation/projectData',
+            projectLoan: 'projectInformation/projectLoan',
             crmdepList: 'crmmanage/crmdepList',
-            punchList: 'crmmanage/punchList',
-            projectRecord: 'crmmanage/projectRecord'
+            punchList: 'projectInformation/punchList',
+            projectRecord: 'projectInformation/projectRecord'
         })
     },
     async mounted () {
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = JSON.parse(JSON.stringify(sessionStorage.getItem('authCode')))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
@@ -225,7 +202,7 @@ export default {
         ...mapActions({
             findProjetpage: 'projectInformation/findProjetpage',
             findProjectLoan: 'projectInformation/findProjectLoan',
-            findCrmdeplist: 'crmmaprojectInformationnage/findCrmdeplist',
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
             findProjectrecord: 'projectInformation/findProjectrecord',
             findPunchlist: 'projectInformation/findPunchlist'
 
@@ -245,10 +222,13 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = date
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
+        },
+        onLookproject (projectId) {
+            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: projectId } })
         },
         fundMoneys (val) {
             if (val) {
@@ -256,7 +236,7 @@ export default {
             }
         },
         onFiterStates (val) {
-            return this.statusList.filter((v) => {
+            return this.coopreation.filter((v) => {
                 return v.key == val
             })
         },
@@ -275,21 +255,6 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        productCategoryChange (val) {
-            this.queryParams.categoryId = val
-        },
-        onChooseDep () {
-            // this.queryParams.deptDocList = []
-            // const depList = []
-            // if (!this.queryParams.subsectionCode) {
-            //     this.branchArr.map(val => {
-            //         depList.push(val.pkDeptDoc)
-            //     })
-            //     this.queryParams.deptDocList = depList.join(',')
-            // } else {
-            //     this.queryParams.deptDocList = this.queryParams.subsectionCode
-            // }
-        },
         async  searchList () {
             this.queryParams.status = this.status.toString()
             this.queryParams.type = this.typeArr.toString()
@@ -304,34 +269,9 @@ export default {
             await this.findProjectLoan(params)
             this.loanData = this.projectLoan ? this.projectLoan : ''
         },
-        onLookproject (val) {
-            this.drawer = true
-            this.$refs.drawercom.onFindProjectDetail(val)
-        },
-        restDrawer () {
-            this.drawer = false
-            this.searchList()
-        },
-        async onLookrecord (val, type) {
-            if (type == 1) {
-                this.title = '项目审批记录'
-                await this.findProjectrecord(val.id)
-                this.dialogRecord = this.projectRecord
-            } else {
-                this.title = '工地打卡记录'
-                await this.findPunchlist({ projectId: val.id })
-                this.plantList = this.punchList
-            }
-
-            this.dialogVisible = true
-        },
-        onHandlePictureCardPreview (val) {
-            this.dialogImageUrl = val.punchImageUrl
-            this.imgVisible = true
-        },
         async onGetbranch () {
-            // let authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
-            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+            // 分部下拉接口
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(JSON.stringify(sessionStorage.getItem('authCode'))) })
             this.branchArr = this.crmdepList
         }
     }

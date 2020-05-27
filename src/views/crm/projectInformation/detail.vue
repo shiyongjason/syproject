@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
 
@@ -121,9 +121,15 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            // informationDetail: 'projectInformation/informationDetail'
         })
     },
     methods: {
+        ...mapActions({
+            // findProjectInformationDetail: 'projectInformation/findProjectInformationDetail'
+        }),
         onDelete () {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                 confirmButtonText: '确定',

@@ -1,8 +1,5 @@
 import axios from 'axios'
 //
-export function getProject (params) {
-    return axios.get(`/fms/api/risk-check/page`, { params })
-}
 
 export const findCrmdep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
 
@@ -18,3 +15,9 @@ export const getProjectloan = (params) => axios.get(`/memeber/openapi/project/lo
 
 export const getProjectrecord = (params) => axios.get(`/memeber/openapi/project/audit/${params}`)
 export const getPunchlist = (params) => axios.get(`/memeber/api/punch/list`, { params })
+// list
+export function getProject (params) {
+    return axios.get(`/fms/api/risk-check/page`, { params })
+}
+// 查询工程的详情 初审tab
+export const getProjectInformationDetail = (projectId) => axios.get(`/fms/api/risk-check/project/${projectId}`, {})

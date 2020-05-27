@@ -4,7 +4,7 @@
             <el-card class="box-card">
                 <el-tabs type="card">
                     <el-tab-pane label="初审">
-                        <tabPreliminaryReview />
+                        <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData />
                     </el-tab-pane>
                     <el-tab-pane label="项目资料清单">
                         <tabChecklist />
@@ -43,6 +43,8 @@
     终审结束：
     （1）初审、项目资料清单、立项、终审  tab页为查看状态
  */
+import { mapState, mapGetters, mapActions } from 'vuex'
+
 export default {
     name: 'approvalDetails',
     components: {
@@ -53,17 +55,32 @@ export default {
     },
     data () {
         return {
-            tabPosition: 'left'
+            tabPosition: 'left',
+            tabPreliminaryReviewData: ''
         }
     },
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            tabPreliminaryReview: 'projectInformation/tabPreliminaryReview'
+        })
+    },
     methods: {
+        ...mapActions({
+            findProjectInformationDetail: 'projectInformation/findProjectInformationDetail'
+        }),
         onBack () {
             this.$router.go(-1)
         }
 
     },
-    mounted () {
+    async mounted () {
         console.log('parent')
+        await this.findProjectInformationDetail(this.$route.query.projectId)
+        this.tabPreliminaryReviewData = this.tabPreliminaryReview
+        console.log('this.tabPreliminaryReviewData: ', this.tabPreliminaryReviewData)
     }
 }
 </script>
