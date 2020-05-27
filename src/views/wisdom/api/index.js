@@ -318,11 +318,38 @@ export function exportSprintIndex (params) {
 export function getSprintIndexList (params) {
     return axios.get(`/api/overdue/annual/target/profit/list`, { params })
 }
-// 冲刺值利润指标列表
+// 冲刺值利润指标合计
 export function getSprintIndexTotal (params) {
     return axios.get(`/api/overdue/annual/target/profit/total`, { params })
 }
 // 履约值利润指标列表
 export function getPerformanceIndexList (params) {
-    return axios.get(`/api/overdue/annual/target/profit/total`, { params })
+    return axios.get(`/api/overdue/annual/performance/value/list`, { params })
+}
+// 履约值利润指标合计
+export function getPerformanceIndexTotal (params) {
+    return axios.get(`/api/overdue/annual/performance/value/total`, { params })
+}
+// 履约值利润指标导出
+export function exportPerformanceIndex (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`/api/overdue/annual/performance/value/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '年度冲刺值.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
 }

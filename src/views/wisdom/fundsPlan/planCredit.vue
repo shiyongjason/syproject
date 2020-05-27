@@ -70,7 +70,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { approvalListHasDoneLabel, approvalListLabel } from './const'
 import { getFundPlanAll } from './api'
 import { clearCache, newCache } from '@/utils/index'
-import {mapState} from "vuex";
+import { mapState } from 'vuex'
 
 export default {
     name: 'planCredit',

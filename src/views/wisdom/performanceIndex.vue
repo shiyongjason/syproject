@@ -52,7 +52,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + '/api/overdue/annual/performance/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
@@ -70,7 +70,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { preformTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
+import { getCommitmentList, getCommitmentTotal, exportPerformanceIndex } from './api/index'
 import moment from 'moment'
 export default {
     name: 'performanceIndex',
@@ -173,7 +173,7 @@ export default {
         },
         onExport () {
             this.queryParams.totalAreaName = this.selectAuthLabelShow()
-            exportCommitment(this.queryParams)
+            exportPerformanceIndex(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
