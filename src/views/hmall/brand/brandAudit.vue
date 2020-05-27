@@ -161,7 +161,7 @@ export default {
                 { label: '供应商', prop: 'merchantName' },
                 { label: '申请品牌', prop: 'brandName' },
                 { label: '申请类目', prop: 'categories' },
-                { label: '申请时间', prop: 'auditTime' },
+                { label: '申请时间', prop: 'createTime' },
                 { label: '审核状态', prop: 'status' },
                 { label: '审核时间', prop: 'auditTime' }
             ],
