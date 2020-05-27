@@ -269,7 +269,7 @@ export default {
                         if (value.prop === key && res[1].data[key] != null) {
                             value.children.forEach(value1 => {
                                 if (key === 'planProportion') {
-                                    value1.label = String(res[1].data[key]) + '%'
+                                    value1.label = String(res[1].data[key] * 100) + '%'
                                 } else {
                                     value1.label = String(res[1].data[key])
                                 }
