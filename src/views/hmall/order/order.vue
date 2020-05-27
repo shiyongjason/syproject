@@ -339,6 +339,7 @@ export default {
             couponList: COUPON_TYPE,
             orderList: ORDER_TYPE,
             sourceList: SOURCE_LIST,
+            categoryOptions: [],
             activeName: '',
             queryParams: {
                 activityCode: '',
