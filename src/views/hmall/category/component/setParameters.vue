@@ -345,7 +345,7 @@ export default {
             }
 
             // 这里对参数字段进行了对象化处理，为了满足动态表单
-            let newArray = this.specificationsInfo.specifications.map(v => {
+            let newArray = (this.specificationsInfo.specifications || []).map(v => {
                 return {
                     ...v,
                     options: v.options.map(i => {
