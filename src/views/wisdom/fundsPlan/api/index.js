@@ -40,3 +40,7 @@ export const approveFundplan = (params) => axios.post(`backend/api/fund-plan/app
 export const getServeTime = () => axios.get(`backend/api/fund-plan/businessDate`)
 // 借款明细
 export const getLoanDetail = (params) => axios.get(`backend/api/fund-plan/query/loan-detail`, { params })
+// 资金计划审批列表
+export function getPlanApprovalList (params) {
+    return axios.get(`/api/overdue/annual/funplan/approve/value/list`, { params })
+}

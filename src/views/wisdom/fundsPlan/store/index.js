@@ -3,7 +3,8 @@ import * as Api from '../api'
 import moment from 'moment'
 const state = {
     planTotalList: [],
-    targetTime: ''
+    targetTime: '',
+    planApprovalList: []
 }
 
 const getters = {
@@ -14,7 +15,8 @@ const getters = {
             return moment(state.targetTime.businessDate).add(1, 'M').format('YYYYMM')
         }
         return moment(state.targetTime.businessDate).format('YYYYMM')
-    }
+    },
+    getPlanApprovalList: state => state.getPlanApprovalList
 }
 
 const mutations = {
@@ -28,6 +30,9 @@ const mutations = {
     },
     [types.TARGET_TIME] (state, payload) {
         state.targetTime = payload
+    },
+    [types.GET_PLAN_APPROVAL_LIST] (state, payload) {
+        state.planApprovalList = payload
     }
 }
 
@@ -39,6 +44,10 @@ const actions = {
     async findTargetTime ({ commit }, params) {
         const { data } = await Api.getServeTime()
         commit(types.TARGET_TIME, data)
+    },
+    async findPlanApprovalList ({ commit }, params) {
+        const { data } = await Api.getPlanApprovalList()
+        commit(types.GET_PLAN_APPROVAL_LIST, data)
     }
 }
 export default {

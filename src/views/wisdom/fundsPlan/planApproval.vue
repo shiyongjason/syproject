@@ -185,7 +185,8 @@ export default {
         },
         onReset () {
 
-        }
+        },
+        ...mapActions
     }
 }
 </script>
