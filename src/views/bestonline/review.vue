@@ -138,17 +138,17 @@ export default {
                 this.isfazhang = true
             }
             // 分部发展
-            if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
+            if ((deptType === 2 || deptType === 3) && (role.indexOf('fenbufazhan') !== -1)) {
                 this.iszongbu = false
                 this.updatebtn = false
                 this.submitbtn = true
             }
             // 分部财务
-            if (deptType === 2 && (role.indexOf('JDgroup-SegmentFinance') !== -1)) {
+            if ((deptType === 2 || deptType === 3) && (role.indexOf('JDgroup-SegmentFinance') !== -1)) {
                 this.iszongbu = false
             }
             // 分部运营
-            if (deptType === 2 && (role.indexOf('JDgroup-SegmentOperation') !== -1)) {
+            if ((deptType === 2 || deptType === 3) && (role.indexOf('JDgroup-SegmentOperation') !== -1)) {
                 this.iszongbu = false
             }
         },
