@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">开启时间：</div>
+                <div class="query-col-title">申请时间：</div>
                 <div class="query-col-input">
                     <el-date-picker v-model="queryParams.applicationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
