@@ -1,9 +1,13 @@
 
 import * as types from './crmTypes'
-import * as Api from './../api'
+import * as Api from '../api'
 const state = {
     projectData: {},
     projectDetail: {},
+    tabPreliminaryReview: '',
+    tabChecklist: '',
+    tabLetterTrial: '',
+    tabFinalReview: '',
     projectLoan: {},
     crmdepList: [],
     projectRecord: [],
@@ -17,7 +21,8 @@ const getters = {
     projectLoan: state => state.projectLoan,
     crmdepList: state => state.crmdepList,
     projectRecord: state => state.projectRecord,
-    punchList: state => state.punchList
+    punchList: state => state.punchList,
+    tabPreliminaryReview: state => state.tabPreliminaryReview
 
 }
 
@@ -39,6 +44,9 @@ const mutations = {
     },
     [types.PROJECT_PUNCH] (state, payload) {
         state.punchList = payload
+    },
+    [types.TABPRELIMINARYREVIEW] (state, payload) {
+        state.tabPreliminaryReview = payload
     }
 }
 
@@ -46,6 +54,10 @@ const actions = {
     async findProjetpage ({ commit }, params) {
         const { data } = await Api.getProject(params)
         commit(types.PROJECT_DATA, data)
+    },
+    async findProjectInformationDetail ({ commit }, params) {
+        const { data } = await Api.getProjectInformationDetail(params)
+        commit(types.TABPRELIMINARYREVIEW, data)
     },
     async findProjectDetail ({ commit }, params) {
         const { data } = await Api.getProjectDetail(params)

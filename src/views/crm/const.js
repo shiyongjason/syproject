@@ -70,14 +70,28 @@ export const AUTEHEN_LIST = [
     { key: 1, value: '已认证' },
     { key: 2, value: '未认证' }
 ]
-
+// 合作进度(好橙工项目资料)
+// 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 10：待终审 6：待签约 7：待放款 8：贷中 9：合作完成
 export const COOPERATION_PROGRESS_LIST = [
-    { key: 1, value: '资料搜集中' },
-    { key: 2, value: '待信审' },
-    { key: 3, value: '待终审' },
-    { key: 4, value: '待签约' },
-    { key: 5, value: '待放款' },
-    { key: 6, value: '贷中' },
-    { key: 7, value: '合作完成' },
-    { key: 8, value: '合作关闭' }
+    { key: 1, value: '待提交' },
+    { key: 2, value: '初审中' },
+    { key: 3, value: '资料收集中' },
+    { key: 4, value: '待立项' },
+    { key: 5, value: '合作关闭' },
+    { key: 10, value: '待终审' },
+    { key: 6, value: '待签约' },
+    { key: 7, value: '待放款' },
+    { key: 8, value: '贷中' },
+    { key: 9, value: '合作完成' }
+]
+// 上游供应商类型
+export const UPSTREAMSUPPLIERTYPE = [
+    { key: 1, value: '厂商' },
+    { key: 2, value: '代理商' },
+    { key: 3, value: '经销商' }
+]
+// 上游接受的付款方式
+export const UPSTREAMPAYTYPE = [
+    { key: 1, value: '现金' },
+    { key: 2, value: '承兑' }
 ]
