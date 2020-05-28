@@ -1,17 +1,6 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="rules" ref="colForm" class="demo-ruleForm">
-            <div class="collect-result">
-                <el-form-item label="终审结果：" prop="resource" label-width="100px">
-                    <el-radio-group v-model="colForm.resource">
-                        <el-radio label="线上品牌商赞助"></el-radio>
-                        <el-radio label="线下场地免费"></el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="说明：" prop="desc" label-width="100px">
-                    <el-input type="textarea" v-model="colForm.desc" maxlength="200" show-word-limit></el-input>
-                </el-form-item>
-            </div>
             <div>
                 <div class="collect-title">立项材料</div>
                 <el-form-item label="" prop="type" label-width="30px">
@@ -23,8 +12,8 @@
                             <p>规定格式：复印件</p>
                         </div>
                     </div>
-                    <hosjoyUpload v-if="isEdit" v-model="otherFiles.fileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('fileList','d-other')" style="margin-top:10px">
-                        <el-button type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
+                    <hosjoyUpload  v-model="fileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('fileList','d-other')" style="margin-top:10px">
+                        <el-button type="primary">上 传</el-button>
                     </hosjoyUpload>
 
                     <div class="collect-box">
@@ -60,7 +49,8 @@ export default {
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
-            }
+            },
+            fileList: []
         }
     }
 }

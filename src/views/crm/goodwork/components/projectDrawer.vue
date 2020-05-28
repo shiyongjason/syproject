@@ -2,7 +2,9 @@
     <div class="project-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-                <el-tab-pane :label=item.value :name=item.key v-for="item in tabs" :key=item.key></el-tab-pane>
+                <template v-for="item in tabs">
+                    <el-tab-pane :label=item.value :name=item.key :key=item.key v-if='item.key<11'></el-tab-pane>
+                </template>
             </el-tabs>
             <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad v-if="activeName==='1'"></projectCom>
             <datacolCom ref="datacolCom" v-if="activeName==='2'"></datacolCom>
@@ -13,9 +15,8 @@
                 <div class="drawer-button">
                     <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&status==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
-                        <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
                     </template>
-                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&status==3">
+                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&status==3&&activeName==='2'">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&status==4">

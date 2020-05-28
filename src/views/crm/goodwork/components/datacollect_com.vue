@@ -1,7 +1,8 @@
 <template>
     <div class="collect-wrap">
-        <el-form :model="colForm" :rules="rules" ref="colForm" label-width="10px" class="demo-ruleForm">
-            <div>
+        <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="10px" class="demo-ruleForm">
+            <el-button size="small" type="primary">打回记录</el-button>
+            <div class="collect-wrapbox">
                 <div class="collect-title">经销商</div>
                 <el-form-item label="" prop="type">
                     <div class="collect-box">
@@ -23,6 +24,17 @@
                 </el-form-item>
             </div>
         </el-form>
+        <el-dialog title="打回记录" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
+            <div class="project-record"  >
+                <el-timeline>
+                    <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
+                        <el-card>
+                           123
+                        </el-card>
+                    </el-timeline-item>
+                </el-timeline>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -35,7 +47,10 @@ export default {
     },
     data () {
         return {
-            colForm: {}
+            colForm: {},
+            colFormrules: [],
+            dialogVisible: false,
+            dialogRecord: []
         }
     }
 }
@@ -48,11 +63,15 @@ export default {
     font-size: 20px;
     color: #333333;
     border-bottom: 1px solid #e5e5e5;
+    margin-top: 10px;
 }
 .collect-box {
     display: flex;
     .el-checkbox {
         margin-right: 10px;
     }
+}
+.collect-wrapbox {
+    margin-left: 20px;
 }
 </style>
