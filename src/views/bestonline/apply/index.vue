@@ -164,7 +164,7 @@ export default {
             this.dialogVisible = true
         },
         async getDueapply () {
-            this.params.organizationCode = this.userInfo.deptDoc
+            this.params.organizationCode = this.userInfo.belongDeptCode
             this.params.role = sessionStorage.getItem('user_Data') ? JSON.parse(sessionStorage.getItem('user_Data')).positionCode : ''
             const { data } = await getDueapply(this.params)
             this.tableData = data.data.pageContent
