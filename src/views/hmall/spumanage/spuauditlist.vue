@@ -138,7 +138,7 @@ export default {
                 merchantName: '',
                 createTimeStart: '',
                 createTimeEnd: '',
-                checked: true
+                checked: false
             },
             copyParams: {},
             tableData: [],
