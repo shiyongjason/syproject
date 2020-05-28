@@ -110,7 +110,7 @@
                 </el-form-item>
             </el-form>
             <div class="mt10 center-btn">
-                <el-button @click="attributeVisible = false">取消</el-button>
+                <el-button @click="closeDialog">取消</el-button>
                 <el-button type="primary" @click="onSave">保存</el-button>
             </div>
         </el-dialog>
@@ -305,6 +305,11 @@ export default {
         onDelete (row) {
             if (row.k) {
                 this.multiSelection = [row]
+            } else {
+                if (this.multiSelection.length === 0) {
+                    this.$message.warning('请先选择参数')
+                    return
+                }
             }
             this.$confirm('是否删除该参数', '提示', {
                 confirmButtonText: '确定',

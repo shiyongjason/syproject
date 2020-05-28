@@ -11,7 +11,7 @@
                         {{form.categoryPathName}}
                     </el-form-item>
                     <el-form-item label="商品品牌：" style="width: 460px;">
-                        {{form.name}}
+                        {{form.brandName}}
                     </el-form-item>
                     <el-form-item label="商品型号：" style="width: 460px;">
                         <el-input v-model="form.model" disabled></el-input>
@@ -43,7 +43,6 @@
 
                 <el-form-item label="商品名称：" style="width: 460px;">
                     <el-input placeholder="" maxlength="100" v-model="form.name" :disabled="operate=='audit'">
-                        <template slot="prepend">{{brandName}}</template>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="imgUrls">
@@ -140,6 +139,7 @@ export default {
             form: {
                 brandId: '',
                 categoryId: '',
+                brandName: '',
                 model: '',
                 name: '',
                 isEnable: '',
@@ -228,9 +228,6 @@ export default {
             userInfo: state => state.userInfo
         }),
 
-        brandName () {
-            return this.brandOptions.find(v => v.value === this.form.brandId) ? this.brandOptions.find(v => v.value === this.form.brandId).label : ''
-        },
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -312,6 +309,7 @@ export default {
                 imgUrls: ''
             }
             this.pictureContainer = []
+            this.categoryIdArr = []
             this.$refs['formmain'].resetFields()
         },
 
@@ -432,6 +430,7 @@ export default {
                 brandId: data.brandId,
                 categoryId: data.categoryId,
                 categoryPathName: data.categoryPathName,
+                brandName: data.brandName,
                 model: data.model,
                 name: data.name,
                 reqDetailList: [
@@ -470,6 +469,7 @@ export default {
                 brandId: data.brandId,
                 categoryId: data.categoryId,
                 categoryPathName: data.categoryPathName || data.category, // 注意和模板详情的字段不一样
+                brandName: data.brandName,
                 model: data.model,
                 name: data.name,
                 isEnable: data.isEnable,
