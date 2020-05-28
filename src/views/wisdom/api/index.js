@@ -294,7 +294,7 @@ export function exportCommitment (params) {
 // 冲刺值利润指标
 export function exportSprintIndex (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`/api/overdue/annual/target/profit/export`, { params }).then(function (response) {
+    axios.get(`/backend/api/overdue/annual/target/profit/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
@@ -316,24 +316,24 @@ export function exportSprintIndex (params) {
 }
 // 冲刺值利润指标列表
 export function getSprintIndexList (params) {
-    return axios.get(`/api/overdue/annual/target/profit/list`, { params })
+    return axios.get(`/backend/api/overdue/annual/target/profit/list`, { params })
 }
 // 冲刺值利润指标合计
 export function getSprintIndexTotal (params) {
-    return axios.get(`/api/overdue/annual/target/profit/total`, { params })
+    return axios.get(`/backend/api/overdue/annual/target/profit/total`, { params })
 }
 // 履约值利润指标列表
 export function getPerformanceIndexList (params) {
-    return axios.get(`/api/overdue/annual/performance/value/list`, { params })
+    return axios.get(`/backend/api/overdue/annual/performance/value/list`, { params })
 }
 // 履约值利润指标合计
 export function getPerformanceIndexTotal (params) {
-    return axios.get(`/api/overdue/annual/performance/value/total`, { params })
+    return axios.get(`/backend/api/overdue/annual/performance/value/total`, { params })
 }
 // 履约值利润指标导出
 export function exportPerformanceIndex (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`/api/overdue/annual/performance/value/export`, { params }).then(function (response) {
+    axios.get(`/backend/api/overdue/annual/performance/value/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
@@ -352,4 +352,8 @@ export function exportPerformanceIndex (params) {
     }).catch(function () {
         axios.defaults.responseType = 'json'
     })
+}
+// 资金计划审批额度列表
+export function getPlanApprovalList (params) {
+    return axios.get(`/backend/api/overdue/annual/funplan/approve/value/list`, { params })
 }

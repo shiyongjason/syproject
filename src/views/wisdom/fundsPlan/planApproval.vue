@@ -22,13 +22,13 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
+                    <el-date-picker v-model="params.valueYear" type="year"  value-format='yyyy' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
+                    <el-button type="primary" class="ml20" @click="findPlanApprovalList({...params, pageSize:10, pageNumber: 1})">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -58,7 +58,7 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { departmentAuth } from '@/mixins/userAuth'
-import { mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { platformPlan } from './const'
 export default {
     name: 'planApproval',
@@ -103,8 +103,12 @@ export default {
                 }
             },
             params: {
-                selectTime: '',
-                subsectionCode: ''
+                valueYear: '',
+                regionCode: '',
+                subsectionCode: '',
+                misCode: '',
+                pageSize: 10,
+                pageNumber: 1
             },
             paramTargetDate: {
                 year: '',
@@ -114,6 +118,9 @@ export default {
                 total: 0
             }
         }
+    },
+    mounted () {
+        this.findPlanApprovalList(this.params)
     },
     methods: {
         linkage (dis) {
@@ -186,7 +193,9 @@ export default {
         onReset () {
 
         },
-        ...mapActions
+        ...mapActions({
+            findPlanApprovalList: 'fundsPlan/findPlanApprovalList'
+        })
     }
 }
 </script>

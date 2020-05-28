@@ -16,7 +16,7 @@ const getters = {
         }
         return moment(state.targetTime.businessDate).format('YYYYMM')
     },
-    getPlanApprovalList: state => state.getPlanApprovalList
+    getPlanApprovalList: state => state.planApprovalList
 }
 
 const mutations = {
@@ -46,7 +46,7 @@ const actions = {
         commit(types.TARGET_TIME, data)
     },
     async findPlanApprovalList ({ commit }, params) {
-        const { data } = await Api.getPlanApprovalList()
+        const { data } = await Api.getPlanApprovalList(params)
         commit(types.GET_PLAN_APPROVAL_LIST, data)
     }
 }
