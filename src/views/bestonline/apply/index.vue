@@ -127,7 +127,7 @@ export default {
             const deptType = this.userInfo.deptType
             const role = this.userInfo.role
             // 分部发展
-            if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
+            if ((deptType === 2 || deptType === 3) && (role.indexOf('fenbufazhan') !== -1)) {
                 this.addbtn = true
                 this.updatebtn = true
                 this.deletebtn = true
