@@ -75,7 +75,7 @@
                 </el-form-item>
 
                 <!-- 根据不同的选择出现不同的操作， -->
-                <template v-if="attributeForm.isCombobox === 1">
+                <div v-if="attributeForm.isCombobox === 1" class="isCombobox-box">
                     <el-form-item
                         v-for="(item, index) in attributeForm.options"
                         :label="'选项' + (index+1) + '：'"
@@ -96,7 +96,7 @@
                             @click="addOption(item)"
                         ></span>
                     </el-form-item>
-                </template>
+                </div>
 
                 <el-form-item label="单位：" prop="unit" v-show="attributeForm.isCombobox === 0">
                     <el-input type="input" v-model="attributeForm.unit" maxlength="20" placeholder="请输入单位"></el-input>
@@ -123,6 +123,7 @@ import {
 } from '../api/index.js'
 import { SETTING_REQUIRED_MAP, SETTING_TYPE_MAP } from '../const'
 import { mapState, mapActions } from 'vuex'
+import { deepCopy } from '@/utils/utils'
 export default {
     props: {
         categoryId: {
@@ -150,7 +151,7 @@ export default {
             attributeForm: {
                 k: '',
                 isCombobox: '',
-                isRequired: '',
+                isRequired: 0,
                 unit: '',
                 options: [
                     {
@@ -202,8 +203,8 @@ export default {
         onEdit (row) {
             this.attributeInfo.type = 'edit'
             this.attributeInfo.title = '参数编辑'
-            this.editObj = row
-            this.attributeForm = { ...row }
+            this.editObj = deepCopy(row)
+            this.attributeForm = deepCopy(row)
             this.attributeVisible = true
         },
 
@@ -324,7 +325,7 @@ export default {
             this.attributeForm = {
                 k: '',
                 isCombobox: '',
-                isRequired: '',
+                isRequired: 0,
                 unit: '',
                 options: [
                     {
@@ -394,5 +395,11 @@ export default {
     text-align: center;
     margin-top: 10px;
     margin-bottom: 20px;
+}
+.isCombobox-box {
+    height: 240px;
+    padding: 20px 0;
+    overflow-y: scroll;
+    border: 1px solid rgb(247, 229, 229);
 }
 </style>

@@ -96,7 +96,7 @@
                         ref="uploadImg"
                         @back-event="readUrl"/>
                     <div class="upload-tips">
-                        尺寸300x300,2m以内，支持jpg、jpeg、png`
+                        尺寸300x300,2m以内，支持jpg、jpeg、png
                     </div>
                 </el-form-item>
                 <el-form-item prop="description" label="品牌描述">

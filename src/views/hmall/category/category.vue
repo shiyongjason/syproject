@@ -136,7 +136,7 @@ export default {
                 },
                 {
                     title: '维护人',
-                    key: 'updateBy',
+                    key: 'operator',
                     align: 'center',
                     headerAlign: 'center'
                 },
