@@ -187,7 +187,6 @@ export default {
             }
         },
         async backPlat (val, dis) {
-            // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
@@ -279,6 +278,7 @@ export default {
         },
         ...mapActions({
             findPlanApprovalList: 'fundsPlan/findPlanApprovalList',
+            findAuthList: 'findAuthList',
             findTargetTime: 'fundsPlan/findTargetTime'
         })
     }
