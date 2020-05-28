@@ -171,7 +171,7 @@ export default {
                 }
             }
             if (dis === 'P') {
-                this.params.companyName = val.value.companyName ? val.value.companyName : ''
+                this.params.companyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
         }
     },
