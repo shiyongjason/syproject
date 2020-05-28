@@ -110,30 +110,6 @@
                 </el-form-item>
             </el-form>
 
-        <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
-            <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='信审'">
-                    <el-radio-group v-model="statusForm.result">
-                        <el-radio :label=1>通过</el-radio>
-                        <el-radio :label=0>不通过</el-radio>
-                        <el-radio :label=2 v-if="aduitTitle=='审核'">退回</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
-                    <el-radio-group v-model="statusForm.afterStatus">
-                        <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onUpdateAudit">确 定</el-button>
-            </span>
-        </el-dialog>
-
     </div>
 </template>
 <script>
@@ -160,16 +136,7 @@ export default {
             loading: false,
             statusTxt: '',
             dialogVisible: false,
-            statusForm: {
-                afterStatus: '',
-                createBy: '',
-                createByMobile: '',
-                projectId: '',
-                remark: '',
-                result: '',
-                reset: ''
-            },
-            copyStatusForm: {},
+
             aduitTitle: '',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '信审' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
                 { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
@@ -248,17 +215,6 @@ export default {
                         }
                     }
                 ]
-            },
-            statusRules: {
-                result: [
-                    { required: true, message: '请选择审核状态', trigger: 'change' }
-                ],
-                afterStatus: [
-                    { required: true, message: '请选择重置状态', trigger: 'change' }
-                ],
-                remark: [
-                    { required: true, message: '请输入说明', trigger: 'blur' }
-                ]
             }
         }
     },
@@ -296,96 +252,11 @@ export default {
         },
         onBackUpload (str) {
         },
-        async onAuditstatus (val) {
-            let status = Object.keys(val)[0]
-            let statusTxt = ''
-            if (status == 2) {
-                // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
-                this.dialogVisible = true
-                this.aduitTitle = '审核'
-                this.statusForm = { ...this.copyStatusForm }
-                this.statusForm.reset = false
-                this.$nextTick(() => {
-                    this.$refs['statusForm'].clearValidate()
-                })
-                return
-            } else if (status == 3) {
-                status = !!status // H5端资料收集种 显示重置按钮
-            } else if (status == 4) {
-                // status = !!status // H5端待信审 显示重置按钮和信审  这里需要弹窗  通过 不通过
-                this.dialogVisible = true
-                this.aduitTitle = '信审'
-                this.statusForm = { ...this.copyStatusForm }
-                this.statusForm.reset = false
-                this.$nextTick(() => {
-                    this.$refs['statusForm'].clearValidate()
-                })
-                return
-            } else if (status == 5) {
-                // status = !!status //  合作关闭显示 重置
-            } else if (status == 6) {
-                status = 7 //  H5端 待签约   显示重置和签约按钮
-            } else if (status == 7) {
-                status = 8 //  H5端 待放款   显示重置和放款按钮
-            } else if (status == 8) {
-                status = 9 //  H5端 贷种   显示重置和全部回款
-            } else if (status == 9) {
-                // status = !!status + 1 //  H5端 合作完成   显示重置
-            }
-            this.statusForm.reset = false
-            await saveStatus(
-                { projectId: this.projectForm.id,
-                    status: status,
-                    updateBy: this.userInfo.employeeName,
-                    createByMobile: this.userInfo.phoneNumber }
-            )
-            this.$message({
-                message: `${statusTxt}成功`,
-                type: 'success'
-            })
-            this.$emit('backEvent')
-        },
+
         onReststatus (val) {
-            if (val == 5) {
-                this.statusType = this.newstatusType
-            } else if (val == 6 || val == 7 || val == 8) {
-                this.statusType = this.newstatusType.slice(0, val - 3)
-            } else if (val == 10) {
-                this.statusType = this.newstatusType.slice(0, 1)
-            } else {
-                this.statusType = this.newstatusType.slice(0, val - 2)
-            }
 
-            this.statusForm = { ...this.copyStatusForm }
-            this.$nextTick(() => {
-                this.$refs['statusForm'].clearValidate()
-            })
-            this.statusForm.reset = true
-            this.dialogVisible = true
-            this.aduitTitle = '重置状态'
-            // saveStatus({ projectId: this.form.id, status: 1, updateBy: this.userInfo.employeeName })
         },
-        async onUpdateAudit () {
-            const msg = this.aduitTitle
-            this.statusForm.createBy = this.userInfo.employeeName
-            this.statusForm.createByMobile = this.userInfo.phoneNumber
-            this.statusForm.projectId = this.projectForm.id
-            this.$refs.statusForm.validate(async (valid) => {
-                if (valid) {
-                    try {
-                        await updateAudit(this.statusForm)
-                        this.dialogVisible = false
-                        this.$message({
-                            message: `${msg}成功`,
-                            type: 'success'
-                        })
-                        this.$emit('backEvent')
-                    } catch (error) {
 
-                    }
-                }
-            })
-        },
         isShowBtn (val) {
             const newVal = val && Object.keys(val)[0]
             if (newVal == 2 || newVal == 3 || newVal == 5 || newVal == 9) {

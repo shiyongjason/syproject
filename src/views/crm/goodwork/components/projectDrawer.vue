@@ -4,19 +4,20 @@
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                 <el-tab-pane :label=item.value :name=item.key v-for="item in tabs" :key=item.key></el-tab-pane>
             </el-tabs>
-            <projectCom ref="projectCom" :projectForm=form @onBackLoad = onBackLoad v-if="activeName==='1'"></projectCom>
+            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad v-if="activeName==='1'"></projectCom>
             <datacolCom ref="datacolCom" v-if="activeName==='2'"></datacolCom>
             <approveCom ref="approveCom" v-if="activeName==='3'"></approveCom>
             <finalCom ref="finalCom" v-if="activeName==='4'"></finalCom>
             <div class="drawer-footer">
+                {{status}}
                 <div class="drawer-button">
                     <template v-if="hosAuthCheck(crm_goodwork_shenpi)&&status==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                         <!-- <el-button type="warning" v-if="isShowRest(statusList[form.status-1])" @click="onReststatus(form.status)">重置状态2</el-button> -->
                     </template>
-                    <!-- <template  v-if="hosAuthCheck(crm_goodwork_wanshan)&&form.status==10">
-                        <el-button type="info"  @click="onAuditstatus(statusList[form.status-1])">信息待完善</el-button>
-                    </template> -->
+                    <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&status==3">
+                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                    </template>
                     <template v-if="hosAuthCheck(crm_goodwork_xinshen)&&status==4">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
@@ -29,13 +30,36 @@
                     <template v-if="hosAuthCheck(crm_goodwork_huikuan)&&status==8">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-
                     <template v-if="hosAuthCheck(crm_goodwork_chongzhi)">
                         <el-button type="warning" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</el-button>
                     </template>
                     <el-button @click="cancelForm">取 消</el-button>
                     <el-button v-if="hosAuthCheck(crm_goodwork_baocun)" type="primary" @click="onSaveproject()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+
                 </div>
+                <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
+                    <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
+                        <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'||aduitTitle=='信审'">
+                            <el-radio-group v-model="statusForm.result">
+                                <el-radio :label=1>通过</el-radio>
+                                <el-radio :label=0>不通过</el-radio>
+                                <el-radio :label=2 v-if="aduitTitle=='审核'">退回</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
+                            <el-radio-group v-model="statusForm.afterStatus">
+                                <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="说明：" prop="remark">
+                            <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="onUpdateAudit">确 定</el-button>
+                    </span>
+                </el-dialog>
             </div>
         </el-drawer>
 
@@ -46,8 +70,11 @@ import projectCom from './project_com'
 import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
 import finalCom from './final_com'
-import { mapActions, mapGetters } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
+import { updateAudit, saveStatus } from '../api/index'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+
 export default {
     name: 'projectdrawer',
     props: {
@@ -75,8 +102,33 @@ export default {
             crm_goodwork_baocun: newAuth.CRM_GOODWORK_BAOCUN, // 保存
             crm_goodwork_chongzhi: newAuth.CRM_GOODWORK_CHOINGZHI, // 重置
             crm_goodwork_wanshan: newAuth.CRM_GOODWORK_WANSHAN, // 重置
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '信审' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中（材料审核通过）' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }],
+            newstatusType: NEW_STATUS_TYPE,
+            dialogVisible: false,
+            aduitTitle: '',
+            remark: '',
+            statusForm: {
+                afterStatus: '',
+                createBy: '',
+                createByMobile: '',
+                projectId: '',
+                remark: '',
+                result: '',
+                reset: ''
+            },
+            statusRules: {
+                result: [
+                    { required: true, message: '请选择审核状态', trigger: 'change' }
+                ],
+                afterStatus: [
+                    { required: true, message: '请选择重置状态', trigger: 'change' }
+                ],
+                remark: [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ]
+            },
+            copyStatusForm: {},
             form: {
                 projectUpload: [],
                 loanPayTypeRate: '方法定义必填',
@@ -87,6 +139,9 @@ export default {
         }
     },
     computed: {
+        ...mapState({
+            userInfo: 'userInfo'
+        }),
         ...mapGetters({
             projectDetail: 'crmmanage/projectDetail'
         })
@@ -119,11 +174,97 @@ export default {
             this.form.upstreamPayTypearr = this.form.upstreamPayType ? this.form.upstreamPayType.split(',') : []
             this.copyForm = { ...this.form }
         },
-        onAuditstatus () {
-            // 调用子组件
-        },
-        onReststatus () {
+        async onAuditstatus (val) {
+            console.log(val)
+            let status = Object.keys(val)[0]
+            let statusTxt = ''
+            if (status == 2) {
+                // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
+                this.dialogVisible = true
+                this.aduitTitle = '审核'
+                this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.reset = false
+                this.$nextTick(() => {
+                    this.$refs['statusForm'].clearValidate()
+                })
+                return
+            } else if (status == 3) {
+                // 材料审核通过 显示重置按钮 去调用材料审批流程
 
+            } else if (status == 4) {
+                // status = !!status // H5端待信审 显示重置按钮和信审  这里需要弹窗  通过 不通过
+                this.dialogVisible = true
+                this.aduitTitle = '信审'
+                this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.reset = false
+                this.$nextTick(() => {
+                    this.$refs['statusForm'].clearValidate()
+                })
+                return
+            } else if (status == 5) {
+                // status = !!status //  合作关闭显示 重置
+            } else if (status == 6) {
+                status = 7 //  H5端 待签约   显示重置和签约按钮
+            } else if (status == 7) {
+                status = 8 //  H5端 待放款   显示重置和放款按钮
+            } else if (status == 8) {
+                status = 9 //  H5端 贷种   显示重置和全部回款
+            } else if (status == 9) {
+                // status = !!status + 1 //  H5端 合作完成   显示重置
+            }
+            this.statusForm.reset = false
+            await saveStatus(
+                { projectId: this.form.id,
+                    status: status,
+                    updateBy: this.userInfo.employeeName,
+                    createByMobile: this.userInfo.phoneNumber }
+            )
+            this.$message({
+                message: `${statusTxt}成功`,
+                type: 'success'
+            })
+            this.$emit('backEvent')
+        },
+        onReststatus (val) {
+            if (val == 5) {
+                this.statusType = this.newstatusType
+            } else if (val == 6 || val == 7 || val == 8) {
+                this.statusType = this.newstatusType.slice(0, val - 3)
+            } else if (val == 10) {
+                this.statusType = this.newstatusType.slice(0, 1)
+            } else {
+                this.statusType = this.newstatusType.slice(0, val - 2)
+            }
+
+            this.statusForm = { ...this.copyStatusForm }
+            this.$nextTick(() => {
+                this.$refs['statusForm'].clearValidate()
+            })
+            this.statusForm.reset = true
+            this.dialogVisible = true
+            this.aduitTitle = '重置状态'
+            // saveStatus({ projectId: this.form.id, status: 1, updateBy: this.userInfo.employeeName })
+        },
+        async onUpdateAudit () {
+            const msg = this.aduitTitle
+            this.statusForm.createBy = this.userInfo.employeeName
+            this.statusForm.createByMobile = this.userInfo.phoneNumber
+            this.statusForm.projectId = this.form.id
+            this.$refs.statusForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await updateAudit(this.statusForm)
+                        this.dialogVisible = false
+                        this.$message({
+                            message: `${msg}成功`,
+                            type: 'success'
+                        })
+                        this.$emit('backEvent')
+                    } catch (error) {
+
+                    }
+                }
+            })
         },
         onSaveproject () {
             // 初审详情保存

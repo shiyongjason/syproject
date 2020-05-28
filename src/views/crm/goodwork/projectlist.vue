@@ -260,7 +260,7 @@ export default {
     },
     async mounted () {
         this.queryParams.jobNumber = this.userInfo.jobNumber
-        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
+        this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()

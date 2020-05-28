@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont risk-table">
-            <div class="risk-table_title">好橙工项目材料清单</div>
+            <div class="risk-table_title">{{tempName}}</div>
             <table class="tablelist">
                 <thead>
                     <tr>
@@ -72,7 +72,7 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onSaveTemp" :loading=loading>{{loading?'保存中':'确 定'}}</el-button>
             </span>
         </el-dialog>
@@ -110,7 +110,8 @@ export default {
             docTable: [],
             formTemp: {
                 projectUpload: []
-            }
+            },
+            tempName: ''
         }
     },
     computed: {
@@ -120,6 +121,7 @@ export default {
         })
     },
     mounted () {
+        this.tempName = this.$route.query.bizType == 1 ? '好橙工项目材料清单' : this.$route.query.bizType == 2 ? '好橙工信审材料清单' : '好橙工终审材料清单'
         this.onFindDoctemp()
     },
     methods: {
@@ -132,7 +134,7 @@ export default {
             this.docTable = this.docTempdata.records
         },
         handleClose () {
-
+            this.dialogVisible = false
         },
         onBackUpload (str) {
             this.formTemp.projectUpload && this.formTemp.projectUpload.map((val, index) => {
