@@ -26,7 +26,7 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">上线时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期">
