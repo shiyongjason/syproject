@@ -295,7 +295,6 @@ export default {
     },
     watch: {
         pictureContainer (val) {
-            console.log(val)
             this.$nextTick(() => {
                 if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
             })
@@ -498,7 +497,6 @@ export default {
         },
         /** 刷单 */
         onOrder (val) {
-            console.log(this.form.status)
             // 刷单前置条件：活动已经开启，库存不为零。
             if (this.form.status == 1) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)

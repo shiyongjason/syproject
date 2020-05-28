@@ -130,12 +130,12 @@ export default {
     async mounted () {
         this.findAllCategory()
         this.findAllBrands()
-        // this.searchList()
+        this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    activated () {
-        this.searchList()
-    },
+    // activated () {
+    //     this.searchList()
+    // },
     methods: {
         ...mapActions('category', [
             'findAllCategory'

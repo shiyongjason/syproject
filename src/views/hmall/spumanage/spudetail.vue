@@ -266,12 +266,8 @@ export default {
 
     },
     async mounted () {
-        this.findAllCategory()
-        this.findAllBrands()
-    },
-
-    // 因为keepAlive的原因，需要做很多重置工作
-    activated () {
+        await this.findAllCategory()
+        await this.findAllBrands()
         this.operate = this.$route.query.type
         if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
             this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
@@ -280,6 +276,18 @@ export default {
         } else {
             this.resetForm()
         }
+    },
+
+    // 因为keepAlive的原因，需要做很多重置工作
+    activated () {
+        // this.operate = this.$route.query.type
+        // if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
+        //     this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
+        // } else if (this.$route.query.type === 'audit' && this.$route.query.spuId) {
+        //     this.findSpuDetailAsync(this.$route.query.spuId)
+        // } else {
+        //     this.resetForm()
+        // }
     },
     methods: {
         ...mapActions('category', [
@@ -298,6 +306,7 @@ export default {
             this.form = {
                 brandId: '',
                 categoryId: '',
+                brandName: '',
                 model: '',
                 name: '',
                 isEnable: '',
@@ -310,7 +319,7 @@ export default {
             }
             this.pictureContainer = []
             this.categoryIdArr = []
-            this.$refs['formmain'].resetFields()
+            this.$refs['formmain'].clearValidate()
         },
 
         // 类目改变的方法
