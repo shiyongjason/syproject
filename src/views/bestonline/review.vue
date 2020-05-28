@@ -165,7 +165,7 @@ export default {
             this.getDuemain()
         },
         async  getDuemain () {
-            this.params.organizationCode = this.userInfo.deptDoc
+            this.params.organizationCode = this.userInfo.belongDeptCode
             this.params.role = sessionStorage.getItem('user_Data') ? JSON.parse(sessionStorage.getItem('user_Data')).positionCode : ''
             const { data } = await getDuemain(this.params)
             this.tableData = data.data.pageContent
