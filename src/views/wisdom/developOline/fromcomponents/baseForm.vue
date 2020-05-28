@@ -26,17 +26,11 @@
             <el-form-item label="公司简称：" prop="companyShortName">
                 <el-input v-model.trim="baseForm.companyShortName" placeholder="输入公司简称" maxlength="64" class="deveInput"></el-input>
             </el-form-item>
-            <el-form-item label="分部：" prop="subsectionCode">
-                <el-select v-model.trim="baseForm.subsectionCode" placeholder="请选择分部">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option :label="item.organizationName" :value="item.organizationCode" v-for="(item,index) in companyData" :key=index></el-option>
-                </el-select>
+            <el-form-item label="分部：" prop="ehrSubsectionCode">
+                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
             </el-form-item>
             <el-form-item label="区域：">
-                <el-select v-model.trim="baseForm.subregionCode" placeholder="请选择区域">
-                    <el-option label="请选择" value=""></el-option>
-                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in regionalismList" :key="item.pkDeptDoc"></el-option>
-                </el-select>
+                <HAutocomplete :selectArr="areaListNew" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
             </el-form-item>
             <el-form-item label="地址：" required>
                 <el-col :span="4">
@@ -102,7 +96,6 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="经营范围：">
-                <!-- <el-input v-model.trim="baseForm.businessScope" placeholder="" maxlength="64" class="deveInput"></el-input> -->
                 <el-input type="textarea" placeholder="请输入经营范围" v-model="baseForm.businessScope" maxlength="255" show-word-limit>
                 </el-input>
             </el-form-item>
@@ -143,16 +136,28 @@ import { mapActions, mapState, mapGetters } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { PHONE, checkIdCard } from '@/utils/rules'
 import { FORMAT_LIST } from '../../store/const'
-import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff } from '../../api/index'
+import { departmentAuth } from '@/mixins/userAuth'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { getCheckField, updateDevelopbasic, getTycHolder, getTycBasicInfo, getTycMainStaff, findAllBranchList } from '../../api/index'
 export default {
+    name: 'baseForm',
+    mixins: [departmentAuth],
+    components: {
+        HAutocomplete
+    },
     props: {
         baseForm: {
+            type: Object,
+            default: () => { }
+        },
+        selectAuth: {
             type: Object,
             default: () => { }
         }
     },
     data () {
         return {
+            pageInit: 0,
             loading: false,
             type: this.$route.query.type,
             companyData: [],
@@ -174,8 +179,8 @@ export default {
                 companyShortName: [
                     { required: true, message: '输入公司简称', trigger: 'blur' }
                 ],
-                subsectionCode: [
-                    { required: true, message: '请选择分部', trigger: 'change' }
+                ehrSubsectionCode: [
+                    { required: true, message: '请选择分部' }
                 ],
                 areaCode: [
                     { required: true, message: '请选择区', trigger: 'change' }
@@ -219,14 +224,15 @@ export default {
             mainSystemList: [],
             radio: '',
             oneimageUrl: '',
-            twoimageUrl: ''
+            twoimageUrl: '',
+            branchList: []
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
             regionalismList: state => state.areaList,
-            devDepList: state => state.devDepList
+            areaListNew: state => state.areaList
         }),
         ...mapGetters({
             nestDdata: 'nestDdata',
@@ -257,21 +263,31 @@ export default {
         }
     },
     watch: {
-
+        'baseForm.ehrSubsectionCode' (newVal) {
+            if (newVal) {
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: newVal || this.userInfo.pkDeptDoc
+                })
+            }
+        }
     },
     mounted () {
-        this.onFinddevlist()
         this.onFindNest()
         this.onFindCompanyType()
         this.onFindSystemType()
-        this.findAuthList({
-            deptType: 'Q',
-            pkDeptDoc: this.userInfo.pkDeptDoc
-        })
+        this.findAllBranchList()
     },
     methods: {
+        async findAllBranchList () {
+            const { data } = await findAllBranchList()
+            for (let i of data) {
+                i.value = i.deptName
+                i.selectCode = i.pkDeptDoc
+            }
+            this.branchList = data
+        },
         ...mapActions({
-            getDevdeplist: 'getDevdeplist',
             findAuthList: 'findAuthList',
             findNest: 'findNest',
             findCompanyType: 'developmodule/findCompanyType',
@@ -306,10 +322,6 @@ export default {
                     this.$set(this.baseForm.developSignInfoCreateForm, 'generalManager', item.name)
                 }
             })
-        },
-        async onFinddevlist () {
-            await this.getDevdeplist({ organizationType: 1 })
-            this.companyData = this.devDepList.data
         },
         async onFindCompanyType () {
             await this.findCompanyType({ 'dictCateName': 'company_type' })
@@ -382,6 +394,27 @@ export default {
                     this.loading = false
                 }
             })
+        },
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.baseForm.ehrSubsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.baseForm.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.$refs['baseForm'].clearValidate()
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc
+                })
+                !val.value.crmDeptCode && this.linkage(dis)
+            } else if (dis === 'Q') {
+                this.baseForm.subregionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+            }
+        },
+        linkage () {
+            this.baseForm.subregionCode = ''
+            this.selectAuth.areaObj = {
+                selectCode: '',
+                selectName: ''
+            }
         }
     }
 }

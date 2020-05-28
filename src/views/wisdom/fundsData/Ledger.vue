@@ -8,19 +8,16 @@
                     </el-input>
                 </div>
             </div>
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-if="branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' clearable @change="findPlatformslistByBranchList">
-                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptName" :value="item.crmDeptCode">
-                        </el-option>
-                    </el-select>
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">平台公司名：</div>
+                <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
+                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -80,17 +77,18 @@ import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WIS
 import { downloadCloudAlarmList } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
-import { departmentAuth } from './mixins/userAuth'
-import { createNamespacedHelpers } from 'vuex'
-const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
+import { departmentAuth } from '@/mixins/userAuth'
+import { createNamespacedHelpers, mapState } from 'vuex'
+const { mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'standingBook',
     mixins: [departmentAuth],
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
-            pagination: state => state.pagination,
-            branchList: state => state.branchList
+            pagination: state => state.fundsData.pagination,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         }),
         ...mapGetters(['platformData', 'tableData']),
         accountName () {
@@ -128,42 +126,56 @@ export default {
             exposure_orange: WISDOM_EXPOSURE_ORANGE,
             pointscredit_good_credit: WISDOM_POINTSCREDIT_GOOD_CREDIT,
             account_export: WISDOM_ACCOUNT_EXPORT,
-            hasNoneAuth: false
+            hasNoneAuth: false,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     async mounted () {
         this.getUserTabAuth()
         this.onSearch()
-        await this.oldBossAuth()
-        if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.branchList[0] ? this.branchList[0].crmDeptCode : ''
-        }
+        await this.newBossAuth(['F', 'P'])
     },
     methods: {
         ...mapActions([
             'findPlatformslist',
             'getAccountList',
             'getRepaymentList',
-            'findBranchList',
             'findSummaryList'
         ]),
-        // 埋点
-        // tracking (event) {
-        //     this.$store.dispatch('tracking', {
-        //         type: 9,
-        //         event,
-        //         page: 2,
-        //         page_name: '额度导入',
-        //         page_path_name: 'amountImport'
-        //     })
-        // },
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.queryParams.loanCompanyCode = ''
+            this.queryParams.loanCompanyName = ''
+            this.selectAuth.areaObj = { ...obj }
+            this.selectAuth.platformObj = { ...obj }
+        },
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                }
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.loanCompanyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.queryParams.loanCompanyName = val.value.companyShortName ? val.value.companyShortName : ''
+            }
+        },
         findPlatformslistByBranchList () {
             let subsectionCode = this.queryParams.subsectionCode
             this.findPlatformslist({ subsectionCode })
-        },
-        backPlat (value) {
-            this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
-            this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
         },
         handleClick (i) {
             if (i == 1) {
@@ -228,7 +240,7 @@ export default {
             this.removeValue = !this.removeValue
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
-            if (this.userInfo.deptType != 2) this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'standingBookNo', '')
             this.$set(this.queryParams, 'loanCompanyCode', '')
             this.$set(this.queryParams, 'loanCompanyName', '')

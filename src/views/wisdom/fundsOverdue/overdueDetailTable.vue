@@ -72,7 +72,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
                 </hosJoyTable>
             </div>
         </div>
@@ -161,7 +161,12 @@ export default {
             platformData: state => state.platformData
         }),
         column () {
-            return overdueDetailTable()
+            return overdueDetailTable
+        },
+        fixedHeight () {
+            let oneHeight = 71
+            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
+            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
@@ -224,12 +229,12 @@ export default {
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
                 })
                 // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
                     this.findPlatformslist()
                 }
-                !val.value.crmDeptCode && this.linkage(dis)
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'Q') {
                 // this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 // // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
@@ -259,8 +264,28 @@ export default {
         async onQuery () {
             const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                res[1].data.standingBookNo = '合计'
-                res[0].data.records.unshift(res[1].data)
+                for (let key in res[1].data) {
+                    overdueDetailTable.forEach(value => {
+                        if (value.prop === key && res[1].data[key] != null) {
+                            value.children.forEach(value1 => {
+                                if (key === 'planProportion') {
+                                    value1.label = String(res[1].data[key] * 100) + '%'
+                                } else {
+                                    value1.label = String(res[1].data[key])
+                                }
+                            })
+                        }
+                        if (value.label === '2020年度还款计划') {
+                            value.children.forEach(value1 => {
+                                value1.children.forEach(value2 => {
+                                    if (value2.prop === key && res[1].data[key] != null) {
+                                        value2.label = String(res[1].data[key])
+                                    }
+                                })
+                            })
+                        }
+                    })
+                }
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
@@ -307,7 +332,7 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             // this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.oldBossAuth()
+            await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
         isSuccess (response) {
@@ -343,7 +368,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>
@@ -370,4 +395,7 @@ export default {
     background-color: rgba($color: #c65911, $alpha: 0.5) !important;
     color: #fff !important;
 }
+    /deep/.overdueTable td{
+        height: 71px;
+    }
 </style>

@@ -55,7 +55,7 @@ export const hexoList = (params) => {
 
 // 分部目标管理列表
 export const findBrandTargetTable = (params) => {
-    return axios.get('rms/subsectiontarget/queryPageList', {
+    return axios.get('rms/api/subsection/target/page', {
         params
     })
 }
@@ -75,7 +75,7 @@ export const findRegionList = (params) => {
 }
 // 获取平台目标列表
 export const findTableList = (params) => {
-    return axios.get('rms/companyTarget/queryPageList', {
+    return axios.get('rms/api/company/target/pages', {
         params
     })
 }
@@ -97,13 +97,13 @@ export const getPlatformSaleSum = (params) => {
 }
 // 获取分部销售分析列表
 export const getBranchSale = (params) => {
-    return axios.get('rms/subsection-sale/adjective', {
+    return axios.get('rms/api/subsection-sale/adjective', {
         params
     })
 }
 // 获取分部销售分析列表 合计
 export const getBranchSaleSum = (params) => {
-    return axios.get('rms/subsection-sale/total', {
+    return axios.get('rms/api/subsection-sale/total', {
         params
     })
 }
@@ -147,12 +147,12 @@ export const findSubsectionList = (params) => {
     })
 }
 export const getCompany = (params) => {
-    return axios.get('rms/companyTarget/queryCompanyShortName', {
+    return axios.get('rms/api/company/target/short-names', {
         params
     })
 }
 export const getCityList = (params) => {
-    return axios.get('rms/companyTarget/queryCity', {
+    return axios.get('rms/api/company/target/cities', {
         params
     })
 }
@@ -356,4 +356,88 @@ export function exportPerformanceIndex (params) {
 // 资金计划审批额度列表
 export function getPlanApprovalList (params) {
     return axios.get(`/backend/api/overdue/annual/funplan/approve/value/list`, { params })
+}
+
+// 分部目标导出
+export function exportBranchTarget (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`rms/api/subsection/target/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '分部目标管理.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 平台公司目标导出
+export function exportPlatTarget (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`rms/api/company/target/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '平台公司目标目标管理.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+
+// 分部列表查询
+export const findAllBranchList = (params) => {
+    return axios.get('/uaa/department/subsections', { params })
+}
+// 大区列表查询
+export const findAllRegionList = (params) => {
+    return axios.get('/uaa/department/regions', { params })
+}
+
+// 分部销售导出
+export function exportBranchSale (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`rms/api/subsection-sale/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '分部销售分析.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 平台目标管理
+export const findPlatformTargetPlat = (params) => {
+    return axios.get('rms/api/company/target/companies', { params })
 }
