@@ -177,7 +177,7 @@ export default {
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage()
             } else if (dis === 'P') {

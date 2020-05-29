@@ -166,8 +166,10 @@ export default {
                     selectCode: '',
                     selectName: ''
                 }
-                if (val.value) {
-                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                if (this.params.subSectionCode) {
+                    this.findPlatformslist({ subsectionCode: this.params.subSectionCode })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
             }
             if (dis === 'P') {

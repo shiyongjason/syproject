@@ -282,7 +282,12 @@ export default {
         backPlat (val, dis) {
             if (dis === 'F') {
                 this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findPlatformTargetPlat(this.searchParams.subsectionCode)
+                if (this.searchParams.subsectionCode) {
+                    this.findPlatformTargetPlat(this.searchParams.subsectionCode)
+                } else {
+                    !this.userInfo.deptType && this.findPlatformTargetPlat(this.userInfo.pkDeptDoc)
+                }
+                this.searchParams.misCode = ''
                 !val.value.pkDeptDoc && this.linkage()
             } else if (dis === 'P') {
                 this.searchParams.misCode = val.value.misCode ? val.value.misCode : ''

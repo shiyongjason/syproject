@@ -29,7 +29,7 @@ export const departmentAuth = {
                     break
                 case 2:
                     this.branch = false
-                    data[0] && this.findPlatformslist({ subsectionCode: data[0].crmDeptCode })
+                    data[0] && this.findPlatformslist({ subsectionCode: data[0].pkDeptDoc })
                     break
                 default:
             }

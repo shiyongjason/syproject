@@ -194,6 +194,7 @@ export default {
                 selectName: ''
             }
             if (dis === 'F') {
+                this.queryParams.companyCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
@@ -201,10 +202,15 @@ export default {
         async backPlat (val, dis) {
             if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                if (this.queryParams.subsectionCode) {
+                    this.findPlatformslist({ subsectionCode: this.queryParams.subsectionCode })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
+                }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         async getPlatCategory (params) {
