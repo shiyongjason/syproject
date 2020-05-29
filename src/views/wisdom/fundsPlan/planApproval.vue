@@ -40,30 +40,30 @@
             </div>
         </div>
         <div class="tips">
-            <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
+            <p><b>{{params.valueYear}}</b>年<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total">
+            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planApprovalList" align="center"
+                         :total="planApprovalPagination.total" :showPagination="true">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
             </hosJoyTable>
         </div>
-        <el-dialog title="冲刺值利润指标导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
+        <el-dialog title="资金计划审批额度导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        冲刺值利润指标导入模板导出
+                    <a class="downloadExcel" href="/excelTemplate/资金计划审批额度.xlsx" download="资金计划审批额度.xls">
+                        资金计划审批额度导入模板导出
                     </a>
                 </el-form-item>
                 <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="uploadData.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + '/api/overdue/annual/target/profit/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/funplan/approve/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
@@ -79,8 +79,9 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { platformPlan } from './const'
+import { planApproval } from './const'
 import { interfaceUrl } from '@/api/config'
+import { exportPlanApproval } from '../api'
 export default {
     name: 'planApproval',
     mixins: [departmentAuth],
@@ -92,12 +93,11 @@ export default {
             platformData: state => state.platformData
         }),
         ...mapGetters({
-            planTotalList: 'fundsPlan/planTotalList',
+            planApprovalList: 'fundsPlan/planApprovalList',
+            planApprovalTotal: 'fundsPlan/planApprovalTotal',
+            planApprovalPagination: 'fundsPlan/planApprovalPagination',
             targetTime: 'fundsPlan/targetTime'
-        }),
-        columnData () {
-            return platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
-        }
+        })
     },
     components: {
         hosJoyTable,
@@ -131,19 +131,12 @@ export default {
                 pageSize: 10,
                 pageNumber: 1
             },
-            paramTargetDate: {
-                year: '',
-                mouth: ''
-            },
-            page: {
-                total: 0
-            },
             dialogFormVisible: false,
             uploadData: {
-                commitmentYear: ''
+                valueYear: ''
             },
             rules: {
-                commitmentYear: [
+                valueYear: [
                     { required: true, message: '请选择年', trigger: 'blur' }
                 ]
             },
@@ -153,14 +146,26 @@ export default {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
             },
             loading: false,
-            accept: '.xlsx,.xls'
+            accept: '.xlsx,.xls',
+            columnData: []
         }
     },
     async mounted () {
         await this.findTargetTime()
-        // console.log(this.targetTime)
-        this.params.valueYear = this.targetTime
+        this.params.valueYear = this.targetTime.slice(0, 4)
         this.findPlanApprovalList(this.params)
+        await this.findPlanApprovalTotal(this.params)
+        const columnData = planApproval(this.params.valueYear)
+        columnData.forEach((value, index) => {
+            if (index > 3) {
+                value.children.forEach((val) => {
+                    if (this.planApprovalTotal[val.prop]) {
+                        val.label = String(this.planApprovalTotal[val.prop])
+                    }
+                })
+            }
+        })
+        this.columnData = columnData
     },
     methods: {
         linkage (dis) {
@@ -188,14 +193,14 @@ export default {
         },
         async backPlat (val, dis) {
             if (dis === 'D') {
-                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.params.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
-                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
+                this.params.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.params.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
@@ -214,7 +219,7 @@ export default {
                     this.findPlatformslist({ subregionCode: val.value.selectCode })
                 } else {
                     let params = null
-                    if (this.queryParams.subsectionOldCode) {
+                    if (this.params.subsectionOldCode) {
                         params = {
                             subsectionCode: this.queryParams.subsectionOldCode
                         }
@@ -223,11 +228,12 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+                this.params.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-
+            this.params.totalAreaName = this.selectAuthLabelShow()
+            exportPlanApproval(this.params)
         },
         onShowImport () {
             this.dialogFormVisible = true
@@ -240,7 +246,7 @@ export default {
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
+            if (!this.uploadData.valueYear) {
                 this.$message({
                     message: '请先选择导入年份！',
                     type: 'warning'
@@ -267,7 +273,9 @@ export default {
                 type: 'success'
             })
             this.loading = false
-            this.onSearch()
+            this.findPlanApprovalList(this.params)
+            this.uploadData.valueYear = ''
+            this.dialogFormVisible = false
         },
         isError (response) {
             this.$message({
@@ -278,6 +286,7 @@ export default {
         },
         ...mapActions({
             findPlanApprovalList: 'fundsPlan/findPlanApprovalList',
+            findPlanApprovalTotal: 'fundsPlan/findPlanApprovalTotal',
             findAuthList: 'findAuthList',
             findTargetTime: 'fundsPlan/findTargetTime'
         })
@@ -303,5 +312,8 @@ export default {
                 float: right;
             }
         }
+    }
+    .upload-demo {
+        display: inline-block;
     }
 </style>

@@ -4,7 +4,9 @@ import moment from 'moment'
 const state = {
     planTotalList: [],
     targetTime: '',
-    planApprovalList: []
+    planApprovalList: [],
+    planApprovalTotal: {},
+    planApprovalPagination: {}
 }
 
 const getters = {
@@ -16,7 +18,9 @@ const getters = {
         }
         return moment(state.targetTime.businessDate).format('YYYYMM')
     },
-    getPlanApprovalList: state => state.planApprovalList
+    planApprovalList: state => state.planApprovalList,
+    planApprovalPagination: state => state.planApprovalPagination,
+    planApprovalTotal: state => state.planApprovalTotal
 }
 
 const mutations = {
@@ -31,8 +35,14 @@ const mutations = {
     [types.TARGET_TIME] (state, payload) {
         state.targetTime = payload
     },
-    [types.GET_PLAN_APPROVAL_LIST] (state, payload) {
+    [types.PLAN_APPROVAL_LIST] (state, payload) {
         state.planApprovalList = payload
+    },
+    [types.PLAN_APPROVAL_PAGINATION] (state, payload) {
+        state.planApprovalPagination = payload
+    },
+    [types.PLAN_APPROVAL_TOTAL] (state, payload) {
+        state.planApprovalTotal = payload
     }
 }
 
@@ -47,7 +57,16 @@ const actions = {
     },
     async findPlanApprovalList ({ commit }, params) {
         const { data } = await Api.getPlanApprovalList(params)
-        commit(types.GET_PLAN_APPROVAL_LIST, data)
+        commit(types.PLAN_APPROVAL_LIST, data.records)
+        commit(types.PLAN_APPROVAL_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findPlanApprovalTotal ({ commit }, params) {
+        const { data } = await Api.getPlanApprovalTotal(params)
+        commit(types.PLAN_APPROVAL_TOTAL, data)
     }
 }
 export default {

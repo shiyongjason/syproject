@@ -124,6 +124,7 @@ export const summarySheet = function (targetYear, targetMonth) {
         }
     ]
 }
+// 平台公司计划分析
 export const platformPlan = function (targetYear, targetMonth) {
     return [
         {
@@ -346,6 +347,192 @@ export const platformPlan = function (targetYear, targetMonth) {
                             label: `-`
                         }
                     ]
+                }
+            ]
+        }
+    ]
+}
+// 平台公司计划分析
+export const planApproval = function (targetYear) {
+    return [
+        {
+            prop: 'misCode',
+            label: '公司编码',
+            width: '100',
+            fixed: true,
+            children: [
+                {
+                    prop: 'misCode',
+                    label: `-`
+                }
+            ]
+        },
+        {
+            prop: 'companyName',
+            label: '平台公司名称',
+            width: '100',
+            fixed: true,
+            children: [
+                {
+                    prop: 'companyName',
+                    label: `-`
+                }
+            ]
+        },
+        {
+            prop: 'subsectionName',
+            label: '分部',
+            width: '100',
+            fixed: true,
+            children: [
+                {
+                    prop: 'subsectionName',
+                    label: `-`
+                }
+            ]
+        },
+        {
+            prop: 'regionName',
+            label: '大区',
+            width: '100',
+            fixed: true,
+            children: [
+                {
+                    prop: 'organizationName',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'januaryValue',
+            label: '1月',
+            width: '100',
+            children: [
+                {
+                    prop: 'januaryValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'februaryValue',
+            label: '2月',
+            fixed: true,
+            children: [
+                {
+                    prop: 'februaryValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'marchValue',
+            label: '3月',
+            width: '100',
+            fixed: true,
+            children: [
+                {
+                    prop: 'marchValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'aprilValue',
+            label: '4月',
+            width: '100',
+            children: [
+                {
+                    prop: 'aprilValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'mayValue',
+            label: '5月',
+            width: '100',
+            children: [
+                {
+                    prop: 'mayValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'juneValue',
+            label: '6月',
+            width: '100',
+            children: [
+                {
+                    prop: 'juneValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'julyValue',
+            label: '7月',
+            width: '100',
+            children: [
+                {
+                    prop: 'julyValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'augustValue',
+            label: '8月',
+            width: '100',
+            children: [
+                {
+                    prop: 'augustValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'septemberValue',
+            label: '9月',
+            width: '100',
+            children: [
+                {
+                    prop: 'septemberValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'octoberValue',
+            label: '10月',
+            width: '100',
+            children: [
+                {
+                    prop: 'octoberValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'novemberValue',
+            label: '11月',
+            width: '100',
+            children: [
+                {
+                    prop: 'novemberValue',
+                    label: `合计`
+                }
+            ]
+        },
+        {
+            prop: 'decemberValue',
+            label: '12月',
+            width: '100',
+            children: [
+                {
+                    prop: 'decemberValue',
+                    label: `合计`
                 }
             ]
         }

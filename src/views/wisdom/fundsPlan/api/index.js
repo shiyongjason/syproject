@@ -44,3 +44,7 @@ export const getLoanDetail = (params) => axios.get(`backend/api/fund-plan/query/
 export function getPlanApprovalList (params) {
     return axios.get(`backend/api/overdue/annual/funplan/approve/value/list`, { params })
 }
+// 资金计划审批列表总计
+export function getPlanApprovalTotal (params) {
+    return axios.get(`backend/api/overdue/annual/funplan/approve/value/total`, { params })
+}

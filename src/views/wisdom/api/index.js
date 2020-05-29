@@ -441,3 +441,30 @@ export function exportBranchSale (params) {
 export const findPlatformTargetPlat = (params) => {
     return axios.get('rms/api/company/target/companies', { params })
 }
+// 资金计划审批导出
+export function exportPlanApproval (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`/backend/api/overdue/annual/funplan/approve/value/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '年度冲刺值.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 资金计划审批列表合计
+export const findPlanApprovalTotal = (params) => {
+    return axios.get('backend/api/overdue/annual/funplan/approve/value/total', { params })
+}
