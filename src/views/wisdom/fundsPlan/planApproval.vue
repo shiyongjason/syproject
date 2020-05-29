@@ -146,7 +146,7 @@ export default {
     async mounted () {
         await this.findTargetTime()
         this.params.valueYear = this.targetTime.slice(0, 4)
-        await this.onQuery(this.params)
+        await this.btnQuery(this.params)
         this.newBossAuth(['D', 'F', 'P'])
     },
     methods: {
@@ -155,7 +155,6 @@ export default {
             this.onQuery(params)
         },
         getList (val) {
-            console.log({ ...this.queryParamsTemp, ...val })
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
         async onQuery (params) {

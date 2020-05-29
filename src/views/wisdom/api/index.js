@@ -339,7 +339,7 @@ export function exportPerformanceIndex (params) {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '年度冲刺值.xlsx'
+                a.download = '履约值利润指标.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()

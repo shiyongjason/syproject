@@ -26,7 +26,7 @@
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageNumber: 1, pageSize: 10})">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                     <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
@@ -42,17 +42,17 @@
         <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
+                    <a class="downloadExcel" href="/excelTemplate/履约值利润指标.xls" download="履约值利润指标.xls">
+                        履约值利润指标导出
                     </a>
                 </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='valueYear'>
+                    <el-date-picker v-model="uploadData.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + '/api/overdue/annual/performance/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/performance/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
@@ -78,10 +78,10 @@ export default {
     data: function () {
         return {
             uploadData: {
-                commitmentYear: ''
+                valueYear: ''
             },
             rules: {
-                commitmentYear: [
+                valueYear: [
                     { required: true, message: '请选择年', trigger: 'blur' }
                 ]
             },
@@ -122,7 +122,8 @@ export default {
             total: {},
             tableData: [],
             column: [],
-            dialogFormVisible: false
+            dialogFormVisible: false,
+            dynamicName: '全部'
         }
     },
     computed: {
@@ -144,12 +145,10 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
@@ -158,11 +157,12 @@ export default {
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.dynamicName = val.value.deptName
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
+                this.dynamicName = val.value.deptName
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
@@ -170,19 +170,34 @@ export default {
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
+                this.dynamicName = val.value.companyShortName
                 this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
             exportPerformanceIndex(this.queryParams)
         },
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.onQuery()
+        btnQuery (params) {
+            this.queryParamsTemp = { ...params }
+            this.onQuery(params)
         },
-        async onQuery () {
-            const promiseArr = [getPerformanceIndexList(this.queryParams), getPerformanceIndexTotal(this.queryParams)]
-            var data = await Promise.all(promiseArr).then((res) => {
+        async onQuery (params) {
+            const promiseArr = [getPerformanceIndexList(params), getPerformanceIndexTotal(params)]
+            const data = await Promise.all(promiseArr).then((res) => {
+                const columnData = preformTableLabel(this.queryParams.valueYear)
+                columnData[1].label = this.dynamicName
+                columnData.forEach((value, index) => {
+                    if (index > 1) {
+                        value.children.forEach((val) => {
+                            val.children.forEach((val1) => {
+                                if (res[1].data[val.prop]) {
+                                    val1.label = String(res[1].data[val.prop])
+                                }
+                            })
+                        })
+                    }
+                })
+                this.column = columnData
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
@@ -191,11 +206,7 @@ export default {
             this.page.total = data.total
         },
         getList (val) {
-            this.searchParams = {
-                ...this.searchParams,
-                ...val
-            }
-            this.onQuery()
+            this.onQuery({ ...this.queryParamsTemp, ...val })
         },
         async onReset () {
             let obj = {
@@ -204,15 +215,14 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.oldBossAuth()
-            this.onSearch()
+            this.newBossAuth(['D', 'F', 'P'])
+            this.onQuery(this.queryParams)
         },
         isSuccess (response) {
             this.$message({
@@ -220,7 +230,8 @@ export default {
                 type: 'success'
             })
             this.loading = false
-            this.onSearch()
+            this.onQuery(this.queryParams)
+            this.dialogFormVisible = false
         },
         isError (response) {
             this.$message({
@@ -231,7 +242,7 @@ export default {
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
+            if (!this.uploadData.valueYear) {
                 this.$message({
                     message: '请先选择导入年份！',
                     type: 'warning'
@@ -265,8 +276,7 @@ export default {
     async mounted () {
         await this.findTargetTime()
         this.queryParams.valueYear = this.targetTime.slice(0, 4)
-        this.column = preformTableLabel(this.queryParams.valueYear)
-        this.onSearch()
+        this.btnQuery(this.queryParams)
         this.newBossAuth(['D', 'F', 'P'])
     }
 }

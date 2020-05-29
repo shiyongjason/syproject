@@ -184,7 +184,7 @@ export default {
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            await this.oldBossAuth()
+            this.newBossAuth(['D', 'F'])
             this.onSearch()
         },
         isSuccess () {
