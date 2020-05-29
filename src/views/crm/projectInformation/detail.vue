@@ -2,70 +2,65 @@
     <div class="page-body">
         <div class="page-body-cont">
             <div class="errormessage">
-                <el-alert center title="资料待补充" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
+                <el-alert center title="资料待补充" v-if="$route.query.status==10" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
+                <el-alert v-if="$route.query.status==2" center title="资料审核中" effect="dark" style="background: #FF7A45;height:40px" :closable='false' />
             </div>
-            <div>
-                <div class="firstclass">经销商</div>
-                <div class="secondclass">
+            <div v-for="(item,index) in detail.projectDocList" :key="index">
+                <div class="firstclass">{{item.firstCatagoryName}}</div>
+                <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
                     <div class="secondclass-title">
-                        <span class="secondclass-start">*</span>
-                        <font class="secondclass-title_font">三证正副本<span>待补充，点击查看原因</span></font>
+                        <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
+                        <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
                     </div>
-                    <p class="secondclass-remark">备注：原则上工商局打印（工商章）</p>
+                    <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                     <div class="secondclass-documents">
-                        <p class="secondclass-documents_title">样例：</p>
-                        <div class="secondclass-documents_case">
-                            <div class="secondclass-documents_case_box">
-                                <el-image style="width: 100px; height: 100px" src="https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg" :preview-src-list="srcList" />
-                            </div>
-                            <div class="secondclass-documents_case_box">
-                                <el-image style="width: 100px; height: 100px" src="https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg" :preview-src-list="srcList" />
-                            </div>
-                            <div class="secondclass-documents_case_box">
-                                <el-image style="width: 100px; height: 100px" src="https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg" :preview-src-list="srcList" />
-                            </div>
-                            <div class="secondclass-documents_case_box">
-                                <el-image style="width: 100px; height: 100px" src="https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg" :preview-src-list="srcList" />
+                        <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
+                        <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
+                            <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
+                                <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList" />
                             </div>
                         </div>
-                        <p class="secondclass-documents_title">规定格式：复印件</p>
-                        <div class="secondclass-documents_case_documents" v-for="(item,index) in dd" :key="index">
-                            <p>
-                                <span class="posrtv">
-                                    <template v-if="item&&item.fileUrl">
-                                        <i class="el-icon-document"></i>
-                                        <a :href="item.fileUrl" target="_blank">
-                                            <font>{{item.fileName}}</font>
-                                        </a>
-                                    </template>
-                                </span>
-                            </p>
-                            <p style="flex:0.5">{{item.date}}</p>
-                            <p>
-                                <font class="fileItemDownLoad" @click="onDelete">删除</font>
-                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
-                                <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                            </p>
-                        </div>
-                        <div class="secondclass-documents_upload">
-                            <hosjoyUpload :fileSize='20' :fileNum='100' v-model="upload" showAsFileName :action='action' :uploadParameters='uploadParameters'>
-                                <el-button type="primary" style="width:130px">上传</el-button>
-                            </hosjoyUpload>
-                        </div>
+                        <!--  -->
+                        <p class="secondclass-documents_title">规定格式：{{jtem.formatName||"-"}}</p>
+                        <template v-if="jtem.riskCheckProjectDocPos&&jtem.riskCheckProjectDocPos.length>=0">
+                            <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.riskCheckProjectDocPos" :key="kndex">
+                                <p>
+                                    <span class="posrtv">
+                                        <template v-if="ktem&&ktem.fileUrl">
+                                            <i class="el-icon-document"></i>
+                                            <a :href="ktem.fileUrl" target="_blank">
+                                                <font>{{ktem.fileName}}</font>
+                                            </a>
+                                        </template>
+                                    </span>
+                                </p>
+                                <p style="flex:0.5">{{formatMoment(ktem.updateTime)}}</p>
+                                <p>
+                                    <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}">删除</font>
+                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
+                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                </p>
+                            </div>
+                        </template>
+                        <p v-else>-</p>
+                    </div>
+                    <div class="secondclass-documents_upload">
+                        <hosjoyUpload :fileSize='20' :fileNum='100' v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                            <el-button type="primary" style="width:130px">上传</el-button>
+                        </hosjoyUpload>
                     </div>
                 </div>
             </div>
-
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
                     <el-button style="width:130px;" @click="onBack">返回</el-button>
                 </p>
                 <p>
-                    <el-button type="primary" style="width:130px">保存</el-button>
+                    <el-button type="primary" style="width:130px" @click="onSave">保存</el-button>
                 </p>
                 <p>
-                    <el-button type="primary" style="width:130px">提交</el-button>
+                    <el-button type="primary" style="width:130px" @click="onSubmit">提交</el-button>
                 </p>
             </div>
         </div>
@@ -92,6 +87,8 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
+import { saveDoc, submitDoc } from './api/index'
+import moment from 'moment'
 
 export default {
     name: 'detail',
@@ -100,22 +97,28 @@ export default {
     },
     data () {
         return {
+            detail: '',
             handleImgDownload,
-            dialogVisible: true,
+            dialogVisible: false,
             action: interfaceUrl + 'tms/files/upload',
             // 上传时附带的额外参数同el-upload 的 data
             uploadParameters: {
                 updateUid: '',
                 reservedName: true
             },
-            upload: [],
             srcList: [
                 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
                 'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
             ],
             dd: [
                 { fileUrl: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg', fileName: '备注：原则上工商局打印（工商章）.jpg', date: '2020-05-22 14:29:00' }
-            ]
+            ],
+            reqRiskCheckProjectDoc: {
+                bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
+                projectId: '', // 工程项目id
+                riskCheckProjectDocPoList: [],
+                submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
+            }
         }
     },
     computed: {
@@ -123,28 +126,36 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            // informationDetail: 'projectInformation/informationDetail'
+            listDetail: 'projectInformation/listDetail'
         })
     },
     methods: {
         ...mapActions({
-            // findProjectInformationDetail: 'projectInformation/findProjectInformationDetail'
+            findInformationEditDetail: 'projectInformation/findInformationEditDetail'
         }),
-        onDelete () {
+        formatMoment (val) {
+            if (!val) return ''
+            return moment(val).format('YYYY-MM-DD HH:mm:ss')
+        },
+        handleSuccessCb (row) {
+            row.riskCheckProjectDocPos.map(item => {
+                item.templateId = row.templateId
+            })
+            console.log('this.detail', this.detail)
+        },
+        onDelete (item, index) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
+                item.riskCheckProjectDocPos.splice(index, 1)
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
                 })
             }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                })
+                // do nothing
             })
         },
         onBack () {
@@ -157,10 +168,59 @@ export default {
             }).catch(() => {
                 // do nothing
             })
+        },
+        async getDetail () {
+            let query = {
+                bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
+                projectId: this.$route.query.projectId,
+                status: this.$route.query.status// 工程状态
+            }
+            await this.findInformationEditDetail(query)
+            this.detail = this.listDetail
+            this.detail.projectDocList.map(item => {
+                item.respRiskCheckDocTemplateList.map(jtem => {
+                    if (!jtem.riskCheckProjectDocPos) {
+                        jtem.riskCheckProjectDocPos = []
+                    }
+                })
+            })
+            console.log('this.detail: ', this.detail)
+        },
+        // 处理保存、提交资料入参
+        dealReqRiskCheckProjectDoc (submitStatus) {
+            console.log('this.detail', this.detail)
+            this.detail.projectDocList.map(item => {
+                if (item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.length > 0) {
+                    item.respRiskCheckDocTemplateList.map(jtem => {
+                        jtem && jtem.riskCheckProjectDocPos.length > 0 && jtem.riskCheckProjectDocPos.map(jtem => {
+                            this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.push({
+                                templateId: jtem.templateId,
+                                fileName: jtem.fileName,
+                                fileUrl: jtem.fileUrl
+                            })
+                        })
+                    })
+                }
+            })
+            this.reqRiskCheckProjectDoc.projectId = this.$route.query.projectId
+            this.reqRiskCheckProjectDoc.submitStatus = submitStatus// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
+            console.log('this.reqRiskCheckProjectDoc: ', this.reqRiskCheckProjectDoc)
+        },
+        onSave () {
+            this.dealReqRiskCheckProjectDoc(1)
+            saveDoc(this.reqRiskCheckProjectDoc)
+            this.$message.success('保存成功')
+        },
+        onSubmit () {
+            this.dealReqRiskCheckProjectDoc(1)
+            submitDoc(this.reqRiskCheckProjectDoc)
+            this.$message.success('提交成功')
         }
     },
     mounted () {
         this.uploadParameters.updateUid = this.userInfo.employeeName
+        this.reqRiskCheckProjectDoc.projectId = this.$route.query.projectId
+        this.getDetail()
     }
 }
 </script>
@@ -226,7 +286,7 @@ export default {
     .fileItemDownLoad {
         font-size: 12px;
         border-radius: 3px;
-        padding: 8px 16px;
+        padding: 6px 16px;
         color: #fff;
         background-color: #ff7a45;
         border-color: #ff7a45;
@@ -236,6 +296,7 @@ export default {
         height: 13px;
         cursor: pointer;
         margin-left: 10px;
+        margin-bottom: 5px;
     }
     .posrtv {
         position: relative;

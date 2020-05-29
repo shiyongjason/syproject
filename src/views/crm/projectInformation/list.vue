@@ -111,7 +111,8 @@
 
                         初审、立项中、待终审、合作关闭、待签约、待放款、贷中、合作完成均只展示查看按钮 -->
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.projectId)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
-                    <el-button type="warning" size="mini" plain @click="onLookproject(scope.data.row.projectId)" v-if="hosAuthCheck(crm_goodwork_detail)">修改</el-button>
+                    <!-- &&scope.data.row.status==3 -->
+                    <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">修改</el-button>
                 </template>
             </basicTable>
         </div>
@@ -143,7 +144,7 @@ export default {
                 minFinalApproveTime: '', // 最小料审核通过时间,
                 maxFinalApproveTime: '', // 最大料审核通过时间
                 pkDeptDoc: '', // 分部编码
-                status: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待信审 5：合作关闭 6：待签约 7：待放款 8：贷中 9：合作完成
+                status: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
                 projectName: '', // 项目名称
                 projectNo: '', // 项目编号
                 // projectIds: [], // 工程id列表
@@ -228,7 +229,10 @@ export default {
             }
         },
         onLookproject (projectId) {
-            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: projectId } })
+            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId } })
+        },
+        onEditproject (row) {
+            this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.projectId, status: row.status } })
         },
         fundMoneys (val) {
             if (val) {

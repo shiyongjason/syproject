@@ -15,9 +15,17 @@ export const getProjectloan = (params) => axios.get(`/memeber/openapi/project/lo
 
 export const getProjectrecord = (params) => axios.get(`/memeber/openapi/project/audit/${params}`)
 export const getPunchlist = (params) => axios.get(`/memeber/api/punch/list`, { params })
-// list
+// 工程资料list
 export function getProject (params) {
     return axios.get(`/fms/api/risk-check/page`, { params })
 }
 // 查询工程的详情 初审tab
 export const getProjectInformationDetail = (projectId) => axios.get(`/fms/api/risk-check/project/${projectId}`, {})
+// 查询工程的点击修改获取详情
+export const getInformationEditDetail = (params) => axios.get(`/memeber/openapi/project/approve-docs/${params.projectId}/${params.status}/${params.bizType}`, {})
+// 查询工程审批结果和项目资料（项目资料收集中，立项，终审）
+export const getInformationDetail = (params) => axios.get(`/memeber/openapi/project/approve-docs/${params.projectId}/${params.status}/${params.bizType}`, {})
+// 资料保存
+export const saveDoc = (params) => axios.post(`/fms/api/risk-check/save/project-doc`, params)
+// 资料保存
+export const submitDoc = (params) => axios.post(`/fms/api/risk-check/submit/project-doc`, params)
