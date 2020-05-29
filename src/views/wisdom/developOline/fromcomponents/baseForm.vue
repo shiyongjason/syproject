@@ -404,7 +404,7 @@ export default {
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc
                 })
-                !val.value.crmDeptCode && this.linkage(dis)
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'Q') {
                 this.baseForm.subregionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
             }
