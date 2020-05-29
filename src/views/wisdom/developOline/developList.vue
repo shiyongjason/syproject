@@ -5,19 +5,12 @@
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
                     <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-
-<!--                    <el-select v-model="queryParams.subsectionCode" placeholder="选择分部" @change='getSubsectionCode'>-->
-<!--                        <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">-->
-<!--                        </el-option>-->
-<!--                    </el-select>-->
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
                     <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
-
-<!--                    <HAutocomplete v-if="platComList" :selectArr="platComList" @back-event="backPlat" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj"></HAutocomplete>-->
                 </div>
             </div>
             <div class="query-cont-col-double">
@@ -627,7 +620,12 @@ export default {
             data.data.pageContent.map(item => {
                 if (item.developSignInfoVo) {
                     Object.keys(item.developSignInfoVo).map(jtem => {
-                        item[`developSignInfoVo_${jtem}`] = item.developSignInfoVo[jtem]
+                        if (jtem === 'changeFactors') {
+                            let onlineStatus = { 0: '初始', 1: '增资', 2: '降资', 3: '淘汰' }
+                            item.developSignInfoVo_changeFactors = onlineStatus[item.developSignInfoVo[jtem]]
+                        } else {
+                            item[`developSignInfoVo_${jtem}`] = item.developSignInfoVo[jtem]
+                        }
                     })
                 }
             })
@@ -637,11 +635,10 @@ export default {
         backPlat (val, dis) {
             if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage()
             } else if (dis === 'P') {
