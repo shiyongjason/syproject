@@ -341,6 +341,10 @@ export default {
             }
             this.attributeVisible = false
         },
+
+        initTable () {
+            this.tableData = []
+        },
         async findSpecificationsAsync () {
             await this.findSpecifications({ categoryId: this.categoryId })
             // 这边如果后台返回data是空，则手动赋值数值，并记录为第一次新增操作是新增，以后的所有操作都是编辑

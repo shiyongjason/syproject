@@ -81,6 +81,7 @@
             class="page-body-drawer"
             title="参数详情"
             :visible.sync="setVisible"
+            :before-close="closeDialog"
             direction="rtl"
             size='900px'>
             <setParameters
@@ -251,6 +252,12 @@ export default {
             this.$nextTick(() => {
                 this.$refs['setting'].findSpecificationsAsync()
             })
+        },
+
+        // 关闭参数前清空列表，防止下次进入缓存
+        closeDialog () {
+            this.$refs['setting'].initTable()
+            this.setVisible = false
         },
 
         // 输入框获取焦点就设置选中行，防止bug

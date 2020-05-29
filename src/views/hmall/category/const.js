@@ -9,8 +9,8 @@ export const ORDER_STATUS_OPTIONS = [
 ]
 
 export const SETTING_REQUIRED_MAP = new Map([
-    [0, '是'],
-    [1, '否']
+    [1, '是'],
+    [0, '否']
 ])
 
 export const SETTING_TYPE_MAP = new Map([

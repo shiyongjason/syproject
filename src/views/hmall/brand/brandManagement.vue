@@ -162,7 +162,7 @@ export default {
             brandAreaInfo: 'brandAreaInfo'
         }),
         ...mapGetters('brand', {
-            areaOptions: 'areaOptions'
+            areaOptions: 'cityOptions'
         }),
         ...mapState('category', {
             categoriesTree: 'categoriesTree'
