@@ -175,7 +175,6 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.subsectionOldCode = ''
                 this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
@@ -232,7 +231,6 @@ export default {
             }
         },
         onExport () {
-            this.params.totalAreaName = this.selectAuthLabelShow()
             exportPlanApproval(this.params)
         },
         onShowImport () {
