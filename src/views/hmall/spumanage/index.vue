@@ -7,6 +7,10 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.brandId" filterable placeholder="请选择">
                             <el-option
+                            label="全部"
+                            value="">
+                            </el-option>
+                            <el-option
                             v-for="item in brandOptions"
                             :key="item.value"
                             :label="item.label"

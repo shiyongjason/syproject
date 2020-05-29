@@ -5,7 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">SPU编码：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入商品编码" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.spuCode" placeholder="请输入SPU编码" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -64,7 +64,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-checkbox v-model="queryParams.checked">自营</el-checkbox>
+                        <el-checkbox v-model="queryParams.isOwnOperated">自营</el-checkbox>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -89,17 +89,12 @@
                 @onSizeChange="handleSizeChange"
                 :multiSelection.sync='multiSelection'
                 :isMultiple="true"
+                :selectable="selectable"
                 :isAction="true"
                 :actionWidth=150
                 :rowKey="rowKey"
                 :isShowIndex='true'
             >
-                <template slot="spuName" slot-scope="scope">
-                    {{scope.data.row.brandName}}{{scope.data.row.spuName}}
-                </template>
-                <template slot="brandName" slot-scope="scope">
-                    {{scope.data.row.brandName}}
-                </template>
                 <template slot="auditStatus" slot-scope="scope">
                     <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">
                         {{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}
@@ -138,7 +133,7 @@ export default {
                 merchantName: '',
                 createTimeStart: '',
                 createTimeEnd: '',
-                checked: false
+                isOwnOperated: false
             },
             copyParams: {},
             tableData: [],
@@ -253,6 +248,10 @@ export default {
                 }
                 location.href = B2bUrl + 'product/api/spu/boss/audit-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
             }
+        },
+        // 只有待审核状态的商品才可以选中批量审核
+        selectable (row) {
+            return row.auditStatus === 0
         },
         // 批量审核通过
         onChangeStatus () {
