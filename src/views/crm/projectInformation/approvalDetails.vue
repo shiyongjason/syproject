@@ -4,7 +4,7 @@
             <el-card class="box-card">
                 <el-tabs type="card" @tab-click="handleClick">
                     <el-tab-pane label="初审">
-                        <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData />
+                        <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData v-if="tabPreliminaryReviewData" />
                     </el-tab-pane>
                     <el-tab-pane label="项目资料清单">
                         <tabChecklist :informationDetail=informationDetail v-if="informationDetail" />
@@ -100,9 +100,7 @@ export default {
 
     },
     mounted () {
-        console.log('parent')
         this.getProjectInformationDetail()
-        console.log('this.tabPreliminaryReviewData: ', this.tabPreliminaryReviewData)
     }
 }
 </script>

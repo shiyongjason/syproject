@@ -12,7 +12,7 @@
                     <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                     <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                         <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                            <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList" />
+                            <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
                         </div>
                     </div>
                     <!--  -->
@@ -58,21 +58,19 @@ export default {
             ]
         }
     },
-    computed: {
-        srcList () {
-            if (this.informationDetail) {
-                const res = this.informationDetail.filter(item => {
-                    return item.fileUrl
-                })
-                return res
-            }
-            return []
-        }
-    },
     methods: {
         formatMoment (val) {
             if (!val) return ''
             return moment(val).format('YYYY-MM-DD HH:mm:ss')
+        },
+        srcList (item, index) {
+            if (item.riskCheckDocTemplateSamplePos) {
+                const res = item.riskCheckDocTemplateSamplePos.filter(item => {
+                    return item.fileUrl
+                })
+                return [res[index].fileUrl]
+            }
+            return []
         }
     },
     mounted () {

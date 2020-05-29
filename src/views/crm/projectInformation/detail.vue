@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body">
+    <div class="page-body" v-if="detail">
         <div class="page-body-cont">
             <div class="errormessage">
                 <el-alert center title="资料待补充" v-if="$route.query.status==10" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
@@ -17,7 +17,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList" />
+                                <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
                             </div>
                         </div>
                         <!--  -->
@@ -89,7 +89,12 @@ import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
 import { saveDoc, submitDoc } from './api/index'
 import moment from 'moment'
-
+const _reqRiskCheckProjectDoc = {
+    bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
+    projectId: '', // 工程项目id
+    riskCheckProjectDocPoList: [],
+    submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
+}
 export default {
     name: 'detail',
     components: {
@@ -106,19 +111,11 @@ export default {
                 updateUid: '',
                 reservedName: true
             },
-            srcList: [
-                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-            ],
             dd: [
                 { fileUrl: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg', fileName: '备注：原则上工商局打印（工商章）.jpg', date: '2020-05-22 14:29:00' }
             ],
-            reqRiskCheckProjectDoc: {
-                bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
-                projectId: '', // 工程项目id
-                riskCheckProjectDocPoList: [],
-                submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
-            }
+            reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
+            mondatoryFlagRes: []
         }
     },
     computed: {
@@ -133,6 +130,15 @@ export default {
         ...mapActions({
             findInformationEditDetail: 'projectInformation/findInformationEditDetail'
         }),
+        srcList (item, index) {
+            if (item.riskCheckDocTemplateSamplePos) {
+                const res = item.riskCheckDocTemplateSamplePos.filter(item => {
+                    return item.fileUrl
+                })
+                return [res[index].fileUrl]
+            }
+            return []
+        },
         formatMoment (val) {
             if (!val) return ''
             return moment(val).format('YYYY-MM-DD HH:mm:ss')
@@ -185,6 +191,14 @@ export default {
                 })
             })
             console.log('this.detail: ', this.detail)
+            // 筛选出需要必填
+            this.detail.projectDocList.map(item => {
+                item.respRiskCheckDocTemplateList.map(jtem => {
+                    if (jtem.mondatoryFlag == 1) {
+                        this.mondatoryFlagRes.push(jtem)
+                    }
+                })
+            })
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus) {
@@ -192,11 +206,11 @@ export default {
             this.detail.projectDocList.map(item => {
                 if (item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.length > 0) {
                     item.respRiskCheckDocTemplateList.map(jtem => {
-                        jtem && jtem.riskCheckProjectDocPos.length > 0 && jtem.riskCheckProjectDocPos.map(jtem => {
+                        jtem && jtem.riskCheckProjectDocPos.length > 0 && jtem.riskCheckProjectDocPos.map(ktem => {
                             this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.push({
-                                templateId: jtem.templateId,
-                                fileName: jtem.fileName,
-                                fileUrl: jtem.fileUrl
+                                templateId: ktem.templateId,
+                                fileName: ktem.fileName,
+                                fileUrl: ktem.fileUrl
                             })
                         })
                     })
@@ -204,17 +218,41 @@ export default {
             })
             this.reqRiskCheckProjectDoc.projectId = this.$route.query.projectId
             this.reqRiskCheckProjectDoc.submitStatus = submitStatus// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
-            console.log('this.reqRiskCheckProjectDoc: ', this.reqRiskCheckProjectDoc)
         },
-        onSave () {
-            this.dealReqRiskCheckProjectDoc(1)
-            saveDoc(this.reqRiskCheckProjectDoc)
-            this.$message.success('保存成功')
+        checkForm (cb) {
+            let res = ''
+            for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
+                const arr = this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.filter(jtem => {
+                    return jtem.templateId == this.mondatoryFlagRes[i].templateId
+                })
+                if (arr.length == 0) {
+                    res = this.mondatoryFlagRes[i]
+                    break
+                }
+            }
+            return res
         },
-        onSubmit () {
+        async onSave () {
             this.dealReqRiskCheckProjectDoc(1)
-            submitDoc(this.reqRiskCheckProjectDoc)
-            this.$message.success('提交成功')
+            let res = this.checkForm()
+            if (res) {
+                this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+            } else {
+                await saveDoc(this.reqRiskCheckProjectDoc)
+                this.$message.success('保存成功')
+                this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+            }
+        },
+        async onSubmit () {
+            this.dealReqRiskCheckProjectDoc(1)
+            let res = this.checkForm()
+            if (res) {
+                this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+            } else {
+                await submitDoc(this.reqRiskCheckProjectDoc)
+                this.$message.success('提交成功')
+                this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+            }
         }
     },
     mounted () {

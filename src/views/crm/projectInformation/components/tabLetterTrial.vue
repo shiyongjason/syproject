@@ -62,17 +62,6 @@ export default {
             ]
         }
     },
-    computed: {
-        srcList () {
-            if (this.informationDetail) {
-                const res = this.informationDetail.filter(item => {
-                    return item.fileUrl
-                })
-                return res
-            }
-            return []
-        }
-    },
     methods: {
         formatMoment (val) {
             if (!val) return ''
