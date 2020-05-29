@@ -181,7 +181,9 @@ export default {
         this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
-        await this.newBossAuth(['F', 'P'])
+        console.log(this.userInfo)
+        !this.deptType && this.findPlatformTargetPlat(this.userInfo.pkDeptDoc)
+        await this.newBossAuth(['F'])
     },
     methods: {
         uploadProcess () {
@@ -280,12 +282,9 @@ export default {
         backPlat (val, dis) {
             if (dis === 'F') {
                 this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findPlatformTargetPlat(this.searchParams.subsectionCode)
                 !val.value.pkDeptDoc && this.linkage()
-                if (val.value.pkDeptDoc) {
-                    this.findPlatformTargetPlat(val.value.pkDeptDoc)
-                }
             } else if (dis === 'P') {
-                this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
                 this.searchParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
