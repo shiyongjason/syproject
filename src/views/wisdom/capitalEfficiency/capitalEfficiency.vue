@@ -3,12 +3,6 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">MIS编码：</div>
-                    <div class="flex-wrap-cont">
-                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
@@ -18,7 +12,12 @@
                     <div class="query-col-title">平台公司名：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入分部名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-<!--                        <HAutocomplete :disabled='disabled' ref="HAutocomplete" :selectArr="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>-->
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">MIS编码：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
@@ -225,10 +224,11 @@ export default {
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage()
             } else if (dis === 'P') {
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
                 this.queryParams.loanCompanyCode = val.value.companyCode ? val.value.companyCode : ''
                 this.queryParams.loanCompanyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
@@ -238,6 +238,7 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
+            this.queryParams.misCode = ''
             this.queryParams.loanCompanyCode = ''
             this.queryParams.loanCompanyName = ''
             this.selectAuth.platformObj = obj

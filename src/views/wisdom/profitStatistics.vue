@@ -2,12 +2,6 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">mis编码：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15" clearable></el-input>
-                    </div>
-                </div>
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
@@ -18,6 +12,12 @@
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">mis编码：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
@@ -337,16 +337,22 @@ export default {
             }
             if (dis === 'F') {
                 this.queryParams.misCode = ''
+                this.queryParams.companyCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
         },
         async backPlat (val, dis) {
             if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                if (this.queryParams.subsectionCode) {
+                    this.findPlatformslist({ subsectionCode: this.queryParams.subsectionCode })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
+                }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         async getSubsectionCode (val) {

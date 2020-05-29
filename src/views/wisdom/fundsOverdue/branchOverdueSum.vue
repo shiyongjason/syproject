@@ -14,18 +14,6 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="false">
-                    <div class="query-col-title">区域：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col" v-if="false">
-                    <div class="query-col-title">平台公司：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
@@ -67,22 +55,11 @@ export default {
                 branchObj: {
                     selectCode: '',
                     selectName: ''
-                },
-                areaObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
-                platformObj: {
-                    selectCode: '',
-                    selectName: ''
                 }
             },
             queryParams: {
                 regionCode: '',
-                subRegionCode: '',
                 subsectionCode: '',
-                subsectionOldCode: '',
-                misCode: '',
                 commitmentYear: moment().format('YYYY')
             },
             searchParams: {},
@@ -99,9 +76,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo,
             regionList: state => state.regionList,
-            branchList: state => state.branchList,
-            areaList: state => state.areaList,
-            platformData: state => state.platformData
+            branchList: state => state.branchList
         }),
         column () {
             return branchSummarySheet()
@@ -118,63 +93,16 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
-            if (dis === 'D') {
-                this.queryParams.subsectionCode = ''
-                this.queryParams.subsectionOldCode = ''
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.areaObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.areaObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
-                this.queryParams.misCode = ''
-                this.selectAuth.platformObj = { ...obj }
-            }
+            this.queryParams.subsectionCode = ''
+            this.selectAuth.branchObj = { ...obj }
         },
         async backPlat (val, dis) {
-            // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
-                this.findAuthList({
-                    deptType: 'Q',
-                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
-                })
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-                } else {
-                    this.findPlatformslist()
-                }
-                !val.value.crmDeptCode && this.linkage(dis)
-            } else if (dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.queryParams.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
-                    }
-                    this.findPlatformslist(params)
-                }
-                !val.value.selectCode && this.linkage(dis)
-            } else if (dis === 'P') {
-                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
@@ -187,7 +115,6 @@ export default {
         async onQuery () {
             // 不分页
             const { data } = await getBranchOverdueList(this.searchParams)
-            // console.log(data)
             this.tableData = data
             this.tableData.map(i => {
                 if (i.incrementProportion != null) {
@@ -216,16 +143,11 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subsectionOldCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            this.selectAuth.areaObj = { ...obj }
-            this.selectAuth.platformObj = { ...obj }
             await this.newBossAuth(['D', 'F'])
             this.onSearch()
         }

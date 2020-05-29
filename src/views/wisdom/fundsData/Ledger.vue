@@ -1,13 +1,6 @@
 <template>
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">MIS编码：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="5" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
-                    </el-input>
-                </div>
-            </div>
             <div class="query-cont-col" v-if="branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
@@ -18,6 +11,13 @@
                 <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
                     <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">MIS编码：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="5" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
+                    </el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -156,6 +156,7 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
+            this.queryParams.misCode = ''
             this.queryParams.loanCompanyCode = ''
             this.queryParams.loanCompanyName = ''
             this.selectAuth.areaObj = { ...obj }
@@ -166,9 +167,12 @@ export default {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
                 this.queryParams.loanCompanyCode = val.value.companyCode ? val.value.companyCode : ''
                 this.queryParams.loanCompanyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
