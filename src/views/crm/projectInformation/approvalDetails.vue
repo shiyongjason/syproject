@@ -2,18 +2,18 @@
     <div class="page-body">
         <div class="page-body-cont">
             <el-card class="box-card">
-                <el-tabs type="card">
+                <el-tabs type="card" @tab-click="handleClick">
                     <el-tab-pane label="初审">
-                        <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData />
+                        <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData v-if="tabPreliminaryReviewData" />
                     </el-tab-pane>
                     <el-tab-pane label="项目资料清单">
-                        <tabChecklist />
+                        <tabChecklist :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
                     <el-tab-pane label="立项">
-                        <tabLetterTrial />
+                        <tabLetterTrial :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
                     <el-tab-pane label="终审">
-                        <tabFinalReview />
+                        <tabFinalReview :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
                 </el-tabs>
                 <!-- bottom button -->
@@ -44,19 +44,23 @@
     （1）初审、项目资料清单、立项、终审  tab页为查看状态
  */
 import { mapState, mapGetters, mapActions } from 'vuex'
-
+import tabPreliminaryReview from './components/tabPreliminaryReview'
+import tabChecklist from './components/tabChecklist'
+import tabLetterTrial from './components/tabLetterTrial'
+import tabFinalReview from './components/tabFinalReview'
 export default {
     name: 'approvalDetails',
     components: {
-        tabPreliminaryReview: () => import('./components/tabPreliminaryReview'),
-        tabChecklist: () => import('./components/tabChecklist'),
-        tabLetterTrial: () => import('./components/tabLetterTrial'),
-        tabFinalReview: () => import('./components/tabFinalReview')
+        tabPreliminaryReview,
+        tabChecklist,
+        tabLetterTrial,
+        tabFinalReview
     },
     data () {
         return {
             tabPosition: 'left',
-            tabPreliminaryReviewData: ''
+            tabPreliminaryReviewData: '',
+            informationDetailData: ''
         }
     },
     computed: {
@@ -64,23 +68,39 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            tabPreliminaryReview: 'projectInformation/tabPreliminaryReview'
+            tabPreliminaryReview: 'projectInformation/tabPreliminaryReview',
+            informationDetail: 'projectInformation/informationDetail'
         })
     },
     methods: {
         ...mapActions({
-            findProjectInformationDetail: 'projectInformation/findProjectInformationDetail'
+            findProjectInformationDetail: 'projectInformation/findProjectInformationDetail',
+            findInformationDetail: 'projectInformation/findInformationDetail'
         }),
         onBack () {
             this.$router.go(-1)
+        },
+        async getProjectInformationDetail () {
+            await this.findProjectInformationDetail(this.$route.query.projectId)
+            this.tabPreliminaryReviewData = this.tabPreliminaryReview
+        },
+        async getInformationDetail (index) {
+            let query = {
+                bizType: index, // 业务类型 1：项目材料 2：立项材料 3：终审材料
+                projectId: this.$route.query.projectId,
+                status: this.tabPreliminaryReviewData.status// 工程状态
+            }
+            await this.findInformationDetail(query)
+            this.informationDetailData = this.informationDetail
+        },
+        handleClick (tab, event) {
+            if (tab.index == 0) return
+            this.getInformationDetail(tab.index)
         }
 
     },
-    async mounted () {
-        console.log('parent')
-        await this.findProjectInformationDetail(this.$route.query.projectId)
-        this.tabPreliminaryReviewData = this.tabPreliminaryReview
-        console.log('this.tabPreliminaryReviewData: ', this.tabPreliminaryReviewData)
+    mounted () {
+        this.getProjectInformationDetail()
     }
 }
 </script>

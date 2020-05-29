@@ -1,32 +1,42 @@
 <template>
-    <div class="page-body-cont">
-        <div>
-            <div class="firstclass">经销商</div>
-            <div class="secondclass">
+    <div class="page-body-cont" v-if="informationDetail.projectDocList&&informationDetail.projectDocList.length>0">
+        <div v-for="(item,index) in informationDetail.projectDocList" :key="index">
+            <div class="firstclass">{{item.firstCatagoryName}}</div>
+            <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
                 <div class="secondclass-title">
-                    <span class="secondclass-start">*</span>
-                    <font class="secondclass-title_font">三证正副本</font>
+                    <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
+                    <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
                 </div>
-                <p class="secondclass-remark">备注：原则上工商局打印（工商章）</p>
+                <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                 <div class="secondclass-documents">
-                    <p class="secondclass-documents_title">规定格式：复印件</p>
-                    <div class="secondclass-documents_case_documents" v-for="(item,index) in dd" :key="index">
-                        <p>
-                            <span class="posrtv">
-                                <template v-if="item&&item.fileUrl">
-                                    <i class="el-icon-document"></i>
-                                    <a :href="item.fileUrl" target="_blank">
-                                        <font>{{item.fileName}}</font>
-                                    </a>
-                                </template>
-                            </span>
-                        </p>
-                        <p style="flex:0.5">{{item.date}}</p>
-                        <p>
-                            <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
-                            <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                        </p>
+                    <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
+                    <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
+                        <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
+                            <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
+                        </div>
                     </div>
+                    <!--  -->
+                    <p class="secondclass-documents_title">规定格式：{{jtem.formatName||"-"}}</p>
+                    <template v-if="jtem.riskCheckProjectDocPos">
+                        <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.riskCheckProjectDocPos" :key="kndex">
+                            <p>
+                                <span class="posrtv">
+                                    <template v-if="ktem&&ktem.fileUrl">
+                                        <i class="el-icon-document"></i>
+                                        <a :href="ktem.fileUrl" target="_blank">
+                                            <font>{{ktem.fileName}}</font>
+                                        </a>
+                                    </template>
+                                </span>
+                            </p>
+                            <p style="flex:0.5">{{formatMoment(ktem.updateTime)}}</p>
+                            <p>
+                                <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
+                                <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                            </p>
+                        </div>
+                    </template>
+                    <p v-else>-</p>
                 </div>
             </div>
         </div>
@@ -35,9 +45,11 @@
 
 <script>
 import { handleImgDownload } from '../utils'
+import moment from 'moment'
 
 export default {
     name: 'tabChecklist',
+    props: ['informationDetail'],
     data () {
         return {
             handleImgDownload,
@@ -47,6 +59,19 @@ export default {
         }
     },
     methods: {
+        formatMoment (val) {
+            if (!val) return ''
+            return moment(val).format('YYYY-MM-DD HH:mm:ss')
+        },
+        srcList (item, index) {
+            if (item.riskCheckDocTemplateSamplePos) {
+                const res = item.riskCheckDocTemplateSamplePos.filter(item => {
+                    return item.fileUrl
+                })
+                return [res[index].fileUrl]
+            }
+            return []
+        }
     },
     mounted () {
 
@@ -115,7 +140,7 @@ export default {
     .fileItemDownLoad {
         font-size: 12px;
         border-radius: 3px;
-        padding: 8px 16px;
+        padding: 6px 16px;
         color: #fff;
         background-color: #ff7a45;
         border-color: #ff7a45;
@@ -125,6 +150,7 @@ export default {
         height: 13px;
         cursor: pointer;
         margin-left: 10px;
+        margin-bottom: 5px;
     }
     .posrtv {
         position: relative;

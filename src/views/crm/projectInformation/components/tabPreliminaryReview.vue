@@ -1,5 +1,5 @@
 <template>
-    <div class="preliminaryreview">
+    <div class="preliminaryreview" v-if="tabPreliminaryReview">
         <div class="preliminaryreview-col" style="margin-top:0">
             <h2 class="preliminaryreview-title">经销商</h2>
             <p>{{tabPreliminaryReview.companyName||'-'}}</p>
@@ -22,11 +22,11 @@
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">项目类别</h2>
-            <p>{{tabPreliminaryReview.type&&typeList[tabPreliminaryReview.type-1]['value']||'-'}}</p>
+            <p>{{tabPreliminaryReview.type&&onFiterStates('typeList',tabPreliminaryReview.type)||'-'}}</p>
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">工程项目进度</h2>
-            <p>{{tabPreliminaryReview.status?onFiterStates('coopreation',tabPreliminaryReview.status)[0].value:'-'}}</p>
+            <p>{{tabPreliminaryReview.status?onFiterStates('coopreation',tabPreliminaryReview.status):'-'}}</p>
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">项目合同总额</h2>
@@ -38,7 +38,7 @@
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">设备品类</h2>
-            <p>{{tabPreliminaryReview.deviceCategory?onFiterStates('deviceCategoryList',tabPreliminaryReview.deviceCategory)[0].value:'-'}}</p>
+            <p>{{tabPreliminaryReview.deviceCategory?onFiterStates('deviceCategoryList',tabPreliminaryReview.deviceCategory):'-'}}</p>
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">设备品牌</h2>
@@ -46,7 +46,7 @@
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">上游供应商类型</h2>
-            <p>{{tabPreliminaryReview.upstreamSupplierType?onFiterStates('upstreamSupplierType',tabPreliminaryReview.upstreamSupplierType)[0].value:'-'}}</p>
+            <p>{{tabPreliminaryReview.upstreamSupplierType?onFiterStates('upstreamSupplierType',tabPreliminaryReview.upstreamSupplierType):'-'}}</p>
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">上游供应商名称</h2>
@@ -54,9 +54,9 @@
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">上游接受付款方式</h2>
-            <p>{{tabPreliminaryReview.upstreamPayType?onFiterStates('upstreamPayType',tabPreliminaryReview.upstreamPayType)[0].value:'-'}}</p>
-            <p v-if="tabPreliminaryReview.upstreamPayType">承兑描述：</p>
-            <p v-if="tabPreliminaryReview.upstreamPayType">{{tabPreliminaryReview.payAcceptanceRemark}}</p>
+            <p>{{tabPreliminaryReview.upstreamPayType?onFiterStates('upstreamPayType',tabPreliminaryReview.upstreamPayType):'-'}}</p>
+            <p v-if="tabPreliminaryReview.upstreamPayType">承兑描述：<span v-if="!tabPreliminaryReview.payAcceptanceRemark">-</span></p>
+            <p v-if="tabPreliminaryReview.upstreamPayType&&tabPreliminaryReview.payAcceptanceRemark">{{tabPreliminaryReview.payAcceptanceRemark}}</p>
         </div>
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">上游接受付款周期</h2>
@@ -116,7 +116,6 @@
 <script>
 import { TYPE_LIST, COOPERATION_PROGRESS_LIST, DEVICE_LIST, UPSTREAMSUPPLIERTYPE, UPSTREAMPAYTYPE } from '../../const'
 import utils from '@/utils/filters'
-console.log('utils: ', utils)
 
 export default {
     name: 'tabPreliminaryReview',
@@ -137,9 +136,28 @@ export default {
     },
     methods: {
         onFiterStates (data, val) {
-            return this[data].filter((v) => {
-                return v.key == val
-            })
+            val = (val + '').split(',')// ['2','1']
+            let arr = []
+            let res = ''
+            if (val.length > 0) {
+                this[data].map((item) => {
+                    val.map(v => {
+                        if (item.key == v) {
+                            arr.push(item)
+                        }
+                    })
+                })
+            }
+            if (arr && arr.length > 1) {
+                arr.map(item => {
+                    res = res + item.value + '，'
+                })
+                res = res.substring(0, res.lastIndexOf('，'))
+            }
+            if (arr && arr.length == 1) {
+                return arr[0].value
+            }
+            return res || '-'
         },
         formatMoney (val) {
             return utils.money(val)
