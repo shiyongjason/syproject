@@ -410,7 +410,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'januaryValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -421,7 +421,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'februaryValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -433,7 +433,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'marchValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -444,7 +444,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'aprilValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -455,7 +455,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'mayValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -466,7 +466,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'juneValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -477,7 +477,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'julyValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -488,7 +488,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'augustValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -499,7 +499,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'septemberValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -510,7 +510,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'octoberValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -521,7 +521,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'novemberValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         },
@@ -532,7 +532,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'decemberValue',
-                    label: `合计`
+                    label: `-`
                 }
             ]
         }

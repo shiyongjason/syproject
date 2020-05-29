@@ -100,7 +100,7 @@ export let tableLabel = [
 ]
 
 // 履约值
-export function preformTableLabel (queryDim) {
+export function preformTableLabel (targetYear) {
     return [
         {
             prop: 'misCode',
@@ -116,25 +116,19 @@ export function preformTableLabel (queryDim) {
         },
         {
             prop: 'companyName',
-            label: queryDim,
+            label: '全部',
             fixed: true,
-            width: 100,
+            width: 120,
             showOverflowTooltip: true,
             children: [
                 {
                     prop: 'companyName',
-                    label: '-',
-                    children: [
-                        {
-                            prop: 'companyName',
-                            label: '合计'
-                        }
-                    ]
+                    label: '合计'
                 }
             ]
         },
         {
-            label: 'XXXX年度履约值利润指标',
+            label: targetYear + '年度履约值利润指标',
             children: [
                 {
                     prop: 'januaryValue',
@@ -311,46 +305,45 @@ export function preformTableLabel (queryDim) {
 }
 
 // 冲刺值
-export function sprintTableLabel (queryDim) {
+export function sprintTableLabel (targetYear) {
     return [
         {
-            prop: 'misCode',
+            prop: 'subsectionName',
             label: '分部',
             fixed: true,
             showOverflowTooltip: true,
             children: [
                 {
-                    prop: 'misCode',
+                    prop: 'subsectionName',
                     label: `-`
                 }
             ]
         },
         {
-            prop: 'companyName',
-            label: queryDim,
+            prop: 'regionName',
+            label: '大区',
             fixed: true,
+            width: 120,
             showOverflowTooltip: true,
-            width: 100,
             children: [
                 {
-                    prop: 'companyName',
-                    label: `全部`
+                    prop: 'regionName',
+                    label: `合计`
                 }
             ]
         },
         {
-            label: 'XXXX年度冲刺值利润指标',
+            label: targetYear + '年度冲刺值利润指标',
             children: [
                 {
                     prop: 'januaryValue',
                     label: '1月',
                     width: '100',
-                    displayAs: 'fundMoney',
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
-                            label: ``
+                            prop: 'januaryValue',
+                            label: `-`
                         }
                     ]
                 },
@@ -358,11 +351,10 @@ export function sprintTableLabel (queryDim) {
                     prop: 'februaryValue',
                     label: '2月',
                     width: '100',
-                    displayAs: 'fundMoney',
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'februaryValue',
                             label: ``
                         }
                     ]
@@ -375,7 +367,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'marchValue',
                             label: ``
                         }
                     ]
@@ -388,7 +380,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'aprilValue',
                             label: ``
                         }
                     ]
@@ -401,7 +393,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'mayValue',
                             label: ``
                         }
                     ]
@@ -414,7 +406,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'juneValue',
                             label: ``
                         }
                     ]
@@ -427,7 +419,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'julyValue',
                             label: ``
                         }
                     ]
@@ -440,7 +432,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'augustValue',
                             label: ``
                         }
                     ]
@@ -453,7 +445,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'septemberValue',
                             label: ``
                         }
                     ]
@@ -466,7 +458,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'octoberValue',
                             label: ``
                         }
                     ]
@@ -479,7 +471,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'novemberValue',
                             label: ``
                         }
                     ]
@@ -492,7 +484,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'decemberValue',
                             label: ``
                         }
                     ]
@@ -505,7 +497,7 @@ export function sprintTableLabel (queryDim) {
                     showOverflowTooltip: true,
                     children: [
                         {
-                            prop: 'misCode',
+                            prop: 'totalAnnual',
                             label: ``
                         }
                     ]

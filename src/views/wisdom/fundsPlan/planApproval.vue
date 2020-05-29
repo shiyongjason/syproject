@@ -28,7 +28,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="findPlanApprovalList({...params, pageSize:10, pageNumber: 1})">
+                    <el-button type="primary" class="ml20" @click="btnQuery({...params, pageSize:10, pageNumber: 1})">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -44,10 +44,7 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planApprovalList" align="center"
-                         :total="planApprovalPagination.total" :showPagination="true">
-                <template slot="organizationName" slot-scope="scope">
-                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
-                </template>
+                         :total="planApprovalPagination.total" :showPagination="true" @pagination="getList">
             </hosJoyTable>
         </div>
         <el-dialog title="资金计划审批额度导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
@@ -68,7 +65,7 @@
                         导入表格
                     </el-button>
                 </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -114,10 +111,6 @@ export default {
                     selectCode: '',
                     selectName: ''
                 },
-                areaObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
                 platformObj: {
                     selectCode: '',
                     selectName: ''
@@ -153,40 +146,45 @@ export default {
     async mounted () {
         await this.findTargetTime()
         this.params.valueYear = this.targetTime.slice(0, 4)
-        this.findPlanApprovalList(this.params)
-        await this.findPlanApprovalTotal(this.params)
-        const columnData = planApproval(this.params.valueYear)
-        columnData.forEach((value, index) => {
-            if (index > 3) {
-                value.children.forEach((val) => {
-                    if (this.planApprovalTotal[val.prop]) {
-                        val.label = String(this.planApprovalTotal[val.prop])
-                    }
-                })
-            }
-        })
-        this.columnData = columnData
+        await this.onQuery(this.params)
+        this.newBossAuth(['D', 'F', 'P'])
     },
     methods: {
+        btnQuery (params) {
+            this.queryParamsTemp = { ...params }
+            this.onQuery(params)
+        },
+        getList (val) {
+            console.log({ ...this.queryParamsTemp, ...val })
+            this.onQuery({ ...this.queryParamsTemp, ...val })
+        },
+        async onQuery (params) {
+            this.findPlanApprovalList(params)
+            await this.findPlanApprovalTotal(params)
+            const columnData = planApproval(params.valueYear)
+            columnData.forEach((value, index) => {
+                if (index > 3) {
+                    value.children.forEach((val) => {
+                        if (this.planApprovalTotal[val.prop]) {
+                            val.label = String(this.planApprovalTotal[val.prop])
+                        }
+                    })
+                }
+            })
+            this.columnData = columnData
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
                 selectName: ''
             }
             if (dis === 'D') {
-                this.queryParams.subsectionCode = ''
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
+                this.params.subsectionCode = ''
+                this.params.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.areaObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
-                this.queryParams.misCode = ''
+                this.params.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
         },
@@ -194,38 +192,17 @@ export default {
             if (dis === 'D') {
                 this.params.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.params.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.params.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
-                this.findAuthList({
-                    deptType: 'Q',
-                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
-                })
                 // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
-                !val.value.crmDeptCode && this.linkage(dis)
-            } else if (dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.params.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
-                    }
-                    this.findPlatformslist(params)
-                }
-                !val.value.selectCode && this.linkage(dis)
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
                 this.params.misCode = val.value.misCode ? val.value.misCode : ''
             }
@@ -240,7 +217,34 @@ export default {
             })
         },
         onReset () {
-
+            this.params = {
+                valueYear: '',
+                regionCode: '',
+                subsectionCode: '',
+                misCode: '',
+                pageSize: 10,
+                pageNumber: 1
+            }
+            this.selectAuth = {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.params.valueYear = this.targetTime.slice(0, 4)
+            this.onQuery({ ...this.params, pageSize: 10, pageNumber: 1 })
+        },
+        cancel () {
+            this.uploadData.valueYear = ''
+            this.dialogFormVisible = false
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
@@ -271,7 +275,7 @@ export default {
                 type: 'success'
             })
             this.loading = false
-            this.findPlanApprovalList(this.params)
+            this.onQuery(this.params)
             this.uploadData.valueYear = ''
             this.dialogFormVisible = false
         },

@@ -16,7 +16,7 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.selectYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="queryParams.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
@@ -40,8 +40,8 @@
                         冲刺值利润指标导入模板导出
                     </a>
                 </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='valueYear'>
+                    <el-date-picker v-model="uploadData.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
@@ -58,14 +58,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { sprintTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getSprintIndexList, getSprintIndexTotal, exportSprintIndex } from './api/index'
-import moment from 'moment'
 export default {
     name: 'sprintIndex',
     mixins: [departmentAuth],
@@ -73,10 +72,10 @@ export default {
     data: function () {
         return {
             uploadData: {
-                commitmentYear: ''
+                valueYear: ''
             },
             rules: {
-                commitmentYear: [
+                valueYear: [
                     { required: true, message: '请选择年', trigger: 'blur' }
                 ]
             },
@@ -99,11 +98,8 @@ export default {
             },
             queryParams: {
                 regionCode: '',
-                subRegionCode: '',
                 subsectionCode: '',
-                subsectionOldCode: '',
-                misCode: '',
-                commitmentYear: moment().format('YYYY'),
+                valueYear: '',
                 totalAreaName: '',
                 pageNumber: 1,
                 pageSize: 10
@@ -114,7 +110,7 @@ export default {
             },
             total: {},
             tableData: [],
-            column: sprintTableLabel('全部'),
+            column: [],
             dialogFormVisible: false
         }
     },
@@ -124,6 +120,9 @@ export default {
             regionList: state => state.regionList,
             branchList: state => state.branchList,
             platformData: state => state.platformData
+        }),
+        ...mapGetters({
+            targetTime: 'fundsPlan/targetTime'
         })
     },
     methods: {
@@ -149,39 +148,22 @@ export default {
             }
         },
         onExport () {
-            this.queryParams.totalAreaName = this.selectAuthLabelShow()
             exportSprintIndex(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
-            this.selectAuthLabelShow()
             this.onQuery()
-        },
-        selectAuthLabelShow () {
-            let totalAreaName = '全部'
-            if (this.selectAuth.branchObj.selectName) {
-                totalAreaName = this.selectAuth.branchObj.selectName
-            } else if (this.selectAuth.regionObj.selectName) {
-                totalAreaName = this.selectAuth.regionObj.selectName
-            }
-            this.column = sprintTableLabel(totalAreaName)
-            return totalAreaName
         },
         async onQuery () {
             const promiseArr = [getSprintIndexList(this.queryParams), getSprintIndexTotal(this.queryParams)]
-            var data = await Promise.all(promiseArr).then((res) => {
-                res[1].data.companyName = '合计'
-                res[0].data.records.unshift(res[1].data)
+            const data = await Promise.all(promiseArr).then((res) => {
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
+            console.log(data)
             this.tableData = data.records
-            if (data.records.length > 1) {
-                this.column[2].label = `${data.records[0].commitmentYear}年度冲刺值利润指标`
-            } else {
-                this.column[2].label = `${this.queryParams.commitmentYear}年度冲刺值利润指标`
-            }
+            this.page.total = data.total
         },
         getList (val) {
             this.searchParams = {
@@ -197,7 +179,7 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'selectYear ', moment().format('YYYY'))
+            this.$set(this.queryParams, 'valueYear ', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
@@ -222,7 +204,7 @@ export default {
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
+            if (!this.uploadData.valueYear) {
                 this.$message({
                     message: '请先选择导入年份！',
                     type: 'warning'
@@ -248,11 +230,17 @@ export default {
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
-        }
+        },
+        ...mapActions({
+            findTargetTime: 'fundsPlan/findTargetTime'
+        })
     },
     async mounted () {
+        await this.findTargetTime()
+        this.queryParams.valueYear = this.targetTime.slice(0, 4)
+        this.column = sprintTableLabel(this.queryParams.valueYear)
         this.onSearch()
-        await this.oldBossAuth(['D', 'F'])
+        this.newBossAuth(['D', 'F'])
     }
 }
 </script>

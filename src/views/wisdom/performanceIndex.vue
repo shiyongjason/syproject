@@ -22,7 +22,7 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="queryParams.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
@@ -35,7 +35,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='true' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -64,14 +64,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { preformTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getPerformanceIndexList, getPerformanceIndexTotal, exportPerformanceIndex } from './api/index'
-import moment from 'moment'
 export default {
     name: 'performanceIndex',
     mixins: [departmentAuth],
@@ -111,7 +110,7 @@ export default {
                 regionCode: '',
                 subsectionCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
+                valueYear: '',
                 totalAreaName: '',
                 pageNumber: 1,
                 pageSize: 10
@@ -122,7 +121,7 @@ export default {
             },
             total: {},
             tableData: [],
-            column: preformTableLabel('全部'),
+            column: [],
             dialogFormVisible: false
         }
     },
@@ -132,6 +131,9 @@ export default {
             regionList: state => state.regionList,
             branchList: state => state.branchList,
             platformData: state => state.platformData
+        }),
+        ...mapGetters({
+            targetTime: 'fundsPlan/targetTime'
         })
     },
     methods: {
@@ -172,41 +174,21 @@ export default {
             }
         },
         onExport () {
-            this.queryParams.totalAreaName = this.selectAuthLabelShow()
             exportPerformanceIndex(this.queryParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
-            this.selectAuthLabelShow()
             this.onQuery()
-        },
-        selectAuthLabelShow () {
-            let totalAreaName = '全部'
-            if (this.selectAuth.platformObj.selectName) {
-                totalAreaName = this.selectAuth.platformObj.selectName
-            } else if (this.selectAuth.branchObj.selectName) {
-                totalAreaName = this.selectAuth.branchObj.selectName
-            } else if (this.selectAuth.regionObj.selectName) {
-                totalAreaName = this.selectAuth.regionObj.selectName
-            }
-            this.column = preformTableLabel(totalAreaName)
-            return totalAreaName
         },
         async onQuery () {
             const promiseArr = [getPerformanceIndexList(this.queryParams), getPerformanceIndexTotal(this.queryParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                res[1].data.companyName = '合计'
-                res[0].data.records.unshift(res[1].data)
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
             this.tableData = data.records
-            if (data.records.length > 1) {
-                this.column[2].label = `${data.records[0].commitmentYear}年度履约值利润指标`
-            } else {
-                this.column[2].label = `${this.queryParams.commitmentYear}年度履约值利润指标`
-            }
+            this.page.total = data.total
         },
         getList (val) {
             this.searchParams = {
@@ -223,7 +205,7 @@ export default {
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
@@ -275,11 +257,17 @@ export default {
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
-        }
+        },
+        ...mapActions({
+            findTargetTime: 'fundsPlan/findTargetTime'
+        })
     },
     async mounted () {
+        await this.findTargetTime()
+        this.queryParams.valueYear = this.targetTime.slice(0, 4)
+        this.column = preformTableLabel(this.queryParams.valueYear)
         this.onSearch()
-        await this.oldBossAuth(['D', 'F', 'P'])
+        this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>
