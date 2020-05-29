@@ -41,7 +41,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -125,13 +125,12 @@ export default {
                 subsectionOldCode: '',
                 misCode: '',
                 commitmentYear: moment().format('YYYY'),
-                totalAreaName: '',
-                pageNumber: 1,
-                pageSize: 10
+                totalAreaName: ''
             },
             page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
             },
             total: {},
             tableData: [],
@@ -237,7 +236,7 @@ export default {
             return this.column[1].label
         },
         async onQuery () {
-            const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
+            const promiseArr = [getCommitmentList(this.searchParams), getCommitmentTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 res[1].data.companyName = '合计'
                 res[0].data.records.unshift(res[1].data)
@@ -245,7 +244,13 @@ export default {
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
+            console.log(data)
             this.tableData = data.records
+            this.page = {
+                total: data.total,
+                pageNumber: data.current,
+                pageSize: data.size
+            }
             if (data.records.length > 1) {
                 this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
             } else {
@@ -253,6 +258,7 @@ export default {
             }
         },
         getList (val) {
+            console.log(val)
             this.searchParams = {
                 ...this.searchParams,
                 ...val

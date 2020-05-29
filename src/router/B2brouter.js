@@ -484,6 +484,17 @@ export default [
                 },
                 component: () => import('@/views/hmall/walletPay/walletPay.vue')
             },
+            // {
+            //     path: 'merchantReview',
+            //     name: 'merchantReview',
+            //     meta: {
+            //         title: '商户审核列表',
+            //         tagName: '商户审核列表',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/shopReview/merchantReview.vue')
+            // },
             {
                 path: 'brandAreaAudit',
                 name: 'brandAreaAudit',

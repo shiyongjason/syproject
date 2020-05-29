@@ -1,10 +1,6 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick">
-                <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
-                <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
-            </el-tabs>
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -31,22 +27,45 @@
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time" v-if="false">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
+                <div class="query-cont-col">
+                    <div class="query-col-title">合同到期日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('payEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('payStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">宽限期到期日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('overdueEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('overdueStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">实际还款日：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('actualPayEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('actualPayStartTime')">
+                        </el-date-picker>
+                    </div>
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
-                            <el-button type="primary" class='ml20' :loading='loading'>
-                                导入表格
-                            </el-button>
-                        </el-upload>
-                    </div>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
+                    <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
+                        <el-button type="primary" class='ml20' :loading='loading'>
+                            导入表格
+                        </el-button>
+                    </el-upload>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -64,20 +83,28 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal } from './const'
+import { overdueDetailTable } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'
-import moment from 'moment'
-import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/utils/auth_const'
+import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal, exportCompanyOverdueDetailExcel } from './api/index'
+import { OVERDUE_DETAIL_TABLE_EXPORT, OVERDUE_DETAIL_TABLE_IMPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
-            platformOverdueSumImport: PLATFORM_OVERDUE_SUM_IMPORT,
+            overdueDetailTableExport: OVERDUE_DETAIL_TABLE_EXPORT,
+            overdueDetailTableImport: OVERDUE_DETAIL_TABLE_IMPORT,
+            tableType: '0',
+            uploadData: {
+                commitmentYear: ''
+            },
+            rules: {
+                commitmentYear: [
+                    { required: true, message: '请选择年', trigger: 'blur' }
+                ]
+            },
             headersData: {
                 'refreshToken': sessionStorage.getItem('refreshToken'),
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
@@ -104,19 +131,21 @@ export default {
                 }
             },
             queryParams: {
-                state: '1',
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
-                subsectionOldCode: '',
-                companyName: '',
-                year: moment().format('YYYY')
+                misCode: '',
+                payStartTime: '',
+                payEndTime: '',
+                overdueStartTime: '',
+                overdueEndTime: '',
+                actualPayStartTime: '',
+                actualPayEndTime: ''
             },
-            searchParams: {},
             page: {
                 total: 0,
-                pageSize: 10,
-                pageNumber: 1
+                pageNumber: 1,
+                pageSize: 10
             },
             total: {},
             tableData: [],
@@ -132,7 +161,7 @@ export default {
             platformData: state => state.platformData
         }),
         column () {
-            return platformSummarySheet
+            return overdueDetailTable
         },
         fixedHeight () {
             let oneHeight = 71
@@ -141,6 +170,26 @@ export default {
         }
     },
     methods: {
+        pickerOptionsStart (val) {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams[val]
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (val) {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams[val]
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -159,10 +208,11 @@ export default {
                 this.queryParams.misCode = ''
                 this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
-                this.queryParams.misCode = ''
-                this.selectAuth.platformObj = { ...obj }
             }
+            // else if (dis === 'Q') {
+            //     this.queryParams.misCode = ''
+            //     this.selectAuth.platformObj = { ...obj }
+            // }
         },
         async backPlat (val, dis) {
             // console.log(val, dis)
@@ -186,71 +236,50 @@ export default {
                 }
                 !val.value.crmDeptCode && this.linkage(dis)
             } else if (dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.queryParams.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
-                    }
-                    this.findPlatformslist(params)
-                }
-                !val.value.selectCode && this.linkage(dis)
+                // this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
+                // if (val.value.selectCode) {
+                //     this.findPlatformslist({ subregionCode: val.value.selectCode })
+                // } else {
+                //     let params = null
+                //     if (this.queryParams.subsectionOldCode) {
+                //         params = {
+                //             subsectionCode: this.queryParams.subsectionOldCode
+                //         }
+                //     }
+                //     this.findPlatformslist(params)
+                // }
+                // !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            exportCompanyOverdueExcel(this.searchParams)
-        },
-        handleClick () {
-            this.tableData = []
-            this.onReset()
+            exportCompanyOverdueDetailExcel(this.searchParams)
         },
         onSearch () {
-            this.searchParams = {
-                ...this.queryParams,
-                ...this.page
-            }
+            this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
-            const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
+            const promiseArr = [getOverdueIncrementDetailList(this.searchParams), getOverdueIncrementDetailTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                if (!res[1].data) {
-                    res[1].data = platformSummarySheetTotal
-                }
-                let { annualRepaymentPlan, ...rest } = res[1].data
-                let temp = { ...annualRepaymentPlan, ...rest }
-                for (let key in temp) {
-                    platformSummarySheet.forEach(value => {
-                        if (value.prop === key && temp[key] != null) {
+                for (let key in res[1].data) {
+                    overdueDetailTable.forEach(value => {
+                        if (value.prop === key && res[1].data[key] != null) {
                             value.children.forEach(value1 => {
                                 if (key === 'planProportion') {
-                                    value1.label = String(temp[key]) + '%'
+                                    value1.label = String(res[1].data[key] * 100) + '%'
                                 } else {
-                                    value1.label = String(temp[key])
+                                    value1.label = String(res[1].data[key])
                                 }
-                            })
-                        }
-                        if (value.label === '销售') {
-                            value.children.forEach(value1 => {
-                                value1.children.forEach(value2 => {
-                                    if (value2.prop === key && temp[key] != null) {
-                                        value2.label = String(temp[key])
-                                    }
-                                })
                             })
                         }
                         if (value.label === '2020年度还款计划') {
                             value.children.forEach(value1 => {
                                 value1.children.forEach(value2 => {
-                                    if (value2.prop === key && temp[key] != null) {
-                                        value2.label = String(temp[key])
+                                    if (value2.prop === key && res[1].data[key] != null) {
+                                        value2.label = String(res[1].data[key])
                                     }
                                 })
                             })
@@ -261,10 +290,10 @@ export default {
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
-            this.tableData = this.handleData(data.records)
+            this.tableData = data.records
             this.tableData.map(i => {
                 if (i.planProportion != null) {
-                    // i.planProportion *= 100
+                    i.planProportion *= 100
                     if (i.planProportion !== 0) i.planProportion = i.planProportion.toFixed(2)
                     i.planProportion += '%'
                 }
@@ -274,22 +303,6 @@ export default {
                 pageSize: data.size,
                 pageNumber: data.current
             }
-        },
-        handleData (arr = []) {
-            return arr.map(i => {
-                if (!i.annualRepaymentPlan) {
-                    i = {
-                        ...i,
-                        ...annualRepaymentPlan
-                    }
-                } else {
-                    i = {
-                        ...i,
-                        ...i.annualRepaymentPlan
-                    }
-                }
-                return i
-            })
         },
         getList (val) {
             this.searchParams = {
@@ -306,13 +319,18 @@ export default {
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'companyName', '')
-            this.$set(this.queryParams, 'year', moment().format('YYYY'))
+            this.$set(this.queryParams, 'misCode', '')
+            this.$set(this.queryParams, 'payStartTime', '')
+            this.$set(this.queryParams, 'payEndTime', '')
+            this.$set(this.queryParams, 'overdueStartTime', '')
+            this.$set(this.queryParams, 'overdueEndTime', '')
+            this.$set(this.queryParams, 'actualPayStartTime', '')
+            this.$set(this.queryParams, 'actualPayEndTime', '')
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            this.selectAuth.areaObj = { ...obj }
+            // this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
             await this.oldBossAuth()
             this.onSearch()

@@ -77,6 +77,14 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">商品状态：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.orderProductStatus">
+                            <el-option v-for="item in productStatusOptions" :label="item.label" :value="item.value" :key="item.key"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-input">
                         <el-button type="primary" class="ml20" @click="onQuery()">
                             查询
@@ -102,13 +110,16 @@
                 <template slot="childOrderStatus" slot-scope="scope">
                     {{ orderStatusMap.get(scope.data.row.childOrderStatus) }}
                 </template>
+                <template slot="orderProductStatus" slot-scope="scope">
+                    {{ productStatusMap.get(scope.data.row.orderProductStatus) }}
+                </template>
             </basicTable>
         </div>
     </div>
 </template>
 
 <script>
-import { ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, ORDER_STATUS_MAP, ORDER_CHANNERL_MAP } from './const'
+import { ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, ORDER_STATUS_MAP, ORDER_CHANNERL_MAP, PRODUCT_STATUS_OPTIONS, PRODUCT_STATUS_MAP } from './const'
 import { PAY_METHOD_OPTIONS } from '@/utils/const'
 import { findProductCategory } from '../shopManager/api/index'
 import { mapGetters, mapActions } from 'vuex'
@@ -122,6 +133,8 @@ export default {
             selfSupportOptions: SELF_SUPPORT_OPTIONS,
             orderStatusMap: ORDER_STATUS_MAP,
             orderChannelMap: ORDER_CHANNERL_MAP,
+            productStatusOptions: PRODUCT_STATUS_OPTIONS,
+            productStatusMap: PRODUCT_STATUS_MAP,
             initParams: {},
             queryParams: {
                 spuCode: '',
@@ -135,7 +148,8 @@ export default {
                 childOrderStatus: '',
                 source: '',
                 startPayTime: '',
-                endPayTime: ''
+                endPayTime: '',
+                orderProductStatus: ''
             },
             categoryId: [],
             categoryOptions: []
@@ -191,6 +205,7 @@ export default {
                 { label: '商品类目', prop: 'category' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '订单状态', prop: 'childOrderStatus' },
+                { label: '商品状态', prop: 'orderProductStatus' },
                 { label: '订单渠道', prop: 'source' }
             ]
         }

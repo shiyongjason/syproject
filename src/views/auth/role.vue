@@ -150,7 +150,7 @@ export default {
             tableList: [],
             newTableList: [], // newTableList记录初始权限配置，在取消的时候判断是否有权限变更
             fieldVisible: false, // 敏感字段弹出层显示控制
-            fieldConfig: [], // 敏感字段弹出层可选项列表
+            fieldConfig: [], // 敏感字段弹出层可选项列表或者 数据范围权限
             layerTitle: '', // 弹出层标题
             layerAuthName: '', // 弹出层列表中的表格名称
             layerType: '',
@@ -169,7 +169,8 @@ export default {
     },
     computed: {
         ...mapState({
-            isCollapse: state => state.isCollapse
+            isCollapse: state => state.isCollapse,
+            userInfo: state => state.userInfo
         })
     },
     async mounted () {
@@ -353,6 +354,17 @@ export default {
                 }
             })
         },
+        // 获取选中 所有 have=true 的每一层的authCode 组成数组， 然后取最后一个code 作为数据范围的菜单code
+        handlerCodeFilter (itemArr, authCodeArr) {
+            itemArr.filter(item => item.have).forEach(item => {
+                if (item.authCode) {
+                    authCodeArr.push(item.authCode)
+                }
+                if (item.childAuthList) {
+                    this.handlerCodeFilter(item.childAuthList, authCodeArr)
+                }
+            })
+        },
         async onSaveRole () {
             let resourceObj = {
                 resourceIds: [],
@@ -419,13 +431,23 @@ export default {
             this.fieldVisible = !!val
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
-            this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
+            if (item.authType == 2) {
+                this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
+            } else {
+                this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))
+            }
             this.newItem = item
             // 弹出层title和authName
             this.layerTitle = item.authType == 0 ? '敏感字段' : item.authType == 0 ? '敏感操作' : '数据范围'
             this.layerAuthName = item.authName
+            this.layerType = item.authType
         },
         onCancelFieldConfig () {
+            if (this.layerType == 2) {
+                this.$refs.treetable.setCheckedKeys([])
+            }
+            this.newItem.employeeSubsections = this.cloneEmployeeSubsections ? this.cloneEmployeeSubsections : {}
             this.newItem.authResourceList = this.cloneConfig ? this.cloneConfig : []
             this.fieldVisible = false
         }

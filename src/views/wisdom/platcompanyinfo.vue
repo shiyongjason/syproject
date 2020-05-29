@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col pl20">
-                    <el-button type="primary" @click="findCompanyList(1)">搜索
+                    <el-button type="primary" @click="findCompanyList({...searchParams, pageNumber: 1})">搜索
                     </el-button>
                     <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="exportTable()">导出
                     </el-button>
@@ -50,13 +50,14 @@
     </div>
 </template>
 <script>
-import { findCompanyList, findProvinceAndCity, findPaltList, findBranchList } from './api/index.js'
+import { findBranchList, findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
+
 export default {
     data () {
         return {
@@ -111,12 +112,12 @@ export default {
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
             // this.findProvinceAndCity(0, code)
             this.platList = await this.findPaltList(code)
-            this.findCompanyList()
+            this.findCompanyList(this.searchParams)
         } else if (this.userInfo.deptType == 0) {
-            this.findCompanyList()
+            this.findCompanyList(this.searchParams)
             this.platList = await this.findPaltList()
         } else {
-            this.findCompanyList()
+            this.findCompanyList(this.searchParams)
         }
         this.platList.forEach((value) => {
             value.value = value.companyShortName
@@ -153,11 +154,12 @@ export default {
         async onCityChange () {
             this.cityList = await this.findProvinceAndCity(this.searchParams.provinceCode)
         },
-        async findCompanyList (val) {
+        async findCompanyList (params, val) {
+            this.queryParamsTemp = { ...params }
             if (val) {
                 this.searchParams.pageNumber = val || 1
             }
-            const { data } = await findCompanyList(this.searchParams)
+            const { data } = await findCompanyList(params)
             this.tableData = data.data.pageContent
             this.tableData.map(i => {
                 if (i.mainFormat == 0) i.mainFormatName = '零售'
@@ -193,8 +195,7 @@ export default {
                 subsectionCode: subsectionCode || ''
             }
             const { data } = await findProvinceAndCity(params)
-            const arr = data.data
-            return arr
+            return data.data
         },
         async findPaltList (subsectionCode) {
             const params = {
@@ -221,12 +222,12 @@ export default {
             location.href = interfaceUrl + 'develop/developbasicinfo/exportCompanyList?exportType=2&' + url
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
-            this.findCompanyList()
+            this.queryParamsTemp.pageSize = val
+            this.findCompanyList(this.queryParamsTemp)
         },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
-            this.findCompanyList()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.findCompanyList(this.queryParamsTemp)
         }
     }
 }

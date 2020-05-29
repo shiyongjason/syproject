@@ -109,27 +109,27 @@
                 <table class="tablelist textCenter">
                     <thead>
                         <tr>
-                            <td width="15%">菜单名</td>
+                            <td width="20%">敏感名</td>
                             <td width="15%">Key</td>
-                            <td width="10%">排序</td>
+                            <td width="5%">排序</td>
                             <td width="20%">资源uri</td>
-                            <td width="20%">操作</td>
-                            <td width="20%">操作</td>
+                            <td width="10%">操作</td>
+                            <td width="10%">操作</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(value, index) in list" :key="index">
                             <td>
-                                <el-input v-model="value.resourceName" placeholder="请输入内容"></el-input>
+                                <el-input v-model="value.resourceName" placeholder="敏感名"></el-input>
                             </td>
                             <td>
-                                <el-input v-model="value.resourceKey" placeholder="请输入内容"></el-input>
+                                <el-input v-model="value.resourceKey" placeholder="Key"></el-input>
                             </td>
                             <td>
-                                <el-input v-model="value.sort" placeholder="请输入内容"></el-input>
+                                <el-input v-model="value.sort" placeholder="排序"></el-input>
                             </td>
                             <td>
-                                <el-input v-model="value.resourceAddress" placeholder="请输入内容"></el-input>
+                                <el-input v-model="value.resourceAddress" placeholder="资源uri"></el-input>
                             </td>
                             <td>
                                 <el-button @click="onResourceSure(index)">保 存</el-button>
@@ -137,7 +137,6 @@
                             </td>
                             <td>
                                 <el-button type="success" @click="addAuthList" v-show="index + 1 == list.length">添加</el-button>
-                                <!-- <button>-</button> -->
                             </td>
                         </tr>
                     </tbody>
@@ -180,10 +179,10 @@ export default {
             },
             formRules: {
                 authName: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                    { required: true, message: '请输入菜单名称', trigger: 'blur' }
                 ],
                 authUri: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                    { required: true, message: '请输入菜单路由', trigger: 'blur' }
                 ]
             },
             dialogFirVisible: false,
@@ -490,5 +489,8 @@ td .el-button {
 }
 .point {
     cursor: pointer;
+}
+.h-dialog{
+    padding: 20px;
 }
 </style>

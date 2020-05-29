@@ -23,8 +23,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
+                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
 </template>
 <script>
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import businessDrawer from './components/businessDrawer'
 import { BUS_TYPE_LIST, RISK_TYPE_LIST, AUTEHEN_LIST } from '../const'
@@ -143,14 +143,16 @@ export default {
                 authenticationTimeOrder: '',
                 customerType: '',
                 customerTypeOrder: '',
-                companyName: '',
+                companyName: this.$route.params.name || '',
                 companyType: '',
-                subsectionCode: '',
                 userAccount: '',
                 userName: '',
                 authenticationStatus: '',
                 createTimeOrder: 'desc',
-                areaIds: ''
+                areaIds: '',
+                deptDoc: '',
+                jobNumber: '',
+                authCode: ''
             },
             copyParams: {},
             tableData: [],
@@ -202,30 +204,39 @@ export default {
                 }
             }
         },
-        ...mapGetters('crmauthen', {
-            businessData: 'businessData',
-            crmauthLoan: 'crmauthLoan'
-        }),
         ...mapGetters({
-            nestDdata: 'nestDdata',
-            branchList: 'branchList'
+            businessData: 'crmauthen/businessData',
+            crmauthLoan: 'crmauthen/crmauthLoan',
+            crmdepList: 'crmmanage/crmdepList',
+            nestDdata: 'nestDdata'
+        }),
+        ...mapState({
+            userInfo: state => state.userInfo
         })
     },
     async mounted () {
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
         this.getFindbranch()
+        if (this.$route.params.name) {
+            this.onLookauthen(this.$route.params.code)
+        }
     },
     methods: {
-        ...mapActions('crmauthen', {
-            findBusinesspage: 'findBusinesspage',
-            findCrmauthenStatic: 'findCrmauthenStatic'
+        ...mapActions({
+            findBusinesspage: 'crmauthen/findBusinesspage',
+            findCrmauthenStatic: 'crmauthen/findCrmauthenStatic',
+            findCrmdeplist: 'crmmanage/findCrmdeplist'
         }),
         ...mapActions({
-            findNest: 'findNest',
-            findBranch: 'findBranch'
+            findNest: 'findNest'
         }),
+        onChooseDep () {
+
+        },
         async getFindNest () {
             await this.findNest()
             this.options = this.nestDdata && this.nestDdata.map(item => {
@@ -238,11 +249,12 @@ export default {
             })
         },
         async getFindbranch () {
-            await this.findBranch()
-            this.branchArr = this.branchList
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+            this.branchArr = this.crmdepList
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.queryParams.companyName = ''
             this.optarr = ''
             this.searchList(1)
         },

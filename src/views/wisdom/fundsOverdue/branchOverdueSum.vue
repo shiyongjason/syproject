@@ -1,10 +1,6 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick">
-                <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
-                <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
-            </el-tabs>
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -18,42 +14,29 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <!-- boss公共权限包含区域，未来要是需要v-if="district" -->
                 <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">区域：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time" v-if="false">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
-                            <el-button type="primary" class='ml20' :loading='loading'>
-                                导入表格
-                            </el-button>
-                        </el-upload>
-                    </div>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" :height="fixedHeight" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -64,27 +47,18 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal } from './const'
+import { branchSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { interfaceUrl } from '@/api/config'
-import { getCompanyOverdueList, getCompanyOverdueListTotal, exportCompanyOverdueExcel } from './api/index'
+import { getBranchOverdueList, exportBranchOverdueDetailExcel } from './api/index'
 import moment from 'moment'
-import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/utils/auth_const'
+import { BRANCH_OVERDUE_SUM_EXPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
-            platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
-            platformOverdueSumImport: PLATFORM_OVERDUE_SUM_IMPORT,
-            headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
-            },
-            accept: '.xlsx,.xls',
-            loading: false,
-            interfaceUrl: interfaceUrl,
+            branchOverdueSumExport: BRANCH_OVERDUE_SUM_EXPORT,
             selectAuth: {
                 regionObj: {
                     selectCode: '',
@@ -104,23 +78,21 @@ export default {
                 }
             },
             queryParams: {
-                state: '1',
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
                 subsectionOldCode: '',
-                companyName: '',
-                year: moment().format('YYYY')
+                misCode: '',
+                commitmentYear: moment().format('YYYY')
             },
             searchParams: {},
             page: {
                 total: 0,
-                pageSize: 10,
-                pageNumber: 1
+                pageNumber: 1,
+                pageSize: 10
             },
             total: {},
-            tableData: [],
-            dialogFormVisible: false
+            tableData: []
         }
     },
     computed: {
@@ -132,11 +104,11 @@ export default {
             platformData: state => state.platformData
         }),
         column () {
-            return platformSummarySheet
+            return branchSummarySheet()
         },
         fixedHeight () {
-            let oneHeight = 71
-            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
+            let oneHeight = 48
+            let isHeight = 110 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
             return isHeight > 450 ? 450 : isHeight
         }
     },
@@ -174,6 +146,7 @@ export default {
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
@@ -201,94 +174,32 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            exportCompanyOverdueExcel(this.searchParams)
-        },
-        handleClick () {
-            this.tableData = []
-            this.onReset()
+            exportBranchOverdueDetailExcel(this.searchParams)
         },
         onSearch () {
-            this.searchParams = {
-                ...this.queryParams,
-                ...this.page
-            }
+            this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
-            const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
-            var data = await Promise.all(promiseArr).then((res) => {
-                if (!res[1].data) {
-                    res[1].data = platformSummarySheetTotal
-                }
-                let { annualRepaymentPlan, ...rest } = res[1].data
-                let temp = { ...annualRepaymentPlan, ...rest }
-                for (let key in temp) {
-                    platformSummarySheet.forEach(value => {
-                        if (value.prop === key && temp[key] != null) {
-                            value.children.forEach(value1 => {
-                                if (key === 'planProportion') {
-                                    value1.label = String(temp[key]) + '%'
-                                } else {
-                                    value1.label = String(temp[key])
-                                }
-                            })
-                        }
-                        if (value.label === '销售') {
-                            value.children.forEach(value1 => {
-                                value1.children.forEach(value2 => {
-                                    if (value2.prop === key && temp[key] != null) {
-                                        value2.label = String(temp[key])
-                                    }
-                                })
-                            })
-                        }
-                        if (value.label === '2020年度还款计划') {
-                            value.children.forEach(value1 => {
-                                value1.children.forEach(value2 => {
-                                    if (value2.prop === key && temp[key] != null) {
-                                        value2.label = String(temp[key])
-                                    }
-                                })
-                            })
-                        }
-                    })
-                }
-                return res[0].data
-            }).catch((error) => {
-                this.$message.error(`error:${error}`)
-            })
-            this.tableData = this.handleData(data.records)
+            // 不分页
+            const { data } = await getBranchOverdueList(this.searchParams)
+            // console.log(data)
+            this.tableData = data
             this.tableData.map(i => {
-                if (i.planProportion != null) {
-                    // i.planProportion *= 100
-                    if (i.planProportion !== 0) i.planProportion = i.planProportion.toFixed(2)
-                    i.planProportion += '%'
+                if (i.incrementProportion != null) {
+                    i.incrementProportion *= 100
+                    if (i.incrementProportion !== 0) i.incrementProportion = i.incrementProportion.toFixed(2)
+                    i.incrementProportion += '%'
                 }
-            })
-            this.page = {
-                total: data.total,
-                pageSize: data.size,
-                pageNumber: data.current
-            }
-        },
-        handleData (arr = []) {
-            return arr.map(i => {
-                if (!i.annualRepaymentPlan) {
-                    i = {
-                        ...i,
-                        ...annualRepaymentPlan
-                    }
-                } else {
-                    i = {
-                        ...i,
-                        ...i.annualRepaymentPlan
-                    }
+                if (i.stockPlanProportion != null) {
+                    i.stockPlanProportion *= 100
+                    if (i.stockPlanProportion !== 0) i.stockPlanProportion = i.stockPlanProportion.toFixed(2)
+                    i.stockPlanProportion += '%'
                 }
-                return i
             })
         },
         getList (val) {
@@ -305,9 +216,10 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'subsectionOldCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'companyName', '')
-            this.$set(this.queryParams, 'year', moment().format('YYYY'))
+            this.$set(this.queryParams, 'misCode', '')
+            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
@@ -316,36 +228,6 @@ export default {
             this.selectAuth.platformObj = { ...obj }
             await this.oldBossAuth()
             this.onSearch()
-        },
-        isSuccess (response) {
-            this.$message({
-                message: '批量导入成功！',
-                type: 'success'
-            })
-            this.loading = false
-            this.onSearch()
-        },
-        isError (response) {
-            this.$message({
-                message: '批量导入失败，' + JSON.parse(response.message).message,
-                type: 'error'
-            })
-            this.loading = false
-        },
-        handleUpload (file) {
-            if (file.size / (1024 * 1024) > 100) {
-                this.$message({
-                    message: '附件要保持100M以内',
-                    type: 'warning'
-                })
-                return false
-            }
-            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
-            if (this.accept.lastIndexOf(fileSuffix) == -1) {
-                this.$message.error('格式不正确！')
-                return false
-            }
-            this.loading = true
         }
     },
     async mounted () {
@@ -377,7 +259,4 @@ export default {
     background-color: rgba($color: #c65911, $alpha: 0.5) !important;
     color: #fff !important;
 }
-    /deep/.overdueTable td{
-        height: 71px;
-    }
 </style>

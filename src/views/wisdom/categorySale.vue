@@ -66,7 +66,7 @@
                             <el-checkbox label=3>淘汰</el-checkbox>
                         </el-checkbox-group>
                     </div>
-                    <el-button type="primary" class="ml20" @click="getPlatCategory()">
+                    <el-button type="primary" class="ml20" @click="getPlatCategory({...queryParams, current: 1})">
                         查询
                     </el-button>
                 </div>
@@ -160,8 +160,6 @@ export default {
                 current: 1,
                 size: 10
             },
-            queryParamsTemp: {
-            },
             activityName: {},
             file: [],
             paginationInfo: {
@@ -195,14 +193,16 @@ export default {
         }
     },
     methods: {
-        async getPlatCategory () {
-            if (!this.queryParams.startTime || !this.queryParams.endTime) {
+        async getPlatCategory (params) {
+            this.queryParamsTemp = { ...params }
+            if (!params.startTime || !params.endTime) {
                 this.$message.warning(`时间不能为空哦`)
                 return
             }
-            this.queryParams.onLineStatus = this.onLineStatus.join(',')
-            const { data } = await getPaltCategory(this.queryParams)
-            const { data: sumData } = await findPlatCategorySum(this.queryParams)
+            const temp = { ...params }
+            temp.onLineStatus = this.onLineStatus.join(',')
+            const { data } = await getPaltCategory(temp)
+            const { data: sumData } = await findPlatCategorySum(temp)
             this.tableData = data.data.records
             this.tableData.splice(0, 0, sumData.data)
             this.paginationInfo = {
@@ -229,12 +229,12 @@ export default {
             }
         },
         onCurrentChange (val) {
-            this.queryParams.current = val.pageNumber
-            this.getPlatCategory()
+            this.queryParamsTemp.current = val.pageNumber
+            this.getPlatCategory(this.queryParamsTemp)
         },
         onSizeChange (val) {
-            this.queryParams.size = val
-            this.getPlatCategory()
+            this.queryParamsTemp.size = val
+            this.getPlatCategory(this.queryParamsTemp)
         },
         async getPaltbarnd () {
             const { data } = await getPaltbarnd()
@@ -267,43 +267,7 @@ export default {
             this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
         },
         onFieldChange (selectedTh) {
-            // console.log(selectedTh)
-
-            // this.tableLabel.map(val => {
-            //     console.log(selectedTh.indexOf(val.label))
-            //     let isFlag = selectedTh.some(item => {
-            //         return val.label == item
-            //     })
-            //     val.choosed = isFlag
-            //     // console.log(isFlag)
-            // })
-            // const newTalelabel = deepCopy(this.tableLabel)
-            // // if (selectedTh.indexOf('平台公司') < 0) {
-            // //     newTalelabel.map(item => {
-            // //         if (item.hasOwnProperty('linkAge')) {
-            // //             item.choosed = !item.linkAge
-            // //         }
-            // //     }
-            // //     )
-            // // } else {
-            // //     newTalelabel.map(item => {
-            // //         if (item.hasOwnProperty('linkAge')) {
-            // //             item.choosed = true
-            // //         }
-            // //     })
-            // // }
-            // newTalelabel.map(item => {
-            //     if (item.hasOwnProperty('linkAge')) {
-            //         if (selectedTh.indexOf('平台公司') < 0) {
-            //             item.choosed = !item.linkAge
-            //         } else if (selectedTh.indexOf('平台公司') > -1 && selectedTh.indexOf('城市') > -1 && selectedTh.indexOf('mis编码') > -1 && selectedTh.indexOf('上线状态') > -1) {
-            //             item.choosed = true
-            //         }
-            //     }
-            // })
-
-            // this.tableLabel = newTalelabel
-            this.getPlatCategory()
+            this.getPlatCategory(this.queryParams)
             const queryFields = this.tableLabel.filter(item => item.queryParams)
             let isFind = false
             queryFields.forEach(field => {
@@ -318,7 +282,7 @@ export default {
                     }
                 }
             })
-            isFind && this.getPlatCategory()
+            isFind && this.getPlatCategory(this.queryParams)
         }
     },
     async mounted () {
@@ -334,7 +298,7 @@ export default {
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.userInfo.oldDeptCode
         }
-        await this.getPlatCategory()
+        await this.getPlatCategory(this.queryParams)
         // this.platList = await this.findPaltList(this.queryParams.subsectionCode)
     }
 }
