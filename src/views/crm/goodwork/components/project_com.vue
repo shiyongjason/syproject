@@ -1,6 +1,5 @@
 <template>
     <div class="drawer-wrap">
-
             <el-form :model="projectForm" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                   <p class="drawer-by">项目提交人：{{projectForm.createBy}}</p>
                 <el-form-item label="经销商：">
@@ -116,11 +115,11 @@
 import { mapGetters, mapActions, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
-import { putProjectDetail, saveStatus, updateAudit } from './../api/index'
+import { putProjectDetail } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
 
 export default {
-    name: 'projectdrawer',
+    name: 'projectcom',
     props: {
         projectForm: {
             type: Object,

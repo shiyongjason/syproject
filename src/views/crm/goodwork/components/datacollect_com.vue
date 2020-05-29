@@ -1,69 +1,162 @@
 <template>
     <div class="collect-wrap">
-        <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="10px" class="demo-ruleForm">
-            <el-button size="small" type="primary">打回记录</el-button>
-            <div class="collect-wrapbox">
-                <div class="collect-title">经销商</div>
-                <el-form-item label="" prop="type">
-                    <div class="collect-box">
-                        <el-checkbox label="" name="type" size="medium"></el-checkbox>
-                        <div class="collect-boxtxt">
-                            <h3>三证正副本</h3>
-                            <p>备注：原则上工商局打印（工商章）</p>
-                            <p>规定格式：复印件</p>
+        <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
+            <el-button size="small" type="primary" @click="onGetrefuse">打回记录</el-button>
+            <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
+                <div class="collect-title">{{item.firstCatagoryName}}</div>
+                <template v-for="obj in item.respRiskCheckDocTemplateList">
+                    <el-form-item label="" prop="type" :key="'item'+obj.templateId">
+                        <div class="collect-box">
+                            <el-checkbox label="" name="type" size="medium" v-model="obj.callback"></el-checkbox>
+                            <div class="collect-boxtxt">
+                                <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call">已打回，待分部补充</span></h3>
+                                <p>备注：{{obj.remark}}</p>
+                                <p>规定格式：{{obj.formatName}}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="collect-box">
-                        <el-checkbox label="" name="type" size="medium"></el-checkbox>
-                        <div class="collect-boxtxt">
-                            <h3>三证正副本</h3>
-                            <p>备注：原则上工商局打印（工商章）</p>
-                            <p>规定格式：复印件</p>
+                        <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
+                            <p>
+                                <span class="posrtv">
+                                    <template v-if="item&&item.fileUrl">
+                                        <i class="el-icon-document"></i>
+                                        <a :href="item.fileUrl" target="_blank">
+                                            <font>{{item.fileName}}</font>
+                                        </a>
+                                    </template>
+                                </span>
+                            </p>
+                            <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD')}}</p>
+                            <p>
+                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
+                                <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                            </p>
                         </div>
-                    </div>
-                </el-form-item>
+                    </el-form-item>
+                </template>
             </div>
         </el-form>
-        <el-dialog title="打回记录" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
-            <div class="project-record"  >
+        <el-dialog title="打回记录" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false>
+            <div class="project-record">
                 <el-timeline>
-                    <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
+                    <el-timeline-item :timestamp="moment(item.createTime).format('YYYY-MM-DD')+' 打回操作人：'+item.createBy" placement="top" v-for="item in refuseRecord" :key=item.id>
                         <el-card>
-                           123
+                            <p>待补充类目:</p>
+                            <p>待补充原因：{{item.remark}}</p>
                         </el-card>
                     </el-timeline-item>
                 </el-timeline>
             </div>
         </el-dialog>
+        <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="()=>reasonVisible = false" :modal=false>
+            <el-form ref="refuseForm" :model="refuseForm" :rules="refuseFormRules" label-width="100px">
+                <el-form-item label="打回原因：" prop="remark">
+                    <el-input type="textarea" v-model.trim="refuseForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="reasonVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onRefuse" :loading=loading>{{loading?'确 定':'保 存'}}</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
+import moment from 'moment'
+import { refuseDoc } from '../api/index'
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
+    name: 'datacollectcom',
     props: {
-        // colForm: {
-        //     type: Object,
-        //     default: () => {}
-        // }
+        colForm: {
+            type: Object,
+            default: () => { }
+        }
     },
     data () {
         return {
-            colForm: {},
-            colFormrules: [],
+            moment,
+            colFormrules: {},
             dialogVisible: false,
-            dialogRecord: []
+            reasonVisible: false,
+            refuseRecord: [],
+            refuseForm: {
+                createBy: '',
+                projectId: '',
+                remark: '',
+                status: 1,
+                templateIds: ''
+            },
+            refuseFormRules: {
+                remark: [
+                    { required: true, message: '请输入打回原因', trigger: 'blur' }
+                ]
+            },
+            loading: false
+        }
+    },
+    computed: {
+        ...mapState({
+            userInfo: 'userInfo'
+        }),
+        ...mapGetters({
+            refusedata: 'crmmanage/refusedata'
+        })
+    },
+    methods: {
+        ...mapActions({
+            findRefuseData: 'crmmanage/findRefuseData'
+        }),
+        onCallback () {
+            const newTempid = []
+            const newList = this.colForm.projectDocList
+            newList && newList.map(val => {
+                val.respRiskCheckDocTemplateList.map(item => {
+                    if (item.callback) newTempid.push(item.templateId)
+                })
+            })
+            this.refuseForm.templateIds = newTempid.toString()
+            if (newTempid.length > 0) {
+                this.reasonVisible = true
+            } else {
+                this.$message.warning('请选择打回的选项')
+            }
+        },
+        onRefuse () {
+            this.loading = true
+            this.refuseForm.createBy = this.userInfo.employeeName
+            this.refuseForm.projectId = this.colForm.projectId
+            console.log(this.refuseForm)
+            this.$refs.refuseForm.validate(async (valid) => {
+                if (valid) {
+                    await refuseDoc(this.refuseForm)
+                    this.loading = false
+                } else {
+                    this.loading = false
+                }
+            })
+        },
+        async onGetrefuse () {
+            await this.findRefuseData(this.colForm.projectId)
+            this.refuseRecord = this.refusedata
+            this.dialogVisible = true
         }
     }
 }
 </script>
 <style lang="scss" scoped>
+/deep/.el-form {
+    padding: 0;
+}
 .collect-wrap {
     padding: 0 10px 100px 10px;
+    margin-left: 15px;
 }
 .collect-title {
     font-size: 20px;
-    color: #333333;
+    line-height: 45px;
     border-bottom: 1px solid #e5e5e5;
     margin-top: 10px;
+    font-weight: bold;
 }
 .collect-box {
     display: flex;
@@ -71,7 +164,63 @@ export default {
         margin-right: 10px;
     }
 }
-.collect-wrapbox {
-    margin-left: 20px;
+.collect-boxtxt{
+    i{
+        color: #ff0000;
+        vertical-align: middle;
+        padding: 0 2 0 0px;
+        font-style: normal;;
+    }
+}
+.collect-call {
+    background: #ff7a45;
+    color: #fff;
+    font-size: 13px;
+    border-radius: 6px;
+    margin-left: 10px;
+    padding: 1px 4px;
+}
+.upload-file_list {
+    display: flex;
+    margin-left: 23px;
+    p {
+        &:first-child {
+            flex: 1;
+        }
+    }
+}
+.fileItemDownLoad {
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #ff7a45;
+    border-color: #ff7a45;
+    display: block;
+    line-height: 13px;
+    float: left;
+    height: 13px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.posrtv {
+    position: relative;
+    color: #ff7a45;
+    a {
+        color: #ff7a45;
+        margin-left: 10px;
+    }
+    font {
+        font-size: 14px;
+    }
+}
+.project-record {
+    margin-top: 15px;
+}
+/deep/.el-card__body {
+    padding: 5px;
+    p {
+        line-height: 30px;
+    }
 }
 </style>

@@ -1,30 +1,41 @@
 <template>
     <div class="collect-wrap">
-        <el-form :model="colForm" :rules="rules" ref="colForm" class="demo-ruleForm">
-            <div>
-                <div class="collect-title">立项材料</div>
-                <el-form-item label="" prop="type" label-width="30px">
-                    <div class="collect-box">
-                        <el-checkbox label="" name="type" size="medium"></el-checkbox>
-                        <div class="collect-boxtxt">
-                            <h3>三证正副本</h3>
-                            <p>备注：原则上工商局打印（工商章）</p>
-                            <p>规定格式：复印件</p>
+        <el-form :model="finalForm"  ref="colForm" class="demo-ruleForm">
+            <div class="collect-wrapbox" v-for="item in finalForm.projectDocList" :key="item.firstCatagoryId">
+                <div class="collect-title">{{item.firstCatagoryName}}</div>
+                <template v-for="obj in item.respRiskCheckDocTemplateList">
+                    <el-form-item label="" prop="type" :key="'item'+obj.templateId">
+                        <div class="collect-box">
+                            <el-checkbox label="" name="type" size="medium" v-model="obj.callback"></el-checkbox>
+                            <div class="collect-boxtxt">
+                                <h3>{{obj.secondCatagoryName}}</h3>
+                                <p>备注：{{obj.remark}}</p>
+                                <p>规定格式：{{obj.formatName}}</p>
+                            </div>
                         </div>
-                    </div>
-                    <hosjoyUpload  v-model="fileList" showAsFileName :fileSize='100' :fileNum='100' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb('fileList','d-other')" style="margin-top:10px">
-                        <el-button type="primary">上 传</el-button>
-                    </hosjoyUpload>
-
-                    <div class="collect-box">
-                        <el-checkbox label="" name="type" size="medium"></el-checkbox>
-                        <div class="collect-boxtxt">
-                            <h3>三证正副本</h3>
-                            <p>备注：原则上工商局打印（工商章）</p>
-                            <p>规定格式：复印件</p>
+                        <div class="upload-file_list" v-for="(item,index) in dd" :key="index">
+                            <p>
+                                <span class="posrtv">
+                                    <template v-if="item&&item.fileUrl">
+                                        <i class="el-icon-document"></i>
+                                        <a :href="item.fileUrl" target="_blank">
+                                            <font>{{item.fileName}}</font>
+                                        </a>
+                                    </template>
+                                </span>
+                            </p>
+                            <p style="flex:0.5">{{item.date}}</p>
+                            <p>
+                                <font class="fileItemDownLoad" @click="onDelete">删除</font>
+                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
+                                <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                            </p>
                         </div>
-                    </div>
-                </el-form-item>
+                        <hosjoyUpload v-model="fileList" :showPreView=false :fileSize='200' :fileNum='15' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb()" style="margin-top:10px">
+                            <el-button type="primary">上 传</el-button>
+                        </hosjoyUpload>
+                    </el-form-item>
+                </template>
             </div>
         </el-form>
     </div>
@@ -32,18 +43,24 @@
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
+import { handleImgDownload } from '../../projectInformation/utils'
 export default {
     props: {
-        // colForm: {
-        //     type: Object,
-        //     default: () => {}
-        // }
+        finalForm: {
+            type: Object,
+            default: () => { }
+        }
     },
     components: {
         hosjoyUpload
     },
     data () {
         return {
+            handleImgDownload,
+            dd: [{
+                fileUrl: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+                fileName: 'asd.jpeg'
+            }],
             colForm: {},
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
@@ -51,6 +68,11 @@ export default {
                 reservedName: true
             },
             fileList: []
+        }
+    },
+    methods: {
+        onDelete () {
+
         }
     }
 }
@@ -61,15 +83,45 @@ export default {
 }
 .collect-title {
     font-size: 20px;
-    color: #333333;
+    color: #ff7a45;
     border-bottom: 1px solid #e5e5e5;
-    padding: 10px 0;
-    font-weight: bold;
+    margin-top: 10px;
 }
 .collect-box {
     display: flex;
     .el-checkbox {
         margin-right: 10px;
+    }
+}
+.collect-wrapbox {
+    margin-left: 20px;
+}
+.upload-file_list {
+    display: flex;
+}
+.fileItemDownLoad {
+    font-size: 12px;
+    border-radius: 3px;
+    padding: 8px 16px;
+    color: #fff;
+    background-color: #ff7a45;
+    border-color: #ff7a45;
+    display: block;
+    line-height: 13px;
+    float: left;
+    height: 13px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+.posrtv {
+    position: relative;
+    color: #ff7a45;
+    a {
+        color: #ff7a45;
+        margin-left: 10px;
+    }
+    font {
+        font-size: 14px;
     }
 }
 </style>
