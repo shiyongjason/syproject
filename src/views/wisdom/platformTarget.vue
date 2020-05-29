@@ -181,8 +181,7 @@ export default {
         this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
-        console.log(this.userInfo)
-        !this.deptType && this.findPlatformTargetPlat(this.userInfo.pkDeptDoc)
+        !this.userInfo.deptType && this.findPlatformTargetPlat()
         await this.newBossAuth(['F'])
     },
     methods: {
@@ -285,7 +284,7 @@ export default {
                 if (this.searchParams.subsectionCode) {
                     this.findPlatformTargetPlat(this.searchParams.subsectionCode)
                 } else {
-                    !this.userInfo.deptType && this.findPlatformTargetPlat(this.userInfo.pkDeptDoc)
+                    !this.userInfo.deptType && this.findPlatformTargetPlat()
                 }
                 this.searchParams.misCode = ''
                 !val.value.pkDeptDoc && this.linkage()
