@@ -712,13 +712,13 @@ export default {
     activated () {
         this.getList()
     },
-    mounted () {
+    async mounted () {
         this.getList()
         this.newBossAuth(['F', 'P'], {
             isCancel: 'Y',
             businessType: 1
         })
-        this.provinceDataList = this.findProvinceAndCity(0)
+        this.provinceDataList = await this.findProvinceAndCity(0)
     }
 }
 </script>
