@@ -37,7 +37,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item, index) in tableList">
+                        <template v-for="(item) in tableList">
                             <template v-for="(itema, indexa) in item.childAuthList">
                                 <tr v-for="(itemb, indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
                                     <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0">
@@ -64,9 +64,9 @@
                                                         <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
                                                         <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType,[itema,itemb])" :disabled="!itemAuthType.have">配置</button>
                                                     </div>
-                                                    <div v-else></div>
-                                                </td>
-                                            </template>
+                                                </div>
+                                                <div v-else></div>
+                                            </td>
                                         </template>
                                     </template>
                                     <template v-else>
