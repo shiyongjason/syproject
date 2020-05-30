@@ -188,10 +188,10 @@ export default {
         },
         onEdit (row) {
             sessionStorage.setItem('companyName', row.companyName)
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName, canEidt: 1 } })
+            this.$router.push({ path: '/jd/bestonline/reviewform', query: { applyId: row.applyId, target: row.signScale, status: row.status, companyName: row.companyName, canEidt: 1 } })
         },
         onCheck (row) {
-            this.$router.push({ path: '/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
+            this.$router.push({ path: '/jd/bestonline/reviewform', query: { applyId: row.applyId, status: row.status, companyName: row.companyName, canEidt: 2 } })
         },
         async onCommit (applyId) {
             const { data } = await getDuemainDetail(applyId)

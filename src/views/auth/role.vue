@@ -37,7 +37,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item) in tableList">
+                        <template v-for="(item, index) in tableList">
                             <template v-for="(itema, indexa) in item.childAuthList">
                                 <tr v-for="(itemb, indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
                                     <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0">
@@ -64,9 +64,9 @@
                                                         <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
                                                         <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType,[itema,itemb])" :disabled="!itemAuthType.have">配置</button>
                                                     </div>
-                                                </div>
-                                                <div v-else></div>
-                                            </td>
+                                                    <div v-else></div>
+                                                </td>
+                                            </template>
                                         </template>
                                     </template>
                                     <template v-else>
@@ -171,7 +171,9 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        this.tableList = this.handlerTableList(data, 0)
+        var shy = JSON.parse(JSON.stringify(data))
+        this.handleData(shy)
+        this.tableList = this.handlerTableList(shy, 0)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
@@ -243,16 +245,43 @@ export default {
                 return item
             })
         },
-        // 计算table合并行数
-        computedRowspan (list, level) {
-            if (level == 0) {
-                let len = 0
-                list.forEach(item => {
-                    len += item.childAuthList.length
-                })
-                return len
+        handleData (data) {
+            data.map(i => {
+                if (!i.childAuthList || i.childAuthList.length === 0) {
+                    i.authTypeList = this.compare(i.authTypeList)
+                } else {
+                    this.handleData(i.childAuthList)
+                }
+            })
+        },
+        compare (authTypeList) {
+            const arr = [
+                { id: '', authType: 0 },
+                { id: '', authType: 1 },
+                { id: '', authType: 2 }
+            ]
+            if (!authTypeList || authTypeList.length === 0) {
+                return arr
             }
-            return list.length
+            arr.map(i => {
+                const a = authTypeList.filter(it => {
+                    return it.authType === i.authType
+                })
+                if (a.length === 0) {
+                    authTypeList.push(i)
+                }
+            })
+            return authTypeList.sort((a, b) => a.authType - b.authType)
+        },
+        // 计算table合并行数
+        computedRowspan (list, len) {
+            len += list.length
+            list.forEach(item => {
+                if (item.childAuthList && item.childAuthList.length > 0) {
+                    len = this.computedRowspan(item.childAuthList, len) - 1
+                }
+            })
+            return len
         },
         // 敏感字段和敏感操作的checkbox转换的处理
         onChangeAuthType (item) {
