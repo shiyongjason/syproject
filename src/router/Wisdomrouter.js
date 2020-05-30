@@ -112,94 +112,20 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/profitStatistics')
-                    }
+                    },
+                    {
+                        path: 'commitValue',
+                        name: 'commitValue',
+                        meta: {
+                            title: '承诺值管理',
+                            tagName: '承诺值管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/commitValue')
+                    }        
                 ]
             },
-            {
-                path: 'newFlowdialog',
-                name: 'newFlowdialog',
-                meta: {
-                    title: '新增台账',
-                    tagName: '新增台账',
-                    parentName: '好智慧-资金数据',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsData/components/newFlowdialog.vue')
-            },
-            {
-                path: 'importData',
-                name: 'importData',
-                meta: {
-                    title: '历史数据导入',
-                    tagName: '历史数据导入',
-                    parentName: '好智慧-资金数据',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/importData.vue')
-            },
-            {
-                path: 'capitalEfficiency',
-                name: 'capitalEfficiency',
-                meta: {
-                    title: '资金效率表',
-                    tagName: '资金效率表',
-                    parentName: '好智慧-资金数据',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
-            },
-            {
-                path: 'branchOverdueSum',
-                name: 'branchOverdueSum',
-                meta: {
-                    title: '分部逾期汇总表',
-                    tagName: '分部逾期汇总表',
-                    parentName: '好智慧-资金数据',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsOverdue/branchOverdueSum.vue')
-            },
-            {
-                path: 'platformOverdueSum',
-                name: 'platformOverdueSum',
-                meta: {
-                    title: '平台公司逾期汇总表',
-                    tagName: '平台公司逾期汇总表',
-                    parentName: '好智慧-资金数据',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsOverdue/platformOverdueSum.vue')
-            },
-            {
-                path: 'overdueDetailTable',
-                name: 'overdueDetailTable',
-                meta: {
-                    title: '逾期增量明细表',
-                    tagName: '逾期增量明细表',
-                    parentName: '好智慧-资金数据',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsOverdue/overdueDetailTable.vue')
-            },
-            ...tabAuth
-        ]
-    },
-    {
-        path: '/wisdom',
-        meta: {
-            title: '好智慧-经营分析',
-            isMenu: true,
-            icon: 'hosjoy_hzh'
-        },
-        // redirect: '/wisdom/' + this.children[0].path,
-        component: Layout,
-        children: [
             {
                 path: 'fundsDataAnalysis',
                 name: 'fundsDataAnalysis',
@@ -209,18 +135,6 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/wisdom/categorySale')
-            },
-            {
-                path: 'commitValue',
-                name: 'commitValue',
-                meta: {
-                    title: '承诺值管理',
-                    tagName: '承诺值管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: InterlayerContainer,
                 children: [
                     {
                         path: 'standingBook',
@@ -233,7 +147,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/fundsData/Ledger.vue')
-                    },
+                    },        
                     {
                         path: 'newFlowdialog',
                         name: 'newFlowdialog',
@@ -270,9 +184,45 @@ export default [
                         },
                         component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
                     },
+                    {
+                        path: 'branchOverdueSum',
+                        name: 'branchOverdueSum',
+                        meta: {
+                            title: '分部逾期汇总表',
+                            tagName: '分部逾期汇总表',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsOverdue/branchOverdueSum.vue')
+                    },
+                    {
+                        path: 'platformOverdueSum',
+                        name: 'platformOverdueSum',
+                        meta: {
+                            title: '平台公司逾期汇总表',
+                            tagName: '平台公司逾期汇总表',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsOverdue/platformOverdueSum.vue')
+                    },
+                    {
+                        path: 'overdueDetailTable',
+                        name: 'overdueDetailTable',
+                        meta: {
+                            title: '逾期增量明细表',
+                            tagName: '逾期增量明细表',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsOverdue/overdueDetailTable.vue')
+                    },
                     ...tabAuth
                 ]
-            }
+            },
         ]
     },
     {
