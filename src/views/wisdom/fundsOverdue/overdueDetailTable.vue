@@ -14,13 +14,6 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <!-- boss公共权限包含区域，未来要是需要v-if="district" -->
-                <div class="query-cont-col" v-if="false">
-                    <div class="query-col-title">区域：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
@@ -92,7 +85,7 @@ export default {
     name: 'commitValue',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
-    data: function () {
+    data () {
         return {
             overdueDetailTableExport: OVERDUE_DETAIL_TABLE_EXPORT,
             overdueDetailTableImport: OVERDUE_DETAIL_TABLE_IMPORT,
@@ -121,10 +114,6 @@ export default {
                     selectCode: '',
                     selectName: ''
                 },
-                areaObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
                 platformObj: {
                     selectCode: '',
                     selectName: ''
@@ -132,7 +121,6 @@ export default {
             },
             queryParams: {
                 regionCode: '',
-                subRegionCode: '',
                 subsectionCode: '',
                 misCode: '',
                 payStartTime: '',
@@ -198,58 +186,27 @@ export default {
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
                 this.queryParams.subsectionOldCode = ''
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
-                this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             }
-            // else if (dis === 'Q') {
-            //     this.queryParams.misCode = ''
-            //     this.selectAuth.platformObj = { ...obj }
-            // }
         },
         async backPlat (val, dis) {
-            // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({
-                    deptType: 'Q',
-                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
-                })
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
-                !val.value.crmDeptCode && this.linkage(dis)
-            } else if (dis === 'Q') {
-                // this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
-                // if (val.value.selectCode) {
-                //     this.findPlatformslist({ subregionCode: val.value.selectCode })
-                // } else {
-                //     let params = null
-                //     if (this.queryParams.subsectionOldCode) {
-                //         params = {
-                //             subsectionCode: this.queryParams.subsectionOldCode
-                //         }
-                //     }
-                //     this.findPlatformslist(params)
-                // }
-                // !val.value.selectCode && this.linkage(dis)
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
                 this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
@@ -318,7 +275,6 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'payStartTime', '')
             this.$set(this.queryParams, 'payEndTime', '')
@@ -330,9 +286,8 @@ export default {
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            // this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.oldBossAuth()
+            await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
         isSuccess (response) {
@@ -368,7 +323,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>

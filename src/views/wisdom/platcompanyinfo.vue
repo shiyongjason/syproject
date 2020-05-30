@@ -2,18 +2,15 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0] || userInfo.deptType===deptType[1]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择分部">
-                            <el-option v-for="item in depArr" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlat" :placeholder="'选择平台公司'"></HAutocomplete>
+                    <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">城市：</div>
@@ -29,7 +26,7 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="false">
                     <div class="query-col-title">上线时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期">
@@ -50,19 +47,20 @@
     </div>
 </template>
 <script>
-import { findBranchList, findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
+import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.js'
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { departmentAuth } from '@/mixins/userAuth'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 
 export default {
+    mixins: [departmentAuth],
     data () {
         return {
             deptType: DEPT_TYPE,
-            depArr: [],
             provinceDataList: [],
             cityList: [],
             platList: [],
@@ -76,6 +74,16 @@ export default {
                 provinceCode: '',
                 subsectionCode: ''
                 // sortInfos: [{ 'field': 'updateTime', 'sort': 'desc' }]
+            },
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
             },
             tableData: [],
             paginationData: {},
@@ -96,50 +104,17 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
     async  mounted () {
-        let oldDeptCode = ''
-        if (this.userInfo.deptType == 1) {
-            oldDeptCode = this.userInfo.oldDeptCode
-        }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
         this.provinceDataList = await this.findProvinceAndCity(0)
-        // 如果 分部角色 => 查看平台下拉   1 传当前角色 组织code 平台下拉传空
-        if (this.userInfo.deptType == 2) {
-            const code = this.userInfo.oldDeptCode
-            this.searchParams.subsectionCode = this.userInfo.oldDeptCode
-            // this.findProvinceAndCity(0, code)
-            this.platList = await this.findPaltList(code)
-            this.findCompanyList(this.searchParams)
-        } else if (this.userInfo.deptType == 0) {
-            this.findCompanyList(this.searchParams)
-            this.platList = await this.findPaltList()
-        } else {
-            this.findCompanyList(this.searchParams)
-        }
-        this.platList.forEach((value) => {
-            value.value = value.companyShortName
-        })
+        this.findCompanyList(this.searchParams)
+        this.newBossAuth(['F', 'P'])
     },
     watch: {
-        async 'searchParams.subsectionCode' (newV, oldV) {
-            const code = newV
-            this.$refs.HAutocomplete.clearInput()
-            this.searchParams.provinceCode = ''
-            this.searchParams.cityCode = ''
-            this.searchParams.companyCode = ''
-            this.platList = await this.findPaltList(code)
-            if (code) {
-                // this.platList = await this.findPaltList(code)
-                // this.provinceDataList = await this.findProvinceAndCity(0, code)
-            } else {
-                this.$refs.HAutocomplete.clearInput()
-                // this.provinceDataList = []
-            }
-            // this.cityList = []
-        },
         async 'searchParams.provinceCode' (newV, oldV) {
             const code = newV
             this.searchParams.cityCode = ''
@@ -176,19 +151,6 @@ export default {
                 total: data.data.totalElements
             }
         },
-        async findBranchList (value) {
-            const { data } = await findBranchList({ crmDeptCode: value })
-            this.depArr = data.data
-            if (this.depArr.length > 0) {
-                if (this.userInfo.deptType == 0) {
-                    this.depArr.splice(0, 0, {
-                        crmDeptCode: '',
-                        deptname: '全部'
-                    })
-                }
-                this.searchParams.subsectionCode = this.depArr[0].crmDeptCode
-            }
-        },
         async findProvinceAndCity (code, subsectionCode) {
             let params = {
                 pCode: code,
@@ -209,8 +171,26 @@ export default {
             this.platList = data.data.pageContent
             return this.platList
         },
-        backPlat (value) {
-            this.searchParams.companyCode = value.value.companyCode ? value.value.companyCode : ''
+        backPlat (val, dis) {
+            if (dis === 'F') {
+                this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage()
+            } else if (dis === 'P') {
+                this.searchParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+            }
+        },
+        linkage () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.searchParams.companyCode = ''
+            this.selectAuth.platformObj = obj
         },
         exportTable () {
             var url = ''
