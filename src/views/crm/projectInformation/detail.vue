@@ -17,7 +17,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
+                                <el-image v-if="example.fileUrl" style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
                             </div>
                         </div>
                         <!--  -->
@@ -201,7 +201,7 @@ export default {
             })
         },
         // 处理保存、提交资料入参
-        dealReqRiskCheckProjectDoc (submitStatus) {
+        dealReqRiskCheckProjectDoc (submitStatus = '') {
             console.log('this.detail', this.detail)
             this.detail.projectDocList.map(item => {
                 if (item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.length > 0) {
@@ -233,15 +233,10 @@ export default {
             return res
         },
         async onSave () {
-            this.dealReqRiskCheckProjectDoc(1)
-            let res = this.checkForm()
-            if (res) {
-                this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
-            } else {
-                await saveDoc(this.reqRiskCheckProjectDoc)
-                this.$message.success('保存成功')
-                this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
-            }
+            this.dealReqRiskCheckProjectDoc()
+            await saveDoc(this.reqRiskCheckProjectDoc)
+            this.$message.success('保存成功')
+            this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
         },
         async onSubmit () {
             this.dealReqRiskCheckProjectDoc(1)
