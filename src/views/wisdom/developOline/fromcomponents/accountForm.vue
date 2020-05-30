@@ -55,6 +55,7 @@ import { mapState, mapActions } from 'vuex'
 import { IsInteger } from '@/utils/rules'
 import { updateDevelopaccount } from '../../api'
 export default {
+    name: 'accountForm',
     props: {
         accountForm: {
             type: Object,

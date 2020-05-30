@@ -247,6 +247,42 @@ export default [
                 },
                 component: () => import('@/views/wisdom/capitalEfficiency/capitalEfficiency.vue')
             },
+            {
+                path: 'branchOverdueSum',
+                name: 'branchOverdueSum',
+                meta: {
+                    title: '分部逾期汇总表',
+                    tagName: '分部逾期汇总表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsOverdue/branchOverdueSum.vue')
+            },
+            {
+                path: 'platformOverdueSum',
+                name: 'platformOverdueSum',
+                meta: {
+                    title: '平台公司逾期汇总表',
+                    tagName: '平台公司逾期汇总表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsOverdue/platformOverdueSum.vue')
+            },
+            {
+                path: 'overdueDetailTable',
+                name: 'overdueDetailTable',
+                meta: {
+                    title: '逾期增量明细表',
+                    tagName: '逾期增量明细表',
+                    parentName: '好智慧-资金数据',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsOverdue/overdueDetailTable.vue')
+            },
             ...tabAuth
         ]
     },
@@ -266,8 +302,7 @@ export default [
                     title: '经营概览',
                     tagName: '经营概览',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/manageoverview'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/manageoverview')
             },
@@ -278,8 +313,7 @@ export default [
                     title: '分部目标管理',
                     tagName: '分部目标管理',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/branchTarget'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/branchTarget')
             },
@@ -290,8 +324,7 @@ export default [
                     title: '平台目标管理',
                     tagName: '平台目标管理',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/platformTarget'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/platformTarget')
             },
@@ -307,7 +340,6 @@ export default [
                 },
                 component: () => import('@/views/wisdom/platcompanyinfo')
             },
-
             {
                 path: 'platformSale',
                 name: 'platformSale',
@@ -327,8 +359,7 @@ export default [
                     title: '分部销售分析',
                     tagName: '分部销售分析',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/branchSale'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/branchSale')
             },
@@ -339,8 +370,7 @@ export default [
                     title: '品类销售分析',
                     tagName: '品类销售分析',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/categorySale'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/categorySale')
             },
@@ -351,8 +381,7 @@ export default [
                     title: '利润统计',
                     tagName: '利润统计',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/profitStatistics'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/profitStatistics')
             },
@@ -363,8 +392,7 @@ export default [
                     title: '承诺值管理',
                     tagName: '承诺值管理',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/commitValue'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/commitValue')
             }
@@ -463,8 +491,7 @@ export default [
                     title: '发展在线',
                     tagName: '发展在线',
                     isMenu: true,
-                    icon: '',
-                    component: '@/views/wisdom/developOline/developList'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/developOline/developList')
             },
@@ -475,8 +502,7 @@ export default [
                     title: '添加/编辑平台公司',
                     tagName: '添加/编辑平台公司',
                     isMenu: false,
-                    icon: '',
-                    component: '@/views/wisdom/developOline/addPlatform'
+                    icon: ''
                 },
                 component: () => import('@/views/wisdom/developOline/addPlatform')
             }

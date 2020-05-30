@@ -26,7 +26,25 @@ const state = {
     cloudDeviceDetailPagination: {},
     cloudHomeDetailList: [],
     cloudHomeDetailPagination: {},
-    cloudHomeDetailDict: []
+    cloudHomeOpDetailList: [],
+    cloudHomeOpDetailPagination: {},
+    cloudHomeCoDetailList: [],
+    cloudHomeCoDetailPagination: {},
+    cloudHomeApDetailList: [],
+    cloudHomeApDetailPagination: {},
+    cloudHomeRtDetailList: [],
+    cloudHomeRtDetailPagination: {},
+    cloudHomeDetailDict: [],
+    comfortableSceneList: [],
+    comfortableSceneListPagination: {},
+    getCloudHomeComfortStatisticsList: [],
+    cloudAlarmChart: {},
+    cloudSendMessageDetailChart: {},
+    cloudUserFeedbackList: [],
+    cloudUserFeedbackPagination: {},
+    cloudComfortEncyclopediaList: [],
+    cloudComfortEncyclopediaListPagination: {},
+    cloudComfortEncyclopediaDetail: {}
 }
 
 const getters = {
@@ -53,7 +71,19 @@ const getters = {
     cloudDeviceDetailPagination: state => state.cloudDeviceDetailPagination,
     cloudHomeDetailList: state => state.cloudHomeDetailList,
     cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
-    cloudHomeDetailDict: state => state.cloudHomeDetailDict
+    cloudHomeOpDetailList: state => state.cloudHomeOpDetailList,
+    cloudHomeOpDetailPagination: state => state.cloudHomeOpDetailPagination,
+    cloudHomeCoDetailList: state => state.cloudHomeCoDetailList,
+    cloudHomeCoDetailPagination: state => state.cloudHomeCoDetailPagination,
+    cloudHomeApDetailList: state => state.cloudHomeApDetailList,
+    cloudHomeApDetailPagination: state => state.cloudHomeApDetailPagination,
+    cloudHomeRtDetailList: state => state.cloudHomeRtDetailList,
+    cloudHomeRtDetailPagination: state => state.cloudHomeRtDetailPagination,
+    cloudHomeDetailDict: state => state.cloudHomeDetailDict,
+    cloudAlarmChart: state => state.cloudAlarmChart,
+    cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart,
+    cloudUserFeedbackList: state => state.cloudUserFeedbackList,
+    cloudUserFeedbackPagination: state => state.cloudUserFeedbackPagination
 
 }
 
@@ -127,8 +157,65 @@ const mutations = {
     [cloud.CLOUD_HOME_DETAIL_PAGINATION] (state, payload) {
         state.cloudHomeDetailPagination = payload
     },
+    [cloud.CLOUD_HOME_OP_DETAIL_LIST] (state, payload) {
+        state.cloudHomeOpDetailList = payload
+    },
+    [cloud.CLOUD_HOME_OP_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_CO_DETAIL_LIST] (state, payload) {
+        state.cloudHomeCoDetailList = payload
+    },
+    [cloud.CLOUD_HOME_CO_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeCoDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_AP_DETAIL_LIST] (state, payload) {
+        state.cloudHomeApDetailList = payload
+    },
+    [cloud.CLOUD_HOME_AP_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeDetailPagination = payload
+    },
+    [cloud.CLOUD_HOME_RT_DETAIL_LIST] (state, payload) {
+        state.cloudHomeRtDetailList = payload
+    },
+    [cloud.CLOUD_HOME_RT_DETAIL_PAGINATION] (state, payload) {
+        state.cloudHomeRtDetailPagination = payload
+    },
     [cloud.CLOUD_HOME_DETAIL_SEARCH_DICT] (state, payload) {
         state.cloudHomeDetailDict = payload
+    },
+    [cloud.CLOUD_HOME_COMFORT_SCENE] (state, payload) {
+        state.comfortableSceneList = payload
+    },
+    [cloud.CLOUD_HOME_COMFORT_SCENE_PAGINATION] (state, payload) {
+        state.comfortableSceneListPagination = payload
+    },
+    [cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS] (state, payload) {
+        state.getCloudHomeComfortStatisticsList = payload
+    },
+    [cloud.CLOUD_ALARM_CHART] (state, payload) {
+        state.cloudAlarmChart = payload
+    },
+    [cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART] (state, payload) {
+        state.cloudSendMessageDetailChart = payload
+    },
+    [cloud.CLOUD_USER_FEEDBACK_LIST] (state, payload) {
+        state.cloudUserFeedbackList = payload
+    },
+    [cloud.CLOUD_USER_FEEDBACK_PAGINATION] (state, payload) {
+        state.cloudUserFeedbackPagination = payload
+        state.cloudSendMessageDetailChart = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST] (state, payload) {
+        console.log(payload)
+        state.cloudComfortEncyclopediaList = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION] (state, payload) {
+        console.log(payload)
+        state.cloudComfortEncyclopediaListPagination = payload
+    },
+    [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL] (state, payload) {
+        state.cloudComfortEncyclopediaDetail = payload
     }
 }
 
@@ -232,9 +319,97 @@ const actions = {
             total: data.data.total
         })
     },
+    async findCloudHomeOpDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceAirDetail(params)
+        commit(cloud.CLOUD_HOME_OP_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeCoDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceAirDetail(params)
+        commit(cloud.CLOUD_HOME_CO_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeApDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceFloorHeartDetail(params)
+        commit(cloud.CLOUD_HOME_AP_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudHomeRtDetailList ({ commit }, params) {
+        const { data } = await Api.getDeviceTempCtlValveDetail(params)
+        commit(cloud.CLOUD_HOME_RT_DETAIL_LIST, data.data.records)
+        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
     async findCloudHomeDetailSearchDict ({ commit }, params) {
         const { data } = await Api.getCloudHomeDetailSearchDict(params)
         commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
+    },
+    async findComfortableSceneList ({ commit }, params) {
+        const { data } = await Api.getCloudHomeComfortReportList(params)
+        commit(cloud.CLOUD_HOME_COMFORT_SCENE, data.data.content)
+        commit(cloud.CLOUD_HOME_COMFORT_SCENE_PAGINATION, {
+            pageNumber: data.data.number + 1,
+            pageSize: data.data.size,
+            total: data.data.totalElements
+        })
+    },
+    async findCloudHomeComfortStatisticsList ({ commit }, params) {
+        const { data } = await Api.getCloudHomeComfortStatisticsList(params)
+        console.log(data)
+        commit(cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS, data.data.comfortRunStats)
+        return data.data.totalRunHours
+    },
+    async findCloudAlarmChart ({ commit }, params) {
+        const { data } = await Api.getCloudAlarmChart(params)
+        commit(cloud.CLOUD_ALARM_CHART, data.data)
+    },
+    async findCloudSendMessageDetailChart ({ commit }, params) {
+        const { data } = await Api.getCloudSendMessageDetailChart(params)
+        commit(cloud.CLOUD_SEND_MESSAGE_DETAIL_CHART, data.data)
+    },
+    async findUserFeedbackList ({ commit }, params) {
+        const { data } = await Api.getCloudUserFeedback(params)
+        console.log({
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+        commit(cloud.CLOUD_USER_FEEDBACK_LIST, data.data.records)
+        commit(cloud.CLOUD_USER_FEEDBACK_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudComfortEncyclopediaList ({ commit }, params) {
+        const { data } = await Api.getComfortEncyclopediaList(params)
+        console.log(data)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST, data.data.records)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findComfortEncyclopediaDetail ({ commit }, params) {
+        const { data } = await Api.getComfortEncyclopediaDetail(params)
+        console.log(data)
+        commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL, data.data)
     }
 }
 export default {
