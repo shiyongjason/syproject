@@ -15,25 +15,32 @@ export const departmentAuth = {
     },
     methods: {
         ...mapActions([
-            'findPlatformslist', // 平台公司
+            'findPlatformslist', // 平台公司（取自发展在线）
             'findAuthList' // 大区、分部、区域
         ]),
-        async oldBossAuth () {
-            const p = [
-                this.findAuthList({ deptType: 'D', pkDeptDoc: this.userInfo.pkDeptDoc }),
-                this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }),
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: this.userInfo.pkDeptDoc })
-            ]
-            await Promise.all(p).then(res => {
-                this.region = res[0].length > 0
-                this.branch = res[1].length > 0
-                this.district = res[2].length > 0
-                // 0总部 1大区 2分部
-                switch (this.userInfo.deptType) {
-                    case 0:
-                        this.findPlatformslist()
-                        break
-                    default:
+        async newBossAuth (arr = ['D', 'F', 'Q', 'P'], params) {
+            let hasPlatformslist = false
+            if (arr.indexOf('P') > -1) {
+                hasPlatformslist = true
+                arr.splice(arr.indexOf('P'), 1)
+            }
+            let p1 = []
+            let tempParams = {
+                pkDeptDoc: this.userInfo.pkDeptDoc,
+                ...params
+            }
+            arr.forEach((value) => {
+                tempParams.deptType = value
+                p1.push(this.findAuthList({ ...tempParams }))
+            })
+            // 0总部 1大区 2分部 3区域
+            await Promise.all(p1).then(res => {
+                this.region = this.userInfo.deptType < 2
+                this.branch = this.userInfo.deptType < 3
+                this.district = this.userInfo.deptType < 4
+                // 0总部 1大区 2分部 3区域
+                if (this.userInfo.deptType == 0 && hasPlatformslist) {
+                    this.findPlatformslist()
                 }
             }).catch(err => {
                 this.$message.error(`error:${err}`)

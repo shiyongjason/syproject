@@ -3,24 +3,21 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="flex-wrap-title">MIS编码：</div>
-                    <div class="flex-wrap-cont">
-                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' placeholder="选择" :clearable=true @change="onChange">
-                            <el-option v-for="item in branchList" :key="item.deptCode" :label="item.deptName" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司名：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :disabled='disabled' ref="HAutocomplete" :selectArr="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入分部名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">MIS编码：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
@@ -101,7 +98,16 @@ export default {
     mixins: [departmentAuth],
     data () {
         return {
-            removeValue: false,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            },
             tableLabel: CAPITAL_EFFICIENCY_TABLE,
             tableData: [],
             paginationData: {
@@ -139,13 +145,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo,
             branchList: (state) => state.branchList,
-            platformData: (state) => {
-                for (let i of state.platformData) {
-                    i.value = i.companyShortName
-                    i.selectCode = i.companyCode
-                }
-                return state.platformData
-            }
+            platformData: state => state.platformData
         }),
         pickerOptionsStart () {
             return {
@@ -170,9 +170,9 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth()
         if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+            this.queryParams.subsectionCode = this.branchList[0].pkDeptDoc
         }
     },
     methods: {
@@ -203,7 +203,6 @@ export default {
                 this.queryParams.loanCompanyCode = ''
                 this.queryParams.loanCompanyName = ''
                 this.queryParams.misCode = ''
-                this.removeValue = !this.removeValue
             } else {
                 this.disabled = false
                 this.queryParams.companyType = 1
@@ -219,15 +218,30 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        backPlat (value) {
-            this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
-            this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
+        backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage()
+            } else if (dis === 'P') {
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+                this.queryParams.loanCompanyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.queryParams.loanCompanyName = val.value.companyShortName ? val.value.companyShortName : ''
+            }
         },
-        onChange (subsectionCode) {
-            this.removeValue = !this.removeValue
+        linkage () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.queryParams.misCode = ''
             this.queryParams.loanCompanyCode = ''
             this.queryParams.loanCompanyName = ''
-            this.onFindPlatformslist(subsectionCode)
+            this.selectAuth.platformObj = obj
         },
         onRemark (row) {
             this.rowData = { ...row }

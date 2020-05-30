@@ -8,7 +8,7 @@
             单位：万
         </div>
         <div class="page-table">
-            <basicTable :maxHeight="550" :tableData="tableData" :pagination="paginationData"  :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
+            <basicTable :maxHeight="624" :tableData="tableData" :pagination="paginationData"  :tableLabel="tableLabel" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250>
                 <template slot-scope="scope" slot="saleRate">
                     <span v-if="scope.data.row.saleRate === null || scope.data.row.saleRate === '-'">-</span>
                     <span v-else>{{scope.data.row.saleRate}}%</span>
