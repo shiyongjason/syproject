@@ -256,7 +256,7 @@ export default {
 
         },
         onAuditSpu (val) {
-            this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
+            this.$router.push({ path: '/b2b/spudetail', query: { type: 'audit', spuCode: val.spuCode, auditStatus: val.status } })
         },
         backFindcode (val) {
             this.queryParams.merchantCode = val.value.selectCode

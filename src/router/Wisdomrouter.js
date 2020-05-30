@@ -18,10 +18,10 @@ export default [
                 name: 'jointVentureBusiness',
                 meta: {
                     title: '合资业务经营分析',
-                    tagName: '合资业务经营分析',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_operation'
                 },
+                component: InterlayerContainer,
                 children: [
                     {
                         path: 'manageoverview',
@@ -123,7 +123,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/commitValue')
-                    }        
+                    }
                 ]
             },
             {
@@ -131,10 +131,10 @@ export default [
                 name: 'fundsDataAnalysis',
                 meta: {
                     title: '资金数据分析',
-                    tagName: '资金数据分析',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_operation'
                 },
+                component: InterlayerContainer,
                 children: [
                     {
                         path: 'standingBook',
@@ -147,7 +147,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/fundsData/Ledger.vue')
-                    },        
+                    },
                     {
                         path: 'newFlowdialog',
                         name: 'newFlowdialog',
@@ -222,7 +222,7 @@ export default [
                     },
                     ...tabAuth
                 ]
-            },
+            }
         ]
     },
     {

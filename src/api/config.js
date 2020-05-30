@@ -6,6 +6,7 @@ let ossUrl = ''
 let iframeUrl = ''
 let jinyun = ''
 let B2bUrl = ''
+let ccpBaseUrl = ''
 let fileUploadUrl = ''
 let iotUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
@@ -17,6 +18,7 @@ switch (env) {
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
         fileUploadUrl = 'https://hbp-gateway-dev.hosjoy.com:4832'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
@@ -26,6 +28,7 @@ switch (env) {
         iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'http://192.168.20.248:40000/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'test':
@@ -34,6 +37,7 @@ switch (env) {
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
+        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
@@ -43,6 +47,7 @@ switch (env) {
         iframeUrl = 'https://staging-boss.hosjoy.com/'
         jinyun = 'https://staging-jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
+        ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
@@ -53,6 +58,7 @@ switch (env) {
         iframeUrl = 'https://boss.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://b2b-gateway.hosjoy.com/'
+        ccpBaseUrl = 'https://ccp.hosjoy.com/'
         fileUploadUrl = 'https://hbp.hosjoy.com/'
         iotUrl = 'https://iot.hosjoy.com'
         break
@@ -63,6 +69,7 @@ export {
     iframeUrl,
     jinyun,
     B2bUrl,
+    ccpBaseUrl,
     fileUploadUrl,
     iotUrl
 }

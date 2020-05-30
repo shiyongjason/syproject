@@ -16,7 +16,7 @@ export default [
                 meta: {
                     title: '合同管理',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_stay_online'
                 },
                 component: InterlayerContainer,
                 children: [
@@ -49,7 +49,7 @@ export default [
                 meta: {
                     title: '额度管理',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_stay_online'
                 },
                 component: InterlayerContainer,
                 children: [
@@ -71,7 +71,7 @@ export default [
                 meta: {
                     title: '用信申请',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_stay_online'
                 },
                 component: InterlayerContainer,
                 children: [

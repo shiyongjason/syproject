@@ -363,14 +363,14 @@ export default {
                             type: 'success',
                             message: '商品新建成功！'
                         })
-                        this.$router.push({ path: '/hmall/spumange' })
+                        this.$router.push({ path: '/b2b/commodity/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpu({ ...this.form, status: val || this.$route.query.status, updateBy: this.userInfo.employeeName, updateUser: this.userInfo.employeeName })
                         this.$message({
                             type: 'success',
                             message: '商品更新成功！'
                         })
-                        this.$router.push({ path: '/hmall/spumange' })
+                        this.$router.push({ path: '/b2b/commodity/spumange' })
                     } else {
                         if (this.auditForm.approveStatus == 1) {
                             this.auditForm.approveDesc = ''

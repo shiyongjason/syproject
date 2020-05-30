@@ -183,10 +183,10 @@ export default {
             }
         },
         onAddcloud (val) {
-            this.$router.push({ path: '/comfortcloud/cloudActedit', query: {} })
+            this.$router.push({ path: '/comfortcloud/operationsManagement/cloudActedit', query: {} })
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortcloud/cloudActedit', query: { id: val.id } })
+            this.$router.push({ path: '/comfortcloud/operationsManagement/cloudActedit', query: { id: val.id } })
         },
         onShowHome (val) {
             this.H5Preview = iotUrl + '/iot/actionDetail?articleId=' + val.id
