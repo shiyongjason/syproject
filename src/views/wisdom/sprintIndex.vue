@@ -36,7 +36,7 @@
         <el-dialog title="冲刺值利润指标导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/冲刺值利润指标导入模板.xls" download="冲刺值利润指标.xls">
+                    <a class="downloadExcel" href="/excelTemplate/冲刺值利润指标导入模板.xlsx" download="冲刺值利润指标.xlsx">
                         冲刺值利润指标导入模板导出
                     </a>
                 </el-form-item>
