@@ -35,7 +35,7 @@
                             </template>
                         </td>
                         <td>
-                            <el-button size="mini" type="primary" @click="onEditTem(item.templateId)">编辑</el-button>
+                            <el-button size="mini" type="primary" @click="onEditTem(obj.templateId)">编辑</el-button>
                         </td>
                     </tr>
                     </template>
@@ -118,7 +118,7 @@ export default {
         })
     },
     mounted () {
-        this.tempName = this.$route.query.bizType == 1 ? '好橙工项目材料清单' : this.$route.query.bizType == 2 ? '好橙工信审材料清单' : '好橙工终审材料清单'
+        this.tempName = this.$route.query.bizType == 1 ? '好橙工项目材料清单' : this.$route.query.bizType == 2 ? '好橙工立项材料清单' : '好橙工终审材料清单'
         this.onFindDoctemp()
     },
     methods: {

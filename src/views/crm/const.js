@@ -10,14 +10,14 @@ export const STATUS_LIST =
     [
         { key: 2, value: '审核中' },
         { key: 3, value: '资料收集中' },
-        { key: 4, value: '待信审' },
+        { key: 4, value: '待立项' },
         { key: 5, value: '合作关闭' },
         { key: 6, value: '待签约' },
         { key: 7, value: '待放款' },
         { key: 8, value: '贷中' },
         { key: 9, value: '合作完成' },
-        { key: 10, value: '信息待完善' }
-
+        { key: 10, value: '信息待完善' },
+        { key: 11, value: '待终审' }
     ]
 export const TYPE_LIST =
     [
@@ -46,12 +46,12 @@ export const DEVICE_LIST = [
 export const UPSTREAM_LIST = [{ key: 1, value: '厂商' }, { key: 2, value: '代理商' }, { key: 3, value: '经销商' }]
 
 export const STATUS_TYPE = [
-    { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '信审' },
+    { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '立项' },
     { key: 5, value: '合作关闭' }, { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }, { key: 9, value: '合作完成' }
 ]
 
 export const NEW_STATUS_TYPE = [
-    { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '信审' },
+    { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '待立项' }, { key: 11, value: '待终审' },
     { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }
 ]
 

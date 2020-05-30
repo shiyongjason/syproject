@@ -135,7 +135,8 @@ export default {
                 const res = item.riskCheckDocTemplateSamplePos.filter(item => {
                     return item.fileUrl
                 })
-                return [res[index].fileUrl]
+                console.log(res)
+                return res.length > 0 && [res[index].fileUrl]
             }
             return []
         },

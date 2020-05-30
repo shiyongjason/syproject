@@ -9,9 +9,9 @@
                     </div>
                 </div>
                 <div class="page-risk_title">
-                    信审清单配置：
+                    立项清单配置：
                     <div class="page-risk_btn">
-                        好橙工信审材料清单 <el-button size="mini" type="primary" @click="onEdittemp(2)">编辑</el-button>
+                        好橙工立项材料清单 <el-button size="mini" type="primary" @click="onEdittemp(2)">编辑</el-button>
                     </div>
                 </div>
                 <div class="page-risk_title">
