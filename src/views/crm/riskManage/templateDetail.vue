@@ -15,28 +15,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item,index) in docTable" :key="item.templateId">
-                        <td :rowspan="computedRowspan(docTable)" v-if="index==0 ">{{item.firstCatagoryName}}</td>
-                        <td>{{item.secondCatagoryName}}</td>
-                        <td>{{item.functionName}}</td>
-                        <td>{{item.formatName}}</td>
+                    <template v-for="(item) in docTable" >
+                    <tr v-for="(obj,index) in item.respRiskCheckDocTemplateList" :key="obj.templateId" >
+                        <td :rowspan="computedRowspan(item.respRiskCheckDocTemplateList)" v-if="index==0 ">{{item.firstCatagoryName}}</td>
+                        <td>{{obj.secondCatagoryName}}</td>
+                        <td>{{obj.functionName}}</td>
+                        <td>{{obj.formatName}}</td>
                         <td>
-                            {{item.remark}}
+                            {{obj.remark}}
                         </td>
                         <td class="table-img">
-                            <template v-for="index in 6">
+                            <template v-for="(objs,index) in obj.riskCheckDocTemplateSamplePos">
                                 <span :key="index">
                                     <!-- <img :src="require('../../../assets/images/img_0.png')" alt=""></span> -->
-                                    <el-image style="width: 100px; height: 100px" :src="require('../../../assets/images/img_0.png')" :preview-src-list="srcList">
+                                    <el-image style="width: 100px; height: 100px" :src="objs.fileUrl" :preview-src-list="onPreview(obj.riskCheckDocTemplateSamplePos)">
                                     </el-image>
                                 </span>
-                                <br v-if="index==3" :key="index+'risk'">
+                                <br v-if="index==2" :key="index+'risk'">
                             </template>
                         </td>
                         <td>
                             <el-button size="mini" type="primary" @click="onEditTem(item.templateId)">编辑</el-button>
                         </td>
                     </tr>
+                    </template>
                 </tbody>
             </table>
         </div>
@@ -82,6 +84,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions } from 'vuex'
+import { saveDoctemp } from './api/index'
 export default {
     name: 'templatedetail',
     components: {
@@ -89,10 +92,6 @@ export default {
     },
     data () {
         return {
-            srcList: [
-                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-            ],
             loading: false,
             formLabelWidth: '120px',
             dialogVisible: false,
@@ -103,9 +102,7 @@ export default {
                 reservedName: true
             },
             queryParams: {
-                bizType: this.$route.query.bizType,
-                pageNumber: -1,
-                pageSize: -1
+                bizType: this.$route.query.bizType
             },
             docTable: [],
             formTemp: {
@@ -130,25 +127,36 @@ export default {
             findDocTempdetail: 'riskManage/findDocTempdetail'
         }),
         async onFindDoctemp () {
-            await this.findDocTemplist(this.queryParams)
-            this.docTable = this.docTempdata.records
+            await this.findDocTemplist(this.queryParams.bizType)
+            this.docTable = this.docTempdata
         },
         handleClose () {
             this.dialogVisible = false
         },
         onBackUpload (str) {
             this.formTemp.projectUpload && this.formTemp.projectUpload.map((val, index) => {
-                val.orderNo = index
+                val.templateId = this.formTemp.templateId
             })
+        },
+        onPreview (list) {
+            console.log(list)
+            const newList = []
+            list && list.map(val => {
+                newList.push(val.fileUrl)
+            })
+            return newList
         },
         async onEditTem (val) {
             await this.findDocTempdetail(val)
             this.formTemp = { ...this.formTemp, ...this.docTempdetail }
+            this.formTemp.projectUpload = this.formTemp.riskCheckDocTemplateSamplePos
             this.dialogVisible = true
         },
-        onSaveTemp () {
-            console.log(this.formTemp)
+        async onSaveTemp () {
             this.dialogVisible = false
+            this.formTemp.riskCheckDocTemplateSamplePos = this.formTemp.projectUpload
+            await saveDoctemp(this.formTemp)
+            this.onFindDoctemp()
         },
         computedRowspan (list) {
             return list.length
