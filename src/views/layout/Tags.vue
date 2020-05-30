@@ -61,8 +61,6 @@ export default {
         },
         // 关闭单个标签
         closeTags (index, isSelf) {
-            console.log('isSelf: ', isSelf)
-            console.log('this.tagsList', this.tagsList)
             this.tagsList.splice(index, 1)
             if (this.tagsList.length < 1) {
                 // this.$router.push('/')

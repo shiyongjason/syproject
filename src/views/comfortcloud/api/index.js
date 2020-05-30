@@ -5,6 +5,10 @@ import { iotUrl } from '@/api/config'
 export function findHomeGeneralSituation (params) {
     return axios.get(iotUrl + `/api/home-manage/general-situation`, { params })
 }
+// 家庭概况
+export function findEffectiveHome (params) {
+    return axios.get(iotUrl + `/api/home-manage/general-situation`, { params })
+}
 
 // 房屋详情
 export function findHomeGeneralDetails (homeId) {
@@ -184,4 +188,56 @@ export function getCloudHomeDetailList (params) {
 }
 export function getCloudHomeDetailSearchDict (params) {
     return axios.get(iotUrl + `/api/device/statistics/species`, { params })
+}
+// 家庭明细分页查询
+export function getCloudHomeComfortReportList (params) {
+    return axios.get(iotUrl + `/api/statistics/comfort/report`, { params })
+}
+// 舒适度场景统计报表
+export function getCloudHomeComfortStatisticsList (params) {
+    return axios.get(iotUrl + `/api/statistics/comfort/statistics`, { params })
+}
+// 告警监控图表
+export function getCloudAlarmChart (params) {
+    return axios.get(iotUrl + `/api/device/upline-downline-alarm/alarm-analysis`, { params })
+}
+// 消息推送 效果
+export function getCloudSendMessageDetailChart (params) {
+    return axios.get(iotUrl + `/api/push-message/result/${params.id}`)
+}
+// 用户反馈列表
+export function getCloudUserFeedback (params) {
+    return axios.get(iotUrl + `/uc/user/feedback-page`, { params })
+}
+// 舒适小百科列表 boss端
+export function getComfortEncyclopediaList (params) {
+    return axios.get(iotUrl + `/api/comfy-encyclopedia/boss`, { params })
+}
+// 舒适小百科详情
+export function getComfortEncyclopediaDetail (articleId) {
+    return axios.get(iotUrl + `/api/comfy-encyclopedia/${articleId}`)
+}
+// boss端新增一条舒适百科
+export function createCloudComfortEncyclopedia (params) {
+    return axios.post(iotUrl + `/api/comfy-encyclopedia/boss`, params)
+}
+// boss端编辑一条舒适百科
+export function updateCloudComfortEncyclopedia (params) {
+    return axios.put(iotUrl + `/api/comfy-encyclopedia/boss`, params)
+}
+// boss端删除一条舒适百科
+export function deleteCloudComfortEncyclopedia (params) {
+    return axios.delete(iotUrl + `/api/comfy-encyclopedia/boss`, { data: params })
+}
+// 设备统计 空调
+export function getDeviceAirDetail (params) {
+    return axios.get(iotUrl + `/api/device/statistics/home/air/details`, { params })
+}
+// 设备统计 地暖
+export function getDeviceFloorHeartDetail (params) {
+    return axios.get(iotUrl + `/api/device/statistics/home/floor-heart/details`, { params })
+}
+// 设备统计 智能温控阀
+export function getDeviceTempCtlValveDetail (params) {
+    return axios.get(iotUrl + `/api/device/statistics/home/temp-ctl-valve/details`, { params })
 }

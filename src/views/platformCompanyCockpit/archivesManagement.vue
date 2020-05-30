@@ -10,36 +10,36 @@
                         <el-button type="primary" style="width:100px" @click="onDialogBtn">档案标注</el-button>
                     </span>
                 </div>
-               <div class="tabs">
+                <div class="tabs">
                     <el-tabs v-model="activeName" type="card">
-                            <el-tab-pane label="基础信息" name="base">
-                                <el-form :model="form.platformBasicInfoPO" ref='formBaseInfo' :rules="rules.platformBasicInfoPO" label-width="140px" label-position='left'>
-                                    <baseInfo ref="baseInfo" v-model="form.platformBasicInfoPO" :isEdit='isEdit'/>
-                                </el-form>
-                            </el-tab-pane>
-                            <el-tab-pane label="A档-尽调材料" name="typea">
-                                <el-form :model="form.platformBasicInfoPO" ref='formTuneMaterials' label-width="140px" label-position='left'>
-                                    <tuneMaterials :isEdit='isEdit' v-model="form.platformBasicInfoPO" />
-                                </el-form>
-                            </el-tab-pane>
-                            <el-tab-pane label="B档-签约材料" name="typeb">
-                                <el-form :model="form.archiveSignPO" :rules="rules.archiveSignPO" ref='formSign' label-width="140px" label-position='left'>
-                                    <!-- v-if为了兼容上传图片误删-->
-                                    <signMaterials v-model="form.archiveSignPO" :isEdit='isEdit' v-if="activeName==='typeb'" />
-                                </el-form>
-                            </el-tab-pane>
-                            <el-tab-pane label="C档-工商材料" name="typec">
-                                <el-form :model="form.archiveCommercialPO" ref='formSign' label-width="140px" label-position='left'>
-                                    <!-- v-if为了兼容上传图片误删-->
-                                    <businessMaterials v-model="form.archiveCommercialPO" :isEdit='isEdit' v-if="activeName==='typec'" />
-                                </el-form>
-                            </el-tab-pane>
-                            <el-tab-pane label="其余材料" name="others">
-                                <el-form :model="form.otherFiles" ref='formSign' label-width="140px" label-position='left'>
-                                    <!-- v-if为了兼容上传图片误删-->
-                                    <otherMaterials v-model="form.otherFiles" :otherDocFlagSync.sync='form.platformBasicInfoPO.otherDocFlag' :isEdit='isEdit' />
-                                </el-form>
-                            </el-tab-pane>
+                        <el-tab-pane label="基础信息" name="base">
+                            <el-form :model="form.platformBasicInfoPO" ref='formBaseInfo' :rules="rules.platformBasicInfoPO" label-width="140px" label-position='left'>
+                                <baseInfo ref="baseInfo" v-model="form.platformBasicInfoPO" :isEdit='isEdit' />
+                            </el-form>
+                        </el-tab-pane>
+                        <el-tab-pane label="A档-尽调材料" name="typea">
+                            <el-form :model="form.platformBasicInfoPO" ref='formTuneMaterials' label-width="140px" label-position='left'>
+                                <tuneMaterials :isEdit='isEdit' v-model="form.platformBasicInfoPO" />
+                            </el-form>
+                        </el-tab-pane>
+                        <el-tab-pane label="B档-签约材料" name="typeb">
+                            <el-form :model="form.archiveSignPO" :rules="rules.archiveSignPO" ref='formSign' label-width="140px" label-position='left'>
+                                <!-- v-if为了兼容上传图片误删-->
+                                <signMaterials v-model="form.archiveSignPO" :isEdit='isEdit' v-if="activeName==='typeb'" />
+                            </el-form>
+                        </el-tab-pane>
+                        <el-tab-pane label="C档-工商材料" name="typec">
+                            <el-form :model="form.archiveCommercialPO" ref='formSign' label-width="140px" label-position='left'>
+                                <!-- v-if为了兼容上传图片误删-->
+                                <businessMaterials v-model="form.archiveCommercialPO" :isEdit='isEdit' v-if="activeName==='typec'" />
+                            </el-form>
+                        </el-tab-pane>
+                        <el-tab-pane label="其余材料" name="others">
+                            <el-form :model="form.otherFiles" ref='formSign' label-width="140px" label-position='left'>
+                                <!-- v-if为了兼容上传图片误删-->
+                                <otherMaterials v-model="form.otherFiles" :otherDocFlagSync.sync='form.platformBasicInfoPO.otherDocFlag' :isEdit='isEdit' />
+                            </el-form>
+                        </el-tab-pane>
                     </el-tabs>
                 </div>
                 <div class="btn" v-if="isEdit">
@@ -54,13 +54,13 @@
         <el-dialog center title="档案标注" :visible.sync="dialogVisible" width="600px">
             <div v-if="!dialogIsEdit&&hosAuthCheck(COCKPIT_FILE_EDIT)" class="el-icon-edit-outline dialogposeditor" @click="dialogIsEdit = true"></div>
             <el-form ref='dialogForm' label-width="140px" label-position='left'>
-                <el-form-item label="归档情况：" >
+                <el-form-item label="归档情况：">
                     <el-radio v-if="dialogIsEdit" v-model="remarkTemp.archiveStatus" label="1">档案齐全</el-radio>
                     <el-radio v-if="dialogIsEdit" v-model="remarkTemp.archiveStatus" label="2">档案缺失</el-radio>
                     <span v-if="!dialogIsEdit">{{remarkTemp.archiveStatus==='1'?'档案齐全':remarkTemp.archiveStatus==='2'?'档案缺失':'-'}}</span>
                 </el-form-item>
                 <el-form-item label="档案备注：">
-                    <el-input v-if="dialogIsEdit" v-model="remarkTemp.remark" placeholder="此处备注档案信息" type='textarea' :rows="6" show-word-limit  maxlength="3000"></el-input>
+                    <el-input v-if="dialogIsEdit" v-model="remarkTemp.remark" placeholder="此处备注档案信息" type='textarea' :rows="6" show-word-limit maxlength="3000"></el-input>
                     <span v-if="!dialogIsEdit">{{remarkTemp.remark}}</span>
                 </el-form-item>
             </el-form>
@@ -80,7 +80,7 @@ import signMaterials from './components/signMaterials'
 import businessMaterials from './components/businessMaterials'
 import otherMaterials from './components/otherMaterials'
 import hosjoyButton from '@/components/HosJoyButton/hosJoyButton'
-import { saveInfo, getDetail, provinces, upData, remark } from './api/index.js'
+import { saveInfo, getDetail, upData, remark, getProvinces, getCities, getAreas } from './api/index.js'
 import { mapState, mapMutations } from 'vuex'
 // import { checkIdCard } from '@/utils/rules.js'
 
@@ -272,23 +272,30 @@ export default {
                 }
             }
             this.$nextTick(async () => {
-                let tempPrivince = this.getNameByCode(this.form.platformBasicInfoPO.addressPrivince, this.$refs['baseInfo'].addressPrivince)
-                await this.provinces({ parentId: this.form.platformBasicInfoPO.addressPrivince }, 1)
-                let tempCity = this.getNameByCode(this.form.platformBasicInfoPO.addressCity, this.addressCity)
-                this.$refs['baseInfo'].addressCity = this.addressCity
-                await this.provinces({ parentId: this.form.platformBasicInfoPO.addressCity }, 2)
-                let tempArea = this.getNameByCode(this.form.platformBasicInfoPO.addressOther, this.addressDistrict)
-                this.$refs['baseInfo'].addressDistrict = this.addressDistrict
-                let privince = tempPrivince.length > 0 ? tempPrivince[0].cityName : ''
-                let city = (tempCity.length > 0 && tempCity[0].cityName) || ''
-                let area = (tempArea.length > 0 && tempArea[0].cityName && tempArea[0].cityId) || ''
-                let address = `${privince} ${city} ${area} ${this.form.platformBasicInfoPO.addressOther}`
+                let address = ''
+                if (this.form.platformBasicInfoPO.addressPrivince) {
+                    const provinceArr = await this.getProvinces()
+                    var province = provinceArr.filter(i => {
+                        return i.provinceId == this.form.platformBasicInfoPO.addressPrivince
+                    })[0].name
+                    address += province
+                    if (this.form.platformBasicInfoPO.addressCity) {
+                        const cityArr = await this.getCities(this.form.platformBasicInfoPO.addressPrivince)
+                        var city = cityArr.filter(i => {
+                            return i.cityId == this.form.platformBasicInfoPO.addressCity
+                        })[0].name
+                        address += city
+                        if (this.form.platformBasicInfoPO.addressDistrict) {
+                            const areaArr = await this.getAreas(this.form.platformBasicInfoPO.addressCity)
+                            var area = areaArr.filter(i => {
+                                return i.countryId == this.form.platformBasicInfoPO.addressDistrict
+                            })[0].name
+                            address += area
+                        }
+                    }
+                }
+                address += this.form.platformBasicInfoPO.addressOther
                 this.$refs['baseInfo'].datailAddress = address == '   ' ? '-' : address
-            })
-        },
-        getNameByCode (code, list) {
-            return list.filter(item => {
-                return code == item.cityId
             })
         },
         async buttonClick (done) {
@@ -387,24 +394,6 @@ export default {
                 }
             })
         },
-        async provinces (params = { parentId: 0 }, city = 0) {
-            const { data } = await provinces(params)
-            switch (city) {
-                case 0:
-                    this.addressPrivince = data.citys
-                    this.addressPrivince.unshift({ cityId: '', cityName: '请选择省', id: 0 })
-                    break
-                case 1:
-                    this.addressCity = data.citys
-                    this.addressCity.unshift({ cityId: '', cityName: '请选择市', id: 0 })
-
-                    break
-                case 2:
-                    this.addressDistrict = data.citys
-                    this.addressDistrict.unshift({ cityId: '', cityName: '请选择区', id: 0 })
-                    break
-            }
-        },
         onInit () {
             this.$set(this.form.platformBasicInfoPO, 'dd', [])
             this.$set(this.form.archiveSignPO, 'realcontrollerList', [])
@@ -416,7 +405,6 @@ export default {
             this.$set(this.form.archiveCommercialPO, 'stocktransfer', [])
             this.$set(this.form, 'otherFiles', { fileList: [] })
             this.formatForm()
-            console.log(this.form)
         },
         async onRemark () {
             this.form.platformBasicInfoPO.archiveStatus = this.remarkTemp.archiveStatus
@@ -458,6 +446,18 @@ export default {
                 // this.$set(this.form.archiveSignPO.signBOs[0], 'radio', '1')
                 this.$set(this.form.archiveSignPO.signBOs[0], 'radio', radio)
             }
+        },
+        async getProvinces () {
+            const { data } = await getProvinces()
+            return data
+        },
+        async getCities (provinceId) {
+            const { data } = await getCities(provinceId)
+            return data
+        },
+        async getAreas (cityId) {
+            const { data } = await getAreas(cityId)
+            return data
         }
     },
     mounted () {
@@ -475,15 +475,48 @@ export default {
 </script>
 
 <style scoped>
-.el-dialog__wrapper>>>.el-textarea .el-input__count{color:#c3c6cc}
-.tabs>>>.el-textarea .el-input__count{color:#c3c6cc}
-.tabs>>>.el-tabs__header{margin:0}
-.tabs>>>.el-form{padding:0}
-.btn{ margin-top: 20px}
-.tit-l{ font-size: 18px; padding-left: 10px}
-.tit-r{ float: right;}
-.title{ margin-bottom: 20px}
-.postionrelative{ position: relative;}
-.poseditor{position: absolute;font-size: 42px;right: 58px;top: 124px;z-index: 999;cursor: pointer;}
-.dialogposeditor{position: absolute;font-size: 31px;right: 16px;top: 69px;z-index: 999;cursor: pointer;}
+.el-dialog__wrapper >>> .el-textarea .el-input__count {
+    color: #c3c6cc;
+}
+.tabs >>> .el-textarea .el-input__count {
+    color: #c3c6cc;
+}
+.tabs >>> .el-tabs__header {
+    margin: 0;
+}
+.tabs >>> .el-form {
+    padding: 0;
+}
+.btn {
+    margin-top: 20px;
+}
+.tit-l {
+    font-size: 18px;
+    padding-left: 10px;
+}
+.tit-r {
+    float: right;
+}
+.title {
+    margin-bottom: 20px;
+}
+.postionrelative {
+    position: relative;
+}
+.poseditor {
+    position: absolute;
+    font-size: 42px;
+    right: 58px;
+    top: 124px;
+    z-index: 999;
+    cursor: pointer;
+}
+.dialogposeditor {
+    position: absolute;
+    font-size: 31px;
+    right: 16px;
+    top: 69px;
+    z-index: 999;
+    cursor: pointer;
+}
 </style>

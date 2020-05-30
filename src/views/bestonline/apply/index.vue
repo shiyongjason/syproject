@@ -127,7 +127,7 @@ export default {
             const deptType = this.userInfo.deptType
             const role = this.userInfo.role
             // 分部发展
-            if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
+            if ((deptType === 2 || deptType === 3) && (role.indexOf('fenbufazhan') !== -1)) {
                 this.addbtn = true
                 this.updatebtn = true
                 this.deletebtn = true
@@ -164,8 +164,8 @@ export default {
             this.dialogVisible = true
         },
         async getDueapply () {
-            this.params.organizationCode = this.userInfo.deptDoc
-            this.params.role = this.userInfo.positionCode
+            this.params.organizationCode = this.userInfo.belongDeptCode
+            this.params.role = sessionStorage.getItem('user_Data') ? JSON.parse(sessionStorage.getItem('user_Data')).positionCode : ''
             const { data } = await getDueapply(this.params)
             this.tableData = data.data.pageContent
             this.pagination = {

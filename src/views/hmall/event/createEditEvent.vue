@@ -278,8 +278,8 @@ export default {
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
+                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -295,7 +295,6 @@ export default {
     },
     watch: {
         pictureContainer (val) {
-            console.log(val)
             this.$nextTick(() => {
                 if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
             })
@@ -498,7 +497,6 @@ export default {
         },
         /** 刷单 */
         onOrder (val) {
-            console.log(this.form.status)
             // 刷单前置条件：活动已经开启，库存不为零。
             if (this.form.status == 1) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
@@ -555,9 +553,7 @@ export default {
         },
         /** 保存 */
         async onSave (status, mark = '') {
-            console.log(this.pictureContainer)
             this.form.image = this.pictureContainer.length > 0 ? this.pictureContainer[0].url : ''
-            console.log(this.form)
             let temp = true
             this.$refs['form'].validate((valid, errors) => {
                 if (!valid) {

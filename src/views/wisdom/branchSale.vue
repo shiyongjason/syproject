@@ -2,36 +2,31 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.regionCode" clearable placeholder="全部" :disabled="regionDisabled" @change='getRegionCode'>
-                            <el-option v-for="item in regionList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" clearable :disabled="branchDisabled" placeholder="全部">
-                            <el-option v-for="item in branchList" :key="item.deptcode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-
-                    <el-date-picker v-model="queryParams.startDate" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.startDate" :editable="false" :clearable='false' :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endDate" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.endDate" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onQuery('btn')">
+                    <el-button type="primary" class="ml20" @click="onSearch()">
                         查询
                     </el-button>
-                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
+                    <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="onExport()">
+                        导出
+                    </el-button>
                 </div>
             </div>
             <div class="page-wrap flex-wrap-col">
@@ -49,24 +44,25 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <branchSaleTable ref="brandSaleTable" :tableData="tableData" :loading="branchLoading" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchSaleTable>
+                <branchSaleTable :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchSaleTable>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import { findBranchList, findRegionList, getBranchSale, getBranchSaleSum } from './api/index.js'
+import { getBranchSale, getBranchSaleSum, exportBranchSale } from './api/index.js'
 import branchSaleTable from './components/branchSaleTable.vue'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { AUTH_WIXDOM_BRANCH_SALE_EXPORT } from '@/utils/auth_const'
-import { DEPT_TYPE } from './store/const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'brandSale',
+    components: { branchSaleTable, HAutocomplete },
+    mixins: [departmentAuth],
     data: function () {
         return {
-            exportAuth: AUTH_WIXDOM_BRANCH_SALE_EXPORT,
             pickerOptionsStart: {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams.endDate
@@ -83,12 +79,7 @@ export default {
                     }
                 }
             },
-            branchLoading: true,
-            total: {
-                total: {}, // 后台返的合计
-                totalTable: {}, // table对应的合计
-                type: 0
-            },
+            exportAuth: AUTH_WIXDOM_BRANCH_SALE_EXPORT,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -98,175 +89,88 @@ export default {
                 endDate: new Date().toJSON().split('T')[0],
                 targetStatus: '3'
             },
-            queryParamsTemp: {
-            },
-            activityName: {},
-            file: [],
+            searchParams: {},
             paginationData: {
                 totalElements: 0,
                 pageSize: 10,
                 pageNumber: 1
             },
             tableData: [],
-            regionList: [],
-            branchList: [],
-            regionDisabled: false,
-            branchDisabled: false,
-            deptType: DEPT_TYPE
+            selectAuth: {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
-        }),
-        exportHref () {
-            let url = interfaceUrl + 'rms/subsection-sale/export?'
-            for (let key in this.queryParams) {
-                if (key !== 'pageSize' && key !== 'pageNumber') {
-                    url += (key + '=' + this.queryParams[key] + '&')
-                }
-            }
-            return url
-        }
-    },
-    components: {
-        branchSaleTable
+            userInfo: state => state.userInfo,
+            regionList: state => state.regionList,
+            branchList: state => state.branchList
+        })
     },
     methods: {
-        async onFindRegionList () {
-            const { data } = await findRegionList()
-            this.regionList = data.data
-            // this.regionList.pop()
+        onExport () {
+            exportBranchSale(this.queryParams)
         },
-        async onFindRegion (val) {
-            const { data } = await findRegionList({ pkDeptdoc: val })
-            if (data.data[0] && data.data[0].deptname !== '好享家总部') {
-                this.queryParams.regionCode = data.data[0].crmDeptCode
+        linkage () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
             }
-        },
-        async onFindBranchList (value) {
-            const { data } = await findBranchList({ crmDeptCode: value })
-            this.branchList = data.data ? data.data : []
-        },
-        async getBranchSale (value) {
-            const { data } = await getBranchSale(value)
-            if (!this.total.type) {
-                this.total.total = data.data.content.respSubsectionSaleAdjectiveTotal
-            }
-            // 出参 在转移时候变动了 前缀 resp
-            this.tableData = data.data.content.subsectionSaleAdjectiveBOS
-            if (this.tableData.length > 0) {
-                let _this = this
-                data.data.content.respSubsectionSaleAdjectiveTotal.subsectionName = '合计'
-                this.total.totalTable.ranking = '-'
-                this.total.totalTable.regionName = '-'
-                Object.keys(this.total.total).forEach(function (key) {
-                    let totalKey = key.split('Total')[0]
-                    _this.total.totalTable[totalKey] = _this.total.total[key]
-                })
-                this.total.shallowCopy = this.total.totalTable
-                this.tableData.unshift(this.total.shallowCopy)
-            }
-            this.paginationData.pageNumber = data.data.pageNumber
-            this.paginationData.pageSize = data.data.pageSize
-            this.paginationData.total = data.data.totalElements
-        },
-        async getBranchSaleSum () {
-            this.total.type = 1
-            const params = {
-                regionCode: this.queryParams.regionCode,
-                subsectionCode: this.queryParams.subsectionCode,
-                startDate: this.queryParams.startDate,
-                endDate: this.queryParams.endDate,
-                targetStatus: this.queryParams.targetStatus
-            }
-            if (params.startDate === null || params.endDate === null) {
-                this.$message({
-                    message: '时间不能为空哦',
-                    type: 'warning'
-                })
-                return
-            }
-            const { data } = await getBranchSaleSum(params)
-            this.total.total = data.data
-            let _this = this
-            Object.keys(data.data).forEach(function (key) {
-                let totalKye = key.split('Total')[0]
-                _this.total.shallowCopy[totalKye] = data.data[key]
-            })
-            this.$set(this.tableData, 0, this.total.shallowCopy)
-            this.branchLoading = false
-        },
-        async onChoose () {
-            this.branchLoading = true
-            if (this.queryParams.startDate === null || this.queryParams.endDate === null) {
-                this.$message({
-                    message: '时间不能为空哦',
-                    type: 'warning'
-                })
-                return
-            }
-            this.total.type = 0
-            await this.onQuery()
-            this.getBranchSaleSum()
-        },
-        async getRegionCode () {
-            // console.log('选择大区，获取大区下分部')
-            await this.onFindBranchList(this.queryParams.regionCode)
             this.queryParams.subsectionCode = ''
+            this.selectAuth.branchObj = { ...obj }
+        },
+        async backPlat (val, dis) {
+            if (dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                !val.value.pkDeptDoc && this.linkage()
+            } else if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+            }
+        },
+        async onChoose (val) {
+            this.searchParams.targetStatus = val
+            await this.onQuery()
         },
         async onSizeChange (val) {
-            this.branchLoading = true
-            this.queryParams.pageSize = val
+            this.searchParams.pageSize = val
             await this.onQuery()
-            this.branchLoading = false
         },
         async onCurrentChange (val) {
-            this.branchLoading = true
-            this.queryParams.pageNumber = val.pageNumber
+            this.searchParams.pageNumber = val.pageNumber
             await this.onQuery()
-            this.branchLoading = false
         },
-        async onQuery (event) {
-            if (this.queryParams.startDate === null || this.queryParams.endDate === null) {
-                this.$message({
-                    message: '时间不能为空哦',
-                    type: 'warning'
-                })
-                return
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.onQuery()
+        },
+        async onQuery () {
+            const res = await Promise.all([getBranchSale(this.searchParams), getBranchSaleSum(this.searchParams)])
+            this.tableData = res[0].data.data.records
+            this.paginationData = {
+                total: res[0].data.data.total,
+                pageSize: res[0].data.data.size,
+                pageNumber: res[0].data.data.current
             }
-            if (event === 'btn') {
-                this.branchLoading = true
-                this.total.type = 0
-            }
-            await this.getBranchSale(this.queryParams)
-            if (event === 'btn') {
-                this.getBranchSaleSum()
-            }
+            let obj = { subsectionName: '合计' }
+            Object.keys(res[1].data.data).forEach(function (key) {
+                let totalKye = key.split('Total')[0]
+                obj[totalKye] = res[1].data.data[key]
+            })
+            this.tableData.unshift(obj)
         }
     },
     async mounted () {
-        // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        await this.onFindRegionList() // 大区
-        await this.onFindBranchList() // 分部
-        if (this.userInfo.deptType === this.deptType[1]) {
-            this.regionDisabled = true
-            this.queryParams.regionCode = this.userInfo.oldDeptCode
-            this.onFindBranchList(this.userInfo.oldDeptCode) // 查大区下的分部
-        } else if (this.userInfo.deptType === this.deptType[0]) {
-            // 总部可查看所有
-        } else if (this.userInfo.deptType === this.deptType[2]) {
-            this.regionDisabled = true
-            this.branchDisabled = true
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
-            // this.queryParams.subsectionCode = "1aad7c94-2830-11e8-ace9-000c290bec91"
-            let region = this.branchList.find((val) => {
-                return val.crmDeptCode === this.queryParams.subsectionCode
-            })
-            await this.onFindRegion(region.pkFathedept) // 根据分部找大区
-        }
-        await this.onQuery()
-        this.getBranchSaleSum()
+        await this.onSearch()
+        await this.newBossAuth(['D', 'F'])
     }
 }
 </script>

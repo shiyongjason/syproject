@@ -41,7 +41,8 @@ export default {
             if (command === 'exit') {
                 // TODO 清除所有缓存
                 sessionStorage.clear()
-                this.$router.push('/login')
+                window.location.href = '/login'
+                // this.$router.push('/login')
             } else if (command === 'editPassword') {
                 // this.editPasswordVisible = true
                 // this.$router.push('/editPassword')

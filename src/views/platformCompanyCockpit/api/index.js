@@ -1,23 +1,35 @@
 import axios from 'axios'
-import { ossUrl, interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 
 // 生成验证码
 export const getVerifica = (params) => axios.get('/uaa/api/verification-code', params)
 // 修改密码
 export const editPassword = (params) => axios.post('/uaa/api/account/change-password', params)
-// 省市区
-export const provinces = (params) => {
-    return axios.post(ossUrl + 'api/http/3041', params)
+// 省
+export const getProvinces = () => {
+    return axios.get(ccpBaseUrl + 'common/region/provinces/nesting')
+}
+// 市
+export const getCities = (provinceId) => {
+    return axios.get(ccpBaseUrl + `common/region/provinces/${provinceId}/cities`)
+}
+// 区
+export const getAreas = (cityId) => {
+    return axios.get(ccpBaseUrl + `common/region/cities/${cityId}/countries`)
 }
 // 查询平台公司
 export const findPaltList = (params) => {
-    return axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', {
+    return axios.get('develop/developbasicinfo/queryCompany', {
         params
     })
 }
 // 分部列表查询
 export const findBranchListNew = (params) => {
-    return axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
+    return axios.get('rms/subsectiontarget/subsection', { params })
+}
+// 分部列表查询
+export const findAllBranchList = (params) => {
+    return axios.get('/uaa/department/subsections', { params })
 }
 // 保存档案
 export const saveInfo = (params) => {
