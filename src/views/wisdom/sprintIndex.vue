@@ -20,7 +20,7 @@
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageNumber: 1, pageSize: 10})">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
                     <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
@@ -36,7 +36,7 @@
         <el-dialog title="冲刺值利润指标导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
+                    <a class="downloadExcel" href="/excelTemplate/冲刺值利润指标导入模板.xls" download="冲刺值利润指标.xls">
                         冲刺值利润指标导入模板导出
                     </a>
                 </el-form-item>
@@ -46,12 +46,12 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + '/api/overdue/annual/target/profit/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/target-profit/value/import\n'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
                     <el-button type="primary" class='m0' :loading='loading'>
                         导入表格
                     </el-button>
                 </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -64,7 +64,11 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { sprintTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getSprintIndexList, getSprintIndexTotal, exportSprintIndex } from './api/index'
+import {
+    getSprintIndexList,
+    getSprintIndexTotal,
+    exportSprintIndex
+} from './api/index'
 export default {
     name: 'sprintIndex',
     mixins: [departmentAuth],
@@ -111,7 +115,9 @@ export default {
             total: {},
             tableData: [],
             column: [],
-            dialogFormVisible: false
+            dialogFormVisible: false,
+            dynamicNameRegion: '大区',
+            dynamicNameBranch: '分部'
         }
     },
     computed: {
@@ -126,51 +132,63 @@ export default {
         })
     },
     methods: {
+        cancel () {
+            this.uploadData.valueYear = ''
+            this.dialogFormVisible = false
+        },
+        btnQuery (params) {
+            this.queryParamsTemp = { ...params }
+            this.onQuery(params)
+        },
+        async onQuery (params) {
+            const promiseArr = [getSprintIndexList(params), getSprintIndexTotal(params)]
+            const data = await Promise.all(promiseArr).then((res) => {
+                const columnData = sprintTableLabel(this.queryParams.valueYear)
+                columnData[1].label = this.dynamicNameRegion
+                columnData[0].label = this.dynamicNameBranch
+                columnData.forEach((value, index) => {
+                    if (index > 1) {
+                        value.children.forEach((val) => {
+                            val.children.forEach((val1) => {
+                                if (res[1].data[val.prop]) {
+                                    val1.label = String(res[1].data[val.prop])
+                                }
+                            })
+                        })
+                    }
+                })
+                this.column = columnData
+                return res[0].data
+            }).catch((error) => {
+                this.$message.error(`error:${error}`)
+            })
+            this.tableData = data.records
+            this.page.total = data.total
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
                 selectName: ''
             }
             this.queryParams.subsectionCode = ''
-            this.queryParams.subRegionCode = ''
-            this.queryParams.misCode = ''
             this.selectAuth.branchObj = { ...obj }
         },
         async backPlat (val, dis) {
-            // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.dynamicNameRegion = val.value.deptName || '大区'
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
+                this.dynamicNameBranch = val.value.deptName || '分部'
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
             }
         },
         onExport () {
             exportSprintIndex(this.queryParams)
         },
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.onQuery()
-        },
-        async onQuery () {
-            const promiseArr = [getSprintIndexList(this.queryParams), getSprintIndexTotal(this.queryParams)]
-            const data = await Promise.all(promiseArr).then((res) => {
-                return res[0].data
-            }).catch((error) => {
-                this.$message.error(`error:${error}`)
-            })
-            console.log(data)
-            this.tableData = data.records
-            this.page.total = data.total
-        },
         getList (val) {
-            this.searchParams = {
-                ...this.searchParams,
-                ...val
-            }
-            this.onQuery()
+            this.onQuery({ ...this.queryParamsTemp, ...val })
         },
         async onReset () {
             let obj = {
@@ -179,13 +197,13 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'valueYear ', this.targetTime.slice(0, 4))
+            this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.newBossAuth(['D', 'F'])
-            this.onSearch()
+            this.onQuery(this.queryParams)
         },
         isSuccess () {
             this.$message({
@@ -193,7 +211,9 @@ export default {
                 type: 'success'
             })
             this.loading = false
-            this.onSearch()
+            this.onQuery(this.queryParams)
+            this.dialogFormVisible = false
+            this.uploadData.valueYear = ''
         },
         isError (response) {
             this.$message({
@@ -239,7 +259,7 @@ export default {
         await this.findTargetTime()
         this.queryParams.valueYear = this.targetTime.slice(0, 4)
         this.column = sprintTableLabel(this.queryParams.valueYear)
-        this.onSearch()
+        this.btnQuery(this.queryParams)
         this.newBossAuth(['D', 'F'])
     }
 }

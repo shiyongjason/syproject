@@ -294,7 +294,7 @@ export function exportCommitment (params) {
 // 冲刺值利润指标
 export function exportSprintIndex (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`/backend/api/overdue/annual/target/profit/export`, { params }).then(function (response) {
+    axios.get(`/backend/api/overdue/annual/target-profit/value/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
@@ -339,7 +339,7 @@ export function exportPerformanceIndex (params) {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '履约值利润指标.xlsx'
+                a.download = '履约值利润指标导入模板.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()

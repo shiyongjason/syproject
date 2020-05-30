@@ -355,7 +355,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'februaryValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -368,7 +368,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'marchValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -381,7 +381,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'aprilValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -394,7 +394,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'mayValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -407,7 +407,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'juneValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -420,7 +420,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'julyValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -433,7 +433,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'augustValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -446,7 +446,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'septemberValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -459,7 +459,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'octoberValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -472,7 +472,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'novemberValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -485,7 +485,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'decemberValue',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 },
@@ -498,7 +498,7 @@ export function sprintTableLabel (targetYear) {
                     children: [
                         {
                             prop: 'totalAnnual',
-                            label: ``
+                            label: `-`
                         }
                     ]
                 }

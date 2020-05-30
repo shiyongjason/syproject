@@ -42,7 +42,7 @@
         <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/履约值利润指标.xls" download="履约值利润指标.xls">
+                    <a class="downloadExcel" href="/excelTemplate/履约值利润指标导入模板.xls" download="履约值利润指标导入模板.xls">
                         履约值利润指标导出
                     </a>
                 </el-form-item>
@@ -57,7 +57,7 @@
                         导入表格
                     </el-button>
                 </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
     </div>
@@ -138,6 +138,10 @@ export default {
         })
     },
     methods: {
+        cancel () {
+            this.uploadData.valueYear = ''
+            this.dialogFormVisible = false
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -166,7 +170,7 @@ export default {
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
@@ -222,7 +226,7 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
             this.newBossAuth(['D', 'F', 'P'])
-            this.onQuery(this.queryParams)
+            this.btnQuery(this.queryParams)
         },
         isSuccess (response) {
             this.$message({
