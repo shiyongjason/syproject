@@ -1,6 +1,6 @@
 <template>
     <div class="collect-wrap">
-        <el-form :model="finalForm"  ref="colForm" class="demo-ruleForm">
+        <el-form :model="finalForm" ref="colForm" class="demo-ruleForm">
             <div class="collect-wrapbox" v-for="item in finalForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
                 <template v-for="obj in item.respRiskCheckDocTemplateList">

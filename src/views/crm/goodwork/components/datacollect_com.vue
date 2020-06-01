@@ -15,24 +15,25 @@
                                 <p>备注：{{obj.remark}}</p>
                                 <p>规定格式：{{obj.formatName}}</p>
                             </div>
+                            <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
+                                <p>
+                                    <span class="posrtv">
+                                        <template v-if="item&&item.fileUrl">
+                                            <i class="el-icon-document"></i>
+                                            <a :href="item.fileUrl" target="_blank">
+                                                <font>{{item.fileName}}</font>
+                                            </a>
+                                        </template>
+                                    </span>
+                                </p>
+                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD')}}</p>
+                                <p>
+                                    <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
+                                    <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                                </p>
+                            </div>
                         </div>
-                        <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
-                            <p>
-                                <span class="posrtv">
-                                    <template v-if="item&&item.fileUrl">
-                                        <i class="el-icon-document"></i>
-                                        <a :href="item.fileUrl" target="_blank">
-                                            <font>{{item.fileName}}</font>
-                                        </a>
-                                    </template>
-                                </span>
-                            </p>
-                            <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD')}}</p>
-                            <p>
-                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
-                                <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                            </p>
-                        </div>
+
                     </el-form-item>
                 </template>
             </div>
@@ -236,6 +237,7 @@ export default {
 }
 .collect-box {
     display: flex;
+    flex-direction: column;
     .el-checkbox {
         margin-right: 10px;
     }
@@ -258,7 +260,6 @@ export default {
 }
 .upload-file_list {
     display: flex;
-    margin-left: 23px;
     p {
         &:first-child {
             flex: 1;

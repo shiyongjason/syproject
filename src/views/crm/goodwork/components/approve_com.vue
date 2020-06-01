@@ -1,6 +1,14 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
+            <div class="collect-Info" v-if="(activeName=='3'&&status>3)||(activeName<status&&status!=11)">
+                  <el-form-item :label="approveTitle+'结果：'" >
+                   {{approveForm.approveResult?'通过':'不通过'}}
+                </el-form-item>
+                <el-form-item label="说明：" >
+                   {{approveForm.remark}}
+                </el-form-item>
+            </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
                 <template v-for="obj in item.respRiskCheckDocTemplateList">
@@ -30,8 +38,8 @@
                                 <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                             </p>
                         </div>
-                        {{activeName}}{{status}}
-                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
+                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
+                            style="margin:10px 0 0 5px">
                             <el-button type="primary">上 传</el-button>
                         </hosjoyUpload>
                     </el-form-item>
@@ -51,7 +59,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="approveVisible = false">取 消</el-button>
+                <el-button @click="onColseApprove">取 消</el-button>
                 <el-button type="primary" @click="onSaveapproveOrfinal(2)">确 定</el-button>
             </span>
         </el-dialog>
@@ -113,19 +121,22 @@ export default {
     methods: {
         onShowApprove () {
             this.approveVisible = true
-            this.approveTitle = status == 4 ? '立项' : '终审'
+            this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
         validFormInfo (list) {
-            if (list.length > 0) {
-                for (let i = 0; i < list.length; i++) {
-                    if (list[i].mondatoryFlag == 1 && list[i].riskCheckProjectDocPos.length == 0) {
-                        this.$message.error(`一级类目：${list[i].firstCatagoryName}，二级类目：${list[i].secondCatagoryName}，${list[i].formatName}必填！`)
-                        break
-                    } else {
-                        return true
-                    }
+            console.log(list)
+            const respTemp = this.approveForm.projectDocList[0].respRiskCheckDocTemplateList
+            let res = ''
+            for (let i = 0; i < respTemp.length; i++) {
+                const arr = list.filter(jtem => {
+                    return jtem.templateId == respTemp[i].templateId
+                })
+                if (arr.length == 0) {
+                    res = respTemp[i]
+                    break
                 }
             }
+            return res
         },
         async  onSaveapproveOrfinal (val) {
             const projectDocList = this.approveForm.projectDocList
@@ -136,10 +147,14 @@ export default {
                 })
             })
             const params = {}
-            params.bizType = this.approveTitle == status == 4 ? '2' : '3'
+            params.bizType = this.status == 4 ? '2' : '3'
             params.projectId = this.approveForm.projectId
             params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
-            if (this.validFormInfo(projectDocList[0].respRiskCheckDocTemplateList)) {
+            let res = this.validFormInfo(riskCheckProjectDocPoList)
+            if (res) {
+                this.$message.error(`二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+                this.$emit('onBackLoad', false)
+            } else {
                 if (val == 2) {
                     params.submitStatus = this.approvedialgForm.submitStatus
                     params.remark = this.approvedialgForm.remark
@@ -166,8 +181,6 @@ export default {
                         this.$emit('onBackLoad', false)
                     }
                 }
-            } else {
-                this.$emit('onBackLoad', false)
             }
         },
         handleSuccessCb (row) {
@@ -194,6 +207,7 @@ export default {
         onColseApprove () {
             this.approvedialgForm.remark = ''
             this.approvedialgForm.submitStatus = ''
+            this.approveVisible = false
         }
     }
 }
