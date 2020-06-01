@@ -51,7 +51,7 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="gotoProductAdd">
-                        新建商品SPU
+                        新建SPU模板
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onDisable()">批量禁用</el-button>
                     <el-button type="primary" class="ml20" @click="onEnable()">批量启用</el-button>
