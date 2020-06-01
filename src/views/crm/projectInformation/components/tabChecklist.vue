@@ -1,45 +1,49 @@
 <template>
     <div class="page-body-cont" v-if="informationDetail.projectDocList&&informationDetail.projectDocList.length>0">
-        <div v-for="(item,index) in informationDetail.projectDocList" :key="index">
-            <div class="firstclass">{{item.firstCatagoryName}}</div>
-            <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
-                <div class="secondclass-title">
-                    <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
-                    <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
-                </div>
-                <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
-                <div class="secondclass-documents">
-                    <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
-                    <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
-                        <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                            <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
-                        </div>
+        <div v-if="!$route.query.docAfterStatus">资料审核通过后展示</div>
+        <div v-else>
+            <div v-for="(item,index) in informationDetail.projectDocList" :key="index">
+                <div class="firstclass">{{item.firstCatagoryName}}</div>
+                <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
+                    <div class="secondclass-title">
+                        <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
+                        <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
                     </div>
-                    <!--  -->
-                    <p class="secondclass-documents_title">规定格式：{{jtem.formatName||"-"}}</p>
-                    <template v-if="jtem.riskCheckProjectDocPos">
-                        <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.riskCheckProjectDocPos" :key="kndex">
-                            <p>
-                                <span class="posrtv">
-                                    <template v-if="ktem&&ktem.fileUrl">
-                                        <i class="el-icon-document"></i>
-                                        <a :href="ktem.fileUrl" target="_blank">
-                                            <font>{{ktem.fileName}}</font>
-                                        </a>
-                                    </template>
-                                </span>
-                            </p>
-                            <p style="flex:0.5">{{formatMoment(ktem.updateTime)}}</p>
-                            <p>
-                                <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
-                                <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
-                            </p>
+                    <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
+                    <div class="secondclass-documents">
+                        <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
+                        <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
+                            <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
+                                <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
+                            </div>
                         </div>
-                    </template>
-                    <p v-else>-</p>
+                        <!--  -->
+                        <p class="secondclass-documents_title">规定格式：{{jtem.formatName||"-"}}</p>
+                        <template v-if="jtem.riskCheckProjectDocPos">
+                            <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.riskCheckProjectDocPos" :key="kndex">
+                                <p>
+                                    <span class="posrtv">
+                                        <template v-if="ktem&&ktem.fileUrl">
+                                            <i class="el-icon-document"></i>
+                                            <a :href="ktem.fileUrl" target="_blank">
+                                                <font>{{ktem.fileName}}</font>
+                                            </a>
+                                        </template>
+                                    </span>
+                                </p>
+                                <p style="flex:0.5">{{formatMoment(ktem.updateTime)}}</p>
+                                <p>
+                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
+                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                </p>
+                            </div>
+                        </template>
+                        <p v-else>-</p>
+                    </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 

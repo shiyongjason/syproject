@@ -146,7 +146,7 @@ export default {
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '' },
+                { label: '项目名称', prop: 'projectName', width: '150' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
                 { label: '赊销总额', prop: 'contractAmount', width: '150' },
