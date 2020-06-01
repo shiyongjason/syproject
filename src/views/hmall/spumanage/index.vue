@@ -109,7 +109,7 @@ export default {
                 { label: '型号', prop: 'model' },
                 { label: '类目', prop: 'categoryPathName', width: '200' },
                 { label: '维护人', prop: 'operator' },
-                { label: '维护时间', prop: 'lastModifyTime', width: '200' },
+                { label: '维护时间', prop: 'lastModifyTime', width: '200', formatters: 'dateTime' },
                 { label: '状态', prop: 'isEnable' }
             ],
             rowKey: '',
