@@ -11,6 +11,7 @@
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='3'"></approveCom>
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
+                    {{activeName}} {{status}}
                 <div class="drawer-button">
                     <template v-if="activeName==='2'&&status==3">
                         <el-button @click="onCallBack()">打回补充</el-button>

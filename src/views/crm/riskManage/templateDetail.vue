@@ -15,29 +15,29 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <template v-for="(item) in docTable" >
-                    <tr v-for="(obj,index) in item.respRiskCheckDocTemplateList" :key="obj.templateId" >
-                        <td :rowspan="computedRowspan(item.respRiskCheckDocTemplateList)" v-if="index==0 ">{{item.firstCatagoryName}}</td>
-                        <td>{{obj.secondCatagoryName}}</td>
-                        <td>{{obj.functionName}}</td>
-                        <td>{{obj.formatName}}</td>
-                        <td>
-                            {{obj.remark}}
-                        </td>
-                        <td class="table-img">
-                            <template v-for="(objs,index) in obj.riskCheckDocTemplateSamplePos">
-                                <span :key="index">
-                                    <!-- <img :src="require('../../../assets/images/img_0.png')" alt=""></span> -->
-                                    <el-image style="width: 100px; height: 100px" :src="objs.fileUrl" :preview-src-list="onPreview(obj.riskCheckDocTemplateSamplePos)">
-                                    </el-image>
-                                </span>
-                                <br v-if="index==2" :key="index+'risk'">
-                            </template>
-                        </td>
-                        <td>
-                            <el-button size="mini" type="primary" @click="onEditTem(obj.templateId)">编辑</el-button>
-                        </td>
-                    </tr>
+                    <template v-for="(item) in docTable">
+                        <tr v-for="(obj,index) in item.respRiskCheckDocTemplateList" :key="obj.templateId">
+                            <td :rowspan="computedRowspan(item.respRiskCheckDocTemplateList)" v-if="index==0 ">{{item.firstCatagoryName}}</td>
+                            <td><em v-if="obj.mondatoryFlag">*</em>{{obj.secondCatagoryName}}</td>
+                            <td>{{obj.functionName}}</td>
+                            <td>{{obj.formatName}}</td>
+                            <td>
+                                {{obj.remark}}
+                            </td>
+                            <td class="table-img">
+                                <template v-for="(objs,objindex) in obj.riskCheckDocTemplateSamplePos">
+                                    <span :key="objindex">
+                                        <!-- <img :src="require('../../../assets/images/img_0.png')" alt=""></span> -->
+                                        <el-image style="width: 100px; height: 100px" :src="objs.fileUrl" :preview-src-list="onPreview(obj.riskCheckDocTemplateSamplePos,objindex)">
+                                        </el-image>
+                                    </span>
+                                    <br v-if="objindex==2" :key="objindex+'risk'">
+                                </template>
+                            </td>
+                            <td>
+                                <el-button size="mini" type="primary" @click="onEditTem(obj.templateId)">编辑</el-button>
+                            </td>
+                        </tr>
                     </template>
                 </tbody>
             </table>
@@ -51,13 +51,13 @@
                     <el-form-item label="二级类目：">
                         <el-input v-model="formTemp.secondCatagoryName" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="功能：">
+                    <el-form-item label="功能：" prop="functionName">
                         <el-input v-model="formTemp.functionName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="规定格式：">
                         <el-input v-model="formTemp.formatName" disabled></el-input>
                     </el-form-item>
-                    <el-form-item label="必填：">
+                    <el-form-item label="必填：" prop="mondatoryFlag">
                         <el-radio-group v-model="formTemp.mondatoryFlag">
                             <el-radio :label=1>是</el-radio>
                             <el-radio :label=0>否</el-radio>
@@ -95,7 +95,6 @@ export default {
             loading: false,
             formLabelWidth: '120px',
             dialogVisible: false,
-            rules: {},
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
@@ -108,7 +107,15 @@ export default {
             formTemp: {
                 projectUpload: []
             },
-            tempName: ''
+            tempName: '',
+            rules: {
+                functionName: [
+                    { required: true, message: '请选择审核状态', trigger: 'change' }
+                ],
+                mondatoryFlag: [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -138,13 +145,13 @@ export default {
                 val.templateId = this.formTemp.templateId
             })
         },
-        onPreview (list) {
+        onPreview (list, index) {
             console.log(list)
             const newList = []
             list && list.map(val => {
                 newList.push(val.fileUrl)
             })
-            return newList
+            return newList.length > 0 && [newList[index]]
         },
         async onEditTem (val) {
             await this.findDocTempdetail(val)
@@ -188,11 +195,17 @@ export default {
     }
     tbody {
         td {
+            em{
+                font-style: normal;
+                color: #f00;
+            }
         }
         min-width: 1280px;
         overflow-x: scroll;
     }
     .table-img {
+        padding-top: 10px;
+        text-align: center;
         span {
             flex: 1;
             flex-wrap: wrap;

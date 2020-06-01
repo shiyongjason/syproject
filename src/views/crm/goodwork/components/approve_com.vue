@@ -1,7 +1,8 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
-            <div class="collect-Info" v-if="(activeName=='3'&&status>3)||(activeName<status&&status!=11)">
+
+            <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
                   <el-form-item :label="approveTitle+'结果：'" >
                    {{approveForm.approveResult?'通过':'不通过'}}
                 </el-form-item>
@@ -55,7 +56,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="approvedialgForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
+                    <el-input type="textarea" v-model.trim="approvedialgForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">

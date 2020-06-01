@@ -7,13 +7,15 @@
                 <template v-for="obj in item.respRiskCheckDocTemplateList">
                     <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                         <div class="collect-box">
-                            <div v-if="activeName=='2'&&status==3">
-                                <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
-                            </div>
-                            <div class="collect-boxtxt">
-                                <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call" v-if="obj.refuse">已打回，待分部补充</span></h3>
-                                <p>备注：{{obj.remark}}</p>
-                                <p>规定格式：{{obj.formatName}}</p>
+                            <div class="collect-boxflex">
+                                <div v-if="activeName=='2'&&status==3">
+                                    <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
+                                </div>
+                                <div class="collect-boxtxt">
+                                    <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call" v-if="obj.refuse">已打回，待分部补充</span></h3>
+                                    <p>备注：{{obj.remark}}</p>
+                                    <p>规定格式：{{obj.formatName}}</p>
+                                </div>
                             </div>
                             <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
                                 <p>
@@ -164,13 +166,13 @@ export default {
             this.loading = true
             this.refuseForm.createBy = this.userInfo.employeeName
             this.refuseForm.projectId = this.colForm.projectId
-            console.log(this.refuseForm)
             this.$refs.refuseForm.validate(async (valid) => {
                 if (valid) {
                     await refuseDoc(this.refuseForm)
                     this.$message.success('打回成功')
                     this.reasonVisible = false
                     this.loading = false
+                    this.$emit('onCompsback')
                 } else {
                     this.loading = false
                 }
@@ -241,6 +243,10 @@ export default {
     .el-checkbox {
         margin-right: 10px;
     }
+}
+.collect-boxflex {
+    display: flex;
+    flex-direction: row;
 }
 .collect-boxtxt {
     i {
