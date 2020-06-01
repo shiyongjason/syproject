@@ -250,6 +250,7 @@ export default {
                 await submitDoc(this.reqRiskCheckProjectDoc)
                 this.$message.success('提交成功')
                 this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+                this.$router.go(-1)
             }
         }
     },
