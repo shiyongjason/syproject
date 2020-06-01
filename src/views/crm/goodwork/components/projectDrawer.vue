@@ -11,7 +11,6 @@
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='3'"></approveCom>
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
-                {{status}}
                 <div class="drawer-button">
                     <template v-if="activeName==='2'&&status==3">
                         <el-button @click="onCallBack()">打回补充</el-button>
@@ -41,7 +40,7 @@
                         <el-button type="warning" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</el-button>
                     </template>
                     <el-button @click="cancelForm">取 消</el-button>
-                    <el-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <el-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                 </div>
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
