@@ -2,7 +2,8 @@
     <div class="page-body">
         <div class="page-body-cont">
             <el-card class="box-card">
-                <!--  合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善 -->
+                <!-- status 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善 -->
+                <!-- docAfterStatus 资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 -->
                 <el-tabs type="card" @tab-click="handleClick">
                     <el-tab-pane label="初审">
                         <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData v-if="tabPreliminaryReviewData" />

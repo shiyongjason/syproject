@@ -2,8 +2,8 @@
     <div class="page-body" v-if="detail">
         <div class="page-body-cont">
             <div class="errormessage">
-                <el-alert center title="资料待补充" v-if="$route.query.status==10" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
-                <el-alert v-if="$route.query.status==2" center title="资料审核中" effect="dark" style="background: #FF7A45;height:40px" :closable='false' />
+                <el-alert center title="资料待补充" v-if="$route.query.docAfterStatus==4" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
+                <el-alert v-if="$route.query.docAfterStatus==2" center title="资料审核中" effect="dark" style="background: #FF7A45;height:40px" :closable='false' />
             </div>
             <div v-for="(item,index) in detail.projectDocList" :key="index">
                 <div class="firstclass">{{item.firstCatagoryName}}</div>
@@ -36,7 +36,7 @@
                                 </p>
                                 <p style="flex:0.5">{{formatMoment(ktem.updateTime)}}</p>
                                 <p>
-                                    <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}">删除</font>
+                                    <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}" v-if="$route.query.docAfterStatus!=2">删除</font>
                                     <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
                                     <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
                                 </p>
@@ -44,7 +44,7 @@
                         </template>
                         <p v-else>-</p>
                     </div>
-                    <div class="secondclass-documents_upload">
+                    <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
                         <hosjoyUpload :fileSize='20' :fileNum='100' v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
                         </hosjoyUpload>
@@ -56,10 +56,10 @@
                 <p>
                     <el-button style="width:130px;" @click="onBack">返回</el-button>
                 </p>
-                <p>
+                <p v-if="$route.query.docAfterStatus!=2">
                     <el-button type="primary" style="width:130px" @click="onSave">保存</el-button>
                 </p>
-                <p>
+                <p v-if="$route.query.docAfterStatus!=2">
                     <el-button type="primary" style="width:130px" @click="onSubmit">提交</el-button>
                 </p>
             </div>
@@ -166,15 +166,20 @@ export default {
             })
         },
         onBack () {
-            this.$confirm('如信息发生修改，退出后信息将不会保存', '确认退出', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
+            // 资料状态 1：待提交 2：已提交 4：审核驳回
+            if (this.$route.query.docAfterStatus != 2) {
+                this.$confirm('如信息发生修改，退出后信息将不会保存', '确认退出', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$router.go(-1)
+                }).catch(() => {
+                    // do nothing
+                })
+            } else {
                 this.$router.go(-1)
-            }).catch(() => {
-                // do nothing
-            })
+            }
         },
         async getDetail () {
             let query = {
