@@ -111,9 +111,6 @@ export default {
                 updateUid: '',
                 reservedName: true
             },
-            dd: [
-                { fileUrl: 'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg', fileName: '备注：原则上工商局打印（工商章）.jpg', date: '2020-05-22 14:29:00' }
-            ],
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: []
         }
