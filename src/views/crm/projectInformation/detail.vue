@@ -207,7 +207,7 @@ export default {
             this.detail.projectDocList.map(item => {
                 if (item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.length > 0) {
                     item.respRiskCheckDocTemplateList.map(jtem => {
-                        jtem && jtem.riskCheckProjectDocPos.length > 0 && jtem.riskCheckProjectDocPos.map(ktem => {
+                        jtem && jtem.riskCheckProjectDocPos && jtem.riskCheckProjectDocPos.length > 0 && jtem.riskCheckProjectDocPos.map(ktem => {
                             this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.push({
                                 templateId: ktem.templateId,
                                 fileName: ktem.fileName,

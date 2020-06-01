@@ -2,17 +2,18 @@
     <div class="page-body">
         <div class="page-body-cont">
             <el-card class="box-card">
+                <!--  合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善 -->
                 <el-tabs type="card" @tab-click="handleClick">
                     <el-tab-pane label="初审">
                         <tabPreliminaryReview :tabPreliminaryReview=tabPreliminaryReviewData v-if="tabPreliminaryReviewData" />
                     </el-tab-pane>
-                    <el-tab-pane label="项目资料清单">
+                    <el-tab-pane label="项目资料清单" v-if="$route.query.status>=3">
                         <tabChecklist :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
-                    <el-tab-pane label="立项">
+                    <el-tab-pane label="立项" v-if="$route.query.status>4">
                         <tabLetterTrial :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
-                    <el-tab-pane label="终审">
+                    <el-tab-pane label="终审" v-if="$route.query.status>4">
                         <tabFinalReview :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
                 </el-tabs>

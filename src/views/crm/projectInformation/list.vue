@@ -99,20 +99,9 @@
 
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <!-- 资料未提交，展示修改按钮与查看按钮
-
-                        资料已提交待审核，仅展示查看按钮
-
-                        资料提交后被打回，展示修改、查看查看按钮
-
-                        资料审核通过，展示查看按钮
-
-                        重置后，合作进度展示初审中，展示查看按钮
-
-                        初审、立项中、待终审、合作关闭、待签约、待放款、贷中、合作完成均只展示查看按钮 -->
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.projectId)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
-                    <!-- &&scope.data.row.status==3 -->
-                    <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">修改</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <!-- -->
+                    <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)&&scope.data.row.status==3">修改</el-button>
                 </template>
             </basicTable>
         </div>
@@ -228,8 +217,8 @@ export default {
                 }
             }
         },
-        onLookproject (projectId) {
-            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId } })
+        onLookproject (row) {
+            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: row.projectId, status: row.status } })
         },
         onEditproject (row) {
             this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.projectId, status: row.status } })

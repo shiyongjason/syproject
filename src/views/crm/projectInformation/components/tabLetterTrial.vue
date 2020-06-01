@@ -4,10 +4,10 @@
             待立项
         </div>
         <div v-else>
-            <div class="firstclass">立项结果：{{informationDetail.approveResult||'-'}}</div>
+            <div class="firstclass">立项结果：通过</div>
             <div class="firstclass">说明：{{!informationDetail.remark?'-':''}}</div>
             <div class="explanation" v-if="informationDetail.remark">
-                {{!informationDetail.remark}}
+                {{informationDetail.remark}}
             </div>
             <div class="firstclass">立项材料：</div>
             <div v-for="(item,index) in informationDetail.projectDocList" :key="index">
