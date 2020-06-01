@@ -271,10 +271,10 @@ export default {
             await updateCategory({
                 id: this.current.id,
                 name: this.current.name,
-                parentId: this.form.parentId,
+                parentId: this.current.parentId,
                 sort: value,
                 operator: this.userInfo.employeeName,
-                imgUrl: this.form.imgUrl
+                imgUrl: this.current.imgUrl
             })
             this.refresh()
         },
@@ -384,6 +384,7 @@ export default {
         async refresh () {
             await this.findAllCategory()
             this.data = this.resolveData(this.categoriesTree)
+            console.log(this.data)
         }
     },
     mounted () {
