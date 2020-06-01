@@ -1,6 +1,6 @@
 <template>
     <div class="page-body-cont" v-if="informationDetail">
-        <div v-if="!informationDetail.approveResult">
+        <div v-if="!informationDetail.approveResult||$route.query.status==11">
             待终审
         </div>
         <div v-else>

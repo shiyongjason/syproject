@@ -10,7 +10,7 @@
                     <el-tab-pane label="项目资料清单" v-if="$route.query.status>=3">
                         <tabChecklist :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
-                    <el-tab-pane label="立项" v-if="$route.query.status>4">
+                    <el-tab-pane label="立项" v-if="$route.query.status>=4">
                         <tabLetterTrial :informationDetail=informationDetail v-if="informationDetail" />
                     </el-tab-pane>
                     <el-tab-pane label="终审" v-if="$route.query.status>4">
