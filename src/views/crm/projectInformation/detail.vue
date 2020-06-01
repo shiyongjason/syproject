@@ -11,6 +11,7 @@
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
+                        <span class="secondclass-reason" v-if="jtem.refuse" @click="onLookRefuse(jtem.templateId)">待补充，点击查看原因</span>
                     </div>
                     <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                     <div class="secondclass-documents">
@@ -66,13 +67,12 @@
         </div>
         <!--  -->
         <el-dialog title="补充原因" :visible.sync="dialogVisible" width="35%" center>
-            <div class="dialog-box">
-                <p>2020-04-28 打回操作人：张三</p>
-                <p>待补充类目：三证正副本</p>
+            <div class="dialog-box" v-if="refuseInfos.length>0">
+                <p>{{moment(refuseInfos[0].createTime).format('YYYY-MM-DD')}} 打回操作人：{{refuseInfos&&refuseInfos[0].createBy}}</p>
+                <p>待补充类目：{{refuseInfos&&refuseInfos[0].secondCategoryNames}}</p>
                 <p>待补充原因：</p>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-                    Namfermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget.
+                  {{refuseInfos&&refuseInfos[0].remark}}
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -102,6 +102,7 @@ export default {
     },
     data () {
         return {
+            moment,
             detail: '',
             handleImgDownload,
             dialogVisible: false,
@@ -112,7 +113,8 @@ export default {
                 reservedName: true
             },
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
-            mondatoryFlagRes: []
+            mondatoryFlagRes: [],
+            refuseInfos: []
         }
     },
     computed: {
@@ -120,12 +122,14 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            listDetail: 'projectInformation/listDetail'
+            listDetail: 'projectInformation/listDetail',
+            refuseInfo: 'projectInformation/refuseInfo'
         })
     },
     methods: {
         ...mapActions({
-            findInformationEditDetail: 'projectInformation/findInformationEditDetail'
+            findInformationEditDetail: 'projectInformation/findInformationEditDetail',
+            findRefuseinfo: 'projectInformation/findRefuseinfo'
         }),
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
@@ -252,6 +256,11 @@ export default {
                 this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
                 this.$router.go(-1)
             }
+        },
+        async onLookRefuse (val) {
+            this.dialogVisible = true
+            await this.findRefuseinfo({ projectId: this.reqRiskCheckProjectDoc.projectId, templateId: val })
+            this.refuseInfos = this.refuseInfo
         }
     },
     mounted () {
@@ -279,6 +288,13 @@ export default {
         margin: 0 15px 0 0;
         color: #ff0000;
         font-size: 16px;
+    }
+    &-reason{
+        background: #ff0000;
+        color: #ffff;
+        margin-left: 20px;
+        border-radius: 10px;
+        padding: 0 10px;
     }
     &-title_font {
         font-size: 19px;

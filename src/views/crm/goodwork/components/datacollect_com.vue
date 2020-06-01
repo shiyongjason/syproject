@@ -83,6 +83,7 @@
 import moment from 'moment'
 import { refuseDoc, submitProjectdoc } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { handleImgDownload } from '../../projectInformation/utils'
 export default {
     name: 'datacollectcom',
     props: {
@@ -101,6 +102,7 @@ export default {
     },
     data () {
         return {
+            handleImgDownload,
             moment,
             colFormrules: {},
             recordsVisible: false,

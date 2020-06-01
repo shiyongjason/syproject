@@ -7,8 +7,8 @@ const state = {
     projectDetail: {},
     tabPreliminaryReview: '',
     informationDetail: '', // 资料详情
-    listDetail: '' // 列表修改详情
-
+    listDetail: '', // 列表修改详情
+    refuseInfo: []
 }
 
 const getters = {
@@ -17,7 +17,8 @@ const getters = {
     tabPreliminaryReview: state => state.tabPreliminaryReview,
     informationDetail: state => state.informationDetail,
     listDetail: state => state.listDetail,
-    projectLoan: state => state.projectLoan
+    projectLoan: state => state.projectLoan,
+    refuseInfo: state => state.refuseInfo
 
 }
 
@@ -39,6 +40,9 @@ const mutations = {
     },
     [types.PROJECT_LOAN] (state, payload) {
         state.projectLoan = payload
+    },
+    [types.REFUSE_INFO] (state, payload) {
+        state.refuseInfo = payload
     }
 }
 
@@ -70,6 +74,10 @@ const actions = {
     async findProjectLoan ({ commit }, params) {
         const { data } = await Api.getProjectloan(params)
         commit(types.PROJECT_LOAN, data)
+    },
+    async findRefuseinfo ({ commit }, params) {
+        const { data } = await Api.getRefuseInfo(params)
+        commit(types.REFUSE_INFO, data)
     }
 }
 export default {

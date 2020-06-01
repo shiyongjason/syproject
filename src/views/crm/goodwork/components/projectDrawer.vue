@@ -11,7 +11,6 @@
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='3'"></approveCom>
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
-                    {{activeName}} {{status}}
                 <div class="drawer-button">
                     <template v-if="activeName==='2'&&status==3">
                         <el-button @click="onCallBack()">打回补充</el-button>
@@ -79,7 +78,6 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import { updateAudit, saveStatus } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
-
 export default {
     name: 'projectdrawer',
     props: {
