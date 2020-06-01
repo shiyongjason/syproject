@@ -63,12 +63,13 @@
                 <el-form-item prop="imgUrl" label="类目logo：" v-if="form.level === 3">
                     <!--imgUrl-->
                     <SingleUpload
+                        sizeLimit="500K"
                         :upload="uploadInfo"
                         :imageUrl="imageUrl"
                         ref="uploadImg"
                         @back-event="readUrl"/>
                     <div class="upload-tips">
-                        尺寸300x300,2m以内，支持jpg、jpeg、png
+                        上传750*750，大小不超过500K，仅支持jpeg，jpg，png格式
                     </div>
                 </el-form-item>
                 <el-form-item>
@@ -384,7 +385,6 @@ export default {
         async refresh () {
             await this.findAllCategory()
             this.data = this.resolveData(this.categoriesTree)
-            console.log(this.data)
         }
     },
     mounted () {
@@ -435,8 +435,8 @@ export default {
         cursor: pointer;
     }
     .img-table {
-        width: 80px;
-        height: 80px;
+        max-width: 80px;
+        max-height: 80px;
     }
 </style>
 <style>
