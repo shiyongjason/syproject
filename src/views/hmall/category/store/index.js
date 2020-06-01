@@ -15,11 +15,11 @@ const getters = {
             return {
                 value: item1.id,
                 label: item1.name,
-                children: item1.subCategoryList.map(item2 => {
+                children: (item1.subCategoryList || []).map(item2 => {
                     return {
                         value: item2.id + '',
                         label: item2.name,
-                        children: item2.subCategoryList.map(item3 => {
+                        children: (item2.subCategoryList || []).map(item3 => {
                             return {
                                 value: item3.id + '',
                                 label: item3.name
