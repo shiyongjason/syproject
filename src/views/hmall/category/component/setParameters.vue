@@ -262,8 +262,18 @@ export default {
 
                             this.specificationsReq.push(this.attributeForm)
                         } else {
-                            // 判断编辑的对象所属index，并作替换操作
-                            let updeteIndex = this.specificationsReq.findIndex(v => v == this.editObj)
+                            // 先找出排除自己的数据，然后判断编辑的参数名是否重复
+                            let excludeSelfArray = this.specificationsReq.filter(v => v.k !== this.editObj.k)
+                            let hasRepeat = excludeSelfArray.find(v => {
+                                return v.k === this.attributeForm.k
+                            })
+                            if (hasRepeat) {
+                                this.$message.warning('参数不可重复')
+                                return
+                            }
+
+                            // 判断编辑的对象所属index(不能通过对象判断，需要通过k判断)，并作替换操作
+                            let updeteIndex = this.specificationsReq.findIndex(v => v.k === this.editObj.k)
                             this.specificationsReq.splice(updeteIndex, 1, this.attributeForm)
                         }
                         let newArray = this.specificationsReq.map(v => {
@@ -303,6 +313,7 @@ export default {
                 specifications: newSpecificationsReq
             }, 'delete')
         },
+        // 通过判断是否传递的是row，删除单个或者多个，注意取消的时候，单个要清空数组
         onDelete (row) {
             if (row.k) {
                 this.multiSelection = [row]
@@ -319,6 +330,9 @@ export default {
             }).then(() => {
                 this.deleteAsync()
             }).catch(() => {
+                if (row.k) {
+                    this.multiSelection = []
+                }
             })
         },
         closeDialog () {
