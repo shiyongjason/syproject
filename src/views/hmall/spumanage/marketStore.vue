@@ -38,6 +38,13 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">商品来源：</div>
+                    <div class="query-col-input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商品来源">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">上架状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.isOnShelf" style="width: 100%">
