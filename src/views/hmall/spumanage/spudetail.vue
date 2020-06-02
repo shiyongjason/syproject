@@ -6,7 +6,7 @@
                     <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
                 </div>
                 <!-- 更新或者审核 start  -->
-                <template v-if="operate=='modify'||operate=='audit'">
+                <div v-if="operate=='modify'||operate=='audit'">
                     <el-form-item label="商品类目：" style="width: 460px;">
                         {{form.categoryPathName}}
                     </el-form-item>
@@ -16,29 +16,29 @@
                     <el-form-item label="商品型号：" style="width: 460px;">
                         <el-input v-model="form.model" disabled></el-input>
                     </el-form-item>
-                </template>
+                </div>
                 <!-- 更新或者审核 end  -->
 
                 <!-- 新增 start -->
-                    <template v-if="operate=='add'">
-                        <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
-                            <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
-                        </el-form-item>
-                        <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
-                            <el-select v-model="form.brandId" filterable placeholder="请选择">
-                                <el-option
-                                v-for="item in brandOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="商品型号：" prop="model" style="width: 460px;">
-                            <el-input placeholder="" maxlength="50" v-model="form.model">
-                            </el-input>
-                        </el-form-item>
-                    </template>
+                <div v-if="operate=='add'" style="margin-bottom: 20px">
+                    <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
+                    </el-form-item>
+                    <el-form-item label="商品品牌：" prop="brandId" style="width: 460px;" v-if="operate=='add'" ref="brandId">
+                        <el-select v-model="form.brandId" filterable placeholder="请选择">
+                            <el-option
+                            v-for="item in brandOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="商品型号：" prop="model" style="width: 460px;">
+                        <el-input placeholder="" maxlength="50" v-model="form.model">
+                        </el-input>
+                    </el-form-item>
+                </div>
                 <!-- 新增 end -->
 
                 <el-form-item label="商品名称：" style="width: 460px;">
@@ -178,14 +178,11 @@ export default {
                 model: [
                     { required: true, whitespace: true, message: '请填写规格/型号', trigger: 'blur' }
                 ],
-                productName: [
-                    { required: true, whitespace: true, message: '请填写商品名称', trigger: 'blur' }
-                ],
                 brandId: [
                     { type: 'number', required: true, whitespace: true, message: '请选择商品品牌' }
                 ],
                 imgUrls: [
-                    { required: true, message: '请选择商品主图' }
+                    { required: true, message: '请选择商品主图', trigger: 'change' }
                 ]
             },
             pictureContainer: [], // 图片列表
@@ -215,6 +212,9 @@ export default {
         // 图片数组变化，更新form中的字段
         pictureContainer (val) {
             this.form.imgUrls = val.map(v => v.url).join()
+        },
+        'form.imgUrls' () {
+            this.$refs['formmain'].validateField('imgUrls')
         }
     },
     computed: {
