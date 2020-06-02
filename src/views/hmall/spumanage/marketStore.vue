@@ -1,111 +1,109 @@
 <template>
-    <div>
-        <div class="page-body">
-            <div class="page-body-cont query-cont">
-                <div class="query-cont-col">
-                    <div class="query-col-title">SPU编码：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.spuCode" placeholder="请输入SPU编码">
-                        </el-input>
-                    </div>
+    <div class="page-body">
+        <div class="page-body-cont query-cont">
+            <div class="query-cont-col">
+                <div class="query-col-title">SPU编码：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="50" v-model="queryParams.spuCode" placeholder="请输入SPU编码">
+                    </el-input>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.spuName" placeholder="请输入商品名称">
-                        </el-input>
-                    </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">商品名称：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="50" v-model="queryParams.spuName" placeholder="请输入商品名称">
+                    </el-input>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品品牌：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入商品品牌">
-                        </el-input>
-                    </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">商品品牌：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入商品品牌">
+                    </el-input>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品类目：</div>
-                    <div class="query-col-input">
-                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
-                    </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">商品类目：</div>
+                <div class="query-col-input">
+                    <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                 </div>
+            </div>
 
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品型号：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品型号">
-                        </el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品来源：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商品来源">
-                        </el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">上架状态：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.isOnShelf" style="width: 100%">
-                            <el-option
-                                v-for="item in shelfStatus"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否共享：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.isShared" style="width: 100%">
-                            <el-option
-                                v-for="item in shareStatus"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
-                        <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
-                        <el-button type="primary" class="ml20" @click="onOffShelves()">批量下架</el-button>
-                        <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">商品型号：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品型号">
+                    </el-input>
                 </div>
             </div>
-            <div class="page-body-cont">
-                <basicTable
-                    :tableLabel="tableLabel"
-                    :tableData="tableData"
-                    :isPagination='true'
-                    :pagination='paginationInfo'
-                    @onSizeChange="onSizeChange"
-                    @onCurrentChange="onCurrentChange"
-                    isAction
-                    isMultiple
-                    :multiSelection.sync='multiSelection'
-                >
-                    <template slot="isOnShelf" slot-scope="scope">
-                        {{ shelfStatusMap.get(scope.data.row.isOnShelf) }}
-                    </template>
-                    <template slot="isShared" slot-scope="scope">
-                        {{ shareStatusMap.get(scope.data.row.isShared) }}
-                    </template>
-                    <template slot="action" slot-scope="scope">
-                        <!-- <el-button class="orangeBtn" @click="">查看</el-button> -->
-                        <el-button class="orangeBtn" v-if="scope.data.row.isOnShelf " @click="onOffShelves(scope.data.row.spuId)">下架</el-button>
-                    </template>
-                </basicTable>
+            <div class="query-cont-col">
+                <div class="query-col-title">商品来源：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商品来源">
+                    </el-input>
+                </div>
             </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">上架状态：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.isOnShelf" style="width: 100%">
+                        <el-option
+                            v-for="item in shelfStatus"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">是否共享：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.isShared" style="width: 100%">
+                        <el-option
+                            v-for="item in shareStatus"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">
+                    <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                    <el-button type="primary" class="ml20" @click="onOffShelves()">批量下架</el-button>
+                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                </div>
+            </div>
+        </div>
+        <div class="page-body-cont">
+            <basicTable
+                :tableLabel="tableLabel"
+                :tableData="tableData"
+                :isPagination='true'
+                :pagination='paginationInfo'
+                @onSizeChange="onSizeChange"
+                @onCurrentChange="onCurrentChange"
+                isAction
+                isMultiple
+                :multiSelection.sync='multiSelection'
+            >
+                <template slot="isOnShelf" slot-scope="scope">
+                    {{ shelfStatusMap.get(scope.data.row.isOnShelf) }}
+                </template>
+                <template slot="isShared" slot-scope="scope">
+                    {{ shareStatusMap.get(scope.data.row.isShared) }}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <!-- <el-button class="orangeBtn" @click="">查看</el-button> -->
+                    <el-button class="orangeBtn" v-if="scope.data.row.isOnShelf " @click="onOffShelves(scope.data.row.spuId)">下架</el-button>
+                </template>
+            </basicTable>
         </div>
     </div>
 </template>
