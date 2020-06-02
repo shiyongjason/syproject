@@ -155,7 +155,8 @@ export default {
                 multiple: true
             },
             areaProps: {
-                multiple: true
+                multiple: true,
+                checkStrictly: true
             },
             tableLabel: [
                 { label: '供应商', prop: 'merchantName' },
@@ -287,7 +288,10 @@ export default {
                 ...this.brandAreaInfo,
                 categoryIdsArr: this.brandAreaInfo.categoryIds.split(',') || [],
                 areaArr: this.brandAreaInfo.brandAuthorizationSalesAreaList.map(item => {
-                    return [item.provinceId, item.cityId]
+                    if (item.cityId && item.cityId != '0') {
+                        return [item.provinceId, item.cityId]
+                    }
+                    return [item.provinceId]
                 })
             }
             this.suggest = {
