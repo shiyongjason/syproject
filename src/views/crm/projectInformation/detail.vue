@@ -240,6 +240,7 @@ export default {
             await saveDoc(this.reqRiskCheckProjectDoc)
             this.$message.success('保存成功')
             this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+            this.$router.go(-1)
         },
         async onSubmit () {
             this.dealReqRiskCheckProjectDoc(1)
