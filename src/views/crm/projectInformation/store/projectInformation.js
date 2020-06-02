@@ -67,10 +67,6 @@ const actions = {
         const { data } = await Api.getProjectDetail(params)
         commit(types.PROJECT_DETAIL, data)
     },
-    async findListDetail ({ commit }, params) {
-        const { data } = await Api.getListDetail(params)
-        commit(types.LIST_DETAIL, data)
-    },
     async findProjectLoan ({ commit }, params) {
         const { data } = await Api.getProjectloan(params)
         commit(types.PROJECT_LOAN, data)

@@ -2,8 +2,10 @@
     <div class="project-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-                <template v-for="item in tabs">
-                    <el-tab-pane :label=item.value :name=item.key :key=item.key v-if='item.key<status'></el-tab-pane>
+                <template v-for="item in tabs" >
+                    <template v-if='item.key<status'>
+                    <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
+                    </template>
                 </template>
             </el-tabs>
             <projectCom ref="projectCom" :projectForm=form  @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='1'"></projectCom>
@@ -18,7 +20,7 @@
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-                    <template v-if="status==3&&activeName==='2'">
+                    <template v-if="status==3&&activeName==='2'&&form.docAfterStatus==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
