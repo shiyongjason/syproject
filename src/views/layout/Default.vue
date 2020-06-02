@@ -184,7 +184,7 @@ export default {
         bottom: 0;
         left: 0;
         background-color: $blackLight;
-        z-index: 10000;
+        z-index: 1999;
     }
 
     .content {
