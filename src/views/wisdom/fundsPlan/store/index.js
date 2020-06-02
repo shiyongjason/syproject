@@ -6,7 +6,10 @@ const state = {
     targetTime: '',
     planApprovalList: [],
     planApprovalTotal: {},
-    planApprovalPagination: {}
+    planApprovalPagination: {},
+    platformPlanList: [],
+    platformPlanTotal: {},
+    platformPlanPagination: {}
 }
 
 const getters = {
@@ -20,7 +23,10 @@ const getters = {
     },
     planApprovalList: state => state.planApprovalList,
     planApprovalPagination: state => state.planApprovalPagination,
-    planApprovalTotal: state => state.planApprovalTotal
+    planApprovalTotal: state => state.planApprovalTotal,
+    platformPlanList: state => state.platformPlanList,
+    platformPlanTotal: state => state.platformPlanTotal,
+    platformPlanPagination: state => state.platformPlanPagination
 }
 
 const mutations = {
@@ -43,6 +49,15 @@ const mutations = {
     },
     [types.PLAN_APPROVAL_TOTAL] (state, payload) {
         state.planApprovalTotal = payload
+    },
+    [types.PLATFORM_PLAN_LIST] (state, payload) {
+        state.platformPlanList = payload
+    },
+    [types.PLATFORM_PLAN_PAGINATION] (state, payload) {
+        state.platformPlanPagination = payload
+    },
+    [types.PLATFORM_PLAN_TOTAL] (state, payload) {
+        state.platformPlanTotal = payload
     }
 }
 
@@ -67,6 +82,19 @@ const actions = {
     async findPlanApprovalTotal ({ commit }, params) {
         const { data } = await Api.getPlanApprovalTotal(params)
         commit(types.PLAN_APPROVAL_TOTAL, data)
+    },
+    async findPlatformPlanList ({ commit }, params) {
+        const { data } = await Api.findPlanFormList(params)
+        commit(types.PLATFORM_PLAN_LIST, data.records)
+        commit(types.PLATFORM_PLAN_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findPlatformPlanTotal ({ commit }, params) {
+        const { data } = await Api.findPlanFormTotal(params)
+        commit(types.PLATFORM_PLAN_TOTAL, data)
     }
 }
 export default {

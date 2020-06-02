@@ -130,6 +130,7 @@ export const platformPlan = function (targetYear, targetMonth) {
         {
             prop: 'organizationName',
             slot: 'organizationName',
+            slotTable: true,
             label: '平台公司',
             width: '100',
             fixed: true,
@@ -141,14 +142,13 @@ export const platformPlan = function (targetYear, targetMonth) {
             ]
         },
         {
-            prop: 'organizationName',
-            slot: 'organizationName',
+            prop: 'regionName',
             label: '区域',
             width: '100',
             fixed: true,
             children: [
                 {
-                    prop: 'organizationName',
+                    prop: 'regionName',
                     label: `-`
                 }
             ]

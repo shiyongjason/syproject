@@ -28,13 +28,13 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
+                    <el-date-picker v-model="queryParams.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
+                    <el-button type="primary" class="ml20" @click="btnQuery({...params, pageSize:10, pageNumber: 1})">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -50,8 +50,8 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total">
+            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="platformPlanList" align="center"
+                         :total="platformPlanPagination.total">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -64,8 +64,9 @@
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { departmentAuth } from '@/mixins/userAuth'
-import { mapGetters, mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import { platformPlan } from './const'
+import { exportPlanForm } from './api'
 export default {
     name: 'platformPlan',
     mixins: [departmentAuth],
@@ -82,7 +83,9 @@ export default {
             platformData: state => state.platformData
         }),
         ...mapGetters({
-            planTotalList: 'fundsPlan/planTotalList',
+            platformPlanList: 'fundsPlan/platformPlanList',
+            platformPlanTotal: 'fundsPlan/platformPlanTotal',
+            platformPlanPagination: 'fundsPlan/platformPlanPagination',
             targetTime: 'fundsPlan/targetTime'
         }),
         columnData () {
@@ -91,7 +94,9 @@ export default {
     },
     data () {
         return {
-            params: {
+            queryParams: {
+                pageSize: 10,
+                pageNumber: 1,
                 selectTime: '',
                 subsectionCode: ''
             },
@@ -128,6 +133,34 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            findPlatformPlanList: 'fundsPlan/findPlatformPlanList',
+            findPlatformPlanTotal: 'fundsPlan/findPlatformPlanTotal',
+            findAuthList: 'findAuthList',
+            findTargetTime: 'fundsPlan/findTargetTime'
+        }),
+        btnQuery (params) {
+            this.queryParamsTemp = { ...params }
+            this.onQuery(params)
+        },
+        getList (val) {
+            this.onQuery({ ...this.queryParamsTemp, ...val })
+        },
+        async onQuery (params) {
+            this.findPlatformPlanList(params)
+            await this.findPlatformPlanTotal(params)
+            // const columnData = platformPlan(params.selectTime)
+            // columnData.forEach((value, index) => {
+            //     if (index > 3) {
+            //         value.children.forEach((val) => {
+            //             if (this.planApprovalTotal[val.prop]) {
+            //                 val.label = String(this.planApprovalTotal[val.prop])
+            //             }
+            //         })
+            //     }
+            // })
+            // this.columnData = columnData
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -135,7 +168,6 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.subsectionOldCode = ''
                 this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
@@ -152,7 +184,6 @@ export default {
             }
         },
         async backPlat (val, dis) {
-            // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
@@ -161,31 +192,27 @@ export default {
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
                 })
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
-                !val.value.crmDeptCode && this.linkage(dis)
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'Q') {
                 this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
                 if (val.value.selectCode) {
                     this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.queryParams.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
+                } else if (this.queryParams.subsectionCode) {
+                    let params = {
+                        subsectionCode: this.queryParams.subsectionCode
                     }
                     this.findPlatformslist(params)
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
@@ -193,11 +220,40 @@ export default {
             }
         },
         onExport () {
-
+            exportPlanForm(this.queryParams)
         },
         onReset () {
-
+            this.queryParams = {
+                selectTime: '',
+                regionCode: '',
+                subsectionCode: '',
+                misCode: '',
+                pageSize: 10,
+                pageNumber: 1
+            }
+            this.selectAuth = {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.queryParams.selectTime = this.targetTime
+            this.onQuery({ ...this.queryParams, pageSize: 10, pageNumber: 1 })
         }
+    },
+    async mounted () {
+        await this.findTargetTime()
+        this.queryParams.selectTime = this.targetTime
+        await this.btnQuery(this.queryParams)
+        await this.newBossAuth()
     }
 }
 </script>

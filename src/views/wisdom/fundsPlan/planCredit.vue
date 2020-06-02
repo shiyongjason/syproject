@@ -18,12 +18,6 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
-                    <div class="query-col-title">区域：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
@@ -50,15 +44,21 @@
                 </div>
             </div>
             <div class="page-body-cont">
-                <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                    <template slot="applyMonth" slot-scope="scope">
-                        <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
+<!--                <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">-->
+<!--                    <template slot="applyMonth" slot-scope="scope">-->
+<!--                        <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>-->
+<!--                    </template>-->
+<!--                    <template slot="action" slot-scope="scope">-->
+<!--                        <el-button v-show="queryParams.processType == 0" class="orangeBtn" @click="onApprovalList(scope.data.row)">审批</el-button>-->
+<!--                        <el-button v-show="queryParams.processType == 1" class="orangeBtn" @click="onApproveDeclare(scope.data.row)">查看详情</el-button>-->
+<!--                    </template>-->
+<!--                </basicTable>-->
+                <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="platformPlanList" align="center"
+                             :total="platformPlanPagination.total">
+                    <template slot="organizationName" slot-scope="scope">
+                        <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                     </template>
-                    <template slot="action" slot-scope="scope">
-                        <el-button v-show="queryParams.processType == 0" class="orangeBtn" @click="onApprovalList(scope.data.row)">审批</el-button>
-                        <el-button v-show="queryParams.processType == 1" class="orangeBtn" @click="onApproveDeclare(scope.data.row)">查看详情</el-button>
-                    </template>
-                </basicTable>
+                </hosJoyTable>
             </div>
         </div>
     </div>
@@ -67,10 +67,8 @@
 <script>
 import { departmentAuth } from '@/mixins/userAuth'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { approvalListHasDoneLabel, approvalListLabel } from './const'
-import { getFundPlanAll } from './api'
-import { clearCache, newCache } from '@/utils/index'
-import { mapState } from 'vuex'
+import {approvalListHasDoneLabel, approvalListLabel, planApproval} from './const'
+import {mapActions, mapGetters, mapState} from 'vuex'
 
 export default {
     name: 'planCredit',
@@ -81,15 +79,14 @@ export default {
             userInfo: state => state.userInfo,
             regionList: state => state.regionList,
             branchList: state => state.branchList,
-            areaList: state => state.areaList,
             platformData: state => state.platformData
+        }),
+        ...mapGetters({
+            targetTime: 'fundsPlan/targetTime'
         })
     },
     data () {
         return {
-            tableLabel: approvalListLabel,
-            tableLabelNotToDo: approvalListLabel,
-            tableLabelHasDone: approvalListHasDoneLabel,
             queryParams: {
                 processType: '0',
                 applyMonth: '',
@@ -98,9 +95,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            paramsTemp: {},
-            tableData: [],
-            pagination: {},
             selectAuth: {
                 regionObj: {
                     selectCode: '',
@@ -122,6 +116,43 @@ export default {
         }
     },
     methods: {
+        btnQuery (params) {
+            this.queryParamsTemp = { ...params }
+            this.onQuery(params)
+        },
+        getList (val) {
+            this.onQuery({ ...this.queryParamsTemp, ...val })
+        },
+        async onQuery (params) {
+            this.findPlanApprovalList(params)
+            await this.findPlanApprovalTotal(params)
+            // const columnData = planApproval(params.valueYear)
+            // columnData.forEach((value, index) => {
+            //     if (index > 3) {
+            //         value.children.forEach((val) => {
+            //             if (this.planApprovalTotal[val.prop]) {
+            //                 val.label = String(this.planApprovalTotal[val.prop])
+            //             }
+            //         })
+            //     }
+            // })
+            // this.columnData = columnData
+        },
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (dis === 'D') {
+                this.params.subsectionCode = ''
+                this.params.misCode = ''
+                this.selectAuth.branchObj = { ...obj }
+                this.selectAuth.platformObj = { ...obj }
+            } else if (dis === 'F') {
+                this.params.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
+            }
+        },
         handleClick (tab, event) {
             this.tableData = []
             if (this.params.processType == 0) {
@@ -142,73 +173,36 @@ export default {
             this.selectObj.branch = { ...obj }
             this.selectObj.platformData = { ...obj }
             this.platComList = []
-            this.onSearch()
-        },
-        onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onQuery()
-        },
-        onSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.onQuery()
-        },
-        async onQuery () {
-            const { data } = await getFundPlanAll(this.paramsTemp)
-            this.tableData = data.records
-        },
-        onSearch () {
-            this.paramsTemp = { ...this.queryParams }
-            this.onQuery()
-        },
-        onApprovalList (row) {
-            this.$router.push({ path: '/fundsPlan/approveDetail', query: { id: row.planId } })
-        },
-        onApproveDeclare (row) {
-            this.$router.push({
-                path: '/fundsPlan/approveDeclare',
-                query: {
-                    id: row.planId,
-                    source: 'approvalList'
-                }
-            })
         },
         async backPlat (val, dis) {
-            if (dis === 'F') {
-                this.queryParams.subSectionCode = val.value.selectCode ? val.value.selectCode : ''
-                this.queryParams.companyName = ''
-                this.selectObj.platformData = {
-                    selectCode: '',
-                    selectName: ''
-                }
-                if (val.value) {
-                    const data = await this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-                    this.platComList = data
+            if (dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                // 清空分部区域
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.platComList = []
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
-            }
-            if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyName ? val.value.companyName : ''
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
-        async getAuth () {
-            const data = await this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc })
-            this.branchList = data
-        }
+        ...mapActions({
+            findAuthList: 'findAuthList',
+            findTargetTime: 'fundsPlan/findTargetTime'
+        })
     },
     async mounted () {
-        await this.getAuth()
-        this.onSearch()
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('approvalList')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'approveDeclare') {
-            clearCache('approvalList')
-        }
-        next()
+        await this.findTargetTime()
+        this.queryParams.valueYear = this.targetTime.slice(0, 4)
+        await this.btnQuery(this.queryParams)
+        this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>

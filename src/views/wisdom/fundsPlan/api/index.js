@@ -48,3 +48,57 @@ export function getPlanApprovalList (params) {
 export function getPlanApprovalTotal (params) {
     return axios.get(`backend/api/overdue/annual/funplan/approve/value/total`, { params })
 }
+// 资金计划审批导出
+export function exportPlanApproval (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`/backend/api/overdue/annual/funplan/approve/value/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '资金计划审批导出模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 平台公司计划分析表列表
+export function findPlanFormList (params) {
+    return axios.get('backend/api/fund-plan/company/summary/pages', { params })
+}
+// 平台公司计划分析表合计
+export function findPlanFormTotal (params) {
+    return axios.get('backend/api/fund-plan/company/summary/total', { params })
+}
+// 平台公司计划分析表导出
+export function exportPlanForm (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`/backend/api/fund-plan/company/summary/error`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '平台公司计划分析表.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}

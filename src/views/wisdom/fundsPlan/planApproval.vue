@@ -78,7 +78,7 @@ import { departmentAuth } from '@/mixins/userAuth'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { planApproval } from './const'
 import { interfaceUrl } from '@/api/config'
-import { exportPlanApproval } from '../api'
+import { exportPlanApproval } from './api'
 export default {
     name: 'planApproval',
     mixins: [departmentAuth],
