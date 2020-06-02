@@ -134,11 +134,11 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.misCode = ''
+                this.queryParams.companyName = ''
                 this.selectAuth.branchObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
-                this.queryParams.misCode = ''
+                this.queryParams.companyName = ''
                 this.selectAuth.platformObj = { ...obj }
             }
         },
@@ -151,6 +151,8 @@ export default {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
