@@ -59,7 +59,7 @@
                 :rules="attributeFormRules"
                 label-width="150px">
                 <el-form-item label="参数名称：" prop="k">
-                     <el-input type="input" v-model="attributeForm.k" maxlength="20"></el-input>
+                     <el-input type="input" v-model.trim="attributeForm.k" maxlength="20"></el-input>
                 </el-form-item>
                 <el-form-item label="参数类型：" prop="isCombobox">
                      <el-select v-model="attributeForm.isCombobox" placeholder="请选择">
