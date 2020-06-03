@@ -180,7 +180,6 @@ export default {
                 imgUrl: ''
             },
             expandCell: [],
-            isSaving: false,
 
             setVisible: false,
             attributeForm: {
@@ -287,10 +286,6 @@ export default {
 
         // 新增和编辑类目
         onEditCategory () {
-            if (this.isSaving) {
-                return
-            }
-            this.isSaving = true
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.isEdit) {
@@ -316,9 +311,6 @@ export default {
                     })
                     this.editVisible = false
                     this.refresh()
-                    this.isSaving = false
-                } else {
-                    this.isSaving = false
                 }
             })
         },
@@ -336,7 +328,6 @@ export default {
                 id: '',
                 imgUrl: ''
             }
-            this.isSaving = false
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
@@ -355,36 +346,43 @@ export default {
                 sort: this.current.sort,
                 imgUrl: this.current.imgUrl || ''
             }
-            this.isSaving = false
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
         },
 
         // 递归处理数据
-        resolveData (data, parentIsFold = true, pcategoryName = '') {
+        resolveData (data, parentIsFold = true, grondIsFold = true, pcategoryName = '') {
             return data.map((item, index, arr) => {
                 item.lastModifyTime = this.$root.$options.filters.formatterTime(item.lastModifyTime)
                 item.pcategoryName = pcategoryName
 
-                // 下面两个判断用于保持展开样式的
+                // 在数组中的数据，必定是非折叠的
                 if (this.expandCell.includes(item.id)) {
                     item._isFold = false
-                    item._isHide = false
                 }
-                if (!parentIsFold) {
+                // 如果祖父级是折叠的，则必定隐藏
+                if (grondIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是折叠的，则隐藏
+                if (!grondIsFold && parentIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是非折叠的，则显示
+                if (!grondIsFold && !parentIsFold) {
                     item._isHide = false
                 }
 
                 if (item.subCategoryList && item.subCategoryList.length > 0) {
-                    this.resolveData(item.subCategoryList, item._isFold, item.name)
+                    this.resolveData(item.subCategoryList, item._isFold, parentIsFold, item.name)
                 }
                 return item
             })
         },
         async refresh () {
             await this.findAllCategory()
-            this.data = this.resolveData(this.categoriesTree)
+            this.data = this.resolveData(this.categoriesTree, false, false)
         }
     },
     mounted () {
