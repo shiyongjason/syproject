@@ -363,17 +363,17 @@ export default [
             //     },
             //     component: () => import('@/views/hmall/attribute/attribute.vue')
             // },
-            {
-                path: 'order',
-                name: 'order',
-                meta: {
-                    title: '订单／收款记录查询',
-                    tagName: '订单／收款记录查询',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/order/order.vue')
-            },
+            // {
+            //     path: 'order',
+            //     name: 'order',
+            //     meta: {
+            //         title: '订单／收款记录查询',
+            //         tagName: '订单／收款记录查询',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/order/order.vue')
+            // },
             {
                 path: 'coupon',
                 name: 'coupon',

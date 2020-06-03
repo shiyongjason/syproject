@@ -161,7 +161,7 @@ export default {
             },
             attributeFormRules: {
                 k: [
-                    { required: true, message: '参数名称不能为空！' }
+                    { required: true, whitespace: true, message: '参数名称不能为空！' }
                 ],
                 isCombobox: [
                     { required: true, message: '参数类型不能为空！' }
@@ -170,7 +170,7 @@ export default {
                     { required: true, message: '是否必填不能为空！' }
                 ],
                 option: [
-                    { required: true, message: '此项为必填项！' }
+                    { required: true, whitespace: true, message: '此项为必填项！' }
                 ]
             },
             attributeInfo: {
