@@ -209,6 +209,7 @@ export default {
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus = '') {
+            this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList = []
             console.log('this.detail', this.detail)
             this.detail.projectDocList.map(item => {
                 if (item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.length > 0) {

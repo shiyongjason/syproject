@@ -68,7 +68,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="样例：">
-                        <hosjoyUpload v-model="formTemp.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='6' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                        <hosjoyUpload v-model="formTemp.projectUpload" accept='.jpeg,.jpg,.png' :fileSize='20' :fileNum='6' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                         </hosjoyUpload>
                     </el-form-item>
                 </el-form>

@@ -20,7 +20,7 @@ export const getProjectrecord = (params) => axios.get(`/memeber/openapi/project/
 
 export const getPunchlist = (params) => axios.get(`/memeber/api/punch/list`, { params })
 // 资料详情
-export const getRiskprojecData = (params) => axios.get(`/memeber/openapi/project/approve-docs/${params.projectId}/${params.status}/${params.bizType}`)
+export const getRiskprojecData = (params) => axios.get(`/memeber/openapi/project/approve-docs/${params.projectId}/${params.status}/${params.bizType}?authFlag=1`)
 
 // 打回材料
 export const refuseDoc = (params) => axios.post(`/fms/api/doc-template/project/refuse`, params)
