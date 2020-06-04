@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ccpBaseUrl, interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 
 // 生成验证码
 export const getVerifica = (params) => axios.get('/uaa/api/verification-code', params)
@@ -19,13 +19,17 @@ export const getAreas = (cityId) => {
 }
 // 查询平台公司
 export const findPaltList = (params) => {
-    return axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', {
+    return axios.get('develop/developbasicinfo/queryCompany', {
         params
     })
 }
 // 分部列表查询
 export const findBranchListNew = (params) => {
-    return axios.get(interfaceUrl + 'rms/subsectiontarget/subsection', { params })
+    return axios.get('rms/subsectiontarget/subsection', { params })
+}
+// 分部列表查询
+export const findAllBranchList = (params) => {
+    return axios.get('/uaa/department/subsections', { params })
 }
 // 保存档案
 export const saveInfo = (params) => {

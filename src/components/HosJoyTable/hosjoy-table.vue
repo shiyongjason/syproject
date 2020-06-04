@@ -13,14 +13,15 @@
                              align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
-                                 :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth"
-                                 :class-name="item.className">
+                                 :key='index' :width="item.width" :min-width="item.minWidth"
+                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot">
+                    <el-table-column v-if="item.slotTable"></el-table-column>
                     <template slot-scope="scope">
-                        <slot :name="item.prop" :data="scope"></slot>
+                        <slot :name="item.prop" :data="scope" ></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item"
-                               :key='index'></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item"
+                               :key='index' v-if="!item.slot"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
