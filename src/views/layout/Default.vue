@@ -13,9 +13,9 @@
                 <div :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
                     <H-tags></H-tags>
                 </div>
-                <!-- <keep-alive :include="/./"> -->
+                <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                     <router-view></router-view>
-                <!-- </keep-alive> -->
+                </keep-alive>
             </el-main>
         </el-container>
         <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password"

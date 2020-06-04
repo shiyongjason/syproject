@@ -137,9 +137,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    // activated () {
-    //     this.searchList()
-    // },
+    activated () {
+        this.searchList()
+    },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
