@@ -52,6 +52,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status == 0 || scope.data.row.status == 3" class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
                     <el-button v-else class="orangeBtn" @click="showDrawer(scope.data.row, 'watch')">查看</el-button>
+                    <el-button class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -94,7 +95,7 @@
                 </el-form-item>
                 <p class="audit-opinion">审核意见</p>
                 <template v-if="drawerMsg.type === 'review'">
-                    <el-form-item label="审核结果：" prop="auditResult">
+                    <el-form-item label="审核结果：" prop="auditResult" ref="auditResult">
                         <el-radio v-model="suggest.auditResult" label="1" @change="onChangeAudio">审核通过</el-radio>
                         <el-radio v-model="suggest.auditResult" label="2" @change="onChangeAudio">审核不通过</el-radio>
                     </el-form-item>
@@ -177,10 +178,10 @@ export default {
             },
             rules: {
                 auditResult: [
-                    { required: true, message: '审核结果不能为空！', trigger: 'blur' }
+                    { required: true, message: '审核结果不能为空！', trigger: 'change' }
                 ],
                 auditRemark: [
-                    { required: true, message: '审核原因不能为空！', trigger: 'blur' }
+                    { required: true, message: '请填写审核不通过的原因', trigger: 'blur' }
                 ]
             }
         }
@@ -265,6 +266,7 @@ export default {
             }
         },
         onChangeAudio (value) {
+            this.$refs.auditResult.clearValidate()
             this.$refs.auditRemark.resetField()
         },
         // 级联面板回调
