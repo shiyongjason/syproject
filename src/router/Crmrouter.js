@@ -41,6 +41,17 @@ export default {
                 icon: ''
             },
             component: () => import('@/views/crm/crmstatic/staticlist')
+        },
+        {
+            path: 'applicationList',
+            name: 'applicationList',
+            meta: {
+                title: '好橙工VIP申请列表',
+                tagName: '好橙工VIP申请列表',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/crm/vipapplication/applicationList')
         }
     ]
 }
