@@ -6,7 +6,7 @@
                     <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
                 </div>
                 <!-- 更新或者审核 start  -->
-                <div v-if="operate=='modify'||operate=='audit'">
+                <div v-if="operate=='modify'||operate=='audit'" style="margin-bottom: 20px">
                     <el-form-item label="商品类目：" style="width: 460px;">
                         {{form.categoryPathName}}
                     </el-form-item>
@@ -213,8 +213,11 @@ export default {
         pictureContainer (val) {
             this.form.imgUrls = val.map(v => v.url).join()
         },
-        'form.imgUrls' () {
+        'form.imgUrls' (value) {
             this.$refs['formmain'].validateField('imgUrls')
+            if (value) {
+                this.$refs['formmain'].clearValidate('imgUrls')
+            }
         }
     },
     computed: {
