@@ -16,7 +16,6 @@
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
                                  :key='index' :width="item.width" :min-width="item.minWidth"
                                  :class-name="item.className" :fixed="item.fixed" v-if="item.slot">
-                    <el-table-column v-if="item.slotTable"></el-table-column>
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope" ></slot>
                     </template>

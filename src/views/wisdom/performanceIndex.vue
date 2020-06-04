@@ -26,9 +26,9 @@
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageNumber: 1, pageSize: 10})">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="btnQuery">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="true">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -42,7 +42,7 @@
         <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/履约值利润指标导入模板.xls" download="履约值利润指标导入模板.xls">
+                    <a class="downloadExcel" href="/excelTemplate/履约值利润指标导入模板.xlsx" download="履约值利润指标导入模板.xlsx">
                         履约值利润指标导出
                     </a>
                 </el-form-item>
@@ -185,9 +185,11 @@ export default {
         onExport () {
             exportPerformanceIndex(this.queryParams)
         },
-        btnQuery (params) {
-            this.queryParamsTemp = { ...params }
-            this.onQuery(params)
+        btnQuery () {
+            this.$set(this.queryParams, 'pageNumber', 1)
+            this.$set(this.queryParams, 'pageSize', 10)
+            this.queryParamsTemp = { ...this.queryParams }
+            this.onQuery(this.queryParams)
         },
         async onQuery (params) {
             const promiseArr = [getPerformanceIndexList(params), getPerformanceIndexTotal(params)]
@@ -229,8 +231,9 @@ export default {
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
+            this.dynamicName = '全部'
             this.newBossAuth(['D', 'F', 'P'])
-            this.btnQuery(this.queryParams)
+            this.btnQuery()
         },
         isSuccess (response) {
             this.$message({
@@ -284,7 +287,7 @@ export default {
     async mounted () {
         await this.findTargetTime()
         this.queryParams.valueYear = this.targetTime.slice(0, 4)
-        this.btnQuery(this.queryParams)
+        this.btnQuery()
         this.newBossAuth(['D', 'F', 'P'])
     }
 }
