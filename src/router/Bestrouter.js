@@ -99,20 +99,20 @@ export default [
                             component: '@/views/bestonline/standard'
                         },
                         component: () => import('@/views/bestonline/standard')
-                    },
-                    {
-                        path: 'applyform',
-                        name: 'applyform',
-                        meta: {
-                            title: '尽调申请详情',
-                            tagName: '尽调申请详情',
-                            isMenu: false,
-                            icon: '',
-                            component: '@/views/bestonline/apply/applyForm'
-                        },
-                        component: () => import('@/views/bestonline/apply/applyForm')
                     }
                 ]
+            },
+            {
+                path: 'applyform',
+                name: 'applyform',
+                meta: {
+                    title: '尽调申请详情',
+                    tagName: '尽调申请详情',
+                    isMenu: false,
+                    icon: '',
+                    component: '@/views/bestonline/apply/applyForm'
+                },
+                component: () => import('@/views/bestonline/apply/applyForm')
             }
         ]
     }

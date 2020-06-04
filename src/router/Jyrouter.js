@@ -76,17 +76,6 @@ export default [
                 component: InterlayerContainer,
                 children: [
                     {
-                        path: 'accountImport',
-                        name: 'accountImport',
-                        meta: {
-                            title: '账户导入',
-                            tagName: '账户导入',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/jinyunplatform/accountImport')
-                    },
-                    {
                         path: 'processManage',
                         name: 'processManage',
                         meta: {
@@ -98,6 +87,17 @@ export default [
                         component: () => import('@/views/jinyunplatform/processManage')
                     }
                 ]
+            },
+            {
+                path: 'accountImport',
+                name: 'accountImport',
+                meta: {
+                    title: '账户导入',
+                    tagName: '账户导入',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/jinyunplatform/accountImport')
             }
         ]
     }
