@@ -13,11 +13,11 @@ export const hasDeclareLabel = [
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
 // 资金计划汇总表
-export const summarySheet = function (targetYear, targetMonth) {
+export const summarySheet = function (targetYear, targetMonth, isF) {
     return [
         {
             prop: 'organizationName',
-            label: '分部',
+            label: isF ? '分部' : '平台公司',
             width: '100',
             showOverflowTooltip: true,
             slot: 'organizationName',
