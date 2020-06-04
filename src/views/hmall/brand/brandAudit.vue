@@ -114,8 +114,8 @@
                         <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
                         <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
                     </el-form-item>
-                    <el-form-item label="备注原因：">
-                        <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
+                    <el-form-item label="备注原因：" prop="auditRemark" :rules="auditRemarkRule">
+                        <el-input type="textarea" v-model.trim="suggest.auditRemark" rows="3" maxlength="50"></el-input>
                     </el-form-item>
                 </template>
                 <template v-else>
@@ -192,8 +192,15 @@ export default {
             },
             rules: {
                 auditResult: [
-                    { required: true, message: '审核结果不能为空！' }
+                    { required: true, message: '审核结果不能为空！', trigger: 'blur' }
                 ]
+            }
+        }
+    },
+    watch: {
+        'suggest.auditResult' (value) {
+            if (value === '1') {
+                this.$refs['suggest'].clearValidate('auditRemarkRule')
             }
         }
     },
@@ -233,6 +240,11 @@ export default {
                     }
                 }
             }
+        },
+        auditRemarkRule () {
+            return [
+                { required: this.suggest.auditResult === '2', message: '审核结果不能为空！' }
+            ]
         }
     },
     methods: {
