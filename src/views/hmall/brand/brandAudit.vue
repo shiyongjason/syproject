@@ -52,6 +52,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status == 0 || scope.data.row.status == 3" class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
                     <el-button v-else class="orangeBtn" @click="showDrawer(scope.data.row, 'watch')">查看</el-button>
+                    <el-button class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
                 </template>
             </basicTable>
         </div>
@@ -114,8 +115,8 @@
                         <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
                         <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
                     </el-form-item>
-                    <el-form-item label="备注原因：">
-                        <el-input type="textarea" v-model="suggest.auditRemark" rows="3" maxlength="50"></el-input>
+                    <el-form-item label="备注原因：" prop="auditRemark" :rules="auditRemarkRule">
+                        <el-input type="textarea" v-model.trim="suggest.auditRemark" rows="3" maxlength="50"></el-input>
                     </el-form-item>
                 </template>
                 <template v-else>
@@ -192,8 +193,15 @@ export default {
             },
             rules: {
                 auditResult: [
-                    { required: true, message: '审核结果不能为空！' }
+                    { required: true, message: '审核结果不能为空！', trigger: 'blur' }
                 ]
+            }
+        }
+    },
+    watch: {
+        'suggest.auditResult' (value) {
+            if (value === '1') {
+                this.$refs['suggest'].clearValidate('auditRemarkRule')
             }
         }
     },
@@ -233,6 +241,11 @@ export default {
                     }
                 }
             }
+        },
+        auditRemarkRule () {
+            return [
+                { required: this.suggest.auditResult === '2', message: '审核结果不能为空！' }
+            ]
         }
     },
     methods: {
