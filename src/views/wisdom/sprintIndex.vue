@@ -46,8 +46,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/target-profit/value/import\n'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/target-profit/value/import\n'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData' :disabled='disabled'>
+                    <el-button type="primary" class='m0' :loading='loading' :disabled='disabled'>
                         导入表格
                     </el-button>
                 </el-upload>
@@ -133,6 +133,9 @@ export default {
         }),
         showImport () {
             return this.hosAuthCheck(SPRINT_INDEX_IMPORT)
+        },
+        disabled () {
+            return !this.uploadData.valueYear
         }
     },
     methods: {

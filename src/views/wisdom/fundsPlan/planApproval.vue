@@ -22,7 +22,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="params.valueYear" type="year"  value-format='yyyy' placeholder="请选择时间">
+                    <el-date-picker v-model="params.valueYear" type="year" value-format='yyyy' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
@@ -43,8 +43,7 @@
             <p><b>{{params.valueYear}}</b>年<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planApprovalList" align="center"
-                         :total="planApprovalPagination.total" :showPagination="true" @pagination="getList">
+            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planApprovalList" align="center" :total="planApprovalPagination.total" :showPagination="true" @pagination="getList">
             </hosJoyTable>
         </div>
         <el-dialog title="资金计划审批额度导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
@@ -54,14 +53,14 @@
                         资金计划审批额度导入模板导出
                     </a>
                 </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='valueYear'>
                     <el-date-picker v-model="uploadData.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/funplan/approve/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/funplan/approve/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData' :disabled='disabled'>
+                    <el-button type="primary" class='m0' :loading='loading' :disabled='disabled'>
                         导入表格
                     </el-button>
                 </el-upload>
@@ -98,6 +97,9 @@ export default {
         }),
         showImport () {
             return this.hosAuthCheck(PLAN_APPROVAL_IMPORT)
+        },
+        disabled () {
+            return !this.uploadData.valueYear
         }
     },
     components: {
@@ -300,25 +302,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .tips {
+.tips {
+    background: #ffffff;
+    p {
+        max-width: 1000px;
+        margin: auto;
+        line-height: 100px;
+        text-align: center;
 
-        background: #ffffff;
-        p {
-            max-width: 1000px;
-            margin: auto;
-            line-height: 100px;
-            text-align: center;
-
-            b {
-                color: red;
-                padding: 0 5px;
-            }
-            .right{
-                float: right;
-            }
+        b {
+            color: red;
+            padding: 0 5px;
+        }
+        .right {
+            float: right;
         }
     }
-    .upload-demo {
-        display: inline-block;
-    }
+}
+.upload-demo {
+    display: inline-block;
+}
 </style>
