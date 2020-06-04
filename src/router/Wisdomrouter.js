@@ -209,6 +209,28 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/commitValue')
+            },
+            {
+                path: 'performanceIndex',
+                name: 'performanceIndex',
+                meta: {
+                    title: '履约值利润指标',
+                    tagName: '履约值利润指标',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/performanceIndex')
+            },
+            {
+                path: 'sprintIndex',
+                name: 'sprintIndex',
+                meta: {
+                    title: '冲刺值利润指标',
+                    tagName: '冲刺值利润指标',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/sprintIndex')
             }
         ]
     },
@@ -297,28 +319,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsPlan/platformPlan')
-            },
-            {
-                path: 'performanceIndex',
-                name: 'performanceIndex',
-                meta: {
-                    title: '履约值利润指标',
-                    tagName: '履约值利润指标',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/performanceIndex')
-            },
-            {
-                path: 'sprintIndex',
-                name: 'sprintIndex',
-                meta: {
-                    title: '冲刺值利润指标',
-                    tagName: '冲刺值利润指标',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/sprintIndex')
             },
             {
                 path: 'approveDeclare',

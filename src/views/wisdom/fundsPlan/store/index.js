@@ -9,7 +9,10 @@ const state = {
     planApprovalPagination: {},
     platformPlanList: [],
     platformPlanTotal: {},
-    platformPlanPagination: {}
+    platformPlanPagination: {},
+    planCreditList: [],
+    planCreditTotal: {},
+    planCreditPagination: {}
 }
 
 const getters = {
@@ -26,7 +29,24 @@ const getters = {
     planApprovalTotal: state => state.planApprovalTotal,
     platformPlanList: state => state.platformPlanList,
     platformPlanTotal: state => state.platformPlanTotal,
-    platformPlanPagination: state => state.platformPlanPagination
+    platformPlanPagination: state => state.platformPlanPagination,
+    planCreditList: state => {
+        state.planCreditList.forEach(value => {
+            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100) + '%'
+            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100) + '%'
+            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100) + '%'
+        })
+        return state.planCreditList
+    },
+    planCreditTotal: state => {
+        for (const key in state.planCreditTotal) {
+            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
+            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
+            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
+        }
+        return state.planCreditTotal
+    },
+    planCreditPagination: state => state.planCreditPagination
 }
 
 const mutations = {
@@ -58,6 +78,15 @@ const mutations = {
     },
     [types.PLATFORM_PLAN_TOTAL] (state, payload) {
         state.platformPlanTotal = payload
+    },
+    [types.PLAN_CREDIT_LIST] (state, payload) {
+        state.planCreditList = payload
+    },
+    [types.PLAN_CREDIT_PAGINATION] (state, payload) {
+        state.planCreditPagination = payload
+    },
+    [types.PLAN_CREDIT_TOTAL] (state, payload) {
+        state.planCreditTotal = payload
     }
 }
 
@@ -95,6 +124,19 @@ const actions = {
     async findPlatformPlanTotal ({ commit }, params) {
         const { data } = await Api.findPlanFormTotal(params)
         commit(types.PLATFORM_PLAN_TOTAL, data)
+    },
+    async findPlanCreditList ({ commit }, params) {
+        const { data } = await Api.findPlanCreditList(params)
+        commit(types.PLAN_CREDIT_LIST, data.records)
+        commit(types.PLAN_CREDIT_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findPlanCreditTotal ({ commit }, params) {
+        const { data } = await Api.findPlanCreditTotal(params)
+        commit(types.PLAN_CREDIT_TOTAL, data)
     }
 }
 export default {

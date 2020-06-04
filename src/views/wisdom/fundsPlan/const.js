@@ -128,54 +128,45 @@ export const summarySheet = function (targetYear, targetMonth) {
 export const platformPlan = function (targetYear, targetMonth) {
     return [
         {
+            prop: 'misCode',
+            label: '公司编码',
+            width: '100',
+            fixed: true
+        },
+        {
             prop: 'organizationName',
-            slot: 'organizationName',
-            slotTable: true,
+            // slot: 'organizationName',
             label: '平台公司',
             width: '100',
-            fixed: true,
-            children: [
-                {
-                    prop: 'organizationName',
-                    label: `-`
-                }
-            ]
+            fixed: true
+        },
+        {
+            prop: 'subRegionName',
+            label: '区域',
+            width: '100',
+            fixed: true
+        },
+        {
+            prop: 'subsectionName',
+            label: '分部',
+            width: '100',
+            fixed: true
         },
         {
             prop: 'regionName',
-            label: '区域',
-            width: '100',
-            fixed: true,
-            children: [
-                {
-                    prop: 'regionName',
-                    label: `-`
-                }
-            ]
-        },
-        {
-            prop: 'organizationName',
-            slot: 'organizationName',
-            label: '分部',
-            width: '100',
-            fixed: true,
-            children: [
-                {
-                    prop: 'organizationName',
-                    label: `-`
-                }
-            ]
-        },
-        {
-            prop: 'organizationName',
-            slot: 'organizationName',
             label: '大区',
             width: '100',
             fixed: true,
             children: [
                 {
-                    prop: 'organizationName',
-                    label: `合计`
+                    prop: 'regionName',
+                    label: `-`,
+                    children: [
+                        {
+                            prop: 'regionName',
+                            label: `合计`
+                        }
+                    ]
                 }
             ]
         },
@@ -352,7 +343,7 @@ export const platformPlan = function (targetYear, targetMonth) {
         }
     ]
 }
-// 平台公司计划分析
+// 资金计划审批额度
 export const planApproval = function (targetYear) {
     return [
         {
@@ -580,191 +571,191 @@ export const approvalListLabel = [
 export const planCreditLabel = [
     {
         label: '公司编码',
-        prop: 'planId',
+        prop: 'misCode',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'misCode'
             }
         ]
     },
     {
         label: '公司名称',
-        prop: 'planId',
+        prop: 'companyName',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'companyName'
             }
         ]
     },
     {
         label: '分部',
-        prop: 'planId',
+        prop: 'subsectionName',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'subsectionName'
             }
         ]
     },
     {
         label: '大区',
-        prop: 'planId',
+        prop: 'regionName',
         children: [
             {
-                label: '-',
-                prop: 'planId'
+                label: '合计',
+                prop: 'regionName'
             }
         ]
     },
     {
         label: '本年累计销售达成额',
-        prop: 'planId',
+        prop: 'annualTotalSale',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'annualTotalSale'
             }
         ]
     },
     {
         label: '本年累计销售达成率',
-        prop: 'planId',
+        prop: 'annualTotalProfitAchieveRate',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'annualTotalProfitAchieveRate'
             }
         ]
     },
     {
         label: '本年累计利润达成额',
-        prop: 'planId',
+        prop: 'annualTotalProfit',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'annualTotalProfit'
             }
         ]
     },
     {
         label: '本年累计利润达成率',
-        prop: 'planId',
+        prop: 'annualTotalSaleAchieveRate',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'annualTotalSaleAchieveRate'
             }
         ]
     },
     {
         label: '本年累计放款额',
-        prop: 'planId',
+        prop: 'annualTotalLoan',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'annualTotalLoan'
             }
         ]
     },
     {
         label: '累计资金支持效率比',
-        prop: 'planId',
+        prop: 'annualTotalEffectiveRate',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'annualTotalEffectiveRate'
             }
         ]
     },
     {
         label: '当月申报用款额',
-        prop: 'planId',
+        prop: 'currentApplyFund',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'currentApplyFund'
             }
         ]
     },
     {
         label: '当月审批用款额',
-        prop: 'planId',
+        prop: 'currentApproveFund',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'currentApproveFund'
             }
         ]
     },
     {
         label: '本月实际放款额',
-        prop: 'planId',
+        prop: 'currentActualLoan',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'currentActualLoan'
             }
         ]
     },
     {
         label: '本月剩余应还本金',
-        prop: 'planId',
+        prop: 'currentRemainingRepayment',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'currentRemainingRepayment'
             }
         ]
     },
     {
         label: '在贷余额',
-        prop: 'planId',
+        prop: 'totalUnpaidAmount',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'totalUnpaidAmount'
             }
         ]
     },
     {
         label: '剩余逾期',
-        prop: 'planId',
+        prop: 'totalRemainingOverdue',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'totalRemainingOverdue'
             }
         ]
     },
     {
         label: '存量逾期',
-        prop: 'planId',
+        prop: 'totalRemainingOverdueExist',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'totalRemainingOverdueExist'
             }
         ]
     },
     {
         label: '增量逾期',
-        prop: 'planId',
+        prop: 'totalRemainingOverdueIncrement',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'totalRemainingOverdueIncrement'
             }
         ]
     },
     {
         label: '本月逾期发生额',
-        prop: 'planId',
+        prop: 'currentOverdueAmount',
         children: [
             {
                 label: '-',
-                prop: 'planId'
+                prop: 'currentOverdueAmount'
             }
         ]
     }

@@ -82,7 +82,7 @@ export function findPlanFormTotal (params) {
 // 平台公司计划分析表导出
 export function exportPlanForm (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`/backend/api/fund-plan/company/summary/error`, { params }).then(function (response) {
+    axios.get(`/backend/api/fund-plan/company/summary/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
@@ -101,4 +101,35 @@ export function exportPlanForm (params) {
     }).catch(function () {
         axios.defaults.responseType = 'json'
     })
+}
+// 资金用信情况列表列表
+export function findPlanCreditList (params) {
+    return axios.get('backend/api/overdue/fund-usage/summary/pages', { params })
+}
+// 资金用信情况列表导出
+export function exportPlanCredit (params, name) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`backend/api/overdue/fund-usage/summary/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = name + '.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 资金用信情况列表总计
+export function findPlanCreditTotal (params) {
+    return axios.get('backend/api/overdue/fund-usage/summary/total', { params })
 }

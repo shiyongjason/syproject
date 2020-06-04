@@ -34,7 +34,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="btnQuery({...params, pageSize:10, pageNumber: 1})">
+                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -50,11 +50,12 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="platformPlanList" align="center"
-                         :total="platformPlanPagination.total">
-                <template slot="organizationName" slot-scope="scope">
-                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
-                </template>
+            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="columnData" :data="platformPlanList" align="center"
+                         :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
+                         :total="platformPlanPagination.total" @pagination="getList">
+<!--                <template slot="organizationName" slot-scope="scope">-->
+<!--                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>-->
+<!--                </template>-->
             </hosJoyTable>
         </div>
     </div>
@@ -87,10 +88,7 @@ export default {
             platformPlanTotal: 'fundsPlan/platformPlanTotal',
             platformPlanPagination: 'fundsPlan/platformPlanPagination',
             targetTime: 'fundsPlan/targetTime'
-        }),
-        columnData () {
-            return platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
-        }
+        })
     },
     data () {
         return {
@@ -98,6 +96,7 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 selectTime: '',
+                misCode: '',
                 subsectionCode: ''
             },
             platComList: [],
@@ -129,7 +128,8 @@ export default {
                     selectCode: '',
                     selectName: ''
                 }
-            }
+            },
+            columnData: []
         }
     },
     methods: {
@@ -147,19 +147,23 @@ export default {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
         async onQuery (params) {
+            this.paramTargetDate = {
+                year: params.selectTime.slice(0, 4),
+                mouth: params.selectTime.slice(4)
+            }
             this.findPlatformPlanList(params)
             await this.findPlatformPlanTotal(params)
-            // const columnData = platformPlan(params.selectTime)
-            // columnData.forEach((value, index) => {
-            //     if (index > 3) {
-            //         value.children.forEach((val) => {
-            //             if (this.planApprovalTotal[val.prop]) {
-            //                 val.label = String(this.planApprovalTotal[val.prop])
-            //             }
-            //         })
-            //     }
-            // })
-            // this.columnData = columnData
+            const columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
+            columnData.forEach((value, index) => {
+                if (index > 3) {
+                    value.children.forEach((val) => {
+                        if (this.platformPlanTotal[val.prop]) {
+                            val.children[0].label = String(this.platformPlanTotal[val.prop])
+                        }
+                    })
+                }
+            })
+            this.columnData = columnData
         },
         linkage (dis) {
             let obj = {
@@ -241,6 +245,10 @@ export default {
                     selectName: ''
                 },
                 platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                areaObj: {
                     selectCode: '',
                     selectName: ''
                 }
