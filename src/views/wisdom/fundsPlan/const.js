@@ -389,7 +389,7 @@ export const planApproval = function (targetYear) {
             fixed: true,
             children: [
                 {
-                    prop: 'organizationName',
+                    prop: 'regionName',
                     label: `合计`
                 }
             ]
@@ -408,7 +408,6 @@ export const planApproval = function (targetYear) {
         {
             prop: 'februaryValue',
             label: '2月',
-            fixed: true,
             children: [
                 {
                     prop: 'februaryValue',
@@ -420,7 +419,6 @@ export const planApproval = function (targetYear) {
             prop: 'marchValue',
             label: '3月',
             width: '100',
-            fixed: true,
             children: [
                 {
                     prop: 'marchValue',

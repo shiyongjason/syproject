@@ -34,7 +34,7 @@
                     <el-button type="primary" class="ml20" @click="onReset">
                         重置
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -79,6 +79,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import { planApproval } from './const'
 import { interfaceUrl } from '@/api/config'
 import { exportPlanApproval } from './api'
+import { PLAN_APPROVAL_IMPORT } from '../../../utils/auth_const'
 export default {
     name: 'planApproval',
     mixins: [departmentAuth],
@@ -94,7 +95,10 @@ export default {
             planApprovalTotal: 'fundsPlan/planApprovalTotal',
             planApprovalPagination: 'fundsPlan/planApprovalPagination',
             targetTime: 'fundsPlan/targetTime'
-        })
+        }),
+        showImport () {
+            return this.hosAuthCheck(PLAN_APPROVAL_IMPORT)
+        }
     },
     components: {
         hosJoyTable,

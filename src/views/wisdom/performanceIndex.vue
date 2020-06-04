@@ -28,7 +28,7 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageNumber: 1, pageSize: 10})">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -71,6 +71,7 @@ import { preformTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getPerformanceIndexList, getPerformanceIndexTotal, exportPerformanceIndex } from './api/index'
+import { PERFORMANCE_INDEX_IMPORT } from '../../utils/auth_const'
 export default {
     name: 'performanceIndex',
     mixins: [departmentAuth],
@@ -135,7 +136,10 @@ export default {
         }),
         ...mapGetters({
             targetTime: 'fundsPlan/targetTime'
-        })
+        }),
+        showImport () {
+            return this.hosAuthCheck(PERFORMANCE_INDEX_IMPORT)
+        }
     },
     methods: {
         cancel () {

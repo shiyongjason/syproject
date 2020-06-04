@@ -22,7 +22,7 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageNumber: 1, pageSize: 10})">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -69,6 +69,7 @@ import {
     getSprintIndexTotal,
     exportSprintIndex
 } from './api/index'
+import { SPRINT_INDEX_IMPORT } from '../../utils/auth_const'
 export default {
     name: 'sprintIndex',
     mixins: [departmentAuth],
@@ -129,7 +130,10 @@ export default {
         }),
         ...mapGetters({
             targetTime: 'fundsPlan/targetTime'
-        })
+        }),
+        showImport () {
+            return this.hosAuthCheck(SPRINT_INDEX_IMPORT)
+        }
     },
     methods: {
         cancel () {
@@ -200,6 +204,8 @@ export default {
             this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
+            this.dynamicNameRegion = '大区'
+            this.dynamicNameBranch = '分部'
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.newBossAuth(['D', 'F'])
