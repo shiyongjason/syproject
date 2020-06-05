@@ -228,6 +228,7 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
