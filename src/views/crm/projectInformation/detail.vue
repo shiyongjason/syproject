@@ -218,7 +218,9 @@ export default {
                             this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.push({
                                 templateId: ktem.templateId,
                                 fileName: ktem.fileName,
-                                fileUrl: ktem.fileUrl
+                                fileUrl: ktem.fileUrl,
+                                createTime: ktem.createTime ? ktem.createTime : null,
+                                createBy: ktem.createBy ? ktem.createBy : this.userInfo.employeeName
                             })
                         })
                     })
