@@ -41,7 +41,7 @@
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -122,16 +122,14 @@ export default {
                 regionCode: '',
                 subRegionCode: '',
                 subsectionCode: '',
-                subsectionOldCode: '',
                 misCode: '',
                 commitmentYear: moment().format('YYYY'),
-                totalAreaName: '',
-                pageNumber: 1,
-                pageSize: 10
+                totalAreaName: ''
             },
             page: {
-                sizes: [10, 20, 50, 100],
-                total: 0
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
             },
             total: {},
             tableData: [],
@@ -156,7 +154,6 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.subsectionOldCode = ''
                 this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
@@ -173,7 +170,6 @@ export default {
             }
         },
         async backPlat (val, dis) {
-            // console.log(val, dis)
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
@@ -182,31 +178,27 @@ export default {
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.queryParams.subsectionOldCode = val.value.crmDeptCode ? val.value.crmDeptCode : ''
                 this.findAuthList({
                     deptType: 'Q',
                     pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
                 })
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
-                if (val.value.crmDeptCode) {
-                    this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
-                    this.findPlatformslist()
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
-                !val.value.crmDeptCode && this.linkage(dis)
+                !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'Q') {
                 this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 区域查询时入参新code 1050V3100000000F6HHM
                 if (val.value.selectCode) {
                     this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else {
-                    let params = null
-                    if (this.queryParams.subsectionOldCode) {
-                        params = {
-                            subsectionCode: this.queryParams.subsectionOldCode
-                        }
+                } else if (this.queryParams.subsectionCode) {
+                    let params = {
+                        subsectionCode: this.queryParams.subsectionCode
                     }
                     this.findPlatformslist(params)
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
@@ -237,7 +229,7 @@ export default {
             return this.column[1].label
         },
         async onQuery () {
-            const promiseArr = [getCommitmentList(this.queryParams), getCommitmentTotal(this.queryParams)]
+            const promiseArr = [getCommitmentList(this.searchParams), getCommitmentTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 res[1].data.companyName = '合计'
                 res[0].data.records.unshift(res[1].data)
@@ -245,7 +237,13 @@ export default {
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
+            console.log(data)
             this.tableData = data.records
+            this.page = {
+                total: data.total,
+                pageNumber: data.current,
+                pageSize: data.size
+            }
             if (data.records.length > 1) {
                 this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
             } else {
@@ -253,6 +251,7 @@ export default {
             }
         },
         getList (val) {
+            console.log(val)
             this.searchParams = {
                 ...this.searchParams,
                 ...val
@@ -266,7 +265,6 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subsectionOldCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
@@ -276,7 +274,7 @@ export default {
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.oldBossAuth()
+            await this.newBossAuth()
             this.onSearch()
         },
         isSuccess (response) {
@@ -326,7 +324,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        await this.oldBossAuth()
+        await this.newBossAuth()
     }
 }
 </script>
