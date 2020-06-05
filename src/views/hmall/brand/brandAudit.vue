@@ -55,13 +55,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-drawer
-            class="page-body-drawer brand-drawer"
-            :title="drawerMsg.title"
-            :visible.sync="drawerShow"
-            :before-close="onCancel"
-            direction="rtl"
-            size='580px'>
+        <el-drawer class="page-body-drawer brand-drawer" :title="drawerMsg.title" :visible.sync="drawerShow" :before-close="onCancel" direction="rtl" size='580px'>
             <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
                 <el-form-item label="供应商：" class="mb-5">
                     {{drawerMsg.merchantName}}
@@ -72,7 +66,7 @@
                 <el-form-item label="代理证书：" class="mb-5">
                     <div class="proxyCert">
                         <a :href="drawerMsg.certification" target="_blank">
-                        <img :src="drawerMsg.certification" alt="">
+                            <img :src="drawerMsg.certification" alt="">
                         </a>
                     </div>
                 </el-form-item>
@@ -91,30 +85,20 @@
                         :options="categoryOptions"
                         :props="categoryProps">
                     </el-cascader-panel> -->
-                    <el-cascader
-                        :options="categoryOptions"
-                        :props="categoryProps"
-                        v-model="drawerMsg.categoryIdsArr"
-                        disabled
-                    >
+                    <el-cascader :options="categoryOptions" :props="categoryProps" v-model="drawerMsg.categoryIdsArr" disabled>
                     </el-cascader>
                 </el-form-item>
                 <el-form-item label="售卖区域：" class="mb-20 area-cascader">
-                    <el-cascader
-                        :options="areaOptions"
-                        :props="areaProps"
-                        v-model="drawerMsg.areaArr"
-                        disabled
-                    >
+                    <el-cascader :options="areaOptions" :props="areaProps" v-model="drawerMsg.areaArr" disabled>
                     </el-cascader>
                 </el-form-item>
                 <p class="audit-opinion">审核意见</p>
                 <template v-if="drawerMsg.type === 'review'">
-                    <el-form-item label="审核结果：" prop="auditResult" >
-                        <el-radio v-model="suggest.auditResult" label="1">审核通过</el-radio>
-                        <el-radio v-model="suggest.auditResult" label="2">审核不通过</el-radio>
+                    <el-form-item label="审核结果：" prop="auditResult" ref="auditResult">
+                        <el-radio v-model="suggest.auditResult" label="1" @change="onChangeAudio">审核通过</el-radio>
+                        <el-radio v-model="suggest.auditResult" label="2" @change="onChangeAudio">审核不通过</el-radio>
                     </el-form-item>
-                    <el-form-item label="备注原因：" prop="auditRemark" :rules="auditRemarkRule">
+                    <el-form-item label="备注原因：" :prop="suggest.auditResult == 1 ? '' : 'auditRemark' " ref="auditRemark">
                         <el-input type="textarea" v-model.trim="suggest.auditRemark" rows="3" maxlength="50"></el-input>
                     </el-form-item>
                 </template>
@@ -135,7 +119,7 @@
             </el-form>
             <div class="drawer-footer">
                 <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
-                <el-button name="hosjoy-color" @click="onConfirm"  v-if="drawerMsg.type === 'review'">提交</el-button>
+                <el-button name="hosjoy-color" @click="onConfirm" v-if="drawerMsg.type === 'review'">提交</el-button>
             </div>
         </el-drawer>
     </div>
@@ -150,6 +134,7 @@ export default {
     name: 'brandAudit',
     data () {
         return {
+            auditResult: '',
             categoryProps: {
                 emitPath: false,
                 multiple: true
@@ -192,15 +177,11 @@ export default {
             },
             rules: {
                 auditResult: [
-                    { required: true, message: '审核结果不能为空！', trigger: 'blur' }
+                    { required: true, message: '审核结果不能为空！', trigger: 'change' }
+                ],
+                auditRemark: [
+                    { required: true, message: '请填写审核不通过的原因', trigger: 'blur' }
                 ]
-            }
-        }
-    },
-    watch: {
-        'suggest.auditResult' (value) {
-            if (value === '1') {
-                this.$refs['suggest'].clearValidate('auditRemarkRule')
             }
         }
     },
@@ -240,11 +221,6 @@ export default {
                     }
                 }
             }
-        },
-        auditRemarkRule () {
-            return [
-                { required: this.suggest.auditResult === '2', message: '审核结果不能为空！' }
-            ]
         }
     },
     methods: {
@@ -288,7 +264,10 @@ export default {
                 total: this.brandAuthorizationInfo.total
             }
         },
-
+        onChangeAudio (value) {
+            this.$refs.auditResult.clearValidate()
+            this.$refs.auditRemark.resetField()
+        },
         // 级联面板回调
         // cascaderPanelChange () {
 
@@ -428,7 +407,7 @@ export default {
     bottom: 0;
     width: 100%;
     padding: 12px 24px;
-    border-top: 1px solid #E5E5EA;
+    border-top: 1px solid #e5e5ea;
     text-align: right;
 }
 </style>
