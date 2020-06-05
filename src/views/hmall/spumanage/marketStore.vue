@@ -137,7 +137,7 @@ export default {
                 isOwnOperated: false
             },
             tableLabel: [
-                { label: '商品编码', prop: 'spuCode' },
+                { label: 'SPU编码', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuName' },
                 { label: '品牌', prop: 'brandName' },
                 { label: '商品类目', prop: 'category' },
