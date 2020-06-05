@@ -28,7 +28,7 @@
                                         </template>
                                     </span>
                                 </p>
-                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD')}}</p>
+                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>

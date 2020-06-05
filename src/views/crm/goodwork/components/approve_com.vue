@@ -32,7 +32,7 @@
                                     </template>
                                 </span>
                             </p>
-                            <p style="flex:0.5"> {{moment(jtem.createTime).format('YYYY-MM-DD')}}</p>
+                            <p style="flex:0.5">{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                             <p>
                                 <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)">删除</font>
                                 <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font>
