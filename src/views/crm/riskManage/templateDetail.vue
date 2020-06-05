@@ -42,7 +42,7 @@
                 </tbody>
             </table>
         </div>
-        <el-dialog title="材料详情" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
+        <el-dialog title="编辑" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
             <div class="tem-wrap">
                 <el-form :model="formTemp" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                     <el-form-item label="一级类目：">
