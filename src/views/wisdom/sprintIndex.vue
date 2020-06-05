@@ -207,14 +207,12 @@ export default {
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
-            this.$set(this.queryParams, 'pageNumber', 1)
-            this.$set(this.queryParams, 'pageSize', 10)
             this.dynamicNameRegion = '大区'
             this.dynamicNameBranch = '分部'
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.newBossAuth(['D', 'F'])
-            this.onQuery(this.queryParams)
+            this.btnQuery()
         },
         isSuccess () {
             this.$message({
