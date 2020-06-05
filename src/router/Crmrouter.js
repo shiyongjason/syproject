@@ -57,8 +57,8 @@ export default {
             path: 'tempdetail',
             name: 'tempdetail',
             meta: {
-                title: '材料清单配置',
-                tagName: '材料清单配置',
+                title: '材料清单配置详情',
+                tagName: '材料清单配置详情',
                 isMenu: false,
                 icon: '',
                 showMenuAs: '/goodwork/datatemp'
