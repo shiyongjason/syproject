@@ -21,18 +21,20 @@
                 :selectable="false"
                 :expand-type="false"
                 :row-style="tableRowStyle"
-                children-prop="categoryList"
+                children-prop="subCategoryList"
                 @cell-click="onCellSelected"
                 @expand-cell-click="onExpandCell"
-                @tree-icon-click="onExpandCell">
+                @tree-icon-click="onExpandCell"
+                >
+                <template slot="sort" slot-scope="scope">
+                    <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @change="inputChange(scope.row.sort)" @focus="inputFocus(scope.row)"></el-input>
+                </template>
+                <template slot="imgUrl" slot-scope="scope">
+                    <img :src="scope.row.imgUrl" class="img-table" v-if="scope.row.level === 3">
+                </template>
                 <template slot="operations" slot-scope="scope">
                     <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
-                    <span class="action mr10" @click="onMove(scope.row, -1)" v-if="!scope.row.isFirst">上移</span>
-                    <span class="action mr10 disabled" v-if="scope.row.isFirst">上移</span>
-                    <span class="action mr10" @click="onMove(scope.row, 1)" v-if="!scope.row.isLast">下移</span>
-                    <span class="action mr10 disabled" v-if="scope.row.isLast">下移</span>
                     <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span>
-                    <span class="action mr10" @click="onShowBrands(scope.row)" v-if="scope.row.level === 2">关联品牌</span>
                 </template>
             </tree-table>
         </div>
@@ -44,19 +46,31 @@
                 label-width="150px">
                 <div class="edit-form-item">
                     <span class="mr20">
-                        <label class="item-label">类目编号：</label>{{ this.form.categoryCode ? this.form.categoryCode : '--' }}
+                        <label class="item-label">类目编号：</label>{{ this.form.code ? this.form.code : '--' }}
                     </span>
                     <span><label class="item-label">类目层级：</label>{{ this.form.level }}</span>
                 </div>
                 <div class="edit-form-item">
                     <span><label class="item-label">父类目：</label>{{ this.form.parentName ? this.form.parentName : '--'  }}</span>
                 </div>
-                <el-form-item label="类目名称" prop="categoryName" v-if="editVisible">
+                <el-form-item label="类目名称" prop="name" v-if="editVisible">
                     <el-input
                         class="form-input"
-                        v-model="form.categoryName"
+                        v-model="form.name"
                         placeholder="请输入类目名称"
-                        maxlength="25"></el-input>
+                        maxlength="20"></el-input>
+                </el-form-item>
+                <el-form-item prop="imgUrl" label="类目logo：" v-if="form.level === 3">
+                    <!--imgUrl-->
+                    <SingleUpload
+                        sizeLimit="500K"
+                        :upload="uploadInfo"
+                        :imageUrl="imageUrl"
+                        ref="uploadImg"
+                        @back-event="readUrl"/>
+                    <div class="upload-tips">
+                        上传750*750，大小不超过500K，仅支持jpeg，jpg，png格式
+                    </div>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="editVisible = false">取消</el-button>
@@ -64,108 +78,97 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <el-dialog title="设置参数" :visible.sync="paramsVisible" width="960px">
-            <div class="mb10">类目名称：{{ this.current.categoryName }}</div>
-            <el-transfer
-                v-model="selectedParams"
-                :data="paramsList"
-                :titles="paramsTitle"
-                :props="{'key': 'parameterId', 'label': 'parameterName','isRequired': 'isRequired'}" class="settingParams">
-                <div slot-scope="{ option }">
-                    {{option.parameterName}}
-                    <div @click.stop.prevent="onIsRequired(option.parameterId)" style="float: right;width: 80px" v-if="selectedParams.indexOf(option.parameterId)>-1">
-                        <label class="el-checkbox el-transfer-panel__item">
-                           <span class="el-checkbox__input" :class="option.isRequired ? 'is-checked' : ''">
-                                <span class="el-checkbox__inner"></span><span style="vertical-align: text-top;margin-left: 8px">必填</span>
-                           </span>
-                        </label>
-                    </div>
-                </div>
-                <span>必填</span>
-            </el-transfer>
-            <div class="mt10 center-btn">
-                <el-button @click="paramsVisible = false">取消</el-button>
-                <el-button type="primary" @click="onLinkParams">保存</el-button>
-            </div>
-        </el-dialog>
-        <el-dialog title="关联品牌" :visible.sync="brandsVisible" :before-close="brandClose" class="settingParams">
-            <div class="mb10">类目名称：{{ this.current.categoryName }}</div>
-            <el-transfer
-                v-model="selectedBrands"
-                :data="brandsList"
-                :titles="brandsTitle"
-                filterable
-                filter-placeholder="请输入品牌名称"
-                :props="{'key': 'brandId', 'label': 'brandName'}" ref="brandRef"></el-transfer>
-            <div class="mt10 center-btn">
-                <el-button @click="brandsVisible = false">取消</el-button>
-                <el-button type="primary" @click="onLinkBrands">保存</el-button>
-            </div>
-        </el-dialog>
+        <el-drawer
+            class="page-body-drawer"
+            title="参数详情"
+            :visible.sync="setVisible"
+            :before-close="closeDialog"
+            direction="rtl"
+            size='900px'>
+            <setParameters
+                ref="setting"
+                :categoryId="current.id"
+            />
+        </el-drawer>
     </div>
 </template>
 
 <script>
 import {
-    findAllCategory, updateCategory, createCategory,
-    moveCategory, linkParams, linkBrands, findLinkParams, findLinkBrands
+    updateCategory, createCategory
 } from './api/index.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
+import { interfaceUrl } from '@/api/config'
+import setParameters from './component/setParameters'
 
 export default {
     name: 'category-list',
+    components: {
+        setParameters
+    },
     data () {
         return {
             data: [],
-            brandsTitle: ['未添加品牌', '已添加品牌'],
-            paramsTitle: ['未选参数', '已选参数'],
-            selectedBrands: [],
-            selectedParams: [],
-            brandsList: [],
-            paramsList: [],
             columns: [
                 {
                     title: '类目名称',
-                    key: 'categoryName',
-                    width: '400px'
+                    key: 'name',
+                    width: '300px'
                 },
                 {
                     title: '类目编码',
-                    key: 'categoryCode',
+                    key: 'code',
                     align: 'center',
                     headerAlign: 'center',
-                    minWidth: '50px'
+                    minWidth: '80px'
+                },
+                {
+                    title: '排序',
+                    headerAlign: 'center',
+                    minWidth: '100px',
+                    type: 'template',
+                    template: 'sort'
+                },
+                {
+                    title: '图片',
+                    headerAlign: 'center',
+                    minWidth: '100px',
+                    type: 'template',
+                    template: 'imgUrl'
                 },
                 {
                     title: '维护人',
-                    key: 'updateBy',
+                    key: 'operator',
                     align: 'center',
                     headerAlign: 'center'
                 },
                 {
                     title: '维护时间',
-                    key: 'updateTime',
+                    key: 'lastModifyTime',
                     align: 'center',
                     headerAlign: 'center',
-                    minWidth: '200px'
+                    minWidth: '160px'
                 },
                 {
                     title: '操作',
                     headerAlign: 'center',
-                    minWidth: '200px',
+                    minWidth: '150px',
                     type: 'template',
                     template: 'operations'
                 }
             ],
             // 当前选中的类目，所有的操作都基于这个数据
-            current: {},
+            current: {
+                id: 0
+            },
             isEdit: false,
             editVisible: false,
-            paramsVisible: false,
-            brandsVisible: false,
             rules: {
-                categoryName: [
+                name: [
                     { required: true, whitespace: true, message: '此项为必填项', trigger: 'blur' }
+                ],
+                imgUrl: [
+                    { required: true, message: '请上传类目logo' }
                 ]
             },
             form: {
@@ -173,33 +176,60 @@ export default {
                 level: 1,
                 parentCode: '',
                 parentName: '',
-                categoryName: ''
+                name: '',
+                imgUrl: ''
             },
             expandCell: [],
-            isSaving: false
+
+            setVisible: false,
+            attributeForm: {
+                name: '',
+                type: '',
+                required: ''
+            },
+            attributeFormRules: {
+                name: [
+                    { required: true, message: '审核结果不能为空！' }
+                ],
+                type: [
+                    { required: true, message: '审核结果不能为空！' }
+                ],
+                required: [
+                    { required: true, message: '审核结果不能为空！' }
+                ]
+            }
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
-        })
+        }),
+        ...mapState('category', {
+            categoriesTree: 'categoriesTree'
+        }),
+        uploadInfo () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                accept: 'image/jpeg, image/jpg, image/png'
+            }
+        },
+        imageUrl () {
+            return this.form.imgUrl
+        }
     },
     methods: {
-        onIsRequired (id) {
-            this.paramsList.forEach((value, index) => {
-                if (value.parameterId === id) {
-                    value.isRequired = !value.isRequired
-                }
-            })
-        },
-        brandClose () {
-            this.$refs.brandRef.clearQuery('left')
-            this.$refs.brandRef.clearQuery('right')
-            this.brandsVisible = false
-        },
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+
         onCellSelected (row, rowIndex, column, columnIndex, $event) {
             this.current = row
         },
+
+        // 展开的样式，用于刷新试图后不重置
         onExpandCell (row, rowIndex, $event) {
             if (row._isFold) {
                 const index = this.expandCell.indexOf(row.id)
@@ -208,19 +238,72 @@ export default {
                 this.expandCell.push(row.id)
             }
         },
+
+        // 表格行样式
+        tableRowStyle (row, rowIndex) {
+            return this.current.id === row.id ? {
+                'background-color': '#bec9ef'
+            } : {}
+        },
+
+        onShowParams (row) {
+            this.current = row
+            this.setVisible = true
+            this.$nextTick(() => {
+                this.$refs['setting'].findSpecificationsAsync()
+            })
+        },
+
+        // 关闭参数前清空列表，防止下次进入缓存
+        closeDialog () {
+            this.$refs['setting'].initTable()
+            this.setVisible = false
+        },
+
+        // 输入框获取焦点就设置选中行，防止bug
+        inputFocus (row) {
+            this.current = row
+        },
+
+        // 输入框排序接口
+        async inputChange (value) {
+            this.$forceUpdate()
+            await updateCategory({
+                id: this.current.id,
+                name: this.current.name,
+                parentId: this.current.parentId,
+                sort: value,
+                operator: this.userInfo.employeeName,
+                imgUrl: this.current.imgUrl
+            })
+            this.refresh()
+        },
+
+        // 上传的回调
+        readUrl (val) {
+            this.form.imgUrl = val.imageUrl
+        },
+
+        // 新增和编辑类目
         onEditCategory () {
-            if (this.isSaving) {
-                return
-            }
-            this.isSaving = true
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     if (this.isEdit) {
-                        this.form.updateBy = this.userInfo.employeeName
-                        await updateCategory(this.form)
+                        await updateCategory({
+                            id: this.form.id,
+                            name: this.form.name,
+                            parentId: this.form.parentId,
+                            sort: this.form.sort,
+                            operator: this.userInfo.employeeName,
+                            imgUrl: this.form.imgUrl
+                        })
                     } else {
-                        this.form.createBy = this.userInfo.employeeName
-                        await createCategory(this.form)
+                        await createCategory({
+                            name: this.form.name,
+                            parentId: this.form.parentId || 0,
+                            operator: this.userInfo.employeeName,
+                            imgUrl: this.form.imgUrl
+                        })
                     }
                     this.$message({
                         message: this.isEdit ? '类目修改成功' : '类目添加成功',
@@ -228,9 +311,6 @@ export default {
                     })
                     this.editVisible = false
                     this.refresh()
-                    this.isSaving = false
-                } else {
-                    this.isSaving = false
                 }
             })
         },
@@ -240,14 +320,17 @@ export default {
             this.isEdit = false
             // 判断level是否存在是处理没有选中任何类目的情况下，做新增操作
             this.form = {
-                parentName: type === 'child' ? this.current.categoryName : this.current.pcategoryName,
-                parentId: type === 'child' ? this.current.id : this.current.parentId,
+                parentName: type === 'child' ? this.current.name : this.current.pcategoryName || '',
+                parentId: type === 'child' ? this.current.id : this.current.parentId || '',
                 level: this.current.level ? (type === 'child' ? this.current.level * 1 + 1 : this.current.level * 1) : 1,
-                categoryName: '',
-                categoryCode: '',
-                id: ''
+                name: '',
+                code: '',
+                id: '',
+                imgUrl: ''
             }
-            this.isSaving = false
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
         onShowEdit (row) {
             this.current = row
@@ -257,120 +340,49 @@ export default {
                 parentName: this.current.pcategoryName,
                 parentId: this.current.parentId,
                 level: this.current.level * 1,
-                categoryName: this.current.categoryName,
-                categoryCode: this.current.categoryCode,
-                id: this.current.id
+                name: this.current.name,
+                code: this.current.code,
+                id: this.current.id,
+                sort: this.current.sort,
+                imgUrl: this.current.imgUrl || ''
             }
-            this.isSaving = false
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
         },
-        async onMove (row, direction) {
-            await moveCategory({
-                id: row.id,
-                moveValue: direction,
-                updateBy: this.userInfo.employeeName
-            })
-            this.$message({
-                message: '类目移动成功',
-                type: 'success'
-            })
-            this.refresh()
-        },
-        async onShowParams (row) {
-            this.current = row
-            this.paramsVisible = true
-            const { data: paramsList } = await findLinkParams({
-                categoryId: this.current.id,
-                isSetupthe: 0
-            })
-            const { data: selectedParams } = await findLinkParams({
-                categoryId: this.current.id,
-                isSetupthe: 1
-            })
-            this.paramsList = selectedParams.concat(paramsList)
-            this.selectedParams = selectedParams.map(item => item.parameterId)
-        },
-        async onShowBrands (row) {
-            this.current = row
-            this.brandsVisible = true
-            const { data: brandsList } = await findLinkBrands({
-                categoryId: this.current.id,
-                isRelation: 0
-            })
-            const { data: selectedBrands } = await findLinkBrands({
-                categoryId: this.current.id,
-                isRelation: 1
-            })
-            this.brandsList = selectedBrands.concat(brandsList)
-            this.brandsList = this.brandsList.map(item => {
-                if (item.brandNameEn) {
-                    item.brandName = item.brandName + item.brandNameEn
-                }
-                return item
-            })
-            this.selectedBrands = selectedBrands.map(item => item.brandId)
-        },
-        async onLinkParams () {
-            let tempParams = this.selectedParams.map(value => {
-                let temp = null
-                this.paramsList.forEach(value1 => {
-                    if (value1.parameterId === value) {
-                        value1.isRequired ? temp = 1 : temp = 0
-                    }
-                })
-                return {
-                    parameterId: value,
-                    isRequired: temp
-                }
-            })
-            await linkParams({
-                categoryId: this.current.id,
-                parameterIdList: [],
-                parameterIsRequired: tempParams
-            })
-            this.$message({
-                message: '设置参数成功！',
-                type: 'success'
-            })
-            this.paramsVisible = false
-        },
-        async onLinkBrands () {
-            await linkBrands({
-                categoryId: this.current.id,
-                brandIdList: this.selectedBrands
-            })
-            this.$message({
-                message: '关联品牌成功！',
-                type: 'success'
-            })
-            this.brandsVisible = false
-        },
-        tableRowStyle (row, rowIndex) {
-            return this.current.id === row.id ? {
-                'background-color': '#bec9ef'
-            } : {}
-        },
-        resolveData (data, parentIsFold = true) {
-            // 设置数组第一个值和最后一个值标志，主要用于判断上移和下移是否可用
-            return data.map((item, index) => {
-                item.isFirst = index === 0
-                item.isLast = index === data.length - 1
-                item.updateTime = this.$root.$options.filters.formatterTime(item.updateTime)
+
+        // 递归处理数据
+        resolveData (data, parentIsFold = true, grondIsFold = true, pcategoryName = '') {
+            return data.map((item, index, arr) => {
+                item.lastModifyTime = this.$root.$options.filters.formatterTime(item.lastModifyTime)
+                item.pcategoryName = pcategoryName
+
+                // 在数组中的数据，必定是非折叠的
                 if (this.expandCell.includes(item.id)) {
                     item._isFold = false
+                }
+                // 如果祖父级是折叠的，则必定隐藏
+                if (grondIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是折叠的，则隐藏
+                if (!grondIsFold && parentIsFold) {
+                    item._isHide = true
+                }
+                // 如果祖父级是非折叠的，父级是非折叠的，则显示
+                if (!grondIsFold && !parentIsFold) {
                     item._isHide = false
                 }
-                if (!parentIsFold) {
-                    item._isHide = false
-                }
-                if (item.categoryList && item.categoryList.length > 0) {
-                    this.resolveData(item.categoryList, item._isFold)
+
+                if (item.subCategoryList && item.subCategoryList.length > 0) {
+                    this.resolveData(item.subCategoryList, item._isFold, parentIsFold, item.name)
                 }
                 return item
             })
         },
         async refresh () {
-            const { data } = await findAllCategory()
-            this.data = this.resolveData(data)
+            await this.findAllCategory()
+            this.data = this.resolveData(this.categoriesTree, false, false)
         }
     },
     mounted () {
@@ -419,6 +431,10 @@ export default {
     }
     span.action{
         cursor: pointer;
+    }
+    .img-table {
+        max-width: 80px;
+        max-height: 80px;
     }
 </style>
 <style>
