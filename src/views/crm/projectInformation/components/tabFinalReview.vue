@@ -1,10 +1,10 @@
 <template>
     <div class="page-body-cont" v-if="informationDetail">
-        <div v-if="!informationDetail.approveResult||$route.query.status==11">
+        <div v-if="$route.query.status==11">
             待终审
         </div>
         <div v-else>
-            <div class="firstclass">终审结果：通过</div>
+            <div class="firstclass">终审结果：{{informationDetail.approveResult?'通过':'不通过'}}</div>
             <div class="firstclass">说明：{{!informationDetail.remark?'-':''}}</div>
             <div class="explanation" v-if="informationDetail.remark">
                 {{informationDetail.remark}}

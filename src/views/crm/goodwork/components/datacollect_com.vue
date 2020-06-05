@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="collect-boxtxt">
                                     <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call" v-if="obj.refuse">已打回，待分部补充</span></h3>
-                                    <p>备注：{{obj.remark}}</p>
+                                    <p>备注：{{obj.remark?obj.remark:'-'}}</p>
                                     <p>规定格式：{{obj.formatName}}</p>
                                 </div>
                             </div>

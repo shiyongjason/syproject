@@ -17,7 +17,7 @@
                         <div class="collect-box">
                             <div class="collect-boxtxt">
                                 <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}</h3>
-                                <p>备注：{{obj.remark}}</p>
+                                <p>备注：{{obj.remark?obj.remark:'-'}}</p>
                                 <p>规定格式：{{obj.formatName}}</p>
                             </div>
                         </div>
