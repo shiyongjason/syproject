@@ -20,9 +20,9 @@
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageNumber: 1, pageSize: 10})">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="btnQuery">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
@@ -46,8 +46,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/target-profit/value/import\n'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/target-profit/value/import\n'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData' :disabled='disabled'>
+                    <el-button type="primary" class='m0' :loading='loading' :disabled='disabled'>
                         导入表格
                     </el-button>
                 </el-upload>
@@ -69,6 +69,7 @@ import {
     getSprintIndexTotal,
     exportSprintIndex
 } from './api/index'
+import { SPRINT_INDEX_IMPORT } from '../../utils/auth_const'
 export default {
     name: 'sprintIndex',
     mixins: [departmentAuth],
@@ -129,16 +130,24 @@ export default {
         }),
         ...mapGetters({
             targetTime: 'fundsPlan/targetTime'
-        })
+        }),
+        showImport () {
+            return this.hosAuthCheck(SPRINT_INDEX_IMPORT)
+        },
+        disabled () {
+            return !this.uploadData.valueYear
+        }
     },
     methods: {
         cancel () {
             this.uploadData.valueYear = ''
             this.dialogFormVisible = false
         },
-        btnQuery (params) {
-            this.queryParamsTemp = { ...params }
-            this.onQuery(params)
+        btnQuery () {
+            this.$set(this.queryParams, 'pageNumber', 1)
+            this.$set(this.queryParams, 'pageSize', 10)
+            this.queryParamsTemp = { ...this.queryParams }
+            this.onQuery(this.queryParams)
         },
         async onQuery (params) {
             const promiseArr = [getSprintIndexList(params), getSprintIndexTotal(params)]
@@ -200,6 +209,8 @@ export default {
             this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
+            this.dynamicNameRegion = '大区'
+            this.dynamicNameBranch = '分部'
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.newBossAuth(['D', 'F'])
@@ -259,7 +270,7 @@ export default {
         await this.findTargetTime()
         this.queryParams.valueYear = this.targetTime.slice(0, 4)
         this.column = sprintTableLabel(this.queryParams.valueYear)
-        this.btnQuery(this.queryParams)
+        this.btnQuery()
         this.newBossAuth(['D', 'F'])
     }
 }
