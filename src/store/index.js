@@ -12,7 +12,6 @@ import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
 import userRealreport from './modules/userRealreport'
-import supplier from './modules/supplier'
 // import cloudmanage from './modules/cloudManage'
 import developmodule from '@/views/wisdom/store/developmodule'
 import jinyunplatform from '@/views/jinyunplatform/store/index.js'
@@ -56,7 +55,6 @@ const store = new Vuex.Store({
         membership,
         serviceManagement,
         payment,
-        supplier,
         userRealreport,
         cloudmanage,
         crmmanage,

@@ -188,7 +188,6 @@ export default {
                 this.$set(item, index, this.listTrack)
             })
             this.tableData = spikelist
-            console.log(this.tableData)
             this.paginationInfo = {
                 total: this.spikeData.total,
                 pageNumber: this.spikeData.current,

@@ -7,7 +7,7 @@ import { interfaceUrl, B2bUrl } from './config'
 
 const configUrl = [{ method: 'get', url: 'api/login/bossLogin' }]
 const responseErrorUrl = [{ method: 'get', url: 'rms/report/overall/sales-rate' }]
-const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }]
+const specialReqUrl = [{ method: 'get', url: '/develop/developbasicinfo/queryCompany' }, { method: 'post', url: '/ets/api/event-tracks' }]
 /* const http = axios.create({
     baseURL: `${interfaceUrl}`,
     timeout: TIME_OUT
@@ -77,7 +77,7 @@ axios.interceptors.response.use(
             store.commit('LOAD_STATE', false)
             return response
         }
-        if (response.data && response.data.code && response.data.code != 200) {
+        if (response.data && response.data.code && response.data.code != 200 && !config.url.includes(B2bUrl)) {
             Message({
                 message: response.data.msg || response.data.message,
                 type: 'error'
@@ -91,7 +91,6 @@ axios.interceptors.response.use(
     (error) => {
         requestLoading--
         if (axios.isCancel(error)) {
-            console.log('Rquest canceled：', error.response.data.message)
             return Promise.reject(error)
         }
         // TODO: 后面还是按照后台返回401解决 error.response.status === 401
