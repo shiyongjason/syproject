@@ -67,7 +67,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -88,7 +88,6 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
-
                 <template slot="predictLoanAmount" slot-scope="scope">
                     {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
                 </template>
@@ -100,13 +99,13 @@
                     <!-- {{scope.data.row.status&&statusList[scope.data.row.status-2]['value']}} -->
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
                     <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
             </basicTable>
         </div>
-        <projectDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></projectDrawer>
+        <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer>
         <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
             <div class="project-record" v-if="title=='项目审批记录'">
                 <el-timeline>
@@ -122,7 +121,6 @@
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
                     <img :src="item.punchImageUrl" alt="">
                 </div>
-
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -130,9 +128,8 @@
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
             <div class="previewimg">
-    <img :src="dialogImageUrl" alt="" >
+                <img :src="dialogImageUrl" alt="">
             </div>
-
         </el-dialog>
     </div>
 </template>
@@ -149,6 +146,7 @@ export default {
     data () {
         return {
             crm_goodwork_detail: Auths.CRM_GOODWORK_DETAIL,
+            projectstatus: 0, // 项目状态字段
             categoryIdArr: [],
             branchArr: [],
             queryParams: {
@@ -176,7 +174,7 @@ export default {
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '' },
+                { label: '项目名称', prop: 'projectName', width: '150' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
                 { label: '赊销总额', prop: 'predictLoanAmount', width: '150' },
@@ -259,7 +257,7 @@ export default {
     },
     async mounted () {
         this.queryParams.jobNumber = this.userInfo.jobNumber
-        this.queryParams.authCode = JSON.parse(sessionStorage.getItem('authCode'))
+        this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
@@ -301,18 +299,6 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val
         },
-        onChooseDep () {
-            // this.queryParams.deptDocList = []
-            // const depList = []
-            // if (!this.queryParams.subsectionCode) {
-            //     this.branchArr.map(val => {
-            //         depList.push(val.pkDeptDoc)
-            //     })
-            //     this.queryParams.deptDocList = depList.join(',')
-            // } else {
-            //     this.queryParams.deptDocList = this.queryParams.subsectionCode
-            // }
-        },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
@@ -329,7 +315,8 @@ export default {
         },
         onLookproject (val) {
             this.drawer = true
-            this.$refs.drawercom.onFindProjectDetail(val)
+            this.projectstatus = val.status
+            this.$refs.drawercom.onFindProjectCom(val.id)
         },
         restDrawer () {
             this.drawer = false
@@ -389,7 +376,7 @@ export default {
     flex-wrap: wrap;
     .plantimg {
         margin: 5px;
-        width:95px;
+        width: 95px;
         height: 95px;
         overflow: hidden;
         img {
@@ -398,9 +385,9 @@ export default {
         }
     }
 }
-.previewimg{
+.previewimg {
     text-align: center;
-    img{
+    img {
         width: 500px;
         padding: 10px;
     }
