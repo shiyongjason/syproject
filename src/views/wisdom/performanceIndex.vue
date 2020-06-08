@@ -39,7 +39,7 @@
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
+        <el-dialog title="履约值利润指标导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
                     <a class="downloadExcel" href="/excelTemplate/履约值利润指标导入模板.xlsx" download="履约值利润指标导入模板.xlsx">
@@ -228,6 +228,7 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)

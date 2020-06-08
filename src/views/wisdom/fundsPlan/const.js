@@ -524,6 +524,17 @@ export const planApproval = function (targetYear) {
                     label: `-`
                 }
             ]
+        },
+        {
+            prop: 'cellType',
+            label: '合计',
+            width: '100',
+            children: [
+                {
+                    prop: 'cellType',
+                    label: `-`
+                }
+            ]
         }
     ]
 }
