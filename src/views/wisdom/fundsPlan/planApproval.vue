@@ -28,7 +28,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="btnQuery({...params, pageSize:10, pageNumber: 1})">
+                    <el-button type="primary" class="ml20" @click="btnQuery">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -146,19 +146,22 @@ export default {
             },
             loading: false,
             accept: '.xlsx,.xls',
-            columnData: []
+            columnData: [],
+            queryParamsTemp: {}
         }
     },
     async mounted () {
         await this.findTargetTime()
         this.params.valueYear = this.targetTime.slice(0, 4)
-        await this.btnQuery(this.params)
+        await this.btnQuery()
         this.newBossAuth(['D', 'F', 'P'])
     },
     methods: {
-        btnQuery (params) {
-            this.queryParamsTemp = { ...params }
-            this.onQuery(params)
+        btnQuery () {
+            this.$set(this.params, 'pageNumber', 1)
+            this.$set(this.params, 'pageSize', 10)
+            this.queryParamsTemp = { ...this.params }
+            this.onQuery(this.params)
         },
         getList (val) {
             this.onQuery({ ...this.queryParamsTemp, ...val })
@@ -245,7 +248,7 @@ export default {
                 }
             }
             this.params.valueYear = this.targetTime.slice(0, 4)
-            this.onQuery({ ...this.params, pageSize: 10, pageNumber: 1 })
+            this.btnQuery()
         },
         cancel () {
             this.uploadData.valueYear = ''
