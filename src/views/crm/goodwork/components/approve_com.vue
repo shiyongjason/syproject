@@ -129,7 +129,7 @@ export default {
             const respTemp = this.approveForm.projectDocList[0].respRiskCheckDocTemplateList
             let res = ''
             for (let i = 0; i < respTemp.length; i++) {
-                const arr = list.filter(jtem => {
+                const arr = list.length > 0 && list.filter(jtem => {
                     return jtem.templateId == respTemp[i].templateId
                 })
                 if (arr.length == 0) {

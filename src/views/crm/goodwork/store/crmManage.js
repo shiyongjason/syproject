@@ -72,6 +72,7 @@ const actions = {
         commit(types.PROJECT_RECORD, data)
     },
     async findPunchlist ({ commit }, params) {
+        console.log(params)
         const { data } = await Api.getPunchlist(params)
         commit(types.PROJECT_PUNCH, data)
     },

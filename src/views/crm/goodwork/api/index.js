@@ -17,7 +17,6 @@ export const updateAudit = (params) => axios.post(`/memeber/openapi/project/audi
 export const getProjectloan = (params) => axios.get(`/memeber/openapi/project/loan`, { params })
 
 export const getProjectrecord = (params) => axios.get(`/memeber/openapi/project/audit/${params}`)
-
 export const getPunchlist = (params) => axios.get(`/memeber/api/punch/list`, { params })
 // 资料详情
 export const getRiskprojecData = (params) => axios.get(`/memeber/openapi/project/approve-docs/${params.projectId}/${params.status}/${params.bizType}?authFlag=1`)

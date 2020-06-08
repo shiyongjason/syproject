@@ -88,6 +88,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
+
                 <template slot="predictLoanAmount" slot-scope="scope">
                     {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
                 </template>
@@ -121,6 +122,7 @@
                 <div class="plantimg" @click="onHandlePictureCardPreview(item)" v-for="(item,index) in plantList" :key="index">
                     <img :src="item.punchImageUrl" alt="">
                 </div>
+
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
@@ -130,6 +132,7 @@
             <div class="previewimg">
                 <img :src="dialogImageUrl" alt="">
             </div>
+
         </el-dialog>
     </div>
 </template>
@@ -298,6 +301,18 @@ export default {
         },
         productCategoryChange (val) {
             this.queryParams.categoryId = val
+        },
+        onChooseDep () {
+            // this.queryParams.deptDocList = []
+            // const depList = []
+            // if (!this.queryParams.subsectionCode) {
+            //     this.branchArr.map(val => {
+            //         depList.push(val.pkDeptDoc)
+            //     })
+            //     this.queryParams.deptDocList = depList.join(',')
+            // } else {
+            //     this.queryParams.deptDocList = this.queryParams.subsectionCode
+            // }
         },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()

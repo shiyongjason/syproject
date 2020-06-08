@@ -330,8 +330,8 @@ ul,li{
 }
 
 .el-step.is-center .el-step__line {
-    // left: calc(50% + 16px);
-    // right: calc(-50% + 32px);
+    left: calc(50% + 16px);
+    right: calc(-50% + 32px);
 }
 
 .el-step__line-inner {
