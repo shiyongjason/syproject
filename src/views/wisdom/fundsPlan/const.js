@@ -533,12 +533,12 @@ export const planApproval = function (targetYear) {
             ]
         },
         {
-            prop: 'cellType',
+            prop: 'totalAnnual',
             label: '合计',
             width: '100',
             children: [
                 {
-                    prop: 'cellType',
+                    prop: 'totalAnnual',
                     label: `-`
                 }
             ]
