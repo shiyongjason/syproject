@@ -72,7 +72,6 @@ const mutations = {
         state.tableData = payload.records || []
     },
     [types.GET_BRANCH] (state, payload) {
-        // payload.unshift({ crmDeptCode: '', deptName: '请选择分部' })
         state.branchList = payload
     },
     [types.GET_SUMMARY] (state, payload) {

@@ -1,6 +1,7 @@
 <template>
-    <div class="hosjoy-table">
-        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
+    <div class="hosjoy-table" ref="hosTable">
+        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height="`calc(100vh - ${height}px)`"
+                  class="hosjoy-in-table"
                   :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
@@ -13,14 +14,14 @@
                              align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
-                                 :key='index' v-if="item.slot" :width="item.width" :min-width="item.minWidth"
-                                 :class-name="item.className">
+                                 :key='index' :width="item.width" :min-width="item.minWidth"
+                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot">
                     <template slot-scope="scope">
-                        <slot :name="item.prop" :data="scope"></slot>
+                        <slot :name="item.prop" :data="scope" ></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-if="!item.slot" v-bind="$attrs" :column="item"
-                               :key='index'></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item"
+                               :key='index' v-if="!item.slot"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
@@ -73,7 +74,8 @@ export default {
     data () {
         return {
             mergeLine: {},
-            mergeIndex: {}
+            mergeIndex: {},
+            height: 0
         }
     },
     created () {
@@ -196,11 +198,19 @@ export default {
         dataLength () {
             this.getMergeArr(this.data, this.merge)
         }
+    },
+    mounted () {
+        this.$nextTick(() => {
+            this.height = this.$refs.hosTable.getBoundingClientRect().top + 80
+        })
     }
 }
 
 </script>
 <style scoped>
+    .hosjoy-in-table {
+        min-height: 300px;
+    }
     .hosjoy-table >>> .el-table .cell {
         font-size: 12px;
     }

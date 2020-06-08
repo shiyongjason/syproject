@@ -45,6 +45,12 @@ export const editAuth = (params) => axios.put(`/uaa/api/auth`, params)
 // 清空缓存
 export const clearCache = (params) => axios.get(`/api/auth/refresh`)
 // 同步机构
-export const syncOrg = (params) => axios.post(`/backend/organizations/sync-jinyun`, params)
+export const syncOrg = (params) => axios.post(`/backend/api/organizations/sync-jinyun`, params)
 // 删除权限
 export const deleteAuth = (authCode) => axios.delete(`/uaa/api/auth/${authCode}`)
+// 查询大区分部
+export const getOrganizationTree = () => axios.get(`/uaa/department/region-subsections`)
+
+// 大区和分部
+export const getRegionsubs = (params) => axios.get(`/uaa/department/region-subsections`, { params })
+export const getJobSubs = (params) => axios.get(`/uaa/employee/subsection/${params.jobNumber}/${params.authCode}`)

@@ -213,9 +213,9 @@ const routerMapping = [
         ]
     },
     ...Wisdomrouter,
-    Bestrouter,
+    ...Bestrouter,
     ...B2brouter,
-    Jyrouter,
+    ...Jyrouter,
     Cloudrouter,
     Crmrouter
 ]
@@ -237,6 +237,7 @@ const router = new Router({
         }
     ]
 })
+let resourceList = []
 function makeIndex (data, next, query) {
     let index = []
     if (data.length > 0) {
@@ -264,15 +265,17 @@ function makeIndex (data, next, query) {
 async function getMenu (to, next, isMakeIndex, query) {
     const { data } = await findMenuList()
     sessionStorage.setItem('authResourceKeys', data.resourceKeys)
-    let resourceList = []
+    resourceList = []
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
         menu = routerMapping
+        // menu = makeMenus(routerMapping, resourceList)
     } else {
         menu = makeMenus(routerMapping, resourceList)
     }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
+
     router.addRoutes(menu)
     if (isMakeIndex) {
         makeIndex(menu, next, query)
@@ -307,6 +310,7 @@ router.beforeEach(async (to, from, next) => {
             }
         }
     }
+
     if (userInfo && !isFirst) {
         tracking({
             type: 2,
@@ -322,7 +326,7 @@ router.beforeEach(async (to, from, next) => {
         })
     }
     // TODO 获取B2b token 项目路径 hmall（重新获取token）
-    if (to.path.indexOf('hmall') > 0 || to.path.indexOf('paymentCentral') > 0) {
+    if (to.path.indexOf('hmall') > 0 || to.path.indexOf('paymentCentral') > 0|| to.path.indexOf('goodwork') > 0){
         // 登录token带到请求的头部中，用于校验登录状态
         const token = sessionStorage.getItem('tokenB2b')
         if (token) {
@@ -343,6 +347,12 @@ router.beforeEach(async (to, from, next) => {
             axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
         }
     }
+    // 获取数据权限
+    const authPath = to && to.path.split('/')
+    const authhasCode = resourceList && resourceList.filter(val => val.url == authPath[authPath.length - 1])
+    // const { data } = authhasCode.length>0 && await getAuthInfo(authhasCode[0].authCode)
+    sessionStorage.setItem('authCode',authhasCode.length>0?JSON.stringify(authhasCode[0].authCode):'')
+    // sessionStorage.setItem('authCodeArr',JSON.stringify(data))
     next()
 })
 export default router

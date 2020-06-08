@@ -5,10 +5,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" clearable placeholder="全部">
-                            <el-option v-for="item in subsectionCodeList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -19,14 +16,16 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onQuery()">
+                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1})">
                         搜索
                     </el-button>
-                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
+                    <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="exportHref">
+                        导出
+                    </el-button>
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/subsectiontarget/import'" :data="{createUser: userInfo.employeeName ,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
                             <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
                                 批量导入
                             </el-button>
@@ -45,13 +44,16 @@
 </template>
 
 <script>
-import { findBrandTargetTable, findBranchListNew } from './api/index'
+import { findBrandTargetTable, exportBranchTarget } from './api/index'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
+import { departmentAuth } from '@/mixins/userAuth'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { AUTH_WIXDOM_BRANCH_TARGET_EXPORT, AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT, AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
     name: 'branchTarget',
+    mixins: [departmentAuth],
     data: function () {
         return {
             uploadLoading: false,
@@ -71,27 +73,27 @@ export default {
             file: [],
             paginationData: {},
             tableData: [],
-            baseUrl: interfaceUrl
+            baseUrl: interfaceUrl,
+            branchObj: {
+                selectCode: '',
+                selectName: ''
+            }
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
-        }),
-        exportHref () {
-            let url = interfaceUrl + 'rms/subsectiontarget/export?'
-            for (var key in this.queryParamsTemp) {
-                if (this.queryParamsTemp[key]) {
-                    url += (key + '=' + this.queryParamsTemp[key] + '&')
-                }
-            }
-            return url
-        }
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList
+        })
     },
     components: {
-        branchTable
+        branchTable,
+        HAutocomplete
     },
     methods: {
+        exportHref () {
+            exportBranchTarget(this.queryParamsTemp)
+        },
         uploadProcess (event, file, fileList) {
             this.uploadLoading = true
         },
@@ -106,7 +108,7 @@ export default {
                     message: '批量导入成功！',
                     type: 'success'
                 })
-                this.onQuery()
+                this.onQuery(this.queryParamsTemp)
             }
             this.uploadLoading = false
         },
@@ -120,18 +122,14 @@ export default {
         downloadXlsx () {
             location.href = '/excelTemplate/分部目标导入模板.xlsx'
         },
-        onQuery () {
-            this.queryParamsTemp = Object.assign({}, this.queryParams)
-            this.queryParamsTemp.date = this.$root.$options.filters.formatDate(this.queryParamsTemp.date, 'YYYY')
-            this.findBrandTargetTable()
+        onQuery (params) {
+            this.queryParamsTemp = Object.assign({}, params)
+            this.queryParamsTemp.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
+            this.findBrandTargetTable(params)
         },
-        async findBrandTargetTable () {
-            const params = Object.assign({}, this.queryParams)
+        async findBrandTargetTable (parentParams) {
+            const params = Object.assign({}, parentParams)
             params.date = this.$root.$options.filters.formatDate(params.date, 'YYYY')
-            if (!params.subsectionCode) {
-                params.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-                this.queryParamsTemp.subsectionCode = this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-            }
             const { data } = await findBrandTargetTable(params)
             this.tableData = data.data.list
             this.paginationData = {
@@ -140,28 +138,21 @@ export default {
                 pageNumber: data.data.pageNum
             }
         },
-        async findBranchListNew () {
-            const param = {
-                subsectionCode: this.userInfo.oldDeptCode ? this.userInfo.oldDeptCode : ''
-            }
-            const { data } = await findBranchListNew(param)
-            if (data.data) {
-                this.subsectionCodeList = data.data
-            }
-        },
         onSizeChange (val) {
-            console.log(val)
-            this.queryParams.pageSize = val
-            this.onQuery()
+            this.queryParamsTemp.pageSize = val
+            this.onQuery(this.queryParamsTemp)
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onQuery()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.onQuery(this.queryParamsTemp)
+        },
+        backPlat (val) {
+            this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
         }
     },
     mounted () {
-        this.findBranchListNew()
-        this.onQuery()
+        this.onQuery(this.queryParams)
+        this.newBossAuth(['F'])
     }
 }
 </script>

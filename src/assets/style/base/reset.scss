@@ -305,6 +305,15 @@ ul,li{
     height: 104px !important;
     line-height: 104px !important;
 }
+.brand-drawer {
+    .el-upload--picture-card {
+        float: left;
+        margin-right: 10px;
+        width:  80px !important;
+        height: 80px !important;
+        line-height: 80px !important;
+    }
+}
 
 .el-upload--picture-card:hover,
 .el-upload:focus,
@@ -330,8 +339,8 @@ ul,li{
 }
 
 .el-step.is-center .el-step__line {
-    left: calc(50% + 16px);
-    right: calc(-50% + 32px);
+    // left: calc(50% + 16px);
+    // right: calc(-50% + 32px);
 }
 
 .el-step__line-inner {

@@ -2,19 +2,16 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType==deptType[1]||userInfo.deptType==deptType[0]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="选择分部">
-                            <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptname" :value="item.crmDeptCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="platList" v-if="platList" @back-event="backPlatcode" :remove-value='removeValue' :placeholder="'选择平台公司'"></HAutocomplete>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="选择平台公司" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -25,10 +22,10 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.startTime" :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.startTime" :editable="false" :clearable='false' :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endTime" :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.endTime" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
             </div>
@@ -45,7 +42,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">品牌：</div>
                     <div class="query-col-input">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="brandList" v-if="brandList" @back-event="backPlat" :placeholder="'全部'"></HAutocomplete>
+                        <HAutocomplete :selectArr="brandList" v-if="brandList" @back-event="brandListBackPlat" :placeholder="'全部'"></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -66,7 +63,7 @@
                             <el-checkbox label=3>淘汰</el-checkbox>
                         </el-checkbox-group>
                     </div>
-                    <el-button type="primary" class="ml20" @click="getPlatCategory()">
+                    <el-button type="primary" class="ml20" @click="getPlatCategory({...queryParams, current: 1})">
                         查询
                     </el-button>
                 </div>
@@ -76,13 +73,13 @@
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot-scope="scope" slot="saleRatio">
-                        {{scope.data.row.saleRatio?scope.data.row.saleRatio+'%':''}}
+                        {{scope.data.row.saleRatio?scope.data.row.saleRatio+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="yearOnYearSale">
-                        {{scope.data.row.yearOnYearSale?scope.data.row.yearOnYearSale+'%':''}}
+                        {{scope.data.row.yearOnYearSale?scope.data.row.yearOnYearSale+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="grossProfitRate">
-                        {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':''}}
+                        {{scope.data.row.grossProfitRate?scope.data.row.grossProfitRate+'%':'-'}}
                     </template>
                     <template slot-scope="scope" slot="saleGross">
                         {{scope.data.row.saleGross|money}}
@@ -104,11 +101,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getPaltCategory, getPaltbarnd, getPaltSys, findPaltList, findPlatCategorySum, findBranchList } from './api/index.js'
+import { getPaltCategory, getPaltbarnd, getPaltSys, findPlatCategorySum } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { BUS_TYPE, DEPT_TYPE } from './store/const'
+import { departmentAuth } from '@/mixins/userAuth'
 export default {
     name: 'brandSale',
+    mixins: [departmentAuth],
+    components: { HAutocomplete },
     data: function () {
         return {
             deptType: DEPT_TYPE,
@@ -145,7 +145,16 @@ export default {
                     }
                 }
             },
-            branchLoading: true,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            },
             onLineStatus: ['1'],
             queryParams: {
                 onLineStatus: '',
@@ -160,84 +169,75 @@ export default {
                 current: 1,
                 size: 10
             },
-            queryParamsTemp: {
-            },
-            activityName: {},
-            file: [],
             paginationInfo: {
                 total: 0,
                 size: 10,
                 current: 1
             },
             tableData: [],
-            branchList: [],
-            brandList: [],
-            sysList: [],
-            platList: [],
-            bustype: BUS_TYPE,
-            removeValue: false
+            brandList: [], // 品牌
+            sysList: [], // 品类
+            bustype: BUS_TYPE // 业务类型
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         })
     },
-    components: {
-        HAutocomplete
-    },
-    watch: {
-        async 'queryParams.subsectionCode' (newV, oldV) {
-            const code = newV
-            this.platList = await this.findPaltList(code)
-            this.queryParams.companyCode = ''
-            this.removeValue = !this.removeValue
-        }
-    },
     methods: {
-        async getPlatCategory () {
-            if (!this.queryParams.startTime || !this.queryParams.endTime) {
-                this.$message.warning(`时间不能为空哦`)
-                return
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
             }
-            this.queryParams.onLineStatus = this.onLineStatus.join(',')
-            const { data } = await getPaltCategory(this.queryParams)
-            const { data: sumData } = await findPlatCategorySum(this.queryParams)
-            this.tableData = data.data.records
-            this.tableData.splice(0, 0, sumData.data)
-            this.paginationInfo = {
-                total: data.data.total,
-                pageSize: data.data.size,
-                pageNumber: data.data.current
+            if (dis === 'F') {
+                this.queryParams.companyCode = ''
+                this.queryParams.misCode = ''
+                this.selectAuth.platformObj = { ...obj }
             }
-            // this.regionList.pop()
         },
-        async findBranchList (value) {
-            // const { data } = await findDepList({ organizationType: 1 })
-            const { data } = await findBranchList({ crmDeptCode: value })
-            if (data.data) {
-                this.branchList = data.data
-            }
-            if (this.branchList.length > 0) {
-                if (this.userInfo.deptType == 0) {
-                    this.branchList.splice(0, 0, {
-                        crmDeptCode: '',
-                        deptname: '全部'
-                    })
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (this.queryParams.subsectionCode) {
+                    this.findPlatformslist({ subsectionCode: this.queryParams.subsectionCode })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
-                this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.companyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+            }
+        },
+        async getPlatCategory (params) {
+            this.queryParamsTemp = { ...params }
+            const temp = { ...params }
+            temp.onLineStatus = this.onLineStatus.join(',')
+            const res = await Promise.all([getPaltCategory(temp), findPlatCategorySum(temp)])
+            this.tableData = res[0].data.data.records
+            let obj = Object.assign({}, res[1].data.data, { subsectionName: '合计' })
+            this.tableData.unshift(obj)
+            this.paginationInfo = {
+                total: res[0].data.data.total,
+                pageSize: res[0].data.data.size,
+                pageNumber: res[0].data.data.current
             }
         },
         onCurrentChange (val) {
-            this.queryParams.current = val.pageNumber
-            this.getPlatCategory()
+            this.queryParamsTemp.current = val.pageNumber
+            this.getPlatCategory(this.queryParamsTemp)
         },
         onSizeChange (val) {
-            this.queryParams.size = val
-            this.getPlatCategory()
+            this.queryParamsTemp.size = val
+            this.getPlatCategory(this.queryParamsTemp)
         },
         async getPaltbarnd () {
             const { data } = await getPaltbarnd()
+            console.log(data)
             this.brandList = data.data
             this.brandList && this.brandList.map(item => {
                 item.value = item.brandName
@@ -248,62 +248,14 @@ export default {
             const { data } = await getPaltSys()
             this.sysList = data.data
         },
-        backPlat (value) {
+        brandListBackPlat (value) {
             this.queryParams.brandId = value.value.selectCode ? value.value.selectCode : ''
-        },
-        async findPaltList (subsectionCode) {
-            const params = {
-                subsectionCode: subsectionCode
-            }
-            const { data } = await findPaltList(params)
-            for (let i of data.data.pageContent) {
-                i.value = i.companyName
-                i.selectCode = i.companyCode
-            }
-            this.platList = data.data.pageContent
-            return this.platList
         },
         backPlatcode (value) {
             this.queryParams.companyCode = value.value.selectCode ? value.value.selectCode : ''
         },
         onFieldChange (selectedTh) {
-            // console.log(selectedTh)
-
-            // this.tableLabel.map(val => {
-            //     console.log(selectedTh.indexOf(val.label))
-            //     let isFlag = selectedTh.some(item => {
-            //         return val.label == item
-            //     })
-            //     val.choosed = isFlag
-            //     // console.log(isFlag)
-            // })
-            // const newTalelabel = deepCopy(this.tableLabel)
-            // // if (selectedTh.indexOf('平台公司') < 0) {
-            // //     newTalelabel.map(item => {
-            // //         if (item.hasOwnProperty('linkAge')) {
-            // //             item.choosed = !item.linkAge
-            // //         }
-            // //     }
-            // //     )
-            // // } else {
-            // //     newTalelabel.map(item => {
-            // //         if (item.hasOwnProperty('linkAge')) {
-            // //             item.choosed = true
-            // //         }
-            // //     })
-            // // }
-            // newTalelabel.map(item => {
-            //     if (item.hasOwnProperty('linkAge')) {
-            //         if (selectedTh.indexOf('平台公司') < 0) {
-            //             item.choosed = !item.linkAge
-            //         } else if (selectedTh.indexOf('平台公司') > -1 && selectedTh.indexOf('城市') > -1 && selectedTh.indexOf('mis编码') > -1 && selectedTh.indexOf('上线状态') > -1) {
-            //             item.choosed = true
-            //         }
-            //     }
-            // })
-
-            // this.tableLabel = newTalelabel
-            this.getPlatCategory()
+            this.getPlatCategory(this.queryParams)
             const queryFields = this.tableLabel.filter(item => item.queryParams)
             let isFind = false
             queryFields.forEach(field => {
@@ -318,24 +270,14 @@ export default {
                     }
                 }
             })
-            isFind && this.getPlatCategory()
+            isFind && this.getPlatCategory(this.queryParams)
         }
     },
     async mounted () {
-        // 如果 当前人大区 -1  总部 0  分部 1 organizationType
-        // console.log(this.userInfo.organizationType)
-        let oldDeptCode = ''
-        if (this.userInfo.deptType == 1) {
-            oldDeptCode = this.userInfo.oldDeptCode
-        }
-        if (this.userInfo.deptType == 0 || this.userInfo.deptType == 1) await this.findBranchList(oldDeptCode)
         await this.getPaltbarnd()
         await this.getPaltSys()
-        if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.userInfo.oldDeptCode
-        }
-        await this.getPlatCategory()
-        // this.platList = await this.findPaltList(this.queryParams.subsectionCode)
+        await this.getPlatCategory(this.queryParams)
+        await this.newBossAuth(['F', 'P'])
     }
 }
 </script>

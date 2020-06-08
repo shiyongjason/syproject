@@ -78,7 +78,8 @@ export default {
             paramTargetDate: {
                 year: '',
                 mouth: ''
-            }
+            },
+            columnData: []
         }
     },
     computed: {
@@ -88,10 +89,7 @@ export default {
         ...mapGetters({
             planTotalList: 'fundsPlan/planTotalList',
             targetTime: 'fundsPlan/targetTime'
-        }),
-        columnData () {
-            return summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth)
-        }
+        })
     },
     methods: {
         goDetail (id, go) {
@@ -109,6 +107,12 @@ export default {
                 year: params.selectTime.slice(0, 4),
                 mouth: params.selectTime.slice(4)
             }
+            if (params.subsectionCode) {
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false)
+            } else {
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true)
+            }
+
             try {
                 await this.findPlanTotalList(params)
             } catch (e) {
@@ -144,9 +148,8 @@ export default {
     },
     async mounted () {
         await this.findTargetTime()
-        // console.log(this.targetTime)
         this.params.selectTime = this.targetTime
-        await this.oldBossAuth()
+        await this.newBossAuth(['F'])
         this.queryAndChangeTime(this.params)
     },
     beforeRouteEnter (to, from, next) {
