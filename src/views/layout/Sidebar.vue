@@ -73,18 +73,11 @@ export default {
                 }
             })
             return result
-        },
-        // 当菜单isMenu: false的时候,侧边菜单按父级高亮展示，by sunjun。example:search 'showMenuAs'。
-        getDefaultActive () {
-            if (this.$route.meta && this.$route.meta.showMenuAs) {
-                return this.$route.meta.showMenuAs
-            }
-            return this.$route.path
         }
     },
     render (h) {
         return (
-            <el-menu mode={this.mode} default-active={this.getDefaultActive()} collapse={this.collapse} active-text-color="#FF7A45" unique-opened router>
+            <el-menu mode={this.mode} default-active={this.$route.path} collapse={this.collapse} active-text-color="#FF7A45" unique-opened router>
                 {this.generateSidebar(this.menus, '')}
             </el-menu>
         )

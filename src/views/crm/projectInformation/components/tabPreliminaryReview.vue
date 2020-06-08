@@ -105,7 +105,7 @@
             <h2 class="preliminaryreview-title">附件</h2>
             <div class="preliminaryreview-annex-annexs" v-if="srcList&&srcList.length>0">
                 <template v-for="(item,index) in srcList">
-                    <el-image :key="index" style="width: 80px; height: 80px;margin-right:8px" src="https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg" :preview-src-list="srcList" />
+                    <el-image :key="index" style="width: 80px; height: 80px;margin-right:8px" :src="item.fileUrl" :preview-src-list="srcList" />
                 </template>
             </div>
             <div v-else>-</div>
