@@ -198,7 +198,7 @@ export default {
             const promiseArr = [getPerformanceIndexList(params), getPerformanceIndexTotal(params)]
             const data = await Promise.all(promiseArr).then((res) => {
                 const columnData = preformTableLabel(this.queryParams.valueYear)
-                columnData[1].label = this.dynamicName
+                columnData[1].children[0].label = this.dynamicName
                 columnData.forEach((value, index) => {
                     if (index > 1) {
                         value.children.forEach((val) => {
