@@ -120,6 +120,9 @@ export default {
                     { required: true, message: '请选择审核状态', trigger: 'change' }],
                 remark: [
                     { required: true, message: '请输入说明', trigger: 'blur' }
+                ],
+                afterStatus: [
+                    { required: true, message: '请选择重置状态', trigger: 'blur' }
                 ]
             },
             copyStatusForm: {},
