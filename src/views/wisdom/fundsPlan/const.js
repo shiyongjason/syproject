@@ -165,9 +165,11 @@ export const platformPlan = function (targetYear, targetMonth) {
                 {
                     prop: 'regionName',
                     label: `-`,
+                    width: '100',
                     children: [
                         {
                             prop: 'regionName',
+                            width: '100',
                             label: `合计`
                         }
                     ]
