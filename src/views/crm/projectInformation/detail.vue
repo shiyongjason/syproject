@@ -67,12 +67,12 @@
         </div>
         <!--  -->
         <el-dialog title="补充原因" :visible.sync="dialogVisible" width="35%" center>
-            <div class="dialog-box" v-if="refuseInfos.length>0">
-                <p>{{moment(refuseInfos[0].createTime).format('YYYY-MM-DD')}} 打回操作人：{{refuseInfos&&refuseInfos[0].createBy}}</p>
-                <p>待补充类目：{{refuseInfos&&refuseInfos[0].secondCategoryNames}}</p>
+            <div class="dialog-box" v-for="item in refuseInfos" :key="item.id">
+                <p>{{moment(item.createTime).format('YYYY-MM-DD')}} 打回操作人：{{item.createBy}}</p>
+                <p>待补充类目：{{item.secondCategoryNames}}</p>
                 <p>待补充原因：</p>
                 <p>
-                  {{refuseInfos&&refuseInfos[0].remark}}
+                  {{item.remark}}
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
