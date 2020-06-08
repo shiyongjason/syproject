@@ -242,7 +242,7 @@ export default {
         },
 
         onCancel () {
-            this.$router.push('/hmall/finance/charge')
+            this.$router.push('/b2b/finance/charge')
         },
 
         searchList () {

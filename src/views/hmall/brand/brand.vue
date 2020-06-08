@@ -7,7 +7,7 @@
                     <div class="flex-wrap-cont">
                         <el-input
                             type="text"
-                            v-model="queryParams.brandCode"
+                            v-model="queryParams.code"
                             maxlength="50"
                             placeholder="请输入品牌编码"></el-input>
                     </div>
@@ -17,7 +17,7 @@
                     <div class="flex-wrap-cont">
                         <el-input
                             type="text"
-                            v-model="queryParams.brandName"
+                            v-model="queryParams.name"
                             maxlength="50"
                             placeholder="请输入品牌名称"></el-input>
                     </div>
@@ -40,7 +40,7 @@
                     <div class="flex-wrap-cont">
                         <el-input
                             type="text"
-                            v-model="queryParams.updateBy"
+                            v-model="queryParams.operator"
                             maxlength="50"
                             placeholder="请输入维护人姓名"></el-input>
                     </div>
@@ -50,6 +50,7 @@
                         <el-button type="primary" class="ml20" @click="onQuery()">
                             搜索
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                     </div>
                 </div>
             </div>
@@ -65,23 +66,24 @@
             @openMark="openMark">
         </brandTable>
         <el-dialog
+            width="700px"
             title="品牌编辑"
             :visible.sync="dialogBrandEdit"
             :close-on-click-modal="false">
             <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
                 <el-form-item label="品牌编号" v-if="this.status === 'modify'">
-                    {{form.brandCode}}
+                    {{form.code}}
                 </el-form-item>
-                <el-form-item prop="brandName" label="品牌名称">
+                <el-form-item prop="name" label="品牌名称">
                     <el-input
-                        v-model="form.brandName"
+                        v-model="form.name"
                         maxlength="10"
                         style="width: 300px"
                         placeholder="请输入品牌中文名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="brandNameEn" label="英文名称">
+                <el-form-item prop="englishName" label="英文名称">
                     <el-input
-                        v-model="form.brandNameEn"
+                        v-model="form.englishName"
                         placeholder="请输入英文名称"
                         maxlength="25"
                         style="width: 300px"></el-input>
@@ -94,15 +96,15 @@
                         ref="uploadImg"
                         @back-event="readUrl"/>
                     <div class="upload-tips">
-                        尺寸300x300,2m以内，支持jpg、jpeg、png`
+                        尺寸300x300,2m以内，支持jpg、jpeg、png
                     </div>
                 </el-form-item>
-                <el-form-item prop="describes" label="品牌描述">
+                <el-form-item prop="description" label="品牌描述">
                     <el-input
                         type="textarea"
                         maxlength="100"
                         placeholder="100字以内"
-                        v-model="form.describes"
+                        v-model="form.description"
                         style="width: 300px;"
                         :rows="5"></el-input>
                 </el-form-item>
@@ -117,9 +119,9 @@
 
 <script>
 import brandTable from './components/brandTable'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
-import { findBrandList, createBrand, updateBrand, findBrandDetails } from './api/index'
+import { createBrand, updateBrand } from './api/index'
 import { BRAND_STATUS } from './const'
 import { IsChinese } from '@/rules'
 export default {
@@ -129,12 +131,13 @@ export default {
     },
     data () {
         return {
+            initParams: {},
             queryParams: {
-                brandName: '',
-                brandCode: '',
+                name: '',
+                code: '',
                 pageNumber: 1,
                 pageSize: 10,
-                updateBy: '',
+                operator: '',
                 status: ''
             },
             subsectionCodeList: [],
@@ -142,20 +145,21 @@ export default {
             paginationData: {},
             dialogBrandEdit: false,
             form: {
-                brandName: '',
-                brandNameEn: '',
+                name: '',
+                englishName: '',
+                id: '',
                 logoUrl: '',
-                describes: ''
+                description: ''
             },
             tempForm: {},
             formLabelWidth: '150px',
             modifyId: 0,
             status: 'add',
             rules: {
-                brandName: [
+                name: [
                     { required: true, whitespace: true, message: '请输入品牌中文名称', trigger: 'blur' }
                 ],
-                brandNameEn: [
+                englishName: [
                     { required: false, whitespace: true },
                     { validator: IsChinese, trigger: 'blur', whitespace: true }
                 ],
@@ -168,6 +172,10 @@ export default {
         }
     },
     computed: {
+        ...mapState('brand', {
+            brandListInfo: 'brandListInfo',
+            brandDetail: 'brandDetail'
+        }),
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -185,9 +193,22 @@ export default {
         })
     },
     methods: {
+        ...mapActions('brand', [
+            'findBrandList',
+            'findBrandArea',
+            'findBrandDetail'
+        ]),
+        onReset () {
+            this.queryParams = { ...this.initParams }
+            this.paginationData = {
+                pageNumber: 1,
+                pageSize: 10
+            }
+            this.onQuery()
+        },
         updateBrandChange (col) {
             this.modifyId = col.id
-            this.findBrandDetails()
+            this.findBrandDetailAsync()
             this.isSaving = false
         },
         submitForm (formName) {
@@ -210,11 +231,12 @@ export default {
         },
         async saveBrand () {
             let { ...params } = this.form
-            params.createBy = this.userInfo.employeeName
+            params.operator = this.userInfo.employeeName
             if (this.status === 'add') {
                 await createBrand(params)
             } else if (this.status === 'modify') {
-                await updateBrand(this.modifyId, params)
+                params.id = this.modifyId
+                await updateBrand(params)
             }
             this.dialogBrandEdit = false
             this.$message({
@@ -223,17 +245,18 @@ export default {
             })
             this.onQuery()
         },
+        // 图片上传成功回调
         readUrl (val) {
             this.form.logoUrl = val.imageUrl
         },
-        async findBrandDetails () {
-            const { data } = await findBrandDetails(this.modifyId)
+        async findBrandDetailAsync () {
+            await this.findBrandDetail(this.modifyId)
             this.form = {
-                brandCode: data.brandCode,
-                brandName: data.brandName,
-                brandNameEn: data.brandNameEn,
-                logoUrl: data.logoUrl,
-                describes: data.describes
+                code: this.brandDetail.code,
+                name: this.brandDetail.name,
+                englishName: this.brandDetail.englishName,
+                logoUrl: this.brandDetail.logoUrl,
+                description: this.brandDetail.description
             }
             this.status = 'modify'
             this.dialogBrandEdit = true
@@ -243,12 +266,12 @@ export default {
         },
         async onQuery () {
             const { ...params } = this.queryParams
-            const { data } = await findBrandList(params)
-            this.tableData = data.records
+            await this.findBrandList(params)
+            this.tableData = this.brandListInfo.records
             this.paginationData = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                totalElements: data.total
+                pageNumber: this.brandListInfo.current,
+                pageSize: this.brandListInfo.size,
+                totalElements: this.brandListInfo.total
             }
         },
         openMark (status) {
@@ -271,6 +294,7 @@ export default {
         }
     },
     mounted () {
+        this.initParams = { ...this.queryParams }
         this.onQuery()
         let { ...form } = this.form
         // 用于清空弹出层的form数据

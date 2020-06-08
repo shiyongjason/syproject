@@ -1,6 +1,7 @@
 <template>
-    <div class="hosjoy-table">
-        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
+    <div class="hosjoy-table" ref="hosTable">
+        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height="`calc(100vh - ${height}px)`"
+                  class="hosjoy-in-table"
                   :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
@@ -73,7 +74,8 @@ export default {
     data () {
         return {
             mergeLine: {},
-            mergeIndex: {}
+            mergeIndex: {},
+            height: 0
         }
     },
     created () {
@@ -196,11 +198,19 @@ export default {
         dataLength () {
             this.getMergeArr(this.data, this.merge)
         }
+    },
+    mounted () {
+        this.$nextTick(() => {
+            this.height = this.$refs.hosTable.getBoundingClientRect().top + 80
+        })
     }
 }
 
 </script>
 <style scoped>
+    .hosjoy-in-table {
+        min-height: 300px;
+    }
     .hosjoy-table >>> .el-table .cell {
         font-size: 12px;
     }
