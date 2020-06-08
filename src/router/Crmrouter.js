@@ -102,5 +102,6 @@ export default {
             },
             component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
         }
+
     ]
 }

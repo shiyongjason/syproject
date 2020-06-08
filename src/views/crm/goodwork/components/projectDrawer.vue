@@ -2,16 +2,16 @@
     <div class="project-wrap">
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-                <template v-for="item in tabs" >
+                <template v-for="item in tabs">
                     <template v-if='item.key<status'>
-                    <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
+                        <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
                     </template>
                 </template>
             </el-tabs>
-            <projectCom ref="projectCom" :projectForm=form  @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='1'"></projectCom>
-            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='2'"></datacolCom>
-            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='3'"></approveCom>
-            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status = status @onBackLoad=onBackLoad @onCompsback =onCompsback v-if="activeName==='4'"></approveCom>
+            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
+            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='2'"></datacolCom>
+            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='3'"></approveCom>
+            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <template v-if="activeName==='2'&&status==3">
@@ -26,7 +26,7 @@
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-                           <template v-if="status==11&&activeName==='4'">
+                    <template v-if="status==11&&activeName==='4'">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_QIANYUE)&&status==6">
@@ -117,11 +117,7 @@ export default {
             },
             statusRules: {
                 result: [
-                    { required: true, message: '请选择审核状态', trigger: 'change' }
-                ],
-                afterStatus: [
-                    { required: true, message: '请选择重置状态', trigger: 'change' }
-                ],
+                    { required: true, message: '请选择审核状态', trigger: 'change' }],
                 remark: [
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ]
