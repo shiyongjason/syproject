@@ -67,7 +67,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -130,9 +130,8 @@
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
             <div class="previewimg">
-    <img :src="dialogImageUrl" alt="" >
+                <img :src="dialogImageUrl" alt="">
             </div>
-
         </el-dialog>
     </div>
 </template>
@@ -389,7 +388,7 @@ export default {
     flex-wrap: wrap;
     .plantimg {
         margin: 5px;
-        width:95px;
+        width: 95px;
         height: 95px;
         overflow: hidden;
         img {
@@ -398,9 +397,9 @@ export default {
         }
     }
 }
-.previewimg{
+.previewimg {
     text-align: center;
-    img{
+    img {
         width: 500px;
         padding: 10px;
     }

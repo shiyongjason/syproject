@@ -8,12 +8,7 @@
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
-                    </div>
-                </div>
+
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
@@ -23,37 +18,25 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">联系人/手机号：</div>
+                    <div class="query-col-title">VIP等级：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">是否分配：</div>
+                    <div class="query-col-title">VIP折扣：</div>
                     <div class="query-col-input">
+                        <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
+                        ~
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否接收：</div>
+               <div class="query-cont-col">
+                    <div class="query-col-title">VIP目标：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">分配员工：</div>
-                    <div class="query-col-input">
+                        ~
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">申请时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
-                        </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -70,12 +53,14 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 3 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=300 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
+             @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=150 :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDistribution(scope.data.row.id)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row.id)">分配</el-button>
                 </template>
             </basicTable>
         </div>
+        <creditdrawer ref="creditdrawer"></creditdrawer>
         <el-dialog title="分配" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="分配给（员工）" prop="name">
@@ -97,22 +82,25 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import creditdrawer from './components/creditdrawer'
 export default {
     name: 'vipapplication',
     data () {
         return {
             queryParams: {},
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '' },
-                { label: '项目编号', prop: 'projectNo', width: '150' },
-                { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150' },
-                { label: '经销商', prop: 'companyName', width: '180' },
-                { label: '甲方名', prop: 'firstPartName' },
-                { label: '项目类别', prop: 'type', width: '120' },
-                { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '项目提交时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
+                { label: '企业名称', prop: 'projectName', width: '' },
+                { label: '所属分部', prop: 'projectNo', width: '150' },
+                { label: '信用评级', prop: 'deptName', width: '150' },
+                { label: '服务费', prop: 'predictLoanAmount', width: '150' },
+                { label: '可代采购额度（万元）', prop: 'companyName', width: '180' },
+                { label: '剩余代采购金额（万元）', prop: 'firstPartName' },
+                { label: '信用到期时间', prop: 'type', width: '120' },
+                { label: '状态', prop: 'progress', width: '120' },
+                { label: '资料状态', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
+                { label: '资料更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
+
             ],
             tableData: [{ projectName: '123123' }],
             branchArr: [],
@@ -130,6 +118,7 @@ export default {
         }
     },
     components: {
+        creditdrawer
     },
     computed: {
         ...mapState({
@@ -195,8 +184,8 @@ export default {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
             this.branchArr = this.crmdepList
         },
-        onDistribution (val) {
-            this.dialogVisible = true
+        onDrawerinfo (val) {
+            this.$refs.creditdrawer.onShowDrawerinfn()
         }
     }
 }
