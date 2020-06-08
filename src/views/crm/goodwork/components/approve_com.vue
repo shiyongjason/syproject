@@ -141,16 +141,19 @@ export default {
         },
         async  onSaveapproveOrfinal (val) {
             const projectDocList = this.approveForm.projectDocList
+            console.log(projectDocList)
             let riskCheckProjectDocPoList = []
+            let newriskCheckProjectDocPoList = []
             projectDocList && projectDocList.map(val => {
                 val.respRiskCheckDocTemplateList.map(obj => {
+                    newriskCheckProjectDocPoList = newriskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
                     if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
                 })
             })
             const params = {}
             params.bizType = this.status == 4 ? '2' : '3'
             params.projectId = this.approveForm.projectId
-            params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+            params.riskCheckProjectDocPoList = newriskCheckProjectDocPoList
             let res = this.validFormInfo(riskCheckProjectDocPoList)
             if (res) {
                 this.$message.error(`二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
