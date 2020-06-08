@@ -42,7 +42,7 @@
                 </tbody>
             </table>
         </div>
-        <el-dialog title="材料详情" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
+        <el-dialog title="编辑" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
             <div class="tem-wrap">
                 <el-form :model="formTemp" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                     <el-form-item label="一级类目：">
@@ -55,7 +55,10 @@
                         <el-input v-model="formTemp.functionName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="规定格式：">
-                        <el-input v-model="formTemp.formatName" disabled></el-input>
+                       <el-select v-model="formTemp.formatId"   placeholder="请选择">
+                            <el-option v-for="item in formatList" :key="item.formatId" :label="item.formatName" :value="item.formatId">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="必填：" prop="mondatoryFlag">
                         <el-radio-group v-model="formTemp.mondatoryFlag">
@@ -68,7 +71,7 @@
                         </el-input>
                     </el-form-item>
                     <el-form-item label="样例：">
-                        <hosjoyUpload v-model="formTemp.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='6' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                        <hosjoyUpload v-model="formTemp.projectUpload" accept='.jpeg,.jpg,.png' :fileSize='20' :fileNum='6' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                         </hosjoyUpload>
                     </el-form-item>
                 </el-form>
@@ -84,7 +87,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions } from 'vuex'
-import { saveDoctemp } from './api/index'
+import { saveDoctemp, docTempformat } from './api/index'
 export default {
     name: 'templatedetail',
     components: {
@@ -115,7 +118,8 @@ export default {
                 mondatoryFlag: [
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ]
-            }
+            },
+            formatList: []
         }
     },
     computed: {
@@ -127,6 +131,7 @@ export default {
     mounted () {
         this.tempName = this.$route.query.bizType == 1 ? '好橙工项目材料清单' : this.$route.query.bizType == 2 ? '好橙工立项材料清单' : '好橙工终审材料清单'
         this.onFindDoctemp()
+        this.findFormat()
     },
     methods: {
         ...mapActions({
@@ -167,6 +172,11 @@ export default {
         },
         computedRowspan (list) {
             return list.length
+        },
+        async findFormat () {
+            const { data } = await docTempformat()
+            console.log(data)
+            this.formatList = data
         }
     }
 }

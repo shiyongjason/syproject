@@ -52,14 +52,14 @@
         </el-form-item>
         <el-form-item label="分部：">
             <el-select v-if="isEdit&&branchList" v-model="platformBasicInfoPO.departmentId" clearable placeholder="请选择所属分部">
-                <el-option v-for="item in branchList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
+                <el-option v-for="item in branchList" :key="item.pkDeptDoc" :label="item.deptName" :value="item.pkDeptDoc">
                 </el-option>
             </el-select>
             <span v-else>
                 {{
-                    platformBasicInfoPO.departmentId
-                    ?getPlatform(platformBasicInfoPO.departmentId).length>0&&getPlatform(platformBasicInfoPO.departmentId)[0].subsectionName
-                    :'-'
+                    platformBasicInfoPO.departmentId ?
+                        getPlatform(platformBasicInfoPO.departmentId).length>0
+                            && getPlatform(platformBasicInfoPO.departmentId)[0].deptName :'-'
                 }}
             </span>
         </el-form-item>
@@ -77,7 +77,7 @@
 
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { findPaltList, findBranchListNew, getProvinces, getCities, getAreas } from '../api/index.js'
+import { findPaltList, findAllBranchList, getProvinces, getCities, getAreas } from '../api/index.js'
 export default {
     name: 'platformBasicInfoPO',
     props: ['value', 'isEdit'],
@@ -104,14 +104,13 @@ export default {
     },
     methods: {
         getPlatform (code) {
-            const arr = this.branchList.filter(item => {
-                return item.subsectionCode === code
+            return this.branchList.filter(item => {
+                return item.pkDeptDoc === code
             })
-            return arr
         },
         getCodeByName (name, code = this.branchList) {
             return code.filter(item => {
-                return item.subsectionName === name
+                return item.deptName === name
             })
         },
         async backPlat (val) {
@@ -124,7 +123,9 @@ export default {
                 this.platformBasicInfoPO.companyName = val.value.value
             }
             if (val && val.value && val.value.companyShortName) {
+                console.log(val)
                 this.platformBasicInfoPO.companyName = val.value.companyShortName
+                this.platformBasicInfoPO.companyId = val.value.companyCode
                 this.platformBasicInfoPO.oldCompanyName = val.value.originaCompanyName
                 this.platformBasicInfoPO.addressOther = val.value.address
                 this.platformBasicInfoPO.addressPrivince = val.value.provinceCode
@@ -137,7 +138,7 @@ export default {
                     this.platformBasicInfoPO.addressDistrict = val.value.areaCode || ''
                 })
                 let temp = val.value.subsectionName && this.getCodeByName(val.value.subsectionName)
-                this.platformBasicInfoPO.departmentId = temp && temp[0].subsectionCode
+                this.platformBasicInfoPO.departmentId = temp && temp[0].pkDeptDoc
                 this.$refs['companyName'].clearValidate()
                 this.$forceUpdate()
             }
@@ -167,10 +168,10 @@ export default {
             }
             this.platComList = data.data.pageContent
         },
-        async findBranchListNew () {
+        async findAllBranchList () {
             // 平台分部
-            const { data } = await findBranchListNew()
-            this.branchList = data.data
+            const { data } = await findAllBranchList()
+            this.branchList = data
         },
         async getProvinces () {
             const { data } = await getProvinces()
@@ -201,7 +202,7 @@ export default {
     mounted () {
         this.getProvinces()
         this.findPaltList()
-        this.findBranchListNew()
+        this.findAllBranchList()
     }
 }
 </script>

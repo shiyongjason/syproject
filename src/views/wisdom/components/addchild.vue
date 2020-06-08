@@ -8,9 +8,9 @@
             <div><strong >{{(addData.onlineScale?parseFloat(addData.onlineScale).toFixed(0):0)|money}}</strong>
                 <span>新增上线规模(万)</span>
             </div>
-            <div><strong >{{addData.shopNum?addData.shopNum:0}}</strong>
+            <!-- <div><strong >{{addData.shopNum?addData.shopNum:0}}</strong>
                 <span>新增会员店(家)<i style="font-style:normal">{{addData.addShopProgress}}%</i></span>
-            </div>
+            </div> -->
             <!-- <div><strong >{{addData.incrementalSales ? parseFloat(addData.incrementalSales).toFixed(0):0}}</strong>
                 <span>新增增量(万)</span>
             </div> -->
@@ -135,7 +135,7 @@ export default {
                         return html
                     }
                 },
-                legend: { data: [{ name: '新增平台', icon: ' rectangle ' }, { name: '新增会员店', icon: ' rectangle ' }, { name: '新增上线规模', icon: ' rectangle ' }] },
+                legend: { data: [{ name: '新增平台', icon: ' rectangle ' }, { name: '新增上线规模', icon: ' rectangle ' }] },
                 xAxis: [{
                     type: 'category',
                     axisTick: {
@@ -200,18 +200,18 @@ export default {
                     yAxisIndex: 1
 
                 },
-                {
-                    id: 'store',
-                    data: sr3,
-                    type: 'line',
-                    name: '新增会员店',
-                    smooth: true,
-                    itemStyle: {
-                        color: '#1890FF',
-                        opacity: 1
-                    },
-                    yAxisIndex: 1
-                },
+                // {
+                //     id: 'store',
+                //     data: sr3,
+                //     type: 'line',
+                //     name: '新增会员店',
+                //     smooth: true,
+                //     itemStyle: {
+                //         color: '#1890FF',
+                //         opacity: 1
+                //     },
+                //     yAxisIndex: 1
+                // },
                 {
                     id: 'scale',
                     data: sr2,

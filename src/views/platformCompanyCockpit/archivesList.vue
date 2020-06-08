@@ -100,7 +100,7 @@ import { COCKPIT_FILE_MANAGE, COCKPIT_FILE_EDIT, COCKPIT_FILE_DELETE, COCKPIT_FI
 import hosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import dialogComponent from './components/dialogComponent.vue'
 import { pagination } from '@/utils/mixins.js'
-import { findPaltList, getList, findBranchListNew, borrow, deleteFile } from './api/index.js'
+import { findPaltList, getList, findAllBranchList, borrow, deleteFile } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { newCache } from '@/utils/index'
 
@@ -489,19 +489,19 @@ export default {
             }
             return arr
         },
-        async findBranchListNew () {
-            // 平台分部
-            const { data } = await findBranchListNew()
-            this.branchList = data.data
+        async findAllBranchList () {
+            const { data } = await findAllBranchList()
+            console.log(data)
+            this.branchList = data
         },
         getNameByCode (code, list = this.branchList) {
             let temp = list.filter(item => {
-                return item.subsectionCode === code
+                return item.pkDeptDoc === code
             })
             if (temp.length === 0) {
                 return '-'
             }
-            return temp[0].subsectionName
+            return temp[0].deptName
         },
         tabsChange () {
             this.getList()
@@ -553,7 +553,7 @@ export default {
     mounted () {
         this.findPaltList()
         this.getList()
-        this.findBranchListNew()
+        this.findAllBranchList()
     },
     activated () {
         this.getList()

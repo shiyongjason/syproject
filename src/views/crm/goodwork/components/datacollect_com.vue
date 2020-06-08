@@ -13,7 +13,7 @@
                                 </div>
                                 <div class="collect-boxtxt">
                                     <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call" v-if="obj.refuse">已打回，待分部补充</span></h3>
-                                    <p>备注：{{obj.remark}}</p>
+                                    <p>备注：{{obj.remark?obj.remark:'-'}}</p>
                                     <p>规定格式：{{obj.formatName}}</p>
                                 </div>
                             </div>
@@ -28,7 +28,7 @@
                                         </template>
                                     </span>
                                 </p>
-                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD')}}</p>
+                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
@@ -42,14 +42,17 @@
         </el-form>
         <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
             <div class="project-record">
-                <el-timeline>
+                <template v-if="refuseRecord.length>0">
                     <el-timeline-item :timestamp="moment(item.createTime).format('YYYY-MM-DD')+' 打回操作人：'+item.createBy" placement="top" v-for="item in refuseRecord" :key=item.id>
                         <el-card>
                             <p>待补充类目:{{item.secondCategoryNames}}</p>
                             <p>待补充原因：{{item.remark}}</p>
                         </el-card>
                     </el-timeline-item>
-                </el-timeline>
+                </template>
+                <template v-else>
+                    <p>暂无记录</p>
+                </template>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="recordsVisible = false">取 消</el-button>
@@ -170,11 +173,15 @@ export default {
             this.refuseForm.projectId = this.colForm.projectId
             this.$refs.refuseForm.validate(async (valid) => {
                 if (valid) {
-                    await refuseDoc(this.refuseForm)
-                    this.$message.success('打回成功')
-                    this.reasonVisible = false
-                    this.loading = false
-                    this.$emit('onCompsback')
+                    try {
+                        await refuseDoc(this.refuseForm)
+                        this.$message.success('打回成功')
+                        this.reasonVisible = false
+                        this.loading = false
+                        this.$emit('onCompsback')
+                    } catch (error) {
+                        this.loading = false
+                    }
                 } else {
                     this.loading = false
                 }
