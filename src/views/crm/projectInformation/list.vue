@@ -100,7 +100,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
-                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 -->
+                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 2的时候点进去能看到，但不能修改-->
                     <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)&&scope.data.row.docAfterStatus!=3">修改</el-button>
                 </template>
             </basicTable>
@@ -264,7 +264,7 @@ export default {
         },
         async onGetbranch () {
             // 分部下拉接口
-            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(JSON.stringify(sessionStorage.getItem('authCode'))) })
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
         }
     }
