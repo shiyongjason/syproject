@@ -1,5 +1,4 @@
 import Layout from '@/views/layout/Default.vue'
-import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
 // 非菜单，权限控制二级菜单下的tab权限
 import { tabAuth } from './const'
 
