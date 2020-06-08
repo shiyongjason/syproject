@@ -64,6 +64,9 @@
                          align="center"
                          :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
                          :total="platformPlanPagination.total" @pagination="getList">
+                <template slot="organizationName" slot-scope="scope">
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                </template>
             </hosJoyTable>
         </div>
     </div>
@@ -76,6 +79,7 @@ import { departmentAuth } from '@/mixins/userAuth'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { platformPlan } from './const'
 import { exportPlanForm } from './api'
+import { clearCache, newCache } from '../../../utils'
 
 export default {
     name: 'platformPlan',
@@ -142,6 +146,15 @@ export default {
         }
     },
     methods: {
+        goDetail (id, go) {
+            go && id && this.$router.push({
+                path: '/fundsPlan/approveDeclare',
+                query: {
+                    id: id,
+                    source: 'platformPlan'
+                }
+            })
+        },
         ...mapActions({
             findPlatformPlanList: 'fundsPlan/findPlatformPlanList',
             findPlatformPlanTotal: 'fundsPlan/findPlatformPlanTotal',
@@ -281,6 +294,16 @@ export default {
         this.queryParams.selectTime = this.targetTime
         await this.btnQuery(this.queryParams)
         await this.newBossAuth()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('platformPlan')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name !== 'approveDeclare') {
+            clearCache('platformPlan')
+        }
+        next()
     }
 }
 </script>
@@ -305,5 +328,9 @@ export default {
                 float: right;
             }
         }
+    }
+    .light {
+        color: #FF7A45;
+        cursor: pointer;
     }
 </style>

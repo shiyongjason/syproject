@@ -135,7 +135,7 @@ export const platformPlan = function (targetYear, targetMonth) {
         },
         {
             prop: 'organizationName',
-            // slot: 'organizationName',
+            slot: 'organizationName',
             showOverflowTooltip: true,
             label: '平台公司',
             width: '100',
