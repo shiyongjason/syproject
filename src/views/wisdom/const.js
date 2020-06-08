@@ -325,7 +325,7 @@ export function sprintTableLabel (targetYear) {
     return [
         {
             prop: 'subsectionName',
-            label: '分部',
+            label: '',
             fixed: true,
             width: '120px',
             showOverflowTooltip: true,
@@ -333,13 +333,20 @@ export function sprintTableLabel (targetYear) {
                 {
                     prop: 'subsectionName',
                     width: '120px',
-                    label: `-`
+                    label: `分部`,
+                    children: [
+                        {
+                            prop: 'subsectionName',
+                            width: '120px',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         },
         {
             prop: 'regionName',
-            label: '大区',
+            label: '',
             fixed: true,
             width: '120px',
             showOverflowTooltip: true,
@@ -347,7 +354,14 @@ export function sprintTableLabel (targetYear) {
                 {
                     prop: 'regionName',
                     width: '120px',
-                    label: `合计`
+                    label: `大区`,
+                    children: [
+                        {
+                            prop: 'regionName',
+                            width: '120px',
+                            label: `合计`
+                        }
+                    ]
                 }
             ]
         },

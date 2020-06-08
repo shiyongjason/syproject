@@ -136,18 +136,21 @@ export const platformPlan = function (targetYear, targetMonth) {
         {
             prop: 'organizationName',
             // slot: 'organizationName',
+            showOverflowTooltip: true,
             label: '平台公司',
             width: '100',
             fixed: true
         },
         {
             prop: 'subRegionName',
+            showOverflowTooltip: true,
             label: '区域',
             width: '100',
             fixed: true
         },
         {
             prop: 'subsectionName',
+            showOverflowTooltip: true,
             label: '分部',
             width: '100',
             fixed: true
@@ -155,15 +158,18 @@ export const platformPlan = function (targetYear, targetMonth) {
         {
             prop: 'regionName',
             label: '大区',
+            showOverflowTooltip: true,
             width: '100',
             fixed: true,
             children: [
                 {
                     prop: 'regionName',
                     label: `-`,
+                    width: '100',
                     children: [
                         {
                             prop: 'regionName',
+                            width: '100',
                             label: `合计`
                         }
                     ]
@@ -176,12 +182,12 @@ export const platformPlan = function (targetYear, targetMonth) {
                 {
                     prop: 'annualCommitment',
                     label: `${targetYear}年责任状目标`,
-                    width: '150',
                     displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
                             prop: 'annualCommitment',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -189,12 +195,12 @@ export const platformPlan = function (targetYear, targetMonth) {
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    width: '150',
                     displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
                             prop: 'currentMonthCommitment',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -208,6 +214,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'lastYearActualSales',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -221,6 +228,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'estimateSales',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -239,6 +247,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'loanBalance',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -252,6 +261,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'totalOverdue',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -259,12 +269,12 @@ export const platformPlan = function (targetYear, targetMonth) {
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
-                    width: '150',
                     displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
                             prop: 'estimateRepayment',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -272,12 +282,12 @@ export const platformPlan = function (targetYear, targetMonth) {
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
-                    width: '150',
                     displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
                             prop: 'lastYearActualUse',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -285,12 +295,12 @@ export const platformPlan = function (targetYear, targetMonth) {
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
-                    width: '150',
                     displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
                             prop: 'preBorrowCurrentMonth',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -304,11 +314,10 @@ export const platformPlan = function (targetYear, targetMonth) {
                     prop: 'salePercentCurrent',
                     label: `${targetYear}年${targetMonth}月销售同比`,
                     align: 'right',
-                    className: 'wisdom-total-background',
-                    width: '150',
                     children: [
                         {
                             prop: 'salePercentCurrent',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -317,11 +326,10 @@ export const platformPlan = function (targetYear, targetMonth) {
                     prop: 'usedPercentCurrent',
                     label: `${targetYear}年${targetMonth}月用款同比`,
                     align: 'right',
-                    className: 'wisdom-total-background',
-                    width: '150',
                     children: [
                         {
                             prop: 'usedPercentCurrent',
+                            width: '150',
                             label: `-`
                         }
                     ]
@@ -330,11 +338,10 @@ export const platformPlan = function (targetYear, targetMonth) {
                     prop: 'overduePercent',
                     label: '逾期率=（逾期额/在贷余额）',
                     align: 'right',
-                    className: 'wisdom-total-background',
-                    width: '200',
                     children: [
                         {
                             prop: 'overduePercent',
+                            width: '220',
                             label: `-`
                         }
                     ]

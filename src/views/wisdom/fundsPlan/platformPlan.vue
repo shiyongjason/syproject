@@ -4,37 +4,47 @@
             <div class="query-cont-col" v-if="region">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称"
+                                   :selectObj="selectAuth.regionObj" :maxlength='30'
+                                   :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col" v-if="branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称"
+                                   :selectObj="selectAuth.branchObj" :maxlength='30'
+                                   :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col" v-if="district">
                 <div class="query-col-title">区域：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称"
+                                   :selectObj="selectAuth.areaObj" :maxlength='30'
+                                   :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称"
+                                   :selectObj="selectAuth.platformObj" :maxlength='30'
+                                   :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
+                    <el-date-picker v-model="queryParams.selectTime" type="month" value-format='yyyyMM'
+                                    placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
+                    <el-button type="primary" class="ml20"
+                               @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -50,12 +60,10 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="columnData" :data="platformPlanList" align="center"
+            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="columnData" :data="platformPlanList"
+                         align="center"
                          :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
                          :total="platformPlanPagination.total" @pagination="getList">
-<!--                <template slot="organizationName" slot-scope="scope">-->
-<!--                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>-->
-<!--                </template>-->
             </hosJoyTable>
         </div>
     </div>
@@ -68,6 +76,7 @@ import { departmentAuth } from '@/mixins/userAuth'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { platformPlan } from './const'
 import { exportPlanForm } from './api'
+
 export default {
     name: 'platformPlan',
     mixins: [departmentAuth],
@@ -164,6 +173,9 @@ export default {
                 }
             })
             this.columnData = columnData
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable.doLayout()
+            })
         },
         linkage (dis) {
             let obj = {
@@ -190,8 +202,14 @@ export default {
         async backPlat (val, dis) {
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.findAuthList({
+                    deptType: 'F',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc
+                })
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc
+                })
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
@@ -258,6 +276,7 @@ export default {
         }
     },
     async mounted () {
+        // this.columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
         await this.findTargetTime()
         this.queryParams.selectTime = this.targetTime
         await this.btnQuery(this.queryParams)
@@ -270,6 +289,7 @@ export default {
     .tips {
 
         background: #ffffff;
+
         p {
             max-width: 1000px;
             margin: auto;
@@ -280,7 +300,8 @@ export default {
                 color: red;
                 padding: 0 5px;
             }
-            .right{
+
+            .right {
                 float: right;
             }
         }
