@@ -46,12 +46,12 @@ export const DEVICE_LIST = [
 export const UPSTREAM_LIST = [{ key: 1, value: '厂商' }, { key: 2, value: '代理商' }, { key: 3, value: '经销商' }]
 
 export const STATUS_TYPE = [
-    { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '立项' },
+    { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 4, value: '立项' },
     { key: 5, value: '合作关闭' }, { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }, { key: 9, value: '合作完成' }
 ]
 
 export const NEW_STATUS_TYPE = [
-    { key: 2, value: '审核' }, { key: 3, value: '资料收集中' }, { key: 4, value: '待立项' }, { key: 11, value: '待终审' },
+    { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 4, value: '待立项' }, { key: 11, value: '待终审' },
     { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }
 ]
 
@@ -63,7 +63,7 @@ export const BUS_TYPE_LIST = [
 export const RISK_TYPE_LIST = [
     { key: 2, value: '白名单' },
     { key: 1, value: '黑名单' },
-    { key: 3, value: '待审核' }
+    { key: 3, value: '待初审' }
 ]
 
 export const AUTEHEN_LIST = [
@@ -71,7 +71,7 @@ export const AUTEHEN_LIST = [
     { key: 2, value: '未认证' }
 ]
 // 合作进度(好橙工项目资料)
-// 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
+// 合作进度 1：待提交2：初审中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
 export const COOPERATION_PROGRESS_LIST = [
     { key: 1, value: '待提交' },
     { key: 2, value: '初审中' },
