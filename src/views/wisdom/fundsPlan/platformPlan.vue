@@ -164,6 +164,7 @@ export default {
                 }
             })
             this.columnData = columnData
+            this.$nextTick(() => { this.$refs.hosjoyTable.doLayout() })
         },
         linkage (dis) {
             let obj = {
@@ -258,6 +259,7 @@ export default {
         }
     },
     async mounted () {
+        // this.columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
         await this.findTargetTime()
         this.queryParams.selectTime = this.targetTime
         await this.btnQuery(this.queryParams)
