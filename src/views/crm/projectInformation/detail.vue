@@ -148,6 +148,7 @@ export default {
         handleSuccessCb (row) {
             row.riskCheckProjectDocPos.map(item => {
                 item.templateId = row.templateId
+                item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
             console.log('this.detail', this.detail)
         },

@@ -185,8 +185,10 @@ export default {
             }
         },
         handleSuccessCb (row) {
+            // console.log(row.riskCheckProjectDocPos)
             row.riskCheckProjectDocPos.map(item => {
                 item.templateId = row.templateId
+                item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
         },
         onDelete (item, index) {
