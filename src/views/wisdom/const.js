@@ -104,29 +104,42 @@ export function preformTableLabel (targetYear) {
     return [
         {
             prop: 'misCode',
-            label: '公司编码',
+            label: '',
             fixed: true,
-            showOverflowTooltip: true,
             width: '120px',
             children: [
                 {
                     prop: 'misCode',
                     width: '120px',
-                    label: '-'
+                    label: '公司编码',
+                    children: [
+                        {
+                            prop: 'misCode',
+                            width: '120px',
+                            label: '-'
+                        }
+                    ]
                 }
             ]
         },
         {
             prop: 'companyName',
-            label: '全部',
+            label: '',
             fixed: true,
             width: '120px',
-            showOverflowTooltip: true,
             children: [
                 {
                     prop: 'companyName',
                     width: '120px',
-                    label: '合计'
+                    label: '全部',
+                    showOverflowTooltip: true,
+                    children: [
+                        {
+                            prop: 'companyName',
+                            width: '120px',
+                            label: '合计'
+                        }
+                    ]
                 }
             ]
         },
