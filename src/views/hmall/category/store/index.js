@@ -2,6 +2,18 @@
 import * as types from './mutation-types'
 import { findAllCategory, findSpecifications } from '../api'
 
+function recursiveCategory (array = [], frequency = 3) {
+    if (frequency > 0) {
+        return array.map(item => {
+            return {
+                value: item.id,
+                label: item.name,
+                children: recursiveCategory(item.subCategoryList, frequency - 1)
+            }
+        })
+    }
+}
+
 const state = {
     categoriesTree: [],
     specificationsInfo: {
@@ -11,24 +23,7 @@ const state = {
 
 const getters = {
     categoryOptions: state => {
-        return state.categoriesTree.map(item1 => {
-            return {
-                value: item1.id,
-                label: item1.name,
-                children: (item1.subCategoryList || []).map(item2 => {
-                    return {
-                        value: item2.id + '',
-                        label: item2.name,
-                        children: (item2.subCategoryList || []).map(item3 => {
-                            return {
-                                value: item3.id + '',
-                                label: item3.name
-                            }
-                        })
-                    }
-                })
-            }
-        })
+        return recursiveCategory(state.categoriesTree, 3)
     }
 }
 
