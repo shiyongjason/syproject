@@ -29,8 +29,22 @@ const getters = {
     planApprovalList: state => state.planApprovalList,
     planApprovalPagination: state => state.planApprovalPagination,
     planApprovalTotal: state => state.planApprovalTotal,
-    platformPlanList: state => state.platformPlanList,
-    platformPlanTotal: state => state.platformPlanTotal,
+    platformPlanList: state => {
+        state.platformPlanList.forEach(value => {
+            value.salePercentCurrent = (value.salePercentCurrent) + '%'
+            value.usedPercentCurrent = (value.usedPercentCurrent) + '%'
+            value.overduePercent = (value.overduePercent) + '%'
+        })
+        return state.platformPlanList
+    },
+    platformPlanTotal: state => {
+        for (const key in state.platformPlanTotal) {
+            if (key === 'salePercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
+            if (key === 'usedPercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
+            if (key === 'overduePercent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
+        }
+        return state.platformPlanTotal
+    },
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
