@@ -78,7 +78,7 @@ export default {
                 { label: '蓄水阶段', prop: 'retainValue' },
                 { label: '信息待完善', prop: 'infoToBeImprovedValue' },
                 { label: '资料收集', prop: 'dataCollectValue' },
-                { label: '立项阶段', prop: 'trustTrialValue' },
+                { label: '信审阶段', prop: 'trustTrialValue' },
                 { label: '待签约', prop: 'toBeSignedValue' },
                 { label: '待放款', prop: 'pendingLoanValue' },
                 { label: '待回款', prop: 'toReturnLoanValue' },
