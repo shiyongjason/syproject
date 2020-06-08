@@ -153,8 +153,8 @@ export default {
             const promiseArr = [getSprintIndexList(params), getSprintIndexTotal(params)]
             const data = await Promise.all(promiseArr).then((res) => {
                 const columnData = sprintTableLabel(this.queryParams.valueYear)
-                columnData[1].label = this.dynamicNameRegion
-                columnData[0].label = this.dynamicNameBranch
+                columnData[1].children[0].label = this.dynamicNameRegion
+                columnData[0].children[0].label = this.dynamicNameBranch
                 columnData.forEach((value, index) => {
                     if (index > 1) {
                         value.children.forEach((val) => {
