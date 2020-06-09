@@ -213,9 +213,9 @@ const routerMapping = [
         ]
     },
     ...Wisdomrouter,
-    ...Bestrouter,
+    Bestrouter,
     ...B2brouter,
-    ...Jyrouter,
+    Jyrouter,
     Cloudrouter,
     Crmrouter
 ]
