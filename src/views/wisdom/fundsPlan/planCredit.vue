@@ -241,7 +241,8 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyName ? val.value.companyName : ''
+                console.log(val.value)
+                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
         },
         ...mapActions({
