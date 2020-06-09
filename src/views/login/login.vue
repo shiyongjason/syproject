@@ -29,7 +29,7 @@
                                 name="hosjoy-color"
                                 @click="onLogin"
                                 :disabled="!checked"
-                                v-loading.fullscreen.lock="fullscreenLoading"
+                                v-loading.fullscreen.lock="$store.state.loading"
                                 element-loading-text="处理中" element-loading-spinner="el-icon-loading"
                                 element-loading-background="rgba(0, 0, 0, 0.5)"
                             >登录</el-button>
@@ -73,8 +73,7 @@ export default {
             isLogin: true,
             userInfo: '',
             src: iframeUrl,
-            iframeWin: {},
-            fullscreenLoading: false
+            iframeWin: {}
         }
     },
     methods: {
@@ -88,7 +87,6 @@ export default {
         async onLogin () {
             this.$refs['loginForm'].validate(async (valid) => {
                 if (valid) {
-                    this.fullscreenLoading = true
                     const { data } = await login(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
@@ -126,7 +124,6 @@ export default {
                     }
                     break
                 }
-                this.fullscreenLoading = false
                 let path = index.join('/')
                 if (!path) {
                     path = '/'
