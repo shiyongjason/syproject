@@ -53,7 +53,7 @@
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
             </div>
             <div class="page-body-cont">
-                <hosJoyTable ref="hosJoyTable" border stripe showPagination :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
+                <hosJoyTable v-if="reRender" ref="hosjoyTable" border stripe showPagination :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
                     <!--                    <template slot="annualTotalEffectiveRate" slot-scope="scope">-->
                     <!--                        {{scope.data.row.annualTotalEffectiveRate * 100}}%-->
                     <!--                    </template>-->
@@ -96,7 +96,7 @@ export default {
             planCreditPagination: 'fundsPlan/planCreditPagination',
             planCreditTotal: 'fundsPlan/planCreditTotal'
         }),
-        planCreditLabel() {
+        planCreditLabel () {
             return planCreditLabel(this.tabSwitch, this.hasAuth)
         }
     },
@@ -136,7 +136,8 @@ export default {
                 mouth: ''
             },
             tabSwitch: false,
-            hasAuth: !this.hosAuthCheck(PLAN_CREDIT_TABLE_COLUMN)
+            hasAuth: !this.hosAuthCheck(PLAN_CREDIT_TABLE_COLUMN),
+            reRender: false
         }
     },
     methods: {
@@ -155,6 +156,7 @@ export default {
             this.findPlanCreditList(params)
             await this.findPlanCreditTotal(params)
             this.columnData = this.planCreditLabel
+            this.reRender = true
         },
         linkage (dis) {
             let obj = {
@@ -177,11 +179,8 @@ export default {
             }
         },
         handleClick () {
-            if (this.queryParams.selectType == 0) {
-                this.tabSwitch = false
-            } else {
-                this.tabSwitch = true
-            }
+            this.reRender = false
+            this.tabSwitch = this.queryParams.selectType !== '0'
             this.onReset()
         },
         onReset () {
