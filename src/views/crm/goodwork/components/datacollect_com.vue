@@ -43,12 +43,14 @@
         <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
             <div class="project-record">
                 <template v-if="refuseRecord.length>0">
-                    <el-timeline-item :timestamp="moment(item.createTime).format('YYYY-MM-DD')+' 打回操作人：'+item.createBy" placement="top" v-for="item in refuseRecord" :key=item.id>
-                        <el-card>
-                            <p>待补充类目:{{item.secondCategoryNames}}</p>
-                            <p>待补充原因：{{item.remark}}</p>
-                        </el-card>
-                    </el-timeline-item>
+                    <el-timeline>
+                        <el-timeline-item :timestamp="moment(item.createTime).format('YYYY-MM-DD  HH:mm:ss')+' 打回操作人：'+item.createBy" placement="top" v-for="item in refuseRecord" :key=item.id>
+                            <el-card>
+                                <p>待补充类目:{{item.secondCategoryNames}}</p>
+                                <p>待补充原因：{{item.remark}}</p>
+                            </el-card>
+                        </el-timeline-item>
+                    </el-timeline>
                 </template>
                 <template v-else>
                     <p>暂无记录</p>
