@@ -156,7 +156,7 @@ export default {
                 { label: '合作进度', prop: 'status', width: '120' },
                 { label: '初审通过时间', prop: 'firstApproveTime', width: '150', formatters: 'dateTimes' },
                 { label: '数据更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料提交审核时间', prop: 'createTime', width: '150', formatters: 'dateTimes' },
+                { label: '材料提交审核时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
                 { label: '材料审核通过时间', prop: 'checkTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
