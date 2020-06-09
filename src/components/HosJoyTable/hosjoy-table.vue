@@ -1,6 +1,6 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
-        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height="`calc(100vh - ${height}px)`"
+        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height || `calc(100vh - ${selfHeight}px)`"
                   class="hosjoy-in-table"
                   :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
@@ -66,7 +66,8 @@ export default {
             }
         },
         layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
-        actionWidth: { type: String, default: '' }
+        actionWidth: { type: String, default: '' },
+        height: { required: false }
     },
     components: {
         hosjoyColumn
@@ -75,7 +76,7 @@ export default {
         return {
             mergeLine: {},
             mergeIndex: {},
-            height: 0
+            selfHeight: 0
         }
     },
     created () {
@@ -201,7 +202,7 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
-            this.height = this.$refs.hosTable.getBoundingClientRect().top + 80
+            this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
     }
 }
