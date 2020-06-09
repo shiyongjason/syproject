@@ -68,7 +68,7 @@
         <!--  -->
         <el-dialog title="补充原因" :visible.sync="dialogVisible" width="35%" center>
             <div class="dialog-box" v-for="item in refuseInfos" :key="item.id">
-                <p>{{moment(item.createTime).format('YYYY-MM-DD')}} 打回操作人：{{item.createBy}}</p>
+                <p>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}} 打回操作人：{{item.createBy}}</p>
                 <p>待补充类目：{{item.secondCategoryNames}}</p>
                 <p>待补充原因：</p>
                 <p>
