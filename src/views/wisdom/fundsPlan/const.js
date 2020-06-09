@@ -609,6 +609,17 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             ]
         },
         {
+            label: '区域',
+            prop: 'subRegionName',
+            isHidden: tabCheck,
+            children: [
+                {
+                    label: '-',
+                    prop: 'subRegionName'
+                }
+            ]
+        },
+        {
             label: '分部',
             prop: 'subsectionName',
             children: [
