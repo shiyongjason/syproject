@@ -640,11 +640,11 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         },
         {
             label: '本年累计销售达成率',
-            prop: 'annualTotalProfitAchieveRate',
+            prop: 'annualTotalSaleAchieveRate',
             children: [
                 {
                     label: '-',
-                    prop: 'annualTotalProfitAchieveRate'
+                    prop: 'annualTotalSaleAchieveRate'
                 }
             ]
         },
@@ -660,11 +660,11 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         },
         {
             label: '本年累计利润达成率',
-            prop: 'annualTotalSaleAchieveRate',
+            prop: 'annualTotalProfitAchieveRate',
             children: [
                 {
                     label: '-',
-                    prop: 'annualTotalSaleAchieveRate'
+                    prop: 'annualTotalProfitAchieveRate'
                 }
             ]
         },
