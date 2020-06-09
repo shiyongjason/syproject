@@ -584,198 +584,203 @@ export const approvalListLabel = [
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
-export const planCreditLabel = [
-    {
-        label: '公司编码',
-        prop: 'misCode',
-        children: [
-            {
-                label: '-',
-                prop: 'misCode'
-            }
-        ]
-    },
-    {
-        label: '公司名称',
-        prop: 'companyName',
-        children: [
-            {
-                label: '-',
-                prop: 'companyName'
-            }
-        ]
-    },
-    {
-        label: '分部',
-        prop: 'subsectionName',
-        children: [
-            {
-                label: '-',
-                prop: 'subsectionName'
-            }
-        ]
-    },
-    {
-        label: '大区',
-        prop: 'regionName',
-        children: [
-            {
-                label: '合计',
-                prop: 'regionName'
-            }
-        ]
-    },
-    {
-        label: '本年累计销售达成额',
-        prop: 'annualTotalSale',
-        children: [
-            {
-                label: '-',
-                prop: 'annualTotalSale'
-            }
-        ]
-    },
-    {
-        label: '本年累计销售达成率',
-        prop: 'annualTotalProfitAchieveRate',
-        children: [
-            {
-                label: '-',
-                prop: 'annualTotalProfitAchieveRate'
-            }
-        ]
-    },
-    {
-        label: '本年累计利润达成额',
-        prop: 'annualTotalProfit',
-        children: [
-            {
-                label: '-',
-                prop: 'annualTotalProfit'
-            }
-        ]
-    },
-    {
-        label: '本年累计利润达成率',
-        prop: 'annualTotalSaleAchieveRate',
-        children: [
-            {
-                label: '-',
-                prop: 'annualTotalSaleAchieveRate'
-            }
-        ]
-    },
-    {
-        label: '本年累计放款额',
-        prop: 'annualTotalLoan',
-        children: [
-            {
-                label: '-',
-                prop: 'annualTotalLoan'
-            }
-        ]
-    },
-    {
-        label: '累计资金支持效率比',
-        prop: 'annualTotalEffectiveRate',
-        children: [
-            {
-                label: '-',
-                prop: 'annualTotalEffectiveRate'
-            }
-        ]
-    },
-    {
-        label: '当月申报用款额',
-        prop: 'currentApplyFund',
-        children: [
-            {
-                label: '-',
-                prop: 'currentApplyFund'
-            }
-        ]
-    },
-    {
-        label: '当月审批用款额',
-        prop: 'currentApproveFund',
-        children: [
-            {
-                label: '-',
-                prop: 'currentApproveFund'
-            }
-        ]
-    },
-    {
-        label: '本月实际放款额',
-        prop: 'currentActualLoan',
-        children: [
-            {
-                label: '-',
-                prop: 'currentActualLoan'
-            }
-        ]
-    },
-    {
-        label: '本月剩余应还本金',
-        prop: 'currentRemainingRepayment',
-        children: [
-            {
-                label: '-',
-                prop: 'currentRemainingRepayment'
-            }
-        ]
-    },
-    {
-        label: '在贷余额',
-        prop: 'totalUnpaidAmount',
-        children: [
-            {
-                label: '-',
-                prop: 'totalUnpaidAmount'
-            }
-        ]
-    },
-    {
-        label: '剩余逾期',
-        prop: 'totalRemainingOverdue',
-        children: [
-            {
-                label: '-',
-                prop: 'totalRemainingOverdue'
-            }
-        ]
-    },
-    {
-        label: '存量逾期',
-        prop: 'totalRemainingOverdueExist',
-        children: [
-            {
-                label: '-',
-                prop: 'totalRemainingOverdueExist'
-            }
-        ]
-    },
-    {
-        label: '增量逾期',
-        prop: 'totalRemainingOverdueIncrement',
-        children: [
-            {
-                label: '-',
-                prop: 'totalRemainingOverdueIncrement'
-            }
-        ]
-    },
-    {
-        label: '本月逾期发生额',
-        prop: 'currentOverdueAmount',
-        children: [
-            {
-                label: '-',
-                prop: 'currentOverdueAmount'
-            }
-        ]
-    }
-]
+export const planCreditLabel = function (tabCheck, hosAuthCheck) {
+    return [
+        {
+            label: '公司编码',
+            prop: 'misCode',
+            isHidden: tabCheck,
+            children: [
+                {
+                    label: '-',
+                    prop: 'misCode'
+                }
+            ]
+        },
+        {
+            label: '公司名称',
+            prop: 'companyName',
+            isHidden: tabCheck,
+            children: [
+                {
+                    label: '-',
+                    prop: 'companyName'
+                }
+            ]
+        },
+        {
+            label: '分部',
+            prop: 'subsectionName',
+            children: [
+                {
+                    label: '-',
+                    prop: 'subsectionName'
+                }
+            ]
+        },
+        {
+            label: '大区',
+            prop: 'regionName',
+            children: [
+                {
+                    label: '合计',
+                    prop: 'regionName'
+                }
+            ]
+        },
+        {
+            label: '本年累计销售达成额',
+            prop: 'annualTotalSale',
+            children: [
+                {
+                    label: '-',
+                    prop: 'annualTotalSale'
+                }
+            ]
+        },
+        {
+            label: '本年累计销售达成率',
+            prop: 'annualTotalProfitAchieveRate',
+            children: [
+                {
+                    label: '-',
+                    prop: 'annualTotalProfitAchieveRate'
+                }
+            ]
+        },
+        {
+            label: '本年累计利润达成额',
+            prop: 'annualTotalProfit',
+            children: [
+                {
+                    label: '-',
+                    prop: 'annualTotalProfit'
+                }
+            ]
+        },
+        {
+            label: '本年累计利润达成率',
+            prop: 'annualTotalSaleAchieveRate',
+            children: [
+                {
+                    label: '-',
+                    prop: 'annualTotalSaleAchieveRate'
+                }
+            ]
+        },
+        {
+            label: '本年累计放款额',
+            prop: 'annualTotalLoan',
+            children: [
+                {
+                    label: '-',
+                    prop: 'annualTotalLoan'
+                }
+            ]
+        },
+        {
+            label: '累计资金支持效率比',
+            prop: 'annualTotalEffectiveRate',
+            children: [
+                {
+                    label: '-',
+                    prop: 'annualTotalEffectiveRate'
+                }
+            ]
+        },
+        {
+            label: '当月申报用款额',
+            prop: 'currentApplyFund',
+            children: [
+                {
+                    label: '-',
+                    prop: 'currentApplyFund'
+                }
+            ]
+        },
+        {
+            label: '当月审批用款额',
+            isHidden: hosAuthCheck,
+            prop: 'currentApproveFund',
+            children: [
+                {
+                    label: '-',
+                    prop: 'currentApproveFund'
+                }
+            ]
+        },
+        {
+            label: '本月实际放款额',
+            prop: 'currentActualLoan',
+            children: [
+                {
+                    label: '-',
+                    prop: 'currentActualLoan'
+                }
+            ]
+        },
+        {
+            label: '本月剩余应还本金',
+            prop: 'currentRemainingRepayment',
+            children: [
+                {
+                    label: '-',
+                    prop: 'currentRemainingRepayment'
+                }
+            ]
+        },
+        {
+            label: '在贷余额',
+            prop: 'totalUnpaidAmount',
+            children: [
+                {
+                    label: '-',
+                    prop: 'totalUnpaidAmount'
+                }
+            ]
+        },
+        {
+            label: '剩余逾期',
+            prop: 'totalRemainingOverdue',
+            children: [
+                {
+                    label: '-',
+                    prop: 'totalRemainingOverdue'
+                }
+            ]
+        },
+        {
+            label: '存量逾期',
+            prop: 'totalRemainingOverdueExist',
+            children: [
+                {
+                    label: '-',
+                    prop: 'totalRemainingOverdueExist'
+                }
+            ]
+        },
+        {
+            label: '增量逾期',
+            prop: 'totalRemainingOverdueIncrement',
+            children: [
+                {
+                    label: '-',
+                    prop: 'totalRemainingOverdueIncrement'
+                }
+            ]
+        },
+        {
+            label: '本月逾期发生额',
+            prop: 'currentOverdueAmount',
+            children: [
+                {
+                    label: '-',
+                    prop: 'currentOverdueAmount'
+                }
+            ]
+        }
+    ]
+}
 export const approvalListHasDoneLabel = [
     { label: '流程编号', prop: 'planId' },
     { label: '申报月份', prop: 'applyMonth' },
