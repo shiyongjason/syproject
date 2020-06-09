@@ -145,7 +145,7 @@ export default {
                 { label: '商品类目', prop: 'category', width: '200' },
                 { label: '型号', prop: 'model', width: '200' },
                 { label: '审核状态', prop: 'auditStatus' },
-                { label: '提交时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '提交时间', prop: 'submitTime', formatters: 'dateTime' },
                 { label: '商品来源', prop: 'merchantName' }
             ],
             rowKey: '',
