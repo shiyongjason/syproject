@@ -49,6 +49,9 @@
                 <template slot="status" slot-scope="scope">
                     {{ auditStatusMap.get(scope.data.row.status) || '-' }}
                 </template>
+                <template slot="auditTime" slot-scope="scope">
+                    {{ scope.data.row.status == 0 ? '-' : scope.data.row.auditTime }}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status == 0 || scope.data.row.status == 3" class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
                     <el-button v-else class="orangeBtn" @click="showDrawer(scope.data.row, 'watch')">查看</el-button>

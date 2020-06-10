@@ -199,7 +199,7 @@ export default {
                 {
                     label: '库存',
                     minWidth: '110',
-                    prop: 'inventoryNum',
+                    prop: 'availableStock',
                     renderHeader: (h, scope) => {
                         return (
                             <span>
@@ -211,7 +211,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryNum') }} disabled={this.disableStatus}></el-input>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disableStatus}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -436,12 +436,12 @@ export default {
         validate (item, action = '') {
             // true 需要在特定的操作才触发。
             if (action === 'submit') {
-                if (!item.inventoryNum) {
+                if (!item.availableStock) {
                     item.inventoryNumErrorMsg = '库存不能小于0'
                     this.$set(item, '_inventoryNumError', true)
                 }
             }
-            if (item.inventoryNum) {
+            if (item.availableStock) {
                 item.inventoryNumErrorMsg = ''
                 this.$set(item, '_inventoryNumError', false)
             }
@@ -461,7 +461,7 @@ export default {
                     item.errorMsg = ''
                 }
             }
-            if ((!this.form.status) && (Number(item.purchaseLimitNum) > Number(item.inventoryNum))) {
+            if ((!this.form.status) && (Number(item.purchaseLimitNum) > Number(item.availableStock))) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
             } else if (item.purchaseLimitNum) {
@@ -493,7 +493,7 @@ export default {
         /** 移除 */
         onRemove (val) {
             this.REMOVE_EVENT_PRODUCTS(val)
-            this.form.spikeSku = this.form.spikeSku.filter(item => item.id != val.id)
+            this.form.spikeSku = this.form.spikeSku.filter(item => item.skuId != val.skuId)
         },
         /** 刷单 */
         onOrder (val) {
@@ -588,8 +588,8 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                this.$set(item, 'inventoryOriginNum', item.availableStock)
+                this.$set(item, 'inventoryRemainNum', item.availableStock)
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
@@ -658,7 +658,7 @@ export default {
                 !item.errorMsg && this.$set(item, 'errorMsg', '')
                 !item.sellingPoint && this.$set(item, 'sellingPoint', '')
                 !item.inventoryNumErrorMsg && this.$set(item, 'inventoryNumErrorMsg', '')
-                !item.inventoryNum && this.$set(item, 'inventoryNum', item.inventoryRemainNum)
+                !item.availableStock && this.$set(item, 'availableStock', item.inventoryRemainNum)
                 !item.productId && this.$set(item, 'productId', null)
                 if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '')
                 !item.clickFarmingNum && this.$set(item, 'clickFarmingNum', 0)
