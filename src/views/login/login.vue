@@ -25,7 +25,14 @@
                             </span>
                         </el-form-item>
                         <el-form-item>
-                            <el-button name="hosjoy-color" @click="onLogin" :disabled="!checked">登录</el-button>
+                            <el-button
+                                name="hosjoy-color"
+                                @click="onLogin"
+                                :disabled="!checked"
+                                v-loading.fullscreen.lock="$store.state.loading"
+                                element-loading-text="处理中" element-loading-spinner="el-icon-loading"
+                                element-loading-background="rgba(0, 0, 0, 0.5)"
+                            >登录</el-button>
                         </el-form-item>
                     </el-form>
 

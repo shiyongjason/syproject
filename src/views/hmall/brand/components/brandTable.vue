@@ -5,8 +5,8 @@
                 <el-button type="primary" class="ml20" @click="openMark('add')">
                     新增品牌
                 </el-button>
-                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId,1)">批量生效</el-button>
-                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId,2)">批量失效</el-button>
+                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</el-button>
+                <el-button type="primary" class="ml20" @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</el-button>
             </div>
         </div>
         <div class="page-body-cont">
@@ -27,18 +27,18 @@
                     width="60">
                 </el-table-column>
                 <el-table-column
-                    prop="brandCode"
+                    prop="code"
                     label="品牌编码">
                 </el-table-column>
                 <el-table-column
-                    prop="brandName"
+                    prop="name"
                     label="品牌名称">
                     <template slot-scope="scope">
-                        <span @click="modify(scope.row)" class="brand-link">{{ scope.row.brandName }}</span>
+                        <span @click="modify(scope.row)" class="brand-link">{{ scope.row.name }}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="brandNameEn"
+                    prop="englishName"
                     label="英文名称">
                 </el-table-column>
                 <el-table-column
@@ -51,14 +51,14 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="updateBy"
+                    prop="operator"
                     label="维护人">
                 </el-table-column>
                 <el-table-column
                     label="维护时间"
                     align="center">
                     <template slot-scope="scope">
-                        {{scope.row.updateTime | formatterTime}}
+                        {{scope.row.lastModifyTime | formatterTime}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import { updateBrandStatus } from '../api/index'
+import { brandEnable, brandDisable } from '../api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'productTable',
@@ -132,15 +132,15 @@ export default {
         },
         onUpdateBrandStatus (row) {
             const params = {
-                id: [row.id],
-                status: row.status === 1 ? 2 : 1
+                brandIdList: [row.id],
+                status: row.status
             }
             this._updateBrandStatus(params)
         },
         async onUpdateBrandMultiStatus (ids, status) {
             if (ids.length > 0) {
                 const params = {
-                    id: ids,
+                    brandIdList: ids,
                     status: status
                 }
                 await this._updateBrandStatus(params)
@@ -154,10 +154,13 @@ export default {
             }
         },
         async _updateBrandStatus (params) {
-            params.updateBy = this.userInfo.employeeName
-            await updateBrandStatus(params)
+            if (params.status === 1) {
+                await brandDisable({ brandIdList: params.brandIdList, operator: this.userInfo.employeeName })
+            } else {
+                await brandEnable({ brandIdList: params.brandIdList, operator: this.userInfo.employeeName })
+            }
             this.$message({
-                message: params.status === 2 ? '品牌已失效！' : '品牌已生效！',
+                message: params.status === 1 ? '品牌已失效！' : '品牌已生效！',
                 type: 'success'
             })
             this.$emit('updateStatus')
