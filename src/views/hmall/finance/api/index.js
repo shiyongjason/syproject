@@ -38,3 +38,5 @@ export const findMarketing = (params) => {
 export const findProductsInfo = (params) => {
     return axios.get(`${B2bUrl}order/api/boss/orders/finance-products`, { params })
 }
+// 查询所有类目
+export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categories/tree', { params })

@@ -319,13 +319,12 @@ import orderTable from './components/orderTable'
 import receivablesTable from './components/receivablesTable'
 import productTotalTable from './components/productTotalTable'
 import { ORDER_TYPE, COUPON_TYPE, SOURCE_LIST } from './const.js'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import {
     findBrandsList, findOrderList,
     findReceivablesList, exportTotalList, exportTabReceivables,
     exportTabOrder, getChiness, orderPage
 } from './api/index'
-import { findProductCategory } from '../shopManager/api/index'
 
 export default {
     name: 'order',
@@ -334,7 +333,79 @@ export default {
         receivablesTable,
         productTotalTable
     },
+
+    data () {
+        return {
+            couponList: COUPON_TYPE,
+            orderList: ORDER_TYPE,
+            sourceList: SOURCE_LIST,
+            categoryOptions: [],
+            activeName: '',
+            queryParams: {
+                activityCode: '',
+                branchCode: '',
+                branchName: '',
+                couponType: '',
+                couponCode: '',
+                orderType: '',
+                memberName: '',
+                merchantName: '',
+                misStatus: '',
+                orderNo: '',
+                orderStatus: '',
+                orderTimeEnd: '',
+                orderTimeStart: '',
+                source: '',
+                // misTimeStart: '',
+                // misTimeEnd: '',
+                current: 1,
+                size: 10
+            },
+            queryParamsReceivables: {
+                memberName: '',
+                merchantName: '',
+                orderNo: '',
+                paymentMethod: '',
+                paymentNo: '',
+                paymentTimeEnd: '',
+                paymentTimeStart: '',
+                current: 1,
+                size: 10
+            },
+            queryParamsProductTotal: {
+                pageNumber: 1,
+                pageSize: 10,
+                branchCode: '',
+                branchName: '',
+                categoryId: [],
+                memberName: '',
+                merchantName: '',
+                misStatus: '',
+                orderStatus: '',
+                orderTimeEnd: '',
+                orderTimeStart: '',
+                productCode: '',
+                spuCode: '',
+                skuCode: '',
+                isShareGoods: false,
+                areaIds: ''
+            },
+            orderData: [],
+            receivablesData: [],
+            productTotalData: [],
+            depArr: [],
+            paginationOrderData: {},
+            paginationReceivablesData: {},
+            paginationProductTotalData: {},
+            brandsList: [],
+            options: [],
+            optarr: ''
+        }
+    },
     computed: {
+        ...mapState('category', {
+            categoriesTree: 'categoriesTree'
+        }),
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
@@ -419,75 +490,10 @@ export default {
             userInfo: state => state.userInfo
         })
     },
-    data () {
-        return {
-            couponList: COUPON_TYPE,
-            orderList: ORDER_TYPE,
-            sourceList: SOURCE_LIST,
-            activeName: '',
-            queryParams: {
-                activityCode: '',
-                branchCode: '',
-                branchName: '',
-                couponType: '',
-                couponCode: '',
-                orderType: '',
-                memberName: '',
-                merchantName: '',
-                misStatus: '',
-                orderNo: '',
-                orderStatus: '',
-                orderTimeEnd: '',
-                orderTimeStart: '',
-                source: '',
-                // misTimeStart: '',
-                // misTimeEnd: '',
-                current: 1,
-                size: 10
-            },
-            queryParamsReceivables: {
-                memberName: '',
-                merchantName: '',
-                orderNo: '',
-                paymentMethod: '',
-                paymentNo: '',
-                paymentTimeEnd: '',
-                paymentTimeStart: '',
-                current: 1,
-                size: 10
-            },
-            queryParamsProductTotal: {
-                pageNumber: 1,
-                pageSize: 10,
-                branchCode: '',
-                branchName: '',
-                categoryId: [],
-                memberName: '',
-                merchantName: '',
-                misStatus: '',
-                orderStatus: '',
-                orderTimeEnd: '',
-                orderTimeStart: '',
-                productCode: '',
-                spuCode: '',
-                skuCode: '',
-                isShareGoods: false,
-                areaIds: ''
-            },
-            orderData: [],
-            receivablesData: [],
-            productTotalData: [],
-            depArr: [],
-            paginationOrderData: {},
-            paginationReceivablesData: {},
-            paginationProductTotalData: {},
-            brandsList: [],
-            categoryOptions: [],
-            options: [],
-            optarr: ''
-        }
-    },
     methods: {
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
         async getArea () {
             const { data } = await getChiness()
             this.options = data
@@ -649,21 +655,21 @@ export default {
         } else if (haveStorage === 'third') {
             this.activeName = 'third'
         }
-        const { data: productCategory } = await findProductCategory()
+        await this.findAllCategory()
         let productCategoryTemp = []
         // 用递归函数从写，后面提
-        productCategoryTemp = productCategory.map((value) => {
+        productCategoryTemp = this.categoriesTree.map((value) => {
             return {
                 value: value.id,
-                label: value.categoryName,
-                children: value.categoryList ? value.categoryList.map(value1 => {
+                label: value.name,
+                children: value.subCategoryList ? value.subCategoryList.map(value1 => {
                     return {
                         value: value1.id,
-                        label: value1.categoryName,
-                        children: value1.categoryList ? value1.categoryList.map(value2 => {
+                        label: value1.name,
+                        children: value1.subCategoryList ? value1.subCategoryList.map(value2 => {
                             return {
                                 value: value2.id,
-                                label: value2.categoryName
+                                label: value2.name
                             }
                         }) : null
                     }
