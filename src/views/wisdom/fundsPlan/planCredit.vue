@@ -32,7 +32,7 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.selectTime" type="month"  value-format='yyyyMM' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="queryParams.selectTime" type="month" value-format='yyyyMM' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
@@ -53,18 +53,16 @@
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
             </div>
             <div class="page-body-cont">
-                <hosJoyTable border stripe showPagination :column="columnData" :data="planCreditList" align="center"
-                             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
-                             :total="planCreditPagination.total" @pagination="getList">
-<!--                    <template slot="annualTotalEffectiveRate" slot-scope="scope">-->
-<!--                        {{scope.data.row.annualTotalEffectiveRate * 100}}%-->
-<!--                    </template>-->
-<!--                    <template slot="annualTotalProfitAchieveRate" slot-scope="scope">-->
-<!--                        {{scope.data.row.annualTotalProfitAchieveRate * 100}}%-->
-<!--                    </template>-->
-<!--                    <template slot="annualTotalSaleAchieveRate" slot-scope="scope">-->
-<!--                        {{scope.data.row.annualTotalSaleAchieveRate * 100}}%-->
-<!--                    </template>-->
+                <hosJoyTable v-if="reRender" ref="hosjoyTable" border stripe showPagination :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
+                    <!--                    <template slot="annualTotalEffectiveRate" slot-scope="scope">-->
+                    <!--                        {{scope.data.row.annualTotalEffectiveRate * 100}}%-->
+                    <!--                    </template>-->
+                    <!--                    <template slot="annualTotalProfitAchieveRate" slot-scope="scope">-->
+                    <!--                        {{scope.data.row.annualTotalProfitAchieveRate * 100}}%-->
+                    <!--                    </template>-->
+                    <!--                    <template slot="annualTotalSaleAchieveRate" slot-scope="scope">-->
+                    <!--                        {{scope.data.row.annualTotalSaleAchieveRate * 100}}%-->
+                    <!--                    </template>-->
                 </hosJoyTable>
             </div>
         </div>
@@ -133,7 +131,10 @@ export default {
             paramTargetDate: {
                 year: '',
                 mouth: ''
-            }
+            },
+            tabSwitch: false,
+            hasAuth: !this.hosAuthCheck(PLAN_CREDIT_TABLE_COLUMN),
+            reRender: false
         }
     },
     methods: {
@@ -151,11 +152,8 @@ export default {
             }
             this.findPlanCreditList(params)
             await this.findPlanCreditTotal(params)
-            let deleteCol = null
-            planCreditLabel.forEach((value, index) => {
-                if (!this.hosAuthCheck(PLAN_CREDIT_TABLE_COLUMN) && value.prop === 'currentApproveFund') {
-                    deleteCol = index
-                }
+            const columnData = planCreditLabel(this.tabSwitch, this.hasAuth)
+            columnData.forEach((value, index) => {
                 if (index > 3) {
                     value.children.forEach((val) => {
                         if (this.planCreditTotal[val.prop]) {
@@ -164,10 +162,8 @@ export default {
                     })
                 }
             })
-            if (typeof deleteCol === 'number') {
-                planCreditLabel.splice(deleteCol, 1)
-            }
-            this.columnData = planCreditLabel
+            this.columnData = columnData
+            this.reRender = true
         },
         linkage (dis) {
             let obj = {
@@ -189,7 +185,9 @@ export default {
                 this.selectAuth.platformObj = { ...obj }
             }
         },
-        handleClick (tab, event) {
+        handleClick () {
+            this.reRender = false
+            this.tabSwitch = this.queryParams.selectType !== '0'
             this.onReset()
         },
         onReset () {
@@ -241,7 +239,7 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyName ? val.value.companyName : ''
+                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
         },
         ...mapActions({
@@ -261,28 +259,27 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .approval {
-        background: #ffffff;
-        padding: 60px 25px 30px;
-        box-sizing: border-box;
-    }
-    .tips {
+.approval {
+    background: #ffffff;
+    padding: 60px 25px 30px;
+    box-sizing: border-box;
+}
+.tips {
+    background: #ffffff;
+    p {
+        max-width: 1000px;
+        margin: auto;
+        padding-top: 10px;
+        line-height: 30px;
+        text-align: center;
 
-        background: #ffffff;
-        p {
-            max-width: 1000px;
-            margin: auto;
-            padding-top: 10px;
-            line-height: 30px;
-            text-align: center;
-
-            b {
-                color: red;
-                padding: 0 5px;
-            }
-            .right{
-                float: right;
-            }
+        b {
+            color: red;
+            padding: 0 5px;
+        }
+        .right {
+            float: right;
         }
     }
+}
 </style>
