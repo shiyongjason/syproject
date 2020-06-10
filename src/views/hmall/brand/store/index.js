@@ -2,6 +2,18 @@
 import * as types from './mutation-types'
 import { findBrandList, findBrandAreaList, findBrandAreaDetail, findBrandDetail, getChiness, findAllBrands } from '../api'
 
+function recursiveChineseArea (array = [], frequency = 3) {
+    if (frequency > 0) {
+        return array.map(item => {
+            return {
+                value: item.countryId || item.cityId || item.provinceId,
+                label: item.name,
+                children: recursiveChineseArea(item.cities || item.countries, frequency - 1)
+            }
+        })
+    }
+}
+
 const state = {
     brandListInfo: {},
     brandAuthorizationInfo: {},
@@ -14,38 +26,10 @@ const state = {
 const getters = {
     // 省市区遍历成级联树结构
     countryOptions: state => {
-        return state.chineseArea.map(item1 => {
-            return {
-                value: item1.provinceId,
-                label: item1.name,
-                children: item1.cities.map(item2 => {
-                    return {
-                        value: item2.cityId,
-                        label: item2.name,
-                        children: item2.countries.map(item3 => {
-                            return {
-                                value: item3.countryId,
-                                label: item3.name
-                            }
-                        })
-                    }
-                })
-            }
-        }) || []
+        return recursiveChineseArea(state.chineseArea, 3) || []
     },
     cityOptions: state => {
-        return state.chineseArea.map(item1 => {
-            return {
-                value: item1.provinceId,
-                label: item1.name,
-                children: item1.cities.map(item2 => {
-                    return {
-                        value: item2.cityId,
-                        label: item2.name
-                    }
-                })
-            }
-        }) || []
+        return recursiveChineseArea(state.chineseArea, 2) || []
     },
     // 品牌下拉选择器
     brandOptions: state => {
