@@ -179,7 +179,7 @@ export default {
             columnData.forEach((value, index) => {
                 if (index > 3) {
                     value.children.forEach((val) => {
-                        if (this.platformPlanTotal[val.prop]) {
+                        if (this.platformPlanTotal[val.prop] !== null) {
                             val.children[0].label = String(this.platformPlanTotal[val.prop])
                         }
                     })
