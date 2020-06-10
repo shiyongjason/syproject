@@ -3,7 +3,9 @@ import * as Api from '../api'
 import moment from 'moment'
 const state = {
     planTotalList: [],
-    targetTime: ''
+    targetTime: {
+        businessDate: ''
+    }
 }
 
 const getters = {

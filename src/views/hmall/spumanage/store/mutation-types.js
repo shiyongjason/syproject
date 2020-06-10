@@ -1,0 +1,11 @@
+// 商品审核列表
+export const PRODUCTS_AUDIT_TREE = 'PRODUCTS_AUDIT_TREE'
+
+// 品牌分页列表
+export const SPECIFICATIONS_INFO = 'SPECIFICATIONS_INFO'
+
+// spu商品管理列表
+export const PRODUCTS_BAZAAR_INFO = 'PRODUCTS_BAZAAR_INFO'
+
+// spu模板列表
+export const PRODUCTS_TEMPLATE_INFO = 'PRODUCTS_TEMPLATE_INFO'
