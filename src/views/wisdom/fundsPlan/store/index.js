@@ -48,17 +48,17 @@ const getters = {
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
-            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100) + '%'
-            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100) + '%'
-            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100) + '%'
+            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100).toFixed(2) + '%'
+            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100).toFixed(2) + '%'
+            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100).toFixed(2) + '%'
         })
         return state.planCreditList
     },
     planCreditTotal: state => {
         for (const key in state.planCreditTotal) {
-            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
-            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
-            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
+            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
+            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
+            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
         }
         return state.planCreditTotal
     },
