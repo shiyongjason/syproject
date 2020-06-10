@@ -157,19 +157,19 @@ export const platformPlan = function (targetYear, targetMonth) {
         },
         {
             prop: 'regionName',
-            label: '大区',
+            label: '',
             showOverflowTooltip: true,
-            width: '100',
+            width: '120',
             fixed: true,
             children: [
                 {
                     prop: 'regionName',
-                    label: `-`,
-                    width: '100',
+                    label: `大区`,
+                    width: '120',
                     children: [
                         {
                             prop: 'regionName',
-                            width: '100',
+                            width: '120',
                             label: `合计`
                         }
                     ]
