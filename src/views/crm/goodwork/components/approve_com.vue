@@ -7,7 +7,7 @@
                   {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
                 </el-form-item>
                 <el-form-item label="说明：" >
-                   {{approveForm.remark}}
+                   {{approveForm.remark?approveForm.remark:'-'}}
                 </el-form-item>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
