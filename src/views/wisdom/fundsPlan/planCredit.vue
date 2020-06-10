@@ -95,10 +95,7 @@ export default {
             planCreditList: 'fundsPlan/planCreditList',
             planCreditPagination: 'fundsPlan/planCreditPagination',
             planCreditTotal: 'fundsPlan/planCreditTotal'
-        }),
-        planCreditLabel () {
-            return planCreditLabel(this.tabSwitch, this.hasAuth)
-        }
+        })
     },
     data () {
         return {
@@ -155,7 +152,17 @@ export default {
             }
             this.findPlanCreditList(params)
             await this.findPlanCreditTotal(params)
-            this.columnData = this.planCreditLabel
+            const columnData = planCreditLabel(this.tabSwitch, this.hasAuth)
+            columnData.forEach((value, index) => {
+                if (index > 3) {
+                    value.children.forEach((val) => {
+                        if (this.planCreditTotal[val.prop]) {
+                            val.label = String(this.planCreditTotal[val.prop])
+                        }
+                    })
+                }
+            })
+            this.columnData = columnData
             this.reRender = true
         },
         linkage (dis) {
