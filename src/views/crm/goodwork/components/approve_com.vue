@@ -4,7 +4,7 @@
 
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
                   <el-form-item :label="approveTitle+'结果：'" >
-                   {{approveForm.approveResult?'通过':'不通过'}}
+                  {{approveForm.approveResult==true?'通过':informationDetail.approveResult==false?'不通过':'-'}}
                 </el-form-item>
                 <el-form-item label="说明：" >
                    {{approveForm.remark}}
