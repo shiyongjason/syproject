@@ -157,19 +157,19 @@ export const platformPlan = function (targetYear, targetMonth) {
         },
         {
             prop: 'regionName',
-            label: '大区',
+            label: '',
             showOverflowTooltip: true,
-            width: '100',
+            width: '120',
             fixed: true,
             children: [
                 {
                     prop: 'regionName',
-                    label: `-`,
-                    width: '100',
+                    label: `大区`,
+                    width: '120',
                     children: [
                         {
                             prop: 'regionName',
-                            width: '100',
+                            width: '120',
                             label: `合计`
                         }
                     ]
@@ -188,6 +188,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                         {
                             prop: 'annualCommitment',
                             width: '150',
+                            displayAs: 'fundMoney',
                             label: `-`
                         }
                     ]
@@ -200,6 +201,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'currentMonthCommitment',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -214,6 +216,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'lastYearActualSales',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -228,6 +231,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'estimateSales',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -247,6 +251,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'loanBalance',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -261,6 +266,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'totalOverdue',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -274,6 +280,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'estimateRepayment',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -287,6 +294,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'lastYearActualUse',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }
@@ -300,6 +308,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'preBorrowCurrentMonth',
+                            displayAs: 'fundMoney',
                             width: '150',
                             label: `-`
                         }

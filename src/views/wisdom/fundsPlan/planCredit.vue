@@ -156,7 +156,7 @@ export default {
             columnData.forEach((value, index) => {
                 if (index > 3) {
                     value.children.forEach((val) => {
-                        if (this.planCreditTotal[val.prop]) {
+                        if (this.planCreditTotal[val.prop] !== null && this.planCreditTotal[val.prop] !== undefined) {
                             val.label = String(this.planCreditTotal[val.prop])
                         }
                     })
