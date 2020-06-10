@@ -173,7 +173,7 @@ export default {
             ],
             rules: {
                 categoryId: [
-                    { required: true, whitespace: true, message: '请选择商品类目' }
+                    { type: 'number', required: true, whitespace: true, message: '请选择商品类目' }
                 ],
                 model: [
                     { required: true, whitespace: true, message: '请填写规格/型号', trigger: 'blur' }

@@ -106,6 +106,7 @@ export default [
             isMenu: true,
             icon: 'hosjoy_hzh'
         },
+        // redirect: '/wisdom/' + this.children[0].path,
         component: Layout,
         children: [
             {
