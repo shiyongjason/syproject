@@ -285,6 +285,7 @@ export default {
                 }
             }
             this.queryParams.selectTime = this.targetTime
+            this.newBossAuth()
             this.onQuery({ ...this.queryParams, pageSize: 10, pageNumber: 1 })
         }
     },

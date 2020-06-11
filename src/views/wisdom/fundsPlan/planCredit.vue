@@ -206,6 +206,7 @@ export default {
             this.selectAuth.platformObj = { ...obj }
             this.selectAuth.areaObj = { ...obj }
             this.btnQuery(this.queryParams)
+            this.newBossAuth()
         },
         onExport () {
             exportPlanCredit(this.queryParams, this.queryParams.selectType === '0' ? '平台公司资金用信情况' : '分部资金用信情况')
