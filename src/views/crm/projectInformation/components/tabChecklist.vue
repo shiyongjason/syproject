@@ -1,6 +1,6 @@
 <template>
     <div class="page-body-cont" v-if="informationDetail.projectDocList&&informationDetail.projectDocList.length>0">
-        <div v-if="$route.query.docAfterStatus==1">资料审核通过后展示</div>
+        <div v-if="$route.query.docAfterStatus!=3">资料审核通过后展示</div>
         <div v-else>
             <div v-for="(item,index) in informationDetail.projectDocList" :key="index">
                 <div class="firstclass">{{item.firstCatagoryName}}</div>
