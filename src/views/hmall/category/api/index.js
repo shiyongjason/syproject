@@ -1,20 +1,27 @@
-import instance from '@/api/axios_new.js'
+import { B2bUrl } from '@/api/config'
+import axios from 'axios'
 
 // 查询所有类目
-export const findAllCategory = (params) => instance.get('/product/api/categories/all', { params })
+export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categories/tree', { params })
 // 根据父类目获取类目信息
-export const findCategoryByParent = (params) => instance.get(`/product/api/categories/${params.parentId}`, {})
+export const findCategoryByParent = (params) => axios.get(B2bUrl + `product/api/categories/${params.parentId}`, {})
 // 新增类目
-export const createCategory = (params) => instance.post('/product/api/categories', params)
+export const createCategory = (params) => axios.post(B2bUrl + 'product/api/categories', params)
 // 修改类目
-export const updateCategory = (params) => instance.put('/product/api/categories', params)
-// 上移和下移
-export const moveCategory = (params) => instance.put('/product/api/categories/move', params)
+export const updateCategory = (params) => axios.put(B2bUrl + 'product/api/categories', params)
+
 // 设置参数
-export const linkParams = (params) => instance.post('/product/api/categories/setupthe', params)
+export const linkParams = (params) => axios.post(B2bUrl + 'product/api/categories/setupthe', params)
 // 关联品牌
-export const linkBrands = (params) => instance.post('/product/api/categories/relation', params)
+export const linkBrands = (params) => axios.post(B2bUrl + 'product/api/categories/relation', params)
 // 获取关联的参数
-export const findLinkParams = (params) => instance.get('/product/api/categories/setupthe', { params })
+export const findLinkParams = (params) => axios.get(B2bUrl + 'product/api/categories/setupthe', { params })
 // 获取关联的品牌
-export const findLinkBrands = (params) => instance.get('/product/api/categories/relation', { params })
+export const findLinkBrands = (params) => axios.get(B2bUrl + 'product/api/categories/relation', { params })
+
+// 查询类目规格参数
+export const findSpecifications = (params) => axios.get(B2bUrl + `product/api/categories/specifications/${params.categoryId}`)
+// 新增类目规格参数
+export const createSpecifications = (params) => axios.post(B2bUrl + `product/api/categories/specifications`, params)
+// 更新类目规格参数
+export const updateSpecifications = (params) => axios.put(B2bUrl + `product/api/categories/specifications`, params)

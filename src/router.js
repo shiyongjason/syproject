@@ -213,10 +213,10 @@ const routerMapping = [
         ]
     },
     ...Wisdomrouter,
-    ...Bestrouter,
+    Bestrouter,
     ...B2brouter,
-    ...Jyrouter,
-    ...Cloudrouter,
+    Jyrouter,
+    Cloudrouter,
     Crmrouter
 ]
 

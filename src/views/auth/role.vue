@@ -31,57 +31,50 @@
                 <table class="tablelist">
                     <thead>
                         <tr>
-                            <td width="15%">一级菜单</td>
-                            <td width="15%">二级菜单</td>
-                            <td width="15%">三级菜单</td>
-                            <td width="50%" colspan=4>权限</td>
+                            <td width="">一级菜单</td>
+                            <td width="">二级菜单</td>
+                            <td width="" colspan=4>权限</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item, index) in tableList">
+                        <template v-for="(item) in tableList">
                             <template v-for="(itema, indexa) in item.childAuthList">
-                                <template v-for="(itemb, indexb) in itema.childAuthList">
-                                    <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
-                                        <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
-                                            <el-checkbox v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
-                                        </td>
-                                        <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
-                                            <div v-if="itema.authName">
-                                                <el-checkbox v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
-                                            </div>
-                                        </td>
-                                        <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
-                                            <div v-if="itemb.authName">
-                                                <el-checkbox v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
-                                            </div>
-                                        </td>
-                                        <td width='300'>
-                                            <div v-if="itemc.authName">
-                                                <el-checkbox v-model="itemc.have" @change="onCheckboxChange([item, itema, itemb, itemc], itemc.have)">{{itemc.authName}}</el-checkbox>
-                                            </div>
-                                        </td>
-                                        <template v-if="itemc.authTypeList">
-                                            <template v-for="(itemAuthType, authTypeIndex) in itemc.authTypeList">
-                                                <td :key="authTypeIndex + '_authType'" width="300">
-                                                    <div v-if="itemAuthType.id">
-                                                        <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemc.have" class="mr10">
-                                                            {{ itemAuthType.authType == 0 ? '敏感字段' : itemAuthType.authType == 1?  '敏感操作' : '敏感数据' }}
-                                                        </el-checkbox>
-                                                        <div class="el-radio-group">
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
-                                                            <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType)" :disabled="!itemAuthType.have">配置</button>
-                                                        </div>
+                                <tr v-for="(itemb, indexb) in itema.childAuthList" :key="indexb+'_'+itemb.id?itemb.id:item.id">
+                                    <td :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0">
+                                        <el-checkbox v-model="item.have" @change="onCheckboxChange([item], item.have)">{{item.authName}}</el-checkbox>
+                                    </td>
+                                    <td :rowspan="computedRowspan(itema.childAuthList, 1)" v-if="indexb==0">
+                                        <div v-if="itema.authName">
+                                            <el-checkbox v-model="itema.have" @change="onCheckboxChange([item, itema], itema.have)">{{itema.authName}}</el-checkbox>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div v-if="itemb.authName">
+                                            <el-checkbox v-model="itemb.have" @change="onCheckboxChange([item, itema, itemb], itemb.have)">{{itemb.authName}}</el-checkbox>
+                                        </div>
+                                    </td>
+                                    <template v-if="itemb.authTypeList">
+                                        <template v-for="(itemAuthType, authTypeIndex) in itemb.authTypeList">
+                                            <td :key="authTypeIndex + '_authType'" width="300">
+                                                <div v-if="itemAuthType.id">
+                                                    <el-checkbox v-model="itemAuthType.have" @change="onChangeAuthType(itemAuthType)" :disabled="!itemb.have" class="mr10">
+                                                        {{ itemAuthType.authType == 0 ? '敏感字段' :itemAuthType.authType == 1 ? '敏感操作':itemAuthType.authType == 2? '数据范围' :'1'}}
+                                                    </el-checkbox>
+                                                    <div class="el-radio-group">
+                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 0 ? 'taborg' : ''" @click="onShowFieldConfig(0, itemAuthType)" :disabled="!itemAuthType.have">全部</button>
+                                                        <button class="el-radio-button__inner" :class="itemAuthType.status == 1 ? 'taborg' : ''" @click="onShowFieldConfig(1, itemAuthType,[itema,itemb])" :disabled="!itemAuthType.have">配置</button>
                                                     </div>
-                                                    <div v-else></div>
-                                                </td>
-                                            </template>
+                                                </div>
+                                                <div v-else></div>
+                                            </td>
                                         </template>
-                                        <template v-else>
-                                            <td width="300"></td>
-                                            <td width="300"></td>
-                                        </template>
-                                    </tr>
-                                </template>
+                                    </template>
+                                    <template v-else>
+                                        <td width="300"></td>
+                                        <td width="300"></td>
+                                        <td width="300"></td>
+                                    </template>
+                                </tr>
                             </template>
                         </template>
                     </tbody>
@@ -139,7 +132,7 @@
 </template>
 
 <script>
-import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getOrganizationTree } from './api/index'
+import { findMenuList, saveAuthRole, getRoleInfo, findpostList, getRegionsubs } from './api/index'
 import { mapState } from 'vuex'
 export default {
     name: 'role',
@@ -177,11 +170,7 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        var shy = JSON.parse(JSON.stringify(data))
-        this.handleData(shy)
-        // console.log(shy)
-        this.tableList = this.handlerTableList(shy, 0)
-        // console.log(this.tableList)
+        this.tableList = this.handlerTableList(data, 0)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
         this.roleInfo = roleInfo
@@ -189,12 +178,12 @@ export default {
         this.positionCodeList = this.roleInfo.positionCodeList
         const { data: postOptions } = await findpostList('')
         this.postOptions = postOptions
-        this.getOrganizationTree()
+        this.onGetRegionsubs()
     },
     methods: {
-        async getOrganizationTree () {
-            const { data } = await getOrganizationTree()
-            this.organizationTree = data
+        async onGetRegionsubs () {
+            const { data } = await getRegionsubs()
+            this.reData = data
         },
         onGetnodes () {
             if (this.layerType == 2) {
@@ -224,8 +213,26 @@ export default {
                         return authType
                     })
                 }
-                if (level < 3) {
-                    if (!item.childAuthList || item.childAuthList.length === 0) {
+                // 如果只有敏感字段或者敏感操作一种配置，那么补充另外一个为空对象，方便循环
+                if (item.authTypeList && item.authTypeList.length < 3) {
+                    for (let i = 0; i < 3; i++) {
+                        if (item.authTypeList[i] && item.authTypeList[i].authType == i) {
+
+                        } else {
+                            item.authTypeList.splice(i, 0, { authType: '' })
+                        }
+                    }
+
+                    // if (item.authTypeList[0].authType == 2) {
+                    //     item.authTypeList.splice(0, 0, {})
+                    // } else if (item.authTypeList[0].authType == 1) {
+                    //     item.authTypeList.splice(0, 0, {})
+                    // } else {
+                    //     item.authTypeList.push({})
+                    // }
+                }
+                if (level < 2) {
+                    if (!item.childAuthList) {
                         item.childAuthList = [{
                             authTypeList: item.authTypeList,
                             have: item.have
@@ -237,43 +244,16 @@ export default {
                 return item
             })
         },
-        handleData (data) {
-            data.map(i => {
-                if (!i.childAuthList || i.childAuthList.length === 0) {
-                    i.authTypeList = this.compare(i.authTypeList)
-                } else {
-                    this.handleData(i.childAuthList)
-                }
-            })
-        },
-        compare (authTypeList) {
-            const arr = [
-                { id: '', authType: 0 },
-                { id: '', authType: 1 },
-                { id: '', authType: 2 }
-            ]
-            if (!authTypeList || authTypeList.length === 0) {
-                return arr
-            }
-            arr.map(i => {
-                const a = authTypeList.filter(it => {
-                    return it.authType === i.authType
-                })
-                if (a.length === 0) {
-                    authTypeList.push(i)
-                }
-            })
-            return authTypeList.sort((a, b) => a.authType - b.authType)
-        },
         // 计算table合并行数
-        computedRowspan (list, len) {
-            len += list.length
-            list.forEach(item => {
-                if (item.childAuthList && item.childAuthList.length > 0) {
-                    len = this.computedRowspan(item.childAuthList, len) - 1
-                }
-            })
-            return len
+        computedRowspan (list, level) {
+            if (level == 0) {
+                let len = 0
+                list.forEach(item => {
+                    len += item.childAuthList.length
+                })
+                return len
+            }
+            return list.length
         },
         // 敏感字段和敏感操作的checkbox转换的处理
         onChangeAuthType (item) {

@@ -3,97 +3,46 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">SPU编码：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.spuCode" placeholder="请输入SPU编码" maxlength="50"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
                     <div class="query-col-title">商品品牌：</div>
                     <div class="query-col-input">
-                        <!-- <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input> -->
-                         <HAutocomplete :placeholder="'输入商品品牌'" @back-event="backFindbrand" :selectArr="brandList" v-if="brandList"  :remove-value='removeValue'/>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品完整度：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.integrity">
-                            <el-option label="全部" value="">
+                        <el-select v-model="queryParams.brandId" filterable placeholder="请选择">
+                            <el-option
+                            label="全部"
+                            value="">
                             </el-option>
-                            <el-option label="完整" value="1">
-                            </el-option>
-                            <el-option label="不完整" value="0">
+                            <el-option
+                            v-for="item in brandOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                             </el-option>
                         </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品状态：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.status">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option label="禁用" value="2">
-                            </el-option>
-                            <el-option label="启用" value="1">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品来源：</div>
-                    <div class="query-col-input">
-                        <!-- <el-select v-model="queryParams.merchantCode">
-                            <el-option label="全部" value="">
-                            </el-option>
-                            <el-option :key="item.sourceCode" :label="item.sourceName" :value="item.sourceCode" v-for="item in productSource">
-                            </el-option>
-                        </el-select> -->
-                        <HAutocomplete :placeholder="'输入商品来源'" @back-event="backFindcode" :selectArr="productSource" v-if="productSource" :remove-value='removeValue'/>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品类目：</div>
                     <div class="query-col-input">
-                        <el-cascader :options="categoryList" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">商品型号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.specification" placeholder="请输入商品型号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.model" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">维护时间：</div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">商品名称：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-input v-model="queryParams.name" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
-                </div> -->
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">维护人：</div>
-                    <div class="query-col-input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.operator" placeholder="请输入维护人姓名">
-                        </el-input>
-                    </div>
-                </div> -->
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <el-button type="primary" class="ml20" @click="searchList">
                             查询
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        <el-button type="primary" class="ml20" @click="onRest">
                             重置
                         </el-button>
                     </div>
@@ -102,16 +51,10 @@
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="gotoProductAdd">
-                        新建商品SPU
+                        新建SPU模板
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(2)">批量禁用</el-button>
-                    <el-button type="primary" class="ml20" @click="onChangeStatus(1)">批量启用</el-button>
-                    <!-- <el-button type="primary" class="ml20" @click="onExport()">
-                        导出
-                    </el-button> -->
-                    <!-- <el-button type="primary" class="ml20" @click="dialogFormVisible = true">
-                        导入
-                    </el-button> -->
+                    <el-button type="primary" class="ml20" @click="onDisable()">批量禁用</el-button>
+                    <el-button type="primary" class="ml20" @click="onEnable()">批量启用</el-button>
                 </div>
             </div>
         </div>
@@ -121,23 +64,25 @@
                 <template slot="brandName" slot-scope="scope">
                     {{scope.data.row.brandName}}{{scope.data.row.brandNameEn}}
                 </template>
-                <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status==1?'colred':'colgry'">{{scope.data.row.status==1?'启用':'禁用'}}</span>
+                <template slot="isEnable" slot-scope="scope">
+                    <span :class="scope.data.row.isEnable===1?'colred':'colgry'">{{scope.data.row.isEnable===1?'启用':'禁用'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
-                    <el-button :type="scope.data.row.status ==1?'primary':''" size="mini" plain @click="onChangeSpu(scope.data.row)" v-text="scope.data.row.status === 1 ? '禁用' : '启用'">
-                    </el-button>
+                    <template v-if="scope.data.row.isEnable ===1">
+                        <el-button type="primary" size="mini" plain   @click="onDisable(scope.data.row.id)">禁用</el-button>
+                    </template>
+                    <template v-else>
+                        <el-button size="mini" plain @click="onEnable(scope.data.row.id)">启用</el-button>
+                    </template>
                 </template>
             </basicTable>
         </div>
-        <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
-import { mapState, mapActions } from 'vuex'
+import { templateDisable, templateEnable } from './api/index'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { clearCache, newCache } from '@/utils/index'
 export default {
@@ -146,75 +91,116 @@ export default {
         return {
             categoryIdArr: [],
             productSource: [],
-            brandList: [],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                spuCode: '',
-                spuName: '',
-                brandName: '',
-                specification: '',
-                categoryId: '',
                 brandId: '',
-                integrity: '',
-                status: '',
-                source: 0,
-                startTime: '',
-                endTime: '',
-                operator: '',
-                merchantCode: ''
+                categoryId: '',
+                model: '',
+                name: ''
             },
             copyParams: {},
             tableData: [],
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: 'SPU编码', prop: 'spuCode' },
                 { label: '品牌', prop: 'brandName' },
-                { label: '商品名称', prop: 'spuName', width: '200' },
-                { label: '型号', prop: 'specification' },
-                { label: '类目', prop: 'categoryNames', width: '200' },
-                { label: '完整度', prop: 'integrity' },
-                { label: '来源', prop: 'merchantName' },
-                { label: '维护人', prop: 'updateBy' },
-                { label: '维护时间', prop: 'updateTime', width: '200' },
-                { label: '状态', prop: 'status' }
+                { label: '商品名称', prop: 'name', width: '200' },
+                { label: '型号', prop: 'model' },
+                { label: '类目', prop: 'categoryPathName', width: '200' },
+                { label: '维护人', prop: 'operator' },
+                { label: '维护时间', prop: 'lastModifyTime', width: '200', formatters: 'dateTime' },
+                { label: '状态', prop: 'isEnable' }
             ],
             rowKey: '',
-            multiSelection: [],
-            removeValue: false
+            multiSelection: []
         }
     },
-    components: {
-        HAutocomplete
-    },
     computed: {
-        pickerOptionsStart () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
-                    if (beginDateVal) {
-                        return time.getTime() > beginDateVal
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() < beginDateVal
-                    }
-                }
-            }
-        },
         ...mapState({
-            userInfo: state => state.userInfo,
-            userInfo2: state => state.hmall.userInfo,
-            categoryList: state => state.hmall.categoryList
+            userInfo: state => state.userInfo
+        }),
+        ...mapState('spumanage', {
+            productsTemplateInfo: 'productsTemplateInfo'
+        }),
+        ...mapGetters('category', {
+            categoryOptions: 'categoryOptions'
+        }),
+        ...mapGetters('brand', {
+            brandOptions: 'brandOptions'
         })
+    },
 
+    async mounted () {
+        this.findAllCategory()
+        this.findAllBrands()
+        this.searchList()
+        this.copyParams = deepCopy(this.queryParams)
+    },
+    activated () {
+        this.searchList()
+    },
+    methods: {
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+        ...mapActions('brand', [
+            'findAllBrands'
+        ]),
+        ...mapActions('spumanage', [
+            'findProductsTemplate'
+        ]),
+        onRest () {
+            this.categoryIdArr = []
+            this.queryParams = deepCopy(this.copyParams)
+            this.searchList()
+        },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.searchList()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.searchList()
+        },
+        productCategoryChange (val) {
+            this.queryParams.categoryId = val[val.length - 1]
+        },
+        async searchList () {
+            await this.findProductsTemplate(this.queryParams)
+            this.tableData = this.productsTemplateInfo.records
+            this.paginationInfo = {
+                pageNumber: this.productsTemplateInfo.current,
+                pageSize: this.productsTemplateInfo.size,
+                total: this.productsTemplateInfo.total
+            }
+        },
+        // 批量禁用，根据是否传递单独id区分批量
+        async onDisable (templateId) {
+            if (!templateId && this.multiSelection.length < 1) {
+                this.$message.warning('请先选择SPU模板')
+                return
+            }
+            await templateDisable({ spuTemplateIdList: templateId ? [templateId] : this.multiSelection.map(v => v.id) })
+            this.$message.success('操作成功')
+            this.searchList()
+        },
+        // 批量启用，根据是否传递单独id区分批量
+        async onEnable (templateId) {
+            if (!templateId && this.multiSelection.length < 1) {
+                this.$message.warning('请先选择SPU模板')
+                return
+            }
+            await templateEnable({ spuTemplateIdList: templateId ? [templateId] : this.multiSelection.map(v => v.id) })
+            this.$message.success('操作成功')
+            this.searchList()
+        },
+        gotoProductAdd () {
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'add' } })
+        },
+        onEditSpu (val) {
+            this.$router.push({ path: '/hmall/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
+        }
     },
     beforeRouteEnter (to, from, next) {
         newCache('spumange')
@@ -225,116 +211,6 @@ export default {
             clearCache('spumange')
         }
         next()
-    },
-    async mounted () {
-        const { data } = await findBossSource({ withBoss: 1 })
-        this.productSource = data
-        // TODO 模糊搜索组件
-        this.productSource && this.productSource.map(item => {
-            item.value = item.sourceName
-            item.selectCode = item.sourceCode
-        })
-        const { data: brand } = await getBrands()
-        this.brandList = brand
-        const brandList = []
-        // TODO 模糊搜索组件
-        this.brandList && this.brandList.map((item, index) => {
-            brandList.push({ value: item, selectCode: item })
-        })
-        this.brandList = brandList
-        this.findCategoryList()
-        this.searchList()
-        this.copyParams = deepCopy(this.queryParams)
-    },
-    activated () {
-        this.searchList()
-    },
-    methods: {
-        onRest () {
-            this.categoryIdArr = []
-            this.queryParams = deepCopy(this.copyParams)
-            this.removeValue = true
-            this.searchList()
-        },
-        ...mapActions({
-            findCategoryList: 'findCategoryList'
-        }),
-        handleSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.searchList()
-        },
-        handleCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.searchList()
-        },
-        productCategoryChange (val) {
-            this.queryParams.categoryId = val
-        },
-        async  searchList () {
-            // this.removeValue = false
-            const { ...params } = this.queryParams
-            if (params.startTime) {
-                params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
-            }
-            if (params.endTime) {
-                params.endTime = this.$root.$options.filters.formatterTime(params.endTime)
-            }
-            if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
-            const { data } = await findProducts(params)
-            this.tableData = data.records
-            this.paginationInfo = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
-            }
-            this.removeValue = false
-        },
-        async onChangeStatus (status) {
-            let multiSelection = this.multiSelection && this.multiSelection.map(val => val.id)
-            if (multiSelection.length < 1) {
-                this.$message({
-                    message: '请先选择商品！',
-                    type: 'warning'
-                })
-                return
-            }
-            const params = {
-                spuIdList: multiSelection,
-                status: status,
-                operator: this.userInfo.employeeName
-            }
-            await changeSpustatus(params)
-            this.$message({
-                message: params.status === 2 ? '禁用成功！' : '启用成功！',
-                type: 'success'
-            })
-            this.searchList()
-        },
-        gotoProductAdd () {
-            this.$router.push({ path: '/b2b/spudetail', query: { type: 'add' } })
-        },
-        onEditSpu (val) {
-            this.$router.push({ path: '/b2b/spudetail', query: { type: 'modify', spuCode: val.spuCode, status: val.status } })
-        },
-        async  onChangeSpu (val) {
-            const params = {
-                spuIdList: [val.id],
-                status: val.status === 1 ? 2 : 1,
-                operator: this.userInfo.employeeName
-            }
-            await changeSpustatus(params)
-            this.$message({
-                message: params.status === 2 ? '禁用成功！' : '启用成功！',
-                type: 'success'
-            })
-            this.searchList()
-        },
-        backFindcode (val) {
-            this.queryParams.merchantCode = val.value.selectCode
-        },
-        backFindbrand (val) {
-            this.queryParams.brandName = val.value.selectCode
-        }
     }
 }
 </script>
