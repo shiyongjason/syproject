@@ -1,36 +1,92 @@
 import Layout from '@/views/layout/Default.vue'
+import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
 
 export default [
     {
-        path: '/jinyun',
+        path: '/creditManage',
         meta: {
-            title: '金云系统',
+            title: '授信管理',
             isMenu: true,
             icon: 'hosjoy_stay_online'
         },
         component: Layout,
         children: [
             {
-                path: 'enterpriseCA',
-                name: 'enterpriseCA',
+                path: 'contractManage',
                 meta: {
-                    title: 'CA认证',
-                    tagName: 'CA认证',
+                    title: '合同管理',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_stay_online'
                 },
-                component: () => import('@/views/jinyunplatform/enterpriseCA')
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'enterpriseCA',
+                        name: 'enterpriseCA',
+                        meta: {
+                            title: 'CA认证',
+                            tagName: 'CA认证',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/jinyunplatform/enterpriseCA')
+                    },
+                    {
+                        path: 'faceRecognition',
+                        name: 'faceRecognition',
+                        meta: {
+                            title: '人脸识别',
+                            tagName: '人脸识别',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/jinyunplatform/faceRecognition')
+                    }
+                ]
             },
             {
-                path: 'amountImport',
-                name: 'amountImport',
+                path: 'quotaManage',
                 meta: {
-                    title: '额度导入',
-                    tagName: '额度导入',
+                    title: '额度管理',
                     isMenu: true,
-                    icon: ''
+                    icon: 'hosjoy_stay_online'
                 },
-                component: () => import('@/views/jinyunplatform/amountImport')
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'amountImport',
+                        name: 'amountImport',
+                        meta: {
+                            title: '额度导入',
+                            tagName: '额度导入',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/jinyunplatform/amountImport')
+                    }
+                ]
+            },
+            {
+                path: 'jinyun',
+                meta: {
+                    title: '用信申请',
+                    isMenu: true,
+                    icon: 'hosjoy_stay_online'
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'processManage',
+                        name: 'processManage',
+                        meta: {
+                            title: '流程查询',
+                            tagName: '流程查询',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/jinyunplatform/processManage')
+                    }
+                ]
             },
             {
                 path: 'accountImport',
@@ -42,52 +98,7 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/jinyunplatform/accountImport')
-            },
-            {
-                path: 'processManage',
-                name: 'processManage',
-                meta: {
-                    title: '流程查询',
-                    tagName: '流程查询',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/jinyunplatform/processManage')
-            },
-            {
-                path: 'faceRecognition',
-                name: 'faceRecognition',
-                meta: {
-                    title: '人脸识别',
-                    tagName: '人脸识别',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/jinyunplatform/faceRecognition')
             }
-            // 后台改动太大，暂时不做，或许下一期做或者下下期暂定
-            // {
-            //     path: 'businessCustomer',
-            //     name: 'businessCustomer',
-            //     meta: {
-            //         title: '企业客户',
-            //         tagName: '企业客户',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/jinyunplatform/businessCustomer')
-            // },
-            // {
-            //     path: 'addBusinessCustomer',
-            //     name: 'addBusinessCustomer',
-            //     meta: {
-            //         title: '企业客户',
-            //         tagName: '企业客户',
-            //         isMenu: false,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/jinyunplatform/pages/addBusinessCustomer')
-            // }
         ]
     }
 ]

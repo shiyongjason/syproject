@@ -55,7 +55,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/brand/brandAudit.vue')
-                    },        
+                    },
                     {
                         path: 'attribute',
                         name: 'attribute',
