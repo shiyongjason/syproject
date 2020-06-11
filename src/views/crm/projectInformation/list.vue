@@ -55,20 +55,20 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">初审通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">材料审核通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
