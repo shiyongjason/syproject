@@ -1,5 +1,26 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
+        <div v-if="collapseShow">
+            <div class="collapse">
+                <img src="../../../src/assets/images/typeIcon.png" alt="" class="collapse" @click="collapse = !collapse">
+            </div>
+            <el-collapse-transition>
+                <div class="collapse-content" v-if="collapse">
+                    <el-tree
+                        :data="switchLabel"
+                        show-checkbox
+                        default-expand-all
+                        node-key="id"
+                        ref="tree"
+                        highlight-current
+                        check-on-click-node
+                        :default-checked-keys="defaultLabel"
+                        @check-change="checkHandler"
+                        :props="defaultProps">
+                    </el-tree>
+                </div>
+            </el-collapse-transition>
+        </div>
         <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height || `calc(100vh - ${selfHeight}px)`"
                   class="hosjoy-in-table"
                   :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
@@ -39,6 +60,7 @@
 
 <script>
 import hosjoyColumn from './hosjoy-column'
+import { mapState } from 'vuex'
 
 export default {
     props: {
@@ -67,7 +89,12 @@ export default {
         },
         layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
         actionWidth: { type: String, default: '' },
-        height: { required: false }
+        height: { required: false },
+        collapseShow: {
+            required: false,
+            type: Boolean,
+            default: false
+        }
     },
     components: {
         hosjoyColumn
@@ -76,13 +103,24 @@ export default {
         return {
             mergeLine: {},
             mergeIndex: {},
-            selfHeight: 0
+            selfHeight: 0,
+            collapse: false,
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
+            defaultLabel: [],
+            selectedColumn: [],
+            userNameLog: ''
         }
     },
     created () {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         dataLength () {
             return this.data.length
         },
@@ -101,6 +139,23 @@ export default {
             set (val) {
                 this.$emit('update:pageSize', val)
             }
+        },
+        switchLabel () {
+            let number = Date.now()
+            return this.column.map(value => {
+                number++
+                return {
+                    id: value.prop || number,
+                    label: value.label,
+                    children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                        number++
+                        return {
+                            id: value1.prop || number,
+                            label: value1.label
+                        }
+                    })
+                }
+            })
         }
     },
     methods: {
@@ -190,6 +245,34 @@ export default {
                     colspan: _col
                 }
             }
+        },
+        collectDefaultId (arr, needShowArrFilter) {
+            arr.forEach(value => {
+                if (needShowArrFilter) {
+                    if (needShowArrFilter.indexOf(value.id) > -1) {
+                        this.defaultLabel.push(value.id)
+                        value.children && this.collectDefaultId(value.children, needShowArrFilter)
+                    }
+                } else {
+                    this.defaultLabel.push(value.id)
+                    value.children && this.collectDefaultId(value.children)
+                }
+            })
+        },
+        checkHandler (item, currentItemChecked) {
+            if (typeof item.id !== 'number') {
+                if (!currentItemChecked) {
+                    const number = this.defaultLabel.indexOf(item.id)
+                    if (number > -1) {
+                        this.defaultLabel.splice(number, 1)
+                    }
+                } else {
+                    this.defaultLabel.push(item.id)
+                    this.defaultLabel = [...new Set(this.defaultLabel)]
+                }
+                const userName = 'TABLE_USER_' + this.$route.path + this.userInfo.user_name
+                sessionStorage.setItem(userName, JSON.stringify(this.defaultLabel))
+            }
         }
     },
     watch: {
@@ -201,6 +284,15 @@ export default {
         }
     },
     mounted () {
+        this.userNameLog = 'TABLE_USER_' + this.$route.path + this.userInfo.user_name
+        const isLoggedIn = JSON.parse(sessionStorage.getItem(this.userNameLog))
+        if (isLoggedIn && isLoggedIn.length > 0) {
+            this.defaultLabel = isLoggedIn
+        } else {
+            this.defaultLabel = []
+            this.collectDefaultId(this.switchLabel)
+            sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+        }
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -209,6 +301,9 @@ export default {
 
 </script>
 <style scoped>
+    .hosjoy-table{
+        position: relative;
+    }
     .hosjoy-in-table {
         min-height: 300px;
     }
@@ -258,4 +353,23 @@ export default {
     /*    background: rgb(253, 233, 217);*/
     /*    font-weight: bold;*/
     /*}*/
+    .collapse {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: 10px;
+        top: 2px;
+        z-index: 1;
+        cursor: pointer;
+    }
+    .collapse-content {
+        position: absolute;
+        width: 280px;
+        top: 35px;
+        right: 10px;
+        background: #ffffff;
+        z-index: 2;
+        padding: 10px 18px;
+        box-sizing: border-box;
+    }
 </style>

@@ -60,7 +60,7 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="columnData" :data="platformPlanList"
+            <hosJoyTable ref="hosjoyTable"  collapseShow border stripe showPagination :column="columnData" :data="platformPlanList"
                          align="center"
                          :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
                          :total="platformPlanPagination.total" @pagination="getList">
