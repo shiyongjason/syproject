@@ -213,11 +213,11 @@ const routerMapping = [
         ]
     },
     ...Wisdomrouter,
-    Bestrouter,
+    ...Bestrouter,
     ...B2brouter,
-    Jyrouter,
-    Cloudrouter,
-    Crmrouter
+    ...Jyrouter,
+    ...Cloudrouter,
+    ...Crmrouter
 ]
 
 const router = new Router({

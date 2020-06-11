@@ -201,7 +201,7 @@ export default {
             const { data } = await getAuth()
             var shy = JSON.parse(JSON.stringify(data))
             this.handleData(shy)
-            console.log(shy)
+            // console.log(shy)
             this.tableList = this.handlerTableList(shy, 0)
         },
         // 计算table合并行数

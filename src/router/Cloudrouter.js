@@ -1,4 +1,5 @@
 import Layout from '@/views/layout/Default.vue'
+import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
 
 export default [
     {
