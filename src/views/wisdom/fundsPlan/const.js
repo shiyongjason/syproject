@@ -183,7 +183,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     prop: 'annualCommitment',
                     label: `${targetYear}年责任状目标`,
                     displayAs: 'fundMoney',
-                    align: 'right',
+                    align: 'center',
                     children: [
                         {
                             prop: 'annualCommitment',
@@ -197,7 +197,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
                     displayAs: 'fundMoney',
-                    align: 'right',
+                    align: 'center',
                     children: [
                         {
                             prop: 'currentMonthCommitment',
@@ -212,7 +212,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right',
+                    align: 'center',
                     children: [
                         {
                             prop: 'lastYearActualSales',
@@ -227,7 +227,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right',
+                    align: 'center',
                     children: [
                         {
                             prop: 'estimateSales',
@@ -247,12 +247,13 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: '在贷余额',
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right',
+                    align: 'center',
                     children: [
                         {
                             prop: 'loanBalance',
                             displayAs: 'fundMoney',
                             width: '150',
+                            align: 'center',
                             label: `-`
                         }
                     ]
@@ -262,11 +263,12 @@ export const platformPlan = function (targetYear, targetMonth) {
                     label: '逾期额',
                     width: '150',
                     displayAs: 'fundMoney',
-                    align: 'right',
+                    align: 'center',
                     children: [
                         {
                             prop: 'totalOverdue',
                             displayAs: 'fundMoney',
+                            align: 'center',
                             width: '150',
                             label: `-`
                         }
@@ -599,9 +601,12 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司编码',
             prop: 'misCode',
             isHidden: tabCheck,
+            width: 100,
+            fixed: true,
             children: [
                 {
                     label: '-',
+                    fixed: true,
                     width: 100,
                     prop: 'misCode'
                 }
@@ -611,10 +616,13 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司名称',
             prop: 'companyName',
             isHidden: tabCheck,
+            width: 120,
+            fixed: true,
             children: [
                 {
                     label: '-',
                     width: 120,
+                    fixed: true,
                     prop: 'companyName'
                 }
             ]
@@ -623,10 +631,13 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '区域',
             prop: 'subRegionName',
             isHidden: tabCheck,
+            width: 150,
+            fixed: true,
             children: [
                 {
                     label: '-',
                     width: 150,
+                    fixed: true,
                     prop: 'subRegionName'
                 }
             ]
@@ -634,10 +645,13 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '分部',
             prop: 'subsectionName',
+            width: 120,
+            fixed: true,
             children: [
                 {
                     label: '-',
                     width: 120,
+                    fixed: true,
                     prop: 'subsectionName'
                 }
             ]
@@ -645,10 +659,13 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '大区',
             prop: 'regionName',
+            width: 120,
+            fixed: true,
             children: [
                 {
                     label: '合计',
                     width: 120,
+                    fixed: true,
                     prop: 'regionName'
                 }
             ]

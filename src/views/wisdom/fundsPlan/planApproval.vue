@@ -248,6 +248,7 @@ export default {
                 }
             }
             this.params.valueYear = this.targetTime.slice(0, 4)
+            this.newBossAuth(['D', 'F', 'P'])
             this.btnQuery()
         },
         cancel () {
