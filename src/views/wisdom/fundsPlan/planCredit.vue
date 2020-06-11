@@ -203,6 +203,8 @@ export default {
             this.queryParams.selectTime = this.targetTime
             this.queryParams.pageSize = 10
             this.queryParams.pageNumber = 1
+            this.queryParams.subRegionCode = ''
+            this.queryParams.misCode = ''
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
