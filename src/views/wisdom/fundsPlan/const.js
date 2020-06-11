@@ -677,6 +677,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'annualTotalSale'
                 }
             ]
@@ -688,6 +690,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'annualTotalSaleAchieveRate'
                 }
             ]
@@ -699,6 +703,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'annualTotalProfit'
                 }
             ]
@@ -710,6 +716,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'annualTotalProfitAchieveRate'
                 }
             ]
@@ -721,6 +729,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'annualTotalLoan'
                 }
             ]
@@ -733,6 +743,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'annualTotalEffectiveRate'
                 }
             ]
@@ -740,12 +752,12 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '当月申报用款额',
             prop: 'currentApplyFund',
-            width: 150,
-            showOverflowTooltip: true,
+            width: 100,
             children: [
                 {
                     label: '-',
-                    width: 150,
+                    width: 100,
+                    isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     prop: 'currentApplyFund'
                 }
@@ -759,6 +771,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'currentApproveFund'
                 }
             ]
@@ -770,6 +784,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'currentActualLoan'
                 }
             ]
@@ -781,6 +797,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'currentRemainingRepayment'
                 }
             ]
@@ -792,6 +810,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'totalUnpaidAmount'
                 }
             ]
@@ -803,6 +823,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'totalRemainingOverdue'
                 }
             ]
@@ -814,6 +836,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'totalRemainingOverdueExist'
                 }
             ]
@@ -825,6 +849,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'totalRemainingOverdueIncrement'
                 }
             ]
@@ -836,6 +862,8 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                 {
                     label: '-',
                     width: 120,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
                     prop: 'currentOverdueAmount'
                 }
             ]

@@ -173,8 +173,10 @@ export default {
             columnData.forEach((value, index) => {
                 if (index > 3) {
                     value.children.forEach((val) => {
-                        if (this.planApprovalTotal[val.prop] !== null && this.planApprovalTotal[val.prop] !== undefined) {
+                        if (this.planApprovalTotal && (this.planApprovalTotal[val.prop] || this.planApprovalTotal[val.prop] === 0)) {
                             val.label = String(this.planApprovalTotal[val.prop])
+                        } else {
+                            val.label = '-'
                         }
                     })
                 }
