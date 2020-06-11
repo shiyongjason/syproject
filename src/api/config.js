@@ -9,7 +9,6 @@ let B2bUrl = ''
 let ccpBaseUrl = ''
 let fileUploadUrl = ''
 let iotUrl = ''
-let ccpBaseUrl = ''
 var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
 
 switch (env) {
@@ -38,7 +37,6 @@ switch (env) {
         B2bUrl = 'http://192.168.20.248:40000/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-        ccpBaseUrl = 'http://192.168.20.248:8021/'
         break
     case 'test':
         interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
@@ -60,7 +58,6 @@ switch (env) {
         ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-        ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
         break
     case 'production':
         // TODO: 给产品调用
@@ -72,7 +69,6 @@ switch (env) {
         ccpBaseUrl = 'https://ccp.hosjoy.com/'
         fileUploadUrl = 'https://hbp.hosjoy.com/'
         iotUrl = 'https://iot.hosjoy.com'
-        ccpBaseUrl = 'https://ccp.hosjoy.com/'
         break
 }
 export {
@@ -83,6 +79,5 @@ export {
     B2bUrl,
     ccpBaseUrl,
     fileUploadUrl,
-    iotUrl,
-    ccpBaseUrl
+    iotUrl
 }
