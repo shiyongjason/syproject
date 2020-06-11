@@ -95,7 +95,7 @@ export default {
                 this.$emit('back-event', {
                     value: item
                 })
-            }, 80)
+            }, 300)
         },
         blurInput (item) {
             if (!this.canDoBlurMethos) {
