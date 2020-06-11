@@ -133,11 +133,11 @@ export default {
                 minFinalApproveTime: '', // 最小料审核通过时间,
                 maxFinalApproveTime: '', // 最大料审核通过时间
                 pkDeptDoc: '', // 分部编码
-                status: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
+                statusList: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
                 projectName: '', // 项目名称
                 projectNo: '', // 项目编号
                 // projectIds: [], // 工程id列表
-                type: ''// 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
+                typeList: ''// 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
             },
             status: [],
             typeArr: [],
@@ -249,8 +249,8 @@ export default {
             this.searchList()
         },
         async  searchList () {
-            this.queryParams.status = this.status.toString()
-            this.queryParams.type = this.typeArr.toString()
+            this.queryParams.statusList = this.status.toString()
+            this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []
