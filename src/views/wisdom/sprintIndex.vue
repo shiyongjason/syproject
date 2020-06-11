@@ -159,8 +159,10 @@ export default {
                     if (index > 1) {
                         value.children.forEach((val) => {
                             val.children.forEach((val1) => {
-                                if (res[1].data[val.prop]) {
+                                if (res[1].data && res[1].data[val.prop]) {
                                     val1.label = String(res[1].data[val.prop])
+                                } else {
+                                    val1.label = '-'
                                 }
                             })
                         })

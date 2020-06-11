@@ -181,6 +181,8 @@ export default {
                     value.children.forEach((val) => {
                         if (this.platformPlanTotal[val.prop] !== null && this.platformPlanTotal[val.prop] !== undefined) {
                             val.children[0].label = String(this.platformPlanTotal[val.prop])
+                        } else {
+                            val.children[0].label = '-'
                         }
                     })
                 }
