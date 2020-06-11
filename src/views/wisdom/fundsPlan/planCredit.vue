@@ -156,8 +156,10 @@ export default {
             columnData.forEach((value, index) => {
                 if (index > 3) {
                     value.children.forEach((val) => {
-                        if (this.planCreditTotal[val.prop] !== null && this.planCreditTotal[val.prop] !== undefined) {
+                        if (this.planCreditTotal && (this.planCreditTotal[val.prop] || this.planCreditTotal[val.prop] === 0)) {
                             val.label = String(this.planCreditTotal[val.prop])
+                        } else {
+                            val.label = '-'
                         }
                     })
                 }
@@ -215,11 +217,15 @@ export default {
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                // 查平台公司 - 分部查询时入参老code 1abc7f57-2830-11e8-ace9-000c290bec91
+                this.findAuthList({
+                    deptType: 'Q',
+                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
+                })
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
@@ -240,7 +246,7 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         ...mapActions({
