@@ -602,6 +602,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 100,
                     prop: 'misCode'
                 }
             ]
@@ -613,6 +614,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'companyName'
                 }
             ]
@@ -624,6 +626,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'subRegionName'
                 }
             ]
@@ -634,6 +637,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'subsectionName'
                 }
             ]
@@ -644,6 +648,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '合计',
+                    width: 120,
                     prop: 'regionName'
                 }
             ]
@@ -654,6 +659,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'annualTotalSale'
                 }
             ]
@@ -664,6 +670,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'annualTotalSaleAchieveRate'
                 }
             ]
@@ -674,6 +681,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'annualTotalProfit'
                 }
             ]
@@ -684,6 +692,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'annualTotalProfitAchieveRate'
                 }
             ]
@@ -694,6 +703,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'annualTotalLoan'
                 }
             ]
@@ -701,9 +711,11 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '累计资金支持效率比',
             prop: 'annualTotalEffectiveRate',
+            width: 150,
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'annualTotalEffectiveRate'
                 }
             ]
@@ -711,9 +723,13 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '当月申报用款额',
             prop: 'currentApplyFund',
+            width: 150,
+            showOverflowTooltip: true,
             children: [
                 {
                     label: '-',
+                    width: 150,
+                    showOverflowTooltip: true,
                     prop: 'currentApplyFund'
                 }
             ]
@@ -725,6 +741,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 150,
                     prop: 'currentApproveFund'
                 }
             ]
@@ -735,6 +752,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'currentActualLoan'
                 }
             ]
@@ -745,6 +763,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'currentRemainingRepayment'
                 }
             ]
@@ -755,6 +774,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'totalUnpaidAmount'
                 }
             ]
@@ -765,6 +785,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'totalRemainingOverdue'
                 }
             ]
@@ -775,6 +796,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'totalRemainingOverdueExist'
                 }
             ]
@@ -785,6 +807,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'totalRemainingOverdueIncrement'
                 }
             ]
@@ -795,6 +818,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             children: [
                 {
                     label: '-',
+                    width: 120,
                     prop: 'currentOverdueAmount'
                 }
             ]

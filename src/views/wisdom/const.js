@@ -144,7 +144,7 @@ export function preformTableLabel (targetYear) {
             ]
         },
         {
-            label: targetYear + '年度履约值利润指标',
+            label: targetYear + '年度履约值利润指标 (单位：万元)',
             children: [
                 {
                     prop: 'januaryValue',
@@ -379,7 +379,7 @@ export function sprintTableLabel (targetYear) {
             ]
         },
         {
-            label: targetYear + '年度冲刺值利润指标',
+            label: targetYear + '年度冲刺值利润指标 (单位：万元)',
             width: '1440',
             children: [
                 {
