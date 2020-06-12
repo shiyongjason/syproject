@@ -2,19 +2,16 @@
     <div class="page-body">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="userInfo.deptType===deptType[0]">
+                <div class="query-cont-col" v-if="branch">
                     <div class="query-cont-title">分部：</div>
                     <div class="query-cont-input">
-                        <el-select v-model="searchParams.subsectionCode" placeholder="选择" :clearable=true>
-                            <el-option v-for="item in branchList" :key="item.subsectionCode" :label="item.subsectionName" :value="item.subsectionCode">
-                            </el-option>
-                        </el-select>
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
-                        <HAutocomplete ref="HAutocomplete" :selectArr="companyList" v-if="companyList" @back-event="backFindmiscode" :placeholder="'选择公司简称'" />
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' />
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -51,14 +48,14 @@
                         <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
                         </el-date-picker>
                     </div>
-                    <el-button type="primary" @click="onFindTableList()">搜索
+                    <el-button type="primary" @click="onFindTableList({...searchParams, pageNumber: 1})">搜索
                     </el-button>
                     <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="onExport()">导出
                     </el-button>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/companyTarget/import'" :data="{createUser: userInfo.employeeName,subsectionCode: userInfo.oldDeptCode}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
@@ -83,13 +80,15 @@
     </div>
 </template>
 <script>
-import { findSubsectionList, findTableList, getCompany, getCityList } from './api/index.js'
+import { findTableList, getCompany, getCityList, exportPlatTarget, findPlatformTargetPlat } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
+    mixins: [departmentAuth],
     data () {
         return {
             uploadLoading: false,
@@ -120,7 +119,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            branchList: [],
             companyData: {
                 url: interfaceUrl + 'rms/companyTarget/queryCompanyShortName',
                 otherParams: {
@@ -144,11 +142,25 @@ export default {
                 }
             },
             tableData: [],
-            paginationData: {},
+            paginationData: {
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
+            },
             interfaceUrl: interfaceUrl,
-            companyList: [],
             cityList: [],
-            deptType: DEPT_TYPE
+            deptType: DEPT_TYPE,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            },
+            platformData: []
         }
     },
     components: {
@@ -156,27 +168,24 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList
         })
     },
-    mounted () {
+    async mounted () {
         if (this.userInfo.oldDeptCode !== 'top') {
             this.searchParams.subsectionCode = this.userInfo.oldDeptCode
         }
         this.companyData.params.companyCode = this.userInfo.oldDeptCode
         this.cityData.params.companyCode = this.userInfo.oldDeptCode
-        this.onFindBranchList(this.userInfo.oldDeptCode)
-        this.onFindTableList()
+        this.onFindTableList(this.searchParams)
         this.getCompanyList()
         this.getCityList()
-    },
-    watch: {
-        // 'searchParams.subsectionCode' (newV, oldV) {
-        //     this.cityData.params.subsectionCode = newV
-        // }
+        !this.userInfo.deptType && this.findPlatformTargetPlat()
+        await this.newBossAuth(['F'])
     },
     methods: {
-        uploadProcess (event, file, fileList) {
+        uploadProcess () {
             this.uploadLoading = true
         },
         isSuccess (response) {
@@ -190,7 +199,7 @@ export default {
                     message: '批量导入成功！',
                     type: 'success'
                 })
-                this.onFindTableList()
+                this.onFindTableList(this.searchParams)
             }
             this.uploadLoading = false
         },
@@ -207,69 +216,45 @@ export default {
                 return 'red'
             }
         },
-        async onFindTableList () {
-            const { data } = await findTableList(this.searchParams)
-            console.log(data)
+        async onFindTableList (params) {
+            this.queryParamsTemp = { ...params }
+            const { data } = await findTableList(params)
             this.tableData = data.data.list
-            // this.tableData && this.tableData.map(value => {
-            //     value.balanceTarget = (value.balanceTarget).toFixed(2)
-            //     value.minimumTarget = (value.minimumTarget).toFixed(2)
-            //     value.performanceTarget = (value.performanceTarget).toFixed(2)
-            //     value.sprintTarget = (value.sprintTarget).toFixed(2)
-            //     return value
-            // })
             this.paginationData = {
                 pageSize: data.data.pageSize,
                 pageNumber: data.data.pageNum,
                 total: data.data.total
             }
         },
-        async onFindBranchList (value) {
-            const { data } = await findSubsectionList({ companyCode: value })
-            this.branchList = data.data
-        },
-        backFindmiscode (val) {
-            this.searchParams.misCode = val.value.misCode
-        },
         backFindcitycode (val) {
-            console.log(val)
-            this.searchParams.cityCode = val.value.cityCode
+            this.searchParams.cityCode = val.value ? val.value.cityCode : ''
         },
         handleSizeChange (val) {
-            console.log(val)
-            this.searchParams.pageSize = val
-            this.onFindTableList()
+            this.queryParamsTemp.pageSize = val
+            this.onFindTableList(this.queryParamsTemp)
         },
         handleCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
-            this.onFindTableList()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.onFindTableList(this.queryParamsTemp)
         },
         onCurrentChange (val) {
-            console.log(222)
-            this.searchParams.pageNumber = val.pageNumber
-            this.onFindTableList()
+            this.queryParamsTemp.pageNumber = val.pageNumber
+            this.onFindTableList(this.queryParamsTemp)
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
-            this.onFindTableList()
+            this.queryParamsTemp.pageSize = val
+            this.onFindTableList(this.queryParamsTemp)
         },
         onFieldChange (val) {
             this.$emit('onFieldChange', val)
         },
         onExport () {
-            var url = ''
-            // delete this.searchParams.pageNumber
-            // delete this.searchParams.pageSize
-            for (var key in this.searchParams) {
-                url += (key + '=' + (this.searchParams[key] ? this.searchParams[key] : '') + '&')
-            }
-            location.href = interfaceUrl + 'rms/companyTarget/export?' + url
+            exportPlatTarget(this.searchParams)
         },
         downloadXlsx () {
             location.href = '/excelTemplate/平台目标导入模板.xlsx'
         },
         async  getCompanyList () {
-            // this.companyData.params.companyCode = this.userInfo.companyCode
             const { data } = await getCompany({ companyCode: this.userInfo.oldDeptCode })
             this.companyList = data.data
             this.companyList && this.companyList.map(item => {
@@ -284,6 +269,35 @@ export default {
                 item.value = item.cityName
                 item.selectCode = item.cityCode
             })
+        },
+        async findPlatformTargetPlat (subsectionCode) {
+            const { data } = await findPlatformTargetPlat({ subsectionCode })
+            for (let i of data.data) {
+                i.value = i.companyShortName
+                i.selectCode = i.ehrSubsectionCode
+            }
+            this.platformData = data.data
+        },
+        backPlat (val, dis) {
+            if (dis === 'F') {
+                this.searchParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (this.searchParams.subsectionCode) {
+                    this.findPlatformTargetPlat(this.searchParams.subsectionCode)
+                } else {
+                    !this.userInfo.deptType && this.findPlatformTargetPlat()
+                }
+                this.searchParams.misCode = ''
+                !val.value.pkDeptDoc && this.linkage()
+            } else if (dis === 'P') {
+                this.searchParams.misCode = val.value.misCode ? val.value.misCode : ''
+            }
+        },
+        linkage () {
+            this.searchParams.companyCode = ''
+            this.selectAuth.platformObj = {
+                selectCode: '',
+                selectName: ''
+            }
         }
     }
 }

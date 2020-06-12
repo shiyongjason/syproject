@@ -83,7 +83,7 @@ export default {
                 { label: '所属商家', prop: 'merchantName' },
                 { label: '建议零售价', prop: 'retailPrice' },
                 { label: '销售价', prop: 'sellPrice' },
-                { label: '库存', prop: 'inventoryNum' }
+                { label: '库存', prop: 'availableStock' }
             ],
             paginationInfo: {},
             multiSelection: []
@@ -164,7 +164,6 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            // this.$router.push('/hmall/createEditEvent')
             this.$router.go(-1)
         },
         selectable (row) {

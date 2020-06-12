@@ -341,7 +341,7 @@ export default {
             this.formData.basicInformations = JSON.stringify(this.basicInformationsArrList)
             this.formData.preMemos = JSON.stringify(this.preMemosArrList)
             this.formData.attachmentsUrl = JSON.stringify(this.attachmentsUrlArrList)
-            this.formData.organizationCode = this.userInfo.deptDoc
+            this.formData.organizationCode = this.userInfo.belongDeptCode
             if (!this.formData.companyName) {
                 this.showWarnMsg('请输入尽调公司名称')
                 return false
@@ -391,7 +391,7 @@ export default {
                             this.formData.attachmentsUrl = JSON.stringify(this.attachmentsUrlArrList)
                             this.formData.createUserName = this.userInfo.name
                             this.formData.createUser = this.userInfo.jobNumber
-                            this.formData.organizationCode = this.userInfo.deptDoc
+                            this.formData.organizationCode = this.userInfo.belongDeptCode
                             if (this.applyId) {
                                 this.formData.applyId = this.applyId
                                 try {

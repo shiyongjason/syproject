@@ -5,14 +5,12 @@ import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
-import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
 import userRealreport from './modules/userRealreport'
-import supplier from './modules/supplier'
 // import cloudmanage from './modules/cloudManage'
 import developmodule from '@/views/wisdom/store/developmodule'
 import jinyunplatform from '@/views/jinyunplatform/store/index.js'
@@ -52,9 +50,7 @@ const store = new Vuex.Store({
         eventManage,
         fundsData,
         membership,
-        serviceManagement,
         payment,
-        supplier,
         userRealreport,
         cloudmanage,
         crmmanage,

@@ -199,7 +199,7 @@ export default {
                 {
                     label: '库存',
                     minWidth: '110',
-                    prop: 'inventoryNum',
+                    prop: 'availableStock',
                     renderHeader: (h, scope) => {
                         return (
                             <span>
@@ -211,7 +211,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryNum') }} disabled={this.disableStatus}></el-input>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disableStatus}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -278,7 +278,7 @@ export default {
                                     {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
+                                直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
                                 {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
@@ -295,7 +295,6 @@ export default {
     },
     watch: {
         pictureContainer (val) {
-            console.log(val)
             this.$nextTick(() => {
                 if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
             })
@@ -437,12 +436,12 @@ export default {
         validate (item, action = '') {
             // true 需要在特定的操作才触发。
             if (action === 'submit') {
-                if (!item.inventoryNum) {
+                if (!item.availableStock) {
                     item.inventoryNumErrorMsg = '库存不能小于0'
                     this.$set(item, '_inventoryNumError', true)
                 }
             }
-            if (item.inventoryNum) {
+            if (item.availableStock) {
                 item.inventoryNumErrorMsg = ''
                 this.$set(item, '_inventoryNumError', false)
             }
@@ -462,7 +461,7 @@ export default {
                     item.errorMsg = ''
                 }
             }
-            if ((!this.form.status) && (Number(item.purchaseLimitNum) > Number(item.inventoryNum))) {
+            if ((!this.form.status) && (Number(item.purchaseLimitNum) > Number(item.availableStock))) {
                 item.numErrorMsg = '限购数量不可超过库存数量'
                 item._numError = true
             } else if (item.purchaseLimitNum) {
@@ -494,11 +493,10 @@ export default {
         /** 移除 */
         onRemove (val) {
             this.REMOVE_EVENT_PRODUCTS(val)
-            this.form.spikeSku = this.form.spikeSku.filter(item => item.id != val.id)
+            this.form.spikeSku = this.form.spikeSku.filter(item => item.skuId != val.skuId)
         },
         /** 刷单 */
         onOrder (val) {
-            console.log(this.form.status)
             // 刷单前置条件：活动已经开启，库存不为零。
             if (this.form.status == 1) {
                 this.$message.error(`刷单的前置条件该商品已经发布且库存不为零。`)
@@ -555,9 +553,7 @@ export default {
         },
         /** 保存 */
         async onSave (status, mark = '') {
-            console.log(this.pictureContainer)
             this.form.image = this.pictureContainer.length > 0 ? this.pictureContainer[0].url : ''
-            console.log(this.form)
             let temp = true
             this.$refs['form'].validate((valid, errors) => {
                 if (!valid) {
@@ -592,8 +588,8 @@ export default {
             this.form.spikeSku.some((item, index) => {
                 this.validate(item, 'submit')
                 item.sort = index + 1
-                this.$set(item, 'inventoryOriginNum', item.inventoryNum)
-                this.$set(item, 'inventoryRemainNum', item.inventoryNum)
+                this.$set(item, 'inventoryOriginNum', item.availableStock)
+                this.$set(item, 'inventoryRemainNum', item.availableStock)
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
@@ -624,7 +620,7 @@ export default {
                     }
                     this.isPending = false
                     this.$message.success(`提交成功！`)
-                    this.$router.push('/hmall/eventMange')
+                    this.$router.push('/b2b/marketing/eventMange')
                 } catch (error) {
                     this.isPending = false
                 }
@@ -662,7 +658,7 @@ export default {
                 !item.errorMsg && this.$set(item, 'errorMsg', '')
                 !item.sellingPoint && this.$set(item, 'sellingPoint', '')
                 !item.inventoryNumErrorMsg && this.$set(item, 'inventoryNumErrorMsg', '')
-                !item.inventoryNum && this.$set(item, 'inventoryNum', item.inventoryRemainNum)
+                !item.availableStock && this.$set(item, 'availableStock', item.inventoryRemainNum)
                 !item.productId && this.$set(item, 'productId', null)
                 if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '')
                 !item.clickFarmingNum && this.$set(item, 'clickFarmingNum', 0)

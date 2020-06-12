@@ -15,11 +15,13 @@ export const STATUS_LIST =
         { key: 6, value: '待签约' },
         { key: 7, value: '待放款' },
         { key: 8, value: '贷中' },
-        { key: 9, value: '合作完成' }
+        { key: 9, value: '合作完成' },
+        { key: 10, value: '信息待完善' }
+
     ]
 export const TYPE_LIST =
     [{ key: 1, value: '地产项目' },
-        { key: 2, value: '政府共建项目' },
+        { key: 2, value: '政府公建项目' },
         { key: 3, value: '市政项目' },
         { key: 4, value: '办公楼' },
         { key: 5, value: '厂房' },
@@ -33,7 +35,10 @@ export const DEVICE_LIST = [
     { key: 5, value: '智能化' },
     { key: 6, value: '辅材' },
     { key: 7, value: '电梯' },
+    { key: 9, value: '电器' },
+    { key: 10, value: '热水器' },
     { key: 8, value: '其他' }
+
 ]
 
 export const UPSTREAM_LIST = [{ key: 1, value: '厂商' }, { key: 2, value: '代理商' }, { key: 3, value: '经销商' }]

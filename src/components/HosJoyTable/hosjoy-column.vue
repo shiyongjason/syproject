@@ -1,8 +1,8 @@
 <template>
-    <el-table-column v-if="column" v-bind="$attrs" v-on="$listeners" :prop="column.prop" :label="column.label" :type="column.type" :index="column.index" :column-key="column.columnKey" :width="column.width" :min-width="column.minWidth" :fixed="column.fixed" :render-header="column.renderHeader"
-        :sortable="column.sortable || false" :sort-method="column.sortMethod" :sort-by="column.sortBy" :sort-orders="column.sortOrders" :resizable="column.resizable || true" :formatter="column.formatter" :show-overflow-tooltip="column.showOverflowTooltip || false"
-        :align="column.align || align || 'center'" :header-align="column.headerAlign || headerAlign || column.align || align || 'center'" :class-name="column.className" :label-class-name="column.labelClassName" :selectable="column.selectable" :reserve-selection="column.reserveSelection || false"
-        :filters="column.filters" :filter-placement="column.filterPlacement" :filter-multiple="column.filterMultiple" :filter-method="column.filterMethod" :filtered-value="column.filteredValue">
+    <el-table-column v-if="column" v-bind="$attrs" v-on="$listeners" :prop="column.prop" :label="column.label" :type="column.type" :index="column.index" :column-key="column.columnKey" :width="column.width" :min-width="column.minWidth" :fixed="column.fixed"
+        :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader" :sortable="column.sortable || false" :sort-method="column.sortMethod" :sort-by="column.sortBy" :sort-orders="column.sortOrders" :resizable="column.resizable || true" :formatter="column.formatter"
+        :show-overflow-tooltip="column.showOverflowTooltip || false" :align="column.align || align || 'center'" :header-align="column.headerAlign || headerAlign || column.align || align || 'center'" :class-name="column.className" :label-class-name="column.labelClassName"
+        :selectable="column.selectable" :reserve-selection="column.reserveSelection || false" :filters="column.filters" :filter-placement="column.filterPlacement" :filter-multiple="column.filterMultiple" :filter-method="column.filterMethod" :filtered-value="column.filteredValue">
 
         <template slot="header" slot-scope="scope">
             <hosjoy-render v-if="column.renderHeader" :scope="scope" :render="column.renderHeader">
@@ -33,13 +33,9 @@ function money (money) {
     return '-'
 }
 function fundMoney (money) {
-    if (money === 0) {
-        return 0
-    }
-    if (money) {
-        const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
-    }
+    if (money === null) return 0
+    if (money === 0) return 0
+    if (money) return money.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     return '-'
 }
 export default {
@@ -61,6 +57,22 @@ export default {
         }
     },
     methods: {
+        renderHeader (h, { column, $index }) {
+            return h('el-tooltip', {
+                attrs: {
+                    class: 'cell'
+                },
+                props: {
+                    content: (function () {
+                        return column.label
+                    })(),
+                    placement: 'top'
+                },
+                domProps: {
+                    innerHTML: column.label
+                }
+            }, [h('span')])
+        },
         formatter (data) {
             return (data || data === 0) ? data : (this.isBlank ? '' : '-')
         },

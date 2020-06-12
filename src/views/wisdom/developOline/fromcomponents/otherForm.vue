@@ -39,6 +39,7 @@
 import { mapActions, mapState, mapGetters } from 'vuex'
 import { updateDevelopother } from '../../api'
 export default {
+    name: 'otherForm',
     props: {
         otherForm: {
             type: Object,

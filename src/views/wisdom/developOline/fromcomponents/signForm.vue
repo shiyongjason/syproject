@@ -182,6 +182,7 @@ import { interfaceUrl } from '@/api/config'
 import { updateDevelopsign } from '../../api'
 import { PHONE, checkIdCard } from '@/utils/rules'
 export default {
+    name: 'signForm',
     props: {
         signForm: {
             type: Object,

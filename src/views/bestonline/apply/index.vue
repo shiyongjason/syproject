@@ -127,7 +127,7 @@ export default {
             const deptType = this.userInfo.deptType
             const role = this.userInfo.role
             // 分部发展
-            if (deptType === 2 && (role.indexOf('fenbufazhan') !== -1)) {
+            if ((deptType === 2 || deptType === 3) && (role.indexOf('fenbufazhan') !== -1)) {
                 this.addbtn = true
                 this.updatebtn = true
                 this.deletebtn = true
@@ -138,7 +138,7 @@ export default {
         }),
         addNewApply () {
             this.getApplyCompanyName('申请')
-            this.$router.push({ path: '/bestonline/applyform' })
+            this.$router.push({ path: '/jd/bestonline/applyform' })
         },
         onSizeChange (val) {
             this.params.pageSize = val
@@ -164,8 +164,8 @@ export default {
             this.dialogVisible = true
         },
         async getDueapply () {
-            this.params.organizationCode = this.userInfo.deptDoc
-            this.params.role = this.userInfo.positionCode
+            this.params.organizationCode = this.userInfo.belongDeptCode
+            this.params.role = sessionStorage.getItem('user_Data') ? JSON.parse(sessionStorage.getItem('user_Data')).positionCode : ''
             const { data } = await getDueapply(this.params)
             this.tableData = data.data.pageContent
             this.pagination = {
@@ -175,7 +175,7 @@ export default {
             }
         },
         onEdit (val) {
-            this.$router.push({ path: '/bestonline/applyform', query: { id: val.applyId } })
+            this.$router.push({ path: '/jd/bestonline/applyform', query: { id: val.applyId } })
         },
         onDelete (val) {
             this.$confirm(`是否确认删除该平台公司?`, '确认删除', {
@@ -192,7 +192,7 @@ export default {
             })
         },
         onShow (val) {
-            this.$router.push({ path: '/bestonline/applyform', query: { id: val.applyId } })
+            this.$router.push({ path: '/jd/bestonline/applyform', query: { id: val.applyId } })
         }
     }
 }

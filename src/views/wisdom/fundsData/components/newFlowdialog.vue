@@ -249,7 +249,7 @@ export default {
                         type: 'success'
                     })
                     this.setNewTags((this.$route.fullPath).split('?')[0])
-                    this.$router.push('/fundsData/standingBook')
+                    this.$router.push('/funds/fundsDataAnalysis/standingBook')
                 }
             })
         },
@@ -260,7 +260,7 @@ export default {
         backPlat (val) {
             this.ruleForm.account.loanCompanyCode = val.value ? val.value.selectCode : ''
             this.ruleForm.account.loanCompanyName = val.value ? val.value.value : ''
-            this.ruleForm.account.subsectionCode = val.value ? val.value.subsectionCode : ''
+            this.ruleForm.account.subsectionCode = val.value ? val.value.ehrSubsectionCode : ''
             this.ruleForm.account.subsectionName = val.value ? val.value.subsectionName : ''
             this.ruleForm.account.misCode = val.value ? val.value.misCode : ''
         },
@@ -313,7 +313,7 @@ export default {
         },
         onCancel () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/fundsData/standingBook')
+            this.$router.push('/funds/fundsDataAnalysis/standingBook')
         }
     }
 }

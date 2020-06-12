@@ -80,10 +80,16 @@ export default {
             this.onQuery()
         },
         onApproveDeclare (row) {
-            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
+            this.$router.push({
+                path: '/fundsPlan/approveDeclare',
+                query: {
+                    id: row.planId,
+                    source: 'planToDeclare'
+                }
+            })
         },
         backPlat (val) {
-            this.queryParams.companyName = val.value.companyName ? val.value.companyName : ''
+            this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
         },
         async onQuery () {
             const { data } = await getFundPlanAll(this.searchParams)

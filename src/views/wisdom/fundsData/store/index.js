@@ -6,8 +6,8 @@ const state = {
     platformData: [], // 平台公司list
     // 阶梯逾期默认值
     overdueList: [
-        { dateNum: '3', dateType: '', overDueInterest: '16', planId: '', sort: '', startTime: '' },
-        { dateNum: '999', dateType: '', overDueInterest: '20', planId: '', sort: '', startTime: '' }
+        { dateNum: '3', dateType: 1, overDueInterest: '16', planId: '', sort: 1, startTime: '' },
+        { dateNum: '999', dateType: 1, overDueInterest: '20', planId: '', sort: 2, startTime: '' }
     ],
     pagination: {
         pageNumber: 1,
@@ -72,7 +72,6 @@ const mutations = {
         state.tableData = payload.records || []
     },
     [types.GET_BRANCH] (state, payload) {
-        // payload.unshift({ crmDeptCode: '', deptName: '请选择分部' })
         state.branchList = payload
     },
     [types.GET_SUMMARY] (state, payload) {

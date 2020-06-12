@@ -51,6 +51,7 @@ import { summarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { downloadPlanTotalList } from './api/index'
+import { clearCache, newCache } from '@/utils/index'
 import moment from 'moment'
 
 export default {
@@ -77,7 +78,8 @@ export default {
             paramTargetDate: {
                 year: '',
                 mouth: ''
-            }
+            },
+            columnData: []
         }
     },
     computed: {
@@ -87,17 +89,15 @@ export default {
         ...mapGetters({
             planTotalList: 'fundsPlan/planTotalList',
             targetTime: 'fundsPlan/targetTime'
-        }),
-        columnData () {
-            return summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth)
-        }
+        })
     },
     methods: {
         goDetail (id, go) {
             go && id && this.$router.push({
                 path: '/fundsPlan/approveDeclare',
                 query: {
-                    id: id
+                    id: id,
+                    source: 'planTotal'
                 }
             })
         },
@@ -107,6 +107,12 @@ export default {
                 year: params.selectTime.slice(0, 4),
                 mouth: params.selectTime.slice(4)
             }
+            if (params.subsectionCode) {
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false)
+            } else {
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true)
+            }
+
             try {
                 await this.findPlanTotalList(params)
             } catch (e) {
@@ -142,10 +148,19 @@ export default {
     },
     async mounted () {
         await this.findTargetTime()
-        // console.log(this.targetTime)
         this.params.selectTime = this.targetTime
-        await this.oldBossAuth()
+        await this.newBossAuth(['F'])
         this.queryAndChangeTime(this.params)
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('planTotal')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'approveDeclare') {
+            clearCache('planTotal')
+        }
+        next()
     }
 }
 </script>

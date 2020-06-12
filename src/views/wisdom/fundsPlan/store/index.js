@@ -3,7 +3,18 @@ import * as Api from '../api'
 import moment from 'moment'
 const state = {
     planTotalList: [],
-    targetTime: ''
+    targetTime: {
+        businessDate: ''
+    },
+    planApprovalList: [],
+    planApprovalTotal: {},
+    planApprovalPagination: {},
+    platformPlanList: [],
+    platformPlanTotal: {},
+    platformPlanPagination: {},
+    planCreditList: [],
+    planCreditTotal: {},
+    planCreditPagination: {}
 }
 
 const getters = {
@@ -14,18 +25,84 @@ const getters = {
             return moment(state.targetTime.businessDate).add(1, 'M').format('YYYYMM')
         }
         return moment(state.targetTime.businessDate).format('YYYYMM')
-    }
+    },
+    planApprovalList: state => state.planApprovalList,
+    planApprovalPagination: state => state.planApprovalPagination,
+    planApprovalTotal: state => state.planApprovalTotal,
+    platformPlanList: state => {
+        state.platformPlanList.forEach(value => {
+            value.salePercentCurrent = (value.salePercentCurrent) + '%'
+            value.usedPercentCurrent = (value.usedPercentCurrent) + '%'
+            value.overduePercent = (value.overduePercent) + '%'
+        })
+        return state.platformPlanList
+    },
+    platformPlanTotal: state => {
+        for (const key in state.platformPlanTotal) {
+            if (key === 'salePercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
+            if (key === 'usedPercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
+            if (key === 'overduePercent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
+        }
+        return state.platformPlanTotal
+    },
+    platformPlanPagination: state => state.platformPlanPagination,
+    planCreditList: state => {
+        state.planCreditList.forEach(value => {
+            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100).toFixed(2) + '%'
+            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100).toFixed(2) + '%'
+            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100).toFixed(2) + '%'
+        })
+        return state.planCreditList
+    },
+    planCreditTotal: state => {
+        for (const key in state.planCreditTotal) {
+            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
+            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
+            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
+        }
+        return state.planCreditTotal
+    },
+    planCreditPagination: state => state.planCreditPagination
 }
 
 const mutations = {
     [types.PLAN_TOTAL_LIST] (state, payload) {
         state.planTotalList = payload.map(value => {
             value.salePercentCurrent += '%'
+            value.usedPercentCurrent += '%'
+            value.overduePercent += '%'
             return value
         })
     },
     [types.TARGET_TIME] (state, payload) {
         state.targetTime = payload
+    },
+    [types.PLAN_APPROVAL_LIST] (state, payload) {
+        state.planApprovalList = payload
+    },
+    [types.PLAN_APPROVAL_PAGINATION] (state, payload) {
+        state.planApprovalPagination = payload
+    },
+    [types.PLAN_APPROVAL_TOTAL] (state, payload) {
+        state.planApprovalTotal = payload
+    },
+    [types.PLATFORM_PLAN_LIST] (state, payload) {
+        state.platformPlanList = payload
+    },
+    [types.PLATFORM_PLAN_PAGINATION] (state, payload) {
+        state.platformPlanPagination = payload
+    },
+    [types.PLATFORM_PLAN_TOTAL] (state, payload) {
+        state.platformPlanTotal = payload
+    },
+    [types.PLAN_CREDIT_LIST] (state, payload) {
+        state.planCreditList = payload
+    },
+    [types.PLAN_CREDIT_PAGINATION] (state, payload) {
+        state.planCreditPagination = payload
+    },
+    [types.PLAN_CREDIT_TOTAL] (state, payload) {
+        state.planCreditTotal = payload
     }
 }
 
@@ -37,6 +114,45 @@ const actions = {
     async findTargetTime ({ commit }, params) {
         const { data } = await Api.getServeTime()
         commit(types.TARGET_TIME, data)
+    },
+    async findPlanApprovalList ({ commit }, params) {
+        const { data } = await Api.getPlanApprovalList(params)
+        commit(types.PLAN_APPROVAL_LIST, data.records)
+        commit(types.PLAN_APPROVAL_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findPlanApprovalTotal ({ commit }, params) {
+        const { data } = await Api.getPlanApprovalTotal(params)
+        commit(types.PLAN_APPROVAL_TOTAL, data)
+    },
+    async findPlatformPlanList ({ commit }, params) {
+        const { data } = await Api.findPlanFormList(params)
+        commit(types.PLATFORM_PLAN_LIST, data.records)
+        commit(types.PLATFORM_PLAN_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findPlatformPlanTotal ({ commit }, params) {
+        const { data } = await Api.findPlanFormTotal(params)
+        commit(types.PLATFORM_PLAN_TOTAL, data)
+    },
+    async findPlanCreditList ({ commit }, params) {
+        const { data } = await Api.findPlanCreditList(params)
+        commit(types.PLAN_CREDIT_LIST, data.records)
+        commit(types.PLAN_CREDIT_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findPlanCreditTotal ({ commit }, params) {
+        const { data } = await Api.findPlanCreditTotal(params)
+        commit(types.PLAN_CREDIT_TOTAL, data)
     }
 }
 export default {

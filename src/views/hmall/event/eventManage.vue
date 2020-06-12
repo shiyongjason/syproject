@@ -160,7 +160,7 @@ export default {
             hoverTrack: 'hoverTrack'
         }),
         onCopy (id) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
+            this.$router.push({ path: '/b2b/marketing/createEditEvent', query: { copeId: id } })
         },
         searchList () {
             this.queryParams.pageNumber = 1
@@ -188,7 +188,6 @@ export default {
                 this.$set(item, index, this.listTrack)
             })
             this.tableData = spikelist
-            console.log(this.tableData)
             this.paginationInfo = {
                 total: this.spikeData.total,
                 pageNumber: this.spikeData.current,
@@ -218,14 +217,14 @@ export default {
 
         },
         onClickStatics (val) {
-            this.$router.push({ path: '/hmall/eventStatistics', query: { activityId: val.id } })
+            this.$router.push({ path: '/b2b/marketing/eventStatistics', query: { activityId: val.id } })
         },
         onAddevent () {
-            this.$router.push({ path: '/hmall/createEditEvent', query: {} })
+            this.$router.push({ path: '/b2b/marketing/createEditEvent', query: {} })
         },
         onEditEvent (val) {
-            if (val.status === 2) this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id, action: 'preheat' } })
-            else this.$router.push({ path: '/hmall/createEditEvent', query: { eventId: val.id } })
+            if (val.status === 2) this.$router.push({ path: '/b2b/marketing/createEditEvent', query: { eventId: val.id, action: 'preheat' } })
+            else this.$router.push({ path: '/b2b/marketing/createEditEvent', query: { eventId: val.id } })
         }
     }
 }

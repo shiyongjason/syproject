@@ -21,7 +21,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title"> 平台公司名称：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="platComList" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectObj.platformData" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectObj.platformData" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -55,10 +55,19 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { getFundPlanAll } from './api/index'
 import { approvalListLabel, approvalListHasDoneLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
+import { clearCache, newCache } from '@/utils/index'
+import { mapState } from 'vuex'
 export default {
-    name: 'ApprovalList',
+    name: 'approvalList',
     components: { HAutocomplete },
     mixins: [departmentAuth],
+    computed: {
+        ...mapState({
+            userInfo: state => state.userInfo,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
+        })
+    },
     data () {
         return {
             tableLabel: approvalListLabel,
@@ -74,9 +83,13 @@ export default {
             },
             paramsTemp: {},
             tableData: [],
-            pagination: {},
-            branchList: [], // 分部列表
-            platComList: [], // 平台公司列表
+            pagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            // branchList: [], // 分部列表
+            // platComList: [], // 平台公司列表
             selectObj: {
                 branch: {
                     selectCode: '',
@@ -113,16 +126,21 @@ export default {
             this.onSearch()
         },
         onCurrentChange (val) {
-            this.params.pageNumber = val.pageNumber
+            this.paramsTemp.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.params.pageSize = val
+            this.paramsTemp.pageSize = val
             this.onQuery()
         },
         async onQuery () {
             const { data } = await getFundPlanAll(this.paramsTemp)
             this.tableData = data.records
+            this.pagination = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         onSearch () {
             this.paramsTemp = { ...this.params }
@@ -132,35 +150,46 @@ export default {
             this.$router.push({ path: '/fundsPlan/approveDetail', query: { id: row.planId } })
         },
         onApproveDeclare (row) {
-            this.$router.push({ path: '/fundsPlan/approveDeclare', query: { id: row.planId } })
+            this.$router.push({
+                path: '/fundsPlan/approveDeclare',
+                query: {
+                    id: row.planId,
+                    source: 'approvalList'
+                }
+            })
         },
         async backPlat (val, dis) {
             if (dis === 'F') {
-                this.params.subSectionCode = val.value.selectCode ? val.value.selectCode : ''
+                this.params.subSectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.params.companyName = ''
                 this.selectObj.platformData = {
                     selectCode: '',
                     selectName: ''
                 }
-                if (val.value) {
-                    const data = await this.findPlatformslist({ subsectionCode: val.value.crmDeptCode })
-                    this.platComList = data
+                if (this.params.subSectionCode) {
+                    this.findPlatformslist({ subsectionCode: this.params.subSectionCode })
                 } else {
-                    this.platComList = []
+                    !this.userInfo.deptType && this.findPlatformslist()
                 }
             }
             if (dis === 'P') {
-                this.params.companyName = val.value.companyName ? val.value.companyName : ''
+                this.params.companyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
-        },
-        async getAuth () {
-            const data = await this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc })
-            this.branchList = data
         }
     },
     async mounted () {
-        await this.getAuth()
+        await this.newBossAuth(['F'])
         this.onSearch()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('approvalList')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'approveDeclare') {
+            clearCache('approvalList')
+        }
+        next()
     }
 }
 </script>

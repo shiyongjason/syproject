@@ -157,6 +157,13 @@ export const WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA = 10810
 export const WISDOM_EXPOSURE_FUNDSDATA_UPDATA = 10820
 // 好智慧-资金数据 新增分授信台账
 export const WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA = 10830
+// 好智慧-资金数据 流贷
+export const WISDOM_FLOWTOBORROW_SHOW_LINE = 10840
+// 好智慧-资金数据 敞口
+export const WISDOM_EXPOSURE_SHOW_LINE = 10850
+// 好智慧-资金数据 分授信
+export const WISDOM_POINTSCREDIT_SHOW_LINE = 10860
+
 // 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
 export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
 
@@ -172,7 +179,21 @@ export const CRM_GOODWORK_FANGKUAN = 109115 // 放款
 export const CRM_GOODWORK_HUIKUAN = 109116 // 全部回款
 export const CRM_GOODWORK_BAOCUN = 109117 // 保存
 export const CRM_GOODWORK_CHOINGZHI = 109118 // 重置
+export const CRM_GOODWORK_WANSHAN = 109119 // 重置
 
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
+// 资金逾期
+export const BRANCH_OVERDUE_SUM_EXPORT = 110003
+export const PLATFORM_OVERDUE_SUM_EXPORT = 110004
+export const PLATFORM_OVERDUE_SUM_IMPORT = 110005
+export const OVERDUE_DETAIL_TABLE_EXPORT = 110006
+export const OVERDUE_DETAIL_TABLE_IMPORT = 110007
+export const PLAN_CREDIT_TABLE_COLUMN = 110008
+// 冲刺值导入
+export const SPRINT_INDEX_IMPORT = 110009
+// 履约值导入
+export const PERFORMANCE_INDEX_IMPORT = 110010
+// 资金计划审批导入
+export const PLAN_APPROVAL_IMPORT = 110011

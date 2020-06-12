@@ -100,7 +100,7 @@ import { COCKPIT_FILE_MANAGE, COCKPIT_FILE_EDIT, COCKPIT_FILE_DELETE, COCKPIT_FI
 import hosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import dialogComponent from './components/dialogComponent.vue'
 import { pagination } from '@/utils/mixins.js'
-import { findPaltList, getList, findBranchListNew, borrow, deleteFile } from './api/index.js'
+import { findPaltList, getList, findAllBranchList, borrow, deleteFile } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { newCache } from '@/utils/index'
 
@@ -360,9 +360,9 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.searchParams.maxCreateTime)
+                    let beginDateVal = this.searchParams.maxCreateTime
                     if (beginDateVal) {
-                        return time.getTime() > beginDateVal
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -370,9 +370,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.searchParams.minCreateTime)
+                    let beginDateVal = this.searchParams.minCreateTime
                     if (beginDateVal) {
-                        return time.getTime() < beginDateVal
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -489,19 +489,19 @@ export default {
             }
             return arr
         },
-        async findBranchListNew () {
-            // 平台分部
-            const { data } = await findBranchListNew()
-            this.branchList = data.data
+        async findAllBranchList () {
+            const { data } = await findAllBranchList()
+            console.log(data)
+            this.branchList = data
         },
         getNameByCode (code, list = this.branchList) {
             let temp = list.filter(item => {
-                return item.subsectionCode === code
+                return item.pkDeptDoc === code
             })
             if (temp.length === 0) {
                 return '-'
             }
-            return temp[0].subsectionName
+            return temp[0].deptName
         },
         tabsChange () {
             this.getList()
@@ -553,7 +553,7 @@ export default {
     mounted () {
         this.findPaltList()
         this.getList()
-        this.findBranchListNew()
+        this.findAllBranchList()
     },
     activated () {
         this.getList()
@@ -592,7 +592,11 @@ export default {
     max-height: 600px;
     overflow-y: scroll;
 }
-.addbutton{ margin-bottom: 16px; text-align: right}
-/deep/.el-dialog__wrapper .el-textarea .el-input__count{color:#c3c6cc}
-
+.addbutton {
+    margin-bottom: 16px;
+    text-align: right;
+}
+/deep/.el-dialog__wrapper .el-textarea .el-input__count {
+    color: #c3c6cc;
+}
 </style>

@@ -1,26 +1,23 @@
 <template>
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont">
+            <div class="query-cont-col" v-if="branch">
+                <div class="query-col-title">分部：</div>
+                <div class="query-col-input">
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">平台公司：</div>
+                <div class="query-col-input">
+                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
+                </div>
+            </div>
             <div class="query-cont-col">
                 <div class="query-col-title">MIS编码：</div>
                 <div class="query-col-input">
                     <el-input type="text" maxlength="5" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
                     </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">分部：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.subsectionCode" :disabled='!this.branch' clearable @change="findPlatformslistByBranchList">
-                        <el-option v-for="item in branchList" :key="item.crmDeptCode" :label="item.deptName" :value="item.crmDeptCode">
-                        </el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">平台公司名：</div>
-                <div class="query-col-input">
-                    <HAutocomplete ref="HAutocomplete" :selectArr="platformData" v-if="platformData" @back-event="backPlat" :placeholder="'请输入平台公司名'" :remove-value='removeValue'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -44,7 +41,7 @@
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
-                <el-tab-pane v-if="tabAuth('台账汇总表')" label="台账汇总表" name="0"></el-tab-pane>
+                <el-tab-pane v-if="tabAuth('台账汇总表')" label="资金支持余额汇总表" name="0"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('流贷台账')" label="流贷" name="1"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('敞口台账')" label="敞口" name="2"></el-tab-pane>
                 <el-tab-pane v-if="tabAuth('分授信台账')" label="分授信" name="3"></el-tab-pane>
@@ -80,21 +77,22 @@ import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WIS
 import { downloadCloudAlarmList } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import * as type from './const'
-import { departmentAuth } from './mixins/userAuth'
-import { createNamespacedHelpers } from 'vuex'
-const { mapState, mapActions, mapGetters } = createNamespacedHelpers('fundsData')
+import { departmentAuth } from '@/mixins/userAuth'
+import { createNamespacedHelpers, mapState } from 'vuex'
+const { mapActions, mapGetters } = createNamespacedHelpers('fundsData')
 export default {
     name: 'standingBook',
     mixins: [departmentAuth],
     components: { complexTable, HAutocomplete },
     computed: {
         ...mapState({
-            pagination: state => state.pagination,
-            branchList: state => state.branchList
+            pagination: state => state.fundsData.pagination,
+            branchList: state => state.branchList,
+            platformData: state => state.platformData
         }),
         ...mapGetters(['platformData', 'tableData']),
         accountName () {
-            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}台账`
+            return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}明细`
         }
     },
     data () {
@@ -128,43 +126,60 @@ export default {
             exposure_orange: WISDOM_EXPOSURE_ORANGE,
             pointscredit_good_credit: WISDOM_POINTSCREDIT_GOOD_CREDIT,
             account_export: WISDOM_ACCOUNT_EXPORT,
-            hasNoneAuth: false
+            hasNoneAuth: false,
+            selectAuth: {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
         }
     },
     async mounted () {
         this.getUserTabAuth()
         this.onSearch()
-        await this.oldBossAuth()
-        if (this.userInfo.deptType == 2) {
-            this.queryParams.subsectionCode = this.branchList[0].crmDeptCode
-        }
+        await this.newBossAuth(['F', 'P'])
     },
     methods: {
         ...mapActions([
             'findPlatformslist',
             'getAccountList',
             'getRepaymentList',
-            'findBranchList',
             'findSummaryList'
         ]),
-        // 埋点
-        // tracking (event) {
-        //     this.$store.dispatch('tracking', {
-        //         type: 9,
-        //         event,
-        //         page: 2,
-        //         page_name: '额度导入',
-        //         page_path_name: 'amountImport'
-        //     })
-        // },
+        linkage (dis) {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.queryParams.misCode = ''
+            this.queryParams.loanCompanyCode = ''
+            this.queryParams.loanCompanyName = ''
+            this.selectAuth.areaObj = { ...obj }
+            this.selectAuth.platformObj = { ...obj }
+        },
+        async backPlat (val, dis) {
+            if (dis === 'F') {
+                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                if (val.value.pkDeptDoc) {
+                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+                } else {
+                    !this.userInfo.deptType && this.findPlatformslist()
+                }
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'P') {
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+                this.queryParams.loanCompanyCode = val.value.companyCode ? val.value.companyCode : ''
+                this.queryParams.loanCompanyName = val.value.companyShortName ? val.value.companyShortName : ''
+            }
+        },
         findPlatformslistByBranchList () {
-            console.log(this.$store.state.userInfo)
             let subsectionCode = this.queryParams.subsectionCode
             this.findPlatformslist({ subsectionCode })
-        },
-        backPlat (value) {
-            this.queryParams.loanCompanyCode = value.value.companyCode ? value.value.companyCode : ''
-            this.queryParams.loanCompanyName = value.value.companyShortName ? value.value.companyShortName : ''
         },
         handleClick (i) {
             if (i == 1) {
@@ -229,7 +244,7 @@ export default {
             this.removeValue = !this.removeValue
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
-            if (this.userInfo.deptType != 2) this.$set(this.queryParams, 'subsectionCode', '')
+            this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'standingBookNo', '')
             this.$set(this.queryParams, 'loanCompanyCode', '')
             this.$set(this.queryParams, 'loanCompanyName', '')
@@ -243,12 +258,15 @@ export default {
             this.onQuery()
         },
         onLinddialog () {
-            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
+            this.$router.push({ path: '/funds/fundsDataAnalysis/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
         },
         getUserTabAuth () {
             let menuList = JSON.parse(sessionStorage.getItem('menuList'))
-            this.router = menuList.filter(i => {
-                return i.path == '/fundsData'
+            let shy = menuList.filter(i => {
+                return i.path == '/funds'
+            })[0].children
+            this.router = shy.filter(i => {
+                return i.path == 'fundsDataAnalysis'
             })[0].children
             this.stairTab()
         },
