@@ -161,7 +161,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
     ]
 }
 // 平台公司计划分析
-export const platformPlan = function (targetYear, targetMonth) {
+export const platformPlan = function (targetYear, targetMonth, fn) {
     return [
         {
             prop: 'misCode',
@@ -405,7 +405,6 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'subRegionFundType',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             width: '100',
                             label: `-`
@@ -419,10 +418,26 @@ export const platformPlan = function (targetYear, targetMonth) {
                     children: [
                         {
                             prop: 'subRegionRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             width: '150',
-                            label: `-`
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.subRegionRemark ? scope.row.subRegionRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.subRegionRemark, '区域人员意见')
+                                        }
+                                    }
+                                })
+                            }
                         }
                     ]
                 }
@@ -455,7 +470,24 @@ export const platformPlan = function (targetYear, targetMonth) {
                             displayAs: 'fundMoney',
                             align: 'center',
                             width: '150',
-                            label: `-`
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.subsectionFinanceRemark ? scope.row.subsectionFinanceRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.subsectionFinanceRemark, '分财意见')
+                                        }
+                                    }
+                                })
+                            }
                         }
                     ]
                 }
@@ -488,7 +520,24 @@ export const platformPlan = function (targetYear, targetMonth) {
                             displayAs: 'fundMoney',
                             align: 'center',
                             width: '150',
-                            label: `-`
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.subsectionManagerRemark ? scope.row.subsectionManagerRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.subsectionManagerRemark, '分总意见')
+                                        }
+                                    }
+                                })
+                            }
                         }
                     ]
                 }
@@ -521,7 +570,24 @@ export const platformPlan = function (targetYear, targetMonth) {
                             displayAs: 'fundMoney',
                             align: 'center',
                             width: '150',
-                            label: `-`
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.regionManagerRemark ? scope.row.regionManagerRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.regionManagerRemark, '大区总意见')
+                                        }
+                                    }
+                                })
+                            }
                         }
                     ]
                 }
