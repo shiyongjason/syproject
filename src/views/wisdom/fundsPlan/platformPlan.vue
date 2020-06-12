@@ -177,10 +177,12 @@ export default {
             await this.findPlatformPlanTotal(params)
             const columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
             columnData.forEach((value, index) => {
-                if (index > 3) {
+                if (index > 4) {
                     value.children.forEach((val) => {
                         if (this.platformPlanTotal[val.prop] !== null && this.platformPlanTotal[val.prop] !== undefined) {
                             val.children[0].label = String(this.platformPlanTotal[val.prop])
+                        } else {
+                            val.children[0].label = '-'
                         }
                     })
                 }

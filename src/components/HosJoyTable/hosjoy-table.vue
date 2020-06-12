@@ -31,18 +31,14 @@
                     <slot name="expand" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod"
-                             align="center" width="60"></el-table-column>
+            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="(item, index) in column">
-                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
-                                 :key='index' :width="item.width" :min-width="item.minWidth"
-                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot">
+                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='index' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed" v-if="item.slot">
                     <template slot-scope="scope">
-                        <slot :name="item.prop" :data="scope" ></slot>
+                        <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item"
-                               :key='index' v-if="!item.slot && !item.isHidden"></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='index' v-if="!item.slot && !item.isHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
@@ -51,9 +47,7 @@
             </el-table-column>
         </el-table>
         <div class="pages">
-            <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum"
-                           :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs"
-                           @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
+            <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum" :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
         </div>
     </div>
 </template>
@@ -159,6 +153,11 @@ export default {
         }
     },
     methods: {
+        hiddenOverflowTooltip (row) {
+            if (row.column.showOverflowTooltip) {
+                return 'hiddenOverflowTooltip'
+            }
+        },
         tableRowClassName ({ row }) {
             if (row.cellType === 2) {
                 return 'branch-total-row'
@@ -284,15 +283,6 @@ export default {
         }
     },
     mounted () {
-        this.userNameLog = 'TABLE_USER_' + this.$route.path + this.userInfo.user_name
-        const isLoggedIn = JSON.parse(sessionStorage.getItem(this.userNameLog))
-        if (isLoggedIn && isLoggedIn.length > 0) {
-            this.defaultLabel = isLoggedIn
-        } else {
-            this.defaultLabel = []
-            this.collectDefaultId(this.switchLabel)
-            sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-        }
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -301,15 +291,12 @@ export default {
 
 </script>
 <style scoped>
-    .hosjoy-table{
-        position: relative;
-    }
-    .hosjoy-in-table {
-        min-height: 300px;
-    }
-    .hosjoy-table >>> .el-table .cell {
-        font-size: 12px;
-    }
+.hosjoy-in-table {
+    min-height: 300px;
+}
+.hosjoy-table >>> .el-table .cell {
+    font-size: 12px;
+}
 
     /* .hosjoy-table >>> .el-table .caret-wrapper {
         height: 20px;
@@ -372,4 +359,21 @@ export default {
         padding: 10px 18px;
         box-sizing: border-box;
     }
+.hosjoy-table >>> .el-table .branch-total-row {
+    background: rgb(235, 241, 222);
+    font-weight: bold;
+}
+.hosjoy-table >>> .el-table__row--striped.branch-total-row td {
+    background: rgb(235, 241, 222);
+    font-weight: bold;
+}
+.hosjoy-table >>> .el-table .total-row {
+    background: rgb(253, 233, 217);
+    font-weight: bold;
+}
+.hosjoy-table >>> .hiddenOverflowTooltip .cell {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 </style>
