@@ -67,6 +67,18 @@
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
+                <template slot="organizationName" slot-scope="scope">
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                </template>
+                <template slot="organizationName" slot-scope="scope">
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                </template>
+                <template slot="organizationName" slot-scope="scope">
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                </template>
+                <template slot="organizationName" slot-scope="scope">
+                    <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
+                </template>
             </hosJoyTable>
         </div>
     </div>
@@ -208,6 +220,7 @@ export default {
                 }
             })
             this.columnData = columnData
+            this.$refs.hosjoyTable.doLayout()
             // this.updateLabel()
         },
         linkage (dis) {

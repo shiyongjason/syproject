@@ -27,14 +27,14 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
             label: '申报公司数',
             children: [
                 {
-                    prop: 'annualCommitment',
+                    prop: 'companyCounts',
                     label: '总平台数',
                     width: '150',
                     displayAs: 'fundMoney',
                     align: 'center'
                 },
                 {
-                    prop: 'annualCommitment',
+                    prop: 'declareCounts',
                     label: '已申报家数',
                     width: '150',
                     displayAs: 'fundMoney',
@@ -145,16 +145,16 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
             label: '审批金额',
             children: [
                 {
-                    prop: 'overduePercent',
+                    prop: 'subsectionManagerApproveAmount',
                     label: '分总审批额度',
                     align: 'right',
                     width: '100'
                 },
                 {
-                    prop: 'overduePercent',
+                    prop: 'regionManagerApproveAmount',
                     label: '大区总审批金额',
                     align: 'right',
-                    width: '100'
+                    width: '120'
                 }
             ]
         }
@@ -400,11 +400,31 @@ export const platformPlan = function (targetYear, targetMonth) {
             children: [
                 {
                     label: '资金支持类型',
-                    width: '100'
+                    prop: 'subRegionFundType',
+                    width: '100',
+                    children: [
+                        {
+                            prop: 'subRegionFundType',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '100',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     label: '区域人员意见',
-                    width: 120
+                    prop: 'subRegionRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'subRegionRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         },
@@ -413,11 +433,31 @@ export const platformPlan = function (targetYear, targetMonth) {
             children: [
                 {
                     label: '健康度指标',
-                    width: '100'
+                    prop: 'subsectionFinanceHealthPercentage',
+                    width: '100',
+                    children: [
+                        {
+                            prop: 'subsectionFinanceHealthPercentage',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '100',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     label: '分财意见',
-                    width: 120
+                    prop: 'subsectionFinanceRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'subsectionFinanceRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         },
@@ -426,11 +466,31 @@ export const platformPlan = function (targetYear, targetMonth) {
             children: [
                 {
                     label: '分总审批金额',
-                    width: '100'
+                    prop: 'subsectionManagerApproveAmount',
+                    width: '100',
+                    children: [
+                        {
+                            prop: 'subsectionManagerApproveAmount',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '120',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     label: '分总意见',
-                    width: 120
+                    prop: 'subsectionManagerRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'subsectionManagerRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         },
@@ -439,11 +499,31 @@ export const platformPlan = function (targetYear, targetMonth) {
             children: [
                 {
                     label: '大区总审批金额',
-                    width: '100'
+                    prop: 'regionManagerApproveAmount',
+                    width: '120',
+                    children: [
+                        {
+                            prop: 'regionManagerApproveAmount',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '120',
+                            label: `-`
+                        }
+                    ]
                 },
                 {
                     label: '大区总意见',
-                    width: 120
+                    prop: 'regionManagerRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'regionManagerRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
                 }
             ]
         }

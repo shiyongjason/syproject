@@ -121,6 +121,7 @@ export default {
                     mouth: params.selectTime.slice(4)
                 }
             }
+            this.$refs.hosjoyTable.doLayout()
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode
