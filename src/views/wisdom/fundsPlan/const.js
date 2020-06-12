@@ -24,6 +24,25 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
             fixed: true
         },
         {
+            label: '申报公司数',
+            children: [
+                {
+                    prop: 'annualCommitment',
+                    label: '总平台数',
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'center'
+                },
+                {
+                    prop: 'annualCommitment',
+                    label: '已申报家数',
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'center'
+                }
+            ]
+        },
+        {
             label: '销售',
             children: [
                 {
@@ -68,7 +87,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期额',
+                    label: '逾期余额',
                     width: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -119,6 +138,23 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                     align: 'right',
                     className: 'wisdom-total-background',
                     width: '200'
+                }
+            ]
+        },
+        {
+            label: '审批金额',
+            children: [
+                {
+                    prop: 'overduePercent',
+                    label: '分总审批额度',
+                    align: 'right',
+                    width: '100'
+                },
+                {
+                    prop: 'overduePercent',
+                    label: '大区总审批金额',
+                    align: 'right',
+                    width: '100'
                 }
             ]
         }
@@ -260,7 +296,7 @@ export const platformPlan = function (targetYear, targetMonth) {
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期额',
+                    label: '逾期余额',
                     width: '150',
                     displayAs: 'fundMoney',
                     align: 'center',
@@ -356,6 +392,58 @@ export const platformPlan = function (targetYear, targetMonth) {
                             label: `-`
                         }
                     ]
+                }
+            ]
+        },
+        {
+            label: '区域申报内容',
+            children: [
+                {
+                    label: '资金支持类型',
+                    width: '100'
+                },
+                {
+                    label: '区域人员意见',
+                    width: 120
+                }
+            ]
+        },
+        {
+            label: '分财核定结果',
+            children: [
+                {
+                    label: '健康度指标',
+                    width: '100'
+                },
+                {
+                    label: '分财意见',
+                    width: 120
+                }
+            ]
+        },
+        {
+            label: '分总审批结果',
+            children: [
+                {
+                    label: '分总审批金额',
+                    width: '100'
+                },
+                {
+                    label: '分总意见',
+                    width: 120
+                }
+            ]
+        },
+        {
+            label: '大区总审批结果',
+            children: [
+                {
+                    label: '大区总审批金额',
+                    width: '100'
+                },
+                {
+                    label: '大区总意见',
+                    width: 120
                 }
             ]
         }
