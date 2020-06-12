@@ -31,3 +31,5 @@ export const saveDoc = (params) => axios.post(`/fms/api/risk-check/save/project-
 export const submitDoc = (params) => axios.post(`/fms/api/risk-check/submit/project-doc`, params)
 // 模板审核记录
 export const getRefuseInfo = (params) => axios.get(`/fms/api/doc-template/project/refuse/${params.projectId}/${params.templateId}`)
+
+export const getRiskcheckloan = (params) => axios.get(`/fms/api/risk-check/loan`, { params })
