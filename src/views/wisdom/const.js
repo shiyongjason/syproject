@@ -338,24 +338,10 @@ export function sprintTableLabel (targetYear) {
     return [
         {
             prop: 'subsectionName',
-            label: '',
+            label: '分部',
             fixed: true,
             width: '120px',
-            showOverflowTooltip: true,
-            children: [
-                {
-                    prop: 'subsectionName',
-                    width: '120px',
-                    label: `分部`,
-                    children: [
-                        {
-                            prop: 'subsectionName',
-                            width: '120px',
-                            label: `-`
-                        }
-                    ]
-                }
-            ]
+            showOverflowTooltip: true
         },
         {
             prop: 'regionName',
