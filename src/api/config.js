@@ -32,8 +32,8 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'test':
-        // interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
-        interfaceUrl = 'https://test-hbp.hosjoy.com:4832/'
+        interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
+        // interfaceUrl = 'https://test-hbp.hosjoy.com:4832/'
         ossUrl = 'https://testroute.hosjoy.com:4832/'
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
