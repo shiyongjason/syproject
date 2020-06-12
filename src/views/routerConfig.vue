@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="box">
                 <div class="h-page-title">
-                    <div>路由配置</div>
+                    <div>路由配置<i style="color: red">（请勿擅自修改菜单名，菜单名与左侧菜单无任何关系）</i></div>
                     <!-- <el-button @click="clearCache">清缓存</el-button> -->
                     <el-dropdown split-button type="primary" trigger="click" @click="popupMenu(1)">
                         添加一级菜单
