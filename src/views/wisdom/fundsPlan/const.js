@@ -702,11 +702,11 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '当月申报用款额',
             prop: 'currentApplyFund',
-            width: 120,
+            width: 150,
             children: [
                 {
                     label: '-',
-                    width: 120,
+                    width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     prop: 'currentApplyFund'
