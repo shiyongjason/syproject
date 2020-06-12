@@ -584,7 +584,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             prop: 'misCode',
             isHidden: tabCheck,
             width: 100,
-            fixed: true,
+            fixed: true
         },
         {
             label: '公司名称',
