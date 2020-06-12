@@ -111,14 +111,7 @@ export function preformTableLabel (targetYear) {
                 {
                     prop: 'misCode',
                     width: '120px',
-                    label: '公司编码',
-                    children: [
-                        {
-                            prop: 'misCode',
-                            width: '120px',
-                            label: '-'
-                        }
-                    ]
+                    label: '公司编码'
                 }
             ]
         },
@@ -338,24 +331,10 @@ export function sprintTableLabel (targetYear) {
     return [
         {
             prop: 'subsectionName',
-            label: '',
+            label: '分部',
             fixed: true,
             width: '120px',
-            showOverflowTooltip: true,
-            children: [
-                {
-                    prop: 'subsectionName',
-                    width: '120px',
-                    label: `分部`,
-                    children: [
-                        {
-                            prop: 'subsectionName',
-                            width: '120px',
-                            label: `-`
-                        }
-                    ]
-                }
-            ]
+            showOverflowTooltip: true
         },
         {
             prop: 'regionName',

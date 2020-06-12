@@ -368,37 +368,19 @@ export const planApproval = function (targetYear) {
             prop: 'misCode',
             label: '公司编码',
             width: '100',
-            fixed: true,
-            children: [
-                {
-                    prop: 'misCode',
-                    label: `-`
-                }
-            ]
+            fixed: true
         },
         {
             prop: 'companyName',
             label: '平台公司名称',
             width: '100',
-            fixed: true,
-            children: [
-                {
-                    prop: 'companyName',
-                    label: `-`
-                }
-            ]
+            fixed: true
         },
         {
             prop: 'subsectionName',
             label: '分部',
             width: '100',
-            fixed: true,
-            children: [
-                {
-                    prop: 'subsectionName',
-                    label: `-`
-                }
-            ]
+            fixed: true
         },
         {
             prop: 'regionName',
@@ -603,58 +585,26 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             isHidden: tabCheck,
             width: 100,
             fixed: true,
-            children: [
-                {
-                    label: '-',
-                    fixed: true,
-                    width: 100,
-                    prop: 'misCode'
-                }
-            ]
         },
         {
             label: '公司名称',
             prop: 'companyName',
             isHidden: tabCheck,
             width: 120,
-            fixed: true,
-            children: [
-                {
-                    label: '-',
-                    width: 120,
-                    fixed: true,
-                    prop: 'companyName'
-                }
-            ]
+            fixed: true
         },
         {
             label: '区域',
             prop: 'subRegionName',
             isHidden: tabCheck,
             width: 150,
-            fixed: true,
-            children: [
-                {
-                    label: '-',
-                    width: 150,
-                    fixed: true,
-                    prop: 'subRegionName'
-                }
-            ]
+            fixed: true
         },
         {
             label: '分部',
             prop: 'subsectionName',
             width: 120,
-            fixed: true,
-            children: [
-                {
-                    label: '-',
-                    width: 120,
-                    fixed: true,
-                    prop: 'subsectionName'
-                }
-            ]
+            fixed: true
         },
         {
             label: '大区',

@@ -154,7 +154,7 @@ export default {
             await this.findPlanCreditTotal(params)
             const columnData = planCreditLabel(this.tabSwitch, this.hasAuth)
             columnData.forEach((value, index) => {
-                if (index > 3) {
+                if (index > 4) {
                     value.children.forEach((val) => {
                         if (this.planCreditTotal && (this.planCreditTotal[val.prop] || this.planCreditTotal[val.prop] === 0)) {
                             val.label = String(this.planCreditTotal[val.prop])
@@ -248,7 +248,7 @@ export default {
                 }
                 !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
             }
         },
         ...mapActions({
