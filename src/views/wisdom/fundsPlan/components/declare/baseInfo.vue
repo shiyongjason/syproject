@@ -86,18 +86,42 @@
                 </div>
             </div>
             <h3>借款情况</h3>
-            <el-form-item label="在贷余额：">
-                <div class="w250">
-                    <span v-if="!fundDetail.respFundPlanLoan">-</span>
-                    <span v-else>{{fundDetail.respFundPlanLoan.loanBalance | fundMoney}}</span>
-                    <span class="dw">万元</span>
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <el-form-item label="在贷余额：">
+                        <div class="w250">
+                            <span v-if="!fundDetail.respFundPlanLoan">-</span>
+                            <span v-else>{{fundDetail.respFundPlanLoan.loanBalance | fundMoney}}</span>
+                            <span class="dw">万元</span>
+                        </div>
+                    </el-form-item>
                 </div>
-            </el-form-item>
-            <el-form-item label="待还款明细：">
-                <div class="w250">
-                    <el-button type="primary" size="small" @click="showRepaid">展开明细列表</el-button>
+                <div class="query-cont-col">
+                    <el-form-item :label="`当前是否有逾期：`">
+                        <div class="w250">
+                            <span v-if="fundDetail.respFundPlanLoan.isOverdue">是</span>
+                            <span v-else>否</span>
+                        </div>
+                    </el-form-item>
                 </div>
-            </el-form-item>
+            </div>
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <el-form-item label="待还款明细：">
+                        <div class="w250">
+                            <el-button type="primary" size="small" @click="showRepaid">展开明细列表</el-button>
+                        </div>
+                    </el-form-item>
+                </div>
+                <div class="query-cont-col">
+                    <el-form-item :label="`当前逾期余额：`">
+                        <div class="w250">
+                            <span>{{fundDetail.respFundPlanLoan.overdueAmount | fundMoney}}</span>
+                            <span class="dw">万元</span>
+                        </div>
+                    </el-form-item>
+                </div>
+            </div>
         </el-form>
         <el-dialog title="待还款明细" :visible.sync="isOpen" :close-on-click-modal='false' width="50%">
             <div class="page-body-cont h400">
@@ -250,7 +274,7 @@ export default {
     /deep/ .el-pagination__editor.el-input {
         width: 50px !important;
     }
-    /deep/ .el-pagination__jump{
+    /deep/ .el-pagination__jump {
         margin-left: 10px;
     }
 }
