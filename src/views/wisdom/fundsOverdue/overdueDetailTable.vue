@@ -65,7 +65,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -150,11 +150,6 @@ export default {
         }),
         column () {
             return overdueDetailTable
-        },
-        fixedHeight () {
-            let oneHeight = 71
-            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
-            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
