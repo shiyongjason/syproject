@@ -258,12 +258,15 @@ export default {
             this.onQuery()
         },
         onLinddialog () {
-            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
+            this.$router.push({ path: '/funds/fundsDataAnalysis/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
         },
         getUserTabAuth () {
             let menuList = JSON.parse(sessionStorage.getItem('menuList'))
-            this.router = menuList.filter(i => {
-                return i.path == '/fundsData'
+            let shy = menuList.filter(i => {
+                return i.path == '/funds'
+            })[0].children
+            this.router = shy.filter(i => {
+                return i.path == 'fundsDataAnalysis'
             })[0].children
             this.stairTab()
         },

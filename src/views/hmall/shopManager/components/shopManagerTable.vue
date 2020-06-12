@@ -140,7 +140,7 @@ export default {
         },
         gotoProductAdd () {
             this.$router.push({
-                path: '/hmall/selectCategory',
+                path: '/b2b/selectCategory',
                 query: {
                     status: 'add',
                     type: 'add'
@@ -149,7 +149,7 @@ export default {
         },
         modify (row) {
             this.$router.push({
-                path: '/hmall/selectCategory',
+                path: '/b2b/selectCategory',
                 query: {
                     id: row.id,
                     status: 'add'
