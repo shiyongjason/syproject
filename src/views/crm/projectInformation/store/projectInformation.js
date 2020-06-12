@@ -68,7 +68,7 @@ const actions = {
         commit(types.PROJECT_DETAIL, data)
     },
     async findProjectLoan ({ commit }, params) {
-        const { data } = await Api.getProjectloan(params)
+        const { data } = await Api.getRiskcheckloan(params)
         commit(types.PROJECT_LOAN, data)
     },
     async findRefuseinfo ({ commit }, params) {
