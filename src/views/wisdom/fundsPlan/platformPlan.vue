@@ -63,7 +63,7 @@
             <hosJoyTable ref="hosjoyTable"  collapseShow border stripe showPagination :column="columnData" :data="platformPlanList"
                          align="center"
                          :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
-                         :total="platformPlanPagination.total" @pagination="getList">
+                         :total="platformPlanPagination.total" @pagination="getList" @updateLabel="updateLabel">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -168,6 +168,26 @@ export default {
         getList (val) {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
+        updateLabel (name) {
+            const showColumnLabel = JSON.parse(sessionStorage.getItem(name)) || []
+            console.log(sessionStorage.getItem(name), name)
+            this.columnData.forEach((value) => {
+                if (value.prop) {
+                    value.isHidden = showColumnLabel.indexOf(value.prop) === -1
+                } else {
+                    if (showColumnLabel.indexOf(value.label) === -1) {
+                        value.isHidden = true
+                    } else {
+                        value.isHidden = false
+                        value.children.forEach(value => {
+                            value.isHidden = showColumnLabel.indexOf(value.prop) === -1
+                        })
+                    }
+                }
+            })
+            console.log(this.columnData)
+            this.$refs.hosjoyTable.doLayout()
+        },
         async onQuery (params) {
             this.paramTargetDate = {
                 year: params.selectTime.slice(0, 4),
@@ -188,9 +208,7 @@ export default {
                 }
             })
             this.columnData = columnData
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
+            // this.updateLabel()
         },
         linkage (dis) {
             let obj = {

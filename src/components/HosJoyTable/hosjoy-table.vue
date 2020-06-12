@@ -153,7 +153,7 @@ export default {
                 return {
                     id: id,
                     label: value.label,
-                    children: value.children && value.children.filter(value => value.label !== '-' && value.label !== '').map(value1 => {
+                    children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
                         if (value1.prop) {
                             id = value1.prop
                         } else {
@@ -271,18 +271,18 @@ export default {
             })
         },
         checkHandler (item, currentItemChecked) {
-            if (typeof item.id !== 'number') {
-                if (!currentItemChecked) {
-                    const idExist = this.defaultLabel.indexOf(item.id)
-                    if (idExist > -1) {
-                        this.defaultLabel.splice(idExist, 1)
-                    }
-                } else {
-                    this.defaultLabel.push(item.id)
-                    this.defaultLabel = [...new Set(this.defaultLabel)]
+            if (!currentItemChecked) {
+                const idExist = this.defaultLabel.indexOf(item.id)
+                if (idExist > -1) {
+                    this.defaultLabel.splice(idExist, 1)
                 }
-                sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+            } else {
+                this.defaultLabel.push(item.id)
+                this.defaultLabel = [...new Set(this.defaultLabel)]
             }
+            sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+            console.log(this.userNameLog)
+            this.$emit('updateLabel', this.userNameLog)
         }
     },
     watch: {
@@ -294,7 +294,7 @@ export default {
         }
     },
     mounted () {
-        this.userNameLog = 'TABLE_USER_' + this.$route.path + this.userInfo.user_name
+        this.userNameLog = 'TABLE_USER::' + this.$route.path + this.userInfo.user_name
         const isLoggedIn = JSON.parse(sessionStorage.getItem(this.userNameLog))
         if (isLoggedIn && isLoggedIn.length > 0) {
             this.defaultLabel = isLoggedIn
