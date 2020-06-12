@@ -13,7 +13,8 @@
             </div>
         </el-collapse-transition>
         <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border  :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4" :row-class-name="rowClassName">
+        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4"
+            :row-class-name="rowClassName">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="item in tableLabel">
@@ -46,14 +47,15 @@
                     </template>
                 </el-table-column>
             </template>
-            <el-table-column label="操作" v-if="isAction" align="center"  :fixed="isfiexd" :min-width="minWidth">
+            <el-table-column label="操作" v-if="isAction" align="center" :fixed="isfiexd" :min-width="minWidth">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange" @size-change="handleSizeChange">
+        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
+            @size-change="handleSizeChange">
         </el-pagination>
     </div>
 </template>

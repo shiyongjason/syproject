@@ -283,6 +283,50 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/membership/memberManage')
+            },
+            {
+                path: 'commonMemberActive',
+                name: 'commonMemberActive',
+                meta: {
+                    title: '会员活跃明细（普通商品）',
+                    tagName: '会员活跃明细（普通商品）',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/commonMemberActive')
+            },
+            {
+                path: 'seckillMemberActive',
+                name: 'seckillMemberActive',
+                meta: {
+                    title: '会员活跃明细（秒杀商品）',
+                    tagName: '会员活跃明细（秒杀商品）',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/seckillMemberActive')
+            },
+            {
+                path: 'activityUseInfo',
+                name: 'activityUseInfo',
+                meta: {
+                    title: '活动使用明细',
+                    tagName: '活动使用明细',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/activityUseInfo')
+            },
+            {
+                path: 'couponsUseInfo',
+                name: 'couponsUseInfo',
+                meta: {
+                    title: '优惠券使用明细',
+                    tagName: '优惠券使用明细',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/couponsUseInfo')
             }
         ]
     },
