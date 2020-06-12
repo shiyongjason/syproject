@@ -51,7 +51,7 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData" :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
-                @updateLabel="updateLabel">
+                @updateLabel="updateLabel" :shy="ssshy" @aa='aa'>
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -100,6 +100,7 @@ export default {
     },
     data () {
         return {
+            ssshy: true,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -167,23 +168,27 @@ export default {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
         updateLabel (name) {
-            const showColumnLabel = JSON.parse(sessionStorage.getItem(name)) || []
-            console.log(sessionStorage.getItem(name), name)
-            this.columnData.forEach((value) => {
-                if (value.prop) {
-                    value.isHidden = showColumnLabel.indexOf(value.prop) === -1
-                } else {
-                    if (showColumnLabel.indexOf(value.label) === -1) {
-                        value.isHidden = true
-                    } else {
-                        value.isHidden = false
-                        value.children.forEach(value => {
-                            value.isHidden = showColumnLabel.indexOf(value.prop) === -1
-                        })
-                    }
+            // this.ssshy = false
+            this.showColumnLabel = JSON.parse(sessionStorage.getItem(name)) || []
+            console.log(this.showColumnLabel)
+            // console.log(sessionStorage.getItem(name), name)
+            // this.sshy(this.columnData)
+            this.columnData[2].children[0].isHidden = !this.columnData[2].children[0].isHidden
+            // this.columnData[0].isHidden = !this.columnData[0].isHidden
+            console.log(this.columnData[2].children[0])
+            this.ssshy = true
+        },
+        aa () {
+            this.ssshy = false
+        },
+        sshy (arr) {
+            arr.forEach((value) => {
+                if (value.children) {
+                    this.sshy(value.children)
+                    return
                 }
+                value.isHidden = this.showColumnLabel.indexOf(value.prop) === -1
             })
-            this.$refs.hosjoyTable.doLayout()
         },
         shy (val, point) {
             if (!val) return
