@@ -64,7 +64,7 @@
                 <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
                 <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
             </div>
-            <complexTable v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
+            <complexTable ref="complexTable" v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
 </template>
@@ -226,6 +226,10 @@ export default {
         async onQuery () {
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
+            // 表格渲染错位解决终极大法
+            this.$nextTick(() => {
+                this.$refs.complexTable.$refs.hosjoyTable.doLayout()
+            })
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
                 return
