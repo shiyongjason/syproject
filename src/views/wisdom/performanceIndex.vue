@@ -14,12 +14,6 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="district">
-                    <div class="query-col-title">区域：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
@@ -28,68 +22,67 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                    <el-date-picker v-model="queryParams.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="btnQuery">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport">导入表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='true' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
-        <el-dialog title="承诺值表格导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
+        <el-dialog title="履约值利润指标导入" :visible.sync="dialogFormVisible" center :close-on-click-modal='false'>
             <el-form :model="uploadData" :rules="rules" ref="form">
                 <el-form-item label="导入模板下载：" label-width="200px">
-                    <a class="downloadExcel" href="/excelTemplate/承诺值导入模板.xls" download="承诺值导入模板.xls">
-                        承诺值导入模板导出
+                    <a class="downloadExcel" href="/excelTemplate/履约值利润指标导入模板.xlsx" download="履约值利润指标导入模板.xlsx">
+                        履约值利润指标导出
                     </a>
                 </el-form-item>
-                <el-form-item label="请选择导入年份：" label-width="200px" prop='commitmentYear'>
-                    <el-date-picker v-model="uploadData.commitmentYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                <el-form-item label="请选择导入年份：" label-width="200px" prop='valueYear'>
+                    <el-date-picker v-model="uploadData.valueYear" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <!-- <el-button type="primary" @click="dialogFormVisible = false">导入表格</el-button> -->
-                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/fund-plan/commitment/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData'>
-                    <el-button type="primary" class='m0' :loading='loading'>
+                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/overdue/annual/performance/value/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='uploadData' :disabled='disabled'>
+                    <el-button type="primary" class='m0' :loading='loading' :disabled='disabled'>
                         导入表格
                     </el-button>
                 </el-upload>
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { tableLabel } from './const'
+import { preformTableLabel } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getCommitmentList, getCommitmentTotal, exportCommitment } from './api/index'
-import moment from 'moment'
+import { getPerformanceIndexList, getPerformanceIndexTotal, exportPerformanceIndex } from './api/index'
+import { PERFORMANCE_INDEX_IMPORT } from '../../utils/auth_const'
 export default {
-    name: 'commitValue',
+    name: 'performanceIndex',
     mixins: [departmentAuth],
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
             uploadData: {
-                commitmentYear: ''
+                valueYear: ''
             },
             rules: {
-                commitmentYear: [
+                valueYear: [
                     { required: true, message: '请选择年', trigger: 'blur' }
                 ]
             },
@@ -109,10 +102,6 @@ export default {
                     selectCode: '',
                     selectName: ''
                 },
-                areaObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
                 platformObj: {
                     selectCode: '',
                     selectName: ''
@@ -120,21 +109,22 @@ export default {
             },
             queryParams: {
                 regionCode: '',
-                subRegionCode: '',
                 subsectionCode: '',
                 misCode: '',
-                commitmentYear: moment().format('YYYY'),
-                totalAreaName: ''
-            },
-            page: {
-                total: 0,
+                valueYear: '',
+                totalAreaName: '',
                 pageNumber: 1,
                 pageSize: 10
             },
+            page: {
+                sizes: [10, 20, 50, 100],
+                total: 0
+            },
             total: {},
             tableData: [],
-            column: tableLabel,
-            dialogFormVisible: false
+            column: [],
+            dialogFormVisible: false,
+            dynamicName: '全部'
         }
     },
     computed: {
@@ -142,11 +132,23 @@ export default {
             userInfo: state => state.userInfo,
             regionList: state => state.regionList,
             branchList: state => state.branchList,
-            areaList: state => state.areaList,
             platformData: state => state.platformData
-        })
+        }),
+        ...mapGetters({
+            targetTime: 'fundsPlan/targetTime'
+        }),
+        showImport () {
+            return this.hosAuthCheck(PERFORMANCE_INDEX_IMPORT)
+        },
+        disabled () {
+            return !this.uploadData.valueYear
+        }
     },
     methods: {
+        cancel () {
+            this.uploadData.valueYear = ''
+            this.dialogFormVisible = false
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -154,17 +156,10 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.subRegionCode = ''
                 this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.areaObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
-                this.queryParams.subRegionCode = ''
-                this.queryParams.misCode = ''
-                this.selectAuth.areaObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'Q') {
                 this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
@@ -173,91 +168,60 @@ export default {
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                this.findAuthList({ deptType: 'Q', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                this.dynamicName = val.value.deptName
                 // 清空分部区域
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
+                this.dynamicName = val.value.deptName
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({
-                    deptType: 'Q',
-                    pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.queryParams.regionCode ? this.queryParams.regionCode : this.userInfo.pkDeptDoc
-                })
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
                     !this.userInfo.deptType && this.findPlatformslist()
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
-            } else if (dis === 'Q') {
-                this.queryParams.subRegionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                if (val.value.selectCode) {
-                    this.findPlatformslist({ subregionCode: val.value.selectCode })
-                } else if (this.queryParams.subsectionCode) {
-                    let params = {
-                        subsectionCode: this.queryParams.subsectionCode
-                    }
-                    this.findPlatformslist(params)
-                } else {
-                    !this.userInfo.deptType && this.findPlatformslist()
-                }
-                !val.value.selectCode && this.linkage(dis)
             } else if (dis === 'P') {
+                this.dynamicName = val.value.companyShortName
                 this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            this.queryParams.totalAreaName = this.selectAuthLabelShow()
-            exportCommitment(this.queryParams)
+            exportPerformanceIndex(this.queryParams)
         },
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.selectAuthLabelShow()
-            this.onQuery()
+        btnQuery () {
+            this.$set(this.queryParams, 'pageNumber', 1)
+            this.$set(this.queryParams, 'pageSize', 10)
+            this.queryParamsTemp = { ...this.queryParams }
+            this.onQuery(this.queryParams)
         },
-        selectAuthLabelShow () {
-            if (this.selectAuth.platformObj.selectName) {
-                this.column[1].label = this.selectAuth.platformObj.selectName
-            } else if (this.selectAuth.areaObj.selectName) {
-                this.column[1].label = this.selectAuth.areaObj.selectName
-            } else if (this.selectAuth.branchObj.selectName) {
-                this.column[1].label = this.selectAuth.branchObj.selectName
-            } else if (this.selectAuth.regionObj.selectName) {
-                this.column[1].label = this.selectAuth.regionObj.selectName
-            } else {
-                this.column[1].label = '全部'
-            }
-            return this.column[1].label
-        },
-        async onQuery () {
-            const promiseArr = [getCommitmentList(this.searchParams), getCommitmentTotal(this.searchParams)]
-            var data = await Promise.all(promiseArr).then((res) => {
-                if (res[1].data) {
-                    res[1].data.companyName = '合计'
-                    res[0].data.records.unshift(res[1].data)
-                }
+        async onQuery (params) {
+            const promiseArr = [getPerformanceIndexList(params), getPerformanceIndexTotal(params)]
+            const data = await Promise.all(promiseArr).then((res) => {
+                const columnData = preformTableLabel(this.queryParams.valueYear)
+                columnData[1].children[0].label = this.dynamicName
+                columnData.forEach((value, index) => {
+                    if (index > 1) {
+                        value.children.forEach((val) => {
+                            val.children.forEach((val1) => {
+                                if (res[1].data && res[1].data[val.prop]) {
+                                    val1.label = String(res[1].data[val.prop])
+                                } else {
+                                    val1.label = '-'
+                                }
+                            })
+                        })
+                    }
+                })
+                this.column = columnData
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
             this.tableData = data.records
-            this.page = {
-                total: data.total,
-                pageNumber: data.current,
-                pageSize: data.size
-            }
-            if (data.records.length > 1) {
-                this.column[2].label = `${data.records[0].commitmentYear}年度销售承诺值`
-            } else {
-                this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
-            }
+            this.page.total = data.total
         },
         getList (val) {
-            console.log(val)
-            this.searchParams = {
-                ...this.searchParams,
-                ...val
-            }
-            this.onQuery()
+            this.onQuery({ ...this.queryParamsTemp, ...val })
         },
         async onReset () {
             let obj = {
@@ -266,17 +230,16 @@ export default {
             }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
             this.$set(this.queryParams, 'misCode', '')
-            this.$set(this.queryParams, 'commitmentYear', moment().format('YYYY'))
+            this.$set(this.queryParams, 'valueYear', this.targetTime.slice(0, 4))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
-            this.selectAuth.areaObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
-            await this.newBossAuth()
-            this.onSearch()
+            this.dynamicName = '全部'
+            this.newBossAuth(['D', 'F', 'P'])
+            this.btnQuery()
         },
         isSuccess (response) {
             this.$message({
@@ -284,7 +247,8 @@ export default {
                 type: 'success'
             })
             this.loading = false
-            this.onSearch()
+            this.onQuery(this.queryParams)
+            this.dialogFormVisible = false
         },
         isError (response) {
             this.$message({
@@ -295,7 +259,7 @@ export default {
         },
         handleUpload (file) {
             this.$refs['form'].validate((valid) => { })
-            if (!this.uploadData.commitmentYear) {
+            if (!this.uploadData.valueYear) {
                 this.$message({
                     message: '请先选择导入年份！',
                     type: 'warning'
@@ -321,11 +285,16 @@ export default {
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
             })
-        }
+        },
+        ...mapActions({
+            findTargetTime: 'fundsPlan/findTargetTime'
+        })
     },
     async mounted () {
-        this.onSearch()
-        await this.newBossAuth()
+        await this.findTargetTime()
+        this.queryParams.valueYear = this.targetTime.slice(0, 4)
+        this.btnQuery()
+        this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>
