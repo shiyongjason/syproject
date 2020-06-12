@@ -261,25 +261,21 @@ export default {
                 }
             }
         },
-        collectDefaultId (arr, needShowArrFilter) {
+        collectDefaultId (arr, isRestDefaultLabel) {
+            if (!isRestDefaultLabel) {
+                this.defaultLabel = []
+            }
             arr.forEach(value => {
-                if (needShowArrFilter) {
-                    if (needShowArrFilter.indexOf(value.id) > -1) {
-                        this.defaultLabel.push(value.id)
-                        value.children && this.collectDefaultId(value.children, needShowArrFilter)
-                    }
-                } else {
-                    this.defaultLabel.push(value.id)
-                    value.children && this.collectDefaultId(value.children)
-                }
+                this.defaultLabel.push(value.id)
+                value.children && this.collectDefaultId(value.children, true)
             })
         },
         checkHandler (item, currentItemChecked) {
             if (typeof item.id !== 'number') {
                 if (!currentItemChecked) {
-                    const number = this.defaultLabel.indexOf(item.id)
-                    if (number > -1) {
-                        this.defaultLabel.splice(number, 1)
+                    const idExist = this.defaultLabel.indexOf(item.id)
+                    if (idExist > -1) {
+                        this.defaultLabel.splice(idExist, 1)
                     }
                 } else {
                     this.defaultLabel.push(item.id)
@@ -303,7 +299,6 @@ export default {
         if (isLoggedIn && isLoggedIn.length > 0) {
             this.defaultLabel = isLoggedIn
         } else {
-            this.defaultLabel = []
             this.collectDefaultId(this.switchLabel)
             sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
         }
