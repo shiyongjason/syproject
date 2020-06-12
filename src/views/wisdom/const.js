@@ -111,14 +111,7 @@ export function preformTableLabel (targetYear) {
                 {
                     prop: 'misCode',
                     width: '120px',
-                    label: '公司编码',
-                    children: [
-                        {
-                            prop: 'misCode',
-                            width: '120px',
-                            label: '-'
-                        }
-                    ]
+                    label: '公司编码'
                 }
             ]
         },
