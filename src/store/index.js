@@ -18,6 +18,8 @@ import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 import crmmanage from '@/views/crm/goodwork/store/crmManage'
 import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
+import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
+import riskManage from '@/views/crm/riskManage/store/riskManage'
 
 Vue.use(Vuex)
 
@@ -58,7 +60,9 @@ const store = new Vuex.Store({
         jinyunplatform,
         crmauthen,
         fundsPlan,
-        crmstatic
+        crmstatic,
+        projectInformation,
+        riskManage
     }
 })
 export default store
