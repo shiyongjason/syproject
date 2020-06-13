@@ -37,6 +37,9 @@
                     <template slot="cooperCompleteValue" slot-scope="scope">
                         {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
                     </template>
+                      <template slot="finalApproveValue" slot-scope="scope">
+                        {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
+                    </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
                     </template>
