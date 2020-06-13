@@ -49,9 +49,12 @@
         <div class="tips">
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
+        {{columnData}}
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData" :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
-                @updateLabel="updateLabel" :shy="ssshy" @aa='aa'>
+            <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
+                         :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
+                         :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
+                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -100,7 +103,7 @@ export default {
     },
     data () {
         return {
-            ssshy: true,
+            toggleTable: true,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -167,30 +170,25 @@ export default {
         getList (val) {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
-        updateLabel (name) {
-            // this.ssshy = false
-            this.showColumnLabel = JSON.parse(sessionStorage.getItem(name)) || []
-            console.log(this.showColumnLabel)
-            // console.log(sessionStorage.getItem(name), name)
-            // this.sshy(this.columnData)
-            this.columnData[2].children[0].isHidden = !this.columnData[2].children[0].isHidden
-            // this.columnData[0].isHidden = !this.columnData[0].isHidden
-            console.log(this.columnData[2].children[0])
-            this.ssshy = true
+        toggleTableHandler () {
+            this.toggleTable = false
         },
-        aa () {
-            this.ssshy = false
-        },
-        sshy (arr) {
-            arr.forEach((value) => {
+        updateLabel (name, showColumnLabel) {
+            this.columnData.forEach(value => {
+                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
                 if (value.children) {
-                    this.sshy(value.children)
-                    return
+                    let number = 0
+                    value.children.forEach(value1 => {
+                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        if (!value1.isHidden) number++
+                    })
+                    value.isHidden = !(number > 0)
                 }
-                value.isHidden = this.showColumnLabel.indexOf(value.prop) === -1
             })
+            this.toggleTable = true
+            this.$forceUpdate()
         },
-        shy (val, point) {
+        showDialog (val, point) {
             if (!val) return
             this.dialogVisible = true
             this.remark = val
@@ -203,7 +201,7 @@ export default {
             }
             this.findPlatformPlanList(params)
             await this.findPlatformPlanTotal(params)
-            const columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth, this.shy)
+            const columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth, this.showDialog)
             columnData.forEach((value, index) => {
                 if (index > 4) {
                     value.children.forEach((val) => {

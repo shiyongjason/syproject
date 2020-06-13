@@ -1,6 +1,5 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
-        {{shy}}
         <div v-if="collapseShow">
             <div class="collapse">
                 <img src="../../../src/assets/images/typeIcon.png" alt="" class="collapse"
@@ -18,13 +17,13 @@
                         check-on-click-node
                         :default-checked-keys="defaultLabel"
                         @check-change="checkHandler"
-                        @node-click="nodeCollapse"
+                        @node-click="toggleTableHandler"
                         :props="defaultProps">
                     </el-tree>
                 </div>
             </el-collapse-transition>
         </div>
-        <el-table v-if="shy" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
+        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
                   :height=" height || `calc(100vh - ${selfHeight}px)`"
                   class="hosjoy-in-table"
                   :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
@@ -70,7 +69,7 @@ export default {
     props: {
         isShowselection: { type: Boolean, default: () => false },
         isAction: { type: Boolean, default: () => false },
-        shy: { type: Boolean, default: () => true },
+        toggleTable: { type: Boolean, default: () => true },
         isShowIndex: { type: Boolean, default: () => false },
         expand: { type: Boolean, default: () => false },
         column: Array,
@@ -172,9 +171,8 @@ export default {
         }
     },
     methods: {
-        nodeCollapse () {
-            console.log(1)
-            this.$emit('aa')
+        toggleTableHandler () {
+            this.$emit('toggleTableHandler')
         },
         hiddenOverflowTooltip (row) {
             if (row.column.showOverflowTooltip) {
@@ -278,7 +276,6 @@ export default {
             })
         },
         checkHandler (item, currentItemChecked) {
-             console.log(2)
             if (!currentItemChecked) {
                 const idExist = this.defaultLabel.indexOf(item.id)
                 if (idExist > -1) {
@@ -289,7 +286,7 @@ export default {
                 this.defaultLabel = [...new Set(this.defaultLabel)]
             }
             sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            this.$emit('updateLabel', this.userNameLog)
+            this.$emit('updateLabel', this.userNameLog, this.defaultLabel)
         }
     },
     watch: {

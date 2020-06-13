@@ -167,7 +167,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             prop: 'misCode',
             label: '公司编码',
             width: '100',
-            // fixed: true
+            fixed: true
         },
         {
             prop: 'organizationName',
@@ -175,43 +175,43 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             showOverflowTooltip: true,
             label: '平台公司',
             width: '100',
-            // fixed: true
+            fixed: true
         },
-        // {
-        //     prop: 'subRegionName',
-        //     showOverflowTooltip: true,
-        //     label: '区域',
-        //     width: '100',
-        //     fixed: true
-        // },
-        // {
-        //     prop: 'subsectionName',
-        //     showOverflowTooltip: true,
-        //     label: '分部',
-        //     width: '100',
-        //     fixed: true
-        // },
-        // {
-        //     prop: 'regionName',
-        //     label: '',
-        //     showOverflowTooltip: true,
-        //     width: '120',
-        //     fixed: true,
-        //     children: [
-        //         {
-        //             prop: 'regionName',
-        //             label: `大区`,
-        //             width: '120',
-        //             children: [
-        //                 {
-        //                     prop: 'regionName',
-        //                     width: '120',
-        //                     label: `合计`
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // },
+        {
+            prop: 'subRegionName',
+            showOverflowTooltip: true,
+            label: '区域',
+            width: '100',
+            fixed: true
+        },
+        {
+            prop: 'subsectionName',
+            showOverflowTooltip: true,
+            label: '分部',
+            width: '100',
+            fixed: true
+        },
+        {
+            prop: 'regionName',
+            label: '',
+            showOverflowTooltip: true,
+            width: '120',
+            fixed: true,
+            children: [
+                {
+                    prop: 'regionName',
+                    label: `大区`,
+                    width: '120',
+                    children: [
+                        {
+                            prop: 'regionName',
+                            width: '120',
+                            label: `合计`
+                        }
+                    ]
+                }
+            ]
+        },
         {
             label: '销售',
             children: [
@@ -276,324 +276,324 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 }
             ]
         },
-        // {
-        //     label: '资金用款',
-        //     children: [
-        //         {
-        //             prop: 'loanBalance',
-        //             label: '在贷余额',
-        //             width: '150',
-        //             displayAs: 'fundMoney',
-        //             align: 'center',
-        //             children: [
-        //                 {
-        //                     prop: 'loanBalance',
-        //                     displayAs: 'fundMoney',
-        //                     width: '150',
-        //                     align: 'center',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             prop: 'totalOverdue',
-        //             label: '逾期余额',
-        //             width: '150',
-        //             displayAs: 'fundMoney',
-        //             align: 'center',
-        //             children: [
-        //                 {
-        //                     prop: 'totalOverdue',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '150',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             prop: 'estimateRepayment',
-        //             label: `${targetYear}年${targetMonth}月预计还款`,
-        //             displayAs: 'fundMoney',
-        //             align: 'right',
-        //             children: [
-        //                 {
-        //                     prop: 'estimateRepayment',
-        //                     displayAs: 'fundMoney',
-        //                     width: '150',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             prop: 'lastYearActualUse',
-        //             label: `${targetYear - 1}年${targetMonth}月实际用款`,
-        //             displayAs: 'fundMoney',
-        //             align: 'right',
-        //             children: [
-        //                 {
-        //                     prop: 'lastYearActualUse',
-        //                     displayAs: 'fundMoney',
-        //                     width: '150',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             prop: 'preBorrowCurrentMonth',
-        //             label: `${targetYear}年${targetMonth}月预计用款`,
-        //             displayAs: 'fundMoney',
-        //             align: 'right',
-        //             children: [
-        //                 {
-        //                     prop: 'preBorrowCurrentMonth',
-        //                     displayAs: 'fundMoney',
-        //                     width: '150',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // },
-        // {
-        //     label: '分析',
-        //     children: [
-        //         {
-        //             prop: 'salePercentCurrent',
-        //             label: `${targetYear}年${targetMonth}月销售同比`,
-        //             align: 'right',
-        //             children: [
-        //                 {
-        //                     prop: 'salePercentCurrent',
-        //                     width: '150',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             prop: 'usedPercentCurrent',
-        //             label: `${targetYear}年${targetMonth}月用款同比`,
-        //             align: 'right',
-        //             children: [
-        //                 {
-        //                     prop: 'usedPercentCurrent',
-        //                     width: '150',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             prop: 'overduePercent',
-        //             label: '逾期率=（逾期额/在贷余额）',
-        //             align: 'right',
-        //             children: [
-        //                 {
-        //                     prop: 'overduePercent',
-        //                     width: '220',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // },
-        // {
-        //     label: '区域申报内容',
-        //     children: [
-        //         {
-        //             label: '资金支持类型',
-        //             prop: 'subRegionFundType',
-        //             width: '100',
-        //             children: [
-        //                 {
-        //                     prop: 'subRegionFundType',
-        //                     align: 'center',
-        //                     width: '100',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             label: '区域人员意见',
-        //             prop: 'subRegionRemark',
-        //             width: 150,
-        //             children: [
-        //                 {
-        //                     prop: 'subRegionRemark',
-        //                     align: 'center',
-        //                     width: '150',
-        //                     render: (h, scope) => {
-        //                         return h('div', {
-        //                             domProps: {
-        //                                 innerHTML: `
-        //                                       <a>${scope.row.subRegionRemark ? scope.row.subRegionRemark : '-'}</a>
-        //                                       `
-        //                             },
-        //                             style: {
-        //                                 color: '#FF7A45',
-        //                                 cursor: 'pointer'
-        //                             },
-        //                             on: {
-        //                                 'click': function () {
-        //                                     fn(scope.row.subRegionRemark, '区域人员意见')
-        //                                 }
-        //                             }
-        //                         })
-        //                     }
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // },
-        // {
-        //     label: '分财核定结果',
-        //     children: [
-        //         {
-        //             label: '健康度指标',
-        //             prop: 'subsectionFinanceHealthPercentage',
-        //             width: '100',
-        //             children: [
-        //                 {
-        //                     prop: 'subsectionFinanceHealthPercentage',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '100',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             label: '分财意见',
-        //             prop: 'subsectionFinanceRemark',
-        //             width: 150,
-        //             children: [
-        //                 {
-        //                     prop: 'subsectionFinanceRemark',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '150',
-        //                     render: (h, scope) => {
-        //                         return h('div', {
-        //                             domProps: {
-        //                                 innerHTML: `
-        //                                       <a>${scope.row.subsectionFinanceRemark ? scope.row.subsectionFinanceRemark : '-'}</a>
-        //                                       `
-        //                             },
-        //                             style: {
-        //                                 color: '#FF7A45',
-        //                                 cursor: 'pointer'
-        //                             },
-        //                             on: {
-        //                                 'click': function () {
-        //                                     fn(scope.row.subsectionFinanceRemark, '分财意见')
-        //                                 }
-        //                             }
-        //                         })
-        //                     }
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // },
-        // {
-        //     label: '分总审批结果',
-        //     children: [
-        //         {
-        //             label: '分总审批金额',
-        //             prop: 'subsectionManagerApproveAmount',
-        //             width: '100',
-        //             children: [
-        //                 {
-        //                     prop: 'subsectionManagerApproveAmount',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '120',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             label: '分总意见',
-        //             prop: 'subsectionManagerRemark',
-        //             width: 150,
-        //             children: [
-        //                 {
-        //                     prop: 'subsectionManagerRemark',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '150',
-        //                     render: (h, scope) => {
-        //                         return h('div', {
-        //                             domProps: {
-        //                                 innerHTML: `
-        //                                       <a>${scope.row.subsectionManagerRemark ? scope.row.subsectionManagerRemark : '-'}</a>
-        //                                       `
-        //                             },
-        //                             style: {
-        //                                 color: '#FF7A45',
-        //                                 cursor: 'pointer'
-        //                             },
-        //                             on: {
-        //                                 'click': function () {
-        //                                     fn(scope.row.subsectionManagerRemark, '分总意见')
-        //                                 }
-        //                             }
-        //                         })
-        //                     }
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // },
-        // {
-        //     label: '大区总审批结果',
-        //     children: [
-        //         {
-        //             label: '大区总审批金额',
-        //             prop: 'regionManagerApproveAmount',
-        //             width: '120',
-        //             children: [
-        //                 {
-        //                     prop: 'regionManagerApproveAmount',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '120',
-        //                     label: `-`
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             label: '大区总意见',
-        //             prop: 'regionManagerRemark',
-        //             width: 150,
-        //             children: [
-        //                 {
-        //                     prop: 'regionManagerRemark',
-        //                     displayAs: 'fundMoney',
-        //                     align: 'center',
-        //                     width: '150',
-        //                     render: (h, scope) => {
-        //                         return h('div', {
-        //                             domProps: {
-        //                                 innerHTML: `
-        //                                       <a>${scope.row.regionManagerRemark ? scope.row.regionManagerRemark : '-'}</a>
-        //                                       `
-        //                             },
-        //                             style: {
-        //                                 color: '#FF7A45',
-        //                                 cursor: 'pointer'
-        //                             },
-        //                             on: {
-        //                                 'click': function () {
-        //                                     fn(scope.row.regionManagerRemark, '大区总意见')
-        //                                 }
-        //                             }
-        //                         })
-        //                     }
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // }
+        {
+            label: '资金用款',
+            children: [
+                {
+                    prop: 'loanBalance',
+                    label: '在贷余额',
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'center',
+                    children: [
+                        {
+                            prop: 'loanBalance',
+                            displayAs: 'fundMoney',
+                            width: '150',
+                            align: 'center',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'totalOverdue',
+                    label: '逾期余额',
+                    width: '150',
+                    displayAs: 'fundMoney',
+                    align: 'center',
+                    children: [
+                        {
+                            prop: 'totalOverdue',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'estimateRepayment',
+                    label: `${targetYear}年${targetMonth}月预计还款`,
+                    displayAs: 'fundMoney',
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'estimateRepayment',
+                            displayAs: 'fundMoney',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'lastYearActualUse',
+                    label: `${targetYear - 1}年${targetMonth}月实际用款`,
+                    displayAs: 'fundMoney',
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'lastYearActualUse',
+                            displayAs: 'fundMoney',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'preBorrowCurrentMonth',
+                    label: `${targetYear}年${targetMonth}月预计用款`,
+                    displayAs: 'fundMoney',
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'preBorrowCurrentMonth',
+                            displayAs: 'fundMoney',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            label: '分析',
+            children: [
+                {
+                    prop: 'salePercentCurrent',
+                    label: `${targetYear}年${targetMonth}月销售同比`,
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'salePercentCurrent',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'usedPercentCurrent',
+                    label: `${targetYear}年${targetMonth}月用款同比`,
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'usedPercentCurrent',
+                            width: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'overduePercent',
+                    label: '逾期率=（逾期额/在贷余额）',
+                    align: 'right',
+                    children: [
+                        {
+                            prop: 'overduePercent',
+                            width: '220',
+                            label: `-`
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            label: '区域申报内容',
+            children: [
+                {
+                    label: '资金支持类型',
+                    prop: 'subRegionFundType',
+                    width: '100',
+                    children: [
+                        {
+                            prop: 'subRegionFundType',
+                            align: 'center',
+                            width: '100',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    label: '区域人员意见',
+                    prop: 'subRegionRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'subRegionRemark',
+                            align: 'center',
+                            width: '150',
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.subRegionRemark ? scope.row.subRegionRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.subRegionRemark, '区域人员意见')
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            label: '分财核定结果',
+            children: [
+                {
+                    label: '健康度指标',
+                    prop: 'subsectionFinanceHealthPercentage',
+                    width: '100',
+                    children: [
+                        {
+                            prop: 'subsectionFinanceHealthPercentage',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '100',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    label: '分财意见',
+                    prop: 'subsectionFinanceRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'subsectionFinanceRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.subsectionFinanceRemark ? scope.row.subsectionFinanceRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.subsectionFinanceRemark, '分财意见')
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            label: '分总审批结果',
+            children: [
+                {
+                    label: '分总审批金额',
+                    prop: 'subsectionManagerApproveAmount',
+                    width: '100',
+                    children: [
+                        {
+                            prop: 'subsectionManagerApproveAmount',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '120',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    label: '分总意见',
+                    prop: 'subsectionManagerRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'subsectionManagerRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.subsectionManagerRemark ? scope.row.subsectionManagerRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.subsectionManagerRemark, '分总意见')
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            label: '大区总审批结果',
+            children: [
+                {
+                    label: '大区总审批金额',
+                    prop: 'regionManagerApproveAmount',
+                    width: '120',
+                    children: [
+                        {
+                            prop: 'regionManagerApproveAmount',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '120',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    label: '大区总意见',
+                    prop: 'regionManagerRemark',
+                    width: 150,
+                    children: [
+                        {
+                            prop: 'regionManagerRemark',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            width: '150',
+                            render: (h, scope) => {
+                                return h('div', {
+                                    domProps: {
+                                        innerHTML: `
+                                              <a>${scope.row.regionManagerRemark ? scope.row.regionManagerRemark : '-'}</a>
+                                              `
+                                    },
+                                    style: {
+                                        color: '#FF7A45',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            fn(scope.row.regionManagerRemark, '大区总意见')
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
     ]
 }
 // 资金计划审批额度
