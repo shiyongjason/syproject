@@ -432,7 +432,17 @@ export default {
             this.fieldConfig = item.authResourceList
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2) {
-                this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                if (item.employeeSubsections) {
+                    if (JSON.stringify(item.employeeSubsections) == '{}') {
+                        this.checkedkeys = []
+                    } else {
+                        this.checkedkeys = JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                    }
+                } else {
+                    this.checkedkeys = []
+                }
+                // this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                // this.checkedkeys = JSON.stringify(item.employeeSubsections) == '{}' ? JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes)) : []
                 this.cloneEmployeeSubsections = JSON.parse(JSON.stringify(item.employeeSubsections))
             } else {
                 this.cloneConfig = JSON.parse(JSON.stringify(item.authResourceList))

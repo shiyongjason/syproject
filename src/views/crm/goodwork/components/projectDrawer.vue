@@ -14,19 +14,19 @@
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <template v-if="activeName==='2'&&status==3">
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==3">
                         <el-button @click="onCallBack()">打回补充</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-                    <template v-if="status==3&&activeName==='2'&&form.docAfterStatus==2">
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==3&&activeName==='2'&&form.docAfterStatus==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-                    <template v-if="status==11&&activeName==='4'">
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FINAL)&&status==11&&activeName==='4'">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_QIANYUE)&&status==6">
