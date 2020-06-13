@@ -327,6 +327,39 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/dataBoard/couponsUseInfo')
+            },
+            {
+                path: 'transactionInfo',
+                name: 'transactionInfo',
+                meta: {
+                    title: '交易额明细',
+                    tagName: '交易额明细',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/transactionInfo')
+            },
+            {
+                path: 'memberRegistrationInfo',
+                name: 'memberRegistrationInfo',
+                meta: {
+                    title: '会员注册明细',
+                    tagName: '会员注册明细',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/memberRegistrationInfo')
+            },
+            {
+                path: 'biGoodDetail',
+                name: 'biGoodDetail',
+                meta: {
+                    title: '商品明细',
+                    tagName: '商品明细',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/dataBoard/biGoodDetail')
             }
         ]
     },
