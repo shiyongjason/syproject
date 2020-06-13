@@ -9,7 +9,12 @@ let B2bUrl = ''
 let fileUploadUrl = ''
 let iotUrl = ''
 let ccpBaseUrl = ''
-var env = process.env.NODE_ENV === 'development' ? 'development' : (process.env.VUE_APP_TITLE === 'dev' ? 'dev' : process.env.VUE_APP_TITLE === 'test' ? 'test' : process.env.VUE_APP_TITLE === 'preview' ? 'preview' : 'production')
+var env = process.env.NODE_ENV === 'development'
+    ? 'development' : (process.env.VUE_APP_TITLE === 'dev'
+        ? 'dev' : process.env.VUE_APP_TITLE === 'test'
+            ? 'test' : process.env.VUE_APP_TITLE === 'preview'
+                ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
+                    ? 'newtest' : 'production')
 
 switch (env) {
     case 'development':
@@ -40,8 +45,17 @@ switch (env) {
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
-        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
+        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
+        break
+    case 'newtest':
+        interfaceUrl = 'https://test-hbp.hosjoy.com:4832/'
+        ossUrl = 'https://testroute.hosjoy.com:4832/'
+        iframeUrl = 'https://test.hosjoy.com:4832/'
+        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        B2bUrl = 'https://test-b2b-gateway.hosjoy.com:4832/'
+        fileUploadUrl = 'https://test-hbp.hosjoy.com:4832/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
         break

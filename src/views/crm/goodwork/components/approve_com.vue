@@ -4,10 +4,10 @@
 
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
                   <el-form-item :label="approveTitle+'结果：'" >
-                   {{approveForm.approveResult?'通过':'不通过'}}
+                  {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
                 </el-form-item>
                 <el-form-item label="说明：" >
-                   {{approveForm.remark}}
+                   {{approveForm.remark?approveForm.remark:'-'}}
                 </el-form-item>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
@@ -39,7 +39,7 @@
                                 <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                             </p>
                         </div>
-                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
+                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100  :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
                             style="margin:10px 0 0 5px">
                             <el-button type="primary">上 传</el-button>
                         </hosjoyUpload>
@@ -125,14 +125,11 @@ export default {
             this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
         validFormInfo (list) {
-            console.log(list)
             const respTemp = this.approveForm.projectDocList[0].respRiskCheckDocTemplateList
+            console.log(list, respTemp)
             let res = ''
             for (let i = 0; i < respTemp.length; i++) {
-                const arr = list.filter(jtem => {
-                    return jtem.templateId == respTemp[i].templateId
-                })
-                if (arr.length == 0) {
+                if (respTemp[i].mondatoryFlag == 1 && respTemp[i].riskCheckProjectDocPos.length == 0) {
                     res = respTemp[i]
                     break
                 }
@@ -141,17 +138,21 @@ export default {
         },
         async  onSaveapproveOrfinal (val) {
             const projectDocList = this.approveForm.projectDocList
+            console.log(projectDocList)
             let riskCheckProjectDocPoList = []
+            let newriskCheckProjectDocPoList = []
             projectDocList && projectDocList.map(val => {
                 val.respRiskCheckDocTemplateList.map(obj => {
+                    newriskCheckProjectDocPoList = newriskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
                     if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
                 })
             })
             const params = {}
             params.bizType = this.status == 4 ? '2' : '3'
             params.projectId = this.approveForm.projectId
-            params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+            params.riskCheckProjectDocPoList = newriskCheckProjectDocPoList
             let res = this.validFormInfo(riskCheckProjectDocPoList)
+            console.log(1, res)
             if (res) {
                 this.$message.error(`二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
                 this.$emit('onBackLoad', false)
@@ -185,8 +186,10 @@ export default {
             }
         },
         handleSuccessCb (row) {
+            // console.log(row.riskCheckProjectDocPos)
             row.riskCheckProjectDocPos.map(item => {
                 item.templateId = row.templateId
+                item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
         },
         onDelete (item, index) {
