@@ -91,12 +91,15 @@ export default {
 
             },
             tableLabel: [
-                { label: '供应商', prop: 'merchantName' },
-                { label: '申请品牌', prop: 'brandName' },
-                { label: '申请类目', prop: 'categories' },
-                { label: '申请时间', prop: 'submitTime' },
-                { label: '审核状态', prop: 'status' },
-                { label: '审核时间', prop: 'auditTime' }
+                { label: '会员店', prop: 'merchantName' },
+                { label: '会员店账号', prop: 'brandName' },
+                { label: '所属商家', prop: 'categories' },
+                { label: 'SPU编码', prop: 'submitTime' },
+                { label: '商品名称', prop: 'status' },
+                { label: '进入时间', prop: 'auditTime' },
+                { label: '离开时间', prop: 'auditTime' },
+                { label: '停留时长', prop: 'auditTime' },
+                { label: '客户端', prop: 'auditTime' }
             ],
             tableData: [],
             paginationData: {}
