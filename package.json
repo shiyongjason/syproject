@@ -1,10 +1,11 @@
 {
-  "name": "chaos",
+  "name": "boss",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service build --mode test",
+    "newtest": "vue-cli-service build --mode newtest",
     "preview": "vue-cli-service build --mode preview",
     "dev": "vue-cli-service build --mode dev",
     "build": "vue-cli-service build",
