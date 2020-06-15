@@ -397,8 +397,10 @@ export default {
         },
         async backPlat (val, dis) {
             if (dis === 'F') {
-                this.baseForm.ehrSubsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                // this.baseForm.ehrSubsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.$set(this.baseForm, 'ehrSubsectionCode', val.value.pkDeptDoc ? val.value.pkDeptDoc : '')
                 this.baseForm.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                console.log(val)
                 this.$refs['baseForm'].clearValidate()
                 this.findAuthList({
                     deptType: 'Q',
