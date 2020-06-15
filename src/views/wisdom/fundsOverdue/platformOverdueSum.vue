@@ -331,7 +331,7 @@ export default {
     background-color: rgba($color: #c65911, $alpha: 0.5) !important;
     color: #fff !important;
 }
-    /deep/.overdueTable td{
-        height: 71px;
-    }
+/deep/.overdueTable td{
+    height: 71px;
+}
 </style>

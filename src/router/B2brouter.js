@@ -21,6 +21,17 @@ export default [
                 },
                 component: () => import('@/views/hmall/category/category.vue')
             },
+            // {
+            //     path: 'category_old',
+            //     name: 'category_old',
+            //     meta: {
+            //         title: '类目管理老',
+            //         tagName: '类目管理老',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/category/category_old.vue')
+            // },
             {
                 path: 'brand',
                 name: 'brand',
@@ -33,17 +44,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/brand/brand.vue')
             },
-            // {
-            //     path: 'shopManager',
-            //     name: 'shopManager',
-            //     meta: {
-            //         title: '商品库管理SPU',
-            //         tagName: '商品库管理SPU',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/shopManager/shopManager.vue')
-            // },
             {
                 path: 'selectCategory',
                 name: 'selectCategory',
@@ -56,49 +56,27 @@ export default [
                 component: () => import('@/views/hmall/shopManager/selectCategory.vue')
             },
             // {
-            //     path: 'platform',
-            //     name: 'platform',
+            //     path: 'attribute',
+            //     name: 'attribute',
             //     meta: {
-            //         title: '商家功能管理',
-            //         tagName: '商家功能管理',
+            //         title: '参数属性管理',
+            //         tagName: '参数属性管理',
             //         isMenu: true,
             //         icon: ''
             //     },
-            //     component: () => import('@/views/hmall/platform/platform.vue')
+            //     component: () => import('@/views/hmall/attribute/attribute.vue')
             // },
             // {
-            //     path: 'shopReviewList',
-            //     name: 'shopReviewList',
+            //     path: 'order',
+            //     name: 'order',
             //     meta: {
-            //         title: '平台公司商品审核列表',
-            //         tagName: '平台公司商品审核列表',
+            //         title: '订单／收款记录查询',
+            //         tagName: '订单／收款记录查询',
             //         isMenu: true,
             //         icon: ''
             //     },
-            //     component: () => import('@/views/hmall/shopReview/shopReviewList.vue')
+            //     component: () => import('@/views/hmall/order/order.vue')
             // },
-            {
-                path: 'attribute',
-                name: 'attribute',
-                meta: {
-                    title: '参数属性管理',
-                    tagName: '参数属性管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/attribute/attribute.vue')
-            },
-            {
-                path: 'order',
-                name: 'order',
-                meta: {
-                    title: '订单／收款记录查询',
-                    tagName: '订单／收款记录查询',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/order/order.vue')
-            },
             {
                 path: 'coupon',
                 name: 'coupon',
@@ -110,17 +88,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/coupon/coupon.vue')
             },
-            // {
-            //     path: 'member',
-            //     name: 'member',
-            //     meta: {
-            //         title: '会员审核列表',
-            //         tagName: '会员审核列表',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/memberStore/member.vue')
-            // },
             {
                 path: 'memberPull',
                 name: 'memberPull',
@@ -132,17 +99,6 @@ export default [
                 },
                 component: () => import('@/views/hmall/memberStore/memberPull.vue')
             },
-            // {
-            //     path: 'publicShop',
-            //     name: 'publicShop',
-            //     meta: {
-            //         title: '共享商品管理',
-            //         tagName: '共享商品管理',
-            //         isMenu: true,
-            //         icon: ''
-            //     },
-            //     component: () => import('@/views/hmall/shopManager/publicShop.vue')
-            // },
             {
                 path: 'activeReview',
                 name: 'activeReview',
@@ -177,33 +133,44 @@ export default [
             //     component: () => import('@/views/hmall/shopReview/merchantReview.vue')
             // },
             {
-                path: 'brandAreaAudit',
-                name: 'brandAreaAudit',
+                path: 'brandAudit',
+                name: 'brandAudit',
                 meta: {
-                    title: '品牌区域审核列表',
-                    tagName: '品牌区域审核列表',
+                    title: '品牌授权审核',
+                    tagName: '品牌授权审核',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/brand/brandAreaAudit.vue')
+                component: () => import('@/views/hmall/brand/brandAudit.vue')
+            },
+            {
+                path: 'brandManagement',
+                name: 'brandManagement',
+                meta: {
+                    title: '品牌授权管理',
+                    tagName: '品牌授权管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/brand/brandManagement.vue')
             },
             {
                 path: 'marketStore',
                 name: 'marketStore',
                 meta: {
-                    title: '商家商品库',
-                    tagName: '商家商品库',
+                    title: '商品管理',
+                    tagName: '商品管理',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/hmall/bazaar/marketStore.vue')
+                component: () => import('@/views/hmall/spumanage/marketStore.vue')
             },
             {
                 path: 'spumange',
                 name: 'spumange',
                 meta: {
-                    title: 'SPU列表',
-                    tagName: 'SPU列表',
+                    title: 'SPU模板列表',
+                    tagName: 'SPU模板列表',
                     isMenu: true,
                     icon: ''
                 },
@@ -224,24 +191,24 @@ export default [
                 path: 'spuauditlist',
                 name: 'spuauditlist',
                 meta: {
-                    title: 'SPU审核列表',
-                    tagName: 'SPU审核列表',
+                    title: '商品审核',
+                    tagName: '商品审核',
                     isMenu: true,
                     icon: ''
                 },
                 component: () => import('@/views/hmall/spumanage/spuauditlist')
             },
-            {
-                path: 'skuset',
-                name: 'skuset',
-                meta: {
-                    title: 'SKU属性管理',
-                    tagName: 'SKU属性管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/skuset')
-            },
+            // {
+            //     path: 'skuset',
+            //     name: 'skuset',
+            //     meta: {
+            //         title: 'SKU属性管理',
+            //         tagName: 'SKU属性管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/spumanage/skuset')
+            // },
             {
                 path: 'eventMange',
                 name: 'eventMange',
@@ -316,17 +283,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/membership/memberManage')
-            },
-            {
-                path: 'supplier',
-                name: 'supplier',
-                meta: {
-                    title: '供应商管理',
-                    tagName: '供应商管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/suppliermanage/index')
             }
         ]
     },
