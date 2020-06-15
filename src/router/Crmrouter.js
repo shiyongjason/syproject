@@ -44,38 +44,66 @@ export default [
                 component: () => import('@/views/crm/crmstatic/staticlist')
             },
             {
-                path: 'applicationList',
-                name: 'applicationList',
+                path: 'datatemp',
+                name: 'datatemp',
                 meta: {
-                    title: '好橙工VIP申请列表',
-                    tagName: '好橙工VIP申请列表',
+                    title: '材料清单配置',
+                    tagName: '材料清单配置',
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/crm/vipapplication/applicationList')
+                component: () => import('@/views/crm/riskManage/dataTemplate.vue')
             },
             {
-                path: 'vipmanlist',
-                name: 'vipmanlist',
+                path: 'tempdetail',
+                name: 'tempdetail',
                 meta: {
-                    title: '好橙工VIP管理列表',
-                    tagName: '好橙工VIP管理列表',
+                    title: '材料清单配置详情',
+                    tagName: '材料清单配置详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/datatemp'
+                },
+                component: () => import('@/views/crm/riskManage/templateDetail.vue')
+            }, {
+                path: 'projectInformationList',
+                name: 'projectInformationList',
+                meta: {
+                    title: '好橙工项目资料',
+                    tagName: '好橙工项目资料',
                     isMenu: true,
                     icon: ''
+
                 },
-                component: () => import('@/views/crm/vipmanage/vipmanlist')
+                component: () => import('@/views/crm/projectInformation/list.vue')
             },
             {
-                path: 'creditmanlist',
-                name: 'creditmanlist',
+                path: 'informationDetail',
+                name: 'informationDetail',
                 meta: {
-                    title: '好橙工信用管理列表',
-                    tagName: '好橙工信用管理列表',
-                    isMenu: true,
-                    icon: ''
+                    title: '好橙工项目资料详情',
+                    tagName: '好橙工项目资料详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/projectInformationList'
+
                 },
-                component: () => import('@/views/crm/creditmanage/creditmanlist')
+                component: () => import('@/views/crm/projectInformation/detail.vue')
+            },
+            {
+                path: 'approvalDetails',
+                name: 'approvalDetails',
+                meta: {
+                    title: '好橙工项目资料详情',
+                    tagName: '好橙工项目资料详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/projectInformationList'
+
+                },
+                component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
             }
+
         ]
     }
 ]

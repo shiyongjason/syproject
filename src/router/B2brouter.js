@@ -258,8 +258,8 @@ export default [
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
                     },
                     {
-                        path: 'order',
-                        name: 'order',
+                        path: 'orderRecord',
+                        name: 'orderRecord',
                         meta: {
                             title: '订单／收款记录查询',
                             tagName: '订单／收款记录查询',
