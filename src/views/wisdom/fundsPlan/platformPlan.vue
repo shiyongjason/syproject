@@ -53,7 +53,7 @@
             <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
                          :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
                          :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
+                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler" :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -102,6 +102,7 @@ export default {
     },
     data () {
         return {
+            localName: 'platformPlanTable::',
             toggleTable: true,
             queryParams: {
                 pageSize: 10,
@@ -212,7 +213,7 @@ export default {
                 }
             })
             this.columnData = columnData
-            const haveLabel = JSON.parse(JSON.stringify(sessionStorage.getItem('TABLE_USER::' + this.userInfo.user_name)))
+            const haveLabel = JSON.parse(JSON.stringify(localStorage.getItem(this.localName + this.userInfo.user_name)))
             haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
         },
         linkage (dis) {

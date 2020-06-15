@@ -98,6 +98,11 @@ export default {
             required: false,
             type: Boolean,
             default: false
+        },
+        localName: {
+            required: false,
+            type: String,
+            default: 'TABLE::'
         }
     },
     components: {
@@ -172,6 +177,7 @@ export default {
     },
     methods: {
         async updateLabel () {
+            localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
             await this.$emit('toggleTableHandler')
             this.$emit('updateLabel', this.defaultLabel)
             this.collapse = false
@@ -287,7 +293,6 @@ export default {
                 this.defaultLabel.push(item.id)
                 this.defaultLabel = [...new Set(this.defaultLabel)]
             }
-            sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
         }
     },
     watch: {
@@ -298,17 +303,17 @@ export default {
             this.getMergeArr(this.data, this.merge)
         },
         switchLabel () {
-            const isLoggedIn = JSON.parse(sessionStorage.getItem(this.userNameLog))
+            const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
             if (isLoggedIn && isLoggedIn.length > 0) {
                 this.defaultLabel = isLoggedIn
             } else {
                 this.collectDefaultId(this.switchLabel)
-                sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
             }
         }
     },
     mounted () {
-        this.userNameLog = 'TABLE_USER::' + this.userInfo.user_name
+        this.userNameLog = this.localName + this.userInfo.user_name
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
