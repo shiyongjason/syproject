@@ -82,6 +82,30 @@ export default {
             component: () => import('@/views/comfortcloud/memberDetail.vue')
         },
         {
+            path: 'knowledge',
+            name: 'knowledge',
+            meta: {
+                title: '知识库管理',
+                tagName: '知识库管理',
+                parentName: '舒适云概览',
+                isMenu: true,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/knowledge')
+        },
+        {
+            path: 'knowledgeEdit',
+            name: 'knowledgeEdit',
+            meta: {
+                title: '知识库管理',
+                tagName: '知识库管理',
+                parentName: '舒适云概览',
+                isMenu: false,
+                icon: ''
+            },
+            component: () => import('@/views/comfortcloud/knowledge/knowledgeEdit.vue')
+        },
+        {
             path: 'cloudList',
             name: 'cloudlist',
             meta: {
