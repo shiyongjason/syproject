@@ -166,7 +166,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
         {
             prop: 'misCode',
             label: '公司编码',
-            width: '100',
+            minWidth: '100',
             fixed: true
         },
         {
@@ -174,38 +174,38 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             slot: 'organizationName',
             showOverflowTooltip: true,
             label: '平台公司',
-            width: '100',
+            minWidth: '100',
             fixed: true
         },
         {
             prop: 'subRegionName',
             showOverflowTooltip: true,
             label: '区域',
-            width: '100',
+            minWidth: '100',
             fixed: true
         },
         {
             prop: 'subsectionName',
             showOverflowTooltip: true,
             label: '分部',
-            width: '100',
+            minWidth: '100',
             fixed: true
         },
         {
             prop: 'regionName',
             label: '',
             showOverflowTooltip: true,
-            width: '120',
+            minWidth: '120',
             fixed: true,
             children: [
                 {
                     prop: 'regionName',
                     label: `大区`,
-                    width: '120',
+                    minWidth: '120',
                     children: [
                         {
                             prop: 'regionName',
-                            width: '120',
+                            minWidth: '120',
                             label: `合计`
                         }
                     ]
@@ -224,7 +224,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'annualCommitment',
-                            width: '150',
+                            minWidth: '150',
                             displayAs: 'fundMoney',
                             label: `-`
                         }
@@ -239,7 +239,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'currentMonthCommitment',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -254,7 +254,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'lastYearActualSales',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -269,7 +269,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'estimateSales',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -282,14 +282,14 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'loanBalance',
                     label: '在贷余额',
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
                             prop: 'loanBalance',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             align: 'center',
                             label: `-`
                         }
@@ -298,7 +298,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'totalOverdue',
                     label: '逾期余额',
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'center',
                     children: [
@@ -306,7 +306,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                             prop: 'totalOverdue',
                             displayAs: 'fundMoney',
                             align: 'center',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -320,7 +320,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'estimateRepayment',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -334,7 +334,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'lastYearActualUse',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -348,7 +348,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'preBorrowCurrentMonth',
                             displayAs: 'fundMoney',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -365,7 +365,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'salePercentCurrent',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -377,7 +377,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'usedPercentCurrent',
-                            width: '150',
+                            minWidth: '150',
                             label: `-`
                         }
                     ]
@@ -389,7 +389,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'overduePercent',
-                            width: '220',
+                            minWidth: '220',
                             label: `-`
                         }
                     ]
@@ -407,7 +407,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'subRegionFundType',
                             align: 'center',
-                            width: '100',
+                            minWidth: '100',
                             label: `-`
                         }
                     ]
@@ -420,7 +420,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'subRegionRemark',
                             align: 'center',
-                            width: '150',
+                            minWidth: '150',
                             render: (h, scope) => {
                                 return h('div', {
                                     domProps: {
@@ -450,13 +450,13 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     label: '健康度指标',
                     prop: 'subsectionFinanceHealthPercentage',
-                    width: '100',
+                    minWidth: '100',
                     children: [
                         {
                             prop: 'subsectionFinanceHealthPercentage',
                             displayAs: 'fundMoney',
                             align: 'center',
-                            width: '100',
+                            minWidth: '100',
                             label: `-`
                         }
                     ]
@@ -464,7 +464,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     label: '分财意见',
                     prop: 'subsectionFinanceRemark',
-                    width: 150,
+                    minWidth: 150,
                     children: [
                         {
                             prop: 'subsectionFinanceRemark',
@@ -500,7 +500,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     label: '分总审批金额',
                     prop: 'subsectionManagerApproveAmount',
-                    width: '100',
+                    minWidth: '100',
                     children: [
                         {
                             prop: 'subsectionManagerApproveAmount',
@@ -514,13 +514,13 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     label: '分总意见',
                     prop: 'subsectionManagerRemark',
-                    width: 150,
+                    minWidth: 150,
                     children: [
                         {
                             prop: 'subsectionManagerRemark',
                             displayAs: 'fundMoney',
                             align: 'center',
-                            width: '150',
+                            minWidth: '150',
                             render: (h, scope) => {
                                 return h('div', {
                                     domProps: {
@@ -550,13 +550,13 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     label: '大区总审批金额',
                     prop: 'regionManagerApproveAmount',
-                    width: '120',
+                    minWidth: '120',
                     children: [
                         {
                             prop: 'regionManagerApproveAmount',
                             displayAs: 'fundMoney',
                             align: 'center',
-                            width: '120',
+                            minWidth: '120',
                             label: `-`
                         }
                     ]
@@ -564,13 +564,13 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     label: '大区总意见',
                     prop: 'regionManagerRemark',
-                    width: 150,
+                    minWidth: 150,
                     children: [
                         {
                             prop: 'regionManagerRemark',
                             displayAs: 'fundMoney',
                             align: 'center',
-                            width: '150',
+                            minWidth: '150',
                             render: (h, scope) => {
                                 return h('div', {
                                     domProps: {

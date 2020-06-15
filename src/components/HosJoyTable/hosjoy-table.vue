@@ -2,7 +2,8 @@
     <div class="hosjoy-table" ref="hosTable">
         <div v-if="collapseShow">
             <div class="collapse">
-                <img src="../../../src/assets/images/typeIcon.png" alt="" class="collapse"
+                <el-button type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
+                <img src="../../../src/assets/images/typeIcon.png" alt=""
                      @click="collapse = !collapse">
             </div>
             <el-collapse-transition>
@@ -17,7 +18,6 @@
                         check-on-click-node
                         :default-checked-keys="defaultLabel"
                         @check-change="checkHandler"
-                        @node-click="toggleTableHandler"
                         :props="defaultProps">
                     </el-tree>
                 </div>
@@ -171,8 +171,10 @@ export default {
         }
     },
     methods: {
-        toggleTableHandler () {
-            this.$emit('toggleTableHandler')
+        async updateLabel () {
+            await this.$emit('toggleTableHandler')
+            this.$emit('updateLabel', this.defaultLabel)
+            this.collapse = false
         },
         hiddenOverflowTooltip (row) {
             if (row.column.showOverflowTooltip) {
@@ -286,7 +288,6 @@ export default {
                 this.defaultLabel = [...new Set(this.defaultLabel)]
             }
             sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            this.$emit('updateLabel', this.userNameLog, this.defaultLabel)
         }
     },
     watch: {
@@ -295,17 +296,19 @@ export default {
         },
         dataLength () {
             this.getMergeArr(this.data, this.merge)
+        },
+        switchLabel () {
+            const isLoggedIn = JSON.parse(sessionStorage.getItem(this.userNameLog))
+            if (isLoggedIn && isLoggedIn.length > 0) {
+                this.defaultLabel = isLoggedIn
+            } else {
+                this.collectDefaultId(this.switchLabel)
+                sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+            }
         }
     },
     mounted () {
-        this.userNameLog = 'TABLE_USER::' + this.$route.path + this.userInfo.user_name
-        const isLoggedIn = JSON.parse(sessionStorage.getItem(this.userNameLog))
-        if (isLoggedIn && isLoggedIn.length > 0) {
-            this.defaultLabel = isLoggedIn
-        } else {
-            this.collectDefaultId(this.switchLabel)
-            sessionStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-        }
+        this.userNameLog = 'TABLE_USER::' + this.userInfo.user_name
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -313,13 +316,15 @@ export default {
 }
 
 </script>
-<style scoped>
+<style scoped lang="scss">
     .hosjoy-table {
         position: relative;
     }
 
     .hosjoy-in-table {
         min-height: 300px;
+        position: relative;
+        z-index: 1;
     }
 
     .hosjoy-table >>> .el-table .cell {
@@ -373,12 +378,22 @@ export default {
     /*}*/
     .collapse {
         position: absolute;
-        width: 20px;
-        height: 20px;
-        right: 10px;
-        top: 2px;
-        z-index: 1;
+        width: 280px;
+        height: 50px;
+        right: 0;
+        top: 0;
+        z-index: 2;
         cursor: pointer;
+        img{
+            float: right;
+            width: 20px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        /deep/.el-button--mini{
+            float: left;
+            margin-top: 4px;
+        }
     }
 
     .collapse-content {
@@ -388,7 +403,7 @@ export default {
         right: 10px;
         background: #ffffff;
         z-index: 2;
-        padding: 10px 18px;
+        padding: 5px 10px;
         box-sizing: border-box;
     }
 

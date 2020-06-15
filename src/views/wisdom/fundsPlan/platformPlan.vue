@@ -49,7 +49,6 @@
         <div class="tips">
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
-        {{columnData}}
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
                          :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
@@ -173,7 +172,7 @@ export default {
         toggleTableHandler () {
             this.toggleTable = false
         },
-        updateLabel (name, showColumnLabel) {
+        updateLabel (showColumnLabel) {
             this.columnData.forEach(value => {
                 value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
                 if (value.children) {
@@ -186,7 +185,6 @@ export default {
                 }
             })
             this.toggleTable = true
-            this.$forceUpdate()
         },
         showDialog (val, point) {
             if (!val) return
@@ -214,8 +212,8 @@ export default {
                 }
             })
             this.columnData = columnData
-            this.$refs.hosjoyTable.doLayout()
-            // this.updateLabel()
+            const haveLabel = JSON.parse(JSON.stringify(sessionStorage.getItem('TABLE_USER::' + this.userInfo.user_name)))
+            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
         },
         linkage (dis) {
             let obj = {
