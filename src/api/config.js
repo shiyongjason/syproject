@@ -18,16 +18,14 @@ var env = process.env.NODE_ENV === 'development'
 
 switch (env) {
     case 'development':
-        interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
-        ossUrl = 'https://testroute.hosjoy.com:4832/'
-        iframeUrl = 'https://test.hosjoy.com:4832/'
+        interfaceUrl = 'http://192.168.20.248:30000/'
+        ossUrl = 'http://192.168.20.248:8089/'
+        iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
-        // B2bUrl = 'https://test-b2b-gateway.hosjoy.com:4832/'
-        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
-        fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
+        B2bUrl = 'http://192.168.20.248:40000/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'

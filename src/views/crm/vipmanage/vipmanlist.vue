@@ -5,14 +5,14 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">企业名称：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
 
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -20,23 +20,25 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">VIP等级：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
+                      <el-select v-model="queryParams.vipRuleId" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevel" :key="item.id"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">VIP折扣：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:2="queryParams.minServiceFeeDiscount" maxlength="4"></el-input>折
                         ~
-                        <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2="queryParams.maxServiceFeeDiscount" maxlength="4"></el-input>折
                     </div>
                 </div>
                <div class="query-cont-col">
                     <div class="query-col-title">VIP目标：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.minVipTarget" placeholder="请输入最小目标" v-isNum:4="queryParams.minVipTarget"  maxlength="50"></el-input>万元
                         ~
-                        <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.maxVipTarget" placeholder="请输入最大目标" v-isNum:4="queryParams.maxVipTarget"   maxlength="50"></el-input>万元
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -87,7 +89,17 @@ export default {
     name: 'vipapplication',
     data () {
         return {
-            queryParams: {},
+            queryParams: {
+                companyName: '',
+                maxServiceFeeDiscount: '',
+                minServiceFeeDiscount: '',
+                minVipTarget: '',
+                maxVipTarget: '',
+                pageNumber: '',
+                pageSize: '',
+                pkDeptDoc: '',
+                vipRuleId: ''
+            },
             tableLabel: [
                 { label: '项目名称', prop: 'projectName', width: '' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
@@ -123,7 +135,9 @@ export default {
             userInfo: 'userInfo'
         }),
         ...mapGetters({
-            crmdepList: 'crmmanage/crmdepList'
+            crmdepList: 'crmmanage/crmdepList',
+            vipManagedata: 'vipManage/vipManagedata',
+            vipLevel: 'vipManage/vipLevel'
         }),
         pickerOptionsMax () {
             return {
@@ -147,11 +161,15 @@ export default {
         }
     },
     async mounted () {
-        this.onGetbranch()
+        // this.onGetbranch()
+        this.searchList()
+        this.onGetvipLevel()
     },
     methods: {
         ...mapActions({
-            findCrmdeplist: 'crmmanage/findCrmdeplist'
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
+            findVipmanage: 'vipManage/findVipmanage',
+            findViprules: 'vipManage/findViprules'
         }),
         onRest () {
             this.searchList()
@@ -165,18 +183,19 @@ export default {
             this.searchList()
         },
         async  searchList () {
-            this.queryParams.statusList = this.status.toString()
-            this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
-            await this.findProjetpage(params)
-            this.tableData = this.projectData.records || []
+            await this.findVipmanage(params)
+            this.tableData = this.vipManagedata.records || []
             this.paginationInfo = {
-                pageNumber: this.projectData.current,
-                pageSize: this.projectData.size,
-                total: this.projectData.total
+                pageNumber: this.vipManagedata.current,
+                pageSize: this.vipManagedata.size,
+                total: this.vipManagedata.total
             }
-            await this.findProjectLoan(params)
-            this.loanData = this.projectLoan ? this.projectLoan : ''
+            // await this.findProjectLoan(params)
+            // this.loanData = this.projectLoan ? this.projectLoan : ''
+        },
+        async onGetvipLevel () {
+            await this.findViprules()
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })

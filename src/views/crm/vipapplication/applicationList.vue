@@ -11,7 +11,9 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr"  ref="myCascader" :clearable=true :collapse-tags=true
+                        :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
+                        </el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -126,7 +128,8 @@ export default {
                     { required: true, message: '请选择活动区域', trigger: 'change' }
                 ]
             },
-            ruleForm: {}
+            ruleForm: {},
+            options: []
         }
     },
     components: {
@@ -134,6 +137,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: 'userInfo'
+
         }),
         ...mapGetters({
             crmdepList: 'crmmanage/crmdepList'
@@ -164,7 +168,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCrmdeplist: 'crmmanage/findCrmdeplist'
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
+            findNest: 'findNest'
         }),
         onRest () {
             this.searchList()
@@ -194,6 +199,24 @@ export default {
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
             this.branchArr = this.crmdepList
+        },
+        async onGetnest () {
+            await this.findNest()
+            this.options = this.nestDdata && this.nestDdata.map(item => {
+                item.countryId = item.provinceId
+                item.cities.map(value => {
+                    value.cities = value.countries
+                    value.countryId = value.cityId
+                })
+                return item
+            })
+        },
+        cityChange (val) {
+            const cityarr = []
+            val && val.map(item => {
+                cityarr.push(item[2])
+            })
+            this.queryParams.areaIds = cityarr.join(',')
         },
         onDistribution (val) {
             this.dialogVisible = true
