@@ -186,6 +186,9 @@ export default {
                 }
             })
             this.toggleTable = true
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable.doLayout()
+            })
         },
         showDialog (val, point) {
             if (!val) return

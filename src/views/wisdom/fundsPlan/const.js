@@ -134,7 +134,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期额/在贷余额）',
+                    label: '逾期率=（逾期余额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
                     width: '200'
@@ -174,7 +174,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             slot: 'organizationName',
             showOverflowTooltip: true,
             label: '平台公司',
-            minWidth: '100',
+            minWidth: '150',
             fixed: true
         },
         {
@@ -384,7 +384,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期额/在贷余额）',
+                    label: '逾期率=（逾期余额/在贷余额）',
                     align: 'right',
                     children: [
                         {

@@ -43,7 +43,7 @@ const money = function (val, int) {
 // 资金台账金额格式
 const fundMoney = function (val, int) {
     if (val) {
-        const res = val.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         return res
     } else {
         return 0

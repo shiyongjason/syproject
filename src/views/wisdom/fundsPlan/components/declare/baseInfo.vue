@@ -146,7 +146,9 @@ export default {
             type: Object,
             default: () => {
                 return {
-                    fundplanSale: {}
+                    fundplanSale: {},
+                    fundplanMain: {},
+                    respFundPlanLoan: {}
                 }
             }
         }
