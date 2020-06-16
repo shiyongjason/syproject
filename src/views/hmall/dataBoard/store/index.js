@@ -1,11 +1,12 @@
 
 import * as types from './mutation-types'
 
-import { findSpikePriceData, findSpikePriceInfo, getTransactionInfo } from '../api/index'
+import { findSpikePriceData, findSpikePriceInfo, findSpecialPriceInfo, findCouponUseData, getTransactionInfo } from '../api/index'
 
 const state = {
     spikePriceData: {},
     spikePriceInfo: {},
+    couponUseData: {},
     // 交易额明细
     getTransactionInfoList: [],
     transactionPaginationData: {
@@ -22,8 +23,10 @@ const mutations = {
     [types.SPIKE_PRICE_INFO] (state, payload) {
         state.spikePriceInfo = payload
     },
+    [types.COUPON_USE_DATA] (state, payload) {
+        state.couponUseData = payload
+    },
     [types.GET_TRANSACTION_INFO] (state, payload) {
-        console.log(payload)
         state.getTransactionInfoList = payload.records
         state.transactionPaginationData = {
             pageNumber: payload.current,
@@ -42,8 +45,11 @@ const actions = {
         const { data } = await findSpikePriceInfo(params)
         commit(types.SPIKE_PRICE_INFO, data)
     },
+    async findCouponUseData ({ commit }, params) {
+        const { data } = await findCouponUseData(params)
+        commit(types.COUPON_USE_DATA, data)
+    },
     async findServiceCharge ({ commit }, params) {
-        console.log(params)
         const { data } = await getTransactionInfo(params)
         commit(types.GET_TRANSACTION_INFO, data)
     }

@@ -1,8 +1,12 @@
 import { B2bUrl } from '@/api/config'
 import axios from 'axios'
-
+// 特价活动
 export const findSpikePriceData = (params) => axios.get(B2bUrl + 'ops/openapi/spike/bi', { params })
 export const findSpikePriceInfo = (params) => axios.get(B2bUrl + 'order/api/bi/activity/details', { params })
+// 专题活动
+export const findSpecialPriceInfo = (params) => axios.get(B2bUrl + 'ops/openapi/bi/theme-activity/page', { params })
+// 优惠券
+export const findCouponUseData = (params) => axios.get(B2bUrl + 'ops/api/coupon/statistics/use-detail/page', { params })
 // 交易额明细
 export const getTransactionInfo = (params) => axios.get(B2bUrl + 'order/api/statistics/turnover-detailed', { params })
 

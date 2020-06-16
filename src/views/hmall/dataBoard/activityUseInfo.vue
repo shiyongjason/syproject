@@ -145,8 +145,7 @@ export default {
             if (this.tableData.length <= 0) {
                 this.$message.warning('无数据可导出！')
             } else {
-                window.location = B2bUrl + 'ops/openapi/spike/bi/export?selectedOrderIds=' + '' +
-                    '&startTime=' + this.queryParams.startTime +
+                window.location = B2bUrl + 'ops/openapi/spike/bi/export?startTime=' + this.queryParams.startTime +
                     '&endTime=' + this.queryParams.endTime +
                     '&access_token=' + sessionStorage.getItem('tokenB2b')
             }
