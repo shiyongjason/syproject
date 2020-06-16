@@ -97,7 +97,7 @@ export default {
             paginationData: state => {
                 return state.cloudmanage.comfortableSceneListPagination
             },
-            shy: state => {
+            getCloudHomeComfortStatisticsList: state => {
                 return state.cloudmanage.getCloudHomeComfortStatisticsList
             }
         })
@@ -158,8 +158,8 @@ export default {
                 ...this.echartsParams
             }
             this.totalTime = await this.findCloudHomeComfortStatisticsList(params)
-            echarts.init(this.$refs.ringChartOption).setOption(ringChartOption(this.handleData(this.shy)))
-            echarts.init(this.$refs.lineChartOption).setOption(lineChartOption(this.shy))
+            echarts.init(this.$refs.ringChartOption).setOption(ringChartOption(this.handleData(this.getCloudHomeComfortStatisticsList)))
+            echarts.init(this.$refs.lineChartOption).setOption(lineChartOption(this.getCloudHomeComfortStatisticsList))
         },
         handleData (data) {
             let legend = []
