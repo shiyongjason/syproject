@@ -44,7 +44,10 @@ const state = {
     cloudUserFeedbackPagination: {},
     cloudComfortEncyclopediaList: [],
     cloudComfortEncyclopediaListPagination: {},
-    cloudComfortEncyclopediaDetail: {}
+    cloudComfortEncyclopediaDetail: {},
+    klCatalogueList: [],
+    klQuestionList: [],
+    klQuestionDetail: {}
 }
 
 const getters = {
@@ -83,8 +86,10 @@ const getters = {
     cloudAlarmChart: state => state.cloudAlarmChart,
     cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart,
     cloudUserFeedbackList: state => state.cloudUserFeedbackList,
-    cloudUserFeedbackPagination: state => state.cloudUserFeedbackPagination
-
+    cloudUserFeedbackPagination: state => state.cloudUserFeedbackPagination,
+    klCatalogueList: state => state.klCatalogueList,
+    klQuestionList: state => state.klQuestionList,
+    klQuestionDetail: state => state.klQuestionDetail
 }
 
 const mutations = {
@@ -216,6 +221,15 @@ const mutations = {
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL] (state, payload) {
         state.cloudComfortEncyclopediaDetail = payload
+    },
+    [cloud.KNOWLEDGE_CATALOGUE_LIST] (state, payload) {
+        state.klCatalogueList = payload
+    },
+    [cloud.KNOWLEDGE_QUESTION_LIST] (state, payload) {
+        state.klQuestionList = payload
+    },
+    [cloud.KNOWLEDGE_QUESTION_DETAIL] (state, payload) {
+        state.klQuestionDetail = payload
     }
 }
 
@@ -410,7 +424,21 @@ const actions = {
         const { data } = await Api.getComfortEncyclopediaDetail(params)
         console.log(data)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL, data.data)
-    }
+    },
+    async getCatalogueListAct ({ commit }, params) {
+        const { data } = await Api.getCatalogueList()
+        console.log(data)
+        commit(cloud.KNOWLEDGE_CATALOGUE_LIST, data.data)
+    },
+    async getQuestionListAct ({ commit }, params) {
+        const { data } = await Api.getQuestionList(params)
+        console.log(data)
+        commit(cloud.KNOWLEDGE_QUESTION_LIST, data.data)
+    },
+    async getQuestionDetailAct ({ commit }, params) {
+        const { data } = await Api.getQuestionDetail(params)
+        commit(cloud.KNOWLEDGE_QUESTION_DETAIL, data.data)
+    },
 }
 export default {
     state,

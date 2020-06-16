@@ -4,7 +4,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">问题标题：</div>
                 <div class="query-col-input">
-                    <el-input v-model="queryParams.title" placeholder="请输入问题标题" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.question" placeholder="请输入问题标题" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -22,9 +22,10 @@
                     <span>目录</span>
                 </div>
                 <el-tree
-                        :data="treeData"
+                        :data="klCatalogueList"
                         :props="defaultProps"
                         @node-click="handleNodeClick"
+                        :highlight-current="true"
                 ></el-tree>
             </div>
             <div class="right">
@@ -40,28 +41,14 @@
                         :isAction="true"
                         ref="basicTableCom"
                 >
-                    <template slot="title" slot-scope="scope">
-                        <p @click="onShowHome(scope.data.row)" class="colred">{{scope.data.row.title}}</p>
-                    </template>
-                    <template slot="effectived" slot-scope="scope">
-                        <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'未生效'}}</span>
-                    </template>
-                    <template slot="showedTemp" slot-scope="scope">
-                        <!--                    scope.data.row.showed -->
-                        <el-switch
-                                v-model="scope.data.row.showedTemp"
-                                @change="updateCloudActive(scope.data.row)"
-                                active-color="#13ce66">
-                        </el-switch>
-                    </template>
                     <template slot="action" slot-scope="scope">
                         <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                         <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
                     </template>
                 </basicTable>
                 <div class="delOpt" v-show="isMultipled">
-                    <span>已经选中{{multipleSelection.length}}条</span>
-                    <el-button type="primary" class="ml20" @click="onAllDel()" :disabled="!(multipleSelection.length>0)">批量删除</el-button>
+                    <span>已经选中{{ids.length}}条</span>
+                    <el-button type="primary" class="ml20" @click="onAllDel()" :disabled="!(ids.length>0)">批量删除</el-button>
                 </div>
             </div>
         </div>
@@ -87,23 +74,23 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { deleteActivity, editActdetail } from '../api'
+import { deleteActivity, editActdetail,delQuestion } from '../api'
 import { clearCache, newCache } from '@/utils/index'
 import { iotUrl } from '@/api/config'
-import H5Preview from '../../../components/h5Preview'
+// import H5Preview from '../../../components/h5Preview'
 export default {
     name: 'cloudlist',
     components: {
-        H5Preview
+        // H5Preview
     },
     data () {
         return {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                title: '',
-                deleted: 1,
-                source: 1
+                question: '',
+                questionId: '',
+                type: ''
             },
             searchParams: {},
             tableData: [],
@@ -113,39 +100,21 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '目录', prop: 'title' },
-                { label: '问题标题', prop: 'title' },
+                { label: '目录', prop: 'questionDescription' },
+                { label: '问题标题', prop: 'question' },
                 { label: '创建时间', prop: 'createTime' }
             ],
             H5Preview: '',
             loading: false,
-            treeData:[{
-                label: '一级 1',
-                children: [{
-                    label: '二级 1-1'
-                }]
-            }, {
-                label: '一级 2',
-                children: [{
-                    label: '二级 2-1',
-                }, {
-                    label: '二级 2-2',
-                }]
-            }, {
-                label: '一级 3',
-                children: [{
-                    label: '二级 3-1'
-                }, {
-                    label: '二级 3-2'
-                }]
-            }],
             checked:false,
             defaultProps: {
-                children: 'children',
-                label: 'label'
+                children: 'respdeviceBOList',
+                label(data,node) {
+                    return data.questionDescription||data.deviceName
+                }
             },
             isMultipled:false,
-            multipleSelection:[],
+            ids:[],
             fileList: [],
             uploadShow:false,
             uploadData: {
@@ -168,9 +137,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters({
-            cloudActicitylist: 'cloudActicitylist'
-        }),
+        ...mapGetters(['cloudActicitylist','klCatalogueList','klQuestionList']),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -197,6 +164,7 @@ export default {
     mounted () {
         // this.tableData = [{ productN: '123' }]
         this.onSearch()
+        this.initCatalogueData()
     },
     beforeRouteEnter (to, from, next) {
         newCache('cloudlist')
@@ -212,21 +180,18 @@ export default {
         this.onQuery()
     },
     methods: {
-        ...mapActions({
-            findcloudActList: 'findcloudActList'
-        }),
-
+        ...mapActions(['findcloudActList','getCatalogueListAct','getQuestionListAct']),
+        initCatalogueData(){
+            this.getCatalogueListAct()
+        },
         async onQuery () {
             this.tableData = []
-            await this.findcloudActList(this.searchParams)
-            this.cloudActicitylist.records.forEach(value => {
-                value.showedTemp = value.showed === 0
-            })
-            this.tableData = this.cloudActicitylist.records
+            await this.getQuestionListAct(this.searchParams)
+            this.tableData = this.klQuestionList.records
             this.pagination = {
-                pageNumber: this.cloudActicitylist.current,
-                pageSize: this.cloudActicitylist.size,
-                total: this.cloudActicitylist.total
+                pageNumber: this.klQuestionList.current,
+                pageSize: this.klQuestionList.size,
+                total: this.klQuestionList.total
             }
         },
         onSearch () {
@@ -242,7 +207,21 @@ export default {
             this.onQuery()
         },
         async onDeleteAct (val) {
-            if (val.effectived == 1) {
+            // console.log(val)
+            // this.ids.push(val.id)
+            this.$confirm('确定删除该问题？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await delQuestion(val.id)
+                this.$message({
+                    message: '删除成功！',
+                    type: 'success'
+                })
+                this.onQuery()
+            })
+            /*if (val.effectived == 1) {
                 this.$confirm('该活动还在生效中，删除后客户端无法查询，是否继续删除？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -268,7 +247,7 @@ export default {
                     })
                     this.onQuery()
                 })
-            }
+            }*/
         },
         onAddcloud (val) {
             this.$router.push({ path: '/comfortcloud/knowledgeEdit', query: {} })
@@ -288,13 +267,40 @@ export default {
         batchOpt(){
             this.isMultipled = !this.isMultipled
             this.$refs.basicTableCom.$children[0].clearSelection()
-            // console.log(this.$refs.basicTableCom.$children[0].clearSelection())
         },
         multiSelection(val){
             console.log(val)
-            this.multipleSelection = val
+            this.ids = val
         },
         handleNodeClick(data){
+            const { respdeviceBOList='',type = '' } = data
+            if(respdeviceBOList){
+                if(respdeviceBOList.length>0){
+                    const { questionId } = data
+                    this.queryParams = {
+                        ...this.queryParams,
+                        questionId
+                    }
+                } else {
+                    const { questionId } = data
+                    this.queryParams = {
+                        ...this.queryParams,
+                        question:'',
+                        pageNumber: 1,
+                        questionId,
+                        type:''
+                    }
+                    this.onSearch()
+                }
+            } else if(type) {
+                this.queryParams = {
+                    ...this.queryParams,
+                    question:'',
+                    pageNumber: 1,
+                    type
+                }
+                this.onSearch()
+            }
             console.log(data)
         },
 
@@ -406,7 +412,7 @@ export default {
         display: flex;
         justify-content:flex-start;
         .left{
-            width: 200px;
+            width: 300px;
             border:1px solid #EBEEF5;
             margin-right: 10px;
             .title{
@@ -455,5 +461,10 @@ export default {
 /deep/.el-button.is-disabled{
     font-size: 14px;
     font-weight: 500;
+}
+/deep/.el-tree-node__label{
+    width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

@@ -5,42 +5,34 @@
                 <div class="page-body-title">
                     <h3>问题管理</h3>
                 </div>
-                <el-form-item label="问题标题：" prop="title">
-                    <el-input v-model.trim="cloudForm.title" show-word-limit placeholder="请输入问题标题" maxlength='50' class="newTitle"></el-input>
+                <el-form-item label="问题标题：" prop="question">
+                    <el-input v-model.trim="cloudForm.question" show-word-limit placeholder="请输入问题标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-                <!--<el-form-item label="列表图片：" prop="picture" ref="picture">
-                    &lt;!&ndash;logoUrl&ndash;&gt;
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="cloudForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
-                    <div class="upload-tips">
-                        &lt;!&ndash; 尺寸300x100,仅支持 gif、 jpeg、 png、 bmp 4种格式, 大小不超过3MB &ndash;&gt;
-                        建议尺寸：993*426，1M以内，支持jpeg,png和jpg格式
-                    </div>
-                </el-form-item>-->
-                <!--<el-form-item label="生效时间：" prop="effectiveTime">
-                    <el-date-picker type="datetime" v-model="cloudForm.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-dd HH:mm:ss' :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                </el-form-item>-->
-                <el-form-item label="目录选择：" prop="listSelect">
+                <el-form-item label="所属类目：" prop="selectedOptions">
                     <el-cascader
                             :options="options"
-                            v-model="selectedOptions"
+                            v-model="cloudForm.selectedOptions"
+                            :props="defaultProps"
                             @change="handleChange">
                     </el-cascader>
                 </el-form-item>
-                <!--<div class="page-body-title">
-                    <h3>活动详情</h3>
-                </div>-->
-                <el-form-item label="详情：" prop="detail">
-                    <!--<el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>-->
-                    <RichEditor @blur="$refs['cloudForm'].validateField('detail')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.detail" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                <div class="page-body-title">
+                    <h3>问题答案</h3>
+                </div>
+                <el-form-item label="详情：" prop="answer">
+                    <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
+                    <RichEditor @blur="$refs['cloudForm'].validateField('answer')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.answer" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveact()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
+                <!--<el-form-item label="问题答案：" prop="answer">
+                    <RichEditor @blur="$refs['cloudForm'].validateField('answer')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.answer" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                </el-form-item>-->
             </el-form>
         </div>
-        <!--<el-dialog title="上传视频" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
+        <el-dialog title="上传视频" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :close-on-click-modal=false>
             <div style="display:flex;margin:20px auto;height:100px;justify-content: center;">
                 <SingleUpload sizeLimit='10M' :upload="videoUpload" :imageUrl="videoimageUrl" ref="video" @back-event="videoUrl" :imgW="200" :imgH="100" />
             </div>
@@ -49,23 +41,23 @@
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="onInsertVideo">确 定</el-button>
             </span>
-        </el-dialog>-->
+        </el-dialog>
     </div>
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveActdetail, editActdetail } from '../api'
+import { saveActdetail, editActdetail, saveQuestion } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'cloudActedit',
     data () {
         return {
             cloudForm: {
-                detail: '',
-                effectiveTime: '',
-                picture: '',
-                title: ''
+                answer: '',
+                question: '',
+                selectedOptions:''
             },
+            id:this.$route.query.id||'',
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -89,220 +81,24 @@ export default {
             dialogVisible: false,
             uploadedUrl: '',
             videoimageUrl: '',
-            selectedOptions:[],
-            options: [{
-                value: 'zhinan',
-                label: '指南',
-                children: [{
-                    value: 'shejiyuanze',
-                    label: '设计原则',
-                    children: [{
-                        value: 'yizhi',
-                        label: '一致'
-                    }, {
-                        value: 'fankui',
-                        label: '反馈'
-                    }, {
-                        value: 'xiaolv',
-                        label: '效率'
-                    }, {
-                        value: 'kekong',
-                        label: '可控'
-                    }]
-                }, {
-                    value: 'daohang',
-                    label: '导航',
-                    children: [{
-                        value: 'cexiangdaohang',
-                        label: '侧向导航'
-                    }, {
-                        value: 'dingbudaohang',
-                        label: '顶部导航'
-                    }]
-                }]
-            }, {
-                value: 'zujian',
-                label: '组件',
-                children: [{
-                    value: 'basic',
-                    label: 'Basic',
-                    children: [{
-                        value: 'layout',
-                        label: 'Layout 布局'
-                    }, {
-                        value: 'color',
-                        label: 'Color 色彩'
-                    }, {
-                        value: 'typography',
-                        label: 'Typography 字体'
-                    }, {
-                        value: 'icon',
-                        label: 'Icon 图标'
-                    }, {
-                        value: 'button',
-                        label: 'Button 按钮'
-                    }]
-                }, {
-                    value: 'form',
-                    label: 'Form',
-                    children: [{
-                        value: 'radio',
-                        label: 'Radio 单选框'
-                    }, {
-                        value: 'checkbox',
-                        label: 'Checkbox 多选框'
-                    }, {
-                        value: 'input',
-                        label: 'Input 输入框'
-                    }, {
-                        value: 'input-number',
-                        label: 'InputNumber 计数器'
-                    }, {
-                        value: 'select',
-                        label: 'Select 选择器'
-                    }, {
-                        value: 'cascader',
-                        label: 'Cascader 级联选择器'
-                    }, {
-                        value: 'switch',
-                        label: 'Switch 开关'
-                    }, {
-                        value: 'slider',
-                        label: 'Slider 滑块'
-                    }, {
-                        value: 'time-picker',
-                        label: 'TimePicker 时间选择器'
-                    }, {
-                        value: 'date-picker',
-                        label: 'DatePicker 日期选择器'
-                    }, {
-                        value: 'datetime-picker',
-                        label: 'DateTimePicker 日期时间选择器'
-                    }, {
-                        value: 'upload',
-                        label: 'Upload 上传'
-                    }, {
-                        value: 'rate',
-                        label: 'Rate 评分'
-                    }, {
-                        value: 'form',
-                        label: 'Form 表单'
-                    }]
-                }, {
-                    value: 'data',
-                    label: 'Data',
-                    children: [{
-                        value: 'table',
-                        label: 'Table 表格'
-                    }, {
-                        value: 'tag',
-                        label: 'Tag 标签'
-                    }, {
-                        value: 'progress',
-                        label: 'Progress 进度条'
-                    }, {
-                        value: 'tree',
-                        label: 'Tree 树形控件'
-                    }, {
-                        value: 'pagination',
-                        label: 'Pagination 分页'
-                    }, {
-                        value: 'badge',
-                        label: 'Badge 标记'
-                    }]
-                }, {
-                    value: 'notice',
-                    label: 'Notice',
-                    children: [{
-                        value: 'alert',
-                        label: 'Alert 警告'
-                    }, {
-                        value: 'loading',
-                        label: 'Loading 加载'
-                    }, {
-                        value: 'message',
-                        label: 'Message 消息提示'
-                    }, {
-                        value: 'message-box',
-                        label: 'MessageBox 弹框'
-                    }, {
-                        value: 'notification',
-                        label: 'Notification 通知'
-                    }]
-                }, {
-                    value: 'navigation',
-                    label: 'Navigation',
-                    children: [{
-                        value: 'menu',
-                        label: 'NavMenu 导航菜单'
-                    }, {
-                        value: 'tabs',
-                        label: 'Tabs 标签页'
-                    }, {
-                        value: 'breadcrumb',
-                        label: 'Breadcrumb 面包屑'
-                    }, {
-                        value: 'dropdown',
-                        label: 'Dropdown 下拉菜单'
-                    }, {
-                        value: 'steps',
-                        label: 'Steps 步骤条'
-                    }]
-                }, {
-                    value: 'others',
-                    label: 'Others',
-                    children: [{
-                        value: 'dialog',
-                        label: 'Dialog 对话框'
-                    }, {
-                        value: 'tooltip',
-                        label: 'Tooltip 文字提示'
-                    }, {
-                        value: 'popover',
-                        label: 'Popover 弹出框'
-                    }, {
-                        value: 'card',
-                        label: 'Card 卡片'
-                    }, {
-                        value: 'carousel',
-                        label: 'Carousel 走马灯'
-                    }, {
-                        value: 'collapse',
-                        label: 'Collapse 折叠面板'
-                    }]
-                }]
-            }, {
-                value: 'ziyuan',
-                label: '资源',
-                children: [{
-                    value: 'axure',
-                    label: 'Axure Components'
-                }, {
-                    value: 'sketch',
-                    label: 'Sketch Templates'
-                }, {
-                    value: 'jiaohu',
-                    label: '组件交互文档'
-                }]
-            }],
+            defaultProps: {
+                children: 'children',
+                value:'type',
+                label:'deviceName'
+            },
+            options:[],
             rules: {
-                title: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' }
+                question: [
+                    { required: true, message: '请输入问题标题', trigger: 'blur' }
                 ],
-                picture: [
-                    { required: true, message: '请选择列表图片' }
-                ],
-                effectiveTime: [
-                    { required: true, message: '请选择生效时间', trigger: 'blur' }
-                ],
-                listSelect:[
+                selectedOptions:[
                     { required: true, message: '请选择目录', trigger: 'blur' }
                 ],
-                detail: [
+                answer: [
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
-                                return callback(new Error('请输入活动详情'))
+                                return callback(new Error('请输入问题答案'))
                             }
                             return callback()
                         },
@@ -317,9 +113,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters({
-            cloudActivitydetail: 'cloudActivitydetail'
-        }),
+        ...mapGetters(['klCatalogueList','klQuestionDetail']),
         videoUpload () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -360,25 +154,40 @@ export default {
             }
         }
     },
-    watch: {
+    /*watch: {
         'cloudForm.picture' (val) {
             this.$nextTick(() => {
                 if (val) this.$refs['picture'].clearValidate()
             })
         }
-    },
+    },*/
     mounted () {
-        if (this.$route.query.id) {
-            this.getActivityDetail(this.$route.query.id)
+        this.initCatalogueData()
+        if (this.id) {
+            this.getActivityDetail(this.id)
         }
     },
     methods: {
-        ...mapActions(
-            {
-                setNewTags: 'setNewTags',
-                findcloudActDetail: 'findcloudActDetail'
-            }
-        ),
+        ...mapActions(['getCatalogueListAct','setNewTags','getQuestionDetailAct']),
+        async initCatalogueData(){
+            await this.getCatalogueListAct()
+            // console.log(2323,this.klCatalogueList)
+            let _opts = this.klCatalogueList.map((item,index)=>{
+
+                return item.respdeviceBOList.length>0?{
+                    ...item,
+                    type:item.questionId,
+                    deviceName:item.questionDescription,
+                    children:item.respdeviceBOList
+                }:{
+                    ...item,
+                    deviceName:item.questionDescription,
+                    type:item.questionId
+                }
+
+            })
+            this.options = _opts
+        },
         readUrl (val) {
             this.cloudForm.picture = val.imageUrl
         },
@@ -402,26 +211,41 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/cloudList')
+            this.$router.push('/comfortCloud/knowledge')
         },
         async getActivityDetail (id) {
-            await this.findcloudActDetail(id)
-            this.cloudForm = { ...this.cloudActivitydetail }
+            await this.getQuestionDetailAct(id)
+            // console.log(111,this.klQuestionDetail)
+            this.id = id
+            const {question,questionId,answer,type=''} = this.klQuestionDetail
+            const selectedOptions = []
+            selectedOptions.push(questionId)
+            type&&selectedOptions.push(type)
+            this.cloudForm = {
+                question,
+                answer,
+                selectedOptions
+            }
         },
         onSaveact () {
             this.loading = true
             this.$refs['cloudForm'].validate(async (valid) => {
+                // console.log(11333, valid)
                 if (valid) {
+                    const { selectedOptions,answer,question } = this.cloudForm
+                    const [questionId,type=''] = selectedOptions
+                    const params = {
+                        answer,
+                        question,
+                        id:this.id,
+                        questionId,
+                        type
+                    }
                     try {
-                        if (this.$route.query.id) {
-                            await editActdetail(this.cloudForm)
-                            this.$message.success('活动修改成功')
-                        } else {
-                            await saveActdetail(this.cloudForm)
-                            this.$message.success('活动保存成功')
-                        }
+                        await saveQuestion(params)
+                        this.$message.success('问题保存成功')
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/cloudList')
+                        this.$router.push('/comfortCloud/knowledge')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -431,8 +255,9 @@ export default {
                 }
             })
         },
-        handleChange(){
-
+        handleChange(value){
+            this.cloudForm.selectedOptions = value
+            console.log(111,value)
         }
     }
 }
