@@ -158,8 +158,8 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            tableData: state => state.dataBoard.getTransactionInfoList,
-            paginationData: state => state.dataBoard.transactionPaginationData
+            tableData: state => state.hmall.dataBoard.getTransactionInfoList,
+            paginationData: state => state.hmall.dataBoard.transactionPaginationData
         })
     },
     methods: {
