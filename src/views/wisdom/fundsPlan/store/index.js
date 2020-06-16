@@ -1,6 +1,7 @@
 import * as types from './const'
 import * as Api from '../api'
 import moment from 'moment'
+import filterUtil from '../../../../utils/filters'
 const state = {
     planTotalList: [],
     targetTime: {
@@ -39,6 +40,9 @@ const getters = {
     },
     platformPlanTotal: state => {
         for (const key in state.platformPlanTotal) {
+            if (state.platformPlanTotal[key]) {
+                state.platformPlanTotal[key] = filterUtil.fundMoney(state.platformPlanTotal[key])
+            }
             if (key === 'salePercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
             if (key === 'usedPercentCurrent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
             if (key === 'overduePercent') state.platformPlanTotal[key] = (state.platformPlanTotal[key]) + '%'
@@ -48,17 +52,20 @@ const getters = {
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
-            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100).toFixed(2) + '%'
-            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100).toFixed(2) + '%'
-            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100).toFixed(2) + '%'
+            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100) + '%'
+            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100) + '%'
+            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100) + '%'
         })
         return state.planCreditList
     },
     planCreditTotal: state => {
         for (const key in state.planCreditTotal) {
-            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
-            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
-            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100).toFixed(2) + '%'
+            if (state.planCreditTotal[key]) {
+                state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key])
+            }
+            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
+            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
+            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
         }
         return state.planCreditTotal
     },

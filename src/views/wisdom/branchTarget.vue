@@ -25,7 +25,7 @@
                 </div>
                 <div class="query-cont-row">
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
                             <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
                                 批量导入
                             </el-button>

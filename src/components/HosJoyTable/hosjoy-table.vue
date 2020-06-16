@@ -1,6 +1,32 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
-        <el-table ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height || `calc(100vh - ${selfHeight}px)`" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName" :header-cell-class-name="hiddenOverflowTooltip">
+        <div v-if="collapseShow">
+            <div class="collapse">
+                <el-button type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
+                <img src="../../../src/assets/images/typeIcon.png" alt=""
+                     @click="collapse = !collapse">
+            </div>
+            <el-collapse-transition>
+                <div class="collapse-content" v-if="collapse">
+                    <el-tree
+                        :data="switchLabel"
+                        show-checkbox
+                        default-expand-all
+                        node-key="id"
+                        ref="tree"
+                        highlight-current
+                        check-on-click-node
+                        :default-checked-keys="defaultLabel"
+                        @check-change="checkHandler"
+                        :props="defaultProps">
+                    </el-tree>
+                </div>
+            </el-collapse-transition>
+        </div>
+        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
+                  :height=" height || `calc(100vh - ${selfHeight}px)`"
+                  class="hosjoy-in-table"
+                  :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -8,14 +34,18 @@
                     <slot name="expand" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="(item, index) in column">
-                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='index' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed" v-if="item.slot">
+            <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod"
+                             align="center" width="60"></el-table-column>
+            <template v-for="(item) in column">
+                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
+                                 :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth"
+                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot && !item.isHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='index' v-if="!item.slot && !item.isHidden"></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop'
+                               v-if="!item.slot && !item.isHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
@@ -24,18 +54,22 @@
             </el-table-column>
         </el-table>
         <div class="pages">
-            <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum" :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
+            <el-pagination v-if="showPagination" :current-page.sync="currentPage" :page-size.sync="pageNum"
+                           :page-sizes="pageSizes" :layout="layout" :total="total" v-bind="$attrs"
+                           @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
         </div>
     </div>
 </template>
 
 <script>
 import hosjoyColumn from './hosjoy-column'
+import { mapState } from 'vuex'
 
 export default {
     props: {
         isShowselection: { type: Boolean, default: () => false },
         isAction: { type: Boolean, default: () => false },
+        toggleTable: { type: Boolean, default: () => true },
         isShowIndex: { type: Boolean, default: () => false },
         expand: { type: Boolean, default: () => false },
         column: Array,
@@ -59,7 +93,17 @@ export default {
         },
         layout: { type: String, default: 'total, sizes, prev, pager, next, jumper' },
         actionWidth: { type: String, default: '' },
-        height: { required: false }
+        height: { required: false },
+        collapseShow: {
+            required: false,
+            type: Boolean,
+            default: false
+        },
+        localName: {
+            required: false,
+            type: String,
+            default: 'TABLE::'
+        }
     },
     components: {
         hosjoyColumn
@@ -68,13 +112,24 @@ export default {
         return {
             mergeLine: {},
             mergeIndex: {},
-            selfHeight: 0
+            selfHeight: 0,
+            collapse: false,
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
+            defaultLabel: [],
+            selectedColumn: [],
+            userNameLog: ''
         }
     },
     created () {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         dataLength () {
             return this.data.length
         },
@@ -93,9 +148,40 @@ export default {
             set (val) {
                 this.$emit('update:pageSize', val)
             }
+        },
+        switchLabel () {
+            let id = null
+            return this.column.map(value => {
+                if (value.prop) {
+                    id = value.prop
+                } else {
+                    id = value.label
+                }
+                return {
+                    id: id,
+                    label: value.label,
+                    children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                        if (value1.prop) {
+                            id = value1.prop
+                        } else {
+                            id = value1.label
+                        }
+                        return {
+                            id: id,
+                            label: value1.label
+                        }
+                    })
+                }
+            })
         }
     },
     methods: {
+        async updateLabel () {
+            localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+            await this.$emit('toggleTableHandler')
+            this.$emit('updateLabel', this.defaultLabel)
+            this.collapse = false
+        },
         hiddenOverflowTooltip (row) {
             if (row.column.showOverflowTooltip) {
                 return 'hiddenOverflowTooltip'
@@ -187,6 +273,26 @@ export default {
                     colspan: _col
                 }
             }
+        },
+        collectDefaultId (arr, isRestDefaultLabel) {
+            if (!isRestDefaultLabel) {
+                this.defaultLabel = []
+            }
+            arr.forEach(value => {
+                this.defaultLabel.push(value.id)
+                value.children && this.collectDefaultId(value.children, true)
+            })
+        },
+        checkHandler (item, currentItemChecked) {
+            if (!currentItemChecked) {
+                const idExist = this.defaultLabel.indexOf(item.id)
+                if (idExist > -1) {
+                    this.defaultLabel.splice(idExist, 1)
+                }
+            } else {
+                this.defaultLabel.push(item.id)
+                this.defaultLabel = [...new Set(this.defaultLabel)]
+            }
         }
     },
     watch: {
@@ -195,9 +301,19 @@ export default {
         },
         dataLength () {
             this.getMergeArr(this.data, this.merge)
+        },
+        switchLabel () {
+            const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
+            if (isLoggedIn && isLoggedIn.length > 0) {
+                this.defaultLabel = isLoggedIn
+            } else {
+                this.collectDefaultId(this.switchLabel)
+                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+            }
         }
     },
     mounted () {
+        this.userNameLog = this.localName + this.userInfo.user_name
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -205,47 +321,115 @@ export default {
 }
 
 </script>
-<style scoped>
-.hosjoy-in-table {
-    min-height: 300px;
-}
-.hosjoy-table >>> .el-table .cell {
-    font-size: 12px;
-}
+<style scoped lang="scss">
+    .hosjoy-table {
+        position: relative;
+    }
 
-/* .hosjoy-table >>> .el-table .caret-wrapper {
+    .hosjoy-in-table {
+        min-height: 300px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hosjoy-table >>> .el-table .cell {
+        font-size: 12px;
+    }
+
+    /* .hosjoy-table >>> .el-table .caret-wrapper {
         height: 20px;
     } */
-.hosjoy-table >>> .el-table th {
-    color: #000000;
-    font-size: 12px;
-    font-weight: 400;
-}
+    .hosjoy-table >>> .el-table th {
+        color: #000000;
+        font-size: 12px;
+        font-weight: 400;
+    }
 
-.pages {
-    text-align: right;
-    margin-top: 20px;
-}
+    .pages {
+        text-align: right;
+        margin-top: 20px;
+    }
 
-.pages .el-pagination {
-    text-align: right;
-}
+    .pages .el-pagination {
+        text-align: right;
+    }
 
-.hosjoy-table >>> .el-table .branch-total-row {
-    background: rgb(235, 241, 222);
-    font-weight: bold;
-}
-.hosjoy-table >>> .el-table__row--striped.branch-total-row td {
-    background: rgb(235, 241, 222);
-    font-weight: bold;
-}
-.hosjoy-table >>> .el-table .total-row {
-    background: rgb(253, 233, 217);
-    font-weight: bold;
-}
-.hosjoy-table >>> .hiddenOverflowTooltip .cell {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
+    .hosjoy-table >>> .el-table .branch-total-row {
+        background: rgb(235, 241, 222);
+        font-weight: bold;
+    }
+
+    .hosjoy-table >>> .el-table__row--striped.branch-total-row td {
+        background: rgb(235, 241, 222);
+        font-weight: bold;
+    }
+
+    .hosjoy-table >>> .el-table .total-row {
+        background: rgb(253, 233, 217);
+        font-weight: bold;
+    }
+
+    /*.hosjoy-table >>> .el-table .branch-total-row .wisdom-total-background,.hosjoy-table >>> .el-table .branch-total-row .wisdom-total-background:hover {*/
+    /*    background: rgb(235, 241, 222);*/
+    /*    font-weight: bold;*/
+    /*}*/
+
+    /*.hosjoy-table >>> .el-table .wisdom-total-background {*/
+    /*    background: rgb(220, 230, 241);*/
+    /*}*/
+    /*.hosjoy-table >>> .el-table .total-row .wisdom-total-background, .hosjoy-table >>> .el-table .total-row .wisdom-total-background:hover  {*/
+    /*    background: rgb(253, 233, 217);*/
+    /*    font-weight: bold;*/
+    /*}*/
+    .collapse {
+        position: absolute;
+        width: 280px;
+        height: 50px;
+        right: 0;
+        top: 0;
+        z-index: 2;
+        cursor: pointer;
+        img{
+            float: right;
+            width: 20px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+        /deep/.el-button--mini{
+            float: left;
+            margin-top: 4px;
+        }
+    }
+
+    .collapse-content {
+        position: absolute;
+        width: 280px;
+        top: 35px;
+        right: 10px;
+        background: #ffffff;
+        z-index: 2;
+        padding: 5px 10px;
+        box-sizing: border-box;
+    }
+
+    .hosjoy-table >>> .el-table .branch-total-row {
+        background: rgb(235, 241, 222);
+        font-weight: bold;
+    }
+
+    .hosjoy-table >>> .el-table__row--striped.branch-total-row td {
+        background: rgb(235, 241, 222);
+        font-weight: bold;
+    }
+
+    .hosjoy-table >>> .el-table .total-row {
+        background: rgb(253, 233, 217);
+        font-weight: bold;
+    }
+
+    .hosjoy-table >>> .hiddenOverflowTooltip .cell {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 </style>
