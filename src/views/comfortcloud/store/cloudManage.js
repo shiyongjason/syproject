@@ -438,7 +438,7 @@ const actions = {
     async getQuestionDetailAct ({ commit }, params) {
         const { data } = await Api.getQuestionDetail(params)
         commit(cloud.KNOWLEDGE_QUESTION_DETAIL, data.data)
-    },
+    }
 }
 export default {
     state,

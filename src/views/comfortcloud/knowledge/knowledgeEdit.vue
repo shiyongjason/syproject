@@ -168,23 +168,22 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getCatalogueListAct','setNewTags','getQuestionDetailAct']),
-        async initCatalogueData(){
+        ...mapActions(['getCatalogueListAct', 'setNewTags', 'getQuestionDetailAct']),
+        async initCatalogueData () {
             await this.getCatalogueListAct()
             // console.log(2323,this.klCatalogueList)
-            let _opts = this.klCatalogueList.map((item,index)=>{
+            let _opts = this.klCatalogueList.map((item, index) => {
 
-                return item.respdeviceBOList.length>0?{
+                return item.respdeviceBOList.length > 0 ? {
                     ...item,
-                    type:item.questionId,
-                    deviceName:item.questionDescription,
-                    children:item.respdeviceBOList
+                    type: item.questionId,
+                    deviceName: item.questionDescription,
+                    children: item.respdeviceBOList
                 }:{
                     ...item,
-                    deviceName:item.questionDescription,
-                    type:item.questionId
+                    deviceName: item.questionDescription,
+                    type: item.questionId
                 }
-
             })
             this.options = _opts
         },
@@ -217,10 +216,10 @@ export default {
             await this.getQuestionDetailAct(id)
             // console.log(111,this.klQuestionDetail)
             this.id = id
-            const {question,questionId,answer,type=''} = this.klQuestionDetail
+            const { question, questionId, answer, type = '' } = this.klQuestionDetail
             const selectedOptions = []
             selectedOptions.push(questionId)
-            type&&selectedOptions.push(type)
+            type && selectedOptions.push(type)
             this.cloudForm = {
                 question,
                 answer,
@@ -232,12 +231,12 @@ export default {
             this.$refs['cloudForm'].validate(async (valid) => {
                 // console.log(11333, valid)
                 if (valid) {
-                    const { selectedOptions,answer,question } = this.cloudForm
-                    const [questionId,type=''] = selectedOptions
+                    const { selectedOptions, answer, question } = this.cloudForm
+                    const [questionId, type = ''] = selectedOptions
                     const params = {
                         answer,
                         question,
-                        id:this.id,
+                        id: this.id,
                         questionId,
                         type
                     }
@@ -255,9 +254,8 @@ export default {
                 }
             })
         },
-        handleChange(value){
+        handleChange (value) {
             this.cloudForm.selectedOptions = value
-            console.log(111,value)
         }
     }
 }

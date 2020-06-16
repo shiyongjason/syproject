@@ -76,7 +76,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { deleteActivity, editActdetail,delQuestion,downloadQuestionTemp } from '../api'
+import { editActdetail, delQuestion, downloadQuestionTemp } from '../api'
 import { clearCache, newCache } from '@/utils/index'
 import { iotUrl } from '@/api/config'
 // import H5Preview from '../../../components/h5Preview'
@@ -108,17 +108,17 @@ export default {
             ],
             H5Preview: '',
             loading: false,
-            checked:false,
+            checked: false,
             defaultProps: {
                 children: 'respdeviceBOList',
-                label(data,node) {
-                    return data.questionDescription||data.deviceName
+                label (data, node) {
+                    return data.questionDescription || data.deviceName
                 }
             },
-            isMultipled:false,
-            ids:[],
+            isMultipled: false,
+            ids: [],
             fileList: [],
-            uploadShow:false,
+            uploadShow: false,
             uploadData: {
                 accept: '.xlsx,.xls',
                 action: `${iotUrl}/api/helpCenter/import`,
@@ -131,17 +131,17 @@ export default {
                 },
                 data: {
                     operateUserName: '',
-                    questionId:'',
-                    type:''
+                    questionId: '',
+                    type: ''
                 }
-            },
+            }
         }
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters(['cloudActicitylist','klCatalogueList','klQuestionList']),
+        ...mapGetters(['cloudActicitylist', 'klCatalogueList', 'klQuestionList']),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -184,8 +184,8 @@ export default {
         this.onQuery()
     },
     methods: {
-        ...mapActions(['findcloudActList','getCatalogueListAct','getQuestionListAct']),
-        initCatalogueData(){
+        ...mapActions(['findcloudActList', 'getCatalogueListAct', 'getQuestionListAct']),
+        initCatalogueData () {
             this.getCatalogueListAct()
         },
         async onQuery () {
@@ -226,33 +226,6 @@ export default {
                 })
                 this.onQuery()
             })
-            /*if (val.effectived == 1) {
-                this.$confirm('该活动还在生效中，删除后客户端无法查询，是否继续删除？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    await deleteActivity(val.id)
-                    this.$message({
-                        message: '删除成功！',
-                        type: 'success'
-                    })
-                    this.onQuery()
-                })
-            } else {
-                this.$confirm('该活动还未生效，是否继续删除？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(async () => {
-                    await deleteActivity(val.id)
-                    this.$message({
-                        message: '删除成功！',
-                        type: 'success'
-                    })
-                    this.onQuery()
-                })
-            }*/
         },
         onAddcloud (val) {
             this.$router.push({ path: '/comfortcloud/knowledgeEdit', query: {} })
@@ -263,10 +236,10 @@ export default {
         onShowHome (val) {
             this.H5Preview = iotUrl + '/iot/actionDetail?articleId=' + val.id
         },
-        onExport(){
+        onExport () {
             this.uploadShow = true
         },
-        onAllDel(){
+        onAllDel () {
             this.$confirm('该问题已在APP端显示，是否确认批量删除已选中的问题？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -281,21 +254,21 @@ export default {
                 this.onQuery()
             })
         },
-        batchOpt(){
+        batchOpt () {
             this.isMultipled = !this.isMultipled
             this.$refs.basicTableCom.$children[0].clearSelection()
             this.ids = []
         },
-        multiSelection(val){
-            if(val.length>0){
-                let _ids = val.map(item=>item.id)
+        multiSelection (val) {
+            if (val.length > 0) {
+                let _ids = val.map(item => item.id)
                 this.ids = _ids
             }
         },
-        handleNodeClick(data){
-            const { respdeviceBOList='',type = '' } = data
-            if(respdeviceBOList){
-                if(respdeviceBOList.length>0){
+        handleNodeClick (data) {
+            const { respdeviceBOList = '', type = '' } = data
+            if (respdeviceBOList) {
+                if (respdeviceBOList.length > 0) {
                     const { questionId } = data
                     this.queryParams = {
                         ...this.queryParams,
@@ -305,17 +278,17 @@ export default {
                     const { questionId } = data
                     this.queryParams = {
                         ...this.queryParams,
-                        question:'',
+                        question: '',
                         pageNumber: 1,
                         questionId,
-                        type:''
+                        type: ''
                     }
                     this.onSearch()
                 }
-            } else if(type) {
+            } else if (type) {
                 this.queryParams = {
                     ...this.queryParams,
-                    question:'',
+                    question: '',
                     pageNumber: 1,
                     type
                 }
@@ -382,8 +355,8 @@ export default {
             this.loading = false
             // console.log(1112233,response)
             if (response.code === 200) {
-                const { failCount,successCount  } = response.data
-                if(failCount>0){
+                const { failCount, successCount } = response.data
+                if (failCount > 0) {
                     this.$message.error(`成功导入${successCount}条，失败${failCount}条`)
                 } else {
                     this.$message.success(`成功导入${successCount}条，失败${failCount}条`)
