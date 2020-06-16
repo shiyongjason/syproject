@@ -63,7 +63,8 @@
                     :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary"  slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                <p slot="tip" class="el-upload__tip">2.请按照故障库模板内容导入故障数据，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">2.批量导入的知识库仅支持文字描述，不支持图片和视频等格式</p>
+                <p slot="tip" class="el-upload__tip">3.请按照知识库模板内容导入问题和答案，否则可能会出现导入异常</p>
             </el-upload>
             <el-button type="primary" @click="onDownload" class="download-template">下载导入帮助中心模板</el-button>
             <span slot="footer" class="dialog-footer">
@@ -128,7 +129,9 @@ export default {
                     AccessKeyId: '5ksbfewexbfc'
                 },
                 data: {
-                    operateUserName: ''
+                    operateUserName: '',
+                    questionId:'',
+                    type:''
                 }
             },
         }
@@ -209,7 +212,7 @@ export default {
         async onDeleteAct (val) {
             // console.log(val)
             // this.ids.push(val.id)
-            this.$confirm('确定删除该问题？', '提示', {
+            this.$confirm('删除问题后将无法恢复，请确认是否继续删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -262,7 +265,7 @@ export default {
             this.uploadShow = true
         },
         onAllDel(){
-            this.$confirm('确定删除该问题？', '提示', {
+            this.$confirm('该问题已在APP端显示，是否确认批量删除已选中的问题？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -323,6 +326,8 @@ export default {
             this.loading = true
             if (this.hasFile()) {
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
+                this.uploadData.data.questionId = this.queryParams.questionId
+                this.uploadData.data.type = this.queryParams.type
                 try {
                     await this.$refs.upload.submit()
                 } catch (e) {}
