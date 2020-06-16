@@ -41,7 +41,7 @@ export function downloadOrdinaryBiGoodDetail (params) {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '交易额明细表.xlsx'
+                a.download = '商品明细-普通商品.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
@@ -64,7 +64,7 @@ export function downloadSpikeBiGoodDetail (params) {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '交易额明细表.xlsx'
+                a.download = '商品明细-秒杀商品.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()

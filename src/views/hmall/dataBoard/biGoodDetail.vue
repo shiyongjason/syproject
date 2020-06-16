@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-            <el-tabs v-model="queryParams.processType" type="card" @tab-click="handleTabClick">
+            <el-tabs v-model="queryParams.type" type="card" @tab-click="handleTabClick">
                 <el-tab-pane label="普通商品" name="0"></el-tab-pane>
                 <el-tab-pane label="秒杀商品" name="1"></el-tab-pane>
             </el-tabs>
@@ -31,7 +31,7 @@
                     </el-input>
                 </div>
             </div>
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-show="queryParams.type == 0">
                 <div class="query-col-title">SPU编码：</div>
                 <div class="query-col-input">
                     <el-input type="text" maxlength="50" v-model="queryParams.spuCode" placeholder="请输入SPU编码">
@@ -39,9 +39,9 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" @click="onQuery">搜索</el-button>
+                <el-button type="primary" @click="onSearch">搜索</el-button>
                 <el-button type="primary" @click="onReset">重置</el-button>
-                <el-button type="primary" @click="onReset">导出</el-button>
+                <el-button type="primary" @click="onExport">导出</el-button>
             </div>
         </div>
         <div class="page-body-cont">
@@ -52,27 +52,31 @@
     </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+import { createNamespacedHelpers, mapState } from 'vuex'
 import { biGoodDetailTableLabel } from './const'
+import { downloadOrdinaryBiGoodDetail, downloadSpikeBiGoodDetail } from './api'
+const { mapActions } = createNamespacedHelpers('dataBoard')
 export default {
     name: 'biGoodDetail',
     data () {
         return {
             queryParams: {
+                type: '0',
                 skuCode: '',
                 skuName: '',
                 spuCode: '',
                 startTime: '',
                 endTime: ''
             },
-            tableLabel: biGoodDetailTableLabel,
-            tableData: [],
-            paginationData: {}
+            searchParams: {},
+            tableLabel: biGoodDetailTableLabel(false)
         }
     },
     computed: {
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            tableData: state => state.hmall.dataBoard.biGoodsData,
+            paginationData: state => state.hmall.dataBoard.biGoodsPaginationData
         }),
         pickerOptionsStart () {
             return {
@@ -97,27 +101,52 @@ export default {
     },
     methods: {
         ...mapActions([
-
+            'findOrdinaryBiGoodDetail',
+            'findSpikeBiGoodDetail',
+            'initBiGoodDetail'
         ]),
-        init () {
-
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.onQuery()
+        },
+        onExport () {
+            if (this.queryParams.type === '1') {
+                downloadSpikeBiGoodDetail(this.searchParams)
+            } else {
+                downloadOrdinaryBiGoodDetail(this.searchParams)
+            }
         },
         onQuery () {
-
+            if (this.queryParams.type === '1') {
+                this.findSpikeBiGoodDetail(this.searchParams)
+            } else {
+                this.findOrdinaryBiGoodDetail(this.searchParams)
+            }
         },
         onReset () {
-
+            this.$set(this.queryParams, 'skuCode', '')
+            this.$set(this.queryParams, 'skuName', '')
+            this.$set(this.queryParams, 'spuCode', '')
+            this.$set(this.queryParams, 'startTime', '')
+            this.$set(this.queryParams, 'endTime', '')
+            this.onSearch()
         },
-        onSizeChange () {
-
+        onSizeChange (val) {
+            this.searchParams.pageSize = val
+            this.onQuery()
         },
-        onCurrentChange () {
-
+        onCurrentChange (val) {
+            this.searchParams.pageNumber = val.pageNumber
+            this.onQuery()
         },
-        handleTabClick () { }
+        handleTabClick () {
+            this.initBiGoodDetail()
+            this.tableLabel = biGoodDetailTableLabel(this.queryParams.type === '1')
+            this.onReset()
+        }
     },
     mounted () {
-        this.init()
+        this.onSearch()
     }
 }
 </script>

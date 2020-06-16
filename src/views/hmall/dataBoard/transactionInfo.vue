@@ -158,7 +158,7 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            tableData: state => state.hmall.dataBoard.getTransactionInfoList,
+            tableData: state => state.hmall.dataBoard.transactionInfoData,
             paginationData: state => state.hmall.dataBoard.transactionPaginationData
         })
     },

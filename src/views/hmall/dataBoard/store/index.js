@@ -1,13 +1,20 @@
 
 import * as types from './mutation-types'
-import { findSpikePriceData, findSpikePriceInfo, getTransactionInfo } from '../api/index'
+import { findSpikePriceData, findSpikePriceInfo, getTransactionInfo, getOrdinaryBiGoodDetail, getSpikeBiGoodDetail } from '../api/index'
 
 const state = {
     spikePriceData: {},
     spikePriceInfo: {},
     // 交易额明细
-    getTransactionInfoList: [],
+    transactionInfoData: [],
     transactionPaginationData: {
+        pageNumber: 1,
+        pageSize: 10,
+        total: 0
+    },
+    // 商品详情
+    biGoodsData: [],
+    biGoodsPaginationData: {
         pageNumber: 1,
         pageSize: 10,
         total: 0
@@ -22,11 +29,35 @@ const mutations = {
         state.spikePriceInfo = payload
     },
     [types.GET_TRANSACTION_INFO] (state, payload) {
-        state.getTransactionInfoList = payload.records
+        state.transactionInfoData = payload.records
         state.transactionPaginationData = {
             pageNumber: payload.current,
             pageSize: payload.size,
             total: payload.total
+        }
+    },
+    [types.GET_ORDINARY_BI_GOOD_DETAIL] (state, payload) {
+        state.biGoodsData = payload.records
+        state.biGoodsPaginationData = {
+            pageNumber: payload.current,
+            pageSize: payload.size,
+            total: payload.total
+        }
+    },
+    [types.GET_SPIKE_BI_GOOD_DETAIL] (state, payload) {
+        state.biGoodsData = payload.records
+        state.biGoodsPaginationData = {
+            pageNumber: payload.current,
+            pageSize: payload.size,
+            total: payload.total
+        }
+    },
+    [types.INIT_BI_GOOD_DETAIL] (state, payload) {
+        state.biGoodsData = []
+        state.biGoodsPaginationData = {
+            pageNumber: 1,
+            pageSize: 10,
+            total: 0
         }
     }
 }
@@ -43,6 +74,18 @@ const actions = {
     async findTransactionInfo ({ commit }, params) {
         const { data } = await getTransactionInfo(params)
         commit(types.GET_TRANSACTION_INFO, data)
+    },
+    async findOrdinaryBiGoodDetail ({ commit }, params) {
+        const { data } = await getOrdinaryBiGoodDetail(params)
+        console.log(data)
+        commit(types.GET_ORDINARY_BI_GOOD_DETAIL, data)
+    },
+    async findSpikeBiGoodDetail ({ commit }, params) {
+        const { data } = await getSpikeBiGoodDetail(params)
+        commit(types.GET_SPIKE_BI_GOOD_DETAIL, data)
+    },
+    initBiGoodDetail ({ commit }) {
+        commit(types.INIT_BI_GOOD_DETAIL)
     }
 }
 
