@@ -189,6 +189,7 @@ export default {
         },
         async onQuery () {
             this.tableData = []
+            this.ids = []
             await this.getQuestionListAct(this.searchParams)
             this.tableData = this.klQuestionList.records
             this.pagination = {
@@ -282,6 +283,7 @@ export default {
         batchOpt(){
             this.isMultipled = !this.isMultipled
             this.$refs.basicTableCom.$children[0].clearSelection()
+            this.ids = []
         },
         multiSelection(val){
             if(val.length>0){
