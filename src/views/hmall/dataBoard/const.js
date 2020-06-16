@@ -1,23 +1,22 @@
 // 交易额明细table
 export const transactionInfoTableLabel = [
-    { label: 'SKU编码', prop: 'merchantName' },
-    { label: 'SPU编码', prop: 'brandName' },
-    { label: '子订单编号', prop: 'categories' },
-    { label: '会员店', prop: 'submitTime' },
-    { label: '会员店账号', prop: 'status' },
-    { label: '所属商家', prop: 'auditTime' },
-    { label: '商品SKU名称', prop: 'auditTime' },
-    { label: '所属品牌', prop: 'auditTime' },
-    { label: '商品型号', prop: 'auditTime' },
-    { label: '数量', prop: 'auditTime' },
-    { label: '商品类目', prop: 'auditTime' },
-    { label: '销售价', prop: 'auditTime' },
-    { label: '实付金额', prop: 'auditTime' },
-    { label: '订单渠道', prop: 'auditTime' },
-    { label: '下单时间', prop: 'auditTime' },
-    { label: '支付时间', prop: 'auditTime' },
-    { label: '订单状态', prop: 'auditTime' },
-    { label: '支付方式', prop: 'auditTime' }
+    { label: 'SKU编码', prop: 'skuCode' },
+    { label: 'SPU编码', prop: 'spuCode' },
+    { label: '子订单编号', prop: 'childOrderNo' },
+    { label: '会员店', prop: 'memberName' },
+    { label: '所属商家', prop: 'merchantName' },
+    { label: '商品SKU名称', prop: 'skuName' },
+    { label: '所属品牌', prop: 'brandName' },
+    { label: '商品型号', prop: 'productSpecification' },
+    { label: '数量', prop: 'quantity' },
+    { label: '商品类目', prop: 'category' },
+    { label: '销售价', prop: 'price' },
+    { label: '实付金额', prop: 'finalTotalAmount' },
+    { label: '订单渠道', prop: 'sourceDescribe' },
+    { label: '下单时间', prop: 'createTime', formatters: 'dateTime' },
+    { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
+    { label: '订单状态', prop: 'childOrderStatusDescribe' },
+    { label: '支付方式', prop: 'payWayDescribe' }
 ]
 
 // 会员注册明细table

@@ -4,6 +4,7 @@ import mutations from './mutations'
 import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
+import dataBoard from '@/views/hmall/dataBoard/store/index.js'
 import layout from '@/views/layout/store/index.js'
 import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
@@ -60,7 +61,8 @@ const store = new Vuex.Store({
         jinyunplatform,
         crmauthen,
         fundsPlan,
-        crmstatic
+        crmstatic,
+        dataBoard
     }
 })
 export default store
