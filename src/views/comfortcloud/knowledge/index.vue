@@ -26,6 +26,7 @@
                         :props="defaultProps"
                         @node-click="handleNodeClick"
                         :highlight-current="true"
+                        :default-expand-all="true"
                 ></el-tree>
             </div>
             <div class="right">
@@ -379,8 +380,14 @@ export default {
         uploadSuccess (response) {
             this.$refs.upload.clearFiles()
             this.loading = false
+            // console.log(1112233,response)
             if (response.code === 200) {
-                this.$message.success('文件上传成功')
+                const { failCount,successCount  } = response.data
+                if(failCount>0){
+                    this.$message.error(`成功导入${successCount}条，失败${failCount}条`)
+                } else {
+                    this.$message.success(`成功导入${successCount}条，失败${failCount}条`)
+                }
                 this.uploadShow = false
                 this.onQuery()
             } else {
