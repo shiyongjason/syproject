@@ -18,7 +18,7 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
         {
             prop: 'organizationName',
             label: isF ? '分部' : '平台公司',
-            width: '100',
+            minWidth: '100',
             showOverflowTooltip: true,
             slot: 'organizationName',
             fixed: true
@@ -29,14 +29,14 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 {
                     prop: 'companyCounts',
                     label: '总平台数',
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'center'
                 },
                 {
                     prop: 'declareCounts',
                     label: '已申报家数',
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'center'
                 }
@@ -48,28 +48,28 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 {
                     prop: 'annualCommitment',
                     label: `${targetYear}年责任状目标`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'lastYearActualSales',
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'estimateSales',
                     label: `${targetYear}年${targetMonth}月预计销售`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 }
@@ -81,35 +81,35 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                 {
                     prop: 'loanBalance',
                     label: '在贷余额',
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'totalOverdue',
                     label: '逾期余额',
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
-                    width: '150',
+                    minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
                 }
@@ -123,21 +123,21 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                     label: `${targetYear}年${targetMonth}月销售同比`,
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '150'
+                    minWidth: '150'
                 },
                 {
                     prop: 'usedPercentCurrent',
                     label: `${targetYear}年${targetMonth}月用款同比`,
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '150'
+                    minWidth: '150'
                 },
                 {
                     prop: 'overduePercent',
                     label: '逾期率=（逾期余额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
-                    width: '200'
+                    minWidth: '200'
                 }
             ]
         },
@@ -148,13 +148,13 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
                     prop: 'subsectionManagerApproveAmount',
                     label: '分总审批额度',
                     align: 'right',
-                    width: '100'
+                    minWidth: '100'
                 },
                 {
                     prop: 'regionManagerApproveAmount',
                     label: '大区总审批金额',
                     align: 'right',
-                    width: '120'
+                    minWidth: '120'
                 }
             ]
         }
