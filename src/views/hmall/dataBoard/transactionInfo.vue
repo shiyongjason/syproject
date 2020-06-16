@@ -96,20 +96,20 @@
             <div class="query-cont-col">
                 <div class="query-col-title">下单时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('endCreateTime')">
                     </el-date-picker>
                     <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.endCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                    <el-date-picker v-model="queryParams.endCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('startCreateTime')" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">支付时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startPayTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startPayTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('endPayTime')">
                     </el-date-picker>
                     <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.endPayTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                    <el-date-picker v-model="queryParams.endPayTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('startPayTime')" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
@@ -158,40 +158,40 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            tableData: state => state.dataBoard.getTransactionInfoList,
-            paginationData: state => state.dataBoard.transactionPaginationData
-        }),
-        pickerOptionsStart () {
+            tableData: state => state.hmall.dataBoard.transactionInfoData,
+            paginationData: state => state.hmall.dataBoard.transactionPaginationData
+        })
+    },
+    methods: {
+        pickerOptionsStart (end) {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.applicationTimeEnd
+                    let beginDateVal = new Date(this.queryParams[end])
                     if (beginDateVal) {
                         return time.getTime() > beginDateVal
                     }
                 }
             }
         },
-        pickerOptionsEnd () {
+        pickerOptionsEnd (start) {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = new Date(this.queryParams.applicationTimeStart)
+                    let beginDateVal = new Date(this.queryParams[start])
                     if (beginDateVal) {
                         return time.getTime() < beginDateVal
                     }
                 }
             }
-        }
-    },
-    methods: {
+        },
         ...mapActions([
-            'findServiceCharge'
+            'findTransactionInfo'
         ]),
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         onQuery () {
-            this.findServiceCharge(this.searchParams)
+            this.findTransactionInfo(this.searchParams)
         },
         onReset () {
             this.queryParams = {

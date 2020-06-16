@@ -38,11 +38,13 @@ export const memberRegistrationInfoTableLabel = [
 ]
 
 // BI看板-商品明细table
-export const biGoodDetailTableLabel = [
-    { label: '日期', prop: 'merchantName' },
-    { label: 'SKU编码', prop: 'brandName' },
-    { label: '商品名称', prop: 'categories' },
-    { label: 'SPU编码', prop: 'submitTime' },
-    { label: '加购次数', prop: 'status' },
-    { label: '购买次数', prop: 'auditTime' }
-]
+export const biGoodDetailTableLabel = function (isHidden) {
+    return [
+        { label: '日期', prop: 'date' },
+        { label: 'SKU编码', prop: 'skuCode' },
+        { label: '商品名称', prop: 'skuName' },
+        { label: 'SPU编码', prop: 'spuCode', isHidden },
+        { label: '加购次数', prop: 'shoppingCartNum', isHidden },
+        { label: '购买次数', prop: 'orderNum' }
+    ]
+}

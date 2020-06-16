@@ -18,7 +18,7 @@
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="item in tableLabel">
-                <el-table-column v-if="selectTh.indexOf(item.label)>-1" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
+                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
                     <template slot-scope="scope">
                         <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                         <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
