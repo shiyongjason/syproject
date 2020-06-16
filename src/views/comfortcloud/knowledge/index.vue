@@ -53,7 +53,7 @@
             </div>
         </div>
         <!--<H5Preview :activeUrl="H5Preview" :loading="loading"  @hideLoading="loading =false" @clearUrl="H5Preview = ''"/>-->
-        <el-dialog title="上传故障库" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+        <el-dialog title="上传问题列表" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
             <el-upload
                     class="upload-fault"
                     ref="upload"
@@ -65,7 +65,7 @@
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照故障库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
-            <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button>
+            <el-button type="primary" @click="onDownload" class="download-template">下载导入帮助中心模板</el-button>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
@@ -74,7 +74,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { deleteActivity, editActdetail,delQuestion } from '../api'
+import { deleteActivity, editActdetail,delQuestion,downloadQuestionTemp } from '../api'
 import { clearCache, newCache } from '@/utils/index'
 import { iotUrl } from '@/api/config'
 // import H5Preview from '../../../components/h5Preview'
@@ -119,7 +119,7 @@ export default {
             uploadShow:false,
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/api/device/breakdown/import`,
+                action: `${iotUrl}/api/helpCenter/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: { // todo I'm need a config file
@@ -262,15 +262,29 @@ export default {
             this.uploadShow = true
         },
         onAllDel(){
-
+            this.$confirm('确定删除该问题？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await delQuestion(this.ids.join(','))
+                this.ids = []
+                this.$message({
+                    message: '删除成功！',
+                    type: 'success'
+                })
+                this.onQuery()
+            })
         },
         batchOpt(){
             this.isMultipled = !this.isMultipled
             this.$refs.basicTableCom.$children[0].clearSelection()
         },
         multiSelection(val){
-            console.log(val)
-            this.ids = val
+            if(val.length>0){
+                let _ids = val.map(item=>item.id)
+                this.ids = _ids
+            }
         },
         handleNodeClick(data){
             const { respdeviceBOList='',type = '' } = data
@@ -318,7 +332,7 @@ export default {
             }
         },
         onDownload () {
-            // downloadEquipmentErrorList()
+            downloadQuestionTemp()
         },
         beforeAvatarUpload (file) {
             const isLt10M = file.size / (1024 * 1024 * 10) < 1
