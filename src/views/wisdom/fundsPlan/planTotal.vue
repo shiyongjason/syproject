@@ -35,7 +35,8 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total">
+                         :total="page.total" collapseShow :localName="localName"
+                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -79,7 +80,9 @@ export default {
                 year: '',
                 mouth: ''
             },
-            columnData: []
+            columnData: [],
+            localName: 'planTotalTable::',
+            toggleTable: true
         }
     },
     computed: {
@@ -145,7 +148,27 @@ export default {
         ...mapActions({
             findPlanTotalList: 'fundsPlan/findPlanTotalList',
             findTargetTime: 'fundsPlan/findTargetTime'
-        })
+        }),
+        toggleTableHandler () {
+            this.toggleTable = false
+        },
+        updateLabel (showColumnLabel) {
+            this.columnData.forEach(value => {
+                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
+                if (value.children) {
+                    let number = 0
+                    value.children.forEach(value1 => {
+                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        if (!value1.isHidden) number++
+                    })
+                    value.isHidden = !(number > 0)
+                }
+            })
+            this.toggleTable = true
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable.doLayout()
+            })
+        }
     },
     async mounted () {
         await this.findTargetTime()
