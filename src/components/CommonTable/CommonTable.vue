@@ -314,7 +314,7 @@ export default {
     height: 20px;
     right: 10px;
     top: 2px;
-    z-index: 1;
+    z-index: 999;
     cursor: pointer;
 }
 .collapse-content {
@@ -323,7 +323,7 @@ export default {
     top: 35px;
     right: 10px;
     background: #ffffff;
-    z-index: 2;
+    z-index: 999;
     padding: 10px 18px;
     box-sizing: border-box;
 }

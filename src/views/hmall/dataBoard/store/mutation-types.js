@@ -1,0 +1,2 @@
+export const SPIKE_PRICE_DATA = 'SPIKE_PRICE_DATA'
+export const SPIKE_PRICE_INFO = 'SPIKE_PRICE_INFO'

@@ -55,9 +55,9 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">SPU编码：</div>
+                <div class="query-col-title">SKU编码：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入SPU编码">
+                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入SKU编码">
                     </el-input>
                 </div>
             </div>
@@ -94,7 +94,7 @@ export default {
                 { label: '会员店', prop: 'merchantName' },
                 { label: '会员店账号', prop: 'brandName' },
                 { label: '所属商家', prop: 'categories' },
-                { label: 'SPU编码', prop: 'submitTime' },
+                { label: 'SKU编码', prop: 'submitTime' },
                 { label: '商品名称', prop: 'status' },
                 { label: '进入时间', prop: 'auditTime' },
                 { label: '离开时间', prop: 'auditTime' },
