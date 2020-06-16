@@ -82,7 +82,7 @@ export default {
             },
             columnData: [],
             localName: 'planTotalTable::',
-            toggleTable: true
+            toggleTable: false
         }
     },
     computed: {
@@ -124,7 +124,9 @@ export default {
                     mouth: params.selectTime.slice(4)
                 }
             }
-            this.$refs.hosjoyTable.doLayout()
+            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
+            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
+            // this.$refs.hosjoyTable.doLayout()
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode
@@ -165,6 +167,7 @@ export default {
                 }
             })
             this.toggleTable = true
+            console.log(this.columnData)
             this.$nextTick(() => {
                 this.$refs.hosjoyTable.doLayout()
             })
