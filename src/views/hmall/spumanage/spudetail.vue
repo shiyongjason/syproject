@@ -386,7 +386,7 @@ export default {
                             type: 'success',
                             message: '商品新建成功！'
                         })
-                        this.$router.push({ path: '/hmall/spumange' })
+                        this.$router.push({ path: '/b2b/commodity/spumange' })
                     } else if (this.operate == 'modify') {
                         await putSpuTemplate(this.spuTemplateBo)
                         this.resetForm()
@@ -394,7 +394,7 @@ export default {
                             type: 'success',
                             message: '商品更新成功！'
                         })
-                        this.$router.push({ path: '/hmall/spumange' })
+                        this.$router.push({ path: '/b2b/commodity/spumange' })
                     } else {
                         if (this.auditForm.auditStatus == 1) {
                             this.auditForm.auditOpinion = ''

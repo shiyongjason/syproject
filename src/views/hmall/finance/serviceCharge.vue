@@ -119,7 +119,7 @@ export default {
             findBankAccountInfo: 'findBankAccountInfo'
         }),
         onWithdrawal () {
-            this.$router.push('/hmall/finance/withdrawal')
+            this.$router.push('/b2b/finance/withdrawal')
         },
 
         searchList () {
