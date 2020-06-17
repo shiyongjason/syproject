@@ -103,7 +103,7 @@ export default {
     data () {
         return {
             localName: 'platformPlanTable::',
-            toggleTable: true,
+            toggleTable: false,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
