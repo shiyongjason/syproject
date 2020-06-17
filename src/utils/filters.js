@@ -45,8 +45,10 @@ const fundMoney = function (val, int) {
     if (val) {
         const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         return res
+    } else if (val === 0) {
+        return val
     } else {
-        return 0
+        return '-'
     }
 }
 const formatDateDuration = function (time) {

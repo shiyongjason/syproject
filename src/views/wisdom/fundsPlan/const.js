@@ -147,12 +147,14 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     prop: 'subsectionManagerApproveAmount',
                     label: '分总审批额度',
                     align: 'right',
+                    displayAs: 'fundMoney',
                     minWidth: '100'
                 },
                 {
                     prop: 'regionManagerApproveAmount',
                     label: '大区总审批金额',
                     align: 'right',
+                    displayAs: 'fundMoney',
                     minWidth: '120'
                 }
             ]
@@ -512,6 +514,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                         {
                             prop: 'subsectionManagerApproveAmount',
                             align: 'center',
+                            displayAs: 'fundMoney',
                             width: '120',
                             label: `-`
                         }
@@ -566,7 +569,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                             prop: 'regionManagerApproveAmount',
                             align: 'center',
                             minWidth: '120',
-                            label: `-`
+                            displayAs: 'fundMoney'
                         }
                     ]
                 },
