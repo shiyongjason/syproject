@@ -28,9 +28,9 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">VIP折扣：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:2="queryParams.minServiceFeeDiscount" maxlength="4"></el-input>折
+                        <el-input v-model="queryParams.minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:2></el-input>折
                         ~
-                        <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2="queryParams.maxServiceFeeDiscount" maxlength="4"></el-input>折
+                        <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2></el-input>折
                     </div>
                 </div>
                <div class="query-cont-col">
@@ -54,11 +54,11 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop">已筛选 3 项</el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{vipManagedata.total||0}}； VIP：{{vipPageLoan.count||0|money}}； VIP目标总额（万元）：{{vipPageLoan.totalTarget||0 |money}} </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-             @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=150 :isShowIndex='true'>
+             @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true"  :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row.id)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row.companyId)">分配</el-button>
                 </template>
             </basicTable>
         </div>
@@ -85,8 +85,10 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import vipdrawer from './components/vipdrawer'
+import { deepCopy } from '@/utils/utils'
+// import { money } from '@/utils/filters'
 export default {
-    name: 'vipapplication',
+    name: 'vipmanage',
     data () {
         return {
             queryParams: {
@@ -95,24 +97,21 @@ export default {
                 minServiceFeeDiscount: '',
                 minVipTarget: '',
                 maxVipTarget: '',
-                pageNumber: '',
-                pageSize: '',
+                pageNumber: 1,
+                pageSize: 10,
                 pkDeptDoc: '',
                 vipRuleId: ''
             },
+            copyParams: {},
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '' },
-                { label: '项目编号', prop: 'projectNo', width: '150' },
-                { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150' },
-                { label: '经销商', prop: 'companyName', width: '180' },
-                { label: '甲方名', prop: 'firstPartName' },
-                { label: '项目类别', prop: 'type', width: '120' },
-                { label: '合作进度', prop: 'progress', width: '120' },
-                { label: '项目提交时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
+                { label: '企业名称', prop: 'companyName', width: '' },
+                { label: '所属分部', prop: 'deptName' },
+                { label: 'VIP等级', prop: 'vipRule' },
+                { label: '次年服务费折扣（折）', prop: 'serviceFeeDiscount' },
+                { label: 'VIP目标（万元）', prop: 'vipTarget', formatters: 'money' },
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
             ],
-            tableData: [{ projectName: '123123' }],
+            tableData: [],
             branchArr: [],
             paginationInfo: {},
             dialogVisible: false,
@@ -137,7 +136,8 @@ export default {
         ...mapGetters({
             crmdepList: 'crmmanage/crmdepList',
             vipManagedata: 'vipManage/vipManagedata',
-            vipLevel: 'vipManage/vipLevel'
+            vipLevel: 'vipManage/vipLevel',
+            vipPageLoan: 'vipManage/vipPageLoan'
         }),
         pickerOptionsMax () {
             return {
@@ -161,17 +161,20 @@ export default {
         }
     },
     async mounted () {
-        // this.onGetbranch()
+        this.onGetbranch()
         this.searchList()
         this.onGetvipLevel()
+        this.copyParams = deepCopy(this.queryParams)
     },
     methods: {
         ...mapActions({
             findCrmdeplist: 'crmmanage/findCrmdeplist',
             findVipmanage: 'vipManage/findVipmanage',
-            findViprules: 'vipManage/findViprules'
+            findViprules: 'vipManage/findViprules',
+            findVippageLoan: 'vipManage/findVippageLoan'
         }),
         onRest () {
+            this.queryParams = deepCopy(this.copyParams)
             this.searchList()
         },
         handleSizeChange (val) {
@@ -191,8 +194,8 @@ export default {
                 pageSize: this.vipManagedata.size,
                 total: this.vipManagedata.total
             }
-            // await this.findProjectLoan(params)
-            // this.loanData = this.projectLoan ? this.projectLoan : ''
+            await this.findVippageLoan(params)
+            // this.loanData = this.vipPageLoan ? this.vipPageLoan : ''
         },
         async onGetvipLevel () {
             await this.findViprules()
@@ -202,7 +205,7 @@ export default {
             this.branchArr = this.crmdepList
         },
         onDrawerinfo (val) {
-            this.$refs.vipdrawer.onShowDrawerinfn()
+            this.$refs.vipdrawer.onShowDrawerinfn(val)
         }
     }
 }

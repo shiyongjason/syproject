@@ -62,7 +62,7 @@ export const BUS_TYPE_LIST = [
 export const RISK_TYPE_LIST = [
     { key: 2, value: '白名单' },
     { key: 1, value: '黑名单' },
-    { key: 3, value: '待初审' }
+    { key: 3, value: '待审核' }
 ]
 
 export const AUTEHEN_LIST = [
@@ -94,4 +94,19 @@ export const UPSTREAMSUPPLIERTYPE = [
 export const UPSTREAMPAYTYPE = [
     { key: 1, value: '现金' },
     { key: 2, value: '承兑' }
+]
+// 信用等级
+export const CREDITLEVEL = [
+    { key: 1, value: 'A' },
+    { key: 2, value: 'B' },
+    { key: 2, value: 'C' },
+    { key: 2, value: 'D' }
+]
+
+// 资料状态
+export const MATELIST = [
+    { key: 1, value: '待提交' },
+    { key: 2, value: '已提交' },
+    { key: 2, value: '已通过' },
+    { key: 2, value: '已打回' }
 ]

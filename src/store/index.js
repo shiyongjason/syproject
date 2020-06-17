@@ -22,6 +22,8 @@ import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
 import vipManage from '@/views/crm/vipManage/store/vipManage'
+import creditManage from '@/views/crm/creditManage/store/creditManage'
+import vipApply from '@/views/crm/vipApplication/store/vipApplication'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -65,7 +67,9 @@ const store = new Vuex.Store({
         crmstatic,
         projectInformation,
         riskManage,
-        vipManage
+        vipManage,
+        vipApply,
+        creditManage
     }
 })
 export default store
