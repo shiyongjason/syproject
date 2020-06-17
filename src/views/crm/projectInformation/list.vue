@@ -55,20 +55,20 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">初审通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFirstApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFirstApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">材料审核通过时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
+                        <el-date-picker v-model="queryParams.maxFinalApproveTime" type="datetime"  value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd(queryParams.minFinalApproveTime)">
                         </el-date-picker>
                     </div>
                 </div>
@@ -99,9 +99,9 @@
 
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
-                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 -->
-                    <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)&&scope.data.row.docAfterStatus!=3">修改</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" >查看详情</el-button>
+                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 2的时候点进去能看到，但不能修改-->
+                    <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</el-button>
                 </template>
             </basicTable>
         </div>
@@ -133,11 +133,11 @@ export default {
                 minFinalApproveTime: '', // 最小料审核通过时间,
                 maxFinalApproveTime: '', // 最大料审核通过时间
                 pkDeptDoc: '', // 分部编码
-                status: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
+                statusList: '', // 合作进度 1：待提交2：审核中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
                 projectName: '', // 项目名称
                 projectNo: '', // 项目编号
                 // projectIds: [], // 工程id列表
-                type: ''// 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
+                typeList: ''// 项目类别 1：地产项目 2：政府共建项目 3：市政项目 3：办公楼 4：厂房 5：其他
             },
             status: [],
             typeArr: [],
@@ -156,8 +156,8 @@ export default {
                 { label: '合作进度', prop: 'status', width: '120' },
                 { label: '初审通过时间', prop: 'firstApproveTime', width: '150', formatters: 'dateTimes' },
                 { label: '数据更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料提交审核时间', prop: 'checkTime', width: '150', formatters: 'dateTimes' },
-                { label: '材料审核通过时间', prop: 'finalApproveTime', width: '150', formatters: 'dateTimes' }
+                { label: '材料提交审核时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
+                { label: '材料审核通过时间', prop: 'checkTime', width: '150', formatters: 'dateTimes' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -249,8 +249,8 @@ export default {
             this.searchList()
         },
         async  searchList () {
-            this.queryParams.status = this.status.toString()
-            this.queryParams.type = this.typeArr.toString()
+            this.queryParams.statusList = this.status.toString()
+            this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []
@@ -264,7 +264,7 @@ export default {
         },
         async onGetbranch () {
             // 分部下拉接口
-            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(JSON.stringify(sessionStorage.getItem('authCode'))) })
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
         }
     }

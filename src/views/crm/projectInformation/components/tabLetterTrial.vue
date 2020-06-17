@@ -4,7 +4,7 @@
             待立项
         </div>
         <div v-else>
-            <div class="firstclass">立项结果：{{informationDetail.approveResult?'通过':'不通过'}}</div>
+            <div class="firstclass">立项结果：{{informationDetail.approveResult==true?'通过':informationDetail.approveResult==false?'不通过':'-'}}</div>
             <div class="firstclass">说明：{{!informationDetail.remark?'-':''}}</div>
             <div class="explanation" v-if="informationDetail.remark">
                 {{informationDetail.remark}}
