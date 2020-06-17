@@ -7,8 +7,9 @@ const state = {
     projectLoan: {},
     crmdepList: [],
     projectRecord: [],
-    punchList: []
-
+    punchList: [],
+    collectdata: {},
+    refusedata: []
 }
 
 const getters = {
@@ -17,8 +18,9 @@ const getters = {
     projectLoan: state => state.projectLoan,
     crmdepList: state => state.crmdepList,
     projectRecord: state => state.projectRecord,
-    punchList: state => state.punchList
-
+    punchList: state => state.punchList,
+    collectdata: state => state.collectdata,
+    refusedata: state => state.refusedata
 }
 
 const mutations = {
@@ -39,6 +41,12 @@ const mutations = {
     },
     [types.PROJECT_PUNCH] (state, payload) {
         state.punchList = payload
+    },
+    [types.DATA_COLLEECT] (state, payload) {
+        state.collectdata = payload
+    },
+    [types.REFUSE_DATA] (state, payload) {
+        state.refusedata = payload
     }
 }
 
@@ -67,6 +75,14 @@ const actions = {
         console.log(params)
         const { data } = await Api.getPunchlist(params)
         commit(types.PROJECT_PUNCH, data)
+    },
+    async findRiskprojectdata ({ commit }, params) {
+        const { data } = await Api.getRiskprojecData(params)
+        commit(types.DATA_COLLEECT, data)
+    },
+    async findRefuseData ({ commit }, params) {
+        const { data } = await Api.getRefuseDoc(params)
+        commit(types.REFUSE_DATA, data)
     }
 }
 export default {

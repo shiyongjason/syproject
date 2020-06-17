@@ -173,13 +173,16 @@ export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681
 export const CRM_GOODWORK_DETAIL = 109111
 // export const CRM_GOODWORK_OPERATE = 109112
 export const CRM_GOODWORK_SHENPI = 109112 // 审批
-export const CRM_GOODWORK_XINSHEN = 109113 // 信审
+export const CRM_GOODWORK_XINSHEN = 109113 // 信审改为立项
 export const CRM_GOODWORK_QIANYUE = 109114 // 签约
 export const CRM_GOODWORK_FANGKUAN = 109115 // 放款
 export const CRM_GOODWORK_HUIKUAN = 109116 // 全部回款
 export const CRM_GOODWORK_BAOCUN = 109117 // 保存
 export const CRM_GOODWORK_CHOINGZHI = 109118 // 重置
-export const CRM_GOODWORK_WANSHAN = 109119 // 重置
+export const CRM_GOODWORK_WANSHAN = 109119 // 完善
+export const CRM_GOODWORK_BACKUP = 109120 // 打回补充
+export const CRM_GOODWORK_APPROVED = 109121 // 材料审核通过
+export const CRM_GOODWORK_FINAL = 109122 // 终审通过
 
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
@@ -190,3 +193,10 @@ export const PLATFORM_OVERDUE_SUM_EXPORT = 110004
 export const PLATFORM_OVERDUE_SUM_IMPORT = 110005
 export const OVERDUE_DETAIL_TABLE_EXPORT = 110006
 export const OVERDUE_DETAIL_TABLE_IMPORT = 110007
+export const PLAN_CREDIT_TABLE_COLUMN = 110008
+// 冲刺值导入
+export const SPRINT_INDEX_IMPORT = 110009
+// 履约值导入
+export const PERFORMANCE_INDEX_IMPORT = 110010
+// 资金计划审批导入
+export const PLAN_APPROVAL_IMPORT = 110011

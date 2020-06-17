@@ -410,10 +410,10 @@ export default {
         backFindbrand (val, type) {
             if (type == 1) {
                 this.businessDetail.developOnlineCompanyCode = val.value ? val.value.selectCode : ''
-                this.businessDetail.developOnlineCompanyName = val.value ? val.value.companyName : ''
+                this.businessDetail.developOnlineCompanyName = val.value ? val.value.companyShortName : ''
             } else {
                 this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
-                this.businessDetail.relationCompanyName = val.value ? val.value.companyName : ''
+                this.businessDetail.relationCompanyName = val.value ? val.value.companyShortName : ''
             }
         }
     },
