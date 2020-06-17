@@ -18,8 +18,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">商品类目：</div>
                 <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.categoryId" placeholder="请输入商品类目">
-                    </el-input>
+                    <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -129,12 +128,12 @@
 <script>
 import { transactionInfoTableLabel } from './const'
 import { downloadTransactionInfoList } from './api'
-import { createNamespacedHelpers, mapState } from 'vuex'
-const { mapActions } = createNamespacedHelpers('dataBoard')
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'transactionInfo',
     data () {
         return {
+            categoryIdArr: [],
             queryParams: {
                 skuCode: '',
                 childOrderNo: '',
@@ -160,6 +159,9 @@ export default {
             userInfo: state => state.userInfo,
             tableData: state => state.hmall.dataBoard.transactionInfoData,
             paginationData: state => state.hmall.dataBoard.transactionPaginationData
+        }),
+        ...mapGetters('category', {
+            categoryOptions: 'categoryOptions'
         })
     },
     methods: {
@@ -183,9 +185,15 @@ export default {
                 }
             }
         },
-        ...mapActions([
+        ...mapActions('category', [
+            'findAllCategory'
+        ]),
+        ...mapActions('dataBoard', [
             'findTransactionInfo'
         ]),
+        productCategoryChange (val) {
+            this.queryParams.categoryId = val[val.length - 1]
+        },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
@@ -194,6 +202,7 @@ export default {
             this.findTransactionInfo(this.searchParams)
         },
         onReset () {
+            this.categoryIdArr = []
             this.queryParams = {
                 skuCode: '',
                 childOrderNo: '',
@@ -226,6 +235,7 @@ export default {
     },
     mounted () {
         this.onSearch()
+        this.findAllCategory()
     }
 }
 </script>
