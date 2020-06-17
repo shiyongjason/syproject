@@ -429,7 +429,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 2
                                     },
                                     on: {
                                         'click': function () {
@@ -477,7 +482,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 2
                                     },
                                     on: {
                                         'click': function () {
@@ -525,7 +535,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 2
                                     },
                                     on: {
                                         'click': function () {
@@ -573,7 +588,12 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                     },
                                     style: {
                                         color: '#FF7A45',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
+                                        width: '100%',
+                                        overflow: 'hidden',
+                                        display: '-webkit-box',
+                                        WebkitBoxOrient: 'vertical',
+                                        webkitLineClamp: 2
                                     },
                                     on: {
                                         'click': function () {

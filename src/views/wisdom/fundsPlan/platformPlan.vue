@@ -64,7 +64,7 @@
         </div>
         <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="450px">
             <h3 style="margin-bottom: 10px;"></h3>
-            <el-input type="textarea" :rows="2" maxlength="1000" show-word-limit v-model="remark" disabled></el-input>
+            <p class="tips">{{remark}}</p>
         </el-dialog>
     </div>
 </template>
@@ -362,4 +362,16 @@ export default {
     color: #ff7a45;
     cursor: pointer;
 }
+    /deep/ .el-dialog__body {
+        min-height: 120px;
+    }
+    .tips {
+        display: flex;
+        height: 90px;
+        padding: 10px 0;
+        text-align: justify;
+        line-height: 20px;
+        overflow: hidden;
+        overflow-y: scroll;
+    }
 </style>
