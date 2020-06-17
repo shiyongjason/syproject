@@ -38,6 +38,7 @@
             </basicTable>
             <div class="table-cont-title">
                 <span class="table-title-name">明细数据</span>
+                <el-button type="primary" @click="onExportInfo">导出</el-button>
             </div>
             <basicTable :tableLabel="tableLabelInfo" :tableData="tableDataInfo" :pagination="paginationDataInfo" @onSizeChange="onSizeChangeInfo" @onCurrentChange="onCurrentChangeInfo"></basicTable>
         </div>
@@ -45,7 +46,7 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { B2bUrl } from '@/api/config'
+import { B2bUrl, interfaceUrl } from '@/api/config'
 export default {
     name: 'activityUseInfo',
     data () {
@@ -173,6 +174,19 @@ export default {
                         '&endTime=' + this.queryParams.endTime +
                         '&merchantName=' + this.queryParams.merchantName +
                         '&access_token=' + sessionStorage.getItem('tokenB2b')
+                }
+            }
+        },
+        onExportInfo () {
+            if (this.tableDataInfo.length <= 0) {
+                this.$message.warning('无数据可导出！')
+            } else {
+                if (this.tabName == 'spike') {
+                    window.location = B2bUrl + 'order/api/bi/activity/export?spikeId=' + this.queryParamsInfo.spikeId +
+                        '&access_token=' + sessionStorage.getItem('tokenB2b')
+                } else if (this.tabName == 'special') {
+                    window.location = interfaceUrl + 'ets/api/b2b/bi/theme-activities/export?id=' + this.queryParamsInfo.id +
+                        '&access_token=' + sessionStorage.getItem('token')
                 }
             }
         },
