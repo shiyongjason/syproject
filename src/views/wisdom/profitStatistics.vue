@@ -394,8 +394,13 @@ export default {
             } else {
                 this.column[scope.$index].children = this.column[scope.$index].children.slice(0, num)
                 this.changeTable = false
-                this.$nextTick(() => { this.changeTable = true })
+                this.$nextTick(() => {
+                    this.changeTable = true
+                })
             }
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
+            })
         },
         async onGetList (query) {
             const { data } = await getProfitList(query)

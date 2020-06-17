@@ -1,5 +1,5 @@
 <template>
-    <el-table-column v-if="column && !column.isHidden" v-bind="$attrs" v-on="$listeners" :prop="column.prop" :label="column.label" :type="column.type" :index="column.index" :column-key="column.columnKey" :width="column.width" :min-width="column.minWidth" :fixed="column.fixed"
+    <el-table-column v-if="column && !column.isHidden && !column.selfSettingHidden" v-bind="$attrs" v-on="$listeners" :prop="column.prop" :label="column.label" :type="column.type" :index="column.index" :column-key="column.columnKey" :width="column.width" :min-width="column.minWidth" :fixed="column.fixed"
         :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader" :sortable="column.sortable || false" :sort-method="column.sortMethod" :sort-by="column.sortBy" :sort-orders="column.sortOrders" :resizable="column.resizable || true" :formatter="column.formatter"
         :show-overflow-tooltip="column.showOverflowTooltip || false" :align="column.align || align || 'center'" :header-align="column.headerAlign || headerAlign || column.align || align || 'center'" :class-name="column.className" :label-class-name="column.labelClassName"
         :selectable="column.selectable" :reserve-selection="column.reserveSelection || false" :filters="column.filters" :filter-placement="column.filterPlacement" :filter-multiple="column.filterMultiple" :filter-method="column.filterMethod" :filtered-value="column.filteredValue">
@@ -35,7 +35,7 @@ function money (money) {
 function fundMoney (money) {
     if (money === null) return 0
     if (money === 0) return 0
-    if (money) return money.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    if (money) return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     return '-'
 }
 export default {

@@ -39,13 +39,13 @@
             <template v-for="(item) in column">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
                                  :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth"
-                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot && !item.isHidden">
+                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
                 <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop'
-                               v-if="!item.slot && !item.isHidden"></hosjoy-column>
+                               v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">
@@ -150,27 +150,30 @@ export default {
             }
         },
         switchLabel () {
-            let id = null
             return this.column.map(value => {
-                if (value.prop) {
+                let id = null
+                if (value.prop && value.label) {
                     id = value.prop
-                } else {
+                } else if (value.label) {
                     id = value.label
                 }
-                return {
-                    id: id,
-                    label: value.label,
-                    children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
-                        if (value1.prop) {
-                            id = value1.prop
-                        } else {
-                            id = value1.label
-                        }
-                        return {
-                            id: id,
-                            label: value1.label
-                        }
-                    })
+                if (id) {
+                    return {
+                        id: id,
+                        label: value.label,
+                        children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                            return {
+                                id: value1.prop || value1.label,
+                                label: value1.label
+                            }
+                        })
+                    }
+                } else {
+                    // 第一行为空的情况,目前没有其他情况
+                    return {
+                        id: value.prop,
+                        label: value.children[0].label
+                    }
                 }
             })
         }
