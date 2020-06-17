@@ -15,7 +15,7 @@ const getters = {
     crmauthLoan: state => state.crmauthLoan,
     platlist: state => {
         state.platlist && state.platlist.map(val => {
-            val.value = val.companyName
+            val.value = val.companyShortName
             val.selectCode = val.companyCode
         })
         return state.platlist

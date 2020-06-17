@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">平台公司名：</div>
                     <div class="query-col-input">
-                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入分部名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
