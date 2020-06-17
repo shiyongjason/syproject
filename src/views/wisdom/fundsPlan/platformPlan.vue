@@ -4,47 +4,37 @@
             <div class="query-cont-col" v-if="region">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称"
-                                   :selectObj="selectAuth.regionObj" :maxlength='30'
-                                   :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col" v-if="branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称"
-                                   :selectObj="selectAuth.branchObj" :maxlength='30'
-                                   :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col" v-if="district">
                 <div class="query-col-title">区域：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称"
-                                   :selectObj="selectAuth.areaObj" :maxlength='30'
-                                   :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">平台公司：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称"
-                                   :selectObj="selectAuth.platformObj" :maxlength='30'
-                                   :canDoBlurMethos='true'></HAutocomplete>
+                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title"> 查询期间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.selectTime" type="month" value-format='yyyyMM'
-                                    placeholder="请选择时间">
+                    <el-date-picker v-model="queryParams.selectTime" type="month" value-format='yyyyMM' placeholder="请选择时间">
                     </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20"
-                               @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
+                    <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
                         搜索
                     </el-button>
                     <el-button type="primary" class="ml20" @click="onReset">
@@ -60,15 +50,22 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" border stripe showPagination :column="columnData" :data="platformPlanList"
-                         align="center"
-                         :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize"
-                         :total="platformPlanPagination.total" @pagination="getList">
+            <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
+                         :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
+                         :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
+                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler" :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
+                <template slot="subRegionRemark" slot-scope="scope">
+                    <div>{{scope.data.row.organizationName}}</div>
+                </template>
             </hosJoyTable>
         </div>
+        <el-dialog :title="title" :visible.sync="dialogVisible" :close-on-click-modal='false' width="450px">
+            <h3 style="margin-bottom: 10px;"></h3>
+            <el-input type="textarea" :rows="2" maxlength="1000" show-word-limit v-model="remark" disabled></el-input>
+        </el-dialog>
     </div>
 </template>
 
@@ -105,6 +102,8 @@ export default {
     },
     data () {
         return {
+            localName: 'platformPlanTable::',
+            toggleTable: false,
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
@@ -142,7 +141,10 @@ export default {
                     selectName: ''
                 }
             },
-            columnData: []
+            columnData: [],
+            title: '',
+            remark: '',
+            dialogVisible: false
         }
     },
     methods: {
@@ -168,6 +170,32 @@ export default {
         getList (val) {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
+        toggleTableHandler () {
+            this.toggleTable = false
+        },
+        updateLabel (showColumnLabel) {
+            this.columnData.forEach(value => {
+                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
+                if (value.children) {
+                    let number = 0
+                    value.children.forEach(value1 => {
+                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        if (!value1.isHidden) number++
+                    })
+                    value.isHidden = !(number > 0)
+                }
+            })
+            this.toggleTable = true
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable.doLayout()
+            })
+        },
+        showDialog (val, point) {
+            if (!val) return
+            this.dialogVisible = true
+            this.remark = val
+            this.title = point
+        },
         async onQuery (params) {
             this.paramTargetDate = {
                 year: params.selectTime.slice(0, 4),
@@ -175,7 +203,7 @@ export default {
             }
             this.findPlatformPlanList(params)
             await this.findPlatformPlanTotal(params)
-            const columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
+            const columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth, this.showDialog)
             columnData.forEach((value, index) => {
                 if (index > 4) {
                     value.children.forEach((val) => {
@@ -188,9 +216,8 @@ export default {
                 }
             })
             this.columnData = columnData
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
+            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
+            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
         },
         linkage (dis) {
             let obj = {
@@ -312,28 +339,27 @@ export default {
 </script>
 
 <style scoped lang="scss">
-    .tips {
+.tips {
+    background: #ffffff;
 
-        background: #ffffff;
+    p {
+        max-width: 1000px;
+        margin: auto;
+        line-height: 100px;
+        text-align: center;
 
-        p {
-            max-width: 1000px;
-            margin: auto;
-            line-height: 100px;
-            text-align: center;
+        b {
+            color: red;
+            padding: 0 5px;
+        }
 
-            b {
-                color: red;
-                padding: 0 5px;
-            }
-
-            .right {
-                float: right;
-            }
+        .right {
+            float: right;
         }
     }
-    .light {
-        color: #FF7A45;
-        cursor: pointer;
-    }
+}
+.light {
+    color: #ff7a45;
+    cursor: pointer;
+}
 </style>

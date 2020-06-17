@@ -36,7 +36,7 @@ export default {
             }
             const jinyunHref = jinyun + 'bossLogin.do?mobileNo=' + this.userInfo.phoneNumber + '&token=' + token
             menus.forEach((item, index) => {
-                const path = parentPath === '' ? `${parentPath}${item.path}` : `${parentPath}/${item.path}`
+                const path = item.path.indexOf('/') != -1 ? item.path : (parentPath === '' ? `${parentPath}${item.path}` : `${parentPath}/${item.path}`)
                 if (item.children && item.children.length > 0) {
                     const children = this.generateSidebar(item.children, path)
                     result.push((

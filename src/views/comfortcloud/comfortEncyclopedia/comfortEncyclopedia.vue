@@ -94,12 +94,12 @@ export default {
         },
         gotoCreatePlay () {
             this.$router.push({
-                path: '/comfortCloud/comfortEncyclopediaEdit'
+                path: '/comfortCloud/operationsManagement/comfortEncyclopediaEdit'
             })
         },
         goEdit (id) {
             this.$router.push({
-                path: '/comfortCloud/comfortEncyclopediaEdit',
+                path: '/comfortCloud/operationsManagement/comfortEncyclopediaEdit',
                 query: {
                     id: id
                 }

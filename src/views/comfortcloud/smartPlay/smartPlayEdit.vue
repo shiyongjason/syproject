@@ -196,7 +196,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/smartPlay')
+            this.$router.push('/comfortCloud/operationsManagement/smartPlay')
         },
         async getActivityDetail (id) {
             await this.findCloudSmartPlayPostDetail(id)
@@ -218,7 +218,7 @@ export default {
                             this.$message.success('活动保存成功')
                         }
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/smartPlay')
+                        this.$router.push('/comfortCloud/operationsManagement/smartPlay')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
