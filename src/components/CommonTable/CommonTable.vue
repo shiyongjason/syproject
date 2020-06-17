@@ -177,7 +177,7 @@ export default {
         defaultTh () {
             const arr = []
             this.tableLabel.map(item => {
-                if (!item.hidden) {
+                if (!item.hidden && !item.isHidden) {
                     arr.push(item.label)
                 }
             })
