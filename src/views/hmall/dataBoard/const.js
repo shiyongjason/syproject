@@ -21,20 +21,20 @@ export const transactionInfoTableLabel = [
 
 // 会员注册明细table
 export const memberRegistrationInfoTableLabel = [
-    { label: '会员店', prop: 'merchantName' },
-    { label: '会员店账号', prop: 'brandName' },
-    { label: '会员所在城市', prop: 'categories' },
-    { label: '所属商家', prop: 'submitTime' },
-    { label: '注册时间', prop: 'status' },
-    { label: '认证时间', prop: 'auditTime' },
-    { label: '首次支付时间', prop: 'auditTime' },
-    { label: '最近登录时间', prop: 'auditTime' },
-    { label: '最近购买时间', prop: 'auditTime' },
-    { label: '认证状态', prop: 'auditTime' },
-    { label: '提交订单数', prop: 'auditTime' },
-    { label: '提交订单金额', prop: 'auditTime' },
-    { label: '支付订单数', prop: 'auditTime' },
-    { label: '支付订单金额', prop: 'auditTime' }
+    { label: '会员店', prop: 'memberName' },
+    { label: '会员店账号', prop: 'username' },
+    { label: '会员所在城市', prop: 'cityName' },
+    { label: '所属商家', prop: 'merchantName' },
+    { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
+    { label: '认证时间', prop: 'authenticationTime', formatters: 'dateTime' },
+    { label: '首次支付时间', prop: 'payTime', formatters: 'dateTime' },
+    { label: '最近登录时间', prop: 'loginTime', formatters: 'dateTime' },
+    { label: '最近购买时间', prop: 'orderTime', formatters: 'dateTime' },
+    { label: '认证状态', prop: 'authenticationStatusDesc' },
+    { label: '提交订单数', prop: 'orderNum' },
+    { label: '提交订单金额', prop: 'orderTotalAmount' },
+    { label: '支付订单数', prop: 'payNum' },
+    { label: '支付订单金额', prop: 'payTotalAmount' }
 ]
 
 // BI看板-商品明细table
