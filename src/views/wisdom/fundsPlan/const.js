@@ -13,7 +13,7 @@ export const hasDeclareLabel = [
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
 // 资金计划汇总表
-export const summarySheet = function (targetYear, targetMonth, isF) {
+export const summarySheet = function (targetYear, targetMonth, isF, isHideCompanyCounts) {
     return [
         {
             prop: 'organizationName',
@@ -25,19 +25,18 @@ export const summarySheet = function (targetYear, targetMonth, isF) {
         },
         {
             label: '申报公司数',
+            selfSettingHidden: isHideCompanyCounts,
             children: [
                 {
                     prop: 'companyCounts',
                     label: '总平台数',
                     minWidth: '150',
-                    displayAs: 'fundMoney',
                     align: 'center'
                 },
                 {
                     prop: 'declareCounts',
                     label: '已申报家数',
                     minWidth: '150',
-                    displayAs: 'fundMoney',
                     align: 'center'
                 }
             ]
@@ -217,7 +216,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             children: [
                 {
                     prop: 'annualCommitment',
-                    label: `${targetYear}shy年责任状目标`,
+                    label: `${targetYear}年责任状目标`,
                     displayAs: 'fundMoney',
                     align: 'center',
                     isHidden: true,

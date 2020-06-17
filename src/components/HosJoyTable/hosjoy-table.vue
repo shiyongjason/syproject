@@ -39,13 +39,13 @@
             <template v-for="(item) in column">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop"
                                  :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth"
-                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot && !item.isHidden">
+                                 :class-name="item.className" :fixed="item.fixed" v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
                 <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop'
-                               v-if="!item.slot && !item.isHidden"></hosjoy-column>
+                               v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag">
                 <template slot-scope="scope">

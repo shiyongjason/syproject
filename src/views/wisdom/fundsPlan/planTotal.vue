@@ -105,15 +105,16 @@ export default {
             })
         },
         async queryAndChangeTime (params) {
+            this.toggleTable = false
             if (!params.selectTime) params.selectTime = moment(this.targetTime.businessDate).format('YYYYMM')
             this.paramTargetDate = {
                 year: params.selectTime.slice(0, 4),
                 mouth: params.selectTime.slice(4)
             }
             if (params.subsectionCode) {
-                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false)
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false, true)
             } else {
-                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true)
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true, !this.branch)
             }
 
             try {
@@ -126,7 +127,6 @@ export default {
             }
             const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
             haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
-            // this.$refs.hosjoyTable.doLayout()
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode
@@ -167,7 +167,6 @@ export default {
                 }
             })
             this.toggleTable = true
-            console.log(this.columnData)
             this.$nextTick(() => {
                 this.$refs.hosjoyTable.doLayout()
             })
