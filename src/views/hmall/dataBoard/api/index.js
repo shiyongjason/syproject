@@ -1,10 +1,14 @@
 import { B2bUrl } from '@/api/config'
 import axios from 'axios'
+// 会员活跃明细
+export const findCommonMemberData = (params) => axios.get('ets/api/b2b/bi/member/spu/page', { params })
+export const findSeckillMemberData = (params) => axios.get('ets/api/b2b/bi/member/sku/page', { params })
 // 特价活动
 export const findSpikePriceData = (params) => axios.get(B2bUrl + 'ops/openapi/spike/bi', { params })
 export const findSpikePriceInfo = (params) => axios.get(B2bUrl + 'order/api/bi/activity/details', { params })
 // 专题活动
-export const findSpecialPriceInfo = (params) => axios.get(B2bUrl + 'ops/openapi/bi/theme-activity/page', { params })
+export const findSpecialPriceData = (params) => axios.get(B2bUrl + 'ops/openapi/bi/theme-activity/page', { params })
+export const findSpecialPriceInfo = (params) => axios.get('ets/api/b2b/bi/theme-activities/detail', { params })
 // 优惠券
 export const findCouponUseData = (params) => axios.get(B2bUrl + 'ops/api/coupon/statistics/use-detail/page', { params })
 // 交易额明细

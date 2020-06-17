@@ -1,9 +1,14 @@
 import * as types from './mutation-types'
 
-import { findSpikePriceData, findSpikePriceInfo, findSpecialPriceInfo, findCouponUseData, getTransactionInfo, getOrdinaryBiGoodDetail, getSpikeBiGoodDetail } from '../api/index'
+import { findCommonMemberData, findSeckillMemberData, findSpikePriceData, findSpikePriceInfo, findSpecialPriceData, findSpecialPriceInfo, findCouponUseData, getTransactionInfo, getOrdinaryBiGoodDetail, getSpikeBiGoodDetail } from '../api/index'
+
 const state = {
+    commonMemberData: {},
+    seckillMemberInfo: {},
     spikePriceData: {},
     spikePriceInfo: {},
+    specialPriceData: {},
+    specialPriceInfo: {},
     couponUseData: {},
     // 交易额明细
     transactionInfoData: [],
@@ -22,11 +27,23 @@ const state = {
 }
 
 const mutations = {
+    [types.COMMON_MEMBER_DATA] (state, payload) {
+        state.commonMemberData = payload
+    },
+    [types.SECKILL_MEMBER_DATA] (state, payload) {
+        state.seckillMemberInfo = payload
+    },
     [types.SPIKE_PRICE_DATA] (state, payload) {
         state.spikePriceData = payload
     },
     [types.SPIKE_PRICE_INFO] (state, payload) {
         state.spikePriceInfo = payload
+    },
+    [types.SPECIAL_PRICE_DATA] (state, payload) {
+        state.specialPriceData = payload
+    },
+    [types.SPECIAL_PRICE_INFO] (state, payload) {
+        state.specialPriceInfo = payload
     },
     [types.COUPON_USE_DATA] (state, payload) {
         state.couponUseData = payload
@@ -66,6 +83,14 @@ const mutations = {
 }
 
 const actions = {
+    async findCommonMemberData ({ commit }, params) {
+        const { data } = await findCommonMemberData(params)
+        commit(types.COMMON_MEMBER_DATA, data)
+    },
+    async findSeckillMemberData ({ commit }, params) {
+        const { data } = await findSeckillMemberData(params)
+        commit(types.SECKILL_MEMBER_DATA, data)
+    },
     async findSpikePriceData ({ commit }, params) {
         const { data } = await findSpikePriceData(params)
         commit(types.SPIKE_PRICE_DATA, data)
@@ -74,11 +99,18 @@ const actions = {
         const { data } = await findSpikePriceInfo(params)
         commit(types.SPIKE_PRICE_INFO, data)
     },
+    async findSpecialPriceData ({ commit }, params) {
+        const { data } = await findSpecialPriceData(params)
+        commit(types.SPECIAL_PRICE_DATA, data)
+    },
+    async findSpecialPriceInfo ({ commit }, params) {
+        const { data } = await findSpecialPriceInfo(params)
+        commit(types.SPECIAL_PRICE_INFO, data)
+    },
     async findCouponUseData ({ commit }, params) {
         const { data } = await findCouponUseData(params)
         commit(types.COUPON_USE_DATA, data)
     },
-
     async findTransactionInfo ({ commit }, params) {
         const { data } = await getTransactionInfo(params)
         commit(types.GET_TRANSACTION_INFO, data)
