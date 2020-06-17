@@ -453,10 +453,8 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionFinanceHealthPercentage',
-                            displayAs: 'fundMoney',
                             align: 'center',
-                            minWidth: '100',
-                            label: `-`
+                            minWidth: '100'
                         }
                     ]
                 },
@@ -503,7 +501,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionManagerApproveAmount',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             width: '120',
                             label: `-`
@@ -517,7 +514,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionManagerRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -553,7 +549,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'regionManagerApproveAmount',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '120',
                             label: `-`
@@ -567,7 +562,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'regionManagerRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '150',
                             render: (h, scope) => {

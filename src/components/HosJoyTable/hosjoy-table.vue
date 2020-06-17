@@ -150,27 +150,30 @@ export default {
             }
         },
         switchLabel () {
-            let id = null
             return this.column.map(value => {
-                if (value.prop) {
+                let id = null
+                if (value.prop && value.label) {
                     id = value.prop
-                } else {
+                } else if (value.label) {
                     id = value.label
                 }
-                return {
-                    id: id,
-                    label: value.label,
-                    children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
-                        if (value1.prop) {
-                            id = value1.prop
-                        } else {
-                            id = value1.label
-                        }
-                        return {
-                            id: id,
-                            label: value1.label
-                        }
-                    })
+                if (id) {
+                    return {
+                        id: id,
+                        label: value.label,
+                        children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                            return {
+                                id: value1.prop || value1.label,
+                                label: value1.label
+                            }
+                        })
+                    }
+                } else {
+                    // 第一行为空的情况,目前没有其他情况
+                    return {
+                        id: value.prop,
+                        label: value.children[0].label
+                    }
                 }
             })
         }

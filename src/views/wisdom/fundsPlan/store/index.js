@@ -32,6 +32,9 @@ const getters = {
     planApprovalTotal: state => state.planApprovalTotal,
     platformPlanList: state => {
         state.platformPlanList.forEach(value => {
+            value.subsectionFinanceHealthPercentage =
+                value.subsectionFinanceHealthPercentage === null
+                    ? '-' : (value.subsectionFinanceHealthPercentage) + '%'
             value.salePercentCurrent = (value.salePercentCurrent) + '%'
             value.usedPercentCurrent = (value.usedPercentCurrent) + '%'
             value.overduePercent = (value.overduePercent) + '%'
