@@ -2,7 +2,6 @@ import * as types from './const'
 import * as Api from '../api'
 import moment from 'moment'
 import filterUtil from '../../../../utils/filters'
-import ca from "element-ui/src/locale/lang/ca";
 const state = {
     planTotalList: [],
     targetTime: {
