@@ -8,10 +8,10 @@
                     </el-date-picker>
                 </div>
             </div>
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-if="this.branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat"
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat"
                                    placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
                                    :canDoBlurMethos='false'></HAutocomplete>
                 </div>
