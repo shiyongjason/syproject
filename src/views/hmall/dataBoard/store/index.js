@@ -1,6 +1,6 @@
 import * as types from './mutation-types'
 
-import { findCommonMemberData, findSeckillMemberData, findSpikePriceData, findSpikePriceInfo, findSpecialPriceData, findSpecialPriceInfo, findCouponUseData, getTransactionInfo, getOrdinaryBiGoodDetail, getSpikeBiGoodDetail } from '../api/index'
+import { findCommonMemberData, findSeckillMemberData, findSpikePriceData, findSpikePriceInfo, findSpecialPriceData, findSpecialPriceInfo, findCouponUseData, getTransactionInfo, getOrdinaryBiGoodDetail, getSpikeBiGoodDetail, getMemberDetailInfo } from '../api/index'
 
 const state = {
     commonMemberData: {},
@@ -20,6 +20,13 @@ const state = {
     // 商品详情
     biGoodsData: [],
     biGoodsPaginationData: {
+        pageNumber: 1,
+        pageSize: 10,
+        total: 0
+    },
+    // 会员注册明细
+    memberDetailData: [],
+    memberDetailPaginationData: {
         pageNumber: 1,
         pageSize: 10,
         total: 0
@@ -67,6 +74,15 @@ const mutations = {
     [types.GET_SPIKE_BI_GOOD_DETAIL] (state, payload) {
         state.biGoodsData = payload.records
         state.biGoodsPaginationData = {
+            pageNumber: payload.current,
+            pageSize: payload.size,
+            total: payload.total
+        }
+    },
+    [types.GET_MEMBER_DETAIL_DATA] (state, payload) {
+        console.log(payload)
+        state.memberDetailData = payload.records
+        state.memberDetailPaginationData = {
             pageNumber: payload.current,
             pageSize: payload.size,
             total: payload.total
@@ -122,6 +138,10 @@ const actions = {
     async findSpikeBiGoodDetail ({ commit }, params) {
         const { data } = await getSpikeBiGoodDetail(params)
         commit(types.GET_SPIKE_BI_GOOD_DETAIL, data)
+    },
+    async findMemberDetailInfo ({ commit }, params) {
+        const { data } = await getMemberDetailInfo(params)
+        commit(types.GET_MEMBER_DETAIL_DATA, data)
     },
     initBiGoodDetail ({ commit }) {
         commit(types.INIT_BI_GOOD_DETAIL)

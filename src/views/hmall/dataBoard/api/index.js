@@ -11,6 +11,31 @@ export const findSpecialPriceData = (params) => axios.get(B2bUrl + 'ops/openapi/
 export const findSpecialPriceInfo = (params) => axios.get('ets/api/b2b/bi/theme-activities/detail', { params })
 // 优惠券
 export const findCouponUseData = (params) => axios.get(B2bUrl + 'ops/api/coupon/statistics/use-detail/page', { params })
+// 会员注册明细
+export const getMemberDetailInfo = (params) => axios.get(B2bUrl + 'order/api/statistics/member-detailed', { params })
+// 会员注册明细导出
+export function downloadMemberDetailInfo (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(B2bUrl + `order/api/statistics/member-detailed/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '会员注册明细表.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
 // 交易额明细
 export const getTransactionInfo = (params) => axios.get(B2bUrl + 'order/api/statistics/turnover-detailed', { params })
 // 交易额明细导出
