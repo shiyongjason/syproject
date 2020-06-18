@@ -292,6 +292,7 @@ export default {
                         type: ''
                     }
                     this.onSearch()
+                    this.isCatalog = true
                 } else {
                     const { questionId } = data
                     this.queryParams = {
@@ -302,18 +303,20 @@ export default {
                         type: ''
                     }
                     this.onSearch()
+                    this.isCatalog = false
                 }
             } else if (type) {
+                const { questionId } = data
                 this.queryParams = {
                     ...this.queryParams,
                     question: '',
-                    questionId: '',
                     pageNumber: 1,
+                    questionId,
                     type
                 }
                 this.onSearch()
+                this.isCatalog = false
             }
-            this.isCatalog = false
         },
 
         async onImport () {
@@ -461,6 +464,7 @@ export default {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
+    font-size: 16px;
     span {
         flex: 1;
         &:first-child {
