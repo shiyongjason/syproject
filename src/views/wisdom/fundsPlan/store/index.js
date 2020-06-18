@@ -55,25 +55,19 @@ const getters = {
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
-            value.annualTotalEffectiveRate = (value.annualTotalEffectiveRate * 100) + '%'
-            value.annualTotalProfitAchieveRate = (value.annualTotalProfitAchieveRate * 100) + '%'
-            value.annualTotalSaleAchieveRate = (value.annualTotalSaleAchieveRate * 100) + '%'
+            value.annualTotalEffectiveRate = value.annualTotalEffectiveRate ? (value.annualTotalEffectiveRate * 100) + '%' : '-'
+            value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate ? (value.annualTotalProfitAchieveRate * 100) + '%' : ''
+            value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate ? (value.annualTotalSaleAchieveRate * 100) + '%' : ''
         })
         return state.planCreditList
     },
     planCreditTotal: state => {
         for (const key in state.planCreditTotal) {
-            if (state.planCreditTotal[key]) {
-                state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key])
-            }
-            if (key === 'annualTotalEffectiveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
-            if (key === 'annualTotalProfitAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
-            if (key === 'annualTotalSaleAchieveRate') state.planCreditTotal[key] = (state.planCreditTotal[key] * 100) + '%'
             switch (key) {
                 case 'annualTotalEffectiveRate':
                 case 'annualTotalProfitAchieveRate':
                 case 'annualTotalSaleAchieveRate':
-                    state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key] * 100) + '%'
+                    state.planCreditTotal[key] = state.planCreditTotal[key] ? filterUtil.fundMoney(state.planCreditTotal[key] * 100) + '%' : ''
                     break
                 default:
                     state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key])
