@@ -15,10 +15,6 @@ import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
-const originalPush = Router.prototype.push
-Router.prototype.push = function push (location) {
-    return originalPush.call(this, location).catch(err => err)
-}
 Vue.use(Router)
 
 

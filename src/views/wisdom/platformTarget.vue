@@ -55,7 +55,8 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload
+                    :on-progress="uploadProcess">
                     <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
@@ -95,6 +96,10 @@ export default {
             exportAuth: AUTH_WIXDOM_PLATFORM_TARGET_EXPORT,
             importAuth: AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT,
             downTemplateAuth: AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE,
+            headersData: {
+                'refreshToken': sessionStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+            },
             tableLabel: [
                 { label: '公司简称', prop: 'companyShortName', choosed: true },
                 { label: '公司编码', prop: 'misCode', choosed: true },
