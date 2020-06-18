@@ -469,6 +469,9 @@ export default {
         }
     }
 }
+.upload-fault {
+    margin-bottom: 10px;
+}
 .colred {
     color: #ff7a45;
     cursor: pointer;
