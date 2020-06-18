@@ -23,7 +23,7 @@
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch()">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onAddcloud()" :disabled="isMultipled">新建知识</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport()" :disabled="isMultipled">批量导入</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport()" :disabled="isMultipled || isCatalog">批量导入</el-button>
                     <el-button type="primary" class="ml20" @click="batchOpt()">{{isMultipled?"取消批量操作":"批量操作"}}</el-button>
                 </div>
             </div>
@@ -129,6 +129,7 @@ export default {
                 }
             },
             isMultipled: false,
+            isCatalog: true,
             ids: [],
             fileList: [],
             uploadShow: false,
@@ -310,6 +311,7 @@ export default {
                 }
                 this.onSearch()
             }
+            this.isCatalog = false
         },
 
         async onImport () {
