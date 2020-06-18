@@ -277,6 +277,8 @@ export default {
             if (val.length > 0) {
                 let _ids = val.map(item => item.id)
                 this.ids = _ids
+            } else {
+                this.ids = []
             }
         },
         handleNodeClick (data) {
