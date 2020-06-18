@@ -219,7 +219,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'annualCommitment',
                     label: `${targetYear}年责任状目标`,
-                    displayAs: 'fundMoney',
                     align: 'center',
                     isHidden: true,
                     children: [
@@ -234,7 +233,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -248,8 +246,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'lastYearActualSales',
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
-                    width: '150',
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -264,7 +260,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     prop: 'estimateSales',
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     width: '150',
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -284,7 +279,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     prop: 'loanBalance',
                     label: '在贷余额',
                     minWidth: '150',
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -300,7 +294,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     prop: 'totalOverdue',
                     label: '逾期余额',
                     minWidth: '150',
-                    displayAs: 'fundMoney',
                     align: 'center',
                     children: [
                         {
@@ -315,7 +308,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
-                    displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
@@ -329,7 +321,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
-                    displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
@@ -343,7 +334,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
-                    displayAs: 'fundMoney',
                     align: 'right',
                     children: [
                         {
@@ -472,7 +462,6 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'subsectionFinanceRemark',
-                            displayAs: 'fundMoney',
                             align: 'center',
                             width: '150',
                             render: (h, scope) => {
