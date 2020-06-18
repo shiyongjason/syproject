@@ -272,8 +272,10 @@ export default {
                     const { questionId } = data
                     this.queryParams = {
                         ...this.queryParams,
-                        questionId
+                        questionId,
+                        type: ''
                     }
+                    this.onSearch()
                 } else {
                     const { questionId } = data
                     this.queryParams = {
@@ -289,12 +291,12 @@ export default {
                 this.queryParams = {
                     ...this.queryParams,
                     question: '',
+                    questionId: '',
                     pageNumber: 1,
                     type
                 }
                 this.onSearch()
             }
-            console.log(data)
         },
 
         async onImport () {
@@ -462,6 +464,10 @@ export default {
 /deep/.el-button.is-disabled{
     font-size: 14px;
     font-weight: 500;
+}
+/deep/.el-tree {
+    height: 600px;
+    overflow: auto;
 }
 /deep/.el-tree-node__label{
     width: 250px;
