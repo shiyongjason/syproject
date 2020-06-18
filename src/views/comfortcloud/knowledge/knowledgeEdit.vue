@@ -46,7 +46,7 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveActdetail, editActdetail, saveQuestion } from '../api'
+import { saveQuestion } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'cloudActedit',
@@ -55,9 +55,9 @@ export default {
             cloudForm: {
                 answer: '',
                 question: '',
-                selectedOptions:''
+                selectedOptions: ''
             },
-            id:this.$route.query.id||'',
+            id: this.$route.query.id || '',
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -83,15 +83,15 @@ export default {
             videoimageUrl: '',
             defaultProps: {
                 children: 'children',
-                value:'type',
-                label:'deviceName'
+                value: 'type',
+                label: 'deviceName'
             },
-            options:[],
+            options: [],
             rules: {
                 question: [
                     { required: true, message: '请输入问题标题', trigger: 'blur' }
                 ],
-                selectedOptions:[
+                selectedOptions: [
                     { required: true, message: '请选择目录', trigger: 'blur' }
                 ],
                 answer: [
@@ -113,7 +113,7 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
-        ...mapGetters(['klCatalogueList','klQuestionDetail']),
+        ...mapGetters(['klCatalogueList', 'klQuestionDetail']),
         videoUpload () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -154,13 +154,6 @@ export default {
             }
         }
     },
-    /*watch: {
-        'cloudForm.picture' (val) {
-            this.$nextTick(() => {
-                if (val) this.$refs['picture'].clearValidate()
-            })
-        }
-    },*/
     mounted () {
         this.initCatalogueData()
         if (this.id) {
@@ -173,13 +166,12 @@ export default {
             await this.getCatalogueListAct()
             // console.log(2323,this.klCatalogueList)
             let _opts = this.klCatalogueList.map((item, index) => {
-
                 return item.respdeviceBOList.length > 0 ? {
                     ...item,
                     type: item.questionId,
                     deviceName: item.questionDescription,
                     children: item.respdeviceBOList
-                }:{
+                } : {
                     ...item,
                     deviceName: item.questionDescription,
                     type: item.questionId
@@ -256,6 +248,7 @@ export default {
         },
         handleChange (value) {
             this.cloudForm.selectedOptions = value
+            this.$refs['cloudForm'].validateField('selectedOptions')
         }
     }
 }
