@@ -1,5 +1,17 @@
 <template>
     <div class="tags-wrapper page-body">
+        <div class="page-body-cont query-cont spanflex">
+            <div>知识库管理
+                <el-popover
+                    placement="right"
+                    title=""
+                    width="200"
+                    trigger="hover"
+                    content="知识库维护的问题同步在舒适云APP端-我的-帮助中心展示">
+                    <i slot="reference" class="el-icon-question"></i>
+                </el-popover>
+            </div>
+        </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">问题标题：</div>
@@ -94,6 +106,7 @@ export default {
                 questionId: '',
                 type: ''
             },
+            visible: false,
             searchParams: {},
             tableData: [],
             pagination: {
@@ -450,7 +463,7 @@ export default {
             font-size: 16px;
         }
         &:last-child {
-            text-align: right;
+            text-align: left;
         }
     }
 }
