@@ -2,7 +2,7 @@
     <div>
         <el-drawer title="VIP详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <div class="drawer-wrap">
-                <div class="drawer-wrap_title">江苏舒适云信息技术有限公司</div>
+                <div class="drawer-wrap_title">{{companyName}}</div>
                 <div class="drawer-wrap_btn">
                     <div class="drawer-wrap_btn-flex">VIP签约信息</div>
                     <div class="drawer-wrap_btn-flex">
@@ -89,6 +89,7 @@ export default {
             queryParams: {
                 companyId: ''
             },
+            companyName: '',
             tableData: [],
             tableLabel: [
                 { label: '签约年份', prop: 'signYear' },
@@ -202,8 +203,9 @@ export default {
             findPagedetail: 'vipManage/findPagedetail',
             findContract: 'vipApply/findContract'
         }),
-        async onShowDrawerinfn (val) {
-            this.queryParams.companyId = val
+        async onShowDrawerinfn (companyId, companyName) {
+            this.queryParams.companyId = companyId
+            this.companyName = companyName
             await this.findVippage(this.queryParams)
             this.tableData = this.vipDetail.companyVipList
             this.drawer = true

@@ -6,7 +6,7 @@
                 <el-tab-pane label="授信资料清单" name="2"></el-tab-pane>
             </el-tabs>
             <div class="drawer-wrap" v-if="activeName=='1'">
-                <div class="drawer-wrap_title">江苏舒适云信息技术有限公司</div>
+                <div class="drawer-wrap_title">{{companyName}}</div>
                 <div class="drawer-wrap_btn">
                     <div class="drawer-wrap_btn-flex">信用详情</div>
                 </div>
@@ -71,8 +71,8 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                     <el-button type="success" @click="onCallback">打回补充</el-button>
-                     <el-button type="primary" @click="onSubmitDoc">审核通过</el-button>
+                    <el-button type="success" @click="onCallback" v-if="activeName==2">打回补充</el-button>
+                    <el-button type="primary" @click="onSubmitDoc" v-if="activeName==2">审核通过</el-button>
                     <el-button @click="handleClose">取 消</el-button>
                 </div>
             </div>
@@ -135,7 +135,7 @@
                 <el-button @click="recordsVisible = false">取 消</el-button>
             </span>
         </el-dialog>
-          <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="onCloseCol" :modal=false>
+        <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="onCloseCol" :modal=false>
             <el-form ref="refuseForm" :model="refuseForm" :rules="refuseFormRules" label-width="100px" style="margin-top:20px">
                 <el-form-item label="打回原因：" prop="remark">
                     <el-input type="textarea" v-model.trim="refuseForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
@@ -153,7 +153,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 export default {
@@ -167,6 +167,7 @@ export default {
             activeName: '1',
             drawer: false,
             companyId: '',
+            companyName: '',
             droplist: CREDITLEVEL,
             tableData: [],
             tableLabel: [
@@ -284,9 +285,11 @@ export default {
         handleClick (tab) {
             if (tab.index == 1) this.onShowCreditdocument()
         },
-        async onShowDrawerinfn (val) {
-            this.companyId = val
-            await this.findCreditPage({ companyId: val })
+        async onShowDrawerinfn (companyId, companyName) {
+            this.activeName = '1'
+            this.companyId = companyId
+            this.companyName = companyName
+            await this.findCreditPage({ companyId: this.companyId })
             this.tableData = this.creditPage.companyCreditList
             this.drawer = true
         },
@@ -306,12 +309,15 @@ export default {
                 })
             })
         },
-        handleSuccessCb (row) {
+        async  handleSuccessCb (row) {
             row.creditDocuments.map(item => {
+                item.companyId = this.companyId
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
             const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
+            await uploadCredit(newDocuments)
+            this.$message.success('资料上传成功!')
             console.log('this.detail', newDocuments)
         },
         onDelete (item, index) {
@@ -375,8 +381,15 @@ export default {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
                 console.log(this.creditDocumentList)
-                // await saveCreditDocument(params)
+                await saveCreditDocument({ companyId: this.companyId, submitStatus: 2 })
+                this.$message({
+                    message: `审核通过`,
+                    type: 'success'
+                })
+                this.drawer = false
+                this.$emit('backEvent')
             }
+
             // this.saveCreditDocument()
         },
         handleClose () {
@@ -619,7 +632,7 @@ export default {
         font-size: 14px;
     }
 }
-.project-record{
+.project-record {
     margin-top: 15px;
 }
 /deep/.el-form .el-input:not(:first-child) {

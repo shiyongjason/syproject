@@ -37,26 +37,26 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">可代采购额度：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入最小可代采购额度" maxlength="50"></el-input>万元
+                        <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入最小可代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入最大可代采购额度" maxlength="50"></el-input>万元
+                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入最大可代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">剩余代采购额度：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入最小剩余代采购额度" maxlength="50"></el-input>万元
+                        <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入最小剩余代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxRemainPurchaseQuota" v-isNum:6 placeholder="请输入最大剩余代采购额度" maxlength="50"></el-input>万元
+                        <el-input v-model="queryParams.maxRemainPurchaseQuota" v-isNum:6 placeholder="请输入最大剩余代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">信用到期时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minEndTime" type="datet" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <el-date-picker v-model="queryParams.minEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEndTime" type="datet" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin">
+                        <el-date-picker v-model="queryParams.maxEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin">
                         </el-date-picker>
                     </div>
                 </div>
@@ -91,11 +91,11 @@
                     {{matelist[scope.data.row.documentStatus-1].value}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row.companyId)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">分配</el-button>
                 </template>
             </basicTable>
         </div>
-        <creditdrawer ref="creditdrawer"></creditdrawer>
+        <creditdrawer ref="creditdrawer" @backEvent=searchList></creditdrawer>
         <el-dialog title="分配" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="分配给（员工）" prop="name">
@@ -244,7 +244,7 @@ export default {
             this.branchArr = this.crmdepList
         },
         onDrawerinfo (val) {
-            this.$refs.creditdrawer.onShowDrawerinfn(val)
+            this.$refs.creditdrawer.onShowDrawerinfn(val.companyId, val.companyName)
         }
     }
 }

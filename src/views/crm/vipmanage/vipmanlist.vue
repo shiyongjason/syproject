@@ -28,17 +28,17 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">VIP折扣：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:2></el-input>折
+                        <el-input v-model="queryParams.minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:2><template slot="append">折</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2></el-input>折
+                        <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2><template slot="append">折</template></el-input>
                     </div>
                 </div>
                <div class="query-cont-col">
                     <div class="query-col-title">VIP目标：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minVipTarget" placeholder="请输入最小目标" v-isNum:4="queryParams.minVipTarget"  maxlength="50"></el-input>万元
+                        <el-input v-model="queryParams.minVipTarget" placeholder="请输入最小目标" v-isNum:4="queryParams.minVipTarget"  maxlength="50"><template slot="append">万元</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxVipTarget" placeholder="请输入最大目标" v-isNum:4="queryParams.maxVipTarget"   maxlength="50"></el-input>万元
+                        <el-input v-model="queryParams.maxVipTarget" placeholder="请输入最大目标" v-isNum:4="queryParams.maxVipTarget"   maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -58,7 +58,7 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
              @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true"  :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row.companyId)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">分配</el-button>
                 </template>
             </basicTable>
         </div>
@@ -205,7 +205,7 @@ export default {
             this.branchArr = this.crmdepList
         },
         onDrawerinfo (val) {
-            this.$refs.vipdrawer.onShowDrawerinfn(val)
+            this.$refs.vipdrawer.onShowDrawerinfn(val.companyId, val.companyName)
         }
     }
 }
