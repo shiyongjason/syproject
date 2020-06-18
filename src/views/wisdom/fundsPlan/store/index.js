@@ -2,6 +2,8 @@ import * as types from './const'
 import * as Api from '../api'
 import moment from 'moment'
 import filterUtil from '../../../../utils/filters'
+import { MathJS } from '../../../../utils/MathUtils'
+
 const state = {
     planTotalList: [],
     targetTime: {
@@ -55,9 +57,9 @@ const getters = {
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
-            value.annualTotalEffectiveRate = value.annualTotalEffectiveRate ? (value.annualTotalEffectiveRate * 100) + '%' : '-'
-            value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate ? (value.annualTotalProfitAchieveRate * 100) + '%' : ''
-            value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate ? (value.annualTotalSaleAchieveRate * 100) + '%' : ''
+            value.annualTotalEffectiveRate = value.annualTotalEffectiveRate !== null ? (filterUtil.fundMoney(MathJS.evaluate(`${value.annualTotalEffectiveRate} * 100`).toNumber())) + '%' : '-'
+            value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate !== null ? (filterUtil.fundMoney(MathJS.evaluate(`${value.annualTotalProfitAchieveRate} * 100`).toNumber())) + '%' : ''
+            value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate !== null ? (filterUtil.fundMoney(MathJS.evaluate(`${value.annualTotalSaleAchieveRate} * 100`).toNumber())) + '%' : ''
         })
         return state.planCreditList
     },
@@ -67,7 +69,7 @@ const getters = {
                 case 'annualTotalEffectiveRate':
                 case 'annualTotalProfitAchieveRate':
                 case 'annualTotalSaleAchieveRate':
-                    state.planCreditTotal[key] = state.planCreditTotal[key] ? filterUtil.fundMoney(state.planCreditTotal[key] * 100) + '%' : ''
+                    state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? filterUtil.fundMoney(MathJS.evaluate(`${state.planCreditTotal[key]} * 100`).toNumber()) + '%' : ''
                     break
                 default:
                     state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key])

@@ -268,6 +268,17 @@ export default [
                 component: () => import('@/views/wisdom/fundsPlan/planToDeclare')
             },
             {
+                path: 'approvalList',
+                name: 'approvalList',
+                meta: {
+                    title: '计划审批',
+                    tagName: '计划审批',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/approvalList')
+            },
+            {
                 path: 'planTotal',
                 name: 'planTotal',
                 meta: {
@@ -279,6 +290,17 @@ export default [
                 component: () => import('@/views/wisdom/fundsPlan/planTotal')
             },
             {
+                path: 'platformPlan',
+                name: 'platformPlan',
+                meta: {
+                    title: '平台公司计划分析表',
+                    tagName: '平台公司计划分析表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/wisdom/fundsPlan/platformPlan')
+            },
+            {
                 path: 'addDeclare',
                 name: 'addDeclare',
                 meta: {
@@ -288,17 +310,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsPlan/pages/declareAdd')
-            },
-            {
-                path: 'approvalList',
-                name: 'approvalList',
-                meta: {
-                    title: '计划审批',
-                    tagName: '计划审批',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsPlan/approvalList')
             },
             {
                 path: 'planCredit',
@@ -321,17 +332,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/wisdom/fundsPlan/planApproval')
-            },
-            {
-                path: 'platformPlan',
-                name: 'platformPlan',
-                meta: {
-                    title: '平台公司计划分析表',
-                    tagName: '平台公司计划分析表',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/wisdom/fundsPlan/platformPlan')
             },
             {
                 path: 'approveDeclare',

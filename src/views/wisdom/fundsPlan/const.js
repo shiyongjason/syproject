@@ -145,7 +145,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
             children: [
                 {
                     prop: 'subsectionManagerApproveAmount',
-                    label: '分总审批额度',
+                    label: '分总审批金额',
                     align: 'right',
                     displayAs: 'fundMoney',
                     minWidth: '100'
@@ -880,6 +880,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'annualTotalSale'
                 }
             ]
@@ -906,6 +907,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'annualTotalProfit'
                 }
             ]
@@ -932,6 +934,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'annualTotalLoan'
                 }
             ]
@@ -960,6 +963,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentApplyFund'
                 }
             ]
@@ -974,6 +978,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 150,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentApproveFund'
                 }
             ]
@@ -987,6 +992,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentActualLoan'
                 }
             ]
@@ -1000,6 +1006,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentRemainingRepayment'
                 }
             ]
@@ -1013,6 +1020,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalUnpaidAmount'
                 }
             ]
@@ -1026,6 +1034,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalRemainingOverdue'
                 }
             ]
@@ -1039,6 +1048,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalRemainingOverdueExist'
                 }
             ]
@@ -1052,6 +1062,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'totalRemainingOverdueIncrement'
                 }
             ]
@@ -1065,6 +1076,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
                     prop: 'currentOverdueAmount'
                 }
             ]
