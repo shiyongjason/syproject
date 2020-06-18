@@ -145,7 +145,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
             children: [
                 {
                     prop: 'subsectionManagerApproveAmount',
-                    label: '分总审批额度',
+                    label: '分总审批金额',
                     align: 'right',
                     displayAs: 'fundMoney',
                     minWidth: '100'
