@@ -303,6 +303,7 @@ export default {
                         type: ''
                     }
                     this.onSearch()
+                    this.isCatalog = false
                 }
             } else if (type) {
                 const { questionId } = data
