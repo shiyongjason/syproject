@@ -198,7 +198,7 @@ export default {
         },
         onInsertVideo () {
             if (!this.uploadedUrl) {
-                this.$message.error('请选择上传视频');
+                this.$message.error('请选择上传视频')
                 return false
             }
             this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
