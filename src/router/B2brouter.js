@@ -188,6 +188,16 @@ export default [
                             isMenu: false
                         },
                         component: () => import('@/views/hmall/event/eventStatistics')
+                    },
+                    {
+                        path: 'addProducts',
+                        name: 'addProducts',
+                        meta: {
+                            title: '添加商品',
+                            tagName: '添加商品',
+                            isMenu: false
+                        },
+                        component: () => import('@/views/hmall/event/addProducts')
                     }
                 ]
             },
@@ -426,16 +436,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/walletPay/walletPay.vue')
-            },
-            {
-                path: 'addProducts',
-                name: 'addProducts',
-                meta: {
-                    title: '添加商品',
-                    tagName: '添加商品',
-                    isMenu: false
-                },
-                component: () => import('@/views/hmall/event/addProducts')
             }
         ]
     }
