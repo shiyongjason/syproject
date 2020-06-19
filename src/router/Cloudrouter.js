@@ -131,6 +131,30 @@ export default [
                 component: () => import('@/views/comfortcloud/memberDetail.vue')
             },
             {
+                path: 'knowledge',
+                name: 'knowledge',
+                meta: {
+                    title: '知识库管理',
+                    tagName: '知识库管理',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/knowledge')
+            },
+            {
+                path: 'knowledgeEdit',
+                name: 'knowledgeEdit',
+                meta: {
+                    title: '知识库管理编辑',
+                    tagName: '知识库管理编辑',
+                    parentName: '舒适云概览',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/knowledge/knowledgeEdit.vue')
+            },
+            {
                 path: 'operationsManagement',
                 meta: {
                     title: '运营管理',
@@ -162,30 +186,6 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/cloudActivity/cloudActedit.vue')
-                    },
-                    {
-                        path: 'knowledge',
-                        name: 'knowledge',
-                        meta: {
-                            title: '知识库管理',
-                            tagName: '知识库管理',
-                            parentName: '舒适云概览',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/comfortcloud/knowledge')
-                    },
-                    {
-                        path: 'knowledgeEdit',
-                        name: 'knowledgeEdit',
-                        meta: {
-                            title: '知识库管理编辑',
-                            tagName: '知识库管理编辑',
-                            parentName: '舒适云概览',
-                            isMenu: false,
-                            icon: ''
-                        },
-                        component: () => import('@/views/comfortcloud/knowledge/knowledgeEdit.vue')
                     },
                     {
                         path: 'smartPlay',
