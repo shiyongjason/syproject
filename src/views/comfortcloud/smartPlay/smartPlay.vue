@@ -96,12 +96,12 @@ export default {
         },
         gotoCreatePlay () {
             this.$router.push({
-                path: '/comfortCloud/smartPlayEdit'
+                path: '/comfortCloud/operationsManagement/smartPlayEdit'
             })
         },
         goEdit (id) {
             this.$router.push({
-                path: '/comfortCloud/smartPlayEdit',
+                path: '/comfortCloud/operationsManagement/smartPlayEdit',
                 query: {
                     id: id
                 }

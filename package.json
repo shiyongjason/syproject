@@ -18,6 +18,7 @@
     "highcharts": "^7.2.1",
     "hosjoy-ui": "^1.1.9",
     "jwt-decode": "^2.2.0",
+    "mathjs": "^7.0.1",
     "moment": "^2.24.0",
     "qrcode": "^1.4.4",
     "save": "^2.3.3",

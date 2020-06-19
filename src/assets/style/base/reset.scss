@@ -278,23 +278,6 @@ ul,li{
     color: #666666;
 }
 
-.el-tabs__item.is-active {
-    color: $whiteColor;
-    background: $hosjoyColor;
-}
-
-.el-tabs__item.is-active:hover {
-    color: $whiteColor;
-}
-
-.el-tabs__item:hover {
-    color: $hosjoyColor;
-}
-
-.el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background-color: $hosjoyColor;
-    border-color: $hosjoyColor;
-}
 
 
 //图片上传框

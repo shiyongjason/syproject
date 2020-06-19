@@ -226,10 +226,6 @@ export default {
         async onQuery () {
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
-            // 表格渲染错位解决终极大法
-            this.$nextTick(() => {
-                this.$refs.complexTable.$refs.hosjoyTable.doLayout()
-            })
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
                 return
@@ -239,6 +235,10 @@ export default {
                 return
             }
             this.getAccountList(this.searchParams)
+            // 表格渲染错位解决终极大法
+            this.$nextTick(() => {
+                this.$refs.complexTable.$refs.hosjoyTable && this.$refs.complexTable.$refs.hosjoyTable.doLayout()
+            })
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -262,12 +262,15 @@ export default {
             this.onQuery()
         },
         onLinddialog () {
-            this.$router.push({ path: '/fundsData/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
+            this.$router.push({ path: '/funds/fundsDataAnalysis/newFlowdialog', query: { accountType: this.accountType, productType: this.productType } })
         },
         getUserTabAuth () {
             let menuList = JSON.parse(sessionStorage.getItem('menuList'))
-            this.router = menuList.filter(i => {
-                return i.path == '/fundsData'
+            let shy = menuList.filter(i => {
+                return i.path == '/funds'
+            })[0].children
+            this.router = shy.filter(i => {
+                return i.path == 'fundsDataAnalysis'
             })[0].children
             this.stairTab()
         },
