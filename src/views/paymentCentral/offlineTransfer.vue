@@ -98,7 +98,7 @@ export default {
             findPaymentwhite: 'findPaymentwhite'
         }),
         onCopy (id) {
-            this.$router.push({ path: '/hmall/createEditEvent', query: { copeId: id } })
+            this.$router.push({ path: '/b2b/marketing/createEditEvent', query: { copeId: id } })
         },
         searchList () {
             this.queryParams.pageNumber = 1

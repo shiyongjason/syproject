@@ -5,7 +5,6 @@ import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
-import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
@@ -53,7 +52,6 @@ const store = new Vuex.Store({
         eventManage,
         fundsData,
         membership,
-        serviceManagement,
         payment,
         userRealreport,
         cloudmanage,
