@@ -8,10 +8,10 @@ export const getCreditDetail = (params) => axios.get(`/memeber/company/credit/${
 
 export const postCreditDetail = (params) => axios.post(`/memeber/company/credit`, params)
 
-export const getCreditDocument = (params) => axios.get(`/memeber/api/credit-document/${params}/detail`)
+export const getCreditDocument = (params) => axios.get(`/memeber/api/credit-document/${params}/2/detail`)
 
 // 授信审核通过
-export const saveCreditDocument = (params) => axios.post(`/memeber/api/credit-document/submit-document`, { params })
+export const saveCreditDocument = (params) => axios.post(`/memeber/api/credit-document/submit-document`, params)
 
 export const putCreditDocument = (params) => axios.delete(`/memeber/api/credit-document/${params}`)
 

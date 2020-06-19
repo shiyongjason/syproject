@@ -220,6 +220,7 @@ export default {
                 this.vipForm = { ...this.vipPagedetail }
                 this.vipForm.projectUpload = this.vipForm.attachFile ? JSON.parse(this.vipForm.attachFile) : []
                 this.newVipForm = { ...this.vipForm }
+                console.log(this.newVipForm)
             } else {
                 this.stateN = ''
                 this.vipForm = { ...this.copyVip }
@@ -260,6 +261,8 @@ export default {
             })
         },
         onCloseDrawer () {
+            delete this.newVipForm.projectUpload
+            delete this.vipForm.projectUpload
             if (JSON.stringify(this.newVipForm) !== JSON.stringify(this.vipForm)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗?', '是否确认取消修改', {
                     distinguishCancelAndClose: true,

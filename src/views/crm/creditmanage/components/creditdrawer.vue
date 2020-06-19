@@ -54,14 +54,14 @@
                                             </template>
                                         </span>
                                     </p>
-                                    <p style="flex:0.5">{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                                    <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                     <p>
-                                        <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}">删除</font>
+                                        <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}"  v-if="(documentStatus!=2&&documentStatus!=3)">删除</font>
                                         <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font>
                                         <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                                     </p>
                                 </div>
-                                <hosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
+                                <hosjoyUpload v-if="(documentStatus!=2&&documentStatus!=3)" v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
                                     <el-button type="primary">上 传</el-button>
                                 </hosjoyUpload>
                             </el-form-item>
@@ -71,8 +71,8 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <el-button type="success" @click="onCallback" v-if="activeName==2">打回补充</el-button>
-                    <el-button type="primary" @click="onSubmitDoc" v-if="activeName==2">审核通过</el-button>
+                    <el-button type="success" @click="onCallback" v-if="activeName==2&&(documentStatus!=2&&documentStatus!=3)">打回补充</el-button>
+                    <el-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=2&&documentStatus!=3)">审核通过</el-button>
                     <el-button @click="handleClose">取 消</el-button>
                 </div>
             </div>
@@ -168,6 +168,7 @@ export default {
             drawer: false,
             companyId: '',
             companyName: '',
+            documentStatus: '',
             droplist: CREDITLEVEL,
             tableData: [],
             tableLabel: [
@@ -285,10 +286,12 @@ export default {
         handleClick (tab) {
             if (tab.index == 1) this.onShowCreditdocument()
         },
-        async onShowDrawerinfn (companyId, companyName) {
+        async onShowDrawerinfn (val) {
             this.activeName = '1'
-            this.companyId = companyId
-            this.companyName = companyName
+            this.companyId = val.companyId
+            this.companyName = val.companyName
+            this.documentStatus = val.documentStatus
+            console.log(this.documentStatus)
             await this.findCreditPage({ companyId: this.companyId })
             this.tableData = this.creditPage.companyCreditList
             this.drawer = true
@@ -572,6 +575,8 @@ export default {
     /deep/ .el-button--mini {
         margin-left: 50px;
     }
+    display: flex;
+    justify-content: space-between;
 }
 .collect-box {
     display: flex;
@@ -601,10 +606,17 @@ export default {
 }
 .upload-file_list {
     display: flex;
+    // justify-content: space-around;
     p {
         &:first-child {
-            flex: 1;
+            flex: 3;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
+    }
+    p {
+        padding: 0 10px;
     }
 }
 .fileItemDownLoad {
@@ -623,7 +635,9 @@ export default {
 }
 .posrtv {
     position: relative;
+    display: flex;
     color: #ff7a45;
+    align-items: center;
     a {
         color: #ff7a45;
         margin-left: 10px;

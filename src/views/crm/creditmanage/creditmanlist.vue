@@ -88,7 +88,7 @@
                     <span :class="scope.data.row.status?'colred':'colgry'">{{scope.data.row.status?'正常':'过期'}}</span>
                 </template>
                 <template slot="documentStatus" slot-scope="scope">
-                    {{matelist[scope.data.row.documentStatus-1].value}}
+                    {{scope.data.row.documentStatus?matelist[scope.data.row.documentStatus-1].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">分配</el-button>
@@ -244,7 +244,7 @@ export default {
             this.branchArr = this.crmdepList
         },
         onDrawerinfo (val) {
-            this.$refs.creditdrawer.onShowDrawerinfn(val.companyId, val.companyName)
+            this.$refs.creditdrawer.onShowDrawerinfn(val)
         }
     }
 }
