@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="box">
                 <div class="h-page-title">
-                    <div>路由配置</div>
+                    <div>路由配置<i style="color: red">（请勿擅自修改菜单名，菜单名与左侧菜单无任何关系）</i></div>
                     <!-- <el-button @click="clearCache">清缓存</el-button> -->
                     <el-dropdown split-button type="primary" trigger="click" @click="popupMenu(1)">
                         添加一级菜单
@@ -31,8 +31,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- 接口不支持排序，前端判断各种情况，导致代码冗余 -->
-                            <!-- SHY-AMEND 需求：展开与搜索（有空改修改） -->
                             <!--  item  一级菜单
                                   itema 二级菜单
                                   itemb 三级菜单
@@ -71,9 +69,9 @@
                                             <!-- 敏感字段和敏感操作 -->
                                             <template v-for="(i, d) in itemc.authTypes">
                                                 <td v-if="i.id" :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
-                                                    <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '敏感数据'  }}</div>
+                                                    <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '已添加敏感数据'  }}</div>
                                                     <div class="el-radio-group">
-                                                        <el-button class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
+                                                        <el-button v-if="i.authType != 2" class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
                                                     </div>
                                                 </td>
                                                 <td v-else :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
@@ -203,7 +201,7 @@ export default {
             const { data } = await getAuth()
             var shy = JSON.parse(JSON.stringify(data))
             this.handleData(shy)
-            console.log(shy)
+            // console.log(shy)
             this.tableList = this.handlerTableList(shy, 0)
         },
         // 计算table合并行数

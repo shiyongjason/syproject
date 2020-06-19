@@ -2171,7 +2171,6 @@ export default {
     },
     methods: {
         handleExpand (scope, expandSellrr) {
-            console.log(expandSellrr)
             this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
             if (this.column[scope.$index]._expand) {
                 this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr.filter(i => !i.isHidden === true))
@@ -2181,6 +2180,9 @@ export default {
                 this.changeTable = false
                 this.$nextTick(() => { this.changeTable = true })
             }
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
+            })
         },
         async getList (val) {
             this.$emit('getList', val)

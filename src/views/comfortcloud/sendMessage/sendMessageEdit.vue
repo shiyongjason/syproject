@@ -188,7 +188,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/sendMessage')
+            this.$router.push('/comfortCloud/operationsManagement/sendMessage')
         },
         async getActivityDetail (id) {
             await this.findCloudSendMessagePostDetail(id)
@@ -212,7 +212,7 @@ export default {
                             this.$message.success('保存成功')
                         }
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/sendMessage')
+                        this.$router.push('/comfortCloud/operationsManagement/sendMessage')
                         this.loading = false
                     } catch (error) {
                         this.loading = false

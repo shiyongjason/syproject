@@ -150,7 +150,7 @@ export default {
         goToChecked (val) {
             console.log(val)
             this.$router.push({
-                path: 'selectCategory',
+                path: '/b2b/selectCategory',
                 query: {
                     id: val.id,
                     status: 'checked'
@@ -161,7 +161,7 @@ export default {
             await addGoods({ 'productId': val.id, 'updateBy': this.userInfo.employeeName })
             this.$emit('onCurrentChange', this.pageSize)
             // this.$router.push({
-            //     path: 'selectCategory',
+            //     path: '/b2b/selectCategory',
             //     query: {
             //         id: val.id,
             //         isReview: 'yes'
@@ -171,7 +171,7 @@ export default {
         goToDetails (val) {
             if (val.checkStatus - 0 === 1) {
                 this.$router.push({
-                    path: 'selectCategory',
+                    path: '/b2b/selectCategory',
                     query: {
                         id: val.id,
                         status: 'checked'
@@ -179,7 +179,7 @@ export default {
                 })
             } else if (val.checkStatus - 0 === 2) {
                 this.$router.push({
-                    path: 'selectCategory',
+                    path: '/b2b/selectCategory',
                     query: {
                         id: val.id,
                         status: 'back'// 可返回到审核列表页面
@@ -187,7 +187,7 @@ export default {
                 })
             } else {
                 this.$router.push({
-                    path: 'selectCategory',
+                    path: '/b2b/selectCategory',
                     query: {
                         id: val.id,
                         status: 'details'
