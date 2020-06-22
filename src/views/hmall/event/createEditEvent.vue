@@ -76,7 +76,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">活动商品：</div>
                             <div class="query-col-input">
-                                <el-button type="primary" size='small' @click="()=>{$router.push('/b2b/addProducts')}" :disabled='disableStatus'>添加商品</el-button>
+                                <el-button type="primary" size='small' @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</el-button>
                             </div>
                         </div>
                     </div>
@@ -706,7 +706,7 @@ export default {
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
         next(vm => {
-            if (from.path == '/hmall/addProducts') {
+            if (from.path == '/b2b/marketing/addProducts') {
                 vm.isFirst = false
             } else {
                 vm.isFirst = true
