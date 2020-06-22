@@ -314,7 +314,7 @@ export default {
             this.$refs.drawercom.onClearV()
         },
         onLinkship (val) {
-            this.$router.push({ path: '/hmall/accountManage', query: { account: val } })
+            this.$router.push({ path: '/b2b/account/accountManage', query: { account: val } })
         }
     }
 }

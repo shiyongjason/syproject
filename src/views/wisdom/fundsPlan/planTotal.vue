@@ -8,10 +8,10 @@
                     </el-date-picker>
                 </div>
             </div>
-            <div class="query-cont-col">
+            <div class="query-cont-col" v-if="this.branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" :disabled='!this.branch' @back-event="backPlat"
+                    <HAutocomplete :selectArr="branchList" @back-event="backPlat"
                                    placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
                                    :canDoBlurMethos='false'></HAutocomplete>
                 </div>
@@ -35,7 +35,8 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total">
+                         :total="page.total" collapseShow :localName="localName"
+                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -79,7 +80,9 @@ export default {
                 year: '',
                 mouth: ''
             },
-            columnData: []
+            columnData: [],
+            localName: 'planTotalTable::',
+            toggleTable: false
         }
     },
     computed: {
@@ -102,15 +105,16 @@ export default {
             })
         },
         async queryAndChangeTime (params) {
+            this.toggleTable = false
             if (!params.selectTime) params.selectTime = moment(this.targetTime.businessDate).format('YYYYMM')
             this.paramTargetDate = {
                 year: params.selectTime.slice(0, 4),
                 mouth: params.selectTime.slice(4)
             }
             if (params.subsectionCode) {
-                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false)
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, false, true)
             } else {
-                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true)
+                this.columnData = summarySheet(this.paramTargetDate.year, this.paramTargetDate.mouth, true, !this.branch)
             }
 
             try {
@@ -121,6 +125,8 @@ export default {
                     mouth: params.selectTime.slice(4)
                 }
             }
+            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
+            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode
@@ -144,7 +150,27 @@ export default {
         ...mapActions({
             findPlanTotalList: 'fundsPlan/findPlanTotalList',
             findTargetTime: 'fundsPlan/findTargetTime'
-        })
+        }),
+        toggleTableHandler () {
+            this.toggleTable = false
+        },
+        updateLabel (showColumnLabel) {
+            this.columnData.forEach(value => {
+                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
+                if (value.children) {
+                    let number = 0
+                    value.children.forEach(value1 => {
+                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        if (!value1.isHidden) number++
+                    })
+                    value.isHidden = !(number > 0)
+                }
+            })
+            this.toggleTable = true
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable.doLayout()
+            })
+        }
     },
     async mounted () {
         await this.findTargetTime()

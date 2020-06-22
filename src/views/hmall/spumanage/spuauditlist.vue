@@ -275,7 +275,7 @@ export default {
             })
         },
         onAuditSpu (val) {
-            this.$router.push({ path: '/hmall/spudetail', query: { type: 'audit', spuId: val.spuId } })
+            this.$router.push({ path: '/b2b/spudetail', query: { type: 'audit', spuId: val.spuId } })
         }
     },
     beforeRouteEnter (to, from, next) {
