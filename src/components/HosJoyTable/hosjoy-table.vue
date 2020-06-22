@@ -119,8 +119,7 @@ export default {
                 label: 'label'
             },
             defaultLabel: [],
-            selectedColumn: [],
-            userNameLog: ''
+            selectedColumn: []
         }
     },
     created () {
@@ -176,6 +175,9 @@ export default {
                     }
                 }
             })
+        },
+        userNameLog () {
+            return this.localName + this.userInfo.user_name
         }
     },
     methods: {
@@ -305,18 +307,23 @@ export default {
         dataLength () {
             this.getMergeArr(this.data, this.merge)
         },
-        switchLabel () {
-            const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
-            if (isLoggedIn && isLoggedIn.length > 0) {
-                this.defaultLabel = isLoggedIn
-            } else {
-                this.collectDefaultId(this.switchLabel)
-                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            }
+        switchLabel: {
+            handler () {
+                const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
+                if (isLoggedIn && isLoggedIn.length > 0) {
+                    this.defaultLabel = isLoggedIn
+                    this.$forceUpdate()
+                } else {
+                    this.collectDefaultId(this.switchLabel)
+                    localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                }
+            },
+            deep: true,
+            immediate: true
         }
     },
     mounted () {
-        this.userNameLog = this.localName + this.userInfo.user_name
+        // this.userNameLog = this.localName + this.userInfo.user_name
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -389,7 +396,7 @@ export default {
         width: 280px;
         height: 50px;
         right: 0;
-        top: 0;
+        top: -50px;
         z-index: 2;
         cursor: pointer;
         img{
