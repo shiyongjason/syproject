@@ -18,7 +18,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">商品类目：</div>
                 <div class="query-col-input">
-                    <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
+                    <el-cascader :options="categoryOptions" :props="{ checkStrictly: true }" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                 </div>
             </div>
             <div class="query-cont-col">
