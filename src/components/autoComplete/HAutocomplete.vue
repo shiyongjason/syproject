@@ -1,5 +1,11 @@
 <template>
-    <el-autocomplete ref="autocomplete" v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @select="handleSelect" @blur="blurInput" @focus="focusInput" :disabled="disabled" :maxlength='maxlength'></el-autocomplete>
+    <el-autocomplete ref="autocomplete" v-model="selectItem.selectName" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @select="handleSelect" @blur="blurInput" @focus="focusInput" :disabled="disabled" :maxlength='maxlength'>
+        <template slot-scope="{ item }">
+            <slot :data="item">
+                <div class="name">{{ item.value }}</div>
+            </slot>
+        </template>
+    </el-autocomplete>
 </template>
 <script>
 export default {

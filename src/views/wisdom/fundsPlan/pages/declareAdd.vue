@@ -37,7 +37,8 @@ export default {
                 subRegionFundPlanApply: {}, // 区域人员
                 subsectionFinanceFundPlanApprove: null, // 分财
                 subsectionManagerFundPlanApprove: null, // 分总
-                respResult: null
+                respResult: null,
+                respFundPlanLoan: {}
             }
         }
     },
