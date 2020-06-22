@@ -48,6 +48,13 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                <div class="query-col-title">所属商家：</div>
+                <div class="query-col-input">
+                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入所属商家">
+                    </el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
                 <div class="query-col-title">首次支付时间：</div>
                 <div class="query-col-input">
                     <el-date-picker v-model="queryParams.startPayTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('endPayTime')">
@@ -103,6 +110,7 @@ export default {
                 endCreateTime: '',
                 memberName: '',
                 username: '',
+                merchantName: '',
                 startAuthenticationTime: '',
                 endAuthenticationTime: '',
                 authenticationStatus: '',
