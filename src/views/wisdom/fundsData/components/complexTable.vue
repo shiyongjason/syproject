@@ -154,7 +154,6 @@ export default {
             // 台账汇总表
             TotalColumn: [
                 {
-                    prop: 'misCode',
                     label: 'MIS编码',
                     fixed: true,
                     width: '150',
@@ -174,7 +173,6 @@ export default {
                     label: '好信用-流贷',
                     children: [
                         {
-                            prop: 'hxyLiquidityLoansAmount',
                             label: '累计借款金额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -184,7 +182,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hxyLiquidityLoansPrincipalPaid',
                             label: '累计还款本金',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -194,7 +191,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hxyLiquidityLoansOwedPrincipal',
                             label: '本金余额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -209,7 +205,6 @@ export default {
                     label: '好信用-敞口',
                     children: [
                         {
-                            prop: 'hxyExposureAmount',
                             label: '累计敞口借款金额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -219,7 +214,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hxyExposurePrincipalPaid',
                             label: '累计归还敞口',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -229,7 +223,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hxyExposureOwedPrincipal',
                             label: '剩余敞口',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -244,7 +237,6 @@ export default {
                     label: '好信用-分授信',
                     children: [
                         {
-                            prop: 'hxySeparateCreditAmount',
                             label: '累计借款金额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -254,7 +246,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hxySeparateCreditPrincipalPaid',
                             label: '累计还款金额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -264,7 +255,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hxySeparateCreditOwedPrincipal',
                             label: '本金余额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -279,7 +269,6 @@ export default {
                     label: '供应链-流贷',
                     children: [
                         {
-                            prop: 'supplyChainLiquidityLoansOwedPrincipal',
                             label: '供应链本金余额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -294,7 +283,6 @@ export default {
                     label: '好橙工',
                     children: [
                         {
-                            prop: 'hcgOwedPrincipal',
                             label: '好橙工本金余额',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -304,7 +292,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'hcgRemainingExposure',
                             label: '好橙工剩余敞口',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -319,7 +306,6 @@ export default {
                     label: '流贷、敞口余额合计',
                     children: [
                         {
-                            prop: 'liquidityLoansOwedPrincipal',
                             label: '流贷余额合计',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -329,7 +315,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'remainingExposure',
                             label: '敞口余额合计',
                             minWidth: '150',
                             render: (h, scope) => {
@@ -358,7 +343,6 @@ export default {
                     width: '200',
                     children: [
                         {
-                            prop: 'account_standingBookNo',
                             label: '台账编号',
                             width: '200',
                             render: (h, scope) => {
@@ -398,7 +382,6 @@ export default {
                     label: '借款账目',
                     children: [
                         {
-                            prop: 'loan_loanAmount',
                             label: '借款金额',
                             sort: 1,
                             minWidth: '150',
@@ -412,7 +395,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_supplier',
                             label: '供货商名称',
                             showOverflowTooltip: true,
                             sort: 2,
@@ -420,7 +402,6 @@ export default {
                             isHidden: false
                         },
                         {
-                            prop: 'loan_repaymentType',
                             label: '还款方式',
                             sort: 3,
                             minWidth: '150',
@@ -439,7 +420,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_yearRate',
                             label: '年利率',
                             sort: 4,
                             minWidth: '150',
@@ -449,7 +429,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanDateNum',
                             label: '借款期限',
                             sort: 5,
                             minWidth: '150',
@@ -472,7 +451,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanStartTime',
                             label: '放款日期',
                             sort: 7,
                             minWidth: '150',
@@ -481,7 +459,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanEndTime',
                             label: '到期日',
                             sort: 8,
                             minWidth: '150',
@@ -490,7 +467,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_registrant',
                             label: '登记人',
                             sort: 9,
                             minWidth: '150',
@@ -505,14 +481,12 @@ export default {
                     label: '还款账目',
                     children: [
                         {
-                            prop: 'planList_0_capitalTime',
                             label: '最新本金还款日',
                             sort: 1,
                             minWidth: '150',
                             displayAs: 'YYYY-MM-DD'
                         },
                         {
-                            prop: 'planList_0_capitalPaid',
                             label: '累计实收借款本金',
                             sort: 2,
                             minWidth: '150',
@@ -522,7 +496,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_capitalOwe',
                             label: '欠收本金',
                             sort: 3,
                             minWidth: '150',
@@ -531,7 +504,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_graceTime',
                             label: '宽限还款日',
                             sort: 4,
                             minWidth: '150',
@@ -541,7 +513,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_interestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                             label: '累计应收正常利息',
                             sort: 5,
@@ -552,7 +523,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_interestTime',
                             label: '最新正常利息还款日',
                             sort: 6,
                             minWidth: '150',
@@ -562,7 +532,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_interestPaid',
                             label: '累计实收正常利息',
                             sort: 7,
                             minWidth: '150',
@@ -572,7 +541,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_interestOwe',
                             label: '欠收正常利息',
                             sort: 8,
                             minWidth: '150',
@@ -582,7 +550,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_graceInterestAmount',
                             label: '累计应收宽限期利息',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                             sort: 9,
@@ -593,7 +560,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_graceInterestPaid',
                             label: '累计实收宽限期利息',
                             sort: 10,
                             minWidth: '150',
@@ -603,7 +569,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_graceInterestOwe',
                             label: '欠收宽限期利息',
                             sort: 11,
                             minWidth: '150',
@@ -618,7 +583,6 @@ export default {
                     label: '逾期账目',
                     children: [
                         {
-                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 1,
                             minWidth: '150',
@@ -627,7 +591,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_overDueInterestAmount',
                             label: '应收逾期罚息',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                             sort: 2,
@@ -638,7 +601,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_overDueInterestPaid',
                             label: '累计实收逾期罚息',
                             sort: 3,
                             minWidth: '150',
@@ -648,7 +610,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_overDueInterestOwe',
                             label: '欠收逾期罚息',
                             sort: 4,
                             minWidth: '150',
@@ -660,7 +621,6 @@ export default {
                     ]
                 },
                 {
-                    prop: 'loan_manualInterest',
                     label: '手动调息',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     minWidth: '100',
@@ -676,7 +636,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'account_standingBookArchiveNo',
                     label: '台账档案编号',
                     minWidth: '200',
                     render: (h, scope) => {
@@ -689,7 +648,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'account_remark',
                     label: '备注',
                     minWidth: '200',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
@@ -711,7 +669,6 @@ export default {
                     prop: 'account_standingBookNo',
                     children: [
                         {
-                            prop: 'account_standingBookNo',
                             label: '台账编号',
                             width: '200',
                             render: (h, scope) => {
@@ -752,7 +709,6 @@ export default {
                     label: '借款账目',
                     children: [
                         {
-                            prop: 'loan_invoiceAmount',
                             label: '开票金额',
                             sort: 1,
                             minWidth: '150',
@@ -761,7 +717,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_invoiceTime',
                             label: '开票日期',
                             sort: 2,
                             minWidth: '150',
@@ -770,7 +725,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_supplier',
                             label: '供货商名称',
                             showOverflowTooltip: true,
                             sort: 3,
@@ -780,7 +734,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanStartTime',
                             label: '借款日期',
                             sort: 4,
                             minWidth: '150',
@@ -789,7 +742,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanAmount',
                             label: '借款金额',
                             sort: 5,
                             minWidth: '150',
@@ -803,7 +755,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanEndTime',
                             label: '到期日',
                             sort: 8,
                             minWidth: '150',
@@ -812,7 +763,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_repaymentType',
                             label: '还款方式',
                             sort: 9,
                             minWidth: '150',
@@ -829,7 +779,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_yearRate',
                             label: '年利率',
                             sort: 6,
                             minWidth: '150',
@@ -838,7 +787,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanDateNum',
                             label: '借款期限',
                             sort: 7,
                             minWidth: '150',
@@ -850,7 +798,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_registrant',
                             label: '登记人',
                             sort: 10,
                             minWidth: '150',
@@ -888,7 +835,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_capitalTime',
                             label: '最新本金还款时间',
                             sort: 1,
                             minWidth: '150',
@@ -897,7 +843,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_capitalPaid',
                             label: '累计已还本金',
                             sort: 2,
                             minWidth: '150',
@@ -915,7 +860,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_interestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '累计应收正常利息',
                             sort: 5,
@@ -925,7 +869,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_interestTime',
                             label: '最新正常利息还款时间',
                             sort: 6,
                             minWidth: '150',
@@ -934,7 +877,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_interestPaid',
                             label: '累计实收正常利息',
                             sort: 7,
                             minWidth: '150',
@@ -968,7 +910,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_overDueInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '累计应收逾期罚息',
                             sort: 12,
@@ -978,7 +919,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_overDueInterestPaid',
                             label: '累计实收逾期罚息',
                             sort: 13,
                             minWidth: '150',
@@ -992,7 +932,6 @@ export default {
                     label: '分授信还款账目明细',
                     children: [
                         {
-                            prop: 'planList_0_endTime',
                             label: '约定还款日期1',
                             sort: 1,
                             minWidth: '150',
@@ -1001,8 +940,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_graceTime',
                             label: '宽限还款日',
+                            uniqueLabel: '宽限还款日1',
                             sort: 2,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1010,7 +949,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_capitalOwe',
                             label: '剩余还款本金金额',
                             sort: 5,
                             minWidth: '150',
@@ -1019,7 +957,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_interestPaid',
                             label: '累计正常实收利息',
                             sort: 7,
                             minWidth: '150',
@@ -1028,7 +965,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_interestOwe',
                             label: '剩余正常利息',
                             sort: 8,
                             minWidth: '150',
@@ -1037,7 +973,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
                             sort: 12,
                             minWidth: '150',
@@ -1046,7 +981,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_endTime',
                             label: '约定还款日期2',
                             sort: 16,
                             minWidth: '150',
@@ -1055,8 +989,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_graceTime',
                             label: '宽限还款日',
+                            uniqueLabel: '宽限还款日2',
                             sort: 17,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1064,7 +998,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_capitalOwe',
                             label: '剩余还款本金金额',
                             sort: 20,
                             minWidth: '150',
@@ -1073,7 +1006,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_interestPaid',
                             label: '累计正常实收利息',
                             sort: 22,
                             minWidth: '150',
@@ -1082,7 +1014,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_interestOwe',
                             label: '剩余正常利息',
                             sort: 23,
                             minWidth: '150',
@@ -1091,7 +1022,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_isOverDue',
                             label: '是否逾期',
                             sort: 27,
                             minWidth: '150',
@@ -1100,7 +1030,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_endTime',
                             label: '约定还款日期3',
                             sort: 31,
                             minWidth: '150',
@@ -1109,8 +1038,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_graceTime',
                             label: '宽限还款日',
+                            uniqueLabel: '宽限还款日2',
                             sort: 32,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1118,7 +1047,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_capitalOwe',
                             label: '剩余还款本金金额',
                             sort: 35,
                             minWidth: '150',
@@ -1127,7 +1055,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_interestPaid',
                             label: '累计正常实收利息',
                             sort: 37,
                             minWidth: '150',
@@ -1136,7 +1063,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_interestOwe',
                             label: '剩余正常利息',
                             sort: 38,
                             minWidth: '150',
@@ -1145,7 +1071,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_isOverDue',
                             label: '是否逾期',
                             sort: 42,
                             minWidth: '150',
@@ -1154,7 +1079,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_capitalAmount',
                             label: '约定还款本金金额',
                             sort: 3,
                             minWidth: '150',
@@ -1163,7 +1087,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_capitalPaid',
                             label: '累计还款本金金额',
                             sort: 4,
                             minWidth: '150',
@@ -1172,7 +1095,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_interestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收正常利息',
                             sort: 6,
@@ -1192,7 +1114,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_interestAmount',
                             label: '累计实收宽限期利息',
                             sort: 10,
                             minWidth: '150',
@@ -1201,7 +1122,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_interestAmount',
                             label: '剩余宽限期利息',
                             sort: 11,
                             minWidth: '150',
@@ -1210,7 +1130,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_overDueInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应缴逾期罚息',
                             sort: 13,
@@ -1220,7 +1139,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_overDueInterestPaid',
                             label: '实缴逾期罚息',
                             sort: 14,
                             minWidth: '150',
@@ -1229,8 +1147,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_overDueInterestOwe',
                             label: '剩余逾期罚息',
+                            uniqueLabel: '剩余逾期罚息1',
                             sort: 15,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1239,7 +1157,6 @@ export default {
                         },
                         // 约定还款日2
                         {
-                            prop: 'planList_1_capitalAmount',
                             label: '约定还款本金金额',
                             sort: 18,
                             minWidth: '150',
@@ -1248,7 +1165,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_capitalPaid',
                             label: '累计还款本金金额',
                             sort: 19,
                             minWidth: '150',
@@ -1257,7 +1173,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_interestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收正常利息',
                             sort: 21,
@@ -1277,7 +1192,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_interestAmount',
                             label: '累计实收宽限期利息',
                             sort: 25,
                             minWidth: '150',
@@ -1286,7 +1200,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_interestAmount',
                             label: '剩余宽限期利息',
                             sort: 26,
                             minWidth: '150',
@@ -1295,7 +1208,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_overDueInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应缴逾期罚息',
                             sort: 28,
@@ -1305,7 +1217,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_overDueInterestPaid',
                             label: '实缴逾期罚息',
                             sort: 29,
                             minWidth: '150',
@@ -1314,7 +1225,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_overDueInterestOwe',
                             label: '剩余逾期罚息',
                             sort: 30,
                             minWidth: '150',
@@ -1324,7 +1234,6 @@ export default {
                         },
                         // 约定还款日3
                         {
-                            prop: 'planList_2_capitalAmount',
                             label: '约定还款本金金额',
                             sort: 33,
                             minWidth: '150',
@@ -1333,7 +1242,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_capitalPaid',
                             label: '累计还款本金金额',
                             sort: 34,
                             minWidth: '150',
@@ -1351,7 +1259,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_graceInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收宽限期利息',
                             uniqueLabel: '应收宽限期利息3',
@@ -1387,7 +1294,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_overDueInterestPaid',
                             label: '实缴逾期罚息',
                             sort: 44,
                             minWidth: '150',
@@ -1396,7 +1302,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_overDueInterestOwe',
                             label: '剩余逾期罚息',
                             sort: 45,
                             minWidth: '150',
@@ -1407,7 +1312,6 @@ export default {
                     ]
                 },
                 {
-                    prop: 'loan_manualInterest',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '手动调息',
                     minWidth: '100',
@@ -1420,7 +1324,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'account_standingBookArchiveNo',
                     label: '台账档案编号',
                     minWidth: '200',
                     render: (h, scope) => {
@@ -1433,7 +1336,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'account_remark',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '备注',
                     minWidth: '200',
@@ -1450,12 +1352,10 @@ export default {
             // 敞口
             Exposure: [
                 {
-                    prop: 'account_standingBookNo',
                     width: '200',
                     fixed: true,
                     children: [
                         {
-                            prop: 'account_standingBookNo',
                             label: '台账编号',
                             width: '200',
                             render: (h, scope) => {
@@ -1497,7 +1397,6 @@ export default {
                     label: '借款账目',
                     children: [
                         {
-                            prop: 'loan_invoiceAmount',
                             label: '开票金额',
                             sort: 1,
                             minWidth: '150',
@@ -1506,7 +1405,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_invoiceTime',
                             label: '开票日期',
                             sort: 2,
                             minWidth: '150',
@@ -1515,7 +1413,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_supplier',
                             label: '供货商名称',
                             showOverflowTooltip: true,
                             sort: 3,
@@ -1525,7 +1422,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_depositPay',
                             label: '保证金缴纳',
                             sort: 5,
                             minWidth: '150',
@@ -1534,7 +1430,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_depositProportion',
                             label: '保证金比例',
                             sort: 4,
                             minWidth: '150',
@@ -1543,7 +1438,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanAmount',
                             label: '敞口金额',
                             sort: 6,
                             minWidth: '150',
@@ -1557,7 +1451,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanDateNum',
                             label: '承兑期限',
                             sort: 7,
                             minWidth: '150',
@@ -1569,7 +1462,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_loanEndTime',
                             label: '到期日',
                             sort: 8,
                             minWidth: '150',
@@ -1578,7 +1470,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'loan_repaymentType',
                             label: '还款方式',
                             sort: 9,
                             minWidth: '150',
@@ -1601,7 +1492,6 @@ export default {
                     label: '敞口还款账目总计',
                     children: [
                         {
-                            prop: 'paymentStatic_capitalOwe',
                             label: '剩余敞口',
                             sort: 3,
                             minWidth: '150',
@@ -1610,7 +1500,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'paymentStatic_overDueInterestOwe',
                             label: '剩余逾期罚息',
                             sort: 9,
                             minWidth: '150',
@@ -1785,6 +1674,7 @@ export default {
                         },
                         {
                             label: '约定还款金额',
+                            uniqueLabel: '约定还款金额1',
                             sort: 3,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1793,6 +1683,7 @@ export default {
                         },
                         {
                             label: '累计实际还款本金金额',
+                            uniqueLabel: '累计实际还款本金金额1',
                             sort: 4,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1801,6 +1692,7 @@ export default {
                         },
                         {
                             label: '应收宽限期利息',
+                            uniqueLabel: '应收宽限期利息1',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                             sort: 6,
                             minWidth: '150',
@@ -1810,6 +1702,7 @@ export default {
                         },
                         {
                             label: '累计实收宽限期利息',
+                            uniqueLabel: '累计实收宽限期利息1',
                             sort: 7,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1818,6 +1711,7 @@ export default {
                         },
                         {
                             label: '剩余宽限期利息',
+                            uniqueLabel: '剩余宽限期利息1',
                             sort: 8,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1827,6 +1721,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                             label: '应缴逾期罚息',
+                            uniqueLabel: '应缴逾期罚息1',
                             sort: 10,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1835,6 +1730,7 @@ export default {
                         },
                         {
                             label: '实缴逾期罚息',
+                            uniqueLabel: '实缴逾期罚息1',
                             sort: 11,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1843,6 +1739,7 @@ export default {
                         },
                         {
                             label: '剩余逾期罚息',
+                            uniqueLabel: '剩余逾期罚息1',
                             sort: 12,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1852,6 +1749,7 @@ export default {
                         // 约定日期2
                         {
                             label: '约定还款金额',
+                            uniqueLabel: '约定还款金额2',
                             sort: 15,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1860,6 +1758,7 @@ export default {
                         },
                         {
                             label: '累计实际还款本金金额',
+                            uniqueLabel: '累计实际还款本金金额2',
                             sort: 16,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1868,6 +1767,7 @@ export default {
                         },
                         {
                             label: '应收宽限期利息',
+                            uniqueLabel: '应收宽限期利息2',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                             sort: 18,
                             minWidth: '150',
@@ -1877,6 +1777,7 @@ export default {
                         },
                         {
                             label: '累计实收宽限期利息',
+                            uniqueLabel: '累计实收宽限期利息2',
                             sort: 19,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1885,6 +1786,7 @@ export default {
                         },
                         {
                             label: '剩余宽限期利息',
+                            uniqueLabel: '剩余宽限期利息2',
                             sort: 20,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1892,9 +1794,9 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_overDueInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                             label: '应缴逾期罚息',
+                            uniqueLabel: '应缴逾期罚息2',
                             sort: 22,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1902,8 +1804,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_overDueInterestPaid',
                             label: '实缴逾期罚息',
+                            uniqueLabel: '实缴逾期罚息2',
                             sort: 23,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1911,8 +1813,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_overDueInterestOwe',
                             label: '剩余逾期罚息',
+                            uniqueLabel: '剩余逾期罚息2',
                             sort: 24,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1921,7 +1823,6 @@ export default {
                         },
                         // 约定日期3
                         {
-                            prop: 'planList_2_capitalAmount',
                             label: '约定还款金额',
                             uniqueLabel: '约定还款金额3',
                             sort: 27,
@@ -1931,7 +1832,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_capitalPaid',
                             label: '累计实际还款本金金额',
                             uniqueLabel: '累计实际还款本金金额3',
                             sort: 28,
@@ -1942,6 +1842,7 @@ export default {
                         },
                         {
                             label: '应收宽限期利息',
+                            uniqueLabel: '应收宽限期利息3',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                             sort: 30,
                             minWidth: '150',
@@ -1951,6 +1852,7 @@ export default {
                         },
                         {
                             label: '累计实收宽限期利息',
+                            uniqueLabel: '累计实收宽限期利息3',
                             sort: 31,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1959,6 +1861,7 @@ export default {
                         },
                         {
                             label: '剩余宽限期利息',
+                            uniqueLabel: '剩余宽限期利息3',
                             sort: 32,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1968,6 +1871,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                             label: '应缴逾期罚息',
+                            uniqueLabel: '应缴逾期罚息3',
                             sort: 34,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1976,6 +1880,7 @@ export default {
                         },
                         {
                             label: '实缴逾期罚息',
+                            uniqueLabel: '实缴逾期罚息3',
                             sort: 35,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1984,6 +1889,7 @@ export default {
                         },
                         {
                             label: '剩余逾期罚息',
+                            uniqueLabel: '剩余逾期罚息3',
                             sort: 36,
                             minWidth: '150',
                             render: (h, scope) => {

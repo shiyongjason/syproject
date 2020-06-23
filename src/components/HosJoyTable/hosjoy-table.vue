@@ -23,7 +23,6 @@
                 </div>
             </el-collapse-transition>
         </div>
-        {{switchLabel}}
         <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
                   :height=" height || `calc(100vh - ${selfHeight}px)`"
                   class="hosjoy-in-table"
