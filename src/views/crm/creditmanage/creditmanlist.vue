@@ -91,7 +91,7 @@
                     {{scope.data.row.documentStatus?matelist[scope.data.row.documentStatus-1].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>

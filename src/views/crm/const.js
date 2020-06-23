@@ -97,10 +97,12 @@ export const UPSTREAMPAYTYPE = [
 ]
 // 信用等级
 export const CREDITLEVEL = [
-    { key: 1, value: 'A' },
-    { key: 2, value: 'B' },
-    { key: 2, value: 'C' },
-    { key: 2, value: 'D' }
+    { key: 1, value: 'A+' },
+    { key: 2, value: 'A' },
+    { key: 3, value: 'B' },
+    { key: 4, value: 'B+' },
+    { key: 5, value: 'C' },
+    { key: 6, value: 'C+' }
 ]
 
 // 资料状态

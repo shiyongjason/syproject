@@ -252,6 +252,7 @@ export default {
                         })
                         await this.findVippage(this.queryParams)
                         this.tableData = this.vipDetail.companyVipList
+                        this.$emit('backEvent')
                     } catch (error) {
                         this.isloading = false
                     }

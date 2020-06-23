@@ -58,28 +58,11 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
              @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true"  :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
-        <vipdrawer ref="vipdrawer"></vipdrawer>
-        <el-dialog title="分配" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-                <el-form-item label="分配给（员工）" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                  <el-form-item label="所属分部" prop="name">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                 <el-form-item label="说明" prop="name">
-                    <el-input type="textarea" v-model="ruleForm.desc"  maxlength="300" show-word-limit   :rows="6"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-            </span>
-        </el-dialog>
+        <vipdrawer ref="vipdrawer" @backEvent=searchList></vipdrawer>
     </div>
 </template>
 <script>
