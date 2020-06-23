@@ -78,9 +78,12 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=300 :isShowIndex='true'>
+                <template slot="companyName" slot-scope="scope">
+                  <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                </template>
                 <template slot="assignedUserId" slot-scope="scope">
                     {{scope.data.row.assignedUserId?'是':'否'}}
-                </template>assignedUserId
+                </template>
                 <template slot="received" slot-scope="scope">
                     {{scope.data.row.received?'是':'否'}}
                 </template>
@@ -348,6 +351,10 @@ export default {
                     this.isloading = false
                 }
             })
+        },
+        onLinkCom (val) {
+            console.log(val)
+            this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
     }
 }
@@ -398,5 +405,9 @@ export default {
         width: 500px;
         padding: 10px;
     }
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 </style>
