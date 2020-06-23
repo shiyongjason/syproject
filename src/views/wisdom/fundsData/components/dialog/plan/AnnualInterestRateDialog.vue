@@ -388,6 +388,7 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
+                    this.detailData[0].graceDueDate = this.untilDay
                     let form = {
                         createBy: this.userInfo.employeeName,
                         planList: [...this.detailData]

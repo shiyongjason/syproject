@@ -96,7 +96,7 @@ export default {
                 if (val === '0') {
                     this.localName = 'TotalColumnTable::'
                     this.$set(this, 'column', this.TotalColumn)
-                    this.collapseShow = false
+                    this.collapseShow = true
                 }
                 if (val === '1') {
                     this.localName = 'FlowToBorrowTable::'
@@ -106,12 +106,12 @@ export default {
                 if (val === '2') {
                     this.localName = 'ExposureTable::'
                     this.$set(this, 'column', this.Exposure)
-                    this.collapseShow = false
+                    this.collapseShow = true
                 }
                 if (val === '3') {
                     this.localName = 'PointsCreditTable::'
                     this.$set(this, 'column', this.PointsCredit)
-                    this.collapseShow = false
+                    this.collapseShow = true
                 }
                 if (val === '4') {
                     this.localName = 'ReimbursementDetailTable::'
@@ -398,8 +398,9 @@ export default {
                 {
                     label: '借款账目',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowBorrowingBooks) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.FlowBorrowingBooks, index) }}></i></span>
                         )
                     },
                     children: [
@@ -459,8 +460,9 @@ export default {
                 {
                     label: '还款账目',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowRepaymentAccount) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.FlowRepaymentAccount, index) }}></i></span>
                         )
                     },
                     children: [
@@ -488,8 +490,9 @@ export default {
                 {
                     label: '逾期账目',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.FlowOverdueAccounts) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.FlowOverdueAccounts, index) }}></i></span>
                         )
                     },
                     children: [
@@ -551,9 +554,9 @@ export default {
             // 分授信
             PointsCredit: [
                 {
-                    label: '',
                     minWidth: '150',
                     fixed: true,
+                    prop: 'account_standingBookNo',
                     children: [
                         {
                             prop: 'account_standingBookNo',
@@ -596,8 +599,9 @@ export default {
                 {
                     label: '借款账目',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsBorrowingBooks) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.PointsBorrowingBooks, index) }}></i></span>
                         )
                     },
                     children: [
@@ -684,7 +688,7 @@ export default {
                     label: '分授信还款账目总计',
                     renderHeader: (h, scope) => {
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsRepaymentAccount) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.PointsRepaymentAccount, index) }}></i></span>
                         )
                     },
                     children: [
@@ -717,8 +721,9 @@ export default {
                 {
                     label: '分授信还款账目明细',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.PointsRCDetail) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.PointsRCDetail, index) }}></i></span>
                         )
                     },
                     children: [
@@ -930,7 +935,7 @@ export default {
             // 敞口
             Exposure: [
                 {
-                    label: '',
+                    prop: 'account_standingBookNo',
                     minWidth: '150',
                     fixed: true,
                     children: [
@@ -976,8 +981,9 @@ export default {
                 {
                     label: '借款账目',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoBorrowingBooks) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.ExpoBorrowingBooks, index) }}></i></span>
                         )
                     },
                     children: [
@@ -1023,8 +1029,9 @@ export default {
                 {
                     label: '敞口还款账目总计',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoRepaymentAccount) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.ExpoRepaymentAccount, index) }}></i></span>
                         )
                     },
                     children: [
@@ -1051,8 +1058,9 @@ export default {
                 {
                     label: '敞口还款账目明细',
                     renderHeader: (h, scope) => {
+                        let index = this.findLabelIndex(scope.column.label)
                         return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(scope, this.ExpoRCDetail) }}></i></span>
+                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.ExpoRCDetail, index) }}></i></span>
                         )
                     },
                     children: [
@@ -2202,6 +2210,9 @@ export default {
         }
     },
     methods: {
+        findLabelIndex (labelName) {
+            return this.column.findIndex((item) => item.label === labelName)
+        },
         showTable () {
             const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
             if (haveLabel && haveLabel.length > 0) {
@@ -2213,19 +2224,19 @@ export default {
                 })
             }
         },
-        handleExpand (scope, expandSellrr) {
-            this.$set(this.column[scope.$index], '_expand', !this.column[scope.$index]._expand)
-            if (this.column[scope.$index]._expand) {
-                this.column[scope.$index].children = this.column[scope.$index].children.concat(expandSellrr.filter(i => !i.selfSettingHidden === true))
-                this.column[scope.$index].children.sort((a, b) => a.sort - b.sort)
+        handleExpand (expandSellrr, index) {
+            this.$set(this.column[index], '_expand', !this.column[index]._expand)
+            if (this.column[index]._expand) {
+                this.column[index].children = this.column[index].children.concat(expandSellrr.filter(i => !i.selfSettingHidden === true))
+                this.column[index].children.sort((a, b) => a.sort - b.sort)
             } else {
-                this.column[scope.$index].children = this.column[scope.$index].children.filter(_ => !expandSellrr.includes(_))
-                // this.$set(this.column[scope.$index], 'children', this.column[scope.$index].children.filter(_ => !expandSellrr.includes(_)))
+                this.column[index].children = this.column[index].children.filter(_ => !expandSellrr.includes(_))
                 this.isShowParent = false
                 this.$nextTick(() => { this.isShowParent = true })
             }
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
+            this.$nextTick(() => {
+                this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
+            })
         },
         async getList (val) {
             this.$emit('getList', val)

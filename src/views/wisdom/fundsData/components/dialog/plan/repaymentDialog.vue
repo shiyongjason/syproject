@@ -310,7 +310,8 @@ export default {
         },
         untilDay () {
             return function (item) {
-                return moment(item.endTime).add(item.graceDay, 'days').format('YYYY-MM-DD')
+                item.graceDueDate = moment(item.endTime).add(item.graceDay, 'days').format('YYYY-MM-DD')
+                return item.graceDueDate
             }
         }
     },
