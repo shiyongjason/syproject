@@ -157,7 +157,7 @@ export default {
                     prop: 'misCode',
                     label: 'MIS编码',
                     fixed: true,
-                    minWidth: '150',
+                    width: '150',
                     render: (h, scope) => {
                         return (
                             <el-tooltip placement="top" effect='light'>
@@ -353,15 +353,14 @@ export default {
             // 流贷
             FlowToBorrow: [
                 {
-                    label: '',
                     prop: 'account_standingBookNo',
-                    minWidth: '150',
                     fixed: true,
+                    width: '200',
                     children: [
                         {
                             prop: 'account_standingBookNo',
                             label: '台账编号',
-                            minWidth: '150',
+                            width: '200',
                             render: (h, scope) => {
                                 let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                                 return render ? <div>
@@ -510,7 +509,7 @@ export default {
                 {
                     prop: 'loan_manualInterest',
                     label: '手动调息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     minWidth: '100',
                     render: (h, scope) => {
                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
@@ -540,7 +539,7 @@ export default {
                     prop: 'account_remark',
                     label: '备注',
                     minWidth: '200',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     render: (h, scope) => {
                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                         return render ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i class='el-icon-edit pointer' onClick={() => {
@@ -554,14 +553,14 @@ export default {
             // 分授信
             PointsCredit: [
                 {
-                    minWidth: '150',
+                    width: '200',
                     fixed: true,
                     prop: 'account_standingBookNo',
                     children: [
                         {
                             prop: 'account_standingBookNo',
                             label: '台账编号',
-                            minWidth: '150',
+                            width: '200',
                             render: (h, scope) => {
                                 let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
                                 return render ? <div>
@@ -893,7 +892,7 @@ export default {
                 },
                 {
                     prop: 'loan_manualInterest',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '手动调息',
                     minWidth: '100',
                     render: (h, scope) => {
@@ -919,7 +918,7 @@ export default {
                 },
                 {
                     prop: 'account_remark',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '备注',
                     minWidth: '200',
                     render: (h, scope) => {
@@ -936,13 +935,13 @@ export default {
             Exposure: [
                 {
                     prop: 'account_standingBookNo',
-                    minWidth: '150',
+                    width: '200',
                     fixed: true,
                     children: [
                         {
                             prop: 'account_standingBookNo',
                             label: '台账编号',
-                            minWidth: '150',
+                            width: '200',
                             render: (h, scope) => {
                                 let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
                                 return render ? <div>
@@ -1176,7 +1175,7 @@ export default {
                 },
                 {
                     prop: 'loan_manualInterest',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '手动调息',
                     minWidth: '100',
                     render: (h, scope) => {
@@ -1202,7 +1201,7 @@ export default {
                 },
                 {
                     prop: 'account_remark',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '备注',
                     minWidth: '200',
                     render: (h, scope) => {
@@ -1335,7 +1334,7 @@ export default {
                 },
                 {
                     label: '应收利息（正常+宽限）',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 6,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -1374,7 +1373,7 @@ export default {
                 },
                 {
                     prop: 'paymentStatic_interestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     label: '累计应收正常利息',
                     sort: 5,
                     minWidth: '150',
@@ -1412,7 +1411,7 @@ export default {
                 {
                     prop: 'paymentStatic_graceInterestAmount',
                     label: '累计应收宽限期利息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 9,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -1443,7 +1442,7 @@ export default {
                 {
                     prop: 'paymentStatic_overDueInterestAmount',
                     label: '应收逾期罚息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     sort: 2,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -1525,7 +1524,7 @@ export default {
                 },
                 {
                     label: '应收利息（正常+宽限）',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     sort: 4,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -1534,7 +1533,7 @@ export default {
                 },
                 {
                     prop: 'paymentStatic_interestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '累计应收正常利息',
                     sort: 5,
                     minWidth: '150',
@@ -1562,7 +1561,7 @@ export default {
                 },
                 {
                     label: '累计应收宽限期利息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     sort: 9,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -1587,7 +1586,7 @@ export default {
                 },
                 {
                     prop: 'paymentStatic_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '累计应收逾期罚息',
                     sort: 12,
                     minWidth: '150',
@@ -1627,7 +1626,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_interestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收正常利息',
                     sort: 6,
                     minWidth: '150',
@@ -1637,7 +1636,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_graceInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收宽限期利息',
                     sort: 9,
                     minWidth: '150',
@@ -1665,7 +1664,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 13,
                     minWidth: '150',
@@ -1712,7 +1711,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_interestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收正常利息',
                     sort: 21,
                     minWidth: '150',
@@ -1722,7 +1721,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_graceInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收宽限期利息',
                     sort: 24,
                     minWidth: '150',
@@ -1750,7 +1749,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 28,
                     minWidth: '150',
@@ -1797,7 +1796,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_interestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收正常利息',
                     sort: 36,
                     minWidth: '150',
@@ -1807,7 +1806,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_graceInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应收宽限期利息',
                     sort: 39,
                     minWidth: '150',
@@ -1835,7 +1834,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 43,
                     minWidth: '150',
@@ -1948,7 +1947,7 @@ export default {
                 },
                 {
                     label: '累计应收宽限期利息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 4,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -1973,7 +1972,7 @@ export default {
                 },
                 {
                     label: '累计应收逾期罚息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 7,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -2011,7 +2010,7 @@ export default {
                 },
                 {
                     label: '应收宽限期利息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 6,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -2036,7 +2035,7 @@ export default {
                 },
                 {
                     prop: 'planList_0_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 10,
                     minWidth: '150',
@@ -2083,7 +2082,7 @@ export default {
                 },
                 {
                     label: '应收宽限期利息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 18,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -2108,7 +2107,7 @@ export default {
                 },
                 {
                     prop: 'planList_1_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 22,
                     minWidth: '150',
@@ -2155,7 +2154,7 @@ export default {
                 },
                 {
                     label: '应收宽限期利息',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     sort: 30,
                     minWidth: '150',
                     render: (h, scope) => {
@@ -2180,7 +2179,7 @@ export default {
                 },
                 {
                     prop: 'planList_2_overDueInterestAmount',
-                    selfSettingHidden: !this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '应缴逾期罚息',
                     sort: 34,
                     minWidth: '150',
@@ -2225,14 +2224,16 @@ export default {
             }
         },
         handleExpand (expandSellrr, index) {
+            this.isShowParent = false
+            this.$nextTick(() => {
+                this.isShowParent = true
+            })
             this.$set(this.column[index], '_expand', !this.column[index]._expand)
             if (this.column[index]._expand) {
                 this.column[index].children = this.column[index].children.concat(expandSellrr.filter(i => !i.selfSettingHidden === true))
                 this.column[index].children.sort((a, b) => a.sort - b.sort)
             } else {
                 this.column[index].children = this.column[index].children.filter(_ => !expandSellrr.includes(_))
-                this.isShowParent = false
-                this.$nextTick(() => { this.isShowParent = true })
             }
             this.$nextTick(() => {
                 this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
