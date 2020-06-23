@@ -949,7 +949,17 @@ export default {
                             }
                         },
                         {
+                            label: '约定还款本金金额',
+                            uniqueLabel: '约定还款本金金额1',
+                            sort: 3,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
+                            }
+                        },
+                        {
                             label: '剩余还款本金金额',
+                            uniqueLabel: '剩余还款本金金额1',
                             sort: 5,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -958,6 +968,7 @@ export default {
                         },
                         {
                             label: '累计正常实收利息',
+                            uniqueLabel: '累计正常实收利息1',
                             sort: 7,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -966,6 +977,7 @@ export default {
                         },
                         {
                             label: '剩余正常利息',
+                            uniqueLabel: '剩余正常利息1',
                             sort: 8,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -974,6 +986,7 @@ export default {
                         },
                         {
                             label: '是否逾期',
+                            uniqueLabel: '是否逾期1',
                             sort: 12,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -999,6 +1012,7 @@ export default {
                         },
                         {
                             label: '剩余还款本金金额',
+                            uniqueLabel: '剩余还款本金金额2',
                             sort: 20,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1007,6 +1021,7 @@ export default {
                         },
                         {
                             label: '累计正常实收利息',
+                            uniqueLabel: '累计正常实收利息2',
                             sort: 22,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1015,6 +1030,7 @@ export default {
                         },
                         {
                             label: '剩余正常利息',
+                            uniqueLabel: '剩余正常利息2',
                             sort: 23,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1023,6 +1039,7 @@ export default {
                         },
                         {
                             label: '是否逾期',
+                            uniqueLabel: '是否逾期2',
                             sort: 27,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1039,7 +1056,7 @@ export default {
                         },
                         {
                             label: '宽限还款日',
-                            uniqueLabel: '宽限还款日2',
+                            uniqueLabel: '宽限还款日3',
                             sort: 32,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1048,6 +1065,7 @@ export default {
                         },
                         {
                             label: '剩余还款本金金额',
+                            uniqueLabel: '剩余还款本金金额3',
                             sort: 35,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1056,6 +1074,7 @@ export default {
                         },
                         {
                             label: '累计正常实收利息',
+                            uniqueLabel: '累计正常实收利息3',
                             sort: 37,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1064,6 +1083,7 @@ export default {
                         },
                         {
                             label: '剩余正常利息',
+                            uniqueLabel: '剩余正常利息3',
                             sort: 38,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1072,22 +1092,17 @@ export default {
                         },
                         {
                             label: '是否逾期',
+                            uniqueLabel: '是否逾期3',
                             sort: 42,
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         },
-                        {
-                            label: '约定还款本金金额',
-                            sort: 3,
-                            minWidth: '150',
-                            render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
-                            }
-                        },
+                        
                         {
                             label: '累计还款本金金额',
+                            uniqueLabel: '累计还款本金金额1',
                             sort: 4,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1097,6 +1112,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收正常利息',
+                            uniqueLabel: '应收正常利息1',
                             sort: 6,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1115,6 +1131,7 @@ export default {
                         },
                         {
                             label: '累计实收宽限期利息',
+                            uniqueLabel: '累计实收宽限期利息1',
                             sort: 10,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1123,6 +1140,7 @@ export default {
                         },
                         {
                             label: '剩余宽限期利息',
+                            uniqueLabel: '剩余宽限期利息1',
                             sort: 11,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1132,6 +1150,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应缴逾期罚息',
+                            uniqueLabel: '应缴逾期罚息1',
                             sort: 13,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1140,6 +1159,7 @@ export default {
                         },
                         {
                             label: '实缴逾期罚息',
+                            uniqueLabel: '实缴逾期罚息1',
                             sort: 14,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1158,6 +1178,7 @@ export default {
                         // 约定还款日2
                         {
                             label: '约定还款本金金额',
+                            uniqueLabel: '约定还款本金金额2',
                             sort: 18,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1166,6 +1187,7 @@ export default {
                         },
                         {
                             label: '累计还款本金金额',
+                            uniqueLabel: '累计还款本金金额2',
                             sort: 19,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1175,6 +1197,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收正常利息',
+                            uniqueLabel: '应收正常利息2',
                             sort: 21,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1193,6 +1216,7 @@ export default {
                         },
                         {
                             label: '累计实收宽限期利息',
+                            uniqueLabel: '累计实收宽限期利息2',
                             sort: 25,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1201,6 +1225,7 @@ export default {
                         },
                         {
                             label: '剩余宽限期利息',
+                            uniqueLabel: '剩余宽限期利息2',
                             sort: 26,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1210,6 +1235,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应缴逾期罚息',
+                            uniqueLabel: '应缴逾期罚息2',
                             sort: 28,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1218,6 +1244,7 @@ export default {
                         },
                         {
                             label: '实缴逾期罚息',
+                            uniqueLabel: '实缴逾期罚息2',
                             sort: 29,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1226,6 +1253,7 @@ export default {
                         },
                         {
                             label: '剩余逾期罚息',
+                            uniqueLabel: '剩余逾期罚息2',
                             sort: 30,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1235,6 +1263,7 @@ export default {
                         // 约定还款日3
                         {
                             label: '约定还款本金金额',
+                            uniqueLabel: '约定还款本金金额3',
                             sort: 33,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1243,6 +1272,7 @@ export default {
                         },
                         {
                             label: '累计还款本金金额',
+                            uniqueLabel: '累计还款本金金额3',
                             sort: 34,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1252,6 +1282,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收正常利息',
+                            uniqueLabel: '应收正常利息3',
                             sort: 36,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1270,6 +1301,7 @@ export default {
                         },
                         {
                             label: '累计实收宽限期利息',
+                            uniqueLabel: '累计实收宽限期利息3',
                             sort: 40,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1278,6 +1310,7 @@ export default {
                         },
                         {
                             label: '剩余宽限期利息',
+                            uniqueLabel: '剩余宽限期利息3',
                             sort: 41,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1287,6 +1320,7 @@ export default {
                         {
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应缴逾期罚息',
+                            uniqueLabel: '应缴逾期罚息3',
                             sort: 43,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1295,6 +1329,7 @@ export default {
                         },
                         {
                             label: '实缴逾期罚息',
+                            uniqueLabel: '实缴逾期罚息3',
                             sort: 44,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1303,6 +1338,7 @@ export default {
                         },
                         {
                             label: '剩余逾期罚息',
+                            uniqueLabel: '剩余逾期罚息3',
                             sort: 45,
                             minWidth: '150',
                             render: (h, scope) => {
