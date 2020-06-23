@@ -76,29 +76,6 @@ export default [
                 },
                 component: () => import('@/views/crm/creditmanage/creditmanlist')
             },
-
-            {
-                path: 'authenlist',
-                name: 'authenlist',
-                meta: {
-                    title: '企业管理',
-                    tagName: '企业管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/crm/crmauthen/authenlist')
-            },
-            {
-                path: 'staticlist',
-                name: 'staticlist',
-                meta: {
-                    title: '好橙工台账',
-                    tagName: '好橙工台账',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/crm/crmstatic/staticlist')
-            },
             {
                 path: 'datatemp',
                 name: 'datatemp',
