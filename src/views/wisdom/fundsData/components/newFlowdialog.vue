@@ -249,7 +249,7 @@ export default {
                         type: 'success'
                     })
                     this.setNewTags((this.$route.fullPath).split('?')[0])
-                    this.$router.push('/fundsData/standingBook')
+                    this.$router.push('/funds/fundsDataAnalysis/standingBook')
                 }
             })
         },
@@ -313,7 +313,7 @@ export default {
         },
         onCancel () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/fundsData/standingBook')
+            this.$router.push('/funds/fundsDataAnalysis/standingBook')
         }
     }
 }

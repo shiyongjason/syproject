@@ -13,10 +13,7 @@
                     <div class="column">
                         <div class="item">
                             <ul>
-                                <li v-for="item in categoryFirst"
-                                    :key="item.id"
-                                    :class="item.isOn ? 'on' : ''"
-                                    @click="onShowNext(item.id, 'categorySecond', item)">
+                                <li v-for="item in categoryFirst" :key="item.id" :class="item.isOn ? 'on' : ''" @click="onShowNext(item.id, 'categorySecond', item)">
                                     {{ item.categoryName }}
                                 </li>
                             </ul>
@@ -25,10 +22,7 @@
                     <div class="column">
                         <div class="item">
                             <ul>
-                                <li v-for="item in categorySecond"
-                                    :key="item.id"
-                                    :class="item.isOn ? 'on' : ''"
-                                    @click="onShowNext(item.id, 'categoryThird', item)">
+                                <li v-for="item in categorySecond" :key="item.id" :class="item.isOn ? 'on' : ''" @click="onShowNext(item.id, 'categoryThird', item)">
                                     {{ item.categoryName }}
                                 </li>
                             </ul>
@@ -37,9 +31,7 @@
                     <div class="column">
                         <div class="item">
                             <ul>
-                                <li v-for="item in categoryThird" :key="item.id"
-                                    :class="item.isOn ? 'on' : ''"
-                                    @click="onShowNext(null, null, item)">
+                                <li v-for="item in categoryThird" :key="item.id" :class="item.isOn ? 'on' : ''" @click="onShowNext(null, null, item)">
                                     {{ item.categoryName }}
                                 </li>
                             </ul>
@@ -69,23 +61,19 @@
                             <div class="form-cont-col">
                                 <el-form-item label="商品品牌" prop="brandId" ref="brandId">
                                     <el-select v-model="form.brandId" clearable placeholder="请选择" style="width: 100%" @change="brandNameChange()">
-                                        <el-option
-                                            :label="item.brandName+item.brandNameEn"
-                                            :value="item.brandId" :key="item.id" v-for="item in relationBrand">
+                                        <el-option :label="item.brandName+item.brandNameEn" :value="item.brandId" :key="item.id" v-for="item in relationBrand">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
                             </div>
                             <div class="form-cont-col">
                                 <el-form-item label="规格/型号" prop="specification">
-                                    <el-input type="text" style="width: 100%" placeholder="请输入规格／型号"
-                                              maxlength="30" v-model="form.specification"></el-input>
+                                    <el-input type="text" style="width: 100%" placeholder="请输入规格／型号" maxlength="30" v-model="form.specification"></el-input>
                                 </el-form-item>
                             </div>
                         </div>
-                        <el-form-item label="商品名称"  prop="productName">
-                            <el-input placeholder="" :maxlength="50 - length" style="width: 500px"
-                                      v-model="form.productShortName">
+                        <el-form-item label="商品名称" prop="productName">
+                            <el-input placeholder="" :maxlength="50 - length" style="width: 500px" v-model="form.productShortName">
                                 <template slot="prepend">{{(brandName ? brandName : '') + categorySelect[2]+ (form.specification ? form.specification : '')}}</template>
                             </el-input>
                         </el-form-item>
@@ -97,20 +85,11 @@
 
                                         <img :src="item.url" :alt="item.url">
                                         <span class="picture-setting" @click="pictureSetting(index)">
-                                                    设为主图
-                                                </span>
+                                            设为主图
+                                        </span>
                                     </li>
                                 </template>
-                                <el-upload
-                                    v-bind="uploadInfo"
-                                    v-if="pictureContainer.length<5"
-                                    :on-exceed="pictureMessage"
-                                    :on-error="pictureError"
-                                    :on-success="pictureSuccess"
-                                    :show-file-list="false"
-                                    :before-upload="beforeAvatarUpload"
-                                    style="float: left"
-                                    list-type="picture-card">
+                                <el-upload v-bind="uploadInfo" v-if="pictureContainer.length<5" :on-exceed="pictureMessage" :on-error="pictureError" :on-success="pictureSuccess" :show-file-list="false" :before-upload="beforeAvatarUpload" style="float: left" list-type="picture-card">
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
                             </ul>
@@ -130,30 +109,20 @@
                             </div>
                             <div class="form-cont-row">
                                 <div :key="item.parameterCode" v-for="(item,index) in form.attributeList" class="form-cont-col">
-                                    <el-form-item :label="item.parameterName" :prop="'attributeList.'+ index + '.model'"
-                                                  :class="item.type === 1? 'isW100' : ''"
-                                                  :rules="{
+                                    <el-form-item :label="item.parameterName" :prop="'attributeList.'+ index + '.model'" :class="item.type === 1? 'isW100' : ''" :rules="{
                                                  required: item.isRequired === 1 ? true : false ,
                                                  whitespace: true,
                                                  message: '请输入'+ item.parameterName,
                                                  trigger: item.type === 2 ? 'blur' : ''
-                                             }"
-                                    >
-                                        <el-select style="width: 100%;"
-                                                   v-model="item.model"
-                                                   v-if="item.type === 2">
+                                             }">
+                                        <el-select style="width: 100%;" v-model="item.model" v-if="item.type === 2">
                                             <template v-if="item.parameterValueList">
-                                                <el-option
-                                                    :label="subItem"
-                                                    :value="subItem" :key="subItem"
-                                                    v-for="subItem in item.parameterValueList">
+                                                <el-option :label="subItem" :value="subItem" :key="subItem" v-for="subItem in item.parameterValueList">
                                                 </el-option>
                                             </template>
                                         </el-select>
                                         <template v-else-if="item.type === 1">
-                                            <el-input placeholder="" maxlength="25"
-                                                      style="width: 50%;margin-right: 12px"
-                                                      v-model="item.model">
+                                            <el-input placeholder="" maxlength="25" style="width: 50%;margin-right: 12px" v-model="item.model">
                                             </el-input>{{item.unit}}
                                         </template>
                                     </el-form-item>
@@ -162,8 +131,7 @@
                         </div>
                         <el-row style="position: relative;z-index: 1">
                             <el-form-item>
-                                <RichEditor v-model="form.details" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName"
-                                            :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;"></RichEditor>
+                                <RichEditor v-model="form.details" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;"></RichEditor>
                             </el-form-item>
                             <el-form-item v-if="isStatus === 'details' && causeFailure" label="驳回原因">
                                 {{causeFailure}}
@@ -181,7 +149,7 @@
                         </el-row>
                         <el-row v-if="isStatus === 'checked'">
                             <el-form-item style="text-align: center">
-                                <el-button  name="white-color"  @click="dialogRejectEdit = true">驳回商品</el-button>
+                                <el-button name="white-color" @click="dialogRejectEdit = true">驳回商品</el-button>
                                 <el-button name="hosjoy-color" type="primary" @click="pass('form')">审核通过</el-button>
                             </el-form-item>
                         </el-row>
@@ -194,18 +162,8 @@
                 </div>
             </div>
         </div>
-        <el-dialog
-            title="驳回商品"
-            width="500px"
-            :visible.sync="dialogRejectEdit"
-            :close-on-click-modal="false" >
-            <el-input
-                type="textarea"
-                maxlength="100"
-                placeholder="请输入驳回原因（100字以内）"
-                v-model="rejectContainer"
-                style="width: 90%;outline: none;margin: auto;display: block"
-                :rows="5"></el-input>
+        <el-dialog title="驳回商品" width="500px" :visible.sync="dialogRejectEdit" :close-on-click-modal="false">
+            <el-input type="textarea" maxlength="100" placeholder="请输入驳回原因（100字以内）" v-model="rejectContainer" style="width: 90%;outline: none;margin: auto;display: block" :rows="5"></el-input>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogRejectEdit = false">取 消</el-button>
                 <el-button type="primary" @click="reject">确认驳回</el-button>
@@ -445,12 +403,10 @@ export default {
                 await createProduct(params)
                 if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
                     this.closeTags()
-                    this.$router.push('/hmall/shopReviewList')
+                    this.$router.push('/b2b/shopReviewList')
                 } else {
                     this.closeTags()
-                    this.$router.push({
-                        path: '/hmall/shopManager'
-                    })
+                    this.$router.push({ path: '/b2b/shopManager' })
                 }
             } catch (e) {
                 this.saveDisabled = false
@@ -460,9 +416,7 @@ export default {
             try {
                 await updateProduct(params)
                 this.closeTags()
-                this.$router.push({
-                    path: '/hmall/shopManager'
-                })
+                this.$router.push({ path: '/b2b/shopManager' })
             } catch (e) {
                 this.saveDisabled = false
             }
@@ -644,10 +598,10 @@ export default {
             } else {
                 if (this.$route.query.isReview === 'yes' || this.isStatus === 'back') {
                     this.closeTags()
-                    this.$router.push('/hmall/shopReviewList')
+                    this.$router.push('/b2b/shopReviewList')
                 } else {
                     this.closeTags()
-                    this.$router.push('/hmall/shopManager')
+                    this.$router.push('/b2b/shopManager')
                 }
             }
         },
@@ -700,7 +654,7 @@ export default {
                         this.saveDisabled = false
                     }
                     this.closeTags()
-                    this.$router.push('/hmall/shopReviewList')
+                    this.$router.push('/b2b/shopReviewList')
                 }
             })
         },
@@ -715,12 +669,12 @@ export default {
                 }
                 await reviewReject(params)
                 this.closeTags()
-                this.$router.push('/hmall/shopReviewList')
+                this.$router.push('/b2b/shopReviewList')
             }
         },
         close () {
             this.closeTags()
-            this.$router.push('/hmall/shopReviewList')
+            this.$router.push('/b2b/shopReviewList')
         },
         ...mapActions({
             getUserInfoMore: 'getUserInfoMore'
@@ -753,129 +707,129 @@ export default {
 </script>
 
 <style scoped>
-    .category {
-        display: flex;
-        justify-content: space-between;
-        padding: 20px 0;
-    }
+.category {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0;
+}
 
-    .column {
-        background: #ffffff;
-        border: 1px solid #737373;
-        line-height: 30px;
-        width: 32%;
-        min-height: 400px;
-        box-sizing: border-box;
-        text-indent: 10px;
-        overflow-x: hidden;
-        overflow-y: scroll;
-        margin-right: -30px;
-    }
+.column {
+    background: #ffffff;
+    border: 1px solid #737373;
+    line-height: 30px;
+    width: 32%;
+    min-height: 400px;
+    box-sizing: border-box;
+    text-indent: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    margin-right: -30px;
+}
 
-    .tips {
-        background: #ffffff;
-        font-size: 13px;
-        padding: 12px;
-        box-sizing: border-box;
-    }
+.tips {
+    background: #ffffff;
+    font-size: 13px;
+    padding: 12px;
+    box-sizing: border-box;
+}
 
-    .next {
-        text-align: center;
-        padding-top: 20px;
-    }
+.next {
+    text-align: center;
+    padding-top: 20px;
+}
 
-    .next-btn {
-        width: 200px;
-    }
-    .category {
-        width: 90%;
-        margin: auto;
-    }
-    .category ul {
-        width: 100%;
-    }
-    .category li {
-        cursor: pointer;
-        height: 30px;
-        overflow: hidden;
-        text-overflow:ellipsis;
-        white-space: nowrap;
-    }
+.next-btn {
+    width: 200px;
+}
+.category {
+    width: 90%;
+    margin: auto;
+}
+.category ul {
+    width: 100%;
+}
+.category li {
+    cursor: pointer;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-    .category li.on {
-        background: #f88825;
-        color: #ffffff;
-    }
-    .isW100{
-        width: 100%;
-    }
-    .picture-container{
-        float: left;
-    }
-    .picture-container li{
-        width: 102px;
-        height: 102px;
-        border: 1px dashed #c0ccda;
-        border-radius: 6px;
-        position: relative;
-        overflow: hidden;
-        margin-right: 12px;
-        float: left;
-        margin-bottom: 12px;
-        cursor: pointer;
-    }
-    .picture-container li img{
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        width: 90%;
-        z-index: 1;
-    }
-    .picture-container li:hover .picture-delete{
-        bottom: 0;
-    }
-    .picture-container li:hover .picture-setting{
-        top: 0;
-    }
-    .picture-delete{
-        position: absolute;
-        bottom: -30px;
-        height: 30px;
-        background: rgba(0,0,0,.3);
-        color: #ffffff;
-        font-size: 18px;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        line-height: 30px;
-        transition: all 0.2s;
-        z-index: 2;
-    }
-    .picture-setting{
-        position: absolute;
-        top: -30px;
-        left: 0;
-        width: 100%;
-        line-height: 30px;
-        font-size: 12px;
-        color: #ffffff;
-        text-align: center;
-        height: 30px;
-        background: rgba(0,0,0,.3);
-        transition: all 0.2s;
-        z-index: 2;
-    }
-    .upload-tips{
-        font-size: 12px;
-        color: #999;
-    }
-    .form-cont-col{
-        margin-bottom: 20px;
-    }
+.category li.on {
+    background: #f88825;
+    color: #ffffff;
+}
+.isW100 {
+    width: 100%;
+}
+.picture-container {
+    float: left;
+}
+.picture-container li {
+    width: 102px;
+    height: 102px;
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    margin-right: 12px;
+    float: left;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+.picture-container li img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    z-index: 1;
+}
+.picture-container li:hover .picture-delete {
+    bottom: 0;
+}
+.picture-container li:hover .picture-setting {
+    top: 0;
+}
+.picture-delete {
+    position: absolute;
+    bottom: -30px;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    color: #ffffff;
+    font-size: 18px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 30px;
+    transition: all 0.2s;
+    z-index: 2;
+}
+.picture-setting {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 100%;
+    line-height: 30px;
+    font-size: 12px;
+    color: #ffffff;
+    text-align: center;
+    height: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    z-index: 2;
+}
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+}
+.form-cont-col {
+    margin-bottom: 20px;
+}
 </style>
 <style>
-    .editor-wrap{
-        width: 1200px !important;
-    }
+.editor-wrap {
+    width: 1200px !important;
+}
 </style>

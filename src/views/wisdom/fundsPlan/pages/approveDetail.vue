@@ -50,7 +50,8 @@ export default {
                 subRegionFundPlanApply: {},
                 subsectionFinanceFundPlanApprove: {},
                 subsectionManagerFundPlanApprove: {},
-                respResult: {}
+                respResult: {},
+                respFundPlanLoan: {}
             },
             isBottom: false,
             approveRoleNode: 0,
