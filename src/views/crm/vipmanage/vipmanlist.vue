@@ -83,7 +83,9 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 pkDeptDoc: '',
-                vipRuleId: ''
+                vipRuleId: '',
+                authCode: '', // 菜单路由
+                jobNumber: '' // 工号
             },
             copyParams: {},
             tableLabel: [
@@ -169,6 +171,8 @@ export default {
             this.searchList()
         },
         async  searchList () {
+            this.queryParams.jobNumber = this.userInfo.jobNumber
+            this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams
             await this.findVipmanage(params)
             this.tableData = this.vipManagedata.records || []
