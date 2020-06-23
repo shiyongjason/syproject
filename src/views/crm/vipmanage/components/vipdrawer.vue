@@ -220,6 +220,7 @@ export default {
                 this.vipForm = { ...this.vipPagedetail }
                 this.vipForm.projectUpload = this.vipForm.attachFile ? JSON.parse(this.vipForm.attachFile) : []
                 this.newVipForm = { ...this.vipForm }
+                this.stateN = this.vipForm.assignedUserName
                 console.log(this.newVipForm)
             } else {
                 this.stateN = ''
