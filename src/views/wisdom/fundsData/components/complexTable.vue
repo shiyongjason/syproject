@@ -412,6 +412,14 @@ export default {
                             }
                         },
                         {
+                            prop: 'loan_supplier',
+                            label: '供货商名称',
+                            showOverflowTooltip: true,
+                            sort: 2,
+                            minWidth: '150',
+                            isHidden: false
+                        },
+                        {
                             prop: 'loan_repaymentType',
                             label: '还款方式',
                             sort: 3,
@@ -429,33 +437,6 @@ export default {
                                         this.AnnualInterestRateDialogVisible = true
                                     }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                             }
-                        },
-                        {
-                            prop: 'loan_loanStartTime',
-                            label: '放款日期',
-                            sort: 7,
-                            minWidth: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.loan_loanStartTime ? moment(scope.row.loan_loanStartTime).format('YYYY-MM-DD') : '-'}</span>
-                            }
-                        },
-                        {
-                            prop: 'loan_loanEndTime',
-                            label: '到期日',
-                            sort: 8,
-                            minWidth: '150',
-                            render: (h, scope) => {
-                                return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
-                            }
-                        },
-                        // -----------
-                        {
-                            prop: 'loan_supplier',
-                            label: '供货商名称',
-                            showOverflowTooltip: true,
-                            sort: 2,
-                            minWidth: '150',
-                            isHidden: false
                         },
                         {
                             prop: 'loan_yearRate',
@@ -491,6 +472,24 @@ export default {
                             }
                         },
                         {
+                            prop: 'loan_loanStartTime',
+                            label: '放款日期',
+                            sort: 7,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_loanStartTime ? moment(scope.row.loan_loanStartTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_loanEndTime',
+                            label: '到期日',
+                            sort: 8,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
                             prop: 'loan_registrant',
                             label: '登记人',
                             sort: 9,
@@ -511,20 +510,7 @@ export default {
                             sort: 1,
                             minWidth: '150',
                             displayAs: 'YYYY-MM-DD'
-                            /* render: (h, scope) => {
-                                return <span>{scope.row.planList_0_capitalTime ? moment(scope.row.planList_0_capitalTime).format('YYYY-MM-DD') : '-'}</span>
-                            } */
                         },
-                        {
-                            prop: 'paymentStatic_capitalOwe',
-                            label: '欠收本金',
-                            sort: 3,
-                            minWidth: '150',
-                            render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</span>
-                            }
-                        },
-                        // --------
                         {
                             prop: 'planList_0_capitalPaid',
                             label: '累计实收借款本金',
@@ -533,6 +519,15 @@ export default {
                             isHidden: true,
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_capitalOwe',
+                            label: '欠收本金',
+                            sort: 3,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</span>
                             }
                         },
                         {
@@ -631,7 +626,6 @@ export default {
                                 return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
-                        // --------------
                         {
                             prop: 'paymentStatic_overDueInterestAmount',
                             label: '应收逾期罚息',
@@ -1790,7 +1784,7 @@ export default {
                             }
                         },
                         {
-                            label: '约定还款金额',
+                            label: '约定还款金额1',
                             sort: 3,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1798,7 +1792,7 @@ export default {
                             }
                         },
                         {
-                            label: '累计实际还款本金金额',
+                            label: '累计实际还款本金金额1',
                             sort: 4,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1857,7 +1851,7 @@ export default {
                         },
                         // 约定日期2
                         {
-                            label: '约定还款金额',
+                            label: '约定还款金额2',
                             sort: 15,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1865,7 +1859,7 @@ export default {
                             }
                         },
                         {
-                            label: '累计实际还款本金金额',
+                            label: '累计实际还款本金金额2',
                             sort: 16,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1928,7 +1922,7 @@ export default {
                         // 约定日期3
                         {
                             prop: 'planList_2_capitalAmount',
-                            label: '约定还款金额',
+                            label: '约定还款金额3',
                             sort: 27,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1937,7 +1931,7 @@ export default {
                         },
                         {
                             prop: 'planList_2_capitalPaid',
-                            label: '累计实际还款本金金额',
+                            label: '累计实际还款本金金额3',
                             sort: 28,
                             minWidth: '150',
                             render: (h, scope) => {
