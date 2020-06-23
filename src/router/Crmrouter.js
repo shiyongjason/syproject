@@ -74,7 +74,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/crm/creditManage/creditmanlist')
+                component: () => import('@/views/crm/creditmanage/creditmanlist')
             },
 
             {
