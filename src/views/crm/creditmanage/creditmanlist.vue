@@ -137,7 +137,9 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 pkDeptDoc: '',
-                documentStatus: ''
+                documentStatus: '',
+                authCode: '', // 菜单路由
+                jobNumber: '' // 工号
             },
             copyParms: {},
             tableLabel: [
@@ -228,6 +230,8 @@ export default {
             this.searchList()
         },
         async  searchList () {
+            this.queryParams.jobNumber = this.userInfo.jobNumber
+            this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams
             await this.findCreditManager(params)
             this.tableData = this.creditdata.records || []

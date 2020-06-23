@@ -20,9 +20,9 @@ import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
-import vipManage from '@/views/crm/vipManage/store/vipManage'
-import creditManage from '@/views/crm/creditManage/store/creditManage'
-import vipApply from '@/views/crm/vipApplication/store/vipApplication'
+import vipManage from '@/views/crm/vipmanage/store/vipManage'
+import creditManage from '@/views/crm/creditmanage/store/creditManage'
+import vipApply from '@/views/crm/vipapplication/store/vipApplication'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')

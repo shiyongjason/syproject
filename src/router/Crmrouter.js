@@ -52,7 +52,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/crm/vipApplication/applicationList')
+                component: () => import('@/views/crm/vipapplication/applicationList')
             },
             {
                 path: 'vipmanlist',
@@ -63,7 +63,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/crm/vipManage/vipmanlist')
+                component: () => import('@/views/crm/vipmanage/vipmanlist')
             },
             {
                 path: 'creditmanlist',
@@ -74,7 +74,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/crm/creditManage/creditmanlist')
+                component: () => import('@/views/crm/creditmanage/creditmanlist')
             },
 
             {
