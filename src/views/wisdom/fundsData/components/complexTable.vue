@@ -1182,9 +1182,9 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_graceInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收宽限期利息',
+                            uniqueLabel: '应收宽限期利息1',
                             sort: 9,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1267,9 +1267,9 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_graceInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收宽限期利息',
+                            uniqueLabel: '应收宽限期利息2',
                             sort: 24,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1354,6 +1354,7 @@ export default {
                             prop: 'planList_2_graceInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应收宽限期利息',
+                            uniqueLabel: '应收宽限期利息3',
                             sort: 39,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1377,7 +1378,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_overDueInterestAmount',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                             label: '应缴逾期罚息',
                             sort: 43,
@@ -1784,7 +1784,7 @@ export default {
                             }
                         },
                         {
-                            label: '约定还款金额1',
+                            label: '约定还款金额',
                             sort: 3,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1792,7 +1792,7 @@ export default {
                             }
                         },
                         {
-                            label: '累计实际还款本金金额1',
+                            label: '累计实际还款本金金额',
                             sort: 4,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1851,7 +1851,7 @@ export default {
                         },
                         // 约定日期2
                         {
-                            label: '约定还款金额2',
+                            label: '约定还款金额',
                             sort: 15,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1859,7 +1859,7 @@ export default {
                             }
                         },
                         {
-                            label: '累计实际还款本金金额2',
+                            label: '累计实际还款本金金额',
                             sort: 16,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1922,7 +1922,8 @@ export default {
                         // 约定日期3
                         {
                             prop: 'planList_2_capitalAmount',
-                            label: '约定还款金额3',
+                            label: '约定还款金额',
+                            uniqueLabel: '约定还款金额3',
                             sort: 27,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1931,7 +1932,8 @@ export default {
                         },
                         {
                             prop: 'planList_2_capitalPaid',
-                            label: '累计实际还款本金金额3',
+                            label: '累计实际还款本金金额',
+                            uniqueLabel: '累计实际还款本金金额3',
                             sort: 28,
                             minWidth: '150',
                             render: (h, scope) => {
