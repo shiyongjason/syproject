@@ -15,7 +15,7 @@
                     </template>
                 </basicTable>
                 <p>
-                    最近维护时间：{{moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss')}}
+                    最近维护时间：{{this.vipDetail.updateTime?moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
                 </p>
                 <p>
                     最近维护人：{{this.vipDetail.updateBy||'-'}}（{{this.vipDetail.updateBy||'-'}}）
