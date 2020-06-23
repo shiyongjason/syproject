@@ -15,7 +15,7 @@
                     </template>
                 </basicTable>
                 <p>
-                    最近维护时间：{{moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss')}}
+                    最近维护时间：{{this.vipDetail.updateTime?moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
                 </p>
                 <p>
                     最近维护人：{{this.vipDetail.updateBy||'-'}}（{{this.vipDetail.updateBy||'-'}}）
@@ -45,8 +45,8 @@
                     <el-date-picker v-model="vipForm.signYear" type="year" value-format="yyyy" format="yyyy" :picker-options="pickerOptionsEnd" placeholder="选择签约年份">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="VIP等级：" prop="vipRule">
-                    <el-select v-model="vipForm.vipRule" placeholder="请选择" :clearable=true>
+                <el-form-item label="VIP等级：" prop="vipRuleId">
+                    <el-select v-model="vipForm.vipRuleId" placeholder="请选择" :clearable=true>
                         <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevel" :key="item.id"></el-option>
                     </el-select>
                 </el-form-item>
@@ -111,7 +111,7 @@ export default {
                 signYear: [
                     { required: true, message: '请选择签约年份', trigger: 'change' }
                 ],
-                vipRule: [
+                vipRuleId: [
                     { required: true, message: '请选择VIP等级', trigger: 'change' }
                 ],
                 serviceFeeDiscount: [
