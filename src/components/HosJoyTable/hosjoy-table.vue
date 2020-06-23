@@ -1,7 +1,7 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
         <div v-if="collapseShow">
-            <div class="collapse">
+            <div class="collapse" :class="collapse ? 'on' : ''">
                 <el-button type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt=""
                      @click="collapse = !collapse">
@@ -119,8 +119,7 @@ export default {
                 label: 'label'
             },
             defaultLabel: [],
-            selectedColumn: [],
-            userNameLog: ''
+            selectedColumn: []
         }
     },
     created () {
@@ -176,14 +175,21 @@ export default {
                     }
                 }
             })
+        },
+        userNameLog () {
+            return this.localName + this.userInfo.user_name
         }
     },
     methods: {
         async updateLabel () {
-            localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            await this.$emit('toggleTableHandler')
-            this.$emit('updateLabel', this.defaultLabel)
-            this.collapse = false
+            if (this.defaultLabel.length < 2) {
+                this.$message.warning('选中不能小于2个')
+            } else {
+                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                await this.$emit('toggleTableHandler')
+                this.$emit('updateLabel', this.defaultLabel)
+                this.collapse = false
+            }
         },
         hiddenOverflowTooltip (row) {
             if (row.column.showOverflowTooltip) {
@@ -305,18 +311,23 @@ export default {
         dataLength () {
             this.getMergeArr(this.data, this.merge)
         },
-        switchLabel () {
-            const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
-            if (isLoggedIn && isLoggedIn.length > 0) {
-                this.defaultLabel = isLoggedIn
-            } else {
-                this.collectDefaultId(this.switchLabel)
-                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            }
+        switchLabel: {
+            handler () {
+                const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
+                if (isLoggedIn && isLoggedIn.length > 0) {
+                    this.defaultLabel = isLoggedIn
+                    this.$forceUpdate()
+                } else {
+                    this.collectDefaultId(this.switchLabel)
+                    localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                }
+            },
+            deep: true,
+            immediate: true
         }
     },
     mounted () {
-        this.userNameLog = this.localName + this.userInfo.user_name
+        // this.userNameLog = this.localName + this.userInfo.user_name
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -388,8 +399,8 @@ export default {
         position: absolute;
         width: 280px;
         height: 50px;
-        right: 0;
-        top: 0;
+        right: 10px;
+        top: -50px;
         z-index: 2;
         cursor: pointer;
         img{
@@ -403,11 +414,14 @@ export default {
             margin-top: 4px;
         }
     }
+    .on {
+        background: #FFFFFF;
+    }
 
     .collapse-content {
         position: absolute;
         width: 280px;
-        top: 35px;
+        top: 0;
         right: 10px;
         background: #ffffff;
         z-index: 2;
