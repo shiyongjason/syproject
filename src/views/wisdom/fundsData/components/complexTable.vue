@@ -396,12 +396,6 @@ export default {
                 },
                 {
                     label: '借款账目',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.FlowBorrowingBooks, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'loan_loanAmount',
@@ -453,17 +447,63 @@ export default {
                             render: (h, scope) => {
                                 return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
                             }
+                        },
+                        // -----------
+                        {
+                            prop: 'loan_supplier',
+                            label: '供货商名称',
+                            showOverflowTooltip: true,
+                            sort: 2,
+                            minWidth: '150',
+                            isHidden: false
+                        },
+                        {
+                            prop: 'loan_yearRate',
+                            label: '年利率',
+                            sort: 4,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_loanDateNum',
+                            label: '借款期限',
+                            sort: 5,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>
+                                    {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                                    {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                                </span>
+                            }
+                        },
+                        {
+                            label: '应收利息（正常+宽限）',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                            sort: 6,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_registrant',
+                            label: '登记人',
+                            sort: 9,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
+                            }
                         }
                     ]
                 },
                 {
                     label: '还款账目',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.FlowRepaymentAccount, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'planList_0_capitalTime',
@@ -483,17 +523,104 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</span>
                             }
+                        },
+                        // --------
+                        {
+                            prop: 'planList_0_capitalPaid',
+                            label: '累计实收借款本金',
+                            sort: 2,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_graceTime',
+                            label: '宽限还款日',
+                            sort: 4,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_0_graceTime ? moment(scope.row.planList_0_graceTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_interestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                            label: '累计应收正常利息',
+                            sort: 5,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_interestTime',
+                            label: '最新正常利息还款日',
+                            sort: 6,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{scope.row.planList_0_interestTime ? moment(scope.row.planList_0_interestTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_interestPaid',
+                            label: '累计实收正常利息',
+                            sort: 7,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_interestOwe',
+                            label: '欠收正常利息',
+                            sort: 8,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_graceInterestAmount',
+                            label: '累计应收宽限期利息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                            sort: 9,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_graceInterestPaid',
+                            label: '累计实收宽限期利息',
+                            sort: 10,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_graceInterestOwe',
+                            label: '欠收宽限期利息',
+                            sort: 11,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
+                            }
                         }
                     ]
                 },
                 {
                     label: '逾期账目',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.FlowOverdueAccounts, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'planList_0_isOverDue',
@@ -502,6 +629,38 @@ export default {
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
+                            }
+                        },
+                        // --------------
+                        {
+                            prop: 'paymentStatic_overDueInterestAmount',
+                            label: '应收逾期罚息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                            sort: 2,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_overDueInterestPaid',
+                            label: '累计实收逾期罚息',
+                            sort: 3,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_overDueInterestOwe',
+                            label: '欠收逾期罚息',
+                            sort: 4,
+                            minWidth: '150',
+                            isHidden: true,
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
                         }
                     ]
@@ -597,12 +756,6 @@ export default {
                 },
                 {
                     label: '借款账目',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.PointsBorrowingBooks, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'loan_invoiceAmount',
@@ -680,16 +833,41 @@ export default {
                                         this.repaymentDialogVisible = true
                                     }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                             }
+                        },
+                        {
+                            prop: 'loan_yearRate',
+                            label: '年利率',
+                            sort: 6,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_loanDateNum',
+                            label: '借款期限',
+                            sort: 7,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>
+                                {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                                {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                            </span>
+                            }
+                        },
+                        {
+                            prop: 'loan_registrant',
+                            label: '登记人',
+                            sort: 10,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
+                            }
                         }
                     ]
                 },
                 {
                     label: '分授信还款账目总计',
-                    renderHeader: (h, scope) => {
-                        return (
-                            <span>{scope.column.label}<i class={this.column[scope.$index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.PointsRepaymentAccount, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             label: '剩余本金',
@@ -714,17 +892,110 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
+                        },
+                        {
+                            prop: 'paymentStatic_capitalTime',
+                            label: '最新本金还款时间',
+                            sort: 1,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.paymentStatic_capitalTime ? moment(scope.row.paymentStatic_capitalTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_capitalPaid',
+                            label: '累计已还本金',
+                            sort: 2,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '应收利息（正常+宽限）',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            sort: 4,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_interestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '累计应收正常利息',
+                            sort: 5,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_normalInterestPranayamaTotal : scope.row.paymentStatic_normalInterestPranayamaTotal})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_interestTime',
+                            label: '最新正常利息还款时间',
+                            sort: 6,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.paymentStatic_interestTime ? moment(scope.row.paymentStatic_interestTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_interestPaid',
+                            label: '累计实收正常利息',
+                            sort: 7,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '累计应收宽限期利息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            sort: 9,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收宽限期利息',
+                            sort: 10,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余宽限期利息',
+                            sort: 11,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_overDueInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '累计应收逾期罚息',
+                            sort: 12,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'paymentStatic_overDueInterestPaid',
+                            label: '累计实收逾期罚息',
+                            sort: 13,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
+                            }
                         }
                     ]
                 },
                 {
                     label: '分授信还款账目明细',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.PointsRCDetail, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'planList_0_endTime',
@@ -887,6 +1158,257 @@ export default {
                             render: (h, scope) => {
                                 return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
+                        },
+                        {
+                            prop: 'planList_0_capitalAmount',
+                            label: '约定还款本金金额',
+                            sort: 3,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_capitalPaid',
+                            label: '累计还款本金金额',
+                            sort: 4,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_interestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应收正常利息',
+                            sort: 6,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_graceInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应收宽限期利息',
+                            sort: 9,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_interestAmount',
+                            label: '累计实收宽限期利息',
+                            sort: 10,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_interestAmount',
+                            label: '剩余宽限期利息',
+                            sort: 11,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_overDueInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应缴逾期罚息',
+                            sort: 13,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_overDueInterestPaid',
+                            label: '实缴逾期罚息',
+                            sort: 14,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_0_overDueInterestOwe',
+                            label: '剩余逾期罚息',
+                            sort: 15,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
+                            }
+                        },
+                        // 约定还款日2
+                        {
+                            prop: 'planList_1_capitalAmount',
+                            label: '约定还款本金金额',
+                            sort: 18,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_capitalAmount)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_capitalPaid',
+                            label: '累计还款本金金额',
+                            sort: 19,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_interestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应收正常利息',
+                            sort: 21,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_graceInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应收宽限期利息',
+                            sort: 24,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_interestAmount',
+                            label: '累计实收宽限期利息',
+                            sort: 25,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_interestAmount',
+                            label: '剩余宽限期利息',
+                            sort: 26,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_overDueInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应缴逾期罚息',
+                            sort: 28,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_overDueInterestPaid',
+                            label: '实缴逾期罚息',
+                            sort: 29,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_overDueInterestOwe',
+                            label: '剩余逾期罚息',
+                            sort: 30,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
+                            }
+                        },
+                        // 约定还款日3
+                        {
+                            prop: 'planList_2_capitalAmount',
+                            label: '约定还款本金金额',
+                            sort: 33,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_capitalAmount)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_capitalPaid',
+                            label: '累计还款本金金额',
+                            sort: 34,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应收正常利息',
+                            sort: 36,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_interestAmount)}{scope.row.planList_2_normalInterestPranayama ? `(${scope.row.planList_2_normalInterestPranayama > 0 ? '+' + scope.row.planList_2_normalInterestPranayama : scope.row.planList_2_normalInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_graceInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应收宽限期利息',
+                            sort: 39,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收宽限期利息',
+                            sort: 40,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余宽限期利息',
+                            sort: 41,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_overDueInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
+                            label: '应缴逾期罚息',
+                            sort: 43,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_overDueInterestPaid',
+                            label: '实缴逾期罚息',
+                            sort: 44,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_overDueInterestOwe',
+                            label: '剩余逾期罚息',
+                            sort: 45,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
+                            }
                         }
                     ]
                 },
@@ -979,12 +1501,6 @@ export default {
                 },
                 {
                     label: '借款账目',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.ExpoBorrowingBooks, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'loan_invoiceAmount',
@@ -1022,17 +1538,73 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.loan_depositPay)}</span>
                             }
-                        }
+                        },
+                        {
+                            prop: 'loan_depositProportion',
+                            label: '保证金比例',
+                            sort: 4,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_depositProportion ? `${scope.row.loan_depositProportion}%` : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_loanAmount',
+                            label: '敞口金额',
+                            sort: 6,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
+                                    this.getLoan(scope.row)
+                                    this.loanData.title = `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                    this.billingDialogVisible = true
+                                }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_loanDateNum',
+                            label: '承兑期限',
+                            sort: 7,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>
+                                {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                                {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                            </span>
+                            }
+                        },
+                        {
+                            prop: 'loan_loanEndTime',
+                            label: '到期日',
+                            sort: 8,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            prop: 'loan_repaymentType',
+                            label: '还款方式',
+                            sort: 9,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
+                            class={
+                                    scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
+                                        ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                onClick={async () => {
+                                    await this.getGrantPaymetPlanData(scope.row)
+                                    this.repaymentDialogVisible = true
+                                }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
+                            }
+                        },
+                        { prop: 'loan_registrant', label: '登记人', sort: 9, width: '150' }
                     ]
                 },
                 {
                     label: '敞口还款账目总计',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.ExpoRepaymentAccount, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
                             prop: 'paymentStatic_capitalOwe',
@@ -1051,20 +1623,71 @@ export default {
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
                             }
+                        },
+                        {
+                            label: '最新还款时间',
+                            sort: 1,
+                            width: '150',
+                            render: (h, scope) => {
+                                return <span>{scope.row.paymentStatic_capitalTime ? moment(scope.row.paymentStatic_capitalTime).format('YYYY-MM-DD') : '-'}</span>
+                            }
+                        },
+                        {
+                            label: '累计已还敞口本金',
+                            sort: 2,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '累计应收宽限期利息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            sort: 4,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收宽限期利息',
+                            sort: 5,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余宽限期利息',
+                            sort: 6,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            label: '累计应收逾期罚息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            sort: 7,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收逾期罚息',
+                            sort: 8,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
+                            }
                         }
                     ]
                 },
                 {
                     label: '敞口还款账目明细',
-                    renderHeader: (h, scope) => {
-                        let index = this.findLabelIndex(scope.column.label)
-                        return (
-                            <span>{scope.column.label}<i class={this.column[index]._expand ? 'el-icon-minus pointer' : 'el-icon-plus pointer'} onClick={() => { this.handleExpand(this.ExpoRCDetail, index) }}></i></span>
-                        )
-                    },
                     children: [
                         {
-                            prop: 'planList_0_endTime',
                             label: '约定还款日期1',
                             sort: 1,
                             minWidth: '150',
@@ -1073,8 +1696,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_graceTime',
                             label: '宽限到期日',
+                            uniqueLabel: '宽限到期日1',
                             sort: 2,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1082,35 +1705,31 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_0_capitalOwe',
                             label: '剩余还款金额',
-                            sort: 5,
+                            uniqueLabel: '剩余还款金额1',
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.planList_0_capitalOwe)}</span>
                             }
                         },
                         {
-                            prop: 'planList_0_isOverDue',
                             label: '是否逾期',
-                            sort: 9,
+                            uniqueLabel: '是否逾期1',
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span class={scope.row.planList_0_isOverDue ? 'red' : ''}>{scope.row.planList_0_isOverDue ? '是' : '否'}</span>
                             }
                         },
                         {
-                            prop: 'planList_1_endTime',
                             label: '约定还款日期2',
-                            sort: 13,
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>{scope.row.planList_1_endTime ? moment(scope.row.planList_1_endTime).format('YYYY-MM-DD') : '-'}</span>
                             }
                         },
                         {
-                            prop: 'planList_1_graceTime',
                             label: '宽限到期日',
+                            uniqueLabel: '宽限到期日2',
                             sort: 14,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1118,8 +1737,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_capitalOwe',
                             label: '剩余还款金额',
+                            uniqueLabel: '剩余还款金额2',
                             sort: 17,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1127,8 +1746,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_1_isOverDue',
                             label: '是否逾期',
+                            uniqueLabel: '是否逾期2',
                             sort: 21,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1136,7 +1755,6 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_endTime',
                             label: '约定还款日期3',
                             sort: 25,
                             minWidth: '150',
@@ -1145,8 +1763,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_graceTime',
                             label: '宽限到期日',
+                            uniqueLabel: '宽限到期日3',
                             sort: 26,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1154,8 +1772,8 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_capitalOwe',
                             label: '剩余还款金额',
+                            uniqueLabel: '剩余还款金额3',
                             sort: 29,
                             minWidth: '150',
                             render: (h, scope) => {
@@ -1163,18 +1781,222 @@ export default {
                             }
                         },
                         {
-                            prop: 'planList_2_isOverDue',
                             label: '是否逾期',
+                            uniqueLabel: '是否逾期3',
                             sort: 33,
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
+                        },
+                        {
+                            label: '约定还款金额',
+                            sort: 3,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
+                            }
+                        },
+                        {
+                            label: '累计实际还款本金金额',
+                            sort: 4,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '应收宽限期利息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            sort: 6,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收宽限期利息',
+                            sort: 7,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余宽限期利息',
+                            sort: 8,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            label: '应缴逾期罚息',
+                            sort: 10,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '实缴逾期罚息',
+                            sort: 11,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余逾期罚息',
+                            sort: 12,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
+                            }
+                        },
+                        // 约定日期2
+                        {
+                            label: '约定还款金额',
+                            sort: 15,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_capitalAmount)}</span>
+                            }
+                        },
+                        {
+                            label: '累计实际还款本金金额',
+                            sort: 16,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '应收宽限期利息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            sort: 18,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收宽限期利息',
+                            sort: 19,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余宽限期利息',
+                            sort: 20,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_overDueInterestAmount',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            label: '应缴逾期罚息',
+                            sort: 22,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_overDueInterestPaid',
+                            label: '实缴逾期罚息',
+                            sort: 23,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_1_overDueInterestOwe',
+                            label: '剩余逾期罚息',
+                            sort: 24,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
+                            }
+                        },
+                        // 约定日期3
+                        {
+                            prop: 'planList_2_capitalAmount',
+                            label: '约定还款金额',
+                            sort: 27,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_capitalAmount)}</span>
+                            }
+                        },
+                        {
+                            prop: 'planList_2_capitalPaid',
+                            label: '累计实际还款本金金额',
+                            sort: 28,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '应收宽限期利息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            sort: 30,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '累计实收宽限期利息',
+                            sort: 31,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_graceInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余宽限期利息',
+                            sort: 32,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
+                            }
+                        },
+                        {
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
+                            label: '应缴逾期罚息',
+                            sort: 34,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
+                            }
+                        },
+                        {
+                            label: '实缴逾期罚息',
+                            sort: 35,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余逾期罚息',
+                            sort: 36,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
+                            }
                         }
                     ]
                 },
                 {
-                    prop: 'loan_manualInterest',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '手动调息',
                     minWidth: '100',
@@ -1187,7 +2009,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'account_standingBookArchiveNo',
                     label: '台账档案编号',
                     minWidth: '200',
                     render: (h, scope) => {
@@ -1200,7 +2021,6 @@ export default {
                     }
                 },
                 {
-                    prop: 'account_remark',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
                     label: '备注',
                     minWidth: '200',
@@ -1300,912 +2120,7 @@ export default {
                 // }
             ],
             column: [],
-            isShowParent: true,
-            // 流贷
-            // 借款账目的展开
-            FlowBorrowingBooks: [
-                {
-                    prop: 'loan_supplier',
-                    label: '供货商名称',
-                    showOverflowTooltip: true,
-                    sort: 2,
-                    minWidth: '150'
-                },
-                {
-                    prop: 'loan_yearRate',
-                    label: '年利率',
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'loan_loanDateNum',
-                    label: '借款期限',
-                    sort: 5,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>
-                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                            {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
-                        </span>
-                    }
-                },
-                {
-                    label: '应收利息（正常+宽限）',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'loan_registrant',
-                    label: '登记人',
-                    sort: 9,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
-                    }
-                }
-            ],
-            // 还款账目的展开
-            FlowRepaymentAccount: [
-                {
-                    prop: 'planList_0_capitalPaid',
-                    label: '累计实收借款本金',
-                    sort: 2,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_graceTime',
-                    label: '宽限还款日',
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.planList_0_graceTime ? moment(scope.row.planList_0_graceTime).format('YYYY-MM-DD') : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_interestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
-                    label: '累计应收正常利息',
-                    sort: 5,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_interestTime',
-                    label: '最新正常利息还款日',
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.planList_0_interestTime ? moment(scope.row.planList_0_interestTime).format('YYYY-MM-DD') : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_interestPaid',
-                    label: '累计实收正常利息',
-                    sort: 7,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_interestOwe',
-                    label: '欠收正常利息',
-                    sort: 8,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_graceInterestAmount',
-                    label: '累计应收宽限期利息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
-                    sort: 9,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_graceInterestPaid',
-                    label: '累计实收宽限期利息',
-                    sort: 10,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_graceInterestOwe',
-                    label: '欠收宽限期利息',
-                    sort: 11,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
-                    }
-                }
-            ],
-            // 逾期账目的展开
-            FlowOverdueAccounts: [
-                {
-                    prop: 'paymentStatic_overDueInterestAmount',
-                    label: '应收逾期罚息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
-                    sort: 2,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_overDueInterestPaid',
-                    label: '累计实收逾期罚息',
-                    sort: 3,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_overDueInterestOwe',
-                    label: '欠收逾期罚息',
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
-                    }
-                }
-            ],
-            // 分授信
-            // 借款账目的展开
-            PointsBorrowingBooks: [
-                {
-                    prop: 'loan_yearRate',
-                    label: '年利率',
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_yearRate ? `${scope.row.loan_yearRate}%` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'loan_loanDateNum',
-                    label: '借款期限',
-                    sort: 7,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>
-                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                            {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
-                        </span>
-                    }
-                },
-                {
-                    prop: 'loan_registrant',
-                    label: '登记人',
-                    sort: 10,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_registrant ? `${scope.row.loan_registrant}` : '-'}</span>
-                    }
-                }
-            ],
-            // 分授信还款账目总计
-            PointsRepaymentAccount: [
-                {
-                    prop: 'paymentStatic_capitalTime',
-                    label: '最新本金还款时间',
-                    sort: 1,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime ? moment(scope.row.paymentStatic_capitalTime).format('YYYY-MM-DD') : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_capitalPaid',
-                    label: '累计已还本金',
-                    sort: 2,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
-                    }
-                },
-                {
-                    label: '应收利息（正常+宽限）',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_interestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '累计应收正常利息',
-                    sort: 5,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_normalInterestPranayamaTotal : scope.row.paymentStatic_normalInterestPranayamaTotal})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_interestTime',
-                    label: '最新正常利息还款时间',
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_interestTime ? moment(scope.row.paymentStatic_interestTime).format('YYYY-MM-DD') : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_interestPaid',
-                    label: '累计实收正常利息',
-                    sort: 7,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
-                    }
-                },
-                {
-                    label: '累计应收宽限期利息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    sort: 9,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
-                    }
-                },
-                {
-                    label: '累计实收宽限期利息',
-                    sort: 10,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    label: '剩余宽限期利息',
-                    sort: 11,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '累计应收逾期罚息',
-                    sort: 12,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'paymentStatic_overDueInterestPaid',
-                    label: '累计实收逾期罚息',
-                    sort: 13,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
-                    }
-                }
-            ],
-            // 分授信还款账目明细
-            PointsRCDetail: [
-                {
-                    prop: 'planList_0_capitalAmount',
-                    label: '约定还款本金金额',
-                    sort: 3,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_capitalPaid',
-                    label: '累计还款本金金额',
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_interestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应收正常利息',
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_graceInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应收宽限期利息',
-                    sort: 9,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_interestAmount',
-                    label: '累计实收宽限期利息',
-                    sort: 10,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_interestAmount',
-                    label: '剩余宽限期利息',
-                    sort: 11,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应缴逾期罚息',
-                    sort: 13,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_overDueInterestPaid',
-                    label: '实缴逾期罚息',
-                    sort: 14,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 15,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
-                    }
-                },
-                // 约定还款日2
-                {
-                    prop: 'planList_1_capitalAmount',
-                    label: '约定还款本金金额',
-                    sort: 18,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_capitalAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_capitalPaid',
-                    label: '累计还款本金金额',
-                    sort: 19,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_capitalPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_interestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应收正常利息',
-                    sort: 21,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_graceInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应收宽限期利息',
-                    sort: 24,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_interestAmount',
-                    label: '累计实收宽限期利息',
-                    sort: 25,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_interestAmount',
-                    label: '剩余宽限期利息',
-                    sort: 26,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应缴逾期罚息',
-                    sort: 28,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_overDueInterestPaid',
-                    label: '实缴逾期罚息',
-                    sort: 29,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 30,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
-                    }
-                },
-                // 约定还款日3
-                {
-                    prop: 'planList_2_capitalAmount',
-                    label: '约定还款本金金额',
-                    sort: 33,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_capitalAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_capitalPaid',
-                    label: '累计还款本金金额',
-                    sort: 34,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_interestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应收正常利息',
-                    sort: 36,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_interestAmount)}{scope.row.planList_2_normalInterestPranayama ? `(${scope.row.planList_2_normalInterestPranayama > 0 ? '+' + scope.row.planList_2_normalInterestPranayama : scope.row.planList_2_normalInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_graceInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应收宽限期利息',
-                    sort: 39,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_interestAmount',
-                    label: '累计实收宽限期利息',
-                    sort: 40,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_interestAmount',
-                    label: '剩余宽限期利息',
-                    sort: 41,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '应缴逾期罚息',
-                    sort: 43,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_overDueInterestPaid',
-                    label: '实缴逾期罚息',
-                    sort: 44,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 45,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
-                    }
-                }
-            ],
-            // 敞口
-            // 借款账目的展开
-            ExpoBorrowingBooks: [
-                {
-                    prop: 'loan_depositProportion',
-                    label: '保证金比例',
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_depositProportion ? `${scope.row.loan_depositProportion}%` : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'loan_loanAmount',
-                    label: '敞口金额',
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                        return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i class='el-icon-edit pointer' onClick={() => {
-                            this.getLoan(scope.row)
-                            this.loanData.title = `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                            this.billingDialogVisible = true
-                        }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'loan_loanDateNum',
-                    label: '承兑期限',
-                    sort: 7,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>
-                            {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                            {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
-                        </span>
-                    }
-                },
-                {
-                    prop: 'loan_loanEndTime',
-                    label: '到期日',
-                    sort: 8,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.loan_loanEndTime ? moment(scope.row.loan_loanEndTime).format('YYYY-MM-DD') : '-'}</span>
-                    }
-                },
-                {
-                    prop: 'loan_repaymentType',
-                    label: '还款方式',
-                    sort: 9,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                        return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                            class={
-                                scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
-                                    ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                            onClick={async () => {
-                                await this.getGrantPaymetPlanData(scope.row)
-                                this.repaymentDialogVisible = true
-                            }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
-                    }
-                },
-                { prop: 'loan_registrant', label: '登记人', sort: 9, width: '150' }
-            ],
-            // 敞口还款账目总计的展开
-            ExpoRepaymentAccount: [
-                {
-                    label: '最新还款时间',
-                    sort: 1,
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.paymentStatic_capitalTime ? moment(scope.row.paymentStatic_capitalTime).format('YYYY-MM-DD') : '-'}</span>
-                    }
-                },
-                {
-                    label: '累计已还敞口本金',
-                    sort: 2,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
-                    }
-                },
-                {
-                    label: '累计应收宽限期利息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
-                    }
-                },
-                {
-                    label: '累计实收宽限期利息',
-                    sort: 5,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    label: '剩余宽限期利息',
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    label: '累计应收逾期罚息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    sort: 7,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
-                    }
-                },
-                {
-                    label: '累计实收逾期罚息',
-                    sort: 8,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
-                    }
-                }
-            ],
-            // 敞口还款账目明细的展开
-            ExpoRCDetail: [
-                {
-                    prop: 'planList_0_capitalAmount',
-                    label: '约定还款金额',
-                    sort: 3,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_capitalPaid',
-                    label: '累计实际还款本金金额',
-                    sort: 4,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
-                    }
-                },
-                {
-                    label: '应收宽限期利息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    sort: 6,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    label: '累计实收宽限期利息',
-                    sort: 7,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    label: '剩余宽限期利息',
-                    sort: 8,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '应缴逾期罚息',
-                    sort: 10,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_overDueInterestPaid',
-                    label: '实缴逾期罚息',
-                    sort: 11,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_0_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 12,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
-                    }
-                },
-                // 约定日期2
-                {
-                    prop: 'planList_1_capitalAmount',
-                    label: '约定还款金额',
-                    sort: 15,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_capitalAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_capitalPaid',
-                    label: '累计实际还款本金金额',
-                    sort: 16,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_capitalPaid)}</span>
-                    }
-                },
-                {
-                    label: '应收宽限期利息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    sort: 18,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    label: '累计实收宽限期利息',
-                    sort: 19,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    label: '剩余宽限期利息',
-                    sort: 20,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '应缴逾期罚息',
-                    sort: 22,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_overDueInterestPaid',
-                    label: '实缴逾期罚息',
-                    sort: 23,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_1_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 24,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
-                    }
-                },
-                // 约定日期3
-                {
-                    prop: 'planList_2_capitalAmount',
-                    label: '约定还款金额',
-                    sort: 27,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_capitalAmount)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_capitalPaid',
-                    label: '累计实际还款本金金额',
-                    sort: 28,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
-                    }
-                },
-                {
-                    label: '应收宽限期利息',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    sort: 30,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    label: '累计实收宽限期利息',
-                    sort: 31,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestPaid)}</span>
-                    }
-                },
-                {
-                    label: '剩余宽限期利息',
-                    sort: 32,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_overDueInterestAmount',
-                    selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '应缴逾期罚息',
-                    sort: 34,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_overDueInterestPaid',
-                    label: '实缴逾期罚息',
-                    sort: 35,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestPaid)}</span>
-                    }
-                },
-                {
-                    prop: 'planList_2_overDueInterestOwe',
-                    label: '剩余逾期罚息',
-                    sort: 36,
-                    minWidth: '150',
-                    render: (h, scope) => {
-                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
-                    }
-                }
-            ]
+            isShowParent: true
         }
     },
     methods: {
@@ -2222,22 +2137,6 @@ export default {
                     this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
                 })
             }
-        },
-        handleExpand (expandSellrr, index) {
-            this.isShowParent = false
-            this.$nextTick(() => {
-                this.isShowParent = true
-            })
-            this.$set(this.column[index], '_expand', !this.column[index]._expand)
-            if (this.column[index]._expand) {
-                this.column[index].children = this.column[index].children.concat(expandSellrr.filter(i => !i.selfSettingHidden === true))
-                this.column[index].children.sort((a, b) => a.sort - b.sort)
-            } else {
-                this.column[index].children = this.column[index].children.filter(_ => !expandSellrr.includes(_))
-            }
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
-            })
         },
         async getList (val) {
             this.$emit('getList', val)

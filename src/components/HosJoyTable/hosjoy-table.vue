@@ -2,7 +2,7 @@
     <div class="hosjoy-table" ref="hosTable">
         <div v-if="collapseShow">
             <div class="collapse" :class="collapse ? 'on' : ''">
-                <el-button type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
+                <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt=""
                      @click="collapse = !collapse">
             </div>
@@ -23,6 +23,7 @@
                 </div>
             </el-collapse-transition>
         </div>
+        {{switchLabel}}
         <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data"
                   :height=" height || `calc(100vh - ${selfHeight}px)`"
                   class="hosjoy-in-table"
@@ -153,6 +154,9 @@ export default {
                 let id = null
                 if (value.prop && value.label) {
                     id = value.prop
+                } else if (value.label && value.uniqueLabel) {
+                    id = value.uniqueLabel
+                    console.log(id)
                 } else if (value.label) {
                     id = value.label
                 }
@@ -397,10 +401,12 @@ export default {
     /*}*/
     .collapse {
         position: absolute;
+        box-sizing: border-box;
+        padding: 10px 15px;
         width: 280px;
         height: 50px;
         right: 10px;
-        top: -50px;
+        top: 0;
         z-index: 2;
         cursor: pointer;
         img{
@@ -421,12 +427,15 @@ export default {
     .collapse-content {
         position: absolute;
         width: 280px;
-        top: 0;
+        top: 50px;
         right: 10px;
         background: #ffffff;
         z-index: 2;
         padding: 5px 10px;
         box-sizing: border-box;
+        max-height: 400px;
+        overflow: hidden;
+        overflow-y: scroll;
     }
 
     .hosjoy-table >>> .el-table .branch-total-row {
