@@ -58,6 +58,11 @@
                                 </el-input>
                             </el-form-item>
                         </div>
+                        <div class="query-cont-col" style="width: 50%">
+                            <el-form-item label="宽限到期日：">
+                                {{untilDay}}
+                            </el-form-item>
+                        </div>
                     </template>
                 </div>
                 <div class="query-cont-row">
@@ -215,6 +220,7 @@
 import { setPlan } from '../../../api'
 import { mapState } from 'vuex'
 import { setCountMixin } from '../../../mixins/setCount'
+import moment from 'moment'
 export default {
     name: 'AnnualInterestRateDialog',
     mixins: [setCountMixin],
@@ -350,6 +356,9 @@ export default {
         },
         thisPaidOverDueInterestSur () {
             return ((this.detailData[0].overDueInterestAmount || 0) - (this.detailData[0].overDueInterestPaid || 0) - (this.detailData[0].thisPaidOverDueInterest || 0)).toFixed(2) || 0
+        },
+        untilDay () {
+            return moment(this.detailData[0].endTime).add(this.detailData[0].graceDay, 'days').format('YYYY-MM-DD')
         }
     },
     methods: {
@@ -379,6 +388,7 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     this.loading = true
+                    this.detailData[0].graceDueDate = this.untilDay
                     let form = {
                         createBy: this.userInfo.employeeName,
                         planList: [...this.detailData]
