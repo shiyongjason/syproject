@@ -153,8 +153,6 @@ export default {
                 let id = null
                 if (value.prop && value.label) {
                     id = value.prop
-                } else if (value.uniqueLabel) {
-                    id = value.uniqueLabel
                 } else if (value.label) {
                     id = value.label
                 }
@@ -163,8 +161,9 @@ export default {
                         id: id,
                         label: value.label,
                         children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                            let subId = id + (value1.uniqueLabel || value1.prop || value1.label)
                             return {
-                                id: value1.uniqueLabel || value1.prop || value1.label,
+                                id: subId,
                                 label: value1.uniqueLabel || value1.label
                             }
                         })

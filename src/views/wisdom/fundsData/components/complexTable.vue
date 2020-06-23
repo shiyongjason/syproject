@@ -1,5 +1,6 @@
 <template>
     <div class="page-body">
+        {{column}}
         <div class="page-table">
             <hosJoyTable v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
                          align="center" border stripe showPagination :column="column"
@@ -792,9 +793,9 @@ export default {
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>
-                                {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                                {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
-                            </span>
+                                    {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                                    {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                                </span>
                             }
                         },
                         {
@@ -1099,7 +1100,7 @@ export default {
                                 return <span class={scope.row.planList_2_isOverDue ? 'red' : ''}>{scope.row.planList_2_isOverDue ? '是' : '否'}</span>
                             }
                         },
-                        
+
                         {
                             label: '累计还款本金金额',
                             uniqueLabel: '累计还款本金金额1',
@@ -1492,9 +1493,9 @@ export default {
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>
-                                {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                                {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
-                            </span>
+                                    {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                                    {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                                </span>
                             }
                         },
                         {
@@ -1512,13 +1513,13 @@ export default {
                             render: (h, scope) => {
                                 let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
                                 return render ? <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}<i
-                            class={
-                                    scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
-                                        ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
-                                onClick={async () => {
-                                    await this.getGrantPaymetPlanData(scope.row)
-                                    this.repaymentDialogVisible = true
-                                }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
+                                    class={
+                                        scope.row.loan_loanAmount && scope.row.loan_loanDateNum && scope.row.loan_invoiceTime
+                                            ? 'el-icon-edit pointer' : 'el-icon-edit pointer hidden'}
+                                    onClick={async () => {
+                                        await this.getGrantPaymetPlanData(scope.row)
+                                        this.repaymentDialogVisible = true
+                                    }}></i></span> : <span>{scope.row.loan_repaymentType == 1 ? '一次性还款' : '334还款'}</span>
                             }
                         },
                         { prop: 'loan_registrant', label: '登记人', sort: 9, width: '150' }
@@ -2173,8 +2174,15 @@ export default {
                 value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
                 if (value.children) {
                     let number = 0
+                    let ID = ''
+                    if (value.prop && value.label) {
+                        ID += value.prop
+                    } else if (value.label) {
+                        ID += value.label
+                    }
                     value.children.forEach(value1 => {
-                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
+                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
                     value.isHidden = !(number > 0)
