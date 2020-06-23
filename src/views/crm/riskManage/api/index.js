@@ -7,4 +7,6 @@ export const getDoctempDetail = (params) => axios.get(`/fms/api/doc-template/${p
 
 export const saveDoctemp = (params) => axios.put('/fms/api/doc-template', params)
 
+export const saveCeditDoctemp = (params) => axios.put('/fms/api/doc-template/company', params)
+
 export const docTempformat = (params) => axios.get('/fms/api/doc-template/format', { params })

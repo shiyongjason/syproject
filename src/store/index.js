@@ -20,7 +20,9 @@ import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
-
+import vipManage from '@/views/crm/vipManage/store/vipManage'
+import creditManage from '@/views/crm/creditManage/store/creditManage'
+import vipApply from '@/views/crm/vipApplication/store/vipApplication'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -45,7 +47,7 @@ const store = new Vuex.Store({
     mutations,
     actions: actions,
     modules: {
-        // 视图的 store
+        // 视图的 store 这里 大写
         dueDiligence,
         hmall,
         layout,
@@ -62,7 +64,10 @@ const store = new Vuex.Store({
         fundsPlan,
         crmstatic,
         projectInformation,
-        riskManage
+        riskManage,
+        vipManage,
+        vipApply,
+        creditManage
     }
 })
 export default store

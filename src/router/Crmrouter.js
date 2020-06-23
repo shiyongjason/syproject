@@ -44,6 +44,62 @@ export default [
                 component: () => import('@/views/crm/crmstatic/staticlist')
             },
             {
+                path: 'applicationList',
+                name: 'applicationList',
+                meta: {
+                    title: '好橙工VIP申请列表',
+                    tagName: '好橙工VIP申请列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/vipApplication/applicationList')
+            },
+            {
+                path: 'vipmanlist',
+                name: 'vipmanlist',
+                meta: {
+                    title: '好橙工VIP管理列表',
+                    tagName: '好橙工VIP管理列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/vipManage/vipmanlist')
+            },
+            {
+                path: 'creditmanlist',
+                name: 'creditmanlist',
+                meta: {
+                    title: '好橙工信用管理列表',
+                    tagName: '好橙工信用管理列表',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditManage/creditmanlist')
+            },
+
+            {
+                path: 'authenlist',
+                name: 'authenlist',
+                meta: {
+                    title: '企业管理',
+                    tagName: '企业管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/crmauthen/authenlist')
+            },
+            {
+                path: 'staticlist',
+                name: 'staticlist',
+                meta: {
+                    title: '好橙工台账',
+                    tagName: '好橙工台账',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/crmstatic/staticlist')
+            },
+            {
                 path: 'datatemp',
                 name: 'datatemp',
                 meta: {
@@ -106,4 +162,5 @@ export default [
 
         ]
     }
+
 ]
