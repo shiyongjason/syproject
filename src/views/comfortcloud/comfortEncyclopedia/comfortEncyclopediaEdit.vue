@@ -194,7 +194,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/comfortEncyclopedia')
+            this.$router.push('/comfortCloud/operationsManagement/comfortEncyclopedia')
         },
         async getActivityDetail (id) {
             await this.findComfortEncyclopediaDetail(id)
@@ -217,7 +217,7 @@ export default {
                         }
                         this.loading = false
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/comfortEncyclopedia')
+                        this.$router.push('/comfortCloud/operationsManagement/comfortEncyclopedia')
                     } catch (error) {
                         this.loading = false
                     }

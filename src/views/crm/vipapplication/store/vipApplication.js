@@ -1,34 +1,33 @@
 
-import * as types from './riskTypes'
+import * as types from './vipTypes'
 import * as Api from '../api'
 const state = {
-    docTempdata: {},
-    docTempdetail: {}
+    vipApply: {},
+    contracts: {}
 }
 
 const getters = {
-    docTempdata: state => state.docTempdata,
-    docTempdetail: state => state.docTempdetail
-
+    vipApply: state => state.vipApply,
+    contracts: state => state.contracts
 }
 
 const mutations = {
-    [types.DOC_TEMDATA] (state, payload) {
-        state.docTempdata = payload
+    [types.VIP_APPLY] (state, payload) {
+        state.vipApply = payload
     },
-    [types.DOC_TEMPDETAIL] (state, payload) {
-        state.docTempdetail = payload
+    [types.CONTRACTS_ARR] (state, payload) {
+        state.contracts = payload
     }
 }
 
 const actions = {
-    async findDocTemplist ({ commit }, params) {
-        const { data } = await Api.getDoctemplist(params)
-        commit(types.DOC_TEMDATA, data)
+    async findApplyvip ({ commit }, params) {
+        const { data } = await Api.getApplyvip(params)
+        commit(types.VIP_APPLY, data)
     },
-    async findDocTempdetail ({ commit }, params) {
-        const { data } = await Api.getDoctempDetail(params)
-        commit(types.DOC_TEMPDETAIL, data)
+    async findContract ({ commit }, params) {
+        const { data } = await Api.seachContract(params)
+        commit(types.CONTRACTS_ARR, data)
     }
 }
 export default {

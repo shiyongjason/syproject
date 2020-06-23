@@ -138,7 +138,7 @@ export default {
         }),
         addNewApply () {
             this.getApplyCompanyName('申请')
-            this.$router.push({ path: '/bestonline/applyform' })
+            this.$router.push({ path: '/jd/bestonline/applyform' })
         },
         onSizeChange (val) {
             this.params.pageSize = val
@@ -175,7 +175,7 @@ export default {
             }
         },
         onEdit (val) {
-            this.$router.push({ path: '/bestonline/applyform', query: { id: val.applyId } })
+            this.$router.push({ path: '/jd/bestonline/applyform', query: { id: val.applyId } })
         },
         onDelete (val) {
             this.$confirm(`是否确认删除该平台公司?`, '确认删除', {
@@ -192,7 +192,7 @@ export default {
             })
         },
         onShow (val) {
-            this.$router.push({ path: '/bestonline/applyform', query: { id: val.applyId } })
+            this.$router.push({ path: '/jd/bestonline/applyform', query: { id: val.applyId } })
         }
     }
 }

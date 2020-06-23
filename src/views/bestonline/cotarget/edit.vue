@@ -130,7 +130,6 @@ export default {
         async onSave () {
             this.form.operationNode = 0
             await this._saveOrUpdate()
-            // this.$router.go(-1)
         },
         async onSubmit () {
             this.form.operationNode = 1

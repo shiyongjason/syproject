@@ -99,13 +99,13 @@ export default {
         goEdit (type, id) {
             if (type === 'edit') {
                 this.$router.push({
-                    path: '/comfortCloud/sendMessageEdit',
+                    path: '/comfortCloud/operationsManagement/sendMessageEdit',
                     query: {
                         id: id
                     }
                 })
             } else {
-                this.$router.push('/comfortCloud/sendMessageEdit')
+                this.$router.push('/comfortCloud/operationsManagement/sendMessageEdit')
             }
         },
         async onDelete (id) {
@@ -151,7 +151,7 @@ export default {
         },
         goDetail (id) {
             this.$router.push({
-                path: '/comfortCloud/sendMessageDetail',
+                path: '/comfortCloud/operationsManagement/sendMessageDetail',
                 query: {
                     id: id
                 }

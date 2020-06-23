@@ -5,7 +5,6 @@ import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
 import hmall from '@/views/hmall/store/index.js'
 import layout from '@/views/layout/store/index.js'
-import serviceManagement from './modules/serviceManagement'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
@@ -22,6 +21,8 @@ import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
 import vipManage from '@/views/crm/vipManage/store/vipManage'
+import creditManage from '@/views/crm/creditManage/store/creditManage'
+import vipApply from '@/views/crm/vipApplication/store/vipApplication'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -53,7 +54,6 @@ const store = new Vuex.Store({
         eventManage,
         fundsData,
         membership,
-        serviceManagement,
         payment,
         userRealreport,
         cloudmanage,
@@ -65,7 +65,9 @@ const store = new Vuex.Store({
         crmstatic,
         projectInformation,
         riskManage,
-        vipManage
+        vipManage,
+        vipApply,
+        creditManage
     }
 })
 export default store

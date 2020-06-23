@@ -87,7 +87,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions } from 'vuex'
-import { saveDoctemp, docTempformat } from './api/index'
+import { saveDoctemp, docTempformat, saveCeditDoctemp } from './api/index'
 export default {
     name: 'templatedetail',
     components: {
@@ -167,7 +167,11 @@ export default {
         async onSaveTemp () {
             this.dialogVisible = false
             this.formTemp.riskCheckDocTemplateSamplePos = this.formTemp.projectUpload
-            await saveDoctemp(this.formTemp)
+            if (this.bizType == 4) {
+                await saveCeditDoctemp(this.formTemp)
+            } else {
+                await saveDoctemp(this.formTemp)
+            }
             this.onFindDoctemp()
         },
         computedRowspan (list) {

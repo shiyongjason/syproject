@@ -1,3 +1,5 @@
-export const VIP = 'DOC_TEMDATA'
+export const VIP_APPLY = 'VIP_APPLY'
 
 export const DOC_TEMPDETAIL = 'DOC_TEMPDETAIL'
+
+export const CONTRACTS_ARR = 'CONTRACTS_ARR'
