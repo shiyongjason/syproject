@@ -9,7 +9,7 @@
                         <el-button type="primary" size="mini" @click="onEditVip()">新增签约</el-button>
                     </div>
                 </div>
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true"  :isShowIndex='true' :maxHeight=500>
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">修改</el-button>
                     </template>
@@ -32,8 +32,10 @@
                 <el-form-item label="签约人（员工）：" prop="assignedUserId" ref="assignedUserId">
                     <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" :trigger-on-focus="false" @select="handleSelect">
                         <template slot-scope="{ item }">
-                            <div class="name">{{ item.psnname }}</div>
-                            <span class="addr">{{ item.mobile }}</span>
+                            <div class="autoflex">
+                                <div class="name">{{ item.psnname }}</div>
+                                <div class="addr">{{ item.mobile }}</div>
+                            </div>
                         </template>
                     </el-autocomplete>
                 </el-form-item>
@@ -51,11 +53,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscount">
-                     <el-input-number v-model="vipForm.serviceFeeDiscount" controls-position="right" :min="0" :max="10" :precision=1></el-input-number>&nbsp; 折
+                    <el-input-number v-model="vipForm.serviceFeeDiscount" controls-position="right" :min="0" :max="10" :precision=1></el-input-number>&nbsp; 折
                     <!-- <el-input v-model="vipForm.serviceFeeDiscount" maxlength='1' v-isNum:6="vipForm.serviceFeeDiscount"> <template slot="append"></template></el-input> -->
                 </el-form-item>
                 <el-form-item label="VIP目标：" prop="vipTarget">
-                    <el-input v-model="vipForm.vipTarget" v-isNum:6 > <template slot="append">万元</template></el-input>
+                    <el-input v-model="vipForm.vipTarget" v-isNum:6> <template slot="append">万元</template></el-input>
                 </el-form-item>
                 <el-form-item label="说明" prop="">
                     <el-input type="textarea" v-model="vipForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
@@ -357,7 +359,11 @@ export default {
 /deep/.el-dialog .el-input {
     width: 100%;
 }
-/deep/.el-form .el-input:not(:first-child){
+/deep/.el-form .el-input:not(:first-child) {
     margin-left: 0;
+}
+.autoflex {
+    display: flex;
+    justify-content: space-between;
 }
 </style>
