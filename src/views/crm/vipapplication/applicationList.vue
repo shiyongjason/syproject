@@ -305,7 +305,7 @@ export default {
         onDistribution (val) {
             this.stateN = ''
             console.log(val, this.copyRuleForm)
-            this.ruleForm = { ...this.copyRuleForm, companyVipId: val.companyId, pkDeptDoc: val.pkDeptDoc }
+            this.ruleForm = { ...this.copyRuleForm, companyVipId: val.id, pkDeptDoc: val.pkDeptDoc }
             // this.ruleForm.companyVipId = val.id
             // this.ruleForm.pkDeptDoc = val.pkDeptDoc
             this.dialogVisible = true
@@ -359,7 +359,6 @@ export default {
             })
         },
         onLinkCom (val) {
-            console.log(val)
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
     }
