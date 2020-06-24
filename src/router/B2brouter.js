@@ -436,6 +436,96 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/walletPay/walletPay.vue')
+            },
+            {
+                path: 'dataBoard',
+                name: 'dataBoard',
+                meta: {
+                    title: '数据看板',
+                    tagName: '数据看板',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'couponsUseInfo',
+                        name: 'couponsUseInfo',
+                        meta: {
+                            title: '优惠券使用明细',
+                            tagName: '优惠券使用明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/couponsUseInfo.vue')
+                    },
+                    {
+                        path: 'activityUseInfo',
+                        name: 'activityUseInfo',
+                        meta: {
+                            title: '活动使用明细',
+                            tagName: '活动使用明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/activityUseInfo.vue')
+                    },
+                    {
+                        path: 'commonMemberActive',
+                        name: 'commonMemberActive',
+                        meta: {
+                            title: '会员活跃明细（普通）',
+                            tagName: '会员活跃明细（普通）',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/commonMemberActive.vue')
+                    },
+                    {
+                        path: 'seckillMemberActive',
+                        name: 'seckillMemberActive',
+                        meta: {
+                            title: '会员活跃明细（秒杀）',
+                            tagName: '会员活跃明细（秒杀）',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/seckillMemberActive.vue')
+                    },
+                    {
+                        path: 'transactionInfo',
+                        name: 'transactionInfo',
+                        meta: {
+                            title: '交易额明细',
+                            tagName: '交易额明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/transactionInfo.vue')
+                    },
+                    {
+                        path: 'memberRegistrationInfo',
+                        name: 'memberRegistrationInfo',
+                        meta: {
+                            title: '会员注册明细',
+                            tagName: '会员注册明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/memberRegistrationInfo.vue')
+                    },
+                    {
+                        path: 'biGoodDetail',
+                        name: 'biGoodDetail',
+                        meta: {
+                            title: '商品明细',
+                            tagName: '商品明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/dataBoard/biGoodDetail.vue')
+                    }
+                ]
             }
         ]
     }
