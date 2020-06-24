@@ -160,7 +160,7 @@ export default {
                 { label: '联系人', prop: 'contract', width: '' },
                 { label: '联系人手机号', prop: 'assignedUserMobile', width: '' },
                 { label: '是否分配', prop: 'assignedUserId', width: '' },
-                { label: '所属分部', prop: 'firstPartName' },
+                { label: '所属分部', prop: 'deptName' },
                 { label: '分配员工', prop: 'assignedUserName', width: '' },
                 { label: '是否接收', prop: 'received', width: '' },
                 { label: '申请时间', prop: 'applyTime', width: '150', formatters: 'dateTimes' },
