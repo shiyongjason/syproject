@@ -404,7 +404,7 @@ export default {
                     })
                 }).catch(() => {
                     this.$message({
-                        type: 'info',
+                        type: 'success',
                         message: '已取消删除'
                     })
                 })
