@@ -149,7 +149,7 @@ export default {
             }
         },
         switchLabel () {
-            return this.column.map(value => {
+            return this.column.filter(value => !value.selfSettingHidden).map(value => {
                 let id = null
                 if (value.prop && value.label) {
                     id = value.prop
