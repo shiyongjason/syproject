@@ -1,6 +1,5 @@
 <template>
     <div class="page-body">
-        {{column}}
         <div class="page-table">
             <hosJoyTable v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
                          align="center" border stripe showPagination :column="column"
