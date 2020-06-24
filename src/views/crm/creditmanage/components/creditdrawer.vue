@@ -11,9 +11,11 @@
                     <div class="drawer-wrap_btn-flex">信用详情</div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
-
+                <template slot="endTime" slot-scope="scope">
+                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
+                </template>
                     <template slot="status" slot-scope="scope">
-                        <span :class="scope.data.row.status?'colred':'colgry'">{{scope.data.row.status?'正常':'过期'}}</span>
+                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">设置信用评级</el-button>
@@ -508,7 +510,7 @@ export default {
     color: #ff7a45;
 }
 .colgry {
-    color: #ccc;
+    color: #67C23A;
 }
 /deep/ .el-drawer__body {
     overflow-y: scroll;
