@@ -53,7 +53,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscount">
-                    <el-input-number v-model="vipForm.serviceFeeDiscount" controls-position="right" :min="0" :max="10" :precision=1></el-input-number>&nbsp; 折
+                    <el-input-number v-model="vipForm.serviceFeeDiscount" controls-position="right" :min="0" :max="100" :precision=0></el-input-number>&nbsp; 折
                     <!-- <el-input v-model="vipForm.serviceFeeDiscount" maxlength='1' v-isNum:6="vipForm.serviceFeeDiscount"> <template slot="append"></template></el-input> -->
                 </el-form-item>
                 <el-form-item label="VIP目标：" prop="vipTarget">
@@ -238,6 +238,7 @@ export default {
         submitForm () {
             this.isloading = true
             this.vipForm.attachFile = JSON.stringify(this.vipForm.projectUpload)
+            this.vipForm.serviceFeeDiscount = parseFloat(this.vipForm.serviceFeeDiscount) * 0.01
             this.$refs.vipForm.validate(async (valid) => {
                 if (valid) {
                     try {
