@@ -2,7 +2,7 @@
     <div class="hosjoy-table" ref="hosTable">
         <div v-if="collapseShow">
             <div class="collapse" :class="collapse ? 'on' : ''">
-                <el-button type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
+                <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt=""
                      @click="collapse = !collapse">
             </div>
@@ -161,9 +161,10 @@ export default {
                         id: id,
                         label: value.label,
                         children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                            let subId = id + (value1.uniqueLabel || value1.prop || value1.label)
                             return {
-                                id: value1.prop || value1.label,
-                                label: value1.label
+                                id: subId,
+                                label: value1.uniqueLabel || value1.label
                             }
                         })
                     }
@@ -397,10 +398,12 @@ export default {
     /*}*/
     .collapse {
         position: absolute;
+        box-sizing: border-box;
+        padding: 10px 15px;
         width: 280px;
         height: 50px;
         right: 10px;
-        top: -50px;
+        top: 0;
         z-index: 2;
         cursor: pointer;
         img{
@@ -421,12 +424,15 @@ export default {
     .collapse-content {
         position: absolute;
         width: 280px;
-        top: 0;
+        top: 50px;
         right: 10px;
         background: #ffffff;
         z-index: 2;
         padding: 5px 10px;
         box-sizing: border-box;
+        max-height: 400px;
+        overflow: hidden;
+        overflow-y: scroll;
     }
 
     .hosjoy-table >>> .el-table .branch-total-row {
