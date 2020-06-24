@@ -87,8 +87,11 @@
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
-                <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status?'colred':'colgry'">{{scope.data.row.status?'正常':'过期'}}</span>
+                  <template slot="status" slot-scope="scope">
+                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
+                </template>
+                <template slot="endTime" slot-scope="scope">
+                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                 </template>
                 <template slot="documentStatus" slot-scope="scope">
                     {{scope.data.row.documentStatus?matelist[scope.data.row.documentStatus-1].value:'-'}}
@@ -119,6 +122,7 @@
     </div>
 </template>
 <script>
+import moment from 'moment'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import creditdrawer from './components/creditdrawer'
 import { CREDITLEVEL, MATELIST } from '../const'
@@ -126,6 +130,7 @@ export default {
     name: 'creditManage',
     data () {
         return {
+            moment,
             queryParams: {
                 companyName: '',
                 creditLevel: '',
@@ -264,7 +269,7 @@ export default {
     color: #ff7a45;
 }
 .colgry {
-    color: #ccc;
+    color: #62b439;
 }
 .colblue {
     color: #50b7f7;
