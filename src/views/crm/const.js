@@ -99,10 +99,10 @@ export const UPSTREAMPAYTYPE = [
 export const CREDITLEVEL = [
     { key: 1, value: 'A+' },
     { key: 2, value: 'A' },
-    { key: 3, value: 'B' },
-    { key: 4, value: 'B+' },
-    { key: 5, value: 'C' },
-    { key: 6, value: 'C+' }
+    { key: 3, value: 'B+' },
+    { key: 4, value: 'B' },
+    { key: 5, value: 'C+' },
+    { key: 6, value: 'C' }
 ]
 
 // 资料状态
