@@ -86,7 +86,7 @@
                         <el-button type="primary" @click="capitalExportFile" size='small' v-if="dialog.type==2">导出</el-button>
                         <el-button type="primary" @click="importoldExcel" size='small' v-if="dialog.type==3">导出</el-button>
                         <hosJoyTable size='small' ref="hosjoyTable" border stripe showPagination :column="dialog.column" :data="dialog.tableData" align="center" :total="dialog.total" :pageNumber.sync="dialog.pageNumber" :pageSize.sync="dialog.pageSize" @pagination="getDialogList"
-                            style="margin-top:20px">
+                            style="margin-top:20px" :height=400>
                         </hosJoyTable>
                         <el-form ref="dialogForm" :model="scale_formData" :rules="scale_formData_Rules" v-if="dialog.type==1">
                             <div class="query-cont-col" style="margin:20px 0">
