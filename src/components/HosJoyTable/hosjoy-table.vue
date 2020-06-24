@@ -160,7 +160,7 @@ export default {
                     return {
                         id: id,
                         label: value.label,
-                        children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                        children: value.children && value.children.filter(value => value.label !== '-' || !value.selfSettingHidden).map(value1 => {
                             let subId = id + (value1.uniqueLabel || value1.prop || value1.label)
                             return {
                                 id: subId,

@@ -338,7 +338,7 @@ export default {
             // 流贷
             FlowToBorrow: [
                 {
-                    prop: 'account_standingBookNo',
+                    prop: '台账编号',
                     fixed: true,
                     width: '200',
                     children: [
@@ -666,7 +666,7 @@ export default {
                 {
                     width: '200',
                     fixed: true,
-                    prop: 'account_standingBookNo',
+                    prop: '台账编号',
                     children: [
                         {
                             label: '台账编号',
@@ -1389,6 +1389,7 @@ export default {
                 {
                     width: '200',
                     fixed: true,
+                    prop: '台账编号',
                     children: [
                         {
                             label: '台账编号',
