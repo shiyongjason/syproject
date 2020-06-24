@@ -84,6 +84,9 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
+                <template slot="companyName" slot-scope="scope">
+                    <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                </template>
                 <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.status?'colred':'colgry'">{{scope.data.row.status?'正常':'过期'}}</span>
                 </template>
@@ -249,6 +252,9 @@ export default {
         },
         onDrawerinfo (val) {
             this.$refs.creditdrawer.onShowDrawerinfn(val)
+        },
+        onLinkCom (val) {
+            this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
     }
 }
@@ -259,6 +265,10 @@ export default {
 }
 .colgry {
     color: #ccc;
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 .eltagtop {
     margin-bottom: 10px;

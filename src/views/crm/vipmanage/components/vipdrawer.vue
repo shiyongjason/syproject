@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-drawer title="VIP详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
+        <el-drawer title="详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <div class="drawer-wrap">
                 <div class="drawer-wrap_title">{{companyName}}</div>
                 <div class="drawer-wrap_btn">
