@@ -359,7 +359,6 @@ export default {
             })
         },
         onLinkCom (val) {
-            console.log(val)
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
     }

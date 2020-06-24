@@ -20,7 +20,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">VIP等级：</div>
                     <div class="query-col-input">
-                      <el-select v-model="queryParams.vipRuleId" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.vipRuleId" placeholder="请选择" :clearable=true>
                             <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevel" :key="item.id"></el-option>
                         </el-select>
                     </div>
@@ -33,12 +33,12 @@
                         <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2><template slot="append">折</template></el-input>
                     </div>
                 </div>
-               <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">VIP目标：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minVipTarget" placeholder="请输入最小目标" v-isNum:4="queryParams.minVipTarget"  maxlength="50"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.minVipTarget" placeholder="请输入最小目标" v-isNum:4="queryParams.minVipTarget" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxVipTarget" placeholder="请输入最大目标" v-isNum:4="queryParams.maxVipTarget"   maxlength="50"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.maxVipTarget" placeholder="请输入最大目标" v-isNum:4="queryParams.maxVipTarget" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -55,8 +55,10 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{vipManagedata.total||0}}； VIP：{{vipPageLoan.vipCount||0}}； VIP目标总额（万元）：{{vipPageLoan.totalTarget||0 |money}} </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-             @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true"  :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
+                <template slot="companyName" slot-scope="scope">
+                    <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">查看详情</el-button>
                 </template>
@@ -193,6 +195,9 @@ export default {
         },
         onDrawerinfo (val) {
             this.$refs.vipdrawer.onShowDrawerinfn(val.companyId, val.companyName)
+        },
+        onLinkCom (val) {
+            this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         }
     }
 }
@@ -203,6 +208,10 @@ export default {
 }
 .colgry {
     color: #ccc;
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 .eltagtop {
     margin-bottom: 10px;
