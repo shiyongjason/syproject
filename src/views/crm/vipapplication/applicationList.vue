@@ -78,7 +78,7 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=300 :isShowIndex='true'>
-                <template slot="companyName" slot-scope="scope">
+                <template slot="companyName" slot-scope="scope" >
                   <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="assignedUserId" slot-scope="scope">
@@ -96,9 +96,11 @@
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="分配给（员工）" prop="assignedUserId" ref="assignedUserId">
                     <el-autocomplete v-model="stateN"  :fetch-suggestions="querySearchAsync" placeholder="请输入员工"  @blur="onBlurItem"  :trigger-on-focus="false" @select="handleSelect">
-                        <template slot-scope="{ item }">
+                        <template slot-scope="{ item }" >
+                            <div class="autoflex">
                             <div class="name">{{ item.psnname }}</div>
                             <span class="addr">{{ item.mobile }}</span>
+                            </div>
                         </template>
                     </el-autocomplete>
                 </el-form-item>
@@ -409,5 +411,9 @@ export default {
 .colblue {
     color: #50b7f7;
     cursor: pointer;
+}
+.autoflex{
+    display: flex;
+ justify-content: space-between;
 }
 </style>
