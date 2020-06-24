@@ -160,7 +160,7 @@ export default {
                 { label: '联系人', prop: 'contract', width: '' },
                 { label: '联系人手机号', prop: 'assignedUserMobile', width: '' },
                 { label: '是否分配', prop: 'assignedUserId', width: '' },
-                { label: '所属分部', prop: 'firstPartName' },
+                { label: '所属分部', prop: 'deptName' },
                 { label: '分配员工', prop: 'assignedUserName', width: '' },
                 { label: '是否接收', prop: 'received', width: '' },
                 { label: '申请时间', prop: 'applyTime', width: '150', formatters: 'dateTimes' },
@@ -286,10 +286,14 @@ export default {
         },
         async onGetnest () {
             await this.findNest()
-            this.nestDdata && this.nestDdata.map(val => {
-                val.cityId = val.provinceId
+            this.options = this.nestDdata && this.nestDdata.map(item => {
+                item.countryId = item.provinceId
+                item.cities.map(value => {
+                    value.cities = value.countries
+                    value.countryId = value.cityId
+                })
+                return item
             })
-            this.options = this.nestDdata
         },
         cityChange (val) {
             const cityarr = []
