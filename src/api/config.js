@@ -24,8 +24,8 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -42,7 +42,7 @@ switch (env) {
         ossUrl = 'https://testroute.hosjoy.com:4832/'
         iframeUrl = 'https://test.hosjoy.com:4832/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://test-b2b-gateway.hosjoy.com:4832/'
+        B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
         fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
