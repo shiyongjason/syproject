@@ -56,12 +56,12 @@
                                     </el-input>
                                 </el-form-item>
                             </div>
-                            <div class="query-cont-col" style="width: 50%">
-                                <el-form-item label="宽限到期日：">
-                                    {{untilDay(item)}}
-                                </el-form-item>
-                            </div>
                         </template>
+                        <div class="query-cont-col" style="width: 50%">
+                            <el-form-item label="宽限到期日：">
+                                {{untilDay(item)}}
+                            </el-form-item>
+                        </div>
                     </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
