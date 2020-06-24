@@ -3,7 +3,7 @@
         <el-drawer title="VIP详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
-                <el-tab-pane label="授信资料清单" name="2"></el-tab-pane>
+                <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>2)"></el-tab-pane>
             </el-tabs>
             <div class="drawer-wrap" v-if="activeName=='1'">
                 <div class="drawer-wrap_title">{{companyName}}</div>
@@ -11,9 +11,11 @@
                     <div class="drawer-wrap_btn-flex">信用详情</div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
-
+                <template slot="endTime" slot-scope="scope">
+                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
+                </template>
                     <template slot="status" slot-scope="scope">
-                        <span :class="scope.data.row.status?'colred':'colgry'">{{scope.data.row.status?'正常':'过期'}}</span>
+                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">设置信用评级</el-button>
@@ -176,7 +178,7 @@ export default {
                 { label: '服务费', prop: 'serviceFee', width: '150' },
                 { label: '可代采购额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
                 { label: '剩余代采购额度(万元)', prop: 'remainPurchaseQuota', width: '150', formatters: 'money' },
-                { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'dateTimes' },
+                { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
             paginationInfo: {},
@@ -508,7 +510,7 @@ export default {
     color: #ff7a45;
 }
 .colgry {
-    color: #ccc;
+    color: #67C23A;
 }
 /deep/ .el-drawer__body {
     overflow-y: scroll;
@@ -642,6 +644,7 @@ export default {
     a {
         color: #ff7a45;
         margin-left: 10px;
+        word-break: break-all;
     }
     font {
         font-size: 14px;
