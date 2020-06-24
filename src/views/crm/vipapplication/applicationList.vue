@@ -286,10 +286,14 @@ export default {
         },
         async onGetnest () {
             await this.findNest()
-            this.nestDdata && this.nestDdata.map(val => {
-                val.cityId = val.provinceId
+            this.options = this.nestDdata && this.nestDdata.map(item => {
+                item.countryId = item.provinceId
+                item.cities.map(value => {
+                    value.cities = value.countries
+                    value.countryId = value.cityId
+                })
+                return item
             })
-            this.options = this.nestDdata
         },
         cityChange (val) {
             const cityarr = []
