@@ -176,7 +176,7 @@ export default {
                 { label: '服务费', prop: 'serviceFee', width: '150' },
                 { label: '可代采购额度(万元)', prop: 'purchaseQuota', width: '150', formatters: 'money' },
                 { label: '剩余代采购额度(万元)', prop: 'remainPurchaseQuota', width: '150', formatters: 'money' },
-                { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'dateTimes' },
+                { label: '信用到期日', prop: 'endTime', width: '180', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
             paginationInfo: {},
