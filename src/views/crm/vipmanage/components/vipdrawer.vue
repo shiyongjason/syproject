@@ -10,6 +10,9 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
+                   <template slot="status" slot-scope="scope">
+                     <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
+                    </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">修改</el-button>
                     </template>
@@ -100,7 +103,7 @@ export default {
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
                 { label: '签约人', prop: 'assignedUserName' },
                 { label: '签约时间', prop: 'signTime', formatters: 'date' },
-                { label: '状态', prop: 'firstPartName' }
+                { label: '状态', prop: 'status' }
             ],
             dialogVisible: false,
             rules: {
@@ -342,6 +345,9 @@ export default {
     }
     p {
         margin-top: 25px;
+    }
+    .green{
+        color: #62b439;
     }
 }
 .drawer-footer {

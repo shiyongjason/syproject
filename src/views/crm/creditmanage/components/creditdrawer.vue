@@ -568,7 +568,7 @@ export default {
     margin: 0 10px;
 }
 .collect-wrapbox {
-    padding: 0 10px;
+    padding: 0 10px 100px 10px;
 }
 .collect-title {
     font-size: 20px;
