@@ -42,7 +42,7 @@
                 </tbody>
             </table>
         </div>
-        <el-dialog title="编辑" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
+        <el-dialog title="编辑" :visible.sync="dialogVisible" width="35%" :close-on-click-modal=false :before-close="handleClose">
             <div class="tem-wrap">
                 <el-form :model="formTemp" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                     <el-form-item label="一级类目：">
@@ -67,7 +67,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input type="textarea" placeholder="请输入内容" v-model="formTemp.remark" maxlength="500" :autosize="{ minRows: 2, maxRows: 7}" show-word-limit>
+                        <el-input type="textarea" placeholder="请输入内容" v-model="formTemp.remark" maxlength="500" :autosize="{ minRows:5, maxRows: 6}" show-word-limit>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="样例：">
@@ -227,6 +227,9 @@ export default {
             margin: 0 19px;
         }
     }
+}
+/deep/.el-textarea .el-input__count{
+    background: transparent;
 }
 /deep/.el-upload-dragger {
     width: 90px;
