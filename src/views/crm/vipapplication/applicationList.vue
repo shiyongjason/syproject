@@ -271,6 +271,7 @@ export default {
         }),
         onRest () {
             this.queryParams = { ...this.copyParams }
+            this.stateUser = ''
             this.optarr = ''
             this.searchList()
         },
