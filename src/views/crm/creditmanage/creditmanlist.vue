@@ -63,7 +63,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">资料状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.documentStatus" placeholder="请选择">
+                        <el-select v-model="queryParams.documentStatus" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in matelist" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -94,7 +94,7 @@
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                 </template>
                 <template slot="documentStatus" slot-scope="scope">
-                    {{scope.data.row.documentStatus?matelist[scope.data.row.documentStatus-1].value:'-'}}
+                    {{scope.data.row.documentStatus?matelist[scope.data.row.documentStatus-2].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">查看详情</el-button>
