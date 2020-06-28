@@ -14,7 +14,7 @@
                    {{scope.data.row.assignedUserName}}  {{scope.data.row.assignedUserMobile}}
                     </template>
                    <template slot="status" slot-scope="scope">
-                     <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
+                     <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">修改</el-button>
