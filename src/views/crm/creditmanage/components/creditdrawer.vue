@@ -98,7 +98,7 @@
                     <el-input v-model="ruleForm.purchaseQuota" v-isNum:6="ruleForm.purchaseQuota" maxlength='15'><template slot="append">万元</template></el-input>
                 </el-form-item>
                 <el-form-item label="信用授予日期：" prop="startTime">
-                    <el-date-picker v-model="ruleForm.startTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="信用到期时间" :picker-options="pickerOptionsStart" type="date" @change="datePickerChange"></el-date-picker>
+                    <el-date-picker v-model="ruleForm.startTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="信用授予日期" :picker-options="pickerOptionsStart" type="date" @change="datePickerChange"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="信用到期时间：" prop="endTime">
                     <el-date-picker v-model="ruleForm.endTime" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="信用到期时间" :picker-options="pickerOptionsEnd" type="date"></el-date-picker>
