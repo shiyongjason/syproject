@@ -99,7 +99,7 @@ export default {
                 { label: 'VIP折扣（折）', prop: 'serviceFeeDiscount' },
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
                 { label: '签约人', prop: 'assignedUserName' },
-                { label: '签约时间', prop: 'signTime', formatters: 'dateTimes' },
+                { label: '签约时间', prop: 'signTime', formatters: 'date' },
                 { label: '状态', prop: 'firstPartName' }
             ],
             dialogVisible: false,
