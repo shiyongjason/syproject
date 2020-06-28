@@ -63,6 +63,58 @@ export function deleteActivity (params) {
 export function getCloudActlist (params) {
     return axios.get(iotUrl + `/api/activity-center`, { params })
 }
+
+// 知识库管理目录
+export function getCatalogueList (params) {
+    return axios.get(iotUrl + `/api/helpCenter/getAllType`)
+}
+
+// 问题列表
+export function getQuestionList (params) {
+    return axios.get(iotUrl + `/api/helpCenter/search-page`, { params })
+}
+
+// 问题删除
+export function delQuestion (params) {
+    console.log(params)
+    return axios.delete(iotUrl + `/api/helpCenter?ids=${params}`)
+}
+
+// 问题保存
+export function saveQuestion (params) {
+    console.log(params)
+    return axios.post(iotUrl + `/api/helpCenter`, params)
+}
+
+// 问题详情
+export function getQuestionDetail (params) {
+    return axios.get(iotUrl + `/api/helpCenter/get/${params}`)
+}
+
+// 下载问题模板
+export function downloadQuestionTemp () {
+    axios.defaults.responseType = 'blob'
+    axios.get(iotUrl + `/api/helpCenter/download-template`).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '帮助中心模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+
 // 设备故障列表
 export function getCloudEquipmentErrorList (params) {
     return axios.get(iotUrl + `/api/device/breakdown`, { params })
