@@ -373,6 +373,7 @@ export default {
                             message: `会员分配成功`,
                             type: 'success'
                         })
+                        this.searchList()
                     } catch (error) {
                         this.isloading = false
                     }
