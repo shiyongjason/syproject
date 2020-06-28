@@ -50,7 +50,15 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">分配员工：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.assignedUserId" placeholder="请输入分配员工" maxlength="50"></el-input>
+                        <!-- <el-input v-model="queryParams.assignedUserId" placeholder="请输入分配员工" maxlength="50"></el-input> -->
+                        <el-autocomplete v-model="stateUser" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
+                            <template slot-scope="{ item }">
+                                <div class="autoflex">
+                                    <div class="name">{{ item.psnname }}</div>
+                                    <span class="addr">{{ item.mobile }}</span>
+                                </div>
+                            </template>
+                        </el-autocomplete>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -129,6 +137,7 @@ export default {
         return {
             restaurants: [],
             stateN: '',
+            stateUser: '',
             timeout: null,
             isloading: false,
             queryParams: {
@@ -199,6 +208,13 @@ export default {
             } else if (this.stateItem.psnname !== val) {
                 console.log(3, val, this.stateItem)
                 this.ruleForm.assignedUserId = ''
+            }
+        },
+        'stateUser' (val) {
+            if (JSON.stringify(this.stateItem) == '{}') {
+                return false
+            } else if (this.stateItem.psnname !== val) {
+                this.queryParams.assignedUserId = ''
             }
         },
         'ruleForm.assignedUserId' (val) {
@@ -304,7 +320,7 @@ export default {
         },
         onDistribution (val) {
             this.stateN = ''
-            console.log(val, this.copyRuleForm)
+            // console.log(val, this.copyRuleForm)
             this.ruleForm = { ...this.copyRuleForm, companyVipId: val.id, pkDeptDoc: val.pkDeptDoc }
             // this.ruleForm.companyVipId = val.id
             // this.ruleForm.pkDeptDoc = val.pkDeptDoc
@@ -331,9 +347,15 @@ export default {
             }
         },
         handleSelect (item) {
-            this.stateN = item.psnname
-            this.stateItem = item
-            this.ruleForm.assignedUserId = item.psncode
+            if (this.dialogVisible) {
+                this.stateN = item.psnname
+                this.stateItem = item
+                this.ruleForm.assignedUserId = item.psncode
+            } else {
+                this.stateUser = item.psnname
+                this.stateItem = item
+                this.queryParams.assignedUserId = item.psncode
+            }
         },
         onBlurItem (item) {
         },
