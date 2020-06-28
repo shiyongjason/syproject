@@ -11,9 +11,9 @@
                     <div class="drawer-wrap_btn-flex">信用详情</div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
-                <template slot="endTime" slot-scope="scope">
-                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
-                </template>
+                    <template slot="endTime" slot-scope="scope">
+                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
+                    </template>
                     <template slot="status" slot-scope="scope">
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
                     </template>
@@ -25,7 +25,7 @@
                     最近维护时间：{{this.creditPage.updateTime?moment(this.creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
                 </p>
                 <p>
-                    最近维护人：{{this.creditPage.updateBy||'-'}}（{{this.creditPage.updateBy||'-'}}）
+                    最近维护人：{{this.creditPage.updateBy||'-'}}（{{this.creditPage.updateByMobile||'-'}}）
                 </p>
             </div>
             <div class="collect-wrapbox" v-if="activeName=='2'">
@@ -58,7 +58,7 @@
                                     </p>
                                     <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                     <p>
-                                        <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}"  v-if="(documentStatus!=3)">删除</font>
+                                        <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
                                         <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font>
                                         <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                                     </p>
@@ -510,7 +510,7 @@ export default {
     color: #ff7a45;
 }
 .colgry {
-    color: #67C23A;
+    color: #67c23a;
 }
 /deep/ .el-drawer__body {
     overflow-y: scroll;
@@ -568,7 +568,7 @@ export default {
     margin: 0 10px;
 }
 .collect-wrapbox {
-    padding: 0 10px;
+    padding: 0 10px 100px 10px;
 }
 .collect-title {
     font-size: 20px;
