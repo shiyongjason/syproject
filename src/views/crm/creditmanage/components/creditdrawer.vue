@@ -36,7 +36,7 @@
                         <template v-for="obj in item.respRiskCheckDocTemplateList">
                             <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                                 <div class="collect-boxflex">
-                                    <div>
+                                    <div v-if="documentStatus!=3">
                                         <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
                                     </div>
                                     <div class="collect-boxtxt">
