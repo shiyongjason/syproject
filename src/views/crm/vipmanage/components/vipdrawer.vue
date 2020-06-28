@@ -52,8 +52,8 @@
                         <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevel" :key="item.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscount">
-                    <el-input-number v-model="vipForm.serviceFeeDiscount" controls-position="right" :min="0" :max="100" :precision=0></el-input-number>&nbsp; 折
+                <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscountNew">
+                    <el-input-number v-model="vipForm.serviceFeeDiscountNew" controls-position="right" :min="0" :max="100" :precision=0></el-input-number>&nbsp; 折
                     <!-- <el-input v-model="vipForm.serviceFeeDiscount" maxlength='1' v-isNum:6="vipForm.serviceFeeDiscount"> <template slot="append"></template></el-input> -->
                 </el-form-item>
                 <el-form-item label="VIP目标：" prop="vipTarget">
@@ -116,7 +116,7 @@ export default {
                 vipRuleId: [
                     { required: true, message: '请选择VIP等级', trigger: 'change' }
                 ],
-                serviceFeeDiscount: [
+                serviceFeeDiscountNew: [
                     { required: true, message: '请输入次年服务费折扣', trigger: 'blur' }
                 ],
                 vipTarget: [
@@ -135,6 +135,7 @@ export default {
                 id: '',
                 signTime: '',
                 serviceFeeDiscount: 0,
+                serviceFeeDiscountNew: 0,
                 signYear: '',
                 vipRule: '',
                 vipTarget: '',
@@ -221,6 +222,7 @@ export default {
                 await this.findPagedetail(val)
                 this.vipForm = { ...this.vipPagedetail }
                 this.vipForm.projectUpload = this.vipForm.attachFile ? JSON.parse(this.vipForm.attachFile) : []
+                this.vipForm.serviceFeeDiscountNew = parseFloat(this.vipForm.serviceFeeDiscount) * 100
                 this.newVipForm = { ...this.vipForm }
                 this.stateN = this.vipForm.assignedUserName
                 console.log(this.newVipForm)
@@ -238,7 +240,9 @@ export default {
         submitForm () {
             this.isloading = true
             this.vipForm.attachFile = JSON.stringify(this.vipForm.projectUpload)
-            this.vipForm.serviceFeeDiscount = parseFloat(this.vipForm.serviceFeeDiscount) * 0.01
+            // console.log(parseFloat(this.vipForm.serviceFeeDiscount) * 0.01, parseFloat(this.vipForm.serviceFeeDiscount))
+            this.vipForm.serviceFeeDiscount = parseFloat(this.vipForm.serviceFeeDiscountNew) * 0.01
+            console.log(this.vipForm.serviceFeeDiscount)
             this.$refs.vipForm.validate(async (valid) => {
                 if (valid) {
                     try {
