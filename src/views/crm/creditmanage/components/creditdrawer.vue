@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-drawer title="VIP详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
+        <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
                 <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>1)"></el-tab-pane>
@@ -74,7 +74,7 @@
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <el-button type="success" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</el-button>
-                    <el-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3)">审核通过</el-button>
+                    <el-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</el-button>
                     <el-button @click="handleClose">取 消</el-button>
                 </div>
             </div>
