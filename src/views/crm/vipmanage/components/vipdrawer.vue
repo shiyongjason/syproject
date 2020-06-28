@@ -10,6 +10,9 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
+                  <template slot="assignedUserName" slot-scope="scope">
+                   {{scope.data.row.assignedUserName}}  {{scope.data.row.assignedUserMobile}}
+                    </template>
                    <template slot="status" slot-scope="scope">
                      <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':'失效'}}</span>
                     </template>
@@ -101,7 +104,7 @@ export default {
                 { label: 'VIP等级', prop: 'vipRule' },
                 { label: 'VIP折扣（折）', prop: 'serviceFeeDiscount' },
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
-                { label: '签约人', prop: 'assignedUserName' },
+                { label: '签约人', prop: 'assignedUserName', width: '150' },
                 { label: '签约时间', prop: 'signTime', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
