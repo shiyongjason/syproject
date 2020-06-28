@@ -97,6 +97,7 @@ export const UPSTREAMPAYTYPE = [
 ]
 // 信用等级
 export const CREDITLEVEL = [
+    { key: 0, value: '无' },
     { key: 1, value: 'A+' },
     { key: 2, value: 'A' },
     { key: 3, value: 'B+' },
