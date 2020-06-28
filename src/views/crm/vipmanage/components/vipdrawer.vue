@@ -21,7 +21,7 @@
                     最近维护时间：{{this.vipDetail.updateTime?moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
                 </p>
                 <p>
-                    最近维护人：{{this.vipDetail.updateBy||'-'}}（{{this.vipDetail.updateBy||'-'}}）
+                    最近维护人：{{this.vipDetail.updateBy||'-'}}（{{this.vipDetail.updateByMobile||'-'}}）
                 </p>
             </div>
             <div class="drawer-footer">
