@@ -64,7 +64,7 @@
                     <div class="query-col-title">资料状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.documentStatus" placeholder="请选择">
-                            <el-option v-for="item in matelist" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in matelist" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
