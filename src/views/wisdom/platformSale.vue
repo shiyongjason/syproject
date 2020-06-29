@@ -57,7 +57,7 @@
                     <div class="line ml5 mr5">-</div>
                     <el-date-picker v-model="queryParams.onlineTimeEnd" :editable="false" :picker-options="onlineTimePickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1})">
+                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1}, 'btn')">
                         查询
                     </el-button>
                     <a href="javascript:" @click="downloading" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
