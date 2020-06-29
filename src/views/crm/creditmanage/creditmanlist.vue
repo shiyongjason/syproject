@@ -88,7 +88,7 @@
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
                   <template slot="status" slot-scope="scope">
-                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
+                    <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                 </template>
                 <template slot="endTime" slot-scope="scope">
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
