@@ -239,6 +239,7 @@ export default {
             'findSpecialPriceInfo'
         ]),
         async getSpikePriceData () {
+            this.tableData = []
             await this.findSpikePriceData(this.queryParams)
             this.tableLabel = [
                 { label: '所属商家', prop: 'merchantName', auth: ['special'] },
@@ -267,6 +268,7 @@ export default {
             }
         },
         async getSpecialPriceData () {
+            this.tableData = []
             await this.findSpecialPriceData(this.queryParams)
             this.tableLabel = [
                 { label: '所属商家', prop: 'merchantName', auth: ['special'] },
