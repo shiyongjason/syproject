@@ -59,7 +59,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscountNew">
-                    <el-input-number v-model="vipForm.serviceFeeDiscountNew" controls-position="right" :min="0" :max="100" :precision=1></el-input-number>&nbsp; 折
+                    <el-input-number v-model="vipForm.serviceFeeDiscountNew" controls-position="right" :min="0" :max="10" :precision=1></el-input-number>&nbsp; 折
                     <!-- <el-input v-model="vipForm.serviceFeeDiscount" maxlength='1' v-isNum:6="vipForm.serviceFeeDiscount"> <template slot="append"></template></el-input> -->
                 </el-form-item>
                 <el-form-item label="VIP目标：" prop="vipTarget">
@@ -228,7 +228,7 @@ export default {
                 await this.findPagedetail(val)
                 this.vipForm = { ...this.vipPagedetail }
                 this.vipForm.projectUpload = this.vipForm.attachFile ? JSON.parse(this.vipForm.attachFile) : []
-                this.vipForm.serviceFeeDiscountNew = parseFloat(this.vipForm.serviceFeeDiscount) * 100
+                this.vipForm.serviceFeeDiscountNew = parseFloat(this.vipForm.serviceFeeDiscount) * 10
                 this.newVipForm = { ...this.vipForm }
                 this.stateN = this.vipForm.assignedUserName
                 console.log(this.newVipForm)
@@ -247,7 +247,7 @@ export default {
             this.isloading = true
             this.vipForm.attachFile = JSON.stringify(this.vipForm.projectUpload)
             // console.log(parseFloat(this.vipForm.serviceFeeDiscount) * 0.01, parseFloat(this.vipForm.serviceFeeDiscount))
-            this.vipForm.serviceFeeDiscount = parseFloat(this.vipForm.serviceFeeDiscountNew) * 0.01
+            this.vipForm.serviceFeeDiscount = parseFloat(this.vipForm.serviceFeeDiscountNew) * 0.1
             console.log(this.vipForm.serviceFeeDiscount)
             this.$refs.vipForm.validate(async (valid) => {
                 if (valid) {
