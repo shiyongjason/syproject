@@ -61,7 +61,7 @@
                     </template>
                     <div class="query-cont-col" style="width: 50%">
                         <el-form-item label="宽限到期日：">
-                            {{untilDay}}
+                            {{ untilDay }}
                         </el-form-item>
                     </div>
                 </div>
@@ -358,7 +358,9 @@ export default {
             return ((this.detailData[0].overDueInterestAmount || 0) - (this.detailData[0].overDueInterestPaid || 0) - (this.detailData[0].thisPaidOverDueInterest || 0)).toFixed(2) || 0
         },
         untilDay () {
-            return moment(this.detailData[0].endTime).add(this.detailData[0].graceDay, 'days').format('YYYY-MM-DD')
+            return this.detailData[0].exsitGrace
+                ? moment(this.detailData[0].endTime).add(this.detailData[0].graceDay, 'days').format('YYYY-MM-DD')
+                : moment(this.detailData[0].endTime).format('YYYY-MM-DD')
         }
     },
     methods: {

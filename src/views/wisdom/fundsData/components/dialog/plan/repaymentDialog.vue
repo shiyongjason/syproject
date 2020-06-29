@@ -59,7 +59,7 @@
                         </template>
                         <div class="query-cont-col" style="width: 50%">
                             <el-form-item label="宽限到期日：">
-                                {{untilDay(item)}}
+                                {{ untilDay(item) }}
                             </el-form-item>
                         </div>
                     </div>
@@ -310,7 +310,9 @@ export default {
         },
         untilDay () {
             return function (item) {
-                item.graceDueDate = moment(item.endTime).add(item.graceDay, 'days').format('YYYY-MM-DD')
+                item.graceDueDate = item.exsitGrace
+                    ? moment(item.endTime).add(item.graceDay, 'days').format('YYYY-MM-DD')
+                    : moment(item.endTime).format('YYYY-MM-DD')
                 return item.graceDueDate
             }
         }
