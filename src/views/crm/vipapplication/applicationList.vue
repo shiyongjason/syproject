@@ -167,7 +167,7 @@ export default {
                 { label: '企业名称', prop: 'companyName', width: '' },
                 { label: '经营区域', prop: 'businessArea', width: '' },
                 { label: '联系人', prop: 'contract', width: '' },
-                { label: '联系人手机号', prop: 'assignedUserMobile', width: '' },
+                { label: '联系人手机号', prop: 'contractMobile', width: '' },
                 { label: '是否分配', prop: 'assignedUserId', width: '' },
                 { label: '所属分部', prop: 'deptName' },
                 { label: '分配员工', prop: 'assignedUserName', width: '' },
