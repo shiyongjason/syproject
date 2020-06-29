@@ -28,9 +28,9 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">VIP折扣：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:2><template slot="append">折</template></el-input>
+                        <el-input v-model="minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:1><template slot="append">折</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:2><template slot="append">折</template></el-input>
+                        <el-input v-model="maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:1><template slot="append">折</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -76,6 +76,8 @@ export default {
     name: 'vipmanage',
     data () {
         return {
+            maxServiceFeeDiscount: '',
+            minServiceFeeDiscount: '',
             queryParams: {
                 companyName: '',
                 maxServiceFeeDiscount: '',
@@ -162,6 +164,8 @@ export default {
         }),
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
+            this.maxServiceFeeDiscount = ''
+            this.minServiceFeeDiscount = ''
             this.searchList()
         },
         handleSizeChange (val) {
@@ -173,6 +177,8 @@ export default {
             this.searchList()
         },
         async  searchList () {
+            this.queryParams.maxServiceFeeDiscount = this.maxServiceFeeDiscount ? this.maxServiceFeeDiscount * 0.01 : ''
+            this.queryParams.minServiceFeeDiscount = this.minServiceFeeDiscount ? this.minServiceFeeDiscount * 0.01 : ''
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams
