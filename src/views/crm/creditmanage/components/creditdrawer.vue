@@ -293,14 +293,12 @@ export default {
             this.companyId = val.companyId
             this.companyName = val.companyName
             this.documentStatus = val.documentStatus
-            console.log(this.documentStatus)
             await this.findCreditPage({ companyId: this.companyId })
             this.tableData = this.creditPage.companyCreditList
             this.drawer = true
         },
         async onShowCreditdocument () {
             await this.findCreditDocument(this.companyId)
-            console.log(this.creditDocument)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -323,7 +321,6 @@ export default {
             const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
             await uploadCredit(newDocuments)
             this.$message.success('资料上传成功!')
-            console.log('this.detail', newDocuments)
         },
         onDelete (item, index) {
             this.$confirm('是否确认删除，删除后不可恢复，是否确认删除？', '提示', {
@@ -484,8 +481,10 @@ export default {
                         await refuseCredit(this.refuseForm)
                         this.$message.success('打回成功')
                         this.reasonVisible = false
+                        this.drawer = false
                         this.onShowCreditdocument()
                         this.resloading = false
+                        this.$emit('backEvent')
                     } catch (error) {
                         this.resloading = false
                     }
