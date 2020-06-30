@@ -138,7 +138,7 @@ export default {
                     {
                         validator: (r, v, callback) => {
                             if (parseFloat(this.vipForm.vipTarget) > 100000000) {
-                                return callback(new Error('VIP目标大于1千万'))
+                                return callback(new Error('VIP目标不得大于1千万'))
                             }
                             return callback()
                         }
@@ -174,6 +174,7 @@ export default {
     },
     watch: {
         'stateN' (val) {
+            console.log(this.stateItem.psnname, val)
             if (JSON.stringify(this.stateItem) == '{}') {
                 return false
             } else if (this.stateItem.psnname !== val) {
@@ -198,7 +199,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    return time.getTime() > new Date().getTime() - 1 * 24 * 60 * 60 * 1000
+                    return time.getTime() > new Date().getTime()
                 }
             }
         },
@@ -237,6 +238,7 @@ export default {
                 this.vipForm.projectUpload = this.vipForm.attachFile ? JSON.parse(this.vipForm.attachFile) : []
                 this.newVipForm = { ...this.vipForm }
                 this.stateN = this.vipForm.assignedUserName
+                this.stateItem.psnname = this.vipForm.assignedUserName
                 console.log(this.newVipForm)
             } else {
                 this.stateN = ''
@@ -280,8 +282,8 @@ export default {
             })
         },
         onCloseDrawer () {
-            delete this.newVipForm.projectUpload
-            delete this.vipForm.projectUpload
+            // delete this.newVipForm.projectUpload
+            // delete this.vipForm.projectUpload
             if (JSON.stringify(this.newVipForm) !== JSON.stringify(this.vipForm)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗?', '是否确认取消修改', {
                     distinguishCancelAndClose: true,
@@ -328,7 +330,7 @@ export default {
     // position: relative;
 }
 /deep/.el-dialog {
-    height: 500px;
+    height: 600px;
     overflow-y: scroll;
 }
 .drawer-wrap {
