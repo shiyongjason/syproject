@@ -260,7 +260,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    return time.getTime() > new Date().getTime() - 1 * 24 * 60 * 60 * 1000
+                    return time.getTime() > new Date().getTime()
                 }
             }
         },
@@ -516,7 +516,7 @@ export default {
     // position: relative;
 }
 /deep/.el-dialog {
-    height: 500px;
+    height: 600px;
     overflow-y: scroll;
 }
 .drawer-wrap {
