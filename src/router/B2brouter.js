@@ -427,17 +427,6 @@ export default [
                 component: () => import('@/views/hmall/spumanage/spudetail')
             },
             {
-                path: 'wallet',
-                name: 'wallet',
-                meta: {
-                    title: '钱包支付开通情况',
-                    tagName: '钱包支付开通情况',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/walletPay/walletPay.vue')
-            },
-            {
                 path: 'dataBoard',
                 name: 'dataBoard',
                 meta: {
