@@ -20,7 +20,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">信用评级 ：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.creditLevel" placeholder="请选择">
+                        <el-select v-model="queryParams.creditLevel" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
