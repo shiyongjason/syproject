@@ -55,7 +55,7 @@ const fundMoney = function (val, int) {
 const fundMoneyHaveSpot = function (val, int) {
     if (val) {
         const head = val.toString().slice(0, val.toString().indexOf('.'))
-        const foot = val.toString().slice(val.toString().indexOf('.'), -1)
+        const foot = val.toString().slice(val.toString().indexOf('.'))
         return `${head}${foot}`
     } else if (val === 0) {
         return val
