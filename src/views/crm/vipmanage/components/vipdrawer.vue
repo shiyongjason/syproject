@@ -10,11 +10,11 @@
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
-                  <template slot="assignedUserName" slot-scope="scope">
-                   {{scope.data.row.assignedUserName}}  {{scope.data.row.assignedUserMobile}}
+                    <template slot="assignedUserName" slot-scope="scope">
+                        {{scope.data.row.assignedUserName}} {{scope.data.row.assignedUserMobile}}
                     </template>
-                   <template slot="status" slot-scope="scope">
-                     <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
+                    <template slot="status" slot-scope="scope">
+                        <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">修改</el-button>
@@ -58,8 +58,8 @@
                         <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevel" :key="item.id"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscountNew">
-                    <el-input-number v-model="vipForm.serviceFeeDiscountNew" controls-position="right" :min="0" :max="10" :precision=1></el-input-number>&nbsp; 折
+                <el-form-item label="次年服务费折扣：" prop="serviceFeeDiscount">
+                    <el-input-number :value='vipForm.serviceFeeDiscount*10' @input="(val)=>{vipForm.serviceFeeDiscount=val*0.1}" controls-position="right" :min="0" :max="10" :precision=1></el-input-number>&nbsp; 折
                     <!-- <el-input v-model="vipForm.serviceFeeDiscount" maxlength='1' v-isNum:6="vipForm.serviceFeeDiscount"> <template slot="append"></template></el-input> -->
                 </el-form-item>
                 <el-form-item label="VIP目标：" prop="vipTarget">
@@ -122,8 +122,16 @@ export default {
                 vipRuleId: [
                     { required: true, message: '请选择VIP等级', trigger: 'change' }
                 ],
-                serviceFeeDiscountNew: [
-                    { required: true, message: '请输入次年服务费折扣', trigger: 'blur' }
+                serviceFeeDiscount: [
+                    { required: true, message: '请输入次年服务费折扣', trigger: 'blur' },
+                    {
+                        validator: (r, v, callback) => {
+                            if (!this.vipForm.serviceFeeDiscount && this.vipForm.serviceFeeDiscount !== 0) {
+                                return callback(new Error('请输入次年服务费折扣'))
+                            }
+                            return callback()
+                        }
+                    }
                 ],
                 vipTarget: [
                     { required: true, message: '请输入VIP目标', trigger: 'blur' },
@@ -141,7 +149,6 @@ export default {
                 id: '',
                 signTime: '',
                 serviceFeeDiscount: 0,
-                serviceFeeDiscountNew: 0,
                 signYear: '',
                 vipRule: '',
                 vipTarget: '',
@@ -170,7 +177,7 @@ export default {
             if (JSON.stringify(this.stateItem) == '{}') {
                 return false
             } else if (this.stateItem.psnname !== val) {
-                // console.log(3, val, this.stateItem)
+                console.log(3, val, this.stateItem)
                 this.vipForm.assignedUserId = ''
             }
         },
@@ -228,7 +235,6 @@ export default {
                 await this.findPagedetail(val)
                 this.vipForm = { ...this.vipPagedetail }
                 this.vipForm.projectUpload = this.vipForm.attachFile ? JSON.parse(this.vipForm.attachFile) : []
-                this.vipForm.serviceFeeDiscountNew = parseFloat(this.vipForm.serviceFeeDiscount) * 10
                 this.newVipForm = { ...this.vipForm }
                 this.stateN = this.vipForm.assignedUserName
                 console.log(this.newVipForm)
@@ -247,8 +253,6 @@ export default {
             this.isloading = true
             this.vipForm.attachFile = JSON.stringify(this.vipForm.projectUpload)
             // console.log(parseFloat(this.vipForm.serviceFeeDiscount) * 0.01, parseFloat(this.vipForm.serviceFeeDiscount))
-            this.vipForm.serviceFeeDiscount = parseFloat(this.vipForm.serviceFeeDiscountNew) * 0.1
-            console.log(this.vipForm.serviceFeeDiscount)
             this.$refs.vipForm.validate(async (valid) => {
                 if (valid) {
                     try {
@@ -323,6 +327,10 @@ export default {
     overflow-y: scroll;
     // position: relative;
 }
+/deep/.el-dialog {
+    height: 500px;
+    overflow-y: scroll;
+}
 .drawer-wrap {
     padding: 0 10px;
     &_title {
@@ -349,7 +357,7 @@ export default {
     p {
         margin-top: 25px;
     }
-    .green{
+    .green {
         color: #62b439;
     }
 }
