@@ -399,6 +399,7 @@ export default {
                         {
                             label: '供货商名称',
                             showOverflowTooltip: true,
+                            prop: 'loan_supplier',
                             sort: 2,
                             minWidth: '150',
                             isHidden: false
@@ -494,7 +495,7 @@ export default {
                     children: [
                         {
                             label: '最新本金还款日',
-                            prop: 'capitalTime',
+                            prop: 'paymentStatic_capitalTime',
                             sort: 1,
                             minWidth: '150',
                             displayAs: 'YYYY-MM-DD'
