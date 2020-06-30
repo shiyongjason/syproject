@@ -21,7 +21,7 @@
                     <div class="query-col-title">信用评级 ：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.creditLevel" placeholder="请选择" :clearable=true>
-                            <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in droplists" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -178,7 +178,8 @@ export default {
                     { required: true, message: '请选择活动区域', trigger: 'change' }
                 ]
             },
-            ruleForm: {}
+            ruleForm: {},
+            droplists: []
         }
     },
     components: {
@@ -218,6 +219,7 @@ export default {
         this.onGetbranch()
         this.searchList()
         this.copyParms = { ...this.queryParams }
+        this.droplists = [...[{ key: 0, value: '无' }], ...this.droplist]
     },
     methods: {
         ...mapActions({
