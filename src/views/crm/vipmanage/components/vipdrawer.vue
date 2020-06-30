@@ -177,7 +177,7 @@ export default {
             if (JSON.stringify(this.stateItem) == '{}') {
                 return false
             } else if (this.stateItem.psnname !== val) {
-                // console.log(3, val, this.stateItem)
+                console.log(3, val, this.stateItem)
                 this.vipForm.assignedUserId = ''
             }
         },

@@ -515,6 +515,10 @@ export default {
     overflow-y: scroll;
     // position: relative;
 }
+/deep/.el-dialog {
+    height: 500px;
+    overflow-y: scroll;
+}
 .drawer-wrap {
     padding: 0 10px;
     &_title {
