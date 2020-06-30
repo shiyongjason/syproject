@@ -157,11 +157,11 @@ export default {
                 { label: '服务费', prop: 'serviceFee' },
                 { label: '可代采购额度（万元）', prop: 'purchaseQuota', formatters: 'money' },
                 { label: '剩余代采购金额（万元）', prop: 'remainPurchaseQuota', formatters: 'money' },
-                { label: '信用到期时间', prop: 'endTime', width: '150', formatters: 'date' },
-                { label: '状态', prop: 'status', width: '120' },
+                { label: '信用到期时间', prop: 'endTime', formatters: 'date' },
+                { label: '状态', prop: 'status' },
                 { label: '资料状态', prop: 'documentStatus' },
-                { label: '资料更新时间', prop: 'documentUpdateTime', width: '150', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
+                { label: '资料更新时间', prop: 'documentUpdateTime', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
 
             ],
             tableData: [],

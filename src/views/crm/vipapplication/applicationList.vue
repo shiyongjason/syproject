@@ -85,7 +85,7 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=300 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
@@ -172,8 +172,8 @@ export default {
                 { label: '所属分部', prop: 'deptName' },
                 { label: '分配员工', prop: 'assignedUserName', width: '' },
                 { label: '是否接收', prop: 'received', width: '' },
-                { label: '申请时间', prop: 'applyTime', width: '150', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
+                { label: '申请时间', prop: 'applyTime', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
             ],
             tableData: [],
             branchArr: [],
