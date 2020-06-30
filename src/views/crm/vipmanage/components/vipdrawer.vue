@@ -69,7 +69,7 @@
                     <el-input type="textarea" v-model="vipForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
                 <el-form-item label="附件：" prop="" ref="projectUpload">
-                    <hosjoyUpload v-model="vipForm.projectUpload" accept='.jpeg,.jpg,.png,excel,.pdf,.word,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
+                    <hosjoyUpload v-model="vipForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlxs,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
                     </hosjoyUpload>
                     <p>2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式</p>
                 </el-form-item>
