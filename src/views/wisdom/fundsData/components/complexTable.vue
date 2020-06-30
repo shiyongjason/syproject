@@ -494,6 +494,7 @@ export default {
                     children: [
                         {
                             label: '最新本金还款日',
+                            prop: 'capitalTime',
                             sort: 1,
                             minWidth: '150',
                             displayAs: 'YYYY-MM-DD'
