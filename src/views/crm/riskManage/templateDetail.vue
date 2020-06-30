@@ -167,7 +167,8 @@ export default {
         async onSaveTemp () {
             this.dialogVisible = false
             this.formTemp.riskCheckDocTemplateSamplePos = this.formTemp.projectUpload
-            if (this.bizType == 4) {
+            console.log(this.bizType)
+            if (this.queryParams.bizType == 4) {
                 await saveCeditDoctemp(this.formTemp)
             } else {
                 await saveDoctemp(this.formTemp)
