@@ -839,7 +839,7 @@ export default {
                             }
                         },
                         {
-                            label: '剩余本金1',
+                            label: '剩余本金',
                             sort: 3,
                             minWidth: '150',
                             render: (h, scope) => {
