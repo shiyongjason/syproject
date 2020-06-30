@@ -1,3 +1,4 @@
+<script src="../../../../utils/MathUtils.js"></script>
 <template>
     <div class="page-body">
         <div class="page-table">
@@ -46,6 +47,7 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
+import {MathJS} from '../../../../utils/MathUtils'
 import {
     WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA,
     WISDOM_EXPOSURE_FUNDSDATA_UPDATA,
@@ -447,7 +449,17 @@ export default {
                             minWidth: '150',
                             isHidden: true,
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
+                                return <span>
+                                    {filters.fundMoneyHaveSpot(
+                                        MathJS.evaluate(`${scope.row.paymentStatic_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                        )}
+                                    {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
+                                        ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
+                                            ? '+' + (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())
+                                            : (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())})`
+                                        : ''
+                                    }
+                                </span>
                             }
                         },
                         {
@@ -768,9 +780,9 @@ export default {
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>
-                                {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
-                                {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
-                            </span>
+                                    {scope.row.loan_loanDateNum ? `${scope.row.loan_loanDateNum}` : '-'}
+                                    {scope.row.loan_loanDateType == 1 ? '个月' : scope.row.loan_loanDateType == 2 ? '天' : ''}
+                                </span>
                             }
                         },
                         {
@@ -827,19 +839,11 @@ export default {
                             }
                         },
                         {
-                            label: '剩余本金',
+                            label: '剩余本金1',
                             sort: 3,
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</span>
-                            }
-                        },
-                        {
-                            label: '剩余正常利息',
-                            sort: 8,
-                            minWidth: '150',
-                            render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
                             }
                         },
                         {
@@ -848,7 +852,18 @@ export default {
                             sort: 4,
                             minWidth: '150',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount + scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0 ? '+' + (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) : (scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal)})` : ''}</span>
+                                return <span>
+                                    {
+                                        filters.fundMoneyHaveSpot(
+                                            MathJS.evaluate(`${scope.row.paymentStatic_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                        )}
+                                    { scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
+                                        ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
+                                            ? '+' + (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())
+                                            : (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())})`
+                                        : ''
+                                    }
+                                </span>
                             }
                         },
                         {
@@ -874,6 +889,14 @@ export default {
                             minWidth: '150',
                             render: (h, scope) => {
                                 return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
+                            }
+                        },
+                        {
+                            label: '剩余正常利息',
+                            sort: 8,
+                            minWidth: '150',
+                            render: (h, scope) => {
+                                return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
                             }
                         },
                         {
