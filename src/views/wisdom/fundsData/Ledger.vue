@@ -182,6 +182,7 @@ export default {
             this.findPlatformslist({ subsectionCode })
         },
         handleClick (i) {
+            this.$refs.complexTable.toggleTableHandler()
             if (i == 1) {
                 this.hasNoneAuth = false
                 this.productType = '1'
@@ -228,17 +229,13 @@ export default {
             this.searchParams.productType = this.productType
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
-                return
-            }
-            if (this.accountType == 0) {
+            } else if (this.accountType == 0) {
                 this.findSummaryList(this.searchParams)
-                return
+            } else {
+                await this.getAccountList(this.searchParams)
             }
-            this.getAccountList(this.searchParams)
-            // 表格渲染错位解决终极大法
-            this.$nextTick(() => {
-                this.$refs.complexTable.$refs.hosjoyTable && this.$refs.complexTable.$refs.hosjoyTable.doLayout()
-            })
+
+            this.$refs.complexTable.showTable()
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
