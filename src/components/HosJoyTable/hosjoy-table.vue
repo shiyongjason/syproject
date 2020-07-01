@@ -1,8 +1,8 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
         <div v-if="collapseShow">
-            <div class="collapse">
-                <el-button type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
+            <div class="collapse" :class="collapse ? 'on' : ''">
+                <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt=""
                      @click="collapse = !collapse">
             </div>
@@ -119,8 +119,7 @@ export default {
                 label: 'label'
             },
             defaultLabel: [],
-            selectedColumn: [],
-            userNameLog: ''
+            selectedColumn: []
         }
     },
     created () {
@@ -150,7 +149,7 @@ export default {
             }
         },
         switchLabel () {
-            return this.column.map(value => {
+            return this.column.filter(value => !value.selfSettingHidden).map(value => {
                 let id = null
                 if (value.prop && value.label) {
                     id = value.prop
@@ -161,10 +160,11 @@ export default {
                     return {
                         id: id,
                         label: value.label,
-                        children: value.children && value.children.filter(value => value.label !== '-').map(value1 => {
+                        children: value.children && value.children.filter(value => value.label !== '-' && !value.selfSettingHidden).map(value1 => {
+                            let subId = id + (value1.uniqueLabel || value1.prop || value1.label)
                             return {
-                                id: value1.prop || value1.label,
-                                label: value1.label
+                                id: subId,
+                                label: value1.uniqueLabel || value1.label
                             }
                         })
                     }
@@ -176,14 +176,21 @@ export default {
                     }
                 }
             })
+        },
+        userNameLog () {
+            return this.localName + this.userInfo.user_name
         }
     },
     methods: {
         async updateLabel () {
-            localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            await this.$emit('toggleTableHandler')
-            this.$emit('updateLabel', this.defaultLabel)
-            this.collapse = false
+            if (this.defaultLabel.length < 2) {
+                this.$message.warning('选中不能小于2个')
+            } else {
+                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                await this.$emit('toggleTableHandler')
+                this.$emit('updateLabel', this.defaultLabel)
+                this.collapse = false
+            }
         },
         hiddenOverflowTooltip (row) {
             if (row.column.showOverflowTooltip) {
@@ -305,18 +312,23 @@ export default {
         dataLength () {
             this.getMergeArr(this.data, this.merge)
         },
-        switchLabel () {
-            const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
-            if (isLoggedIn && isLoggedIn.length > 0) {
-                this.defaultLabel = isLoggedIn
-            } else {
-                this.collectDefaultId(this.switchLabel)
-                localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
-            }
+        switchLabel: {
+            handler () {
+                const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
+                if (isLoggedIn && isLoggedIn.length > 0) {
+                    this.defaultLabel = isLoggedIn
+                    this.$forceUpdate()
+                } else {
+                    this.collectDefaultId(this.switchLabel)
+                    localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                }
+            },
+            deep: true,
+            immediate: true
         }
     },
     mounted () {
-        this.userNameLog = this.localName + this.userInfo.user_name
+        // this.userNameLog = this.localName + this.userInfo.user_name
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
         })
@@ -386,9 +398,11 @@ export default {
     /*}*/
     .collapse {
         position: absolute;
+        box-sizing: border-box;
+        padding: 10px 15px;
         width: 280px;
         height: 50px;
-        right: 0;
+        right: 10px;
         top: 0;
         z-index: 2;
         cursor: pointer;
@@ -403,16 +417,22 @@ export default {
             margin-top: 4px;
         }
     }
+    .on {
+        background: #FFFFFF;
+    }
 
     .collapse-content {
         position: absolute;
         width: 280px;
-        top: 35px;
+        top: 50px;
         right: 10px;
         background: #ffffff;
         z-index: 2;
         padding: 5px 10px;
         box-sizing: border-box;
+        max-height: 400px;
+        overflow: hidden;
+        overflow-y: scroll;
     }
 
     .hosjoy-table >>> .el-table .branch-total-row {
