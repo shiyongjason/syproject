@@ -37,17 +37,17 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">可代采购额度：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入最小可代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入最大可代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">剩余代采购额度：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入最小剩余代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
-                        <el-input v-model="queryParams.maxRemainPurchaseQuota" v-isNum:6 placeholder="请输入最大剩余代采购额度" maxlength="50"><template slot="append">万元</template></el-input>
+                        <el-input v-model="queryParams.maxRemainPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
