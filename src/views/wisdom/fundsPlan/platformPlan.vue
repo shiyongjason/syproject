@@ -178,8 +178,15 @@ export default {
                 value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
                 if (value.children) {
                     let number = 0
+                    let ID = ''
+                    if (value.prop && value.label) {
+                        ID += value.prop
+                    } else if (value.label) {
+                        ID += value.label
+                    }
                     value.children.forEach(value1 => {
-                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
+                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
                     value.isHidden = !(number > 0)

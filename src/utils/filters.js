@@ -63,6 +63,18 @@ const fundMoney = function (val, int) {
         return '-'
     }
 }
+// 资金台账金额格式
+const fundMoneyHaveSpot = function (val, int) {
+    if (val) {
+        const head = val.toString().slice(0, val.toString().indexOf('.'))
+        const foot = val.toString().slice(val.toString().indexOf('.'))
+        return `${head}${foot}`
+    } else if (val === 0) {
+        return val
+    } else {
+        return '-'
+    }
+}
 const formatDateDuration = function (time) {
     if (!time) return '-'
     let tempTime = ''
@@ -99,5 +111,6 @@ export default {
     money,
     isNotBlank,
     fundMoney,
-    moneyShow
+    moneyShow,
+    fundMoneyHaveSpot
 }
