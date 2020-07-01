@@ -34,7 +34,7 @@
             </div>
         </el-drawer>
         <el-dialog title="签约" :visible.sync="dialogVisible" width="40%" :before-close="onCloseDrawer" :close-on-click-modal=false>
-            <el-form :model="vipForm" :rules="rules" ref="vipForm" label-width="150px" class="demo-vipForm">
+            <el-form :model="vipForm" :rules="rules" ref="vipForm" label-width="150px" class="demo-vipForm el-dialog__form">
                 <el-form-item label="签约人（员工）：" prop="assignedUserId" ref="assignedUserId">
                     <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" :trigger-on-focus="false" @select="handleSelect">
                         <template slot-scope="{ item }">
@@ -330,7 +330,7 @@ export default {
 
     // position: relative;
 }
-/deep/.el-dialog__body {
+/deep/.el-dialog__form{
     height: 500px;
     overflow-y: scroll;
 }
