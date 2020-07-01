@@ -27,8 +27,7 @@ import HosjoyRender from './hosjoy-render'
 import moment from 'moment'
 function money (money) {
     if (money) {
-        const res = money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
+        return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     }
     return '-'
 }
@@ -37,6 +36,18 @@ function fundMoney (money) {
     if (money === 0) return 0
     if (money) return money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     return '-'
+}
+// 资金台账金额格式
+const fundMoneyHaveSpot = function (val, int) {
+    if (val) {
+        const head = val.toString().slice(0, val.toString().indexOf('.'))
+        const foot = val.toString().slice(val.toString().indexOf('.'), -1)
+        return `${head}${foot}`
+    } else if (val === 0) {
+        return val
+    } else {
+        return '-'
+    }
 }
 export default {
     name: 'hosjoyColumn',
@@ -52,7 +63,8 @@ export default {
         return {
             functions: {
                 money: money,
-                fundMoney: fundMoney
+                fundMoney: fundMoney,
+                fundMoneyHaveSpot: fundMoneyHaveSpot
             }
         }
     },

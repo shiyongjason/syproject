@@ -2,7 +2,7 @@ export const CAPITAL_EFFICIENCY_TABLE = [
     { label: 'MIS编码', prop: 'misCode', hidden: true, width: 100 },
     { label: '平台公司', prop: 'loanCompanyName', width: 100 },
     { label: '分部', prop: 'subsectionName', hidden: true, width: 100 },
-    { label: '资金周转次数', prop: 'turnoverCount', hidden: true, formatters: 'fundMoney', width: 150 },
+    { label: '资金周转次数', prop: 'turnoverCount', hidden: true, formatters: 'fundMoneyHaveSpot', width: 150 },
     { label: '销售金额', prop: 'saleAmount', hidden: true, formatters: 'fundMoney', width: 150 },
     { label: '资金占用总计', prop: 'totalOccupy', hidden: true, formatters: 'fundMoney', width: 150 },
     { label: '资金敞口占用', prop: 'openOccupy', hidden: true, formatters: 'fundMoney', width: 150 },
