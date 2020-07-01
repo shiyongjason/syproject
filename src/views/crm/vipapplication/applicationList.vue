@@ -96,7 +96,7 @@
                     {{scope.data.row.received?'是':'否'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDistribution(scope.data.row)">分配</el-button>
+                    <el-button type="success" size="mini" plain @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</el-button>
                 </template>
             </basicTable>
         </div>
@@ -131,10 +131,12 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { postVipsigner } from './api'
+import * as auths from '@/utils/auth_const'
 export default {
     name: 'vipapplication',
     data () {
         return {
+            auths,
             restaurants: [],
             stateN: '',
             stateUser: '',
