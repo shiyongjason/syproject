@@ -97,7 +97,7 @@
                     {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-2].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -126,10 +126,12 @@ import moment from 'moment'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import creditdrawer from './components/creditdrawer'
 import { CREDITLEVEL, MATELIST } from '../const'
+import * as auths from '@/utils/auth_const'
 export default {
     name: 'creditManage',
     data () {
         return {
+            auths,
             moment,
             queryParams: {
                 companyName: '',

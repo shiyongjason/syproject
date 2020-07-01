@@ -6,7 +6,7 @@
                 <div class="drawer-wrap_btn">
                     <div class="drawer-wrap_btn-flex">VIP签约信息</div>
                     <div class="drawer-wrap_btn-flex">
-                        <el-button type="primary" size="mini" @click="onEditVip()">新增签约</el-button>
+                        <el-button type="primary" size="mini" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</el-button>
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
@@ -17,7 +17,7 @@
                         <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">修改</el-button>
+                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</el-button>
                     </template>
                 </basicTable>
                 <p>
@@ -87,10 +87,12 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapActions, mapGetters } from 'vuex'
 import { postCompanyvip, putCompanyvip } from '../api/index'
+import * as auths from '@/utils/auth_const'
 export default {
     name: 'vipdrawer',
     data () {
         return {
+            auths,
             moment,
             drawer: false,
             isloading: false,

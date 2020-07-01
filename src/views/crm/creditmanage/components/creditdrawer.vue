@@ -18,7 +18,7 @@
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)">设置信用评级</el-button>
+                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths. CRM_CREDIT_SET)">设置信用评级</el-button>
                     </template>
                 </basicTable>
                 <p>
@@ -158,10 +158,12 @@ import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
+import * as auths from '@/utils/auth_const'
 export default {
     name: 'creditdrawer',
     data () {
         return {
+            auths,
             handleImgDownload,
             moment,
             isloading: false,
