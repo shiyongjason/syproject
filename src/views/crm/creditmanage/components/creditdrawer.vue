@@ -80,7 +80,7 @@
             </div>
         </el-drawer>
         <el-dialog title="设置" :visible.sync="dialogVisible" width="40%" :before-close="onCloseDrawer" :close-on-click-modal=false>
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">
                     <el-input v-model="ruleForm.companyName" disabled></el-input>
                 </el-form-item>
@@ -515,7 +515,7 @@ export default {
     overflow-y: scroll;
     // position: relative;
 }
-/deep/.el-dialog__body {
+/deep/.el-dialog__form {
     height: 500px;
     overflow-y: scroll;
 }
