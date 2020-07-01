@@ -345,7 +345,9 @@ export default {
                         })
                         // 全选 0 时候 不传任何  1 时候传配置的数据范围
                         if (authType.status == 1 && authType.authType == 2) {
-                            authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            if (JSON.stringify(authType.employeeSubsections) != '{}') {
+                                authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            }
                         }
                     })
                 }
@@ -382,6 +384,9 @@ export default {
                 dingCode: this.dingCode,
                 positionCodeList: this.positionCodeList,
                 userCode: this.jobNumber
+            }
+            if (params.authCodes.length < 1) {
+                this.$message({ message: '请勾选数据范围配置', type: 'warning' })
             }
             console.log(params)
             await saveAuthRole(params)
