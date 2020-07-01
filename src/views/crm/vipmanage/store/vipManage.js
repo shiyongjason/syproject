@@ -11,10 +11,7 @@ const state = {
 
 const getters = {
     vipManagedata: state => state.vipManagedata,
-    vipLevel: state => {
-        let newLevl = [{ id: 0, vipRule: '无' }]
-        return [...newLevl, ...state.vipLevel]
-    },
+    vipLevel: state => state.vipLevel,
     vipDetail: state => state.vipDetail,
     vipPagedetail: state => state.vipPagedetail,
     vipPageLoan: state => state.vipPageLoan

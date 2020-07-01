@@ -20,8 +20,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">信用评级 ：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.creditLevel" placeholder="请选择">
-                            <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
+                        <el-select v-model="queryParams.creditLevel" placeholder="请选择" :clearable=true>
+                            <el-option v-for="item in droplists" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -157,11 +157,11 @@ export default {
                 { label: '服务费', prop: 'serviceFee' },
                 { label: '可代采购额度（万元）', prop: 'purchaseQuota', formatters: 'money' },
                 { label: '剩余代采购金额（万元）', prop: 'remainPurchaseQuota', formatters: 'money' },
-                { label: '信用到期时间', prop: 'endTime', width: '150', formatters: 'date' },
-                { label: '状态', prop: 'status', width: '120' },
+                { label: '信用到期时间', prop: 'endTime', formatters: 'date' },
+                { label: '状态', prop: 'status' },
                 { label: '资料状态', prop: 'documentStatus' },
-                { label: '资料更新时间', prop: 'documentUpdateTime', width: '150', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
+                { label: '资料更新时间', prop: 'documentUpdateTime', formatters: 'dateTimes' },
+                { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
 
             ],
             tableData: [],
@@ -178,7 +178,8 @@ export default {
                     { required: true, message: '请选择活动区域', trigger: 'change' }
                 ]
             },
-            ruleForm: {}
+            ruleForm: {},
+            droplists: []
         }
     },
     components: {
@@ -218,6 +219,7 @@ export default {
         this.onGetbranch()
         this.searchList()
         this.copyParms = { ...this.queryParams }
+        this.droplists = [...[{ key: 0, value: '无' }], ...this.droplist]
     },
     methods: {
         ...mapActions({
