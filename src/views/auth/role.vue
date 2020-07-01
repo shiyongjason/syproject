@@ -418,12 +418,17 @@ export default {
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2 && item.employeeSubsections) {
                 console.log(item.employeeSubsections)
-                this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                console.log(2, JSON.stringify(item.employeeSubsections))
+                if (JSON.stringify(item.employeeSubsections) != '{}') {
+                    this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                }
             } else if (item.authType == 2 && !item.employeeSubsections) {
                 this.checkedkeys = []
             }
             this.$nextTick(() => {
-                this.$refs['treetable'].setCheckedKeys(this.checkedkeys)
+                setTimeout(() => {
+                    this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                }, 100)
             })
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
