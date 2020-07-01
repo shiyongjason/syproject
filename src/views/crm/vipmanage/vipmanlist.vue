@@ -60,7 +60,7 @@
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_LOOK_DETAIL)">查看详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -71,11 +71,12 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import vipdrawer from './components/vipdrawer'
 import { deepCopy } from '@/utils/utils'
-// import { money } from '@/utils/filters'
+import * as auths from '@/utils/auth_const'
 export default {
     name: 'vipmanage',
     data () {
         return {
+            auths,
             maxServiceFeeDiscount: '',
             minServiceFeeDiscount: '',
             queryParams: {
