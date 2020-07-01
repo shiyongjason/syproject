@@ -269,9 +269,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.ruleForm.startTime
+                    let beginDateVal = this.newendTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -400,6 +400,7 @@ export default {
             this.drawer = false
         },
         datePickerChange (val) {
+            this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
         async onEditVip (val) {
@@ -407,6 +408,7 @@ export default {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
             }
             this.dialogVisible = true
