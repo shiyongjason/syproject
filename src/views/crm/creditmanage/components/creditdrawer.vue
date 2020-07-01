@@ -107,7 +107,7 @@
                     <el-input type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
                 <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <hosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlxs,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
+                    <hosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
                     </hosjoyUpload>
                     2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式
                 </el-form-item>
@@ -515,8 +515,8 @@ export default {
     overflow-y: scroll;
     // position: relative;
 }
-/deep/.el-dialog {
-    height: 600px;
+/deep/.el-dialog__body {
+    height: 500px;
     overflow-y: scroll;
 }
 .drawer-wrap {
