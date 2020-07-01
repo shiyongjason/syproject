@@ -21,7 +21,7 @@
                     <div class="query-col-title">VIP等级：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.vipRuleId" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevel" :key="item.id"></el-option>
+                            <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevels" :key="item.id"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -112,7 +112,8 @@ export default {
                     { required: true, message: '请选择活动区域', trigger: 'change' }
                 ]
             },
-            ruleForm: {}
+            ruleForm: {},
+            vipLevels: []
         }
     },
     components: {
@@ -194,6 +195,8 @@ export default {
         },
         async onGetvipLevel () {
             await this.findViprules()
+            let newLevl = [{ id: 0, vipRule: '无' }]
+            this.vipLevels = [...newLevl, ...this.vipLevel]
         },
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
