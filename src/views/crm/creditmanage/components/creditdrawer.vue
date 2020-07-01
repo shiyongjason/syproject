@@ -15,10 +15,10 @@
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                     </template>
                     <template slot="status" slot-scope="scope">
-                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
+                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths. CRM_CREDIT_SET)">设置信用评级</el-button>
+                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</el-button>
                     </template>
                 </basicTable>
                 <p>
