@@ -12,7 +12,6 @@ export function exportCompanyOverdueExcel (params) {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
-                console.log(params)
                 const a = document.createElement('a')
                 let name = ''
                 if (params.state == 1) {
@@ -75,6 +74,30 @@ export function exportBranchOverdueDetailExcel (params) {
                 console.log(params)
                 const a = document.createElement('a')
                 a.download = `分部逾期汇总表.xlsx`
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+
+// 平台公司逾期汇总导出
+export function exportBackMoneyTrack (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`backend/api/company/overdue/summary/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = `平台公司回款跟踪表.xlsx`
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
