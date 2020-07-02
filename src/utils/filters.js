@@ -30,15 +30,27 @@ const formatterDate = function (time) {
 }
 
 // 金额格式化
-const money = function (val, int) {
-    if (val) {
-        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
+const money = function (value, int) {
+    // if (val) {
+    //     const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    //     return res
+    // }
+    // if (val == 0) {
+    //     return 0
+    // }
+    // return '-'
+    if (value == null) return '-'
+    let money = ''
+    let pointNum = ''
+    let val = value.toString()
+    if (val.indexOf('.') > 0) {
+        money = val.split('.')[0]
+        pointNum = val.split('.')[1]
+        return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
+    } else {
+        money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        return money
     }
-    if (val == 0) {
-        return 0
-    }
-    return '-'
 }
 // 资金台账金额格式
 const fundMoney = function (val, int) {
