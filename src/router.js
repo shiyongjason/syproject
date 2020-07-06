@@ -276,7 +276,6 @@ async function getMenu (to, next, isMakeIndex, query) {
         menu = makeMenus(routerMapping, resourceList)
     }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
-
     router.addRoutes(menu)
     if (isMakeIndex) {
         makeIndex(menu, next, query)
