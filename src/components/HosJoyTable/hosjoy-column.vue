@@ -1,4 +1,5 @@
 <template>
+<!--    isUseCommonRenderHeader  针对el-table头部超出显示悬浮框-->
     <el-table-column v-if="column && !column.isHidden && !column.selfSettingHidden" v-bind="$attrs" v-on="$listeners" :prop="column.prop" :label="column.label" :type="column.type" :index="column.index" :column-key="column.columnKey" :width="column.width" :min-width="column.minWidth" :fixed="column.fixed"
         :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader" :sortable="column.sortable || false" :sort-method="column.sortMethod" :sort-by="column.sortBy" :sort-orders="column.sortOrders" :resizable="column.resizable || true" :formatter="column.formatter"
         :show-overflow-tooltip="column.showOverflowTooltip || false" :align="column.align || align || 'center'" :header-align="column.headerAlign || headerAlign || column.align || align || 'center'" :class-name="column.className" :label-class-name="column.labelClassName"

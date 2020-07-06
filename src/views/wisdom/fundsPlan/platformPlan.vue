@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        <div class="tips">
+        <div class="table-tips">
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
@@ -346,15 +346,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.tips {
+.table-tips {
     background: #ffffff;
 
     p {
         max-width: 1000px;
         margin: auto;
-        line-height: 100px;
+        line-height: 25px;
         text-align: center;
-
+        padding-top: 5px;
         b {
             color: red;
             padding: 0 5px;

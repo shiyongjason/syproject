@@ -35,6 +35,13 @@
                         </div>
                     </el-form-item>
                 </div>
+                <div class="query-cont-col">
+                    <el-form-item label="好享家注资占用额：">
+                        <div class="w250">
+                            <span>{{fundDetail.hxjFundAmount | fundMoneyHaveSpot}}&nbsp;万元</span>
+                        </div>
+                    </el-form-item>
+                </div>
             </div>
             <h3>销售数据</h3>
             <div class="query-cont-row">
