@@ -49,7 +49,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">项目类别：</div>
                     <div class="query-col-input">
-                        <el-select v-model="typeArr" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                        <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -58,7 +58,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <el-select v-model="status" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                        <el-select v-model="status" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
