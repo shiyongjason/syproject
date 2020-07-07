@@ -8,7 +8,7 @@ export const updataRemark = (params) => axios.post(interfaceUrl + `backend/api/a
 export const getEfficiencyTotal = (params) => axios.get(interfaceUrl + `backend/api/account-efficiency/total`, { params })
 export function exportEfficiencyList (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`backend/api/account-efficiency/total/export`, { params }).then(function (response) {
+    axios.get(`backend/api/account-efficiency/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
