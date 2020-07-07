@@ -88,7 +88,15 @@ export function exportBranchOverdueDetailExcel (params) {
     })
 }
 
-// 平台公司逾期汇总导出
+// 回款跟踪列表
+export function getBackMoneyTrackList (params) {
+    return axios.get(`backend/api/overdue/repayment-trace/page`, { params })
+}
+// 回款跟踪列表合计
+export function getBackMoneyTrackTotal (params) {
+    return axios.get(`backend/api/company/overdue/summary`, { params })
+}
+// 回款跟踪导出
 export function exportBackMoneyTrack (params) {
     axios.defaults.responseType = 'blob'
     axios.get(`backend/api/company/overdue/summary/export`, { params }).then(function (response) {

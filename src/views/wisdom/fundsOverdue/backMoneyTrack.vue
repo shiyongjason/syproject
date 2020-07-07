@@ -42,7 +42,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
+                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { backMoneyTrack, backMoneyTrackTotal } from './const'
@@ -175,24 +175,7 @@ export default {
                 ...this.queryParams,
                 ...this.page
             }
-            this.onQuery()
-        },
-        async onQuery () {
-            const promiseArr = [getCompanyOverdueList(this.searchParams), getCompanyOverdueListTotal(this.searchParams)]
-            const data = await Promise.all(promiseArr).then((res) => {
-                if (!res[1].data) {
-                    res[1].data = backMoneyTrackTotal
-                }
-                return res[0].data
-            }).catch((error) => {
-                this.$message.error(`error:${error}`)
-            })
-            this.tableData = data.records
-            this.page = {
-                total: data.total,
-                pageSize: data.size,
-                pageNumber: data.current
-            }
+            this.findBackMoneyTrackList(this.searchParams)
         },
         getList (val) {
             this.searchParams = {
@@ -218,7 +201,11 @@ export default {
             this.selectAuth.platformObj = { ...obj }
             await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
-        }
+        },
+        ...mapActions([
+            'findBackMoneyTrackList',
+            'findBackMoneyTrackTotal'
+        ])
     },
     async mounted () {
         this.onSearch()
@@ -250,6 +237,6 @@ export default {
         color: #fff !important;
     }
     /deep/.overdueTable td{
-        height: 71px;
+        height: 20px;
     }
 </style>
