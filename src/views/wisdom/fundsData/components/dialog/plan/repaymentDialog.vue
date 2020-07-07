@@ -57,6 +57,11 @@
                                 </el-form-item>
                             </div>
                         </template>
+                        <div class="query-cont-col" style="width: 50%">
+                            <el-form-item label="宽限到期日：">
+                                {{ untilDay(item) }}
+                            </el-form-item>
+                        </div>
                     </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
@@ -248,6 +253,7 @@
 import { setPlan } from '../../../api'
 import { mapState } from 'vuex'
 import { setCountMixin } from '../../../mixins/setCount'
+import moment from 'moment'
 export default {
     name: 'repaymentDialog',
     mixins: [setCountMixin],
@@ -301,6 +307,14 @@ export default {
             })
             // this.arrSurplus = arrSurplus
             return arrSurplus
+        },
+        untilDay () {
+            return function (item) {
+                item.graceDueDate = item.exsitGrace
+                    ? moment(item.endTime).add(item.graceDay, 'days').format('YYYY-MM-DD')
+                    : moment(item.endTime).format('YYYY-MM-DD')
+                return item.graceDueDate
+            }
         }
     },
     mounted () {

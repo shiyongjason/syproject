@@ -20,6 +20,12 @@
                         好橙工终审材料清单 <el-button size="mini" type="primary" @click="onEdittemp(3)">编辑</el-button>
                     </div>
                 </div>
+                   <div class="page-risk_title">
+                    授信清单配置：
+                    <div class="page-risk_btn">
+                        好橙工授信材料清单 <el-button size="mini" type="primary" @click="onEdittemp(4)">编辑</el-button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

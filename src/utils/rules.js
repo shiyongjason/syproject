@@ -166,6 +166,14 @@ export const IsFixedTwoNumber = (rule, value, callback) => {
     }
     return callback()
 }
+// 大于零的实数
+export const IsThanZero = (rule, value, callback) => {
+    // var Reg = /^[0-9]+(.[0-9])?$/
+    if (value < 0) {
+        return callback(new Error(rule.message))
+    }
+    return callback()
+}
 export const twoNumber = (rule, value, callback) => {
     var Reg = /(^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$)/
     if (value && !Reg.test(value)) {

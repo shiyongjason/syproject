@@ -42,7 +42,7 @@
                 </tbody>
             </table>
         </div>
-        <el-dialog title="编辑" :visible.sync="dialogVisible" width="35%" :before-close="handleClose">
+        <el-dialog title="编辑" :visible.sync="dialogVisible" width="35%" :close-on-click-modal=false :before-close="handleClose">
             <div class="tem-wrap">
                 <el-form :model="formTemp" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
                     <el-form-item label="一级类目：">
@@ -67,7 +67,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input type="textarea" placeholder="请输入内容" v-model="formTemp.remark" maxlength="500" :autosize="{ minRows: 2, maxRows: 7}" show-word-limit>
+                        <el-input type="textarea" placeholder="请输入内容" v-model="formTemp.remark" maxlength="500" :autosize="{ minRows:5, maxRows: 6}" show-word-limit>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="样例：">
@@ -87,7 +87,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions } from 'vuex'
-import { saveDoctemp, docTempformat } from './api/index'
+import { saveDoctemp, docTempformat, saveCeditDoctemp } from './api/index'
 export default {
     name: 'templatedetail',
     components: {
@@ -129,7 +129,7 @@ export default {
         })
     },
     mounted () {
-        this.tempName = this.$route.query.bizType == 1 ? '好橙工项目材料清单' : this.$route.query.bizType == 2 ? '好橙工立项材料清单' : '好橙工终审材料清单'
+        this.tempName = this.$route.query.bizType == 1 ? '好橙工项目材料清单' : this.$route.query.bizType == 2 ? '好橙工立项材料清单' : this.$route.query.bizType == 3 ? '好橙工终审材料清单' : '好橙工授信材料清单'
         this.onFindDoctemp()
         this.findFormat()
     },
@@ -167,7 +167,12 @@ export default {
         async onSaveTemp () {
             this.dialogVisible = false
             this.formTemp.riskCheckDocTemplateSamplePos = this.formTemp.projectUpload
-            await saveDoctemp(this.formTemp)
+            console.log(this.bizType)
+            if (this.queryParams.bizType == 4) {
+                await saveCeditDoctemp(this.formTemp)
+            } else {
+                await saveDoctemp(this.formTemp)
+            }
             this.onFindDoctemp()
         },
         computedRowspan (list) {
@@ -223,6 +228,9 @@ export default {
             margin: 0 19px;
         }
     }
+}
+/deep/.el-textarea .el-input__count{
+    background: transparent;
 }
 /deep/.el-upload-dragger {
     width: 90px;
