@@ -295,6 +295,7 @@ export default {
                 this.projectForm.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.projectForm.pkDeptDoc).deptName || ''
             }
             this.$refs.ruleForm.validate(async (valid) => {
+                console.log(valid)
                 if (valid) {
                     try {
                         await putProjectDetail(this.projectForm)
@@ -302,6 +303,7 @@ export default {
                             message: '数据保存成功',
                             type: 'success'
                         })
+                        this.$emit('onCompsback')
                         this.$emit('onBackLoad', false)
                     } catch (error) {
                         this.$emit('onBackLoad', false)

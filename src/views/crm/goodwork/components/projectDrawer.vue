@@ -295,7 +295,7 @@ export default {
                 // 初审详情保存
                 try {
                     this.$refs.projectCom.onSaveproject()
-                    this.$emit('backEvent')
+                    // this.$emit('backEvent')
                 } catch (error) {
                     this.loading = false
                 }
