@@ -957,7 +957,7 @@ export const backMoneyTrack = [
             {
                 prop: 'misCode',
                 minWidth: 100,
-                label: '合计'
+                label: '-'
             }
         ]
     },
@@ -999,64 +999,141 @@ export const backMoneyTrack = [
             {
                 prop: 'regionName',
                 minWidth: 100,
-                label: '-'
+                label: '合计'
             }
         ]
     },
     {
         prop: 'normalRepaymentAmount',
         minWidth: 120,
-        label: '正常应还金额'
+        label: '正常应还金额',
+        children: [
+            {
+                prop: 'normalRepaymentAmount',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'overduePlanRepaymentAmount',
         minWidth: 150,
-        label: '逾期计划应还款金额'
+        label: '逾期计划应还款金额',
+        children: [
+            {
+                prop: 'overduePlanRepaymentAmount',
+                minWidth: 150,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'repaymentAmountTotal',
         minWidth: 120,
-        label: '应还金额合计'
+        label: '应还金额合计',
+        children: [
+            {
+                prop: 'repaymentAmountTotal',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'takeBackNormalAmount',
         minWidth: 120,
-        label: '收回正常金额'
+        label: '收回正常金额',
+        children: [
+            {
+                prop: 'takeBackNormalAmount',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'takeBackPlanInsideOverdueAmount',
         minWidth: 150,
-        label: '收回计划内逾期金额'
+        label: '收回计划内逾期金额',
+        children: [
+            {
+                prop: 'takeBackPlanInsideOverdueAmount',
+                minWidth: 150,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'receivedAmountTotal',
         minWidth: 120,
-        label: '应收已收金额合计'
+        label: '应收已收金额合计',
+        children: [
+            {
+                prop: 'receivedAmountTotal',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'takeBackPlanOuterOverdueAmount',
         minWidth: 150,
-        label: '收回计划外逾期金额'
+        label: '收回计划外逾期金额',
+        children: [
+            {
+                prop: 'takeBackPlanOuterOverdueAmount',
+                minWidth: 150,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'prepaymentAmount',
         minWidth: 120,
-        label: '提前还款金额'
+        label: '提前还款金额',
+        children: [
+            {
+                prop: 'prepaymentAmount',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'currentActualTakeBackTotal',
         minWidth: 120,
-        label: '当期实际收回合计'
+        label: '当期实际收回合计',
+        children: [
+            {
+                prop: 'currentActualTakeBackTotal',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'rebateRate',
         minWidth: 120,
-        label: '回款率（金额）'
+        label: '回款率（金额）',
+        children: [
+            {
+                prop: 'rebateRate',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     },
     {
         prop: 'onTimeRate',
         minWidth: 120,
-        label: '及时率（笔数）'
+        label: '及时率（笔数）',
+        children: [
+            {
+                prop: 'onTimeRate',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
     }
 ]
 // 回款跟踪合计

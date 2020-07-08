@@ -1,14 +1,32 @@
 import * as types from './const'
 import * as Api from '../api'
+import { MathJS } from '../../../../utils/MathUtils'
 
-const states = {
+const state = {
     backMoneyList: [],
     backMoneyTotal: {},
-    backMoneyPagination: {}
+    backMoneyPagination: {
+        total: 0,
+        pageSize: 10,
+        pageNumber: 1
+    }
 }
 const getters = {
-    backMoneyList: state => state.backMoneyList,
-    backMoneyTotal: state => state.backMoneyTotal,
+    backMoneyList: state => {
+        return state.backMoneyList.map(value => {
+            value.onTimeRate = value.onTimeRate !== null ? (MathJS.evaluate(`${value.onTimeRate} * 100`).toNumber()) + '%' : '-'
+            value.rebateRate = value.rebateRate !== null ? (MathJS.evaluate(`${value.rebateRate} * 100`).toNumber()) + '%' : '-'
+            return value
+        })
+    },
+    backMoneyTotal: state => {
+        for (const key in state.backMoneyTotal) {
+            if (key === 'onTimeRate' || key === 'rebateRate') {
+                state.backMoneyTotal[key] = MathJS.evaluate(`${state.backMoneyTotal[key]} * 100`).toNumber() + '%'
+            }
+        }
+        return state.backMoneyTotal
+    },
     backMoneyPagination: state => state.backMoneyPagination
 }
 const mutations = {
@@ -40,7 +58,7 @@ const actions = {
 
 export default {
     namespaced: true,
-    states,
+    state,
     getters,
     mutations,
     actions

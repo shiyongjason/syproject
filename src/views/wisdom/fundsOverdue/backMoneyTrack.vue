@@ -1,11 +1,11 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick">
+    <div class="page-body back-money-track">
+        <div>
+            <el-tabs v-model="queryParams.departmentType" type="card" @tab-click="handleClick">
                 <el-tab-pane label="平台公司回款跟踪" name="1"></el-tab-pane>
                 <el-tab-pane label="分部回款跟踪" name="2"></el-tab-pane>
             </el-tabs>
-            <div class="query-cont-row">
+            <div class="page-body-cont query-cont">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
@@ -26,36 +26,45 @@
                 </div>
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">查询时间：</div>
-                    <el-date-picker v-model="queryParams.startDate" :clearable='false' :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.startDate" @change="restEndTime" :clearable='false' :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
                     </el-date-picker>
                     <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.endDate" :clearable='false' :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    <el-date-picker v-model="queryParams.endDate" :clearable='false' :editable="false" :picker-options="pickerOptions" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
-                </hosJoyTable>
+                <hosJoyTable
+                    ref="hosjoyTable"
+                    border
+                    stripe
+                    :showPagination='!!backMoneyPagination.total'
+                    :column="column" :data="backMoneyList"
+                    :total="backMoneyPagination.total"
+                    :pageNumber.sync="backMoneyPagination.pageNumber"
+                    :pageSize.sync="backMoneyPagination.pageSize"
+                    @pagination="getList"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { backMoneyTrack, backMoneyTrackTotal } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { getCompanyOverdueList, getCompanyOverdueListTotal, exportBackMoneyTrack } from './api/index'
+import { exportBackMoneyTrack } from './api/index'
+import filters from '../../../utils/filters'
 import moment from 'moment'
 export default {
     name: 'backMoneyTrack',
@@ -79,19 +88,17 @@ export default {
                 }
             },
             queryParams: {
-                state: '1',
-                regionCode: '',
-                subsectionCode: '',
-                companyName: ''
-            },
-            searchParams: {},
-            page: {
-                total: 0,
+                departmentType: '1',
+                startDate: moment(new Date()).startOf('month').format('YYYY-MM-DD'),
+                endDate: moment(new Date()).format('YYYY-MM-DD'),
+                misCode: '',
+                pageNumber: 1,
                 pageSize: 10,
-                pageNumber: 1
+                regionCode: '',
+                subsectionCode: ''
             },
-            total: {},
-            tableData: []
+            tableData: [],
+            column: []
         }
     },
     computed: {
@@ -101,30 +108,18 @@ export default {
             branchList: state => state.branchList,
             platformData: state => state.platformData
         }),
-        column () {
-            return backMoneyTrack
-        },
-        fixedHeight () {
-            let oneHeight = 71
-            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
-            return isHeight > 450 ? 450 : isHeight
-        },
-        pickerOptionsStart () {
+        ...mapGetters({
+            backMoneyList: 'fundsOverdue/backMoneyList',
+            backMoneyTotal: 'fundsOverdue/backMoneyTotal',
+            backMoneyPagination: 'fundsOverdue/backMoneyPagination'
+        }),
+        pickerOptions () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.queryParams.endDate
-                    if (endDateVal) {
-                        return time.getTime() > new Date(endDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startDate
+                    let beginDateVal = moment(this.queryParams.startDate).startOf('month').format('YYYY-MM-DD')
+                    let endDateVal = moment(this.queryParams.startDate).endOf('month').add(1, 'days').format('YYYY-MM-DD')
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7 || time.getTime() > new Date(endDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -138,11 +133,11 @@ export default {
             }
             if (dis === 'D') {
                 this.queryParams.subsectionCode = ''
-                this.queryParams.companyName = ''
+                this.queryParams.misCode = ''
                 this.selectAuth.branchObj = { ...obj }
                 this.selectAuth.platformObj = { ...obj }
             } else if (dis === 'F') {
-                this.queryParams.companyName = ''
+                this.queryParams.misCode = ''
                 this.selectAuth.platformObj = { ...obj }
             }
         },
@@ -160,54 +155,62 @@ export default {
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            exportBackMoneyTrack(this.searchParams)
+            exportBackMoneyTrack(this.queryParamsTemp)
         },
         handleClick () {
-            this.tableData = []
             this.onReset()
         },
-        onSearch () {
-            this.searchParams = {
-                ...this.queryParams,
-                ...this.page
+        async onSearch () {
+            this.queryParamsTemp = {
+                ...this.queryParams
             }
-            this.findBackMoneyTrackList(this.searchParams)
+            this.findBackMoneyTrackList(this.queryParamsTemp)
+            await this.findBackMoneyTrackTotal(this.queryParamsTemp)
+            backMoneyTrack.forEach(value => {
+                if (value.children && value.children.length > 0) {
+                    for (let key in this.backMoneyTotal) {
+                        if (key === value.children[0].prop && this.backMoneyTotal[key] !== null) {
+                            value.children[0].label = String(filters.fundMoney(this.backMoneyTotal[key]))
+                        }
+                    }
+                }
+            })
+            this.column = backMoneyTrack
         },
         getList (val) {
-            this.searchParams = {
-                ...this.searchParams,
+            this.queryParamsTemp = {
+                ...this.queryParamsTemp,
                 ...val
             }
-            this.onQuery()
+            this.findBackMoneyTrackList(this.queryParamsTemp)
+            this.findBackMoneyTrackTotal(this.queryParamsTemp)
         },
         async onReset () {
             let obj = {
                 selectCode: '',
                 selectName: ''
             }
-            this.$set(this.queryParams, 'regionCode', '')
-            this.$set(this.queryParams, 'subsectionCode', '')
-            this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'companyName', '')
-            this.$set(this.queryParams, 'year', moment().format('YYYY'))
-            this.$set(this.queryParams, 'pageNumber', 1)
-            this.$set(this.queryParams, 'pageSize', 10)
+            this.queryParams = { ...this.restQueryParams, departmentType: this.queryParams.departmentType }
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
             await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
-        ...mapActions([
-            'findBackMoneyTrackList',
-            'findBackMoneyTrackTotal'
-        ])
+        restEndTime () {
+            this.queryParams.endDate = moment(this.queryParams.startDate).endOf('month').format('YYYY-MM-DD')
+        },
+        ...mapActions({
+            findBackMoneyTrackList: 'fundsOverdue/findBackMoneyTrackList',
+            findBackMoneyTrackTotal: 'fundsOverdue/findBackMoneyTrackTotal'
+        })
     },
     async mounted () {
+        this.restQueryParams = { ...this.queryParams }
         this.onSearch()
         await this.newBossAuth(['D', 'F', 'P'])
     }
@@ -215,8 +218,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .upload-demo {
-        display: inline-block;
+    .back-money-track {
+        background: #ffffff;
+        padding: 60px 25px 0;
+        box-sizing: border-box;
     }
     .overdueTable {
         position: relative;
@@ -227,16 +232,5 @@ export default {
         position: absolute;
         top: -16px;
         right: 0;
-    }
-    /deep/.el-table__header .repaymentStyle {
-        background-color: rgba($color: #c65911, $alpha: 1) !important;
-        color: #fff !important;
-    }
-    /deep/.el-table__row .repaymentStyle {
-        background-color: rgba($color: #c65911, $alpha: 0.5) !important;
-        color: #fff !important;
-    }
-    /deep/.overdueTable td{
-        height: 20px;
     }
 </style>

@@ -8,6 +8,7 @@ import layout from '@/views/layout/store/index.js'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
+import fundsOverdue from '@/views/wisdom/fundsOverdue/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
 import userRealreport from './modules/userRealreport'
@@ -62,6 +63,7 @@ const store = new Vuex.Store({
         jinyunplatform,
         crmauthen,
         fundsPlan,
+        fundsOverdue,
         crmstatic,
         projectInformation,
         riskManage,

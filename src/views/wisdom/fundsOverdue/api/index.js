@@ -94,18 +94,22 @@ export function getBackMoneyTrackList (params) {
 }
 // 回款跟踪列表合计
 export function getBackMoneyTrackTotal (params) {
-    return axios.get(`backend/api/company/overdue/summary`, { params })
+    return axios.get(`backend/api/overdue/repayment-trace/total`, { params })
 }
 // 回款跟踪导出
 export function exportBackMoneyTrack (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`backend/api/company/overdue/summary/export`, { params }).then(function (response) {
+    axios.get(`backend/api/overdue/repayment-trace/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = `平台公司回款跟踪表.xlsx`
+                if (params.departmentType === '1') {
+                    a.download = `平台公司回款跟踪表.xlsx`
+                } else {
+                    a.download = `分部回款跟踪表.xlsx`
+                }
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
