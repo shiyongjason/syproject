@@ -111,7 +111,7 @@
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
                 <template slot="progress" slot-scope="scope">
-                    {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
+                    {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
@@ -182,7 +182,9 @@ export default {
                 originType: 1,
                 deptDoc: '',
                 jobNumber: '',
-                authCode: ''
+                authCode: '',
+                field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
+                isAsc: ''// 排序方式 是否升序 true：是 false：否
             },
             status: [],
             typeArr: [],
@@ -192,15 +194,53 @@ export default {
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
                 { label: '项目名称', prop: 'projectName', width: '150' },
+                { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: true },
+                { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: 'custom' },
                 { label: '经销商', prop: 'companyName', width: '180' },
-                { label: '甲方名', prop: 'firstPartName', width: '180' },
+                { label: '甲方名称', prop: 'firstPartName', width: '180' },
                 { label: '项目类别', prop: 'type', width: '120', slot: 'type' },
-                { label: '合作进度', prop: 'progress', width: '120', slot: 'progress' },
-                { label: '项目提交时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
+                // { label: '工程项目进度', prop: 'progress', width: '120', slot: 'progress' },
+                { label: '工程项目进度', prop: 'progress', width: '120', dicData: [{ value: 1, label: '项目跟踪阶段' }, { value: 2, label: '招投标' }, { value: 3, label: '合同已签订' }, { value: 4, label: '项目已开工' }] },
+                { label: '项目合同总额', prop: 'contractAmount', width: '150', displayAs: 'money', sortable: 'custom' },
+                { label: '设备总额', prop: 'deviceAmount', width: '150', displayAs: 'money', sortable: 'custom' },
+                { label: '设备品类', prop: 'deviceCategory', width: '100', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] },
+                { label: '设备品牌', prop: 'deviceBrand', width: '150' },
+                { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
+                { label: '上游接受付款方式', prop: 'upstreamPayType', width: '180', dicData: [{ value: 1, label: '现金' }, { value: 2, label: '承兑' }, { value: '1,2', label: '现金+承兑' }] },
+                {
+                    label: '上游接受付款的周期',
+                    prop: 'upstreamPromiseMonth',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.upstreamPromiseMonth ? `${scope.row.upstreamPromiseMonth}个月` : '-'}</span>
+                    }
+                },
+                { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom' },
+                {
+                    label: '工程项目回款方式',
+                    children: [
+                        { label: '预付款比例', prop: 'advancePaymentProportion', width: '100', unit: '%' },
+                        { label: '货到付款比例', prop: 'deliveryPaymentProportion', width: '100', unit: '%' },
+                        { label: '安装进度款比例', prop: 'installProgressPaymentProportion', width: '130', unit: '%' },
+                        { label: '验收款比例', prop: 'acceptancePaymentProportion', width: '100', unit: '%' },
+                        { label: '交付款比例', prop: 'realPaymentProportion', width: '100', unit: '%' },
+                        { label: '审计结算款比例', prop: 'auditCalculationPaymentProportion', width: '150', unit: '%' },
+                        { label: '其他', prop: 'payOtherText', width: '150', showOverflowTooltip: true }
+                    ]
+                },
+                {
+                    label: '合作进度',
+                    prop: 'status',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
+                    }
+                },
+                //
+                { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
+                { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' }
             ],
             rowKey: '',
             multiSelection: [],
@@ -288,8 +328,43 @@ export default {
             findPunchlist: 'crmmanage/findPunchlist'
 
         }),
+        getStatusList (key, docProgress) {
+            const map = STATUS_LIST.reduce((res, item) => {
+                res[item.key] = item
+                return res
+            }, {})
+            if (key == 10) {
+                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress}%`
+                return { value: label }
+            } else {
+                return map[key]
+            }
+        },
         sortChange (e) {
-            console.log('e, ', e)
+            if (e.order == null) {
+                this.queryParams.field = ''
+                this.queryParams.isAsc = null
+                console.log('this.queryParams: ', this.queryParams)
+            } else if (e.prop == 'predictLoanAmount') {
+                this.queryParams.field = 'predict_loan_amount'
+                this.queryParams.isAsc = e.order === 'ascending'
+            } else if (e.prop == 'contractAmount') {
+                this.queryParams.field = 'contract_amount'
+                this.queryParams.isAsc = e.order === 'ascending'
+            } else if (e.prop == 'deviceAmount') {
+                this.queryParams.field = 'device_amount'
+                this.queryParams.isAsc = e.order === 'ascending'
+            } else if (e.prop == 'estimatedLoanTime') {
+                this.queryParams.field = 'estimated_loan_time'
+                this.queryParams.isAsc = e.order === 'ascending'
+            } else if (e.prop == 'submitTime') {
+                this.queryParams.field = 'submit_time'
+                this.queryParams.isAsc = e.order === 'ascending'
+            } else if (e.prop == 'updateTime') {
+                this.queryParams.field = 'update_time'
+                this.queryParams.isAsc = e.order === 'ascending'
+            }
+            this.searchList()
         },
         fundMoneys (val) {
             if (val) {
