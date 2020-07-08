@@ -78,16 +78,18 @@ export default {
             tableLabel: [
                 { label: '按项目进度分类', prop: 'type' },
                 { label: '合计', prop: 'totalValue' },
-                { label: '蓄水阶段', prop: 'retainValue' },
                 { label: '信息待完善', prop: 'infoToBeImprovedValue' },
+                { label: '初审中', prop: 'retainValue' },
                 { label: '资料收集', prop: 'dataCollectValue' },
-                { label: '立项阶段', prop: 'trustTrialValue' },
-                { label: '终审阶段', prop: 'finalApproveValue' },
+                { label: '资料待审核', prop: 'dataCollectValue1' },
+                { label: '待立项', prop: 'trustTrialValue' },
+                { label: '待终审', prop: 'finalApproveValue' },
                 { label: '待签约', prop: 'toBeSignedValue' },
                 { label: '待放款', prop: 'pendingLoanValue' },
                 { label: '待回款', prop: 'toReturnLoanValue' },
-                { label: '合作关闭', prop: 'cooperCloseValue' },
-                { label: '合作完成', prop: 'cooperCompleteValue' }
+                { label: '合作完成', prop: 'cooperCompleteValue' },
+                { label: '合作关闭', prop: 'cooperCloseValue' }
+
             ],
             rowKey: '',
             tabPosition: 1,
