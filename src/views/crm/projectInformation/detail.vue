@@ -58,10 +58,10 @@
                     <el-button style="width:130px;" @click="onBack">返回</el-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSave">保存</el-button>
+                    <el-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</el-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSubmit">提交</el-button>
+                    <el-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</el-button>
                 </p>
             </div>
         </div>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
@@ -102,6 +103,7 @@ export default {
     },
     data () {
         return {
+            auths,
             moment,
             detail: '',
             handleImgDownload,

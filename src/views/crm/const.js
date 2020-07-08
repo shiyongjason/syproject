@@ -74,16 +74,18 @@ export const AUTEHEN_LIST = [
 // 合作进度 1：待提交2：初审中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
 export const COOPERATION_PROGRESS_LIST = [
     { key: 1, value: '待提交' },
+    { key: 10, value: '信息待完善' },
     { key: 2, value: '初审中' },
     { key: 3, value: '资料收集中' },
+    { key: 12, value: '资料待审核' },
     { key: 4, value: '待立项' },
-    { key: 5, value: '合作关闭' },
     { key: 11, value: '待终审' },
     { key: 6, value: '待签约' },
     { key: 7, value: '待放款' },
     { key: 8, value: '贷中' },
     { key: 9, value: '合作完成' },
-    { key: 10, value: '信息待完善' }
+    { key: 5, value: '合作关闭' }
+
 ]
 // 上游供应商类型
 export const UPSTREAMSUPPLIERTYPE = [
