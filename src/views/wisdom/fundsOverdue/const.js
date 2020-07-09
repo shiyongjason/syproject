@@ -1010,6 +1010,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'normalRepaymentAmount',
+                displayAs: 'fundMoney',
                 minWidth: 120,
                 label: '-'
             }
@@ -1022,6 +1023,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'overduePlanRepaymentAmount',
+                displayAs: 'fundMoney',
                 minWidth: 150,
                 label: '-'
             }
@@ -1034,6 +1036,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'repaymentAmountTotal',
+                displayAs: 'fundMoney',
                 minWidth: 120,
                 label: '-'
             }
@@ -1046,6 +1049,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'takeBackNormalAmount',
+                displayAs: 'fundMoney',
                 minWidth: 120,
                 label: '-'
             }
@@ -1058,6 +1062,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'takeBackPlanInsideOverdueAmount',
+                displayAs: 'fundMoney',
                 minWidth: 150,
                 label: '-'
             }
@@ -1070,6 +1075,20 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'receivedAmountTotal',
+                displayAs: 'fundMoney',
+                minWidth: 120,
+                label: '-'
+            }
+        ]
+    },
+    {
+        prop: 'uncollectedAmountTotal',
+        minWidth: 120,
+        label: '应收未收金额合计',
+        children: [
+            {
+                prop: 'uncollectedAmountTotal',
+                displayAs: 'fundMoney',
                 minWidth: 120,
                 label: '-'
             }
@@ -1082,6 +1101,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'takeBackPlanOuterOverdueAmount',
+                displayAs: 'fundMoney',
                 minWidth: 150,
                 label: '-'
             }
@@ -1094,6 +1114,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'prepaymentAmount',
+                displayAs: 'fundMoney',
                 minWidth: 120,
                 label: '-'
             }
@@ -1106,6 +1127,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'currentActualTakeBackTotal',
+                displayAs: 'fundMoney',
                 minWidth: 120,
                 label: '-'
             }
