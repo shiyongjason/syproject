@@ -19,7 +19,7 @@ export default [
                 meta: {
                     title: '合资业务经营分析',
                     isMenu: true,
-                    icon: 'hosjoy_operation'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
@@ -154,7 +154,7 @@ export default [
                 meta: {
                     title: '资金数据分析',
                     isMenu: true,
-                    icon: 'hosjoy_operation'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
