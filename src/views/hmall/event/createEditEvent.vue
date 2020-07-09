@@ -579,9 +579,8 @@ export default {
                 this.$message.error(`开始时间不能大于结束时间`)
                 return
             }
-            //
-            if (hours > 4 * 24) {
-                this.$message.error(`活动时间最多持续四天`)
+            if (hours > 30 * 24) {
+                this.$message.error(`活动时间最多持续三十天`)
                 return
             }
             let flag = true
