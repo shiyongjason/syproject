@@ -165,6 +165,7 @@ export default {
             this.onReset()
         },
         async onSearch () {
+            this.$refs.hosjoyTable.toggleTableHandler()
             this.queryParamsTemp = {
                 ...this.queryParams
             }
@@ -187,6 +188,7 @@ export default {
                 }
             })
             this.column = backMoneyTrack
+            this.$refs.hosjoyTable.toggleTableHandler()
         },
         getList (val) {
             this.queryParamsTemp = {
