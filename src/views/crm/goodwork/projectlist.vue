@@ -427,7 +427,6 @@ export default {
         },
         productCategoryChange (val) {
             this.queryParams.categoryId = val
-
         },
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
