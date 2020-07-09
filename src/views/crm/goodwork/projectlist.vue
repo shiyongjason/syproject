@@ -134,7 +134,7 @@
             </basicTable> -->
             <!-- table -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='260' isAction isActionFixed @sort-change='sortChange'>
+                actionWidth='300' isAction isActionFixed @sort-change='sortChange'>
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
@@ -368,7 +368,7 @@ export default {
                 return res
             }, {})
             if (key == 10) {
-                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress}%`
+                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
                 return { value: label }
             } else {
                 return map[key]
