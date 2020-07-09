@@ -107,8 +107,8 @@
                 <!-- <template v-for="(item,index) in srcList">
                     <el-image :key="index" style="width: 80px; height: 80px;margin-right:8px" :src="item.fileUrl" :preview-src-list="srcList" />
                 </template> -->
-                  <hosjoyUpload v-model="srcList" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15'  >
-                    </hosjoyUpload>
+                <hosjoyUpload v-model="srcList" accept='.jpeg,.jpg,.png,.BMP,.pdf' :fileSize='20' :fileNum='15'>
+                </hosjoyUpload>
             </div>
             <div v-else>-</div>
         </div>
@@ -208,10 +208,10 @@ export default {
         margin-top: 10px;
     }
 }
-/deep/.el-icon-delete-solid{
+/deep/.el-icon-delete-solid {
     display: none;
 }
-/deep/.elupload{
+/deep/.elupload {
     display: none;
 }
 </style>
