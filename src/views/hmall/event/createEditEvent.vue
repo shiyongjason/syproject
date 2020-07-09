@@ -592,7 +592,6 @@ export default {
                 if (item._error || item._numError || item._inventoryNumError) flag = false
             })
             if (flag) {
-                // if status === 2 &&
                 if (status === 2 && mark === '') {
                     let now = moment().format('YYYY-MM-DD HH:mm:ss')
                     let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
@@ -600,8 +599,8 @@ export default {
                         this.$message.error(`只能创建10分钟后开始的活动`)
                         return
                     }
-                    if (consumingMinutes > 4 * 24 * 60) {
-                        this.$message.error(`只能提前4天发布`)
+                    if (consumingMinutes > 30 * 24 * 60) {
+                        this.$message.error(`只能提前三十天发布`)
                         return
                     }
                     this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
