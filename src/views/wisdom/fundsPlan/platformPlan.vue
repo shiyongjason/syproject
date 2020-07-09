@@ -50,10 +50,8 @@
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
         <div class="page-body-cont">
-            <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
-                         :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
-                         :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler" :localName="localName">
+            <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData" :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
+                @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler" :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -178,8 +176,15 @@ export default {
                 value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
                 if (value.children) {
                     let number = 0
+                    let ID = ''
+                    if (value.prop && value.label) {
+                        ID += value.prop
+                    } else if (value.label) {
+                        ID += value.label
+                    }
                     value.children.forEach(value1 => {
-                        value1.isHidden = showColumnLabel.indexOf(value1.prop) === -1
+                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
+                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
                     value.isHidden = !(number > 0)
@@ -362,16 +367,16 @@ export default {
     color: #ff7a45;
     cursor: pointer;
 }
-    /deep/ .el-dialog__body {
-        min-height: 120px;
-    }
-    .tips {
-        display: flex;
-        height: 90px;
-        padding: 10px 0;
-        text-align: justify;
-        line-height: 20px;
-        overflow: hidden;
-        overflow-y: scroll;
-    }
+/deep/ .el-dialog__body {
+    min-height: 120px;
+}
+.tips {
+    display: flex;
+    height: 90px;
+    padding: 10px 0;
+    text-align: justify;
+    line-height: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 </style>
