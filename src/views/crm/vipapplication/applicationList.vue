@@ -313,11 +313,12 @@ export default {
                 })
                 return item
             })
+            console.log(this.options)
         },
         cityChange (val) {
             const cityarr = []
             val && val.map(item => {
-                cityarr.push(item[1])
+                cityarr.push(item[2])
             })
             this.queryParams.cityIds = cityarr.join(',')
         },

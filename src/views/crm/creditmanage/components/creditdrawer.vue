@@ -15,10 +15,10 @@
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                     </template>
                     <template slot="status" slot-scope="scope">
-                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status?'正常':'过期'}}</span>
+                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths. CRM_CREDIT_SET)">设置信用评级</el-button>
+                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</el-button>
                     </template>
                 </basicTable>
                 <p>
@@ -123,7 +123,7 @@
                     <el-timeline>
                         <el-timeline-item :timestamp="moment(item.createTime).format('YYYY-MM-DD  HH:mm:ss')+' 打回操作人：'+(item.createBy||'-')" placement="top" v-for="item in refuseRecord" :key=item.id>
                             <el-card>
-                                <p>待补充类目:{{item.secondCategoryNames}}</p>
+                                <p>待补充类目：{{item.secondCategoryNames}}</p>
                                 <p>待补充原因：{{item.remark||'-'}}</p>
                             </el-card>
                         </el-timeline-item>
@@ -269,9 +269,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.ruleForm.startTime
+                    let beginDateVal = this.newendTime
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime()
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -400,6 +400,7 @@ export default {
             this.drawer = false
         },
         datePickerChange (val) {
+            this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
         async onEditVip (val) {
@@ -407,6 +408,7 @@ export default {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
                 this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                this.ruleForm.newendTime = this.ruleForm.endTime
                 this.newRuleForm = { ...this.ruleForm }
             }
             this.dialogVisible = true

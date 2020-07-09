@@ -179,8 +179,8 @@ export default {
             this.searchList()
         },
         async  searchList () {
-            this.queryParams.maxServiceFeeDiscount = this.maxServiceFeeDiscount ? this.maxServiceFeeDiscount * 0.1 : ''
-            this.queryParams.minServiceFeeDiscount = this.minServiceFeeDiscount ? this.minServiceFeeDiscount * 0.1 : ''
+            this.queryParams.maxServiceFeeDiscount = this.maxServiceFeeDiscount ? (this.maxServiceFeeDiscount * 0.1).toFixed(2) : ''
+            this.queryParams.minServiceFeeDiscount = this.minServiceFeeDiscount ? (this.minServiceFeeDiscount * 0.1).toFixed(2) : ''
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams
