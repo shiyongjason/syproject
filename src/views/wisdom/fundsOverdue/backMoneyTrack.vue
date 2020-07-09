@@ -165,8 +165,16 @@ export default {
             this.onReset()
         },
         async onSearch () {
+            this.$refs.hosjoyTable.toggleTableHandler()
             this.queryParamsTemp = {
                 ...this.queryParams
+            }
+            if (this.queryParamsTemp.departmentType === '2') {
+                backMoneyTrack[0].isHidden = true
+                backMoneyTrack[1].isHidden = true
+            } else {
+                backMoneyTrack[0].isHidden = false
+                backMoneyTrack[1].isHidden = false
             }
             this.findBackMoneyTrackList(this.queryParamsTemp)
             await this.findBackMoneyTrackTotal(this.queryParamsTemp)
@@ -180,6 +188,7 @@ export default {
                 }
             })
             this.column = backMoneyTrack
+            this.$refs.hosjoyTable.toggleTableHandler()
         },
         getList (val) {
             this.queryParamsTemp = {
