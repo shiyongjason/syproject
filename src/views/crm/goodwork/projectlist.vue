@@ -39,10 +39,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxUpdateTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
+                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minUpdateTime)">
                         </el-date-picker>
                     </div>
                 </div>
@@ -69,6 +69,34 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">预估借款时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.maxEstimatedLoanTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimatedLoanTime)">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">设备品类：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.deviceCategory" placeholder="请选择" :clearable=true>
+                            <el-option v-for="item in deviceList" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">供应商类型：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.upstreamSupplierType" placeholder="请选择" :clearable=true>
+                            <el-option v-for="item in upstreamList" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
                         </el-select>
                     </div>
                 </div>
@@ -156,7 +184,7 @@ import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { TYPE_LIST, PROCESS_LIST, STATUS_LIST } from '../const'
+import { TYPE_LIST, PROCESS_LIST, STATUS_LIST, DEVICE_LIST, UPSTREAM_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
 export default {
     name: 'projectlist',
@@ -175,6 +203,10 @@ export default {
                 maxUpdateTime: '',
                 minSubmitTime: '',
                 minUpdateTime: '',
+                upstreamSupplierType: '', // 供应商类型
+                deviceCategory: '', // 设备品类
+                minEstimatedLoanTime: '', // 最小预估借款时间
+                maxEstimatedLoanTime: '', // 最小预估借款时间
                 statusList: '',
                 projectName: '',
                 projectNo: '',
@@ -248,6 +280,8 @@ export default {
             typeList: TYPE_LIST,
             processList: PROCESS_LIST,
             statusList: STATUS_LIST,
+            deviceList: DEVICE_LIST,
+            upstreamList: UPSTREAM_LIST,
             loanData: {},
             dialogVisible: false,
             dialogRecord: [],
@@ -281,26 +315,6 @@ export default {
                 }
             }
         },
-        pickerOptionsMax () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxUpdateTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsMin () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minUpdateTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -328,6 +342,26 @@ export default {
             findPunchlist: 'crmmanage/findPunchlist'
 
         }),
+        pickerOptionsMax (val) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = val
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsMin (val) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = val
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
         getStatusList (key, docProgress) {
             const map = STATUS_LIST.reduce((res, item) => {
                 res[item.key] = item
