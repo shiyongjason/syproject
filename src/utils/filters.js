@@ -66,7 +66,10 @@ const fundMoney = function (val, int) {
 const fundMoneyHaveSpot = function (val, int) {
     if (val) {
         const head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        const foot = val.toString().substr(val.toString().indexOf('.'), 3) // 防止后台没对金额保留2位作处理
+        let foot = ''
+        if (val.toString().indexOf('.') > -1) {
+            foot = val.toString().substr(val.toString().indexOf('.'), 3) // 防止后台没对金额保留2位作处理
+        }
         return `${head}${foot}`
     } else if (val === 0) {
         return val
