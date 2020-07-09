@@ -18,7 +18,7 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col" v-if="queryParams.departmentType === '1'">
                     <div class="query-col-title">平台公司：</div>
                     <div class="query-col-input">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
