@@ -168,6 +168,13 @@ export default {
             this.queryParamsTemp = {
                 ...this.queryParams
             }
+            if (this.queryParamsTemp.departmentType === '2') {
+                backMoneyTrack[0].isHidden = true
+                backMoneyTrack[1].isHidden = true
+            } else {
+                backMoneyTrack[0].isHidden = false
+                backMoneyTrack[1].isHidden = false
+            }
             this.findBackMoneyTrackList(this.queryParamsTemp)
             await this.findBackMoneyTrackTotal(this.queryParamsTemp)
             backMoneyTrack.forEach(value => {
