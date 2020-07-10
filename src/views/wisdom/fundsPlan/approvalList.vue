@@ -36,6 +36,9 @@
                 </div>
             </div>
             <div class="page-body-cont">
+                <p class="tips">
+                    请在本月26号24点前完成所有资金计划申报审批工作！
+                </p>
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                     <template slot="applyMonth" slot-scope="scope">
                         <span>{{`${scope.data.row.applyMonth.substring(0, 4)}-${scope.data.row.applyMonth.substring(4, 6)}`}}</span>
@@ -204,4 +207,10 @@ export default {
 /deep/ .el-tabs__header {
     margin: 0;
 }
+    .tips {
+        color: red;
+        text-align: center;
+        padding-bottom: 10px;
+        font-size: 12px;
+    }
 </style>

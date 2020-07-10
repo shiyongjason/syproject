@@ -63,6 +63,8 @@
                 <div class="query-cont-col">
                     <el-button type="primary" @click="onSearch()">搜索
                     </el-button>
+                    <el-button type="primary" @click="onExport">导出表格
+                    </el-button>
                 </div>
             </div>
         </div>
@@ -93,6 +95,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { CAPITAL_EFFICIENCY_TABLE, ONLINESTATUS, HOSJOYINJECTION, FINANCIALSUPPORT } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
+import { exportEfficiencyList } from './api'
 export default {
     name: 'capitalEfficiency',
     mixins: [departmentAuth],
@@ -118,7 +121,6 @@ export default {
             onlineStatus: ONLINESTATUS,
             hosjoyInjection: HOSJOYINJECTION,
             financialSupport: FINANCIALSUPPORT,
-            searchParams: {},
             queryParams: {
                 misCode: '',
                 subsectionCode: '',
@@ -176,12 +178,15 @@ export default {
         }
     },
     methods: {
+        onExport () {
+            exportEfficiencyList(this.queryParamsTemp)
+        },
         async onSearch () {
-            this.searchParams = { ...this.queryParams }
+            this.queryParamsTemp = { ...this.queryParams }
             this.onQuery()
         },
         async onQuery () {
-            const promiseArr = [getEfficiencyList(this.searchParams), getEfficiencyTotal(this.searchParams)]
+            const promiseArr = [getEfficiencyList(this.queryParamsTemp), getEfficiencyTotal(this.queryParamsTemp)]
             var data = await Promise.all(promiseArr).then((res) => {
                 res[1].data.misCode = '合计'
                 res[0].data.records.unshift(res[1].data)
@@ -211,11 +216,11 @@ export default {
             this.onSearch()
         },
         onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.searchParams.pageSize = val
+            this.queryParams.pageSize = val
             this.onQuery()
         },
         backPlat (val, dis) {
