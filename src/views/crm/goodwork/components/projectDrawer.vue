@@ -1,9 +1,10 @@
 <template>
     <div class="project-wrap">
+
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                 <template v-for="item in tabs">
-                    <template v-if='item.key<status'>
+                    <template v-if='isShowTab(item.key,status)'>
                         <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
                     </template>
                 </template>
@@ -14,13 +15,14 @@
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
+                    <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==3">
                         <el-button @click="onCallBack()">打回补充</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==3&&activeName==='2'&&form.docAfterStatus==2">
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==12&&activeName==='2'&&form.docAfterStatus==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
@@ -101,7 +103,7 @@ export default {
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }],
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -157,6 +159,16 @@ export default {
         }),
         handleClick (tab, event) {
             if (tab.index > 0) this.onFindRiskproject(tab.index)
+        },
+        isShowTab (key, status) {
+            // 由于新加了资料审核状态 status ==12
+            // 骚操作 12=》3
+            if (status == 12) {
+                status = 3
+            }
+            if (key < status) {
+                return true
+            }
         },
         isShowRest (val) {
             const newVal = val && Object.keys(val)[0]
