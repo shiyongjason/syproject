@@ -38,24 +38,24 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
     case 'test':
-        interfaceUrl = 'https://testhbp.hosjoy.com:4832/'
-        ossUrl = 'https://testroute.hosjoy.com:4832/'
-        iframeUrl = 'https://test.hosjoy.com:4832/'
+        interfaceUrl = 'https://hbp-test.hosjoy.com/'
+        ossUrl = 'https://route-test.hosjoy.com/'
+        iframeUrl = 'https://crm-test.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://testb2b-gateway.hosjoy.com:4832/'
-        fileUploadUrl = 'https://testhbp.hosjoy.com:4832/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
-        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
+        B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
+        fileUploadUrl = 'https://hbp-test.hosjoy.com/'
+        iotUrl = 'https://iot-test.hosjoy.com'
+        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
         break
     case 'newtest':
-        interfaceUrl = 'https://test-hbp.hosjoy.com:4832/'
-        ossUrl = 'https://testroute.hosjoy.com:4832/'
-        iframeUrl = 'https://test.hosjoy.com:4832/'
+        interfaceUrl = 'https://hbp-test245.hosjoy.com/'
+        ossUrl = 'https://route-test245.hosjoy.com/'
+        iframeUrl = 'https://crm-test.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://test-b2b-gateway.hosjoy.com:4832/'
-        fileUploadUrl = 'https://test-hbp.hosjoy.com:4832/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
-        ccpBaseUrl = 'https://testccp.hosjoy.com:4832/'
+        B2bUrl = 'https://b2b-gateway-test245.hosjoy.com/'
+        fileUploadUrl = 'https://hbp-test245.hosjoy.com/'
+        iotUrl = 'https://iot-test.hosjoy.com'
+        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
