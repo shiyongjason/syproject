@@ -3,11 +3,11 @@
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
 
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
-                  <el-form-item :label="approveTitle+'结果：'" >
-                  {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
+                <el-form-item :label="approveTitle+'结果：'">
+                    {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
                 </el-form-item>
-                <el-form-item label="说明：" >
-                   {{approveForm.remark?approveForm.remark:'-'}}
+                <el-form-item label="说明：">
+                    {{approveForm.remark?approveForm.remark:'-'}}
                 </el-form-item>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
@@ -39,7 +39,7 @@
                                 <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                             </p>
                         </div>
-                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100  :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
+                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
                             style="margin:10px 0 0 5px">
                             <el-button type="primary">上 传</el-button>
                         </hosjoyUpload>
@@ -93,6 +93,7 @@ export default {
     },
     data () {
         return {
+
             moment,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
