@@ -151,6 +151,7 @@ export default {
             findRefuseData: 'crmmanage/findRefuseData'
         }),
         onShowcollect () {
+            console.log(12)
             this.collectVisible = true
             this.collectTitle = '材料审核'
         },

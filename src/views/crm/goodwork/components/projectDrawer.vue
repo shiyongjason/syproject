@@ -220,8 +220,9 @@ export default {
                     this.$refs['statusForm'].clearValidate()
                 })
                 return
-            } else if (status == 3) {
+            } else if (status == 3 || status == 12) {
                 // 材料审核通过 显示重置按钮 去调用材料审批流程 需要弹窗
+                // 这里新加了材料审核通过所以要多判断一个字段
                 this.$refs.datacolCom.onShowcollect()
                 return
             } else if (status == 4) {
