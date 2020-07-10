@@ -92,6 +92,7 @@ export default {
     },
     data () {
         return {
+
             moment,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',

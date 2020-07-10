@@ -72,6 +72,28 @@
 
             </div>
         </el-drawer>
+        <!-- 签约和放款使用弹窗 -->
+        <el-dialog :title="signOrLoanVisibleTitle" :visible.sync="signOrLoanVisible" width="35%" :before-close="onColseSignOrLoan" :modal=false :close-on-click-modal=false>
+            <el-form ref="signOrLoanDialog" :model="signOrLoanForm" :rules="signOrLoanRules" label-width="100px">
+                <el-form-item label="审核结果：" prop="result">
+                    <el-radio-group v-model="signOrLoanForm.result">
+                        <el-radio :label=1>{{status==6?'确认签约':'确认放款'}}</el-radio>
+                        <el-radio :label=0>合作关闭</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="说明：" prop="remark">
+                    <el-input type="textarea" v-model.trim="signOrLoanForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+            <div style="margin-top:5px">附件：</div>
+            <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                <!-- <el-button type="primary">上 传</el-button> -->
+            </hosjoyUpload>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onColseSignOrLoan">取 消</el-button>
+                <el-button type="primary" @click="onSubmitSignOrLoan">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -80,8 +102,11 @@ import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
-import { updateAudit, saveStatus } from '../api/index'
+import { updateAudit, saveStatus, signAudit } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { interfaceUrl } from '@/api/config'
+
 export default {
     name: 'projectdrawer',
     props: {
@@ -94,16 +119,31 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom
+        projectCom, datacolCom, approveCom, hosjoyUpload
     },
     data () {
         return {
+            action: interfaceUrl + 'tms/files/upload',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: true
+            },
+            signOrLoanForm: {
+                'attachment': [], // 附件
+                'createBy': '', // 创建人
+                'createByMobile': '', // 审核人手机
+                'projectId': '', // 项目工程id
+                'remark': '', // 说明
+                'result': ''// 审核结果 1：确认签约或确认放款 0：合作关闭
+            },
+            signOrLoanVisibleTitle: '',
+            signOrLoanVisible: false,
             newAuth,
             loading: false,
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
+            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -136,7 +176,15 @@ export default {
             },
             copyForm: {},
             projectId: '',
-            colForm: {}
+            colForm: {},
+            signOrLoanRules: {
+                result: [
+                    { required: true, message: '请选择审核状态', trigger: 'change' }
+                ],
+                remark: [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ]
+            }
 
         }
     },
@@ -157,6 +205,32 @@ export default {
             findProjectDetail: 'findProjectDetail',
             findRiskprojectdata: 'findRiskprojectdata'
         }),
+        onSubmitSignOrLoan () {
+            this.$refs.signOrLoanDialog.validate(async valid => {
+                if (valid) {
+                    this.signOrLoanForm.createBy = this.userInfo.employeeName
+                    this.signOrLoanForm.createByMobile = this.userInfo.phoneNumber
+                    this.signOrLoanForm.projectId = this.form.id
+                    let query = { ...this.signOrLoanForm }
+                    query.attachment = JSON.stringify(this.signOrLoanForm.attachment)
+                    await signAudit(query)
+                    this.signOrLoanVisible = false
+                    this.$emit('backEvent')
+                }
+            })
+        },
+        onColseSignOrLoan () {
+            this.signOrLoanVisible = false
+            this.signOrLoanForm.attachment = ''
+            this.signOrLoanForm.remark = ''
+            this.signOrLoanForm.result = ''
+        },
+        // 签约和放款使用弹窗
+        onShowSignOrLoan () {
+            console.log('onShowSignOrLoan', this.status)
+            this.signOrLoanVisible = true
+            this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '付款'
+        },
         handleClick (tab, event) {
             if (tab.index > 0) this.onFindRiskproject(tab.index)
         },
@@ -232,9 +306,12 @@ export default {
             } else if (status == 5) {
                 // status = !!status //  合作关闭显示 重置
             } else if (status == 6) {
-                status = 7 //  H5端 待签约   显示重置和签约按钮
+                this.onShowSignOrLoan()
+                return
+                // status = 7 //  H5端 待签约   显示重置和签约按钮
             } else if (status == 7) {
-                status = 8 //  H5端 待放款   显示重置和放款按钮
+                this.onShowSignOrLoan()
+                return
             } else if (status == 8) {
                 status = 9 //  H5端 贷种   显示重置和全部回款
             } else if (status == 9) {
