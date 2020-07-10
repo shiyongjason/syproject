@@ -205,9 +205,9 @@ export default {
         p {
             max-width: 1000px;
             margin: auto;
-            line-height: 100px;
+            line-height: 25px;
             text-align: center;
-
+            padding-top: 5px;
             b {
                 color: red;
                 padding: 0 5px;

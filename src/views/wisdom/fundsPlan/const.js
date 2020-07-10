@@ -92,6 +92,13 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     align: 'right'
                 },
                 {
+                    prop: 'hxjFundAmount',
+                    label: '好享家注资占用额',
+                    minWidth: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
                     minWidth: '150',
@@ -298,6 +305,21 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     children: [
                         {
                             prop: 'totalOverdue',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            minWidth: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
+                    prop: 'hxjFundAmount',
+                    label: '好享家注资占用额',
+                    minWidth: '150',
+                    align: 'center',
+                    children: [
+                        {
+                            prop: 'hxjFundAmount',
                             displayAs: 'fundMoney',
                             align: 'center',
                             minWidth: '150',
@@ -939,6 +961,22 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     prop: 'annualTotalEffectiveRate'
+                }
+            ]
+        },
+        {
+            label: '好享家注资占用额',
+            prop: 'hxjFundAmount',
+            displayAs: 'fundMoney',
+            width: 150,
+            children: [
+                {
+                    label: '-',
+                    width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
+                    prop: 'hxjFundAmount'
                 }
             ]
         },
