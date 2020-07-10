@@ -61,7 +61,7 @@
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item label="说明：" prop="remark">
-                            <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                            <el-input type="textarea" placeholder="请输入说明" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
@@ -82,7 +82,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="signOrLoanForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
+                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="signOrLoanForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <div style="margin-top:5px">附件：</div>
