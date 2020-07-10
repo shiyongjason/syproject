@@ -8,17 +8,17 @@ export const PROCESS_LIST =
 
 export const STATUS_LIST =
     [
+        { key: 10, value: '信息待完善' },
         { key: 2, value: '初审中' },
         { key: 3, value: '资料收集中' },
         { key: 12, value: '资料待审核' },
         { key: 4, value: '待立项' },
-        { key: 5, value: '合作关闭' },
+        { key: 11, value: '待终审' },
         { key: 6, value: '待签约' },
         { key: 7, value: '待放款' },
         { key: 8, value: '贷中' },
         { key: 9, value: '合作完成' },
-        { key: 10, value: '信息待完善' },
-        { key: 11, value: '待终审' }
+        { key: 5, value: '合作关闭' }
     ]
 
 export const TYPE_LIST =

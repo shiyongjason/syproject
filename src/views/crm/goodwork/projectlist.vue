@@ -354,12 +354,12 @@ export default {
             } else {
                 this.queryParams.statusList = this.status.toString()
                 this.queryParams.typeList = this.typeArr.toString()
-                this.queryParams.deviceCategory = this.deviceCategoryChange.toString()
-                this.queryParams.upstreamSupplierType = this.upstreamSupplierTypeChange.toString()
+                this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
+                this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
                 window.location = interfaceUrl + 'memeber/openapi/project/export?authCode=' + this.queryParams.authCode +
                     '&companyName=' + this.queryParams.companyName +
                     '&deptDoc=' + this.queryParams.deptDoc + // EHR部门主键
-                    '&deviceCategory=' + this.queryParams.deviceCategory +
+                    '&deviceCategoryList=' + this.queryParams.deviceCategoryList +
                     '&field=' + this.queryParams.field +
                     '&firstPartName=' + this.queryParams.firstPartName +
                     '&isAsc=' + this.queryParams.isAsc +
@@ -377,7 +377,7 @@ export default {
                     '&projectNo=' + this.queryParams.projectNo +
                     '&statusList=' + this.queryParams.statusList +
                     '&typeList=' + this.queryParams.typeList +
-                    '&upstreamSupplierType=' + this.queryParams.upstreamSupplierType
+                    '&upstreamSupplierTypeList=' + this.queryParams.upstreamSupplierTypeList
             }
         },
         pickerOptionsMax (val) {
@@ -471,8 +471,8 @@ export default {
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
-            this.queryParams.deviceCategory = this.deviceCategoryChange.toString()
-            this.queryParams.upstreamSupplierType = this.upstreamSupplierTypeChange.toString()
+            this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
+            this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []
