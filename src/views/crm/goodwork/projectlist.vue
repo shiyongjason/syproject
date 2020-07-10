@@ -85,7 +85,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">设备品类：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deviceCategory" placeholder="请选择" :clearable=true>
+                        <el-select v-model="deviceCategoryChange" multiple collapse-tags placeholder="请选择" :clearable=true>
                             <el-option v-for="item in deviceList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -94,7 +94,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">供应商类型：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.upstreamSupplierType" placeholder="请选择" :clearable=true>
+                        <el-select v-model="upstreamSupplierTypeChange" multiple collapse-tags placeholder="请选择" :clearable=true>
                             <el-option v-for="item in upstreamList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -198,6 +198,8 @@ export default {
             projectstatus: 0, // 项目状态字段
             categoryIdArr: [],
             branchArr: [],
+            deviceCategoryChange: [],
+            upstreamSupplierTypeChange: [],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -350,10 +352,14 @@ export default {
             if (this.tableData.length <= 0) {
                 this.$message.warning('无数据可导出！')
             } else {
-                window.location = interfaceUrl + 'memeber/openapi/project/export?authCode = ' + this.queryParams.authCode +
+                this.queryParams.statusList = this.status.toString()
+                this.queryParams.typeList = this.typeArr.toString()
+                this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
+                this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
+                window.location = interfaceUrl + 'memeber/openapi/project/export?authCode=' + this.queryParams.authCode +
                     '&companyName=' + this.queryParams.companyName +
                     '&deptDoc=' + this.queryParams.deptDoc + // EHR部门主键
-                    '&deviceCategory=' + this.queryParams.deviceCategory +
+                    '&deviceCategoryList=' + this.queryParams.deviceCategoryList +
                     '&field=' + this.queryParams.field +
                     '&firstPartName=' + this.queryParams.firstPartName +
                     '&isAsc=' + this.queryParams.isAsc +
@@ -371,7 +377,7 @@ export default {
                     '&projectNo=' + this.queryParams.projectNo +
                     '&statusList=' + this.queryParams.statusList +
                     '&typeList=' + this.queryParams.typeList +
-                    '&upstreamSupplierType=' + this.queryParams.upstreamSupplierType
+                    '&upstreamSupplierTypeList=' + this.queryParams.upstreamSupplierTypeList
             }
         },
         pickerOptionsMax (val) {
@@ -447,6 +453,8 @@ export default {
             this.queryParams = deepCopy(this.copyParams)
             this.status = []
             this.typeArr = []
+            this.deviceCategoryChange = []
+            this.upstreamSupplierTypeChange = []
             this.searchList()
         },
         handleSizeChange (val) {
@@ -463,6 +471,8 @@ export default {
         async  searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
+            this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
+            this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData.records || []
