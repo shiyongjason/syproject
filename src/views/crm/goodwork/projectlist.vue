@@ -108,6 +108,9 @@
                         <el-button type="primary" class="ml20" @click="onRest()">
                             重置
                         </el-button>
+                        <el-button type="primary" class="ml20" @click="onExport">
+                            导出
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -186,6 +189,7 @@ import projectDrawer from './components/projectDrawer'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST, DEVICE_LIST, UPSTREAM_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
+import { interfaceUrl } from '@/api/config'
 export default {
     name: 'projectlist',
     data () {
@@ -342,6 +346,34 @@ export default {
             findPunchlist: 'crmmanage/findPunchlist'
 
         }),
+        onExport () {
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无数据可导出！')
+            } else {
+                window.location = interfaceUrl + 'memeber/openapi/project/export?authCode = ' + this.queryParams.authCode +
+                    '&companyName=' + this.queryParams.companyName +
+                    '&deptDoc=' + this.queryParams.deptDoc + // EHR部门主键
+                    '&deviceCategory=' + this.queryParams.deviceCategory +
+                    '&field=' + this.queryParams.field +
+                    '&firstPartName=' + this.queryParams.firstPartName +
+                    '&isAsc=' + this.queryParams.isAsc +
+                    '&jobNumber=' + this.queryParams.jobNumber +
+                    '&maxEstimatedLoanTime=' + this.queryParams.maxEstimatedLoanTime +
+                    '&maxSubmitTime=' + this.queryParams.maxSubmitTime +
+                    '&maxUpdateTime=' + this.queryParams.maxUpdateTime +
+                    '&minEstimatedLoanTime=' + this.queryParams.minEstimatedLoanTime +
+                    '&minSubmitTime=' + this.queryParams.minSubmitTime +
+                    '&minUpdateTime=' + this.queryParams.minUpdateTime +
+                    '&originType=' + this.queryParams.originType +
+                    '&pageNumber=' + this.queryParams.pageNumber +
+                    '&pageSize=' + this.queryParams.pageSize +
+                    '&projectName=' + this.queryParams.projectName +
+                    '&projectNo=' + this.queryParams.projectNo +
+                    '&statusList=' + this.queryParams.statusList +
+                    '&typeList=' + this.queryParams.typeList +
+                    '&upstreamSupplierType=' + this.queryParams.upstreamSupplierType
+            }
+        },
         pickerOptionsMax (val) {
             return {
                 disabledDate: (time) => {
