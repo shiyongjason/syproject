@@ -16,7 +16,7 @@
                     <template slot="dataCollectValue" slot-scope="scope">
                         {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
                     </template>
-                        <template slot="infoToBeImprovedValue" slot-scope="scope">
+                    <template slot="infoToBeImprovedValue" slot-scope="scope">
                         {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
                     </template>
                     <template slot="trustTrialValue" slot-scope="scope">
@@ -31,11 +31,14 @@
                     <template slot="cooperCloseValue" slot-scope="scope">
                         {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
                     </template>
-                          <template slot="toBeSignedValue" slot-scope="scope">
+                    <template slot="toBeSignedValue" slot-scope="scope">
                         {{scope.data.row.toBeSignedValue?fundMoneys(scope.data.row.toBeSignedValue):'-'}}
                     </template>
                     <template slot="cooperCompleteValue" slot-scope="scope">
                         {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
+                    </template>
+                    <template slot="finalApproveValue" slot-scope="scope">
+                        {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
                     </template>
                     <template slot="action" slot-scope="scope">
                         <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
@@ -79,6 +82,7 @@ export default {
                 { label: '信息待完善', prop: 'infoToBeImprovedValue' },
                 { label: '资料收集', prop: 'dataCollectValue' },
                 { label: '立项阶段', prop: 'trustTrialValue' },
+                { label: '终审阶段', prop: 'finalApproveValue' },
                 { label: '待签约', prop: 'toBeSignedValue' },
                 { label: '待放款', prop: 'pendingLoanValue' },
                 { label: '待回款', prop: 'toReturnLoanValue' },
@@ -355,7 +359,7 @@ export default {
                         normal: {
                             // color:'#ffc938', // 图表颜色
                             color: function (params) { // 颜色定制显示（按顺序）
-                                var colorList = ['#A47CB7', '#7BA1D2', '#63CBE0', '#F69573', '#F3BA5B', '#F3EB57', '#91E56E']
+                                var colorList = ['#A47CB7', '#7BA1D2', '#63CBE0', '#F69573', '#F3BA5B', '#F3EB57', '#91E56E', '#63CBE0', '#F69573', '#7BA1D2', '#F3BA5B']
                                 return colorList[params.dataIndex]
                             }
                             // barBorderRadius: [0, 17, 17, 0]  //圆角

@@ -44,17 +44,14 @@ export default {
         isDisabled () {
             let nowTimeDay = moment(this.applyMonth).format('DD')
             // 20日—25日可填报
-            if (nowTimeDay > 19 && nowTimeDay < 26) {
-                return false
-            }
-            return true
+            return !(nowTimeDay > 19 && nowTimeDay < 26)
         }
     },
     data () {
         return {
             tableLabel: bankLabel,
             tableData: [],
-            applyMonth: moment().format('YYYYMM'),
+            applyMonth: '',
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,

@@ -143,7 +143,7 @@ export default {
                 authenticationTimeOrder: '',
                 customerType: '',
                 customerTypeOrder: '',
-                companyName: this.$route.params.name || '',
+                companyName: this.$route.query.name || '',
                 companyType: '',
                 userAccount: '',
                 userName: '',
@@ -221,8 +221,8 @@ export default {
         this.copyParams = deepCopy(this.queryParams)
         this.getFindNest()
         this.getFindbranch()
-        if (this.$route.params.name) {
-            this.onLookauthen(this.$route.params.code)
+        if (this.$route.query.name) {
+            this.searchList()
         }
     },
     methods: {

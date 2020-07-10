@@ -60,7 +60,7 @@
                     <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1}, 'btn')">
                         查询
                     </el-button>
-                    <a :href="exportHref" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
+                    <a href="javascript:" @click="downloading" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
                 </div>
             </div>
             <div class="page-wrap flex-wrap-col">
@@ -193,7 +193,8 @@ export default {
                     selectCode: '',
                     selectName: ''
                 }
-            }
+            },
+            exportHref: ''
         }
     },
     computed: {
@@ -202,22 +203,33 @@ export default {
             regionList: state => state.regionList,
             branchList: state => state.branchList,
             platformData: state => state.platformData
-        }),
-        exportHref () {
-            let url = interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeExport?'
-            for (let key in this.queryParams) {
-                if (key !== 'pageSize' && key !== 'pageNumber') {
-                    url += (key + '=' + this.queryParams[key] + '&')
-                }
-            }
-            return url
-        }
+        })
+        // exportHref () {
+        //     let url = interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeExport?'
+        //     for (let key in this.queryParamsTemp) {
+        //         if (key !== 'pageSize' && key !== 'pageNumber') {
+        //             url += (key + '=' + this.queryParamsTemp[key] + '&')
+        //         }
+        //     }
+        //     return url
+        // }
     },
     components: {
         platformSaleTable,
         HAutocomplete
     },
     methods: {
+        downloading () {
+            const temp = { ...this.queryParamsTemp }
+            temp.onLineStatus = this.checkedList.filter((item) => item.checked).map((item) => item.key).join(',')
+            let url = interfaceUrl + 'rms/platSaleAnalyze/platSaleAnalyzeExport?'
+            for (let key in temp) {
+                if (key !== 'pageSize' && key !== 'pageNumber') {
+                    url += (key + '=' + temp[key] + '&')
+                }
+            }
+            location.href = url
+        },
         ...mapActions({
             findAuthList: 'findAuthList'
         }),
@@ -389,7 +401,7 @@ export default {
                     arr.push(value.key)
                 }
             })
-            const temp = { ...params }
+            const temp = { ...this.queryParamsTemp }
             temp.onLineStatus = arr.join(',')
             await this.getPlatformSale(temp)
 

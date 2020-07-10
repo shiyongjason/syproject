@@ -187,6 +187,15 @@ export const CRM_GOODWORK_FINAL = 109122 // 终审通过
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
+
+// 好橙工 申请列表
+export const CRM_APPLY_ASSIGN = 109301 // 分配
+export const CRM_LOOK_DETAIL = 109302 // 查看详情
+export const CRM_ADD_DETAIL = 109303 // 新增
+export const CRM_EDIT_DETAIL = 109304 // 修改
+export const CRM_CREDIT_DETAIL = 109305 // 查看信用
+export const CRM_CREDIT_SET = 109306 //  设置信用
+
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
 export const PLATFORM_OVERDUE_SUM_EXPORT = 110004

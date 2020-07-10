@@ -125,14 +125,11 @@ export default {
             this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
         validFormInfo (list) {
-            console.log(list)
             const respTemp = this.approveForm.projectDocList[0].respRiskCheckDocTemplateList
+            console.log(list, respTemp)
             let res = ''
             for (let i = 0; i < respTemp.length; i++) {
-                const arr = list.length > 0 && list.filter(jtem => {
-                    return jtem.templateId == respTemp[i].templateId
-                })
-                if (arr.length == 0) {
+                if (respTemp[i].mondatoryFlag == 1 && respTemp[i].riskCheckProjectDocPos.length == 0) {
                     res = respTemp[i]
                     break
                 }
@@ -155,6 +152,7 @@ export default {
             params.projectId = this.approveForm.projectId
             params.riskCheckProjectDocPoList = newriskCheckProjectDocPoList
             let res = this.validFormInfo(riskCheckProjectDocPoList)
+            console.log(1, res)
             if (res) {
                 this.$message.error(`二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
                 this.$emit('onBackLoad', false)

@@ -345,7 +345,9 @@ export default {
                         })
                         // 全选 0 时候 不传任何  1 时候传配置的数据范围
                         if (authType.status == 1 && authType.authType == 2) {
-                            authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            if (JSON.stringify(authType.employeeSubsections) != '{}') {
+                                authType.employeeSubsections && resourceObj.employeeSubsections.push(authType.employeeSubsections)
+                            }
                         }
                     })
                 }
@@ -383,6 +385,9 @@ export default {
                 positionCodeList: this.positionCodeList,
                 userCode: this.jobNumber
             }
+            if (params.authCodes.length < 1) {
+                this.$message({ message: '请勾选数据范围配置', type: 'warning' })
+            }
             console.log(params)
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
@@ -418,12 +423,17 @@ export default {
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2 && item.employeeSubsections) {
                 console.log(item.employeeSubsections)
-                this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                console.log(2, JSON.stringify(item.employeeSubsections))
+                if (JSON.stringify(item.employeeSubsections) != '{}') {
+                    this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
+                }
             } else if (item.authType == 2 && !item.employeeSubsections) {
                 this.checkedkeys = []
             }
             this.$nextTick(() => {
-                this.$refs['treetable'].setCheckedKeys(this.checkedkeys)
+                setTimeout(() => {
+                    this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                }, 100)
             })
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上

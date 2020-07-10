@@ -13,15 +13,17 @@
             </div>
         </el-collapse-transition>
         <!-- 列表 -->
-        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border  :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4" :row-class-name="rowClassName">
+        <el-table v-bind="tableAttr" :data="tableData" :stripe='stripe' border :lazy="true" :max-height="maxHeight" @sort-change="handleSortChange" @selection-change="handleSelectionChange" :tree-props="{ hasChildren: 'hasChildren' }" :row-key="rowKey" :load="load" :indent="4"
+            :row-class-name="rowClassName">
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="item in tableLabel">
-                <el-table-column v-if="selectTh.indexOf(item.label)>-1" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
+                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
                     <template slot-scope="scope">
                         <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                         <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
                         <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoney}}</slot>
+                        <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoneyHaveSpot}}</slot>
                         <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
                         <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
                         <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
@@ -46,14 +48,15 @@
                     </template>
                 </el-table-column>
             </template>
-            <el-table-column label="操作" v-if="isAction" align="center"  :fixed="isfiexd" :min-width="minWidth">
+            <el-table-column label="操作" v-if="isAction" align="center" :fixed="isfiexd" :min-width="minWidth">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
         </el-table>
         <!-- 分页 -->
-        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange" @size-change="handleSizeChange">
+        <el-pagination v-if="isPagination && paginationInfo.total" :total="paginationInfo.total" :layout="paginationStyle.pageLayout" :current-page="paginationInfo.pageNumber" :page-size.sync="paginationInfo.pageSize" :page-sizes="paginationStyle.pageSizes" @current-change="handleCurrentChange"
+            @size-change="handleSizeChange">
         </el-pagination>
     </div>
 </template>
@@ -175,7 +178,7 @@ export default {
         defaultTh () {
             const arr = []
             this.tableLabel.map(item => {
-                if (!item.hidden) {
+                if (!item.hidden && !item.isHidden) {
                     arr.push(item.label)
                 }
             })
@@ -312,7 +315,7 @@ export default {
     height: 20px;
     right: 10px;
     top: 2px;
-    z-index: 1;
+    z-index: 999;
     cursor: pointer;
 }
 .collapse-content {
@@ -321,7 +324,7 @@ export default {
     top: 35px;
     right: 10px;
     background: #ffffff;
-    z-index: 2;
+    z-index: 999;
     padding: 10px 18px;
     box-sizing: border-box;
 }

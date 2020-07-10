@@ -226,19 +226,13 @@ export default {
         async onQuery () {
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
-            // 表格渲染错位解决终极大法
-            this.$nextTick(() => {
-                this.$refs.complexTable.$refs.hosjoyTable.doLayout()
-            })
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
-                return
-            }
-            if (this.accountType == 0) {
+            } else if (this.accountType == 0) {
                 this.findSummaryList(this.searchParams)
-                return
+            } else {
+                await this.getAccountList(this.searchParams)
             }
-            this.getAccountList(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }

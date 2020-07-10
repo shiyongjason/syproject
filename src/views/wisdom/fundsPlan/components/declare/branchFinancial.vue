@@ -7,12 +7,6 @@
                     <template slot="append">%</template>
                 </el-input>
             </el-form-item>
-            <el-form-item label="是否有逾期：" prop="isOverdue">
-                <el-radio-group v-model="fundDetail.subsectionFinanceFundPlanApprove.isOverdue" :disabled='disabled'>
-                    <el-radio :label="1">是</el-radio>
-                    <el-radio :label="0">否</el-radio>
-                </el-radio-group>
-            </el-form-item>
             <el-form-item label="分部财务意见：" prop="remark">
                 <div class="w250">
                     <el-input type="textarea" :rows="3" placeholder="请输入内容" maxlength="1000" show-word-limit v-model="fundDetail.subsectionFinanceFundPlanApprove.remark" :disabled='disabled'></el-input>
@@ -50,9 +44,6 @@ export default {
             rules: {
                 healthPercentage: [
                     { required: this.required, message: '请输入健康度指标', trigger: 'blur' }
-                ],
-                isOverdue: [
-                    { required: this.required, message: '请选择是否有逾期', trigger: 'change' }
                 ],
                 remark: [
                     { required: this.required, message: '请输入分部财务意见', trigger: 'blur' }

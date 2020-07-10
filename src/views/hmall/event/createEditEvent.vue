@@ -76,7 +76,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">活动商品：</div>
                             <div class="query-col-input">
-                                <el-button type="primary" size='small' @click="()=>{$router.push('/hmall/addProducts')}" :disabled='disableStatus'>添加商品</el-button>
+                                <el-button type="primary" size='small' @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</el-button>
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@
             </el-form>
         </div>
         <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click="()=>{$router.push('/hmall/eventMange')}">返回</el-button>
+            <el-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
@@ -706,7 +706,7 @@ export default {
     beforeRouteEnter (to, from, next) {
         newCache('createEditEvent')
         next(vm => {
-            if (from.path == '/hmall/addProducts') {
+            if (from.path == '/b2b/marketing/addProducts') {
                 vm.isFirst = false
             } else {
                 vm.isFirst = true

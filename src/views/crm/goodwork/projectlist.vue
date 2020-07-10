@@ -49,7 +49,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">项目类别：</div>
                     <div class="query-col-input">
-                        <el-select v-model="typeArr" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                        <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -58,7 +58,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
-                        <el-select v-model="status" multiple collapse-tags style="margin-left: 20px;" placeholder="请选择">
+                        <el-select v-model="status" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -67,7 +67,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -86,7 +86,7 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
+            <!-- <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
 
                 <template slot="predictLoanAmount" slot-scope="scope">
@@ -97,14 +97,28 @@
                 </template>
                 <template slot="progress" slot-scope="scope">
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
-                    <!-- {{scope.data.row.status&&statusList[scope.data.row.status-2]['value']}} -->
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
                     <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
-            </basicTable>
+            </basicTable> -->
+            <!-- table -->
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
+                actionWidth='260' isAction isActionFixed @sort-change='sortChange'>
+                <template slot="type" slot-scope="scope">
+                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
+                </template>
+                <template slot="progress" slot-scope="scope">
+                    {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
+                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                </template>
+            </hosJoyTable>
         </div>
         <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer>
         <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
@@ -141,6 +155,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
 import projectDrawer from './components/projectDrawer'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
 export default {
@@ -179,11 +194,11 @@ export default {
                 { label: '项目名称', prop: 'projectName', width: '150' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150' },
+                { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: true },
                 { label: '经销商', prop: 'companyName', width: '180' },
-                { label: '甲方名', prop: 'firstPartName' },
-                { label: '项目类别', prop: 'type', width: '120' },
-                { label: '合作进度', prop: 'progress', width: '120' },
+                { label: '甲方名', prop: 'firstPartName', width: '180' },
+                { label: '项目类别', prop: 'type', width: '120', slot: 'type' },
+                { label: '合作进度', prop: 'progress', width: '120', slot: 'progress' },
                 { label: '项目提交时间', prop: 'submitTime', width: '150', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
@@ -203,7 +218,7 @@ export default {
         }
     },
     components: {
-        projectDrawer
+        projectDrawer, hosJoyTable
     },
     computed: {
         pickerOptionsStart () {
@@ -273,6 +288,9 @@ export default {
             findPunchlist: 'crmmanage/findPunchlist'
 
         }),
+        sortChange (e) {
+            console.log('e, ', e)
+        },
         fundMoneys (val) {
             if (val) {
                 return filters.money(val)
