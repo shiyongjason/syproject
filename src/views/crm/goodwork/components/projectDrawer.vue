@@ -221,7 +221,7 @@ export default {
         },
         onColseSignOrLoan () {
             this.signOrLoanVisible = false
-            this.signOrLoanForm.attachment = ''
+            this.signOrLoanForm.attachment = []
             this.signOrLoanForm.remark = ''
             this.signOrLoanForm.result = ''
         },
