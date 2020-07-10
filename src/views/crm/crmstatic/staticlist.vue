@@ -56,7 +56,7 @@
                     </el-radio-group>
                 </div>
                 <p>单位：{{barUnit}}</p>
-                <div id="barchart" style="height:500px"></div>
+                <div id="barchart" style="height:600px"></div>
             </div>
         </div>
     </div>
@@ -80,8 +80,8 @@ export default {
                 { label: '合计', prop: 'totalValue' },
                 { label: '信息待完善', prop: 'infoToBeImprovedValue' },
                 { label: '初审中', prop: 'retainValue' },
-                { label: '资料收集', prop: 'dataCollectValue' },
-                { label: '资料待审核', prop: 'dataCollectValue1' },
+                { label: '资料收集中', prop: 'dataCollectValue' },
+                { label: '资料待审核', prop: 'docAuditValue' },
                 { label: '待立项', prop: 'trustTrialValue' },
                 { label: '待终审', prop: 'finalApproveValue' },
                 { label: '待签约', prop: 'toBeSignedValue' },
