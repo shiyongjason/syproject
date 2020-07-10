@@ -37,25 +37,25 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         break
-    case 'test':
-        interfaceUrl = 'https://hbp-test.hosjoy.com/'
-        ossUrl = 'https://route-test.hosjoy.com/'
-        iframeUrl = 'https://crm-test.hosjoy.com/'
-        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
-        fileUploadUrl = 'https://hbp-test.hosjoy.com/'
-        iotUrl = 'https://iot-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+    case 'test':
+        interfaceUrl = 'https://hbp-test.hosjoy.com/'
+        ossUrl = 'https://route-test.hosjoy.com/'
+        iframeUrl = 'https://crm-test.hosjoy.com/'
+        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
+        fileUploadUrl = 'https://hbp-test.hosjoy.com/'
+        iotUrl = 'https://iot-test.hosjoy.com'
+        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
         break
-    case 'newtest':
-        interfaceUrl = 'https://hbp-test245.hosjoy.com/'
-        ossUrl = 'https://route-test245.hosjoy.com/'
-        iframeUrl = 'https://crm-test.hosjoy.com/'
-        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://b2b-gateway-test245.hosjoy.com/'
-        fileUploadUrl = 'https://hbp-test245.hosjoy.com/'
-        iotUrl = 'https://iot-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
+    case 'newtest':
+        interfaceUrl = 'https://hbp-test245.hosjoy.com/'
+        ossUrl = 'https://route-test245.hosjoy.com/'
+        iframeUrl = 'https://crm-test.hosjoy.com/'
+        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        B2bUrl = 'https://b2b-gateway-test245.hosjoy.com/'
+        fileUploadUrl = 'https://hbp-test245.hosjoy.com/'
+        iotUrl = 'https://iot-test.hosjoy.com'
+        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
