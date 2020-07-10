@@ -212,7 +212,11 @@ export default {
                     this.signOrLoanForm.createByMobile = this.userInfo.phoneNumber
                     this.signOrLoanForm.projectId = this.form.id
                     let query = { ...this.signOrLoanForm }
-                    query.attachment = JSON.stringify(this.signOrLoanForm.attachment)
+                    if (this.signOrLoanForm.attachment.length == 0) {
+                        query.attachment = ''
+                    } else {
+                        query.attachment = JSON.stringify(this.signOrLoanForm.attachment)
+                    }
                     await signAudit(query)
                     this.signOrLoanVisible = false
                     this.$emit('backEvent')
