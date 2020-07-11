@@ -124,8 +124,6 @@ export default {
                     mouth: params.selectTime.slice(4)
                 }
             }
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode
