@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">供应商类型：</div>
+                    <div class="query-col-title">上游供应商类型：</div>
                     <div class="query-col-input">
                         <el-select v-model="upstreamSupplierTypeChange" multiple collapse-tags placeholder="请选择" :clearable=true>
                             <el-option v-for="item in upstreamList" :key="item.key" :label="item.value" :value="item.key">
@@ -159,6 +159,15 @@
                         <el-card>
                             <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
                             <p><span>操作内容：</span> {{item.remark}}</p>
+                            <p><span>附件：</span>{{getAttachment(item.attachment).length>0?'':'-'}}</p>
+                            <span v-for="(item,index) in getAttachment(item.attachment)" :key="index" class="posrtv">
+                                <template v-if="item&&item.fileUrl">
+                                    <i class="el-icon-document"></i>
+                                    <a :href="item.fileUrl" target="_blank">
+                                        <font>{{item.fileName}}</font>
+                                    </a>
+                                </template>
+                            </span>
                         </el-card>
                     </el-timeline-item>
                 </el-timeline>
@@ -348,6 +357,14 @@ export default {
             findPunchlist: 'crmmanage/findPunchlist'
 
         }),
+        getAttachment (item) {
+            if (item) {
+                let arr = JSON.parse(item)
+                return arr
+            } else {
+                return []
+            }
+        },
         onExport () {
             if (this.tableData.length <= 0) {
                 this.$message.warning('无数据可导出！')
@@ -518,6 +535,29 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.posrtv {
+    position: relative;
+    margin-right: 15px;
+    color: #ff7a45;
+}
+.posrtv a {
+    color: #ff7a45;
+    margin-left: 10px;
+}
+.abs {
+    position: absolute;
+    right: -11px;
+    top: -7px;
+    display: none;
+    i {
+        font-size: 18px;
+        color: #5d5d5d;
+        cursor: pointer;
+    }
+}
+.posrtv:hover .abs {
+    display: block;
+}
 .colred {
     color: #ff7a45;
 }
