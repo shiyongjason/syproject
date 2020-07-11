@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="page-body-cont">
-                <p class="tips">
+                <p class="tips" v-if="params.processType === '0'">
                     请在本月26号24点前完成所有资金计划申报审批工作！
                 </p>
                 <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">

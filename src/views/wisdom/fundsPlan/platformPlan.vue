@@ -46,10 +46,10 @@
                 </div>
             </div>
         </div>
-        <div class="table-tips">
-            <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
-        </div>
         <div class="page-body-cont">
+            <div class="table-tips">
+                <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
+            </div>
             <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
                          :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
                          :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
@@ -327,6 +327,7 @@ export default {
     },
     async mounted () {
         // this.columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
+        localStorage.clear()
         await this.findTargetTime()
         this.queryParams.selectTime = this.targetTime
         await this.btnQuery(this.queryParams)
