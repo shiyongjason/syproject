@@ -183,7 +183,7 @@ export const CRM_GOODWORK_WANSHAN = 109119 // 完善
 export const CRM_GOODWORK_BACKUP = 109120 // 打回补充
 export const CRM_GOODWORK_APPROVED = 109121 // 材料审核通过
 export const CRM_GOODWORK_FINAL = 109122 // 终审通过
-
+export const CRM_GOODWORK_IMPORT = 109122
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213

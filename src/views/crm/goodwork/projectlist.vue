@@ -108,7 +108,7 @@
                         <el-button type="primary" class="ml20" @click="onRest()">
                             重置
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onExport">
+                        <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
                             导出
                         </el-button>
                     </div>
@@ -145,7 +145,7 @@
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</el-button>
                     <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
                     <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
                 </template>
@@ -194,7 +194,7 @@ export default {
     name: 'projectlist',
     data () {
         return {
-            crm_goodwork_detail: Auths.CRM_GOODWORK_DETAIL,
+            Auths,
             projectstatus: 0, // 项目状态字段
             categoryIdArr: [],
             branchArr: [],

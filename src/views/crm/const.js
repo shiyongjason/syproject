@@ -75,8 +75,8 @@ export const AUTEHEN_LIST = [
 // 合作进度(好橙工项目资料)
 // 合作进度 1：待提交2：初审中 3：资料收集中 4：待立项 5：合作关闭 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10：信息待完善
 export const COOPERATION_PROGRESS_LIST = [
-    { key: 1, value: '待提交' },
     { key: 10, value: '信息待完善' },
+    { key: 1, value: '待提交' },
     { key: 2, value: '初审中' },
     { key: 3, value: '资料收集中' },
     { key: 12, value: '资料待审核' },
