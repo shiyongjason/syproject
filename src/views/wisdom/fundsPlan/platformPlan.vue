@@ -327,7 +327,6 @@ export default {
     },
     async mounted () {
         // this.columnData = platformPlan(this.paramTargetDate.year, this.paramTargetDate.mouth)
-        localStorage.clear()
         await this.findTargetTime()
         this.queryParams.selectTime = this.targetTime
         await this.btnQuery(this.queryParams)
@@ -370,16 +369,16 @@ export default {
     color: #ff7a45;
     cursor: pointer;
 }
-    /deep/ .el-dialog__body {
-        min-height: 120px;
-    }
-    .tips {
-        display: flex;
-        height: 90px;
-        padding: 10px 0;
-        text-align: justify;
-        line-height: 20px;
-        overflow: hidden;
-        overflow-y: scroll;
-    }
+/deep/ .el-dialog__body {
+    min-height: 120px;
+}
+.tips {
+    display: flex;
+    height: 90px;
+    padding: 10px 0;
+    text-align: justify;
+    line-height: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 </style>

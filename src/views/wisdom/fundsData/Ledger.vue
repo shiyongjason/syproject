@@ -182,7 +182,6 @@ export default {
             this.findPlatformslist({ subsectionCode })
         },
         handleClick (i) {
-            this.$refs.complexTable.toggleTableHandler()
             if (i == 1) {
                 this.hasNoneAuth = false
                 this.productType = '1'
@@ -234,8 +233,6 @@ export default {
             } else {
                 await this.getAccountList(this.searchParams)
             }
-
-            this.$refs.complexTable.showTable()
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
