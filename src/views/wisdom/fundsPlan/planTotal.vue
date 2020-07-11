@@ -35,8 +35,7 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total" collapseShow :localName="localName"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
+                         :total="page.total" collapseShow :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
