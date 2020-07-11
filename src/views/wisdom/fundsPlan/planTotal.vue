@@ -149,34 +149,7 @@ export default {
         ...mapActions({
             findPlanTotalList: 'fundsPlan/findPlanTotalList',
             findTargetTime: 'fundsPlan/findTargetTime'
-        }),
-        toggleTableHandler () {
-            this.toggleTable = false
-        },
-        updateLabel (showColumnLabel) {
-            this.columnData.forEach(value => {
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
-                    let number = 0
-                    let ID = ''
-                    if (value.prop && value.label) {
-                        ID += value.prop
-                    } else if (value.label) {
-                        ID += value.label
-                    }
-                    value.children.forEach(value1 => {
-                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
-                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
-                        if (!value1.isHidden) number++
-                    })
-                    value.isHidden = !(number > 0)
-                }
-            })
-            this.toggleTable = true
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
-        }
+        })
     },
     async mounted () {
         await this.findTargetTime()
