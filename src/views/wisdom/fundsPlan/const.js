@@ -448,7 +448,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -500,7 +500,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -554,7 +554,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -607,7 +607,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
