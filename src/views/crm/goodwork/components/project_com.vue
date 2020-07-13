@@ -62,7 +62,7 @@
                     <el-checkbox label="2" name="type">承兑</el-checkbox>
                 </el-checkbox-group>
                 <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
-                    <el-input v-if="projectForm.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
+                    <el-input v-if="projectForm.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="projectForm.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
             </el-form-item>
             <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
@@ -295,6 +295,7 @@ export default {
                 this.projectForm.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.projectForm.pkDeptDoc).deptName || ''
             }
             this.$refs.ruleForm.validate(async (valid) => {
+                console.log(valid)
                 if (valid) {
                     try {
                         await putProjectDetail(this.projectForm)
@@ -302,6 +303,7 @@ export default {
                             message: '数据保存成功',
                             type: 'success'
                         })
+                        this.$emit('onCompsback')
                         this.$emit('onBackLoad', false)
                     } catch (error) {
                         this.$emit('onBackLoad', false)

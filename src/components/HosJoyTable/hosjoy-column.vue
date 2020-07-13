@@ -141,12 +141,13 @@ export default {
                 }
             }
             if (this.column && !this.column.render) {
+                let unit = this.column.unit ? this.column.unit : '' // 添加单位unit
                 this.column.render = (h, scope) => {
                     // 添加字典
                     if (this.column.dicData) {
                         return (
                             <span>
-                                {this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData).label}
+                                {this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData) ? this.getLabelFromDicData(scope.row[this.column.prop], this.column.dicData).label : '-'}
                             </span>
                         )
                     }
@@ -158,7 +159,7 @@ export default {
                         )
                     }
                     return (
-                        <span>{scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? scope.row[scope.column.property] : '-'}</span>
+                        <span>{scope.row[scope.column.property] || scope.row[scope.column.property] === 0 ? `${scope.row[scope.column.property]}${unit}` : '-'}</span>
                     )
                 }
             }
@@ -175,7 +176,7 @@ export default {
             if (fncName in this.functions) {
                 return this.functions[fncName](row)
             } else {
-                // moment
+                // moment   displayAs: 'YYYY-MM-DD HH:mm:ss'
                 if (!row) return '-'
                 return moment(row).format(fncName)
             }

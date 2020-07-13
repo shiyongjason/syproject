@@ -178,7 +178,14 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '180' },
                 { label: '甲方名', prop: 'firstPartName', width: '180' },
                 { label: '项目类别', prop: 'type', width: '120', slot: 'type' },
-                { label: '合作进度', prop: 'status', width: '120', slot: 'status' },
+                {
+                    label: '合作进度',
+                    prop: 'status',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
+                    }
+                },
                 { label: '初审通过时间', prop: 'firstApproveTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' },
                 { label: '数据更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' },
                 { label: '材料提交审核时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm' },
@@ -291,6 +298,18 @@ export default {
             // 分部下拉接口
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
             this.branchArr = this.crmdepList
+        },
+        getStatusList (key, docProgress) {
+            const map = STATUS_LIST.reduce((res, item) => {
+                res[item.key] = item
+                return res
+            }, {})
+            if (key == 10) {
+                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
+                return { value: label }
+            } else {
+                return map[key]
+            }
         }
     }
 }

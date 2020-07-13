@@ -1,13 +1,12 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
-
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
-                  <el-form-item :label="approveTitle+'结果：'" >
-                  {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
+                <el-form-item :label="approveTitle+'结果：'">
+                    {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
                 </el-form-item>
-                <el-form-item label="说明：" >
-                   {{approveForm.remark?approveForm.remark:'-'}}
+                <el-form-item label="说明：">
+                    {{approveForm.remark?approveForm.remark:'-'}}
                 </el-form-item>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
@@ -22,7 +21,7 @@
                             </div>
                         </div>
                         <div class="upload-file_list" v-for="(jtem,index) in obj.riskCheckProjectDocPos" :key="index">
-                            <p>
+                            <div>
                                 <span class="posrtv">
                                     <template v-if="jtem&&jtem.fileUrl">
                                         <i class="el-icon-document"></i>
@@ -31,15 +30,15 @@
                                         </a>
                                     </template>
                                 </span>
-                            </p>
-                            <p style="flex:0.5">{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                            <p>
+                            </div>
+                            <div>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
+                            <div>
                                 <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)">删除</font>
                                 <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font>
                                 <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
-                            </p>
+                            </div>
                         </div>
-                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100  :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
+                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
                             style="margin:10px 0 0 5px">
                             <el-button type="primary">上 传</el-button>
                         </hosjoyUpload>
@@ -56,7 +55,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" v-model.trim="approvedialgForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
+                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="approvedialgForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -93,6 +92,7 @@ export default {
     },
     data () {
         return {
+
             moment,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
@@ -255,8 +255,25 @@ export default {
 }
 .upload-file_list {
     display: flex;
-    p {
+    justify-content: space-between;
+    align-items: center;
+    div {
         &:first-child {
+            display: flex;
+            flex: 5;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        &:nth-child(2) {
+            display: flex;
+            flex: 2;
+        }
+        &:nth-child(3) {
             flex: 1;
         }
     }
@@ -278,12 +295,32 @@ export default {
 .posrtv {
     position: relative;
     color: #ff7a45;
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
     a {
         color: #ff7a45;
         margin-left: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
     font {
         font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
 }
 </style>
