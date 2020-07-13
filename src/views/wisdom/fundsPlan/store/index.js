@@ -91,7 +91,6 @@ const getters = {
 
 const mutations = {
     [types.PLAN_TOTAL_LIST] (state, payload) {
-        //
         state.planTotalList = payload
     },
     [types.TARGET_TIME] (state, payload) {
