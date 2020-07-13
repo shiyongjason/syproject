@@ -81,7 +81,7 @@ export default {
                 mouth: ''
             },
             columnData: [],
-            localName: 'planTotalTable::',
+            localName: 'planTotalTableTemp::', // 临时修改线上bug
             toggleTable: false
         }
     },

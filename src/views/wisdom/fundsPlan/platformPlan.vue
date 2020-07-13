@@ -102,7 +102,7 @@ export default {
     },
     data () {
         return {
-            localName: 'platformPlanTable::',
+            localName: 'platformPlanTableTemp::', // 临时修改线上bug
             toggleTable: false,
             queryParams: {
                 pageSize: 10,
