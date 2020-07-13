@@ -224,7 +224,12 @@ export default {
             })
             this.columnData = columnData
             const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
+
+            if (haveLabel && haveLabel.length > 0) {
+                this.updateLabel(haveLabel)
+            } else {
+                this.toggleTable = true
+            }
         },
         linkage (dis) {
             let obj = {
