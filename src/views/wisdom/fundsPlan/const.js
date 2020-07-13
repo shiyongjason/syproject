@@ -12,7 +12,7 @@ export const hasDeclareLabel = [
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
-// 资金计划汇总表
+// 计划汇总分析表
 export const summarySheet = function (targetYear, targetMonth, isF, isHideCompanyCounts) {
     return [
         {

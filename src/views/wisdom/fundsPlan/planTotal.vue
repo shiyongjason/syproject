@@ -80,8 +80,7 @@ export default {
                 mouth: ''
             },
             columnData: [],
-            localName: 'planTotalTable::',
-            toggleTable: false
+            localName: 'planTotalTable::'
         }
     },
     computed: {
@@ -104,7 +103,6 @@ export default {
             })
         },
         async queryAndChangeTime (params) {
-            this.toggleTable = false
             if (!params.selectTime) params.selectTime = moment(this.targetTime.businessDate).format('YYYYMM')
             this.paramTargetDate = {
                 year: params.selectTime.slice(0, 4),
