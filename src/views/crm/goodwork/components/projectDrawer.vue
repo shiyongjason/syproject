@@ -1,9 +1,10 @@
 <template>
     <div class="project-wrap">
+
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                 <template v-for="item in tabs">
-                    <template v-if='item.key<status'>
+                    <template v-if='isShowTab(item.key,status)'>
                         <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
                     </template>
                 </template>
@@ -14,13 +15,14 @@
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
+                    <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==3">
                         <el-button @click="onCallBack()">打回补充</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==3&&activeName==='2'&&form.docAfterStatus==2">
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==12&&activeName==='2'&&form.docAfterStatus==2">
                         <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
@@ -59,7 +61,7 @@
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item label="说明：" prop="remark">
-                            <el-input type="textarea" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                            <el-input type="textarea" placeholder="请输入说明" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
@@ -70,6 +72,28 @@
 
             </div>
         </el-drawer>
+        <!-- 签约和放款使用弹窗 -->
+        <el-dialog :title="signOrLoanVisibleTitle" :visible.sync="signOrLoanVisible" width="35%" :before-close="onColseSignOrLoan" :modal=false :close-on-click-modal=false>
+            <el-form ref="signOrLoanDialog" :model="signOrLoanForm" :rules="signOrLoanRules" label-width="100px">
+                <el-form-item label="审核结果：" prop="result">
+                    <el-radio-group v-model="signOrLoanForm.result">
+                        <el-radio :label=1>{{status==6?'确认签约':'确认放款'}}</el-radio>
+                        <el-radio :label=0>合作关闭</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="说明：" prop="remark">
+                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="signOrLoanForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
+                </el-form-item>
+            </el-form>
+            <div style="margin-top:5px">附件：</div>
+            <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                <!-- <el-button type="primary">上 传</el-button> -->
+            </hosjoyUpload>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onColseSignOrLoan">取 消</el-button>
+                <el-button type="primary" @click="onSubmitSignOrLoan">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -78,8 +102,11 @@ import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
-import { updateAudit, saveStatus } from '../api/index'
+import { updateAudit, saveStatus, signAudit } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { interfaceUrl } from '@/api/config'
+
 export default {
     name: 'projectdrawer',
     props: {
@@ -92,16 +119,31 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom
+        projectCom, datacolCom, approveCom, hosjoyUpload
     },
     data () {
         return {
+            action: interfaceUrl + 'tms/files/upload',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: true
+            },
+            signOrLoanForm: {
+                'attachment': [], // 附件
+                'createBy': '', // 创建人
+                'createByMobile': '', // 审核人手机
+                'projectId': '', // 项目工程id
+                'remark': '', // 说明
+                'result': ''// 审核结果 1：确认签约或确认放款 0：合作关闭
+            },
+            signOrLoanVisibleTitle: '',
+            signOrLoanVisible: false,
             newAuth,
             loading: false,
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }],
+            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -134,7 +176,15 @@ export default {
             },
             copyForm: {},
             projectId: '',
-            colForm: {}
+            colForm: {},
+            signOrLoanRules: {
+                result: [
+                    { required: true, message: '请选择审核状态', trigger: 'change' }
+                ],
+                remark: [
+                    { required: true, message: '请输入说明', trigger: 'blur' }
+                ]
+            }
 
         }
     },
@@ -155,8 +205,48 @@ export default {
             findProjectDetail: 'findProjectDetail',
             findRiskprojectdata: 'findRiskprojectdata'
         }),
+        onSubmitSignOrLoan () {
+            this.$refs.signOrLoanDialog.validate(async valid => {
+                if (valid) {
+                    this.signOrLoanForm.createBy = this.userInfo.employeeName
+                    this.signOrLoanForm.createByMobile = this.userInfo.phoneNumber
+                    this.signOrLoanForm.projectId = this.form.id
+                    let query = { ...this.signOrLoanForm }
+                    if (this.signOrLoanForm.attachment.length == 0) {
+                        query.attachment = ''
+                    } else {
+                        query.attachment = JSON.stringify(this.signOrLoanForm.attachment)
+                    }
+                    await signAudit(query)
+                    this.signOrLoanVisible = false
+                    this.$emit('backEvent')
+                }
+            })
+        },
+        onColseSignOrLoan () {
+            this.signOrLoanVisible = false
+            this.signOrLoanForm.attachment = []
+            this.signOrLoanForm.remark = ''
+            this.signOrLoanForm.result = ''
+        },
+        // 签约和放款使用弹窗
+        onShowSignOrLoan () {
+            console.log('onShowSignOrLoan', this.status)
+            this.signOrLoanVisible = true
+            this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '付款'
+        },
         handleClick (tab, event) {
             if (tab.index > 0) this.onFindRiskproject(tab.index)
+        },
+        isShowTab (key, status) {
+            // 由于新加了资料审核状态 status ==12
+            // 骚操作 12=》3
+            if (status == 12) {
+                status = 3
+            }
+            if (key < status) {
+                return true
+            }
         },
         isShowRest (val) {
             const newVal = val && Object.keys(val)[0]
@@ -189,6 +279,7 @@ export default {
             this.form.loanPayTypeRate = '方法定义必填'
             this.form.upstreamPayTypearr = this.form.upstreamPayType ? this.form.upstreamPayType.split(',') : []
             this.copyForm = { ...this.form }
+            console.log('this.form: ', this.form)
         },
         onCallBack () {
             // 打回补充
@@ -207,8 +298,9 @@ export default {
                     this.$refs['statusForm'].clearValidate()
                 })
                 return
-            } else if (status == 3) {
+            } else if (status == 3 || status == 12) {
                 // 材料审核通过 显示重置按钮 去调用材料审批流程 需要弹窗
+                // 这里新加了材料审核通过所以要多判断一个字段
                 this.$refs.datacolCom.onShowcollect()
                 return
             } else if (status == 4) {
@@ -218,9 +310,12 @@ export default {
             } else if (status == 5) {
                 // status = !!status //  合作关闭显示 重置
             } else if (status == 6) {
-                status = 7 //  H5端 待签约   显示重置和签约按钮
+                this.onShowSignOrLoan()
+                return
+                // status = 7 //  H5端 待签约   显示重置和签约按钮
             } else if (status == 7) {
-                status = 8 //  H5端 待放款   显示重置和放款按钮
+                this.onShowSignOrLoan()
+                return
             } else if (status == 8) {
                 status = 9 //  H5端 贷种   显示重置和全部回款
             } else if (status == 9) {
@@ -295,7 +390,7 @@ export default {
                 // 初审详情保存
                 try {
                     this.$refs.projectCom.onSaveproject()
-                    this.$emit('backEvent')
+                    // this.$emit('backEvent')
                 } catch (error) {
                     this.loading = false
                 }

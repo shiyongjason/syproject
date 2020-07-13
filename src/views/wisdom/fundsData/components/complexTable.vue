@@ -2,13 +2,8 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
-                         align="center" border stripe showPagination :column="column"
-                         :data="tableData" :total="pagination.total"
-                         :pageNumber.sync="pagination.pageNumber"
-                         :pageSize.sync="pagination.pageSize" @pagination="getList"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable"
-                         @toggleTableHandler="toggleTableHandler" :localName="localName">
+            <hosJoyTable v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable" align="center" border stripe showPagination :column="column" :data="tableData" :total="pagination.total" :pageNumber.sync="pagination.pageNumber" :pageSize.sync="pagination.pageSize" @pagination="getList"
+                :localName="localName">
             </hosJoyTable>
         </div>
         <!-- 基本信息Dialog -台账编号 -->
@@ -47,7 +42,7 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
-import {MathJS} from '../../../../utils/MathUtils'
+import { MathJS } from '../../../../utils/MathUtils'
 import {
     WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA,
     WISDOM_EXPOSURE_FUNDSDATA_UPDATA,
@@ -361,11 +356,11 @@ export default {
                                         this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
                                     }}></i></div> : <el-tooltip effect="light" placement="top">
-                                    <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                        <br />借款单位：{scope.row.account_loanCompanyName}
-                                        <br />欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                    <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                </el-tooltip>
+                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                            <br />借款单位：{scope.row.account_loanCompanyName}
+                                            <br />欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                    </el-tooltip>
                             }
                         }
                     ]
@@ -453,7 +448,7 @@ export default {
                                 return <span>
                                     {filters.fundMoneyHaveSpot(
                                         MathJS.evaluate(`${scope.row.paymentStatic_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
-                                        )}
+                                    )}
                                     {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                         ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
                                             ? '+' + (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())
@@ -699,12 +694,12 @@ export default {
                                         this.accountData.title = `${this.product}-分授信基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
                                     }}></i></div> : <div>
-                                    <el-tooltip effect="light" placement="top">
-                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                            <br />借款单位：{scope.row.account_loanCompanyName}
-                                            <br />剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                    </el-tooltip></div>
+                                        <el-tooltip effect="light" placement="top">
+                                            <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                                <br />借款单位：{scope.row.account_loanCompanyName}
+                                                <br />剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                            <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                        </el-tooltip></div>
                             }
                         }
                     ]
@@ -859,7 +854,7 @@ export default {
                                         filters.fundMoneyHaveSpot(
                                             MathJS.evaluate(`${scope.row.paymentStatic_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
                                         )}
-                                    { scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
+                                    {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                         ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
                                             ? '+' + (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())
                                             : (MathJS.evaluate(`${scope.row.paymentStatic_normalInterestPranayamaTotal} + ${scope.row.paymentStatic_graceInterestPranayamaTotal}`).toNumber())})`
@@ -1433,13 +1428,13 @@ export default {
                                         this.accountData.title = `${this.product}-敞口基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                         this.misDialogVisible = true
                                     }}></i></div> : <div>
-                                    <el-tooltip effect="light" placement="top">
-                                        <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                            <br />借款单位：{scope.row.account_loanCompanyName}
-                                            <br />剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                    </el-tooltip>
-                                </div>
+                                        <el-tooltip effect="light" placement="top">
+                                            <div slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                                <br />借款单位：{scope.row.account_loanCompanyName}
+                                                <br />剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                            <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                        </el-tooltip>
+                                    </div>
                             }
                         }
                     ]
@@ -2090,17 +2085,6 @@ export default {
         findLabelIndex (labelName) {
             return this.column.findIndex((item) => item.label === labelName)
         },
-        showTable () {
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            if (haveLabel && haveLabel.length > 0) {
-                this.updateLabel(haveLabel)
-            } else {
-                this.toggleTable = true
-                this.$nextTick(() => {
-                    this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
-                })
-            }
-        },
         async getList (val) {
             this.$emit('getList', val)
         },
@@ -2190,33 +2174,6 @@ export default {
                 item.overDueInterest = 12
             }
         },
-        toggleTableHandler () {
-            this.toggleTable = false
-        },
-        updateLabel (showColumnLabel) {
-            this.column.forEach(value => {
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
-                    let number = 0
-                    let ID = ''
-                    if (value.prop && value.label) {
-                        ID += value.prop
-                    } else if (value.label) {
-                        ID += value.label
-                    }
-                    value.children.forEach(value1 => {
-                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
-                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
-                        if (!value1.isHidden) number++
-                    })
-                    value.isHidden = !(number > 0)
-                }
-            })
-            this.toggleTable = true
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable && this.$refs.hosjoyTable.doLayout()
-            })
-        }
     },
     mounted () {
         // this.column = this.FlowToBorrow

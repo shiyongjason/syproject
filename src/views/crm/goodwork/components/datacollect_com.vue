@@ -18,7 +18,7 @@
                                 </div>
                             </div>
                             <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
-                                <p>
+                                <div>
                                     <span class="posrtv">
                                         <template v-if="item&&item.fileUrl">
                                             <i class="el-icon-document"></i>
@@ -27,12 +27,12 @@
                                             </a>
                                         </template>
                                     </span>
-                                </p>
-                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                                <p>
+                                </div>
+                                <div> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
+                                <div>
                                     <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                                </p>
+                                </div>
                             </div>
                         </div>
 
@@ -151,6 +151,7 @@ export default {
             findRefuseData: 'crmmanage/findRefuseData'
         }),
         onShowcollect () {
+            console.log(12)
             this.collectVisible = true
             this.collectTitle = '材料审核'
         },
@@ -277,8 +278,25 @@ export default {
 }
 .upload-file_list {
     display: flex;
-    p {
+    justify-content: space-between;
+    align-items: center;
+    div {
         &:first-child {
+            display: flex;
+            flex: 5;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        &:nth-child(2) {
+            display: flex;
+            flex: 2;
+        }
+        &:nth-child(3) {
             flex: 1;
         }
     }
@@ -300,12 +318,32 @@ export default {
 .posrtv {
     position: relative;
     color: #ff7a45;
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
     a {
         color: #ff7a45;
         margin-left: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
     font {
         font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
 }
 .project-record {
