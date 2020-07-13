@@ -983,11 +983,11 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
         {
             label: '当月申报用款额',
             prop: 'currentApplyFund',
-            width: 150,
+            width: 120,
             children: [
                 {
                     label: '-',
-                    width: 150,
+                    width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     displayAs: 'fundMoney',
