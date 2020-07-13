@@ -1,6 +1,6 @@
 <template>
     <div class="baseInfo">
-        <el-form ref="ruleForm" label-width="200px">
+        <el-form ref="ruleForm" label-width="200px" @submit.native.prevent>
             <h3>基础信息</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
