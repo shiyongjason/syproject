@@ -19,9 +19,21 @@ const state = {
     planCreditTotal: {},
     planCreditPagination: {}
 }
-
+function translateColumn (value) {
+    value.salePercentCurrent = value.salePercentCurrent === null ? '-' : (value.salePercentCurrent) + '%'
+    value.usedPercentCurrent = value.usedPercentCurrent === null ? '-' : (value.usedPercentCurrent) + '%'
+    value.overduePercent = value.overduePercent === null ? '-' : (value.overduePercent) + '%'
+    return value
+}
 const getters = {
-    planTotalList: state => state.planTotalList,
+    planTotalList: state => {
+        const temp = state.planTotalList.map(value => {
+            // console.log(value)
+            return translateColumn(value)
+        })
+        // console.log(temp)
+        return temp
+    },
     targetTime: function (state) {
         const temp = state.targetTime.businessDate.slice(6) > 19
         if (temp) {
@@ -33,15 +45,12 @@ const getters = {
     planApprovalPagination: state => state.planApprovalPagination,
     planApprovalTotal: state => state.planApprovalTotal,
     platformPlanList: state => {
-        state.platformPlanList.forEach(value => {
+        return state.platformPlanList.map(value => {
             value.subsectionFinanceHealthPercentage =
                 value.subsectionFinanceHealthPercentage === null
                     ? '-' : (value.subsectionFinanceHealthPercentage) + '%'
-            value.salePercentCurrent = (value.salePercentCurrent) + '%'
-            value.usedPercentCurrent = (value.usedPercentCurrent) + '%'
-            value.overduePercent = (value.overduePercent) + '%'
+            return translateColumn(value)
         })
-        return state.platformPlanList
     },
     platformPlanTotal: state => {
         for (const key in state.platformPlanTotal) {
@@ -82,12 +91,7 @@ const getters = {
 
 const mutations = {
     [types.PLAN_TOTAL_LIST] (state, payload) {
-        state.planTotalList = payload.map(value => {
-            value.salePercentCurrent += '%'
-            value.usedPercentCurrent += '%'
-            value.overduePercent += '%'
-            return value
-        })
+        state.planTotalList = payload
     },
     [types.TARGET_TIME] (state, payload) {
         state.targetTime = payload
