@@ -304,7 +304,7 @@ export default {
                 res[item.key] = item
                 return res
             }, {})
-            if (key == 10) {
+            if (key == 3) {
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
                 return { value: label }
             } else {
