@@ -81,7 +81,7 @@ export default {
                 mouth: ''
             },
             columnData: [],
-            localName: 'planTotalTable::',
+            localName: 'planTotalTableTemp::', // 临时修改线上bug
             toggleTable: false
         }
     },
@@ -126,7 +126,11 @@ export default {
                 }
             }
             const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
+            if (haveLabel && haveLabel.length > 0) {
+                this.updateLabel(haveLabel)
+            } else {
+                this.toggleTable = true
+            }
         },
         backPlat (val) {
             this.params.subsectionCode = val.value.selectCode

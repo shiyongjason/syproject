@@ -100,7 +100,7 @@ export default {
     },
     data () {
         return {
-            localName: 'platformPlanTable::',
+            localName: 'platformPlanTableTemp::', // 临时修改线上bug
             toggleTable: false,
             queryParams: {
                 pageSize: 10,
@@ -222,7 +222,12 @@ export default {
             })
             this.columnData = columnData
             const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            haveLabel && haveLabel.length > 0 && this.updateLabel(haveLabel)
+
+            if (haveLabel && haveLabel.length > 0) {
+                this.updateLabel(haveLabel)
+            } else {
+                this.toggleTable = true
+            }
         },
         linkage (dis) {
             let obj = {
