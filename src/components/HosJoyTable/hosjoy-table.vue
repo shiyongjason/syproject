@@ -427,7 +427,11 @@ export default {
 .hosjoy-table {
     position: relative;
 }
-
+//fix element ui 表头错位（出现滚动条后错位）
+.hosjoy-table >>> .el-table--border th.gutter:last-of-type {
+    display: block !important;
+    width: 17px !important;
+}
 .hosjoy-in-table {
     min-height: 300px;
     position: relative;

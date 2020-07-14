@@ -255,6 +255,7 @@ export default {
                 { label: '设备品类', prop: 'deviceCategory', width: '100', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] },
                 { label: '设备品牌', prop: 'deviceBrand', width: '150' },
                 { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
+                { label: '上游供应商名称', prop: 'upstreamSupplierName', width: '180' },
                 { label: '上游接受付款方式', prop: 'upstreamPayType', width: '180', dicData: [{ value: 1, label: '现金' }, { value: 2, label: '承兑' }, { value: '1,2', label: '现金+承兑' }] },
                 {
                     label: '上游接受付款的周期',
@@ -430,6 +431,7 @@ export default {
             }
         },
         sortChange (e) {
+            console.log('e: ', e)
             if (e.order == null) {
                 this.queryParams.field = ''
                 this.queryParams.isAsc = null
