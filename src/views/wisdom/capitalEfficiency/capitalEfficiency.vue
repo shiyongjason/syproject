@@ -216,11 +216,11 @@ export default {
             this.onSearch()
         },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
+            this.queryParamsTemp.pageNumber = val.pageNumber
             this.onQuery()
         },
         onSizeChange (val) {
-            this.queryParams.pageSize = val
+            this.queryParamsTemp.pageSize = val
             this.onQuery()
         },
         backPlat (val, dis) {
