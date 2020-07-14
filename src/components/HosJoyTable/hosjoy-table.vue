@@ -14,7 +14,7 @@
             </el-collapse-transition>
         </div>
         <!-- 大表哥 :summary-method="getSummary" :show-summary="showSummary"-->
-        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height || `calc(100vh - ${selfHeight}px)`" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
+        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height="height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -116,6 +116,17 @@ export default {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
+        // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
+        computedHeight () {
+            if (this.height) return 'unset'
+            if (this.data && this.data.length >= this.pageSize) {
+                // 获取页面可视区的高度-this.selfHeight `calc(100vh - ${selfHeight}px)`
+                let h = document.documentElement.clientHeight - this.selfHeight
+                return `${h}px`
+            } else {
+                return 'unset'
+            }
+        },
         dataLength () {
             if (this.data) {
                 return this.data.length
@@ -430,7 +441,7 @@ export default {
     width: 17px !important;
 }
 .hosjoy-in-table {
-    min-height: 300px;
+    // min-height: 300px;
     position: relative;
     z-index: 1;
 }
