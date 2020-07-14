@@ -265,6 +265,8 @@ export default {
                         return <span>{scope.row.upstreamPromiseMonth ? `${scope.row.upstreamPromiseMonth}个月` : '-'}</span>
                     }
                 },
+                //
+                { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
                 { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom' },
                 {
                     label: '工程项目回款方式',
@@ -286,7 +288,6 @@ export default {
                         return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
                     }
                 },
-                //
                 { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
                 { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' }
             ],
