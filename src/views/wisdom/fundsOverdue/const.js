@@ -1010,7 +1010,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'normalRepaymentAmount',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
@@ -1023,7 +1023,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'overduePlanRepaymentAmount',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 150,
                 label: '-'
             }
@@ -1036,7 +1036,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'repaymentAmountTotal',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
@@ -1049,7 +1049,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'takeBackNormalAmount',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
@@ -1062,7 +1062,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'takeBackPlanInsideOverdueAmount',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 150,
                 label: '-'
             }
@@ -1075,7 +1075,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'receivedAmountTotal',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
@@ -1088,7 +1088,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'uncollectedAmountTotal',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
@@ -1101,7 +1101,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'takeBackPlanOuterOverdueAmount',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 150,
                 label: '-'
             }
@@ -1114,7 +1114,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'prepaymentAmount',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
@@ -1127,7 +1127,7 @@ export const backMoneyTrack = [
         children: [
             {
                 prop: 'currentActualTakeBackTotal',
-                displayAs: 'fundMoney',
+                displayAs: 'fundMoneyHaveSpot',
                 minWidth: 120,
                 label: '-'
             }
