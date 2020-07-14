@@ -182,7 +182,7 @@ export default {
                 if (value.children && value.children.length > 0) {
                     for (let key in this.backMoneyTotal) {
                         if (key === value.children[0].prop && this.backMoneyTotal[key] !== null) {
-                            value.children[0].label = String(filters.fundMoney(this.backMoneyTotal[key]))
+                            value.children[0].label = String(filters.fundMoneyHaveSpot(this.backMoneyTotal[key]))
                         }
                     }
                 }
