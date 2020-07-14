@@ -375,28 +375,13 @@ export default {
                 this.queryParams.typeList = this.typeArr.toString()
                 this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
                 this.queryParams.upstreamSupplierTypeList = this.upstreamSupplierTypeChange.toString()
-                window.location = interfaceUrl + 'memeber/openapi/project/export?authCode=' + this.queryParams.authCode +
-                    '&companyName=' + this.queryParams.companyName +
-                    '&deptDoc=' + this.queryParams.deptDoc + // EHR部门主键
-                    '&deviceCategoryList=' + this.queryParams.deviceCategoryList +
-                    '&field=' + this.queryParams.field +
-                    '&firstPartName=' + this.queryParams.firstPartName +
-                    '&isAsc=' + this.queryParams.isAsc +
-                    '&jobNumber=' + this.queryParams.jobNumber +
-                    '&maxEstimatedLoanTime=' + this.queryParams.maxEstimatedLoanTime +
-                    '&maxSubmitTime=' + this.queryParams.maxSubmitTime +
-                    '&maxUpdateTime=' + this.queryParams.maxUpdateTime +
-                    '&minEstimatedLoanTime=' + this.queryParams.minEstimatedLoanTime +
-                    '&minSubmitTime=' + this.queryParams.minSubmitTime +
-                    '&minUpdateTime=' + this.queryParams.minUpdateTime +
-                    '&originType=' + this.queryParams.originType +
-                    '&pageNumber=' + this.queryParams.pageNumber +
-                    '&pageSize=' + this.queryParams.pageSize +
-                    '&projectName=' + this.queryParams.projectName +
-                    '&projectNo=' + this.queryParams.projectNo +
-                    '&statusList=' + this.queryParams.statusList +
-                    '&typeList=' + this.queryParams.typeList +
-                    '&upstreamSupplierTypeList=' + this.queryParams.upstreamSupplierTypeList
+                let url = ''
+                for (const key in this.queryParams) {
+                    if (this.queryParams[key] !== '') {
+                        url += (`${key}=${this.queryParams[key]}&`)
+                    }
+                }
+                window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
         pickerOptionsMax (val) {
