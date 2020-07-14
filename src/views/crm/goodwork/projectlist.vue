@@ -430,6 +430,7 @@ export default {
             }
         },
         sortChange (e) {
+            console.log('e: ', e)
             if (e.order == null) {
                 this.queryParams.field = ''
                 this.queryParams.isAsc = null
