@@ -69,16 +69,15 @@ const fundMoneyHaveSpot = function (val, int) {
         let foot = ''
         if (val.toString().indexOf('.') > -1) {
             head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            foot = val.toString().substr(val.toString().indexOf('.'), 3) // 防止后台没对金额保留2位作处理
+            foot = val.toString().slice(val.toString().indexOf('.'))
         } else {
             head = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         }
         return `${head}${foot}`
     } else if (val === 0) {
         return val
-    } else {
-        return '-'
     }
+    return '-'
 }
 const formatDateDuration = function (time) {
     if (!time) return '-'
