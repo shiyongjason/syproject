@@ -228,6 +228,7 @@ export default {
             this.signOrLoanForm.attachment = []
             this.signOrLoanForm.remark = ''
             this.signOrLoanForm.result = ''
+            this.$refs['signOrLoanDialog'].clearValidate()
         },
         // 签约和放款使用弹窗
         onShowSignOrLoan () {
