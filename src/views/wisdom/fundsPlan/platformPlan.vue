@@ -46,14 +46,14 @@
                 </div>
             </div>
         </div>
-        <div class="tips">
-            <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
-        </div>
         <div class="page-body-cont">
+            <div class="table-tips">
+                <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
+            </div>
             <hosJoyTable ref="hosjoyTable" collapseShow border stripe showPagination :column="columnData"
                          :data="platformPlanList" align="center" :pageNumber.sync="queryParams.pageNumber"
                          :pageSize.sync="queryParams.pageSize" :total="platformPlanPagination.total" @pagination="getList"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler" :localName="localName">
+                         :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -102,7 +102,7 @@ export default {
     },
     data () {
         return {
-            localName: 'platformPlanTableTemp::', // 临时修改线上bug
+            localName: 'platformPlanTable::',
             toggleTable: false,
             queryParams: {
                 pageSize: 10,
@@ -170,33 +170,6 @@ export default {
         getList (val) {
             this.onQuery({ ...this.queryParamsTemp, ...val })
         },
-        toggleTableHandler () {
-            this.toggleTable = false
-        },
-        updateLabel (showColumnLabel) {
-            this.columnData.forEach(value => {
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
-                    let number = 0
-                    let ID = ''
-                    if (value.prop && value.label) {
-                        ID += value.prop
-                    } else if (value.label) {
-                        ID += value.label
-                    }
-                    value.children.forEach(value1 => {
-                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
-                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
-                        if (!value1.isHidden) number++
-                    })
-                    value.isHidden = !(number > 0)
-                }
-            })
-            this.toggleTable = true
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
-        },
         showDialog (val, point) {
             if (!val) return
             this.dialogVisible = true
@@ -223,13 +196,6 @@ export default {
                 }
             })
             this.columnData = columnData
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-
-            if (haveLabel && haveLabel.length > 0) {
-                this.updateLabel(haveLabel)
-            } else {
-                this.toggleTable = true
-            }
         },
         linkage (dis) {
             let obj = {
@@ -351,15 +317,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.tips {
+.table-tips {
     background: #ffffff;
 
     p {
         max-width: 1000px;
         margin: auto;
-        line-height: 100px;
+        line-height: 25px;
         text-align: center;
-
+        padding-top: 5px;
         b {
             color: red;
             padding: 0 5px;
@@ -374,16 +340,16 @@ export default {
     color: #ff7a45;
     cursor: pointer;
 }
-    /deep/ .el-dialog__body {
-        min-height: 120px;
-    }
-    .tips {
-        display: flex;
-        height: 90px;
-        padding: 10px 0;
-        text-align: justify;
-        line-height: 20px;
-        overflow: hidden;
-        overflow-y: scroll;
-    }
+/deep/ .el-dialog__body {
+    min-height: 120px;
+}
+.tips {
+    display: flex;
+    height: 90px;
+    padding: 10px 0;
+    text-align: justify;
+    line-height: 20px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
 </style>

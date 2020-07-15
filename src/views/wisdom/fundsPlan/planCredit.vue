@@ -52,19 +52,8 @@
             <div class="tips">
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
             </div>
-            <div class="page-body-cont">
-                <hosJoyTable v-if="reRender" ref="hosjoyTable" border stripe showPagination :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
-                    <!--                    <template slot="annualTotalEffectiveRate" slot-scope="scope">-->
-                    <!--                        {{scope.data.row.annualTotalEffectiveRate * 100}}%-->
-                    <!--                    </template>-->
-                    <!--                    <template slot="annualTotalProfitAchieveRate" slot-scope="scope">-->
-                    <!--                        {{scope.data.row.annualTotalProfitAchieveRate * 100}}%-->
-                    <!--                    </template>-->
-                    <!--                    <template slot="annualTotalSaleAchieveRate" slot-scope="scope">-->
-                    <!--                        {{scope.data.row.annualTotalSaleAchieveRate * 100}}%-->
-                    <!--                    </template>-->
-                </hosJoyTable>
-            </div>
+            <hosJoyTable v-if="reRender" ref="hosjoyTable" border stripe showPagination :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
+            </hosJoyTable>
         </div>
     </div>
 </template>
@@ -278,7 +267,6 @@ export default {
     p {
         max-width: 1000px;
         margin: auto;
-        padding-top: 10px;
         line-height: 30px;
         text-align: center;
 

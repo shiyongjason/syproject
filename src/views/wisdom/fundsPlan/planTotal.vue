@@ -35,8 +35,7 @@
         </div>
         <div class="page-body-cont">
             <hosJoyTable ref="hosjoyTable" border stripe :column="columnData" :data="planTotalList" align="center"
-                         :total="page.total" collapseShow :localName="localName"
-                         @updateLabel="updateLabel" :toggleTable="toggleTable" @toggleTableHandler="toggleTableHandler">
+                         :total="page.total" collapseShow :localName="localName">
                 <template slot="organizationName" slot-scope="scope">
                     <a :class="scope.data.row.cellType === 1 && scope.data.row.planId ? 'light' : ''" @click="goDetail(scope.data.row.planId, scope.data.row.cellType === 1)" type="primary">{{scope.data.row.organizationName}}</a>
                 </template>
@@ -81,8 +80,7 @@ export default {
                 mouth: ''
             },
             columnData: [],
-            localName: 'planTotalTableTemp::', // 临时修改线上bug
-            toggleTable: false
+            localName: 'planTotalTable::'
         }
     },
     computed: {
@@ -105,7 +103,6 @@ export default {
             })
         },
         async queryAndChangeTime (params) {
-            this.toggleTable = false
             if (!params.selectTime) params.selectTime = moment(this.targetTime.businessDate).format('YYYYMM')
             this.paramTargetDate = {
                 year: params.selectTime.slice(0, 4),
@@ -124,12 +121,6 @@ export default {
                     year: params.selectTime.slice(0, 4),
                     mouth: params.selectTime.slice(4)
                 }
-            }
-            const haveLabel = JSON.parse(localStorage.getItem(this.localName + this.userInfo.user_name))
-            if (haveLabel && haveLabel.length > 0) {
-                this.updateLabel(haveLabel)
-            } else {
-                this.toggleTable = true
             }
         },
         backPlat (val) {
@@ -154,34 +145,7 @@ export default {
         ...mapActions({
             findPlanTotalList: 'fundsPlan/findPlanTotalList',
             findTargetTime: 'fundsPlan/findTargetTime'
-        }),
-        toggleTableHandler () {
-            this.toggleTable = false
-        },
-        updateLabel (showColumnLabel) {
-            this.columnData.forEach(value => {
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
-                    let number = 0
-                    let ID = ''
-                    if (value.prop && value.label) {
-                        ID += value.prop
-                    } else if (value.label) {
-                        ID += value.label
-                    }
-                    value.children.forEach(value1 => {
-                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
-                        value1.isHidden = showColumnLabel.indexOf(subId) === -1
-                        if (!value1.isHidden) number++
-                    })
-                    value.isHidden = !(number > 0)
-                }
-            })
-            this.toggleTable = true
-            this.$nextTick(() => {
-                this.$refs.hosjoyTable.doLayout()
-            })
-        }
+        })
     },
     async mounted () {
         await this.findTargetTime()
@@ -209,9 +173,9 @@ export default {
         p {
             max-width: 1000px;
             margin: auto;
-            line-height: 100px;
+            line-height: 25px;
             text-align: center;
-
+            padding-top: 5px;
             b {
                 color: red;
                 padding: 0 5px;
