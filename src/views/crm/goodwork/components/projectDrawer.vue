@@ -233,7 +233,7 @@ export default {
         onShowSignOrLoan () {
             console.log('onShowSignOrLoan', this.status)
             this.signOrLoanVisible = true
-            this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '付款'
+            this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '放款'
         },
         handleClick (tab, event) {
             if (tab.index > 0) this.onFindRiskproject(tab.index)
