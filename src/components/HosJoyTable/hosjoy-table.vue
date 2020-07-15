@@ -122,7 +122,7 @@ export default {
             if (this.data && this.data.length >= this.pageSize) {
                 // 获取页面可视区的高度-this.selfHeight `calc(100vh - ${selfHeight}px)`
                 let h = document.documentElement.clientHeight - this.selfHeight
-                return `${h}px`
+                return `${Math.floor(h)}px` // fix windows浏览器max-height 不能有小数
             } else {
                 return 'unset'
             }
