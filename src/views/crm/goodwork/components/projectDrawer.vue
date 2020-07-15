@@ -86,9 +86,11 @@
                 </el-form-item>
             </el-form>
             <div style="margin-top:5px">附件：</div>
-            <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
-                <!-- <el-button type="primary">上 传</el-button> -->
-            </hosjoyUpload>
+            <div class="dialogattachment">
+                <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                    <!-- <el-button type="primary">上 传</el-button> -->
+                </hosjoyUpload>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onColseSignOrLoan">取 消</el-button>
                 <el-button type="primary" @click="onSubmitSignOrLoan">确 定</el-button>
@@ -219,6 +221,10 @@ export default {
                     }
                     await signAudit(query)
                     this.signOrLoanVisible = false
+                    this.signOrLoanForm.attachment = []
+                    this.signOrLoanForm.remark = ''
+                    this.signOrLoanForm.result = ''
+                    this.$refs['signOrLoanDialog'].clearValidate()
                     this.$emit('backEvent')
                 }
             })
@@ -235,6 +241,7 @@ export default {
             console.log('onShowSignOrLoan', this.status)
             this.signOrLoanVisible = true
             this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '放款'
+            this.$refs['signOrLoanDialog'].clearValidate()
         },
         handleClick (tab, event) {
             if (tab.index > 0) this.onFindRiskproject(tab.index)
@@ -463,5 +470,8 @@ export default {
     .drawer-button {
         text-align: right;
     }
+}
+.dialogattachment {
+    max-height: 300px;
 }
 </style>
