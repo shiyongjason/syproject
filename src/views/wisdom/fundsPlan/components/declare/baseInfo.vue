@@ -1,6 +1,6 @@
 <template>
     <div class="baseInfo">
-        <el-form ref="ruleForm" label-width="200px">
+        <el-form ref="ruleForm" label-width="200px" @submit.native.prevent>
             <h3>基础信息</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
@@ -32,6 +32,13 @@
                     <el-form-item label="申报填报人：">
                         <div class="w250">
                             <span>{{fundDetail.fundplanMain.applyType ? fundDetail.fundplanMain.createBy : userInfo.employeeName}}</span>
+                        </div>
+                    </el-form-item>
+                </div>
+                <div class="query-cont-col">
+                    <el-form-item label="好享家注资占用额：">
+                        <div class="w250">
+                            <span>{{fundDetail.fundplanMain.hxjFundAmount | fundMoneyHaveSpot}}&nbsp;万元</span>
                         </div>
                     </el-form-item>
                 </div>

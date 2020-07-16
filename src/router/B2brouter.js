@@ -110,6 +110,17 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/spumanage/marketStore.vue')
+                    },
+                    {
+                        path: 'spudetail',
+                        name: 'spudetail',
+                        meta: {
+                            title: 'SPU管理',
+                            tagName: 'SPU管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/spumanage/spudetail')
                     }
                 ]
             },
@@ -416,17 +427,6 @@ export default [
                 component: () => import('@/views/hmall/shopManager/selectCategory.vue')
             },
             {
-                path: 'spudetail',
-                name: 'spudetail',
-                meta: {
-                    title: 'SPU管理',
-                    tagName: 'SPU管理',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/spudetail')
-            },
-            {
                 path: 'wallet',
                 name: 'wallet',
                 meta: {
@@ -436,6 +436,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/hmall/walletPay/walletPay.vue')
+            },
+            {
+                path: 'spudetail',
+                name: 'spudetail',
+                meta: {
+                    title: 'SPU管理',
+                    tagName: 'SPU管理',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/hmall/spumanage/spudetail')
             },
             {
                 path: 'dataBoard',

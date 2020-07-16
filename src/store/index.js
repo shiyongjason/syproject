@@ -8,6 +8,7 @@ import layout from '@/views/layout/store/index.js'
 import eventManage from './modules/eventManage'
 import fundsData from '@/views/wisdom/fundsData/store/index.js'
 import fundsPlan from '@/views/wisdom/fundsPlan/store/index.js'
+import fundsOverdue from '@/views/wisdom/fundsOverdue/store/index.js'
 import membership from './modules/membership'
 import payment from './modules/payment'
 import userRealreport from './modules/userRealreport'
@@ -20,7 +21,9 @@ import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
-
+import vipManage from '@/views/crm/vipmanage/store/vipManage'
+import creditManage from '@/views/crm/creditmanage/store/creditManage'
+import vipApply from '@/views/crm/vipapplication/store/vipApplication'
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -45,7 +48,7 @@ const store = new Vuex.Store({
     mutations,
     actions: actions,
     modules: {
-        // 视图的 store
+        // 视图的 store 这里 大写
         dueDiligence,
         hmall,
         layout,
@@ -60,9 +63,13 @@ const store = new Vuex.Store({
         jinyunplatform,
         crmauthen,
         fundsPlan,
+        fundsOverdue,
         crmstatic,
         projectInformation,
-        riskManage
+        riskManage,
+        vipManage,
+        vipApply,
+        creditManage
     }
 })
 export default store

@@ -1,7 +1,7 @@
 <template>
     <div class="districtEmployee">
         <h3>区域申报内容</h3>
-        <el-form :model="fundDetail.subRegionFundPlanApply" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm">
+        <el-form :model="fundDetail.subRegionFundPlanApply" :rules="rules" ref="form" label-width="200px" class="demo-ruleForm" @submit.native.prevent>
             <el-form-item :label="`${yearMonth}预计资金还款：`" prop="prePaymentCurrentMonth">
                 <el-input v-model.trim="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" v-isNum:2="fundDetail.subRegionFundPlanApply.prePaymentCurrentMonth" maxlength='20' placeholder="请输入金额" :disabled='disabled'>
                     <template slot="append">万元</template>

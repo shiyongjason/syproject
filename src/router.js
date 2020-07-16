@@ -270,13 +270,12 @@ async function getMenu (to, next, isMakeIndex, query) {
     handleMenuResources(data.employeeAuthDetailsList, resourceList)
     let menu = ''
     if (process.env.NODE_ENV == 'development') {
-        // menu = routerMapping
-        menu = makeMenus(routerMapping, resourceList)
+        menu = routerMapping
+        // menu = makeMenus(routerMapping, resourceList)
     } else {
         menu = makeMenus(routerMapping, resourceList)
     }
     sessionStorage.setItem('menuList', JSON.stringify(menu))
-
     router.addRoutes(menu)
     if (isMakeIndex) {
         makeIndex(menu, next, query)
