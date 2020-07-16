@@ -23,6 +23,7 @@
                         <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                         <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
                         <slot v-else-if="item.formatters === 'fundMoney'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoney}}</slot>
+                        <slot v-else-if="item.formatters === 'fundMoneyHaveSpot'" :name="item.prop" :data="scope">{{scope.row[item.prop] | fundMoneyHaveSpot}}</slot>
                         <slot v-else-if="item.formatters === 'dateTime'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTime}}</slot>
                         <slot v-else-if="item.formatters === 'dateTimes'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterTimes}}</slot>
                         <slot v-else-if="item.formatters === 'date'" :name="item.prop" :data="scope">{{scope.row[item.prop] | formatterDate}}</slot>
