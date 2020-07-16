@@ -393,7 +393,7 @@ export default {
     margin-top: 13px;
 }
 .pdfimg {
-    width: 130px;
+    width: 120px;
     height: 120px;
     text-align: center;
     display: flex;
