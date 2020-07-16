@@ -86,7 +86,7 @@
                 </el-form-item>
 
                 <div style="margin-top:5px">附件：</div>
-                <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
                     <!-- <el-button type="primary">上 传</el-button> -->
                 </hosjoyUpload>
             </el-form>
@@ -144,7 +144,7 @@ export default {
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
+            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',

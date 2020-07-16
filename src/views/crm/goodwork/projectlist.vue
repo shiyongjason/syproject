@@ -152,7 +152,7 @@
             </hosJoyTable>
         </div>
         <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer>
-        <el-dialog :title="title" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
+        <el-dialog :title="title" ref='recordDialog' :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" v-if="dialogVisible">
             <div class="project-record" v-if="title=='项目审批记录'">
                 <el-timeline>
                     <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
@@ -265,9 +265,8 @@ export default {
                         return <span>{scope.row.upstreamPromiseMonth ? `${scope.row.upstreamPromiseMonth}个月` : '-'}</span>
                     }
                 },
-                //
-                { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
                 { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom' },
+                { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
                 {
                     label: '工程项目回款方式',
                     children: [
@@ -510,6 +509,7 @@ export default {
             }
 
             this.dialogVisible = true
+            console.log('recordDialog', this.$refs.recordDialog)
         },
         onHandlePictureCardPreview (val) {
             this.dialogImageUrl = val.punchImageUrl

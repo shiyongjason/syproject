@@ -46,7 +46,7 @@
                         <p v-else>-</p>
                     </div>
                     <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
-                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=15 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
                         </hosjoyUpload>
                     </div>
@@ -72,7 +72,7 @@
                 <p>待补充类目：{{item.secondCategoryNames}}</p>
                 <p>待补充原因：</p>
                 <p>
-                  {{item.remark}}
+                    {{item.remark}}
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -296,7 +296,7 @@ export default {
         color: #ff0000;
         font-size: 16px;
     }
-    &-reason{
+    &-reason {
         background: #ff0000;
         color: #ffff;
         margin-left: 20px;
