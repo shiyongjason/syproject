@@ -427,17 +427,6 @@ export default [
                 component: () => import('@/views/hmall/shopManager/selectCategory.vue')
             },
             {
-                path: 'spudetail',
-                name: 'spudetail',
-                meta: {
-                    title: 'SPU管理',
-                    tagName: 'SPU管理',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/spumanage/spudetail')
-            },
-            {
                 path: 'dataBoard',
                 name: 'dataBoard',
                 meta: {
