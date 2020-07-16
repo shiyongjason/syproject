@@ -74,7 +74,7 @@
         </el-drawer>
         <!-- 签约和放款使用弹窗 -->
         <el-dialog :title="signOrLoanVisibleTitle" :visible.sync="signOrLoanVisible" width="35%" :before-close="onColseSignOrLoan" :modal=false :close-on-click-modal=false>
-            <el-form ref="signOrLoanDialog" :model="signOrLoanForm" :rules="signOrLoanRules" label-width="100px">
+            <el-form ref="signOrLoanDialog" :model="signOrLoanForm" :rules="signOrLoanRules" label-width="100px" class="el-dialog__form">
                 <el-form-item label="审核结果：" prop="result">
                     <el-radio-group v-model="signOrLoanForm.result">
                         <el-radio :label=1>{{status==6?'确认签约':'确认放款'}}</el-radio>
@@ -84,11 +84,12 @@
                 <el-form-item label="说明：" prop="remark">
                     <el-input type="textarea" placeholder="请输入说明" v-model.trim="signOrLoanForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
+
+                <div style="margin-top:5px">附件：</div>
+                <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                    <!-- <el-button type="primary">上 传</el-button> -->
+                </hosjoyUpload>
             </el-form>
-            <div style="margin-top:5px">附件：</div>
-            <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
-                <!-- <el-button type="primary">上 传</el-button> -->
-            </hosjoyUpload>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onColseSignOrLoan">取 消</el-button>
                 <el-button type="primary" @click="onSubmitSignOrLoan">确 定</el-button>
@@ -143,7 +144,7 @@ export default {
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -219,6 +220,10 @@ export default {
                     }
                     await signAudit(query)
                     this.signOrLoanVisible = false
+                    this.signOrLoanForm.attachment = []
+                    this.signOrLoanForm.remark = ''
+                    this.signOrLoanForm.result = ''
+                    this.$refs['signOrLoanDialog'].clearValidate()
                     this.$emit('backEvent')
                 }
             })
@@ -228,12 +233,14 @@ export default {
             this.signOrLoanForm.attachment = []
             this.signOrLoanForm.remark = ''
             this.signOrLoanForm.result = ''
+            this.$refs['signOrLoanDialog'].clearValidate()
         },
         // 签约和放款使用弹窗
         onShowSignOrLoan () {
             console.log('onShowSignOrLoan', this.status)
             this.signOrLoanVisible = true
-            this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '付款'
+            this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '放款'
+            this.$refs['signOrLoanDialog'].clearValidate()
         },
         handleClick (tab, event) {
             if (tab.index > 0) this.onFindRiskproject(tab.index)
@@ -438,10 +445,17 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+/deep/.el-dialog {
+    min-width: 745px;
+}
 .el-tabs--card {
     margin-left: 20px;
 }
 /deep/ .el-drawer__body {
+    overflow-y: scroll;
+}
+/deep/.el-dialog__form {
+    height: 500px;
     overflow-y: scroll;
 }
 .project-wrap {
@@ -462,5 +476,8 @@ export default {
     .drawer-button {
         text-align: right;
     }
+}
+.dialogattachment {
+    max-height: 300px;
 }
 </style>

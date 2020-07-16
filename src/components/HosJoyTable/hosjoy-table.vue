@@ -1,10 +1,12 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
         <!-- 筛选 -->
-        <div v-if="collapseShow">
+        <div v-if="collapseShow" ref="collapseShow">
             <div class="collapse" :class="collapse ? 'on' : ''">
                 <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse">
+                <!-- 以下代码能实现点击空白关闭筛选窗口，误删。 -->
+                <!-- <img src="../../../src/assets/images/typeIcon.png" alt="" @click="onHanderCollapseClick"> -->
             </div>
             <el-collapse-transition>
                 <div class="collapse-content" v-if="collapse">
@@ -183,6 +185,20 @@ export default {
         }
     },
     methods: {
+        onHanderCollapseClick () {
+            this.collapse = !this.collapse
+            if (JSON.parse(localStorage.getItem(this.userNameLog))) {
+                this.defaultLabel = JSON.parse(localStorage.getItem(this.userNameLog))
+            }
+            document.addEventListener('click', this.onClickCollapse, false)
+        },
+        onClickCollapse (e) {
+            // .contains() 判断一个元素内是否包含另一个元素
+            if (this.$refs.collapseShow && !this.$refs.collapseShow.contains(e.target)) {
+                this.collapse = false
+                document.removeEventListener('click', this.onClickCollapse, false)
+            }
+        },
         /* getSummary () {
             // todo use: show-summary :summary=sums summary-merge='3'
             if (!this.showSummary && this.summary.length > 0) return null
