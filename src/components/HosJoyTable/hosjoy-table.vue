@@ -4,8 +4,9 @@
         <div v-if="collapseShow" ref="collapseShow">
             <div class="collapse" :class="collapse ? 'on' : ''">
                 <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
-                <!-- <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse"> -->
-                <img src="../../../src/assets/images/typeIcon.png" alt="" @click="onHanderCollapseClick">
+                <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse">
+                <!-- 以下代码能实现点击空白关闭筛选窗口，误删。 -->
+                <!-- <img src="../../../src/assets/images/typeIcon.png" alt="" @click="onHanderCollapseClick"> -->
             </div>
             <el-collapse-transition>
                 <div class="collapse-content" v-if="collapse">
