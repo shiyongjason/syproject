@@ -356,6 +356,7 @@ export default {
     flex-wrap: wrap;
     margin-right: 8px;
     margin-top: 13px;
+    position: relative;
     &-mask {
         position: absolute;
         display: flex;

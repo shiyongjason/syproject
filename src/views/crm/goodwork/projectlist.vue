@@ -158,7 +158,7 @@
                     <el-timeline-item :timestamp="item.createTime" placement="top" v-for="item in dialogRecord" :key=item.id>
                         <el-card>
                             <p><span>操作人：</span> {{item.createBy}}{{item.createByMobile?'('+item.createByMobile+')':''}}</p>
-                            <p><span>操作内容：</span> {{item.remark}}</p>
+                            <p><span>说明内容：</span> {{item.remark}}</p>
                             <p><span>附件：</span>{{getAttachment(item.attachment).length>0?'':'-'}}</p>
                             <span v-for="(item,index) in getAttachment(item.attachment)" :key="index" class="posrtv">
                                 <template v-if="item&&item.fileUrl">

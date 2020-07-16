@@ -242,7 +242,19 @@ export default [
                         },
                         component: () => import('@/views/wisdom/fundsOverdue/overdueDetailTable.vue')
                     },
-                    ...tabAuth
+                    ...tabAuth,
+                    {
+                        path: 'backMoneyTrack',
+                        name: 'backMoneyTrack',
+                        meta: {
+                            title: '回款跟踪',
+                            tagName: '回款跟踪',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/fundsOverdue/backMoneyTrack.vue')
+                    }
                 ]
             }
         ]
