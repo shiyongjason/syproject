@@ -55,8 +55,7 @@ const money = function (value, int) {
 // 资金台账金额格式
 const fundMoney = function (val, int) {
     if (val) {
-        const res = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-        return res
+        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     } else if (val === 0) {
         return val
     } else {
@@ -66,14 +65,19 @@ const fundMoney = function (val, int) {
 // 资金台账金额格式
 const fundMoneyHaveSpot = function (val, int) {
     if (val) {
-        const head = val.toString().slice(0, val.toString().indexOf('.'))
-        const foot = val.toString().slice(val.toString().indexOf('.'))
+        let head = ''
+        let foot = ''
+        if (val.toString().indexOf('.') > -1) {
+            head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+            foot = val.toString().slice(val.toString().indexOf('.'))
+        } else {
+            head = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+        }
         return `${head}${foot}`
     } else if (val === 0) {
         return val
-    } else {
-        return '-'
     }
+    return '-'
 }
 const formatDateDuration = function (time) {
     if (!time) return '-'

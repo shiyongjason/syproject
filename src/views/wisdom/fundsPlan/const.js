@@ -12,7 +12,7 @@ export const hasDeclareLabel = [
     { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
     { label: '资金支持类型', prop: 'fundTypeName' }
 ]
-// 资金计划汇总表
+// 计划汇总分析表
 export const summarySheet = function (targetYear, targetMonth, isF, isHideCompanyCounts) {
     return [
         {
@@ -87,6 +87,13 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'totalOverdue',
                     label: '逾期余额',
+                    minWidth: '150',
+                    displayAs: 'fundMoney',
+                    align: 'right'
+                },
+                {
+                    prop: 'hxjFundAmount',
+                    label: '好享家注资占用额',
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -306,6 +313,21 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                     ]
                 },
                 {
+                    prop: 'hxjFundAmount',
+                    label: '好享家注资占用额',
+                    minWidth: '150',
+                    align: 'center',
+                    children: [
+                        {
+                            prop: 'hxjFundAmount',
+                            displayAs: 'fundMoney',
+                            align: 'center',
+                            minWidth: '150',
+                            label: `-`
+                        }
+                    ]
+                },
+                {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
                     align: 'right',
@@ -426,7 +448,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -478,7 +500,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -532,7 +554,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -585,7 +607,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                                         overflow: 'hidden',
                                         display: '-webkit-box',
                                         WebkitBoxOrient: 'vertical',
-                                        webkitLineClamp: 2
+                                        webkitLineClamp: 1
                                     },
                                     on: {
                                         'click': function () {
@@ -943,13 +965,29 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             ]
         },
         {
-            label: '当月申报用款额',
-            prop: 'currentApplyFund',
+            label: '好享家注资占用额',
+            prop: 'hxjFundAmount',
+            displayAs: 'fundMoney',
             width: 150,
             children: [
                 {
                     label: '-',
                     width: 150,
+                    isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
+                    displayAs: 'fundMoney',
+                    prop: 'hxjFundAmount'
+                }
+            ]
+        },
+        {
+            label: '当月申报用款额',
+            prop: 'currentApplyFund',
+            width: 120,
+            children: [
+                {
+                    label: '-',
+                    width: 120,
                     isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     displayAs: 'fundMoney',
