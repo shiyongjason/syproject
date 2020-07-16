@@ -427,17 +427,6 @@ export default [
                 component: () => import('@/views/hmall/shopManager/selectCategory.vue')
             },
             {
-                path: 'wallet',
-                name: 'wallet',
-                meta: {
-                    title: '钱包支付开通情况',
-                    tagName: '钱包支付开通情况',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/walletPay/walletPay.vue')
-            },
-            {
                 path: 'spudetail',
                 name: 'spudetail',
                 meta: {
