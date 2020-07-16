@@ -12,7 +12,6 @@ export function exportCompanyOverdueExcel (params) {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
-                console.log(params)
                 const a = document.createElement('a')
                 let name = ''
                 if (params.state == 1) {
@@ -75,6 +74,42 @@ export function exportBranchOverdueDetailExcel (params) {
                 console.log(params)
                 const a = document.createElement('a')
                 a.download = `分部逾期汇总表.xlsx`
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+
+// 回款跟踪列表
+export function getBackMoneyTrackList (params) {
+    return axios.get(`backend/api/overdue/repayment-trace/page`, { params })
+}
+// 回款跟踪列表合计
+export function getBackMoneyTrackTotal (params) {
+    return axios.get(`backend/api/overdue/repayment-trace/total`, { params })
+}
+// 回款跟踪导出
+export function exportBackMoneyTrack (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(`backend/api/overdue/repayment-trace/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                if (params.departmentType === '1') {
+                    a.download = `平台公司回款跟踪表.xlsx`
+                } else {
+                    a.download = `分部回款跟踪表.xlsx`
+                }
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()

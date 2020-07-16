@@ -267,6 +267,9 @@ export default {
                 // }
             })
         },
+        toggleTableHandler () {
+            this.toggleTable = !this.toggleTable
+        },
         hiddenOverflowTooltip (row) {
             if (row.column.showOverflowTooltip) {
                 return 'hiddenOverflowTooltip'
