@@ -585,4 +585,12 @@ export default {
 .hosjoy-table >>> .el-table th {
     background: #f5f7fa;
 }
+.hosjoy-table >>> .el-table__empty-block {
+    position: relative;
+}
+.hosjoy-table >>> .el-table__empty-block .el-table__empty-text {
+    position: fixed;
+    left: calc(50vw + 80px);
+    width: auto;
+}
 </style>
