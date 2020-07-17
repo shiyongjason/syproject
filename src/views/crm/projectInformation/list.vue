@@ -106,7 +106,7 @@
             <!--  -->
             <div class="page-table">
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                    actionWidth='260' isAction isActionFixed>
+                    actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template slot="contractAmount" slot-scope="scope">
                         {{scope.data.row.contractAmount?fundMoneys(scope.data.row.contractAmount):0}}
                     </template>
