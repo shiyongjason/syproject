@@ -274,7 +274,7 @@ export default {
             flex: 2;
         }
         &:nth-child(3) {
-            flex: 1;
+            flex: 2;
         }
     }
 }
