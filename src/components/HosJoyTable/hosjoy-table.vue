@@ -39,6 +39,7 @@
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
+            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>
         </el-table>
         <!-- 分页 -->
         <div class="pages">
@@ -111,7 +112,8 @@ export default {
             },
             defaultLabel: [],
             selectedColumn: [],
-            columnRender: []
+            columnRender: [],
+            emptyTxtLeft: ''
         }
     },
     created () {
@@ -445,6 +447,10 @@ export default {
     mounted () {
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
+            let left = this.$refs.hosTable.getBoundingClientRect().left
+            let windowsWidth = document.documentElement.clientWidth
+            let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
+            this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)
         })
     }
 }
@@ -589,8 +595,12 @@ export default {
     position: relative;
 }
 .hosjoy-table >>> .el-table__empty-block .el-table__empty-text {
+    position: absolute;
+    top: 0;
+}
+.hosjoy-table >>> .emptylayout {
     position: fixed;
-    left: calc(50vw + 80px);
+    transform: translateX(-50%);
     width: auto;
 }
 </style>
