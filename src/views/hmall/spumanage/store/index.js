@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findAuditProducts, findBazaarLists, findProductsTemplate } from '../api'
+import { findAuditProducts, findBazaarLists, findProductsTemplate, setSpuTemplate } from '../api'
 
 const state = {
     productsAuditListInfo: {},
@@ -41,6 +41,9 @@ const actions = {
     async findProductsTemplate ({ commit }, params) {
         const { data } = await findProductsTemplate(params)
         commit(types.PRODUCTS_TEMPLATE_INFO, data)
+    },
+    setSpuTemplate ({ commit }, params) {
+        setSpuTemplate(params)
     }
 }
 
