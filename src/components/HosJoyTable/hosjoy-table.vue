@@ -23,14 +23,14 @@
                 </template>
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="(item) in getColumn()">
+            <template v-for="(item, index) in getColumn()">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop' v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop + index' v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag" :fixed="isActionFixed?'right':false">
                 <template slot-scope="scope">
@@ -87,6 +87,11 @@ export default {
             default: false
         },
         localName: {
+            required: false,
+            type: String,
+            default: 'TABLE::'
+        },
+        prevLocalName: {
             required: false,
             type: String,
             default: 'TABLE::'
@@ -147,7 +152,7 @@ export default {
                     id = value.label
                 }
                 if (id) {
-                    return {
+                    return { // 只遍历了2级，如果展示的是三级，需要将第一个label设置空
                         id: id,
                         label: value.label,
                         children: value.children && value.children.filter(value => value.label !== '-' && !value.selfSettingHidden).map(value1 => {
@@ -160,8 +165,9 @@ export default {
                     }
                 } else {
                     // 第一行为空的情况,目前没有其他情况
+                    // 如果第一节为空 prop或者selfProp 必须存在 && label定义为空
                     return {
-                        id: value.prop,
+                        id: value.prop || value.selfProp, // selfProp 针对有render的prop companyTable里面TotalColumn使用
                         label: value.children[0].label
                     }
                 }
@@ -169,6 +175,9 @@ export default {
         },
         userNameLog () {
             return this.localName + this.$route.path
+        },
+        prevUserNameLog () {
+            return this.prevLocalName + this.$route.path
         }
     },
     methods: {
@@ -228,7 +237,9 @@ export default {
                         value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
-                    value.isHidden = !(number > 0)
+                    if (value.isHidden) { // 二级列表判断是否需要显示 如果数组底下有勾选的 修改显示父树结构
+                        value.isHidden = !(number > 0)
+                    }
                 }
             })
             this.toggleTable = false
@@ -340,8 +351,11 @@ export default {
                 this.defaultLabel = []
             }
             arr.forEach(value => {
-                this.defaultLabel.push(value.id)
-                value.children && this.collectDefaultId(value.children, true)
+                if (value.children) {
+                    this.collectDefaultId(value.children, true)
+                } else {
+                    this.defaultLabel.push(value.id)
+                }
             })
         },
         checkHandler (item, currentItemChecked) {
@@ -392,6 +406,9 @@ export default {
         },
         switchLabel: {
             handler () {
+                if (this.prevLocalName) {
+                    localStorage.removeItem(this.prevUserNameLog)
+                }
                 const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
                 if (isLoggedIn && isLoggedIn.length > 0) {
                     this.defaultLabel = isLoggedIn

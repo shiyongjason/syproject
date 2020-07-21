@@ -34,9 +34,9 @@
                 <div class="query-col-title" v-if="hosAuthCheck(account_export)">
                     <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                 </div>
-                <!-- <div class="query-col-title">
+                <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                </div> -->
+                </div>
             </div><br>
         </div>
         <div class="page-body-cont">
@@ -90,7 +90,7 @@ export default {
             branchList: state => state.branchList,
             platformData: state => state.platformData
         }),
-        ...mapGetters(['platformData', 'tableData']),
+        ...mapGetters(['platformData', 'tableData', 'tableDataTotal']),
         accountName () {
             return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}明细`
         }
@@ -149,7 +149,8 @@ export default {
             'findPlatformslist',
             'getAccountList',
             'getRepaymentList',
-            'findSummaryList'
+            'findSummaryList',
+            'findSummaryTotal'
         ]),
         linkage (dis) {
             let obj = {
@@ -229,7 +230,11 @@ export default {
             if (this.accountType == 4) {
                 this.getRepaymentList(this.searchParams)
             } else if (this.accountType == 0) {
-                this.findSummaryList(this.searchParams)
+                Promise.all([this.findSummaryList(this.searchParams), this.findSummaryTotal(this.searchParams)]).then(() => {
+                    this.$refs.complexTable.totalColumnTotalDo(this.tableDataTotal)
+                    // for (let i=3;i< this.tableDataTotal.length)
+                })
+                // this.findSummaryList(this.searchParams)
             } else {
                 await this.getAccountList(this.searchParams)
             }

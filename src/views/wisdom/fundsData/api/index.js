@@ -30,6 +30,8 @@ export const setCount = (params) => axios.post(interfaceUrl + 'backend/api/accou
 export const transformPlanType = (params) => axios.get(interfaceUrl + `backend/api/account/plan/account-type`, { params })
 // 台账汇总表
 export const getSummaryList = (params) => axios.get(interfaceUrl + `backend/api/account/summary`, { params })
+// 台账汇总表合计
+export const getSummaryTotal = (params) => axios.get(interfaceUrl + `backend/api/account/summary/total`, { params })
 // 台账数据导出
 export function downloadCloudAlarmList (params) {
     axios.defaults.responseType = 'blob'
