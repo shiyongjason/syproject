@@ -347,6 +347,7 @@ export default {
             this.$emit('backEvent')
         },
         onReststatus (val) {
+            console.log(val)
             if (val == 5) {
                 this.statusType = this.newstatusType
             } else if (val == 6 || val == 7 || val == 8) {
@@ -355,6 +356,8 @@ export default {
                 this.statusType = this.newstatusType.slice(0, 1)
             } else if (val == 11) {
                 this.statusType = this.newstatusType.slice(0, 3)
+            } else if (val == 12) {
+                this.statusType = this.newstatusType.slice(0, 2)
             } else {
                 this.statusType = this.newstatusType.slice(0, val - 2)
             }
