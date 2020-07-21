@@ -8,12 +8,12 @@
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">项目编号：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
-                </div>
+                </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-title">项目提交时间：</div>
                     <div class="query-col-input">
@@ -36,7 +36,7 @@
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxUpdateTime)">
@@ -45,8 +45,8 @@
                         <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minUpdateTime)">
                         </el-date-picker>
                     </div>
-                </div>
-                <div class="query-cont-col">
+                </div> -->
+                <!-- <div class="query-cont-col">
                     <div class="query-col-title">项目类别：</div>
                     <div class="query-col-input">
                         <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
@@ -54,7 +54,7 @@
                             </el-option>
                         </el-select>
                     </div>
-                </div>
+                </div> -->
                 <div class="query-cont-col">
                     <div class="query-col-title">合作进度：</div>
                     <div class="query-col-input">
@@ -72,16 +72,7 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">预估借款时间：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimatedLoanTime)">
-                        </el-date-picker>
-                    </div>
-                </div>
+
                 <div class="query-cont-col">
                     <div class="query-col-title">设备品类：</div>
                     <div class="query-col-input">
@@ -98,6 +89,16 @@
                             <el-option v-for="item in upstreamList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
+                    </div>
+                </div>
+                        <div class="query-cont-col">
+                    <div class="query-col-title">预估借款时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.maxEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimatedLoanTime)">
+                        </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -590,5 +591,8 @@ export default {
         width: 500px;
         padding: 10px;
     }
+}
+/deep/.query-cont-col .query-col-input .el-input{
+    width: 150px;
 }
 </style>
