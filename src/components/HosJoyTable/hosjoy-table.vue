@@ -16,7 +16,9 @@
             </el-collapse-transition>
         </div>
         <!-- 大表哥 :summary-method="getSummary" :show-summary="showSummary"-->
-        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height="height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
+        <!-- :height=" height || `calc(100vh - ${selfHeight}px)`" -->
+        <!--  :max-height="computedHeight" -->
+        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -124,8 +126,11 @@ export default {
         computedHeight () {
             if (this.height) return 'unset'
             if (this.data && this.data.length >= this.pageSize) {
-                // 获取页面可视区的高度-this.selfHeight `calc(100vh - ${selfHeight}px)`
+                // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
                 let h = document.documentElement.clientHeight - this.selfHeight
+                if (Math.floor(h) < 280) {
+                    h = 280// 最小高度
+                }
                 return `${Math.floor(h)}px` // fix windows浏览器max-height 不能有小数
             } else {
                 return 'unset'
@@ -447,10 +452,12 @@ export default {
     mounted () {
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
-            let left = this.$refs.hosTable.getBoundingClientRect().left
-            let windowsWidth = document.documentElement.clientWidth
-            let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
-            this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)
+            if (this.data.length == 0) {
+                let left = this.$refs.hosTable.getBoundingClientRect().left
+                let windowsWidth = document.documentElement.clientWidth
+                let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
+                this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)
+            }
         })
     }
 }
