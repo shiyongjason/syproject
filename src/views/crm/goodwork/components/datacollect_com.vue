@@ -8,7 +8,7 @@
                     <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                         <div class="collect-box">
                             <div class="collect-boxflex">
-                                <div v-if="activeName=='2'&&status==3">
+                                <div v-if="activeName=='2'&&status==12">
                                     <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
                                 </div>
                                 <div class="collect-boxtxt">
