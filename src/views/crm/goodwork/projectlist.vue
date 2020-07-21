@@ -243,31 +243,32 @@ export default {
             tableLabel: [
                 { label: '项目名称', prop: 'projectName', width: '150', showOverflowTooltip: true },
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
-                { label: '项目编号', prop: 'projectNo', width: '150' },
-                { label: '所属分部', prop: 'deptName', width: '150' },
+                { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
+                { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
 
-                { label: '经销商', prop: 'companyName', width: '180' },
-                { label: '甲方名称', prop: 'firstPartName', width: '180' },
-                { label: '项目类别', prop: 'type', width: '120', slot: 'type' },
+                { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
+                { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
+                { label: '项目类别', prop: 'type', width: '120', slot: 'type', showOverflowTooltip: true },
                 // { label: '工程项目进度', prop: 'progress', width: '120', slot: 'progress' },
                 { label: '工程项目进度', prop: 'progress', width: '120', dicData: [{ value: 1, label: '项目跟踪阶段' }, { value: 2, label: '招投标' }, { value: 3, label: '合同已签订' }, { value: 4, label: '项目已开工' }] },
                 { label: '项目合同总额', prop: 'contractAmount', width: '150', displayAs: 'money', sortable: 'custom' },
                 { label: '设备总额', prop: 'deviceAmount', width: '150', displayAs: 'money', sortable: 'custom' },
                 { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: 'custom' },
-                { label: '设备品类', prop: 'deviceCategory', width: '100', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] },
-                { label: '设备品牌', prop: 'deviceBrand', width: '150' },
-                { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-                { label: '上游供应商名称', prop: 'upstreamSupplierName', width: '180' },
-                { label: '上游接受付款方式', prop: 'upstreamPayType', width: '180', dicData: [{ value: 1, label: '现金' }, { value: 2, label: '承兑' }, { value: '1,2', label: '现金+承兑' }] },
+                { label: '设备品类', prop: 'deviceCategory', showOverflowTooltip: true, width: '100', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] },
+                { label: '设备品牌', prop: 'deviceBrand', showOverflowTooltip: true, width: '150' },
+                { label: '上游供应商类型', prop: 'upstreamSupplierType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
+                { label: '上游供应商名称', prop: 'upstreamSupplierName', showOverflowTooltip: true, width: '180' },
+                { label: '上游接受付款方式', prop: 'upstreamPayType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '现金' }, { value: 2, label: '承兑' }, { value: '1,2', label: '现金+承兑' }] },
                 {
                     label: '上游接受付款周期',
                     prop: 'upstreamPromiseMonth',
                     width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.upstreamPromiseMonth ? `${scope.row.upstreamPromiseMonth}个月` : '-'}</span>
-                    }
+                    },
+                    showOverflowTooltip: true
                 },
-                { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom' },
+                { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom', showOverflowTooltip: true },
                 { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
                 {
                     label: '工程项目回款方式',
@@ -279,7 +280,8 @@ export default {
                         { label: '交付款比例', prop: 'realPaymentProportion', width: '100', unit: '%' },
                         { label: '审计结算款比例', prop: 'auditCalculationPaymentProportion', width: '150', unit: '%' },
                         { label: '其他', prop: 'payOtherText', width: '150', showOverflowTooltip: true }
-                    ]
+                    ],
+                    showOverflowTooltip: true
                 },
                 {
                     label: '合作进度',
@@ -291,7 +293,7 @@ export default {
                     showOverflowTooltip: true
                 },
                 { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
-                { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' }
+                { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
             ],
             rowKey: '',
             multiSelection: [],
@@ -597,13 +599,11 @@ export default {
 /deep/.query-cont-col .query-col-input .el-input {
     width: 150px;
 }
-/deep/.el-table__row {
-    span {
+/deep/.el-table__row >span {
         display: -webkit-box;
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
 }
 </style>
