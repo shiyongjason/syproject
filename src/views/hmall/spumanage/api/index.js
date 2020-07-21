@@ -105,3 +105,6 @@ export const findSpuTemplateDetail = (params) => axios.get(B2bUrl + `product/api
 export const putSpuTemplate = (params) => axios.put(B2bUrl + `product/api/spu/template`, params)
 
 /* 2020-05 商品改造 end */
+
+// 修改spu模板
+export const setSpuTemplate = (params) => axios.post(B2bUrl + `product/api/spu/join/template/${params}`)

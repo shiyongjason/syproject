@@ -295,9 +295,18 @@ export default {
         &:nth-child(2) {
             display: flex;
             flex: 2;
+                display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+    white-space: nowrap;
         }
         &:nth-child(3) {
-            flex: 1;
+            flex: 2;
+      word-break: keep-all;
+
         }
     }
 }
