@@ -53,7 +53,7 @@ export const STATUS_TYPE = [
 ]
 
 export const NEW_STATUS_TYPE = [
-    { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 4, value: '待立项' }, { key: 11, value: '待终审' },
+    { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 12, value: '资料待审核' }, { key: 4, value: '待立项' }, { key: 11, value: '待终审' },
     { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }
 ]
 
