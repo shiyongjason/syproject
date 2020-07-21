@@ -119,6 +119,7 @@
                         <el-form-item style="text-align: center">
                             <el-button type="primary" @click="onAudit()">确定</el-button>
                             <el-button @click="onBack()">返回</el-button>
+                            <el-button @click="onSetSpuTemplate()">设置为SPU模板</el-button>
                         </el-form-item>
                     </el-row>
                 </el-form>
@@ -298,6 +299,9 @@ export default {
         ]),
         ...mapActions('brand', [
             'findAllBrands'
+        ]),
+        ...mapActions('spumanage', [
+            'setSpuTemplate'
         ]),
         ...mapActions({
             findCategoryList: 'findCategoryList',
@@ -513,6 +517,9 @@ export default {
                 })
             })
             this.$forceUpdate()
+        },
+        onSetSpuTemplate () {
+            this.setSpuTemplate(this.$route.query.spuId)
         }
     }
 }

@@ -90,12 +90,11 @@
 </template>
 <script>
 import moment from 'moment'
-import { getEfficiencyList, updataRemark, getEfficiencyTotal } from './api/index.js'
+import { getEfficiencyList, updataRemark, getEfficiencyTotal, exportEfficiencyList } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { CAPITAL_EFFICIENCY_TABLE, ONLINESTATUS, HOSJOYINJECTION, FINANCIALSUPPORT } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
-import { exportEfficiencyList } from './api'
 export default {
     name: 'capitalEfficiency',
     mixins: [departmentAuth],
