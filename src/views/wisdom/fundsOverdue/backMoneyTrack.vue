@@ -61,7 +61,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { backMoneyTrack, backMoneyTrackTotal } from './const'
+import { backMoneyTrack } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { exportBackMoneyTrack } from './api/index'
 import filters from '../../../utils/filters'
