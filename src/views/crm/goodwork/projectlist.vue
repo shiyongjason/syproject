@@ -91,7 +91,7 @@
                         </el-select>
                     </div>
                 </div>
-                        <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">预估借款时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
@@ -241,11 +241,11 @@ export default {
             paginationInfo: {},
             middleStatus: 0, // 0无文件 1有文件已提交 2有文件未提交
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '150' },
+                { label: '项目名称', prop: 'projectName', width: '150', showOverflowTooltip: true },
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: 'custom' },
+
                 { label: '经销商', prop: 'companyName', width: '180' },
                 { label: '甲方名称', prop: 'firstPartName', width: '180' },
                 { label: '项目类别', prop: 'type', width: '120', slot: 'type' },
@@ -253,6 +253,7 @@ export default {
                 { label: '工程项目进度', prop: 'progress', width: '120', dicData: [{ value: 1, label: '项目跟踪阶段' }, { value: 2, label: '招投标' }, { value: 3, label: '合同已签订' }, { value: 4, label: '项目已开工' }] },
                 { label: '项目合同总额', prop: 'contractAmount', width: '150', displayAs: 'money', sortable: 'custom' },
                 { label: '设备总额', prop: 'deviceAmount', width: '150', displayAs: 'money', sortable: 'custom' },
+                { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: 'custom' },
                 { label: '设备品类', prop: 'deviceCategory', width: '100', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] },
                 { label: '设备品牌', prop: 'deviceBrand', width: '150' },
                 { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
@@ -286,9 +287,10 @@ export default {
                     width: '150',
                     render: (h, scope) => {
                         return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
-                    }
+                    },
+                    showOverflowTooltip: true
                 },
-                { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
+                { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
                 { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' }
             ],
             rowKey: '',
@@ -592,7 +594,16 @@ export default {
         padding: 10px;
     }
 }
-/deep/.query-cont-col .query-col-input .el-input{
+/deep/.query-cont-col .query-col-input .el-input {
     width: 150px;
+}
+/deep/.el-table__row {
+    span {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 </style>
