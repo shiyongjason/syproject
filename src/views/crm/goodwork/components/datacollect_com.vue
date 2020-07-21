@@ -118,7 +118,8 @@ export default {
                 projectId: '',
                 remark: '',
                 status: 1,
-                templateIds: ''
+                templateIds: '',
+                createMobile: ''
             },
             refuseFormRules: {
                 remark: [
@@ -173,6 +174,7 @@ export default {
         onRefuse () {
             this.loading = true
             this.refuseForm.createBy = this.userInfo.employeeName
+            this.refuseForm.createMobile = this.userInfo.phoneNumber
             this.refuseForm.projectId = this.colForm.projectId
             this.$refs.refuseForm.validate(async (valid) => {
                 if (valid) {
