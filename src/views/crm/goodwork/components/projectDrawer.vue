@@ -352,14 +352,14 @@ export default {
                 this.statusType = this.newstatusType
             } else if (val == 6 || val == 7 || val == 8) {
                 this.statusType = this.newstatusType.slice(0, val - 2)
-            } else if (val == 10) {
+            } else if (val == 10 || val == 3) {
                 this.statusType = this.newstatusType.slice(0, 1)
             } else if (val == 11) {
-                this.statusType = this.newstatusType.slice(0, 3)
+                this.statusType = this.newstatusType.slice(0, 4)
             } else if (val == 12) {
                 this.statusType = this.newstatusType.slice(0, 2)
             } else {
-                this.statusType = this.newstatusType.slice(0, val - 2)
+                this.statusType = this.newstatusType.slice(0, val - 1)
             }
             this.statusForm = { ...this.copyStatusForm }
             this.$nextTick(() => {
