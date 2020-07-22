@@ -351,7 +351,7 @@ export default {
             if (val == 5) {
                 this.statusType = this.newstatusType
             } else if (val == 6 || val == 7 || val == 8) {
-                this.statusType = this.newstatusType.slice(0, val - 2)
+                this.statusType = this.newstatusType.slice(0, val - 1)
             } else if (val == 10 || val == 3) {
                 this.statusType = this.newstatusType.slice(0, 1)
             } else if (val == 11) {
