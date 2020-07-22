@@ -27,7 +27,11 @@
                             <p style="flex:0.5">{{item.date}}</p>
                             <p>
                                 <font class="fileItemDownLoad" @click="onDelete">删除</font>
-                                <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
+                                <!-- <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font> -->
+                                <a class="fileItemDownLoad" :href="item.fileUrl+'?response-content-type=application/octet-stream'" :download="item.fileName"
+                                    v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1">
+                                    下载
+                                </a>
                                 <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
                             </p>
                         </div>

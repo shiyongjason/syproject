@@ -16,6 +16,10 @@
                     <template slot="dataCollectValue" slot-scope="scope">
                         {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
                     </template>
+                    <template slot="docAuditValue" slot-scope="scope">
+                        {{scope.data.row.docAuditValue?fundMoneys(scope.data.row.docAuditValue):'-'}}
+                    </template>
+
                     <template slot="infoToBeImprovedValue" slot-scope="scope">
                         {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
                     </template>
