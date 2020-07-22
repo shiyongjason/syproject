@@ -29,3 +29,6 @@ export const getRefuseDoc = (params) => axios.get(`/fms/api/doc-template/project
 export const submitProjectdoc = (params) => axios.post(`/fms/api/risk-check/submit/project-doc`, params)
 
 export const saveProjectdoc = (params) => axios.post(`/fms/api/risk-check/save/project-doc`, params)
+
+// 审核（签约和放款使用）
+export const signAudit = (params) => axios.post(`/memeber/openapi/project/sign-audit`, params)
