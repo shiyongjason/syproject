@@ -30,7 +30,11 @@
                                 </div>
                                 <div> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
                                 <div>
-                                    <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
+                                    <!-- <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font> -->
+                                    <a class="fileItemDownLoad" :href="item.fileUrl+'?response-content-type=application/octet-stream'" :download="item.fileName"
+                                        v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1">
+                                        下载
+                                    </a>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
                                 </div>
                             </div>
@@ -297,18 +301,17 @@ export default {
         &:nth-child(2) {
             display: flex;
             flex: 2;
-                display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-right: 10px;
-    white-space: nowrap;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
         }
         &:nth-child(3) {
             flex: 2;
-      word-break: keep-all;
-
+            word-break: keep-all;
         }
     }
 }
