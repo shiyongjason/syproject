@@ -8,5 +8,5 @@ export const REPAYMENT_SCHEDULE = 'REPAYMENT_SCHEDULE'
 export const GET_BRANCH = 'GET_BRANCH'
 // 台账列表
 export const GET_SUMMARY = 'GET_SUMMARY'
-// 台账列表合计
-export const GET_SUMMARY_TOTAL = 'GET_SUMMARY_TOTAL'
+// 列表合计 公用的合计
+export const TABLE_DATE_TOTAL = 'GET_SUMMARY_TOTAL'

@@ -2,8 +2,14 @@ import axios from 'axios'
 import { interfaceUrl } from '@/api/config'
 // 台账列表
 export const getAccountList = (params) => axios.get(interfaceUrl + `backend/api/account`, { params })
+// 台账列表
+export const getAccountTotal = (params) => axios.get(interfaceUrl + `backend/api/account/total`, { params })
+
 // 还款明细表
 export const getRepaymentList = (params) => axios.get(interfaceUrl + 'backend/api/account/repayment/page', { params })
+// 还款明细表合计
+export const getRepaymentTotal = (params) => axios.get(interfaceUrl + 'backend/api/account/repayment/total', { params })
+
 // 查询平台公司
 export const findPaltList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 // 新增各类台账

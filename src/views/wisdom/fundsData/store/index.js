@@ -1,7 +1,7 @@
 
 // 资金台账 store
 import * as types from './const'
-import { findPlatformslist, getAccountList, getRepaymentList, getSummaryList, findDepartment, getSummaryTotal } from '@/views/wisdom/fundsData/api'
+import { findPlatformslist, getAccountList, getAccountTotal, getRepaymentList, getRepaymentTotal, getSummaryList, findDepartment, getSummaryTotal } from '@/views/wisdom/fundsData/api'
 const state = {
     platformData: [], // 平台公司list
     // 阶梯逾期默认值
@@ -85,7 +85,7 @@ const mutations = {
         }
         state.tableData = payload.records || []
     },
-    [types.GET_SUMMARY_TOTAL] (state, payload) {
+    [types.TABLE_DATE_TOTAL] (state, payload) {
         if (!payload) return
         state.tableDataTotal = payload
     }
@@ -104,9 +104,17 @@ const actions = {
         const { data } = await getAccountList(params)
         commit(types.STANDINGB_BOOK, data)
     },
+    async getAccountTotal ({ commit }, params) {
+        const { data } = await getAccountTotal(params)
+        commit(types.TABLE_DATE_TOTAL, data)
+    },
     async getRepaymentList ({ commit }, params) {
         const { data } = await getRepaymentList(params)
         commit(types.REPAYMENT_SCHEDULE, data)
+    },
+    async getRepaymentTotal ({ commit }, params) {
+        const { data } = await getRepaymentTotal(params)
+        commit(types.TABLE_DATE_TOTAL, data)
     },
     async findBranchList ({ commit }, params) {
         // 查询分部（不用做权限，现在是总部在使用）
@@ -120,7 +128,7 @@ const actions = {
     },
     async findSummaryTotal ({ commit }, params) {
         const { data } = await getSummaryTotal(params)
-        commit(types.GET_SUMMARY_TOTAL, data)
+        commit(types.TABLE_DATE_TOTAL, data)
     }
 
 }
