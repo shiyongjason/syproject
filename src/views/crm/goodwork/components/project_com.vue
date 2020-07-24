@@ -62,7 +62,7 @@
                     <el-checkbox label="2" name="type">承兑</el-checkbox>
                 </el-checkbox-group>
                 <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
-                    <el-input v-if="projectForm.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="form.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
+                    <el-input v-if="projectForm.upstreamPayTypearr.indexOf('2')>-1" type="textarea" placeholder="请输入厂商接受承兑是否有指定银行，如有指定，则标明指定的银行" v-model="projectForm.payAcceptanceRemark" maxlength="200" show-word-limit></el-input>
                 </el-form-item>
             </el-form-item>
             <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
@@ -104,7 +104,7 @@
                 </el-form-item>
             </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                <hosjoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='15' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                <hosjoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='2' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                 </hosjoyUpload>
             </el-form-item>
         </el-form>
@@ -136,7 +136,7 @@ export default {
 
             aduitTitle: '',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '立项' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
+            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
             statusType: STATUS_TYPE,
             newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
@@ -295,6 +295,7 @@ export default {
                 this.projectForm.deptName = this.crmdepList.find(v => v.pkDeptDoc == this.projectForm.pkDeptDoc).deptName || ''
             }
             this.$refs.ruleForm.validate(async (valid) => {
+                console.log(valid)
                 if (valid) {
                     try {
                         await putProjectDetail(this.projectForm)
@@ -302,6 +303,7 @@ export default {
                             message: '数据保存成功',
                             type: 'success'
                         })
+                        this.$emit('onCompsback')
                         this.$emit('onBackLoad', false)
                     } catch (error) {
                         this.$emit('onBackLoad', false)

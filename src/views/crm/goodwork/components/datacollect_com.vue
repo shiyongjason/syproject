@@ -8,7 +8,7 @@
                     <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                         <div class="collect-box">
                             <div class="collect-boxflex">
-                                <div v-if="activeName=='2'&&status==3">
+                                <div v-if="activeName=='2'&&status==12">
                                     <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
                                 </div>
                                 <div class="collect-boxtxt">
@@ -18,7 +18,7 @@
                                 </div>
                             </div>
                             <div class="upload-file_list" v-for="(item,index) in obj.riskCheckProjectDocPos" :key="index">
-                                <p>
+                                <div>
                                     <span class="posrtv">
                                         <template v-if="item&&item.fileUrl">
                                             <i class="el-icon-document"></i>
@@ -27,12 +27,16 @@
                                             </a>
                                         </template>
                                     </span>
-                                </p>
-                                <p style="flex:0.5"> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                                <p>
-                                    <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font>
+                                </div>
+                                <div> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
+                                <div>
+                                    <!-- <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font> -->
+                                    <a class="fileItemDownLoad" :href="item.fileUrl+'?response-content-type=application/octet-stream'" :download="item.fileName"
+                                        v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1">
+                                        下载
+                                    </a>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
-                                </p>
+                                </div>
                             </div>
                         </div>
 
@@ -118,7 +122,8 @@ export default {
                 projectId: '',
                 remark: '',
                 status: 1,
-                templateIds: ''
+                templateIds: '',
+                createMobile: ''
             },
             refuseFormRules: {
                 remark: [
@@ -151,6 +156,7 @@ export default {
             findRefuseData: 'crmmanage/findRefuseData'
         }),
         onShowcollect () {
+            console.log(12)
             this.collectVisible = true
             this.collectTitle = '材料审核'
         },
@@ -172,6 +178,7 @@ export default {
         onRefuse () {
             this.loading = true
             this.refuseForm.createBy = this.userInfo.employeeName
+            this.refuseForm.createMobile = this.userInfo.phoneNumber
             this.refuseForm.projectId = this.colForm.projectId
             this.$refs.refuseForm.validate(async (valid) => {
                 if (valid) {
@@ -277,9 +284,34 @@ export default {
 }
 .upload-file_list {
     display: flex;
-    p {
+    justify-content: space-between;
+    align-items: center;
+    div {
         &:first-child {
-            flex: 1;
+            display: flex;
+            flex: 5;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        &:nth-child(2) {
+            display: flex;
+            flex: 2;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+        }
+        &:nth-child(3) {
+            flex: 2;
+            word-break: keep-all;
         }
     }
 }
@@ -300,12 +332,32 @@ export default {
 .posrtv {
     position: relative;
     color: #ff7a45;
+    display: flex;
+    align-items: center;
+
+    overflow: hidden;
     a {
         color: #ff7a45;
         margin-left: 10px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
     font {
         font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 10px;
+        white-space: nowrap;
+        display: flex;
     }
 }
 .project-record {

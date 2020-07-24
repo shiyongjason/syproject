@@ -28,7 +28,7 @@ export default [
                 meta: {
                     title: '设备概览',
                     isMenu: true,
-                    icon: 'hosjoy_shushiyun'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
@@ -159,7 +159,7 @@ export default [
                 meta: {
                     title: '运营管理',
                     isMenu: true,
-                    icon: 'hosjoy_shushiyun'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
