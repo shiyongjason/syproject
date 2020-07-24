@@ -46,7 +46,7 @@
                         <p v-else>-</p>
                     </div>
                     <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
-                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=15 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
                         </hosjoyUpload>
                     </div>
@@ -58,10 +58,10 @@
                     <el-button style="width:130px;" @click="onBack">返回</el-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSave">保存</el-button>
+                    <el-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</el-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSubmit">提交</el-button>
+                    <el-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</el-button>
                 </p>
             </div>
         </div>
@@ -72,7 +72,7 @@
                 <p>待补充类目：{{item.secondCategoryNames}}</p>
                 <p>待补充原因：</p>
                 <p>
-                  {{item.remark}}
+                    {{item.remark}}
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
@@ -102,8 +103,10 @@ export default {
     },
     data () {
         return {
+            auths,
             moment,
             detail: '',
+            tempDetail: '',
             handleImgDownload,
             dialogVisible: false,
             action: interfaceUrl + 'tms/files/upload',
@@ -168,6 +171,10 @@ export default {
             })
         },
         onBack () {
+            if (JSON.stringify(this.tempDetail) === JSON.stringify(this.detail)) {
+                this.$router.go(-1)
+                return
+            }
             // 资料状态 1：待提交 2：已提交 4：审核驳回
             if (this.$route.query.docAfterStatus != 2) {
                 this.$confirm('如信息发生修改，退出后信息将不会保存', '确认退出', {
@@ -207,6 +214,7 @@ export default {
                     }
                 })
             })
+            this.tempDetail = JSON.parse(JSON.stringify(this.detail))
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus = '') {
@@ -294,7 +302,7 @@ export default {
         color: #ff0000;
         font-size: 16px;
     }
-    &-reason{
+    &-reason {
         background: #ff0000;
         color: #ffff;
         margin-left: 20px;

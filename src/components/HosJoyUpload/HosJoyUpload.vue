@@ -356,6 +356,7 @@ export default {
     flex-wrap: wrap;
     margin-right: 8px;
     margin-top: 13px;
+    position: relative;
     &-mask {
         position: absolute;
         display: flex;
@@ -392,7 +393,7 @@ export default {
     margin-top: 13px;
 }
 .pdfimg {
-    width: 130px;
+    width: 120px;
     height: 120px;
     text-align: center;
     display: flex;

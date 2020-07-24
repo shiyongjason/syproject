@@ -1,10 +1,12 @@
 <template>
     <div class="hosjoy-table" ref="hosTable">
         <!-- 筛选 -->
-        <div v-if="collapseShow">
+        <div v-if="collapseShow" ref="collapseShow">
             <div class="collapse" :class="collapse ? 'on' : ''">
                 <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse">
+                <!-- 以下代码能实现点击空白关闭筛选窗口，误删。 -->
+                <!-- <img src="../../../src/assets/images/typeIcon.png" alt="" @click="onHanderCollapseClick"> -->
             </div>
             <el-collapse-transition>
                 <div class="collapse-content" v-if="collapse">
@@ -14,7 +16,9 @@
             </el-collapse-transition>
         </div>
         <!-- 大表哥 :summary-method="getSummary" :show-summary="showSummary"-->
-        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height || `calc(100vh - ${selfHeight}px)`" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
+        <!-- :height=" height || `calc(100vh - ${selfHeight}px)`" -->
+        <!--  :max-height="computedHeight" -->
+        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -23,20 +27,21 @@
                 </template>
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="(item) in getColumn()">
+            <template v-for="(item, index) in getColumn()">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop' v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop + index' v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag" :fixed="isActionFixed?'right':false">
                 <template slot-scope="scope">
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
+            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>
         </el-table>
         <!-- 分页 -->
         <div class="pages">
@@ -90,6 +95,11 @@ export default {
             required: false,
             type: String,
             default: 'TABLE::'
+        },
+        prevLocalName: {
+            required: false,
+            type: String,
+            default: 'TABLE::'
         }
     },
     components: {
@@ -109,13 +119,28 @@ export default {
             },
             defaultLabel: [],
             selectedColumn: [],
-            columnRender: []
+            columnRender: [],
+            emptyTxtLeft: ''
         }
     },
     created () {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
+        // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
+        computedHeight () {
+            if (this.height) return 'unset'
+            if (this.data && this.data.length >= this.pageSize) {
+                // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
+                let h = document.documentElement.clientHeight - this.selfHeight
+                if (Math.floor(h) < 280) {
+                    h = 280// 最小高度
+                }
+                return `${Math.floor(h)}px` // fix windows浏览器max-height 不能有小数
+            } else {
+                return 'unset'
+            }
+        },
         dataLength () {
             if (this.data) {
                 return this.data.length
@@ -147,7 +172,7 @@ export default {
                     id = value.label
                 }
                 if (id) {
-                    return {
+                    return { // 只遍历了2级，如果展示的是三级，需要将第一个label设置空
                         id: id,
                         label: value.label,
                         children: value.children && value.children.filter(value => value.label !== '-' && !value.selfSettingHidden).map(value1 => {
@@ -160,8 +185,9 @@ export default {
                     }
                 } else {
                     // 第一行为空的情况,目前没有其他情况
+                    // 如果第一节为空 prop或者selfProp 必须存在 && label定义为空
                     return {
-                        id: value.prop,
+                        id: value.prop || value.selfProp, // selfProp 针对有render的prop companyTable里面TotalColumn使用
                         label: value.children[0].label
                     }
                 }
@@ -169,9 +195,26 @@ export default {
         },
         userNameLog () {
             return this.localName + this.$route.path
+        },
+        prevUserNameLog () {
+            return this.prevLocalName + this.$route.path
         }
     },
     methods: {
+        onHanderCollapseClick () {
+            this.collapse = !this.collapse
+            if (JSON.parse(localStorage.getItem(this.userNameLog))) {
+                this.defaultLabel = JSON.parse(localStorage.getItem(this.userNameLog))
+            }
+            document.addEventListener('click', this.onClickCollapse, false)
+        },
+        onClickCollapse (e) {
+            // .contains() 判断一个元素内是否包含另一个元素
+            if (this.$refs.collapseShow && !this.$refs.collapseShow.contains(e.target)) {
+                this.collapse = false
+                document.removeEventListener('click', this.onClickCollapse, false)
+            }
+        },
         /* getSummary () {
             // todo use: show-summary :summary=sums summary-merge='3'
             if (!this.showSummary && this.summary.length > 0) return null
@@ -228,7 +271,9 @@ export default {
                         value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
-                    value.isHidden = !(number > 0)
+                    if (value.isHidden) { // 二级列表判断是否需要显示 如果数组底下有勾选的 修改显示父树结构
+                        value.isHidden = !(number > 0)
+                    }
                 }
             })
             this.toggleTable = false
@@ -340,8 +385,11 @@ export default {
                 this.defaultLabel = []
             }
             arr.forEach(value => {
-                this.defaultLabel.push(value.id)
-                value.children && this.collectDefaultId(value.children, true)
+                if (value.children) {
+                    this.collectDefaultId(value.children, true)
+                } else {
+                    this.defaultLabel.push(value.id)
+                }
             })
         },
         checkHandler (item, currentItemChecked) {
@@ -392,6 +440,9 @@ export default {
         },
         switchLabel: {
             handler () {
+                if (this.prevLocalName) {
+                    localStorage.removeItem(this.prevUserNameLog)
+                }
                 const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
                 if (isLoggedIn && isLoggedIn.length > 0) {
                     this.defaultLabel = isLoggedIn
@@ -418,6 +469,12 @@ export default {
     mounted () {
         this.$nextTick(() => {
             this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
+            if (this.data.length == 0) {
+                let left = this.$refs.hosTable.getBoundingClientRect().left
+                let windowsWidth = document.documentElement.clientWidth
+                let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
+                this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)
+            }
         })
     }
 }
@@ -427,9 +484,13 @@ export default {
 .hosjoy-table {
     position: relative;
 }
-
+//fix element ui 表头错位（出现滚动条后错位）
+.hosjoy-table >>> .el-table--border th.gutter:last-of-type {
+    display: block !important;
+    width: 17px !important;
+}
 .hosjoy-in-table {
-    min-height: 300px;
+    // min-height: 300px;
     position: relative;
     z-index: 1;
 }
@@ -553,5 +614,17 @@ export default {
 }
 .hosjoy-table >>> .el-table th {
     background: #f5f7fa;
+}
+.hosjoy-table >>> .el-table__empty-block {
+    position: relative;
+}
+.hosjoy-table >>> .el-table__empty-block .el-table__empty-text {
+    position: absolute;
+    top: 0;
+}
+.hosjoy-table >>> .emptylayout {
+    position: fixed;
+    transform: translateX(-50%);
+    width: auto;
 }
 </style>

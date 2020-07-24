@@ -19,7 +19,7 @@ export default [
                 meta: {
                     title: '合资业务经营分析',
                     isMenu: true,
-                    icon: 'hosjoy_operation'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
@@ -154,7 +154,7 @@ export default [
                 meta: {
                     title: '资金数据分析',
                     isMenu: true,
-                    icon: 'hosjoy_operation'
+                    icon: ''
                 },
                 component: InterlayerContainer,
                 children: [
@@ -186,13 +186,25 @@ export default [
                         path: 'importData',
                         name: 'importData',
                         meta: {
-                            title: '历史数据导入',
-                            tagName: '历史数据导入',
+                            title: '台账线下数据导入',
+                            tagName: '台账线下数据导入',
                             parentName: '好智慧-资金数据',
                             isMenu: true,
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/importData.vue')
+                    },
+                    {
+                        path: 'importDataSplit',
+                        name: 'importDataSplit',
+                        meta: {
+                            title: '注资信息导入',
+                            tagName: '注资信息导入',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/importDataSplit.vue')
                     },
                     {
                         path: 'capitalEfficiency',
