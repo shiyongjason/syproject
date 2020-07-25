@@ -183,7 +183,7 @@ export const CRM_GOODWORK_WANSHAN = 109119 // 完善
 export const CRM_GOODWORK_BACKUP = 109120 // 打回补充
 export const CRM_GOODWORK_APPROVED = 109121 // 材料审核通过
 export const CRM_GOODWORK_FINAL = 109122 // 终审通过
-
+export const CRM_GOODWORK_IMPORT = 109123
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
@@ -195,6 +195,8 @@ export const CRM_ADD_DETAIL = 109303 // 新增
 export const CRM_EDIT_DETAIL = 109304 // 修改
 export const CRM_CREDIT_DETAIL = 109305 // 查看信用
 export const CRM_CREDIT_SET = 109306 //  设置信用
+export const CRM_MEATE_SAVE = 109307 //  好橙工资料保存
+export const CRM_MEATE_SUBMIT = 109308 //  好橙工资料保存
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
