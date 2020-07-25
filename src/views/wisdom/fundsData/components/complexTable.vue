@@ -124,31 +124,31 @@ export default {
             handler (val) {
                 if (val === '0') {
                     this.prevLocalName = 'TotalColumnTable::'
-                    this.localName = 'TotalColumnTable::V2.3.2'
+                    this.localName = 'TotalColumnTable::V2.3.2_1'
                     this.$set(this, 'column', this.TotalColumn)
                     this.collapseShow = true
                 }
                 if (val === '1') {
                     this.prevLocalName = 'FlowToBorrowTable::'
-                    this.localName = 'FlowToBorrowTable::V2.3.2'
+                    this.localName = 'FlowToBorrowTable::V2.3.2_1'
                     this.$set(this, 'column', this.FlowToBorrow)
                     this.collapseShow = true
                 }
                 if (val === '2') {
                     this.prevLocalName = 'ExposureTable::'
-                    this.localName = 'ExposureTable::V2.3.2'
+                    this.localName = 'ExposureTable::V2.3.2_1'
                     this.$set(this, 'column', this.Exposure)
                     this.collapseShow = true
                 }
                 if (val === '3') {
                     this.prevLocalName = 'PointsCreditTable::'
-                    this.localName = 'PointsCreditTable::V2.3.2'
+                    this.localName = 'PointsCreditTable::V2.3.2_1'
                     this.$set(this, 'column', this.PointsCredit)
                     this.collapseShow = true
                 }
                 if (val === '4') {
                     this.prevLocalName = 'ReimbursementDetailTable::'
-                    this.localName = 'ReimbursementDetailTable::V2.3.2'
+                    this.localName = 'ReimbursementDetailTable::V2.3.2_1'
                     this.$set(this, 'column', this.ReimbursementDetail)
                     this.collapseShow = false
                 }
@@ -248,7 +248,7 @@ export default {
                             prop: 'hxyLiquidityLoansAmount',
                             children: [{
                                 prop: 'hxyLiquidityLoansAmount',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -260,7 +260,7 @@ export default {
                             prop: 'hxyLiquidityLoansPrincipalPaid',
                             children: [{
                                 prop: 'hxyLiquidityLoansPrincipalPaid',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -272,7 +272,7 @@ export default {
                             prop: 'hxyLiquidityLoansOwedPrincipal',
                             children: [{
                                 prop: 'hxyLiquidityLoansOwedPrincipal',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -289,7 +289,7 @@ export default {
                             prop: 'hxyExposureAmount',
                             children: [{
                                 prop: 'hxyExposureAmount',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -301,7 +301,7 @@ export default {
                             prop: 'hxyExposurePrincipalPaid',
                             children: [{
                                 prop: 'hxyExposurePrincipalPaid',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -313,7 +313,7 @@ export default {
                             prop: 'hxyExposureOwedPrincipal',
                             children: [{
                                 prop: 'hxyExposureOwedPrincipal',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -332,7 +332,7 @@ export default {
                                 prop: 'hxySeparateCreditAmount',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }]
                         },
@@ -344,7 +344,7 @@ export default {
                                 prop: 'hxySeparateCreditPrincipalPaid',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }]
                         },
@@ -356,7 +356,7 @@ export default {
                                 prop: 'hxySeparateCreditOwedPrincipal',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }]
                         }
@@ -373,7 +373,7 @@ export default {
                                 prop: 'supplyChainLiquidityLoansOwedPrincipal',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }]
                         }
@@ -390,7 +390,7 @@ export default {
                                 prop: 'hcgOwedPrincipal',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }]
                         },
@@ -402,7 +402,7 @@ export default {
                                 prop: 'hcgRemainingExposure',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }]
                         }
@@ -417,7 +417,7 @@ export default {
                             prop: 'liquidityLoansOwedPrincipal',
                             children: [{
                                 prop: 'liquidityLoansOwedPrincipal',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -429,7 +429,7 @@ export default {
                             prop: 'remainingExposure',
                             children: [{
                                 prop: 'remainingExposure',
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
                                 label: '-'
@@ -451,7 +451,7 @@ export default {
                                 prop: 'balanceTotal',
                                 minWidth: '120',
                                 showOverflowTooltip: true,
-                                displayAs: 'fundMoney',
+                                displayAs: 'fundMoneyHaveSpot',
                                 label: '-'
                             }
                         ]
@@ -825,7 +825,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_interestPaid',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_interestPaid)}</span>
                                     },
                                     label: '-',
                                     minWidth: '120'
@@ -841,7 +841,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_interestOwe',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_interestOwe)}</span>
                                     },
                                     label: '-',
                                     minWidth: '100'
@@ -858,7 +858,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_graceInterestAmount',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
                                     },
                                     label: '-',
                                     minWidth: '150'
@@ -874,7 +874,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_graceInterestPaid',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestPaid)}</span>
                                     },
                                     label: '-',
                                     minWidth: '150'
@@ -890,7 +890,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_graceInterestOwe',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestOwe)}</span>
                                     },
                                     label: '-',
                                     minWidth: '120'
@@ -928,7 +928,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_overDueInterestAmount',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
                                     },
                                     label: '-',
                                     minWidth: '100'
@@ -944,7 +944,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_overDueInterestPaid',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestPaid)}</span>
                                     },
                                     label: '-',
                                     minWidth: '120'
@@ -960,7 +960,7 @@ export default {
                                 {
                                     prop: 'paymentStatic_overDueInterestOwe',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestOwe)}</span>
                                     },
                                     label: '-',
                                     minWidth: '100'
@@ -1068,7 +1068,7 @@ export default {
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                                     <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                                    <br/>剩余本金：{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalOwe)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                             <i class='el-icon-edit pointer' onClick={() => {
@@ -1080,7 +1080,7 @@ export default {
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                                     <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                                    <br/>剩余本金：{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalOwe)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                         </div>
@@ -1144,7 +1144,7 @@ export default {
                                     label: '-',
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.loan_invoiceAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.loan_invoiceAmount)}</span>
                                     }
                                 }
                             ]
@@ -1203,12 +1203,12 @@ export default {
                                     minWidth: '150',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
-                                        return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i
+                                        return render ? <span>{filters.fundMoneyHaveSpot(scope.row.loan_loanAmount)}<i
                                             class='el-icon-edit pointer' onClick={() => {
                                                 this.getLoan(scope.row)
                                                 this.loanData.title = `${this.product}-分授信借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                                 this.pointsCreditBillingDialogVisible = true
-                                            }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
+                                            }}></i></span> : <span>{filters.fundMoneyHaveSpot(scope.row.loan_loanAmount)}</span>
                                     }
                                 }
                             ]
@@ -1332,7 +1332,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -1347,7 +1347,7 @@ export default {
                                     label: '-',
                                     showOverflowTooltip: true,
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalOwe)}</span>
                                     },
                                     minWidth: '100'
                                 }
@@ -1391,7 +1391,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_normalInterestPranayamaTotal : scope.row.paymentStatic_normalInterestPranayamaTotal})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_interestAmount)}{scope.row.paymentStatic_normalInterestPranayamaTotal ? `(${scope.row.paymentStatic_normalInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_normalInterestPranayamaTotal : scope.row.paymentStatic_normalInterestPranayamaTotal})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1420,7 +1420,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_interestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1435,7 +1435,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_interestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_interestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1451,7 +1451,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1466,7 +1466,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1482,7 +1482,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1499,7 +1499,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1514,7 +1514,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1530,7 +1530,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1584,7 +1584,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_capitalAmount)}</span>
                                     }
                                 }
                             ]
@@ -1600,7 +1600,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -1616,7 +1616,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -1634,7 +1634,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_interestAmount)}{scope.row.planList_0_normalInterestPranayama ? `(${scope.row.planList_0_normalInterestPranayama > 0 ? '+' + scope.row.planList_0_normalInterestPranayama : scope.row.planList_0_normalInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1650,7 +1650,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_interestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_interestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1666,7 +1666,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_interestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_interestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1683,7 +1683,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1700,7 +1700,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1718,7 +1718,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1754,7 +1754,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1772,7 +1772,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1790,7 +1790,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1842,7 +1842,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_capitalAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_capitalAmount)}</span>
                                     }
                                 }
                             ]
@@ -1860,7 +1860,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -1878,7 +1878,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -1896,7 +1896,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_interestAmount)}{scope.row.planList_1_normalInterestPranayama ? `(${scope.row.planList_1_normalInterestPranayama > 0 ? '+' + scope.row.planList_1_normalInterestPranayama : scope.row.planList_1_normalInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1914,7 +1914,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_interestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_interestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1932,7 +1932,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_interestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_interestOwe)}</span>
                                     }
                                 }
                             ]
@@ -1950,7 +1950,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -1968,7 +1968,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -1986,7 +1986,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2023,7 +2023,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2041,7 +2041,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -2059,7 +2059,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2111,7 +2111,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_capitalAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_capitalAmount)}</span>
                                     }
                                 }
                             ]
@@ -2129,7 +2129,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -2147,7 +2147,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -2166,7 +2166,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_interestAmount)}{scope.row.planList_2_normalInterestPranayama ? `(${scope.row.planList_2_normalInterestPranayama > 0 ? '+' + scope.row.planList_2_normalInterestPranayama : scope.row.planList_2_normalInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_interestAmount)}{scope.row.planList_2_normalInterestPranayama ? `(${scope.row.planList_2_normalInterestPranayama > 0 ? '+' + scope.row.planList_2_normalInterestPranayama : scope.row.planList_2_normalInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2184,7 +2184,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_interestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_interestPaid)}</span>
                                     }
                                 }
                             ]
@@ -2201,7 +2201,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_interestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_interestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2219,7 +2219,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2237,7 +2237,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -2255,7 +2255,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2292,7 +2292,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2310,7 +2310,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -2328,7 +2328,7 @@ export default {
                                     showOverflowTooltip: true,
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2434,7 +2434,7 @@ export default {
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                                     <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                                    <br/>剩余敞口：{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalOwe)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                             <i class='el-icon-edit pointer' onClick={() => {
@@ -2446,7 +2446,7 @@ export default {
                                                 <div
                                                     slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
                                                     <br/>借款单位：{scope.row.account_loanCompanyName}
-                                                    <br/>剩余敞口：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                                    <br/>剩余敞口：{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalOwe)}</div>
                                                 <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
                                             </el-tooltip>
                                         </div>
@@ -2518,7 +2518,7 @@ export default {
                                     showOverflowTooltip: true,
                                     label: '-',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.loan_invoiceAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.loan_invoiceAmount)}</span>
                                     },
                                     minWidth: '120'
                                 }
@@ -2584,7 +2584,7 @@ export default {
                                     prop: 'loan_depositPay',
                                     showOverflowTooltip: true,
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.loan_depositPay)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.loan_depositPay)}</span>
                                     },
                                     label: '-',
                                     minWidth: '120'
@@ -2603,12 +2603,12 @@ export default {
                                     minWidth: '120',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                        return render ? <span>{filters.fundMoney(scope.row.loan_loanAmount)}<i
+                                        return render ? <span>{filters.fundMoneyHaveSpot(scope.row.loan_loanAmount)}<i
                                             class='el-icon-edit pointer' onClick={() => {
                                                 this.getLoan(scope.row)
                                                 this.loanData.title = `${this.product}-敞口借款信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
                                                 this.billingDialogVisible = true
-                                            }}></i></span> : <span>{filters.fundMoney(scope.row.loan_loanAmount)}</span>
+                                            }}></i></span> : <span>{filters.fundMoneyHaveSpot(scope.row.loan_loanAmount)}</span>
                                     }
                                 }
                             ]
@@ -2720,7 +2720,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -2737,7 +2737,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -2755,7 +2755,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestAmount)}{scope.row.paymentStatic_graceInterestPranayamaTotal ? `(${scope.row.paymentStatic_graceInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_graceInterestPranayamaTotal : scope.row.paymentStatic_graceInterestPranayamaTotal})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2772,7 +2772,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -2789,7 +2789,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2807,7 +2807,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestAmount)}{scope.row.paymentStatic_overDueInterestPranayamaTotal ? `(${scope.row.paymentStatic_overDueInterestPranayamaTotal > 0 ? '+' + scope.row.paymentStatic_overDueInterestPranayamaTotal : scope.row.paymentStatic_overDueInterestPranayamaTotal})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2824,7 +2824,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -2841,7 +2841,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.paymentStatic_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.paymentStatic_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -2896,7 +2896,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -2931,7 +2931,7 @@ export default {
                                     label: '-',
                                     minWidth: '100',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_capitalAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_capitalAmount)}</span>
                                     }
                                 }
                             ]
@@ -2948,7 +2948,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -2966,7 +2966,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_graceInterestAmount)}{scope.row.planList_0_graceInterestPranayama ? `(${scope.row.planList_0_graceInterestPranayama > 0 ? '+' + scope.row.planList_0_graceInterestPranayama : scope.row.planList_0_graceInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -2983,7 +2983,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -3000,7 +3000,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -3018,7 +3018,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_overDueInterestAmount)}{scope.row.planList_0_overDueInterestPranayama ? `(${scope.row.planList_0_overDueInterestPranayama > 0 ? '+' + scope.row.planList_0_overDueInterestPranayama : scope.row.planList_0_overDueInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -3035,7 +3035,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -3053,7 +3053,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_0_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_0_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -3105,7 +3105,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_capitalAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_capitalAmount)}</span>
                                     }
                                 }
                             ]
@@ -3123,7 +3123,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -3140,7 +3140,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -3158,7 +3158,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_graceInterestAmount)}{scope.row.planList_1_graceInterestPranayama ? `(${scope.row.planList_1_graceInterestPranayama > 0 ? '+' + scope.row.planList_1_graceInterestPranayama : scope.row.planList_1_graceInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -3175,7 +3175,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -3192,7 +3192,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -3227,7 +3227,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_overDueInterestAmount)}{scope.row.planList_1_overDueInterestPranayama ? `(${scope.row.planList_1_overDueInterestPranayama > 0 ? '+' + scope.row.planList_1_overDueInterestPranayama : scope.row.planList_1_overDueInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -3244,7 +3244,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -3260,7 +3260,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_1_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_1_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -3309,7 +3309,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_capitalAmount)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_capitalAmount)}</span>
                                     }
                                 }
                             ]
@@ -3326,7 +3326,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_capitalPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_capitalPaid)}</span>
                                     }
                                 }
                             ]
@@ -3343,7 +3343,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_capitalOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_capitalOwe)}</span>
                                     }
                                 }
                             ]
@@ -3379,7 +3379,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_graceInterestAmount)}{scope.row.planList_2_graceInterestPranayama ? `(${scope.row.planList_2_graceInterestPranayama > 0 ? '+' + scope.row.planList_2_graceInterestPranayama : scope.row.planList_2_graceInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -3396,7 +3396,7 @@ export default {
                                     label: '-',
                                     minWidth: '150',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_graceInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -3413,7 +3413,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_graceInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_graceInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -3431,7 +3431,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_overDueInterestAmount)}{scope.row.planList_2_overDueInterestPranayama ? `(${scope.row.planList_2_overDueInterestPranayama > 0 ? '+' + scope.row.planList_2_overDueInterestPranayama : scope.row.planList_2_overDueInterestPranayama})` : ''}</span>
                                     }
                                 }
                             ]
@@ -3448,7 +3448,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestPaid)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_overDueInterestPaid)}</span>
                                     }
                                 }
                             ]
@@ -3465,7 +3465,7 @@ export default {
                                     label: '-',
                                     minWidth: '120',
                                     render: (h, scope) => {
-                                        return <span>{filters.fundMoney(scope.row.planList_2_overDueInterestOwe)}</span>
+                                        return <span>{filters.fundMoneyHaveSpot(scope.row.planList_2_overDueInterestOwe)}</span>
                                     }
                                 }
                             ]
@@ -3474,73 +3474,98 @@ export default {
                 },
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '手动调息',
+                    label: '',
                     minWidth: '150',
                     prop: 'paymentStatic_normalInterestPranayamaTotal',
                     children: [
                         {
                             prop: 'paymentStatic_normalInterestPranayamaTotal',
                             showOverflowTooltip: true,
-                            label: '-',
+                            label: '手动调息',
                             minWidth: '150',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
-                                        class='el-icon-edit pointer' onClick={async () => {
-                                            await this.getGrantPaymetPlanData(scope.row, true)
-                                            this.regulatingBreathingDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
-                            }
+                            children: [
+                                {
+                                    prop: 'paymentStatic_normalInterestPranayamaTotal',
+                                    showOverflowTooltip: true,
+                                    label: '-',
+                                    minWidth: '150',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={async () => {
+                                                    await this.getGrantPaymetPlanData(scope.row, true)
+                                                    this.regulatingBreathingDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
                     label: '',
                     minWidth: '200',
+                    prop: 'account_standingBookArchiveNo',
                     children: [
                         {
                             prop: 'account_standingBookArchiveNo',
                             showOverflowTooltip: true,
-                            label: '-',
+                            label: '台账档案编号',
                             minWidth: '200',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
-                                        class='el-icon-edit pointer' onClick={() => {
-                                            this.getAccount(scope.row)
-                                            this.accountData.title = `${this.product}-敞口基础信息维护`
-                                            this.fileinfoDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
-                            }
+                            children: [
+                                {
+                                    prop: 'account_standingBookArchiveNo',
+                                    showOverflowTooltip: true,
+                                    label: '台账档案编号',
+                                    minWidth: '200',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row)
+                                                    this.accountData.title = `${this.product}-敞口基础信息维护`
+                                                    this.fileinfoDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{scope.row.account_standingBookArchiveNo ? scope.row.account_standingBookArchiveNo.substring(0, 6) + '...' : '-'}</span>
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_EXPOSURE_SHOW_LINE),
-                    label: '备注',
+                    label: '',
                     minWidth: '100',
                     prop: 'account_remark',
                     children: [
                         {
                             prop: 'account_remark',
                             showOverflowTooltip: true,
-                            label: '-',
+                            label: '备注',
                             minWidth: '100',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                        class='el-icon-edit pointer' onClick={() => {
-                                            this.getAccount(scope.row)
-                                            this.accountData.title = `${this.product}-敞口备注信息维护`
-                                            this.remarkDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
-                            }
+                            children: [
+                                {
+                                    prop: 'account_remark',
+                                    showOverflowTooltip: true,
+                                    label: '备注',
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_EXPOSURE_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row)
+                                                    this.accountData.title = `${this.product}-敞口备注信息维护`
+                                                    this.remarkDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -3647,7 +3672,7 @@ export default {
                         {
                             prop: 'paidAmount',
                             render: (h, scope) => {
-                                return <span>{filters.fundMoney(scope.row.paidAmount)}</span>
+                                return <span>{filters.fundMoneyHaveSpot(scope.row.paidAmount)}</span>
                             },
                             label: '-'
                         }
