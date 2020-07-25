@@ -347,20 +347,22 @@ export default {
             this.$emit('backEvent')
         },
         onReststatus (val) {
-            console.log(val)
-            if (val == 5) {
-                this.statusType = this.newstatusType
-            } else if (val == 6 || val == 7 || val == 8) {
-                this.statusType = this.newstatusType.slice(0, val - 1)
-            } else if (val == 10 || val == 3) {
-                this.statusType = this.newstatusType.slice(0, 1)
-            } else if (val == 11) {
-                this.statusType = this.newstatusType.slice(0, 4)
-            } else if (val == 12) {
-                this.statusType = this.newstatusType.slice(0, 2)
-            } else {
-                this.statusType = this.newstatusType.slice(0, val - 1)
-            }
+            // 代码优化 根据不同合作状态去匹配 真正的num值截取当前合作状态前面的状态数组
+            const newSatusArr = this.newstatusType.filter(item => item.key == val)
+            this.statusType = this.newstatusType.slice(0, newSatusArr[0].num)
+            // if (val == 5) {
+            //     this.statusType = this.newstatusType
+            // } else if (val == 6 || val == 7 || val == 8) {
+            //     this.statusType = this.newstatusType.slice(0, val - 1)
+            // } else if (val == 10 || val == 3) {
+            //     this.statusType = this.newstatusType.slice(0, 1)
+            // } else if (val == 11) {
+            //     this.statusType = this.newstatusType.slice(0, 4)
+            // } else if (val == 12) {
+            //     this.statusType = this.newstatusType.slice(0, 2)
+            // } else {
+            //     this.statusType = this.newstatusType.slice(0, val - 1)
+            // }
             this.statusForm = { ...this.copyStatusForm }
             this.$nextTick(() => {
                 this.$refs['statusForm'].clearValidate()
