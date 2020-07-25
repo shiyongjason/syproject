@@ -287,10 +287,12 @@ export default {
         async backPlat (val, dis) {
             if (dis === 'D') {
                 this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.queryParams.regionCodeName = val.value.deptName ? val.value.deptName : ''
                 this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.queryParams.subsectionCodeName = val.value.deptName ? val.value.deptName : ''
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
@@ -327,13 +329,25 @@ export default {
             }
             if (!this.queryParams.regionCode) {
                 this.selectAuth.regionObj = { ...obj }
+            } else {
+                this.selectAuth.regionObj.selectCode = this.queryParams.regionCode
+                this.selectAuth.regionObj.selectName = this.queryParams.regionCodeName
+                this.findAuthList({ deptType: 'F', pkDeptDoc: this.selectAuth.regionObj.selectCode })
+                this.linkage('D')
             }
             if (!this.queryParams.subsectionCode) {
                 this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
+            } else {
+                this.selectAuth.branchObj.selectCode = this.queryParams.subsectionCode
+                this.selectAuth.branchObj.selectName = this.queryParams.subsectionCodeName
+                this.findPlatformslist({ subsectionCode: this.selectAuth.branchObj.selectCode })
+                this.linkage('F')
             }
             if (!this.queryParams.loanCompanyCode) {
                 this.selectAuth.platformObj = { ...obj }
+            } else {
+                this.selectAuth.platformObj.selectCode = this.queryParams.loanCompanyCode
+                this.selectAuth.platformObj.selectCode = this.queryParams.loanCompanyName
             }
         },
         isSuccess (response) {
@@ -396,7 +410,7 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onReset () {
+        async onReset () {
             let obj = {
                 selectCode: '',
                 selectName: ''
@@ -418,9 +432,12 @@ export default {
             this.$set(this.queryParams, 'repaymentType', '')
             this.$set(this.queryParams, 'startDate', '')
             this.$set(this.queryParams, 'endDate', '')
+            this.$set(this.queryParams, 'repaymentStatus', '')
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
+            this.accountType = '0'
+            await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
         getList (val) {
