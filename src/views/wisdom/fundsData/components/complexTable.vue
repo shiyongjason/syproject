@@ -124,31 +124,31 @@ export default {
             handler (val) {
                 if (val === '0') {
                     this.prevLocalName = 'TotalColumnTable::'
-                    this.localName = 'TotalColumnTable::V2.3.2_1'
+                    this.localName = 'TotalColumnTable::V2.3.2_2'
                     this.$set(this, 'column', this.TotalColumn)
                     this.collapseShow = true
                 }
                 if (val === '1') {
                     this.prevLocalName = 'FlowToBorrowTable::'
-                    this.localName = 'FlowToBorrowTable::V2.3.2_1'
+                    this.localName = 'FlowToBorrowTable::V2.3.2_2'
                     this.$set(this, 'column', this.FlowToBorrow)
                     this.collapseShow = true
                 }
                 if (val === '2') {
                     this.prevLocalName = 'ExposureTable::'
-                    this.localName = 'ExposureTable::V2.3.2_1'
+                    this.localName = 'ExposureTable::V2.3.2_2'
                     this.$set(this, 'column', this.Exposure)
                     this.collapseShow = true
                 }
                 if (val === '3') {
                     this.prevLocalName = 'PointsCreditTable::'
-                    this.localName = 'PointsCreditTable::V2.3.2_1'
+                    this.localName = 'PointsCreditTable::V2.3.2_2'
                     this.$set(this, 'column', this.PointsCredit)
                     this.collapseShow = true
                 }
                 if (val === '4') {
                     this.prevLocalName = 'ReimbursementDetailTable::'
-                    this.localName = 'ReimbursementDetailTable::V2.3.2_1'
+                    this.localName = 'ReimbursementDetailTable::V2.3.2_2'
                     this.$set(this, 'column', this.ReimbursementDetail)
                     this.collapseShow = false
                 }
@@ -970,27 +970,36 @@ export default {
                     ]
                 },
                 {
-                    label: '手动调息',
+                    label: '',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     minWidth: '100',
+                    prop: 'paymentStatic_normalInterestPranayamaTotal',
                     children: [
                         {
+                            label: '手动调息',
+                            selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
+                            minWidth: '100',
                             prop: 'paymentStatic_normalInterestPranayamaTotal',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
-                                        class='el-icon-edit pointer' onClick={async () => {
-                                            await this.getRespAccountRepaymentPlanData(scope.row)
-                                            this.respAccountRepaymentPlanData[0].otherTitle = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                            this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
-                                            this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
-                                            this.regulatingBreathingDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
-                            },
-                            label: '-',
-                            minWidth: '100'
+                            children: [
+                                {
+                                    prop: 'paymentStatic_normalInterestPranayamaTotal',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={async () => {
+                                                    await this.getRespAccountRepaymentPlanData(scope.row)
+                                                    this.respAccountRepaymentPlanData[0].otherTitle = `${this.product}-手动调息（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                                    this.respAccountRepaymentPlanData[0].accountId = scope.row.account_id
+                                                    this.regulatingBreathingDialogData = JSON.parse(JSON.stringify(this.respAccountRepaymentPlanData))
+                                                    this.regulatingBreathingDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
+                                    },
+                                    label: '-',
+                                    minWidth: '100'
+                                }
+                            ]
                         }
                     ]
                 },
@@ -1356,10 +1365,10 @@ export default {
                         {
                             label: '应收利息（正常+宽限）',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                            prop: 'paymentStatic_interestAmount',
+                            prop: 'paymentStatic_interestAmount_total', // 自己算的
                             children: [
                                 {
-                                    prop: 'paymentStatic_interestAmount',
+                                    prop: 'paymentStatic_interestAmount_total',
                                     label: '-',
                                     showOverflowTooltip: true,
                                     minWidth: '150',
@@ -1367,7 +1376,7 @@ export default {
                                         return <span>
                                             {
                                                 filters.fundMoneyHaveSpot(
-                                                    MathJS.evaluate(`${scope.row.paymentStatic_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                                    MathJS.evaluate(`${scope.row.paymentStatic_interestAmount_total} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
                                                 )}
                                             {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                                 ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
@@ -2337,24 +2346,32 @@ export default {
                 },
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '手动调息',
+                    label: '',
                     minWidth: '100',
                     children: [
                         {
                             prop: 'paymentStatic_normalInterestPranayamaTotal',
-                            label: '-',
+                            label: '手动调息',
                             showOverflowTooltip: true,
                             minWidth: '100',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
-                                        class='el-icon-edit pointer' onClick={async () => {
-                                            await this.getGrantPaymetPlanData(scope.row)
-                                            this.regulatingBreathingDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
-                            }
+                            children: [
+                                {
+                                    prop: 'paymentStatic_normalInterestPranayamaTotal',
+                                    label: '-',
+                                    showOverflowTooltip: true,
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={async () => {
+                                                    await this.getGrantPaymetPlanData(scope.row)
+                                                    this.regulatingBreathingDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{(scope.row.paymentStatic_normalInterestPranayamaTotal || scope.row.paymentStatic_graceInterestPranayamaTotal || scope.row.paymentStatic_overDueInterestPranayamaTotal) ? '已调息' : '-'}</span>
+                                    }
+                                }
+                            ]
                         }
                     ]
                 },
