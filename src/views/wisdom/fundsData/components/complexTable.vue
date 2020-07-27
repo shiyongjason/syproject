@@ -1033,25 +1033,33 @@ export default {
                     ]
                 },
                 {
-                    label: '备注',
+                    label: '',
                     minWidth: '120',
+                    prop: 'account_remark',
                     selfSettingHidden: this.hosAuthCheck(WISDOM_FLOWTOBORROW_SHOW_LINE),
                     children: [
                         {
                             prop: 'account_remark',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
-                                        class='el-icon-edit pointer' onClick={() => {
-                                            this.getAccount(scope.row)
-                                            this.accountData.title = `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                            this.remarkDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
-                            },
-                            label: '-',
-                            minWidth: '120'
+                            label: '备注',
+                            minWidth: '120',
+                            children: [
+                                {
+                                    prop: 'account_remark',
+                                    label: '备注',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row)
+                                                    this.accountData.title = `${this.product}-流贷备注信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                                    this.remarkDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? scope.row.account_remark.substring(0, 6) + '...' : '-'}</span>
+                                    },
+                                    minWidth: '120'
+                                }
+                            ]
                         }
                     ]
                 }
@@ -1376,7 +1384,7 @@ export default {
                                         return <span>
                                             {
                                                 filters.fundMoneyHaveSpot(
-                                                    MathJS.evaluate(`${scope.row.paymentStatic_interestAmount_total} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                                    MathJS.evaluate(`${scope.row.paymentStatic_total_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
                                                 )}
                                             {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                                 ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
