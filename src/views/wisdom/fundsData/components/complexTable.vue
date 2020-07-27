@@ -461,40 +461,41 @@ export default {
             // 流贷
             FlowToBorrow: [
                 {
-                    prop: '台账编号',
+                    prop: 'account_standingBookNo',
                     fixed: true,
                     minWidth: '100',
+                    label: '',
                     children: [
                         {
-                            label: '台账编号',
+                            prop: 'account_standingBookNo',
                             minWidth: '100',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
-                                return render ? <div>
-                                    <el-tooltip effect="light" placement="top">
-                                        <div
-                                            slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                            <br/>借款单位：{scope.row.account_loanCompanyName}
-                                            <br/>欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                        <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                    </el-tooltip>
-                                    <i class='el-icon-edit pointer' onClick={() => {
-                                        this.getAccount(scope.row)
-                                        this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
-                                        this.misDialogVisible = true
-                                    }}></i></div> : <el-tooltip effect="light" placement="top">
-                                    <div
-                                        slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
-                                        <br/>借款单位：{scope.row.account_loanCompanyName}
-                                        <br/>欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
-                                    <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
-                                </el-tooltip>
-                            },
                             children: [
                                 {
                                     prop: 'account_standingBookNo',
                                     label: '-',
-                                    minWidth: '100'
+                                    minWidth: '100',
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
+                                        return render ? <div>
+                                            <el-tooltip effect="light" placement="top">
+                                                <div
+                                                    slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                                    <br/>借款单位：{scope.row.account_loanCompanyName}
+                                                    <br/>欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                                <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                            </el-tooltip>
+                                            <i class='el-icon-edit pointer' onClick={() => {
+                                                this.getAccount(scope.row)
+                                                this.accountData.title = `${this.product}-流贷基础信息维护（${scope.row.account_standingBookNo} ${scope.row.account_loanCompanyName}）`
+                                                this.misDialogVisible = true
+                                            }}></i></div> : <el-tooltip effect="light" placement="top">
+                                            <div
+                                                slot="content">台账编号：{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}
+                                                <br/>借款单位：{scope.row.account_loanCompanyName}
+                                                <br/>欠收本金：{filters.fundMoney(scope.row.paymentStatic_capitalOwe)}</div>
+                                            <span>{scope.row.account_standingBookNo ? scope.row.account_standingBookNo : '-'}</span>
+                                        </el-tooltip>
+                                    }
                                 }
                             ]
                         }
@@ -2355,6 +2356,7 @@ export default {
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '',
+                    prop: 'paymentStatic_normalInterestPranayamaTotal',
                     minWidth: '100',
                     children: [
                         {
@@ -2417,25 +2419,34 @@ export default {
                 },
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '备注',
+                    label: '',
+                    prop: 'account_remark',
                     minWidth: '100',
                     children: [
                         {
                             prop: 'account_remark',
-                            label: '-',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                        class='el-icon-edit pointer' onClick={() => {
-                                            this.getAccount(scope.row)
-                                            this.accountData.title = `${this.product}-分授信备注信息维护`
-                                            this.remarkDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
-                            },
+                            label: '备注',
                             showOverflowTooltip: true,
-                            minWidth: '100'
+                            minWidth: '100',
+                            children: [
+                                {
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row)
+                                                    this.accountData.title = `${this.product}-分授信备注信息维护`
+                                                    this.remarkDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    },
+                                    prop: 'account_remark',
+                                    label: '备注-',
+                                    showOverflowTooltip: true,
+                                    minWidth: '100'
+                                }
+                            ]
                         }
                     ]
                 }
