@@ -2355,6 +2355,7 @@ export default {
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
                     label: '',
+                    prop: 'paymentStatic_normalInterestPranayamaTotal',
                     minWidth: '100',
                     children: [
                         {
@@ -2417,25 +2418,34 @@ export default {
                 },
                 {
                     selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                    label: '备注',
+                    label: '',
+                    prop: 'account_remark',
                     minWidth: '100',
                     children: [
                         {
                             prop: 'account_remark',
-                            label: '-',
-                            render: (h, scope) => {
-                                let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
-                                return render
-                                    ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
-                                        class='el-icon-edit pointer' onClick={() => {
-                                            this.getAccount(scope.row)
-                                            this.accountData.title = `${this.product}-分授信备注信息维护`
-                                            this.remarkDialogVisible = true
-                                        }}></i></span>
-                                    : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
-                            },
+                            label: '备注',
                             showOverflowTooltip: true,
-                            minWidth: '100'
+                            minWidth: '100',
+                            children: [
+                                {
+                                    render: (h, scope) => {
+                                        let render = this.hosAuthCheck(WISDOM_POINTSCREDIT_FUNDSDATA_UPDATA)
+                                        return render
+                                            ? <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}<i
+                                                class='el-icon-edit pointer' onClick={() => {
+                                                    this.getAccount(scope.row)
+                                                    this.accountData.title = `${this.product}-分授信备注信息维护`
+                                                    this.remarkDialogVisible = true
+                                                }}></i></span>
+                                            : <span>{scope.row.account_remark ? `${scope.row.account_remark.substring(0, 6)}...` : '-'}</span>
+                                    },
+                                    prop: 'account_remark',
+                                    label: '备注-',
+                                    showOverflowTooltip: true,
+                                    minWidth: '100'
+                                }
+                            ]
                         }
                     ]
                 }
