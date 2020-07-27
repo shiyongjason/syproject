@@ -1376,7 +1376,7 @@ export default {
                             prop: 'paymentStatic_interestAmount_total', // 自己算的
                             children: [
                                 {
-                                    prop: 'paymentStatic_interestAmount_total',
+                                    prop: 'paymentStatic_interestTotalAmount',
                                     label: '-',
                                     showOverflowTooltip: true,
                                     minWidth: '150',
@@ -1384,7 +1384,7 @@ export default {
                                         return <span>
                                             {
                                                 filters.fundMoneyHaveSpot(
-                                                    MathJS.evaluate(`${scope.row.paymentStatic_total_interestAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
+                                                    MathJS.evaluate(`${scope.row.paymentStatic_interestTotalAmount} + ${scope.row.paymentStatic_graceInterestAmount}`).toNumber()
                                                 )}
                                             {scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal
                                                 ? `(${(scope.row.paymentStatic_normalInterestPranayamaTotal + scope.row.paymentStatic_graceInterestPranayamaTotal) > 0
