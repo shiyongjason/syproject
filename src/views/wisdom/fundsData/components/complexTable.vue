@@ -467,12 +467,13 @@ export default {
                     label: '',
                     children: [
                         {
+                            label: '台账编号',
                             prop: 'account_standingBookNo',
                             minWidth: '100',
                             children: [
                                 {
                                     prop: 'account_standingBookNo',
-                                    label: '-',
+                                    label: '台账编号',
                                     minWidth: '100',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
