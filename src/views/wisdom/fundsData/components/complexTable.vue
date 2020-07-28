@@ -44,6 +44,13 @@
         <repaymentDialog ref="repayment" :detailData='rowData' v-if='rowData&&repaymentDialogVisible'
                          :dialogVisible='repaymentDialogVisible' @onClose="repaymentDialogVisible=false"
                          @reload='getList' @repaymentTypeChange="onRepaymentTypeChange" @stepOver="onStepOver"/>
+        <el-dialog
+            title="供货商名称"
+            :visible.sync="tipsDialogVisible"
+            :close-on-click-modal='false'
+            width="50%">
+            <span class="max-height">{{tipsDialogVisibleContent}}</span>
+        </el-dialog>
     </div>
 </template>
 
@@ -164,6 +171,8 @@ export default {
     },
     data: function () {
         return {
+            tipsDialogVisible: false,
+            tipsDialogVisibleContent: '',
             localName: '',
             prevLocalName: '',
             toggleTable: false,
@@ -572,14 +581,19 @@ export default {
                         {
                             label: '供货商名称',
                             prop: 'loan_supplier',
-                            minWidth: '150',
+                            minWidth: '120',
                             isHidden: false,
                             children: [
                                 {
                                     prop: 'loan_supplier',
-                                    showOverflowTooltip: true,
                                     label: '-',
-                                    minWidth: '120'
+                                    minWidth: '120',
+                                    render: (h, scope) => {
+                                        return <span onClick={() => {
+                                            this.tipsDialogVisible = true
+                                            this.tipsDialogVisibleContent = scope.row.loan_supplier
+                                        }}>{(scope.row.loan_supplier && scope.row.loan_supplier.length > 7) ? scope.row.loan_supplier.substr(0, 7) + '...' : (scope.row.loan_supplier ? scope.row.loan_supplier : '-')}</span>
+                                    }
                                 }
                             ]
                         },
@@ -1186,13 +1200,18 @@ export default {
                         },
                         {
                             label: '供货商名称',
-                            minWidth: '100',
+                            minWidth: '120',
                             children: [
                                 {
                                     prop: 'loan_supplier',
                                     label: '-',
-                                    minWidth: '100',
-                                    showOverflowTooltip: true
+                                    minWidth: '120',
+                                    render: (h, scope) => {
+                                        return <span onClick={() => {
+                                            this.tipsDialogVisible = true
+                                            this.tipsDialogVisibleContent = scope.row.loan_supplier
+                                        }}>{(scope.row.loan_supplier && scope.row.loan_supplier.length > 7) ? scope.row.loan_supplier.substr(0, 7) + '...' : (scope.row.loan_supplier ? scope.row.loan_supplier : '-')}</span>
+                                    }
                                 }
                             ]
                         },
@@ -1375,7 +1394,7 @@ export default {
                         {
                             label: '应收利息（正常+宽限）',
                             selfSettingHidden: this.hosAuthCheck(WISDOM_POINTSCREDIT_SHOW_LINE),
-                            prop: 'paymentStatic_interestAmount_total', // 自己算的
+                            prop: 'paymentStatic_interestTotalAmount', // 自己算的
                             children: [
                                 {
                                     prop: 'paymentStatic_interestTotalAmount',
@@ -2580,18 +2599,20 @@ export default {
                         },
                         {
                             label: '供货商名称',
-                            showOverflowTooltip: true,
-                            minWidth: '100',
+                            minWidth: '120',
                             prop: 'loan_supplier',
                             children: [
                                 {
                                     prop: 'loan_supplier',
-                                    showOverflowTooltip: true,
                                     render: (h, scope) => {
-                                        return <span>{scope.row.loan_supplier ? `${scope.row.loan_supplier}` : '-'}</span>
+                                        return <span
+                                            className='loan-supplier' onClick={() => {
+                                                this.tipsDialogVisible = true
+                                                this.tipsDialogVisibleContent = scope.row.loan_supplier
+                                            }}>{(scope.row.loan_supplier && scope.row.loan_supplier.length > 7) ? scope.row.loan_supplier.substr(0, 7) + '...' : (scope.row.loan_supplier ? scope.row.loan_supplier : '-')}</span>
                                     },
                                     label: '-',
-                                    minWidth: '100'
+                                    minWidth: '120'
                                 }
                             ]
                         },
@@ -3899,5 +3920,13 @@ export default {
     /deep/ .el-table td,
     /deep/ .el-table th {
         padding: 7px 0;
+    }
+    .max-height {
+        display: block;
+        margin: 20px auto;
+        max-height: 300px;
+        overflow: hidden;
+        overflow-y: scroll;
+        min-height: 100px;
     }
 </style>
