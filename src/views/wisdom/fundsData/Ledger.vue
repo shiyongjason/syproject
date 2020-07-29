@@ -514,6 +514,7 @@ export default {
         },
         onExport () {
             const params = {
+                regionCode: this.queryParams.regionCode,
                 misCode: this.queryParams.misCode,
                 loanCompanyName: this.queryParams.loanCompanyName,
                 subsectionCode: this.queryParams.subsectionCode,
