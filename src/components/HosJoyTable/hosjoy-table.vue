@@ -28,13 +28,13 @@
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="(item, index) in getColumn()">
-                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed"
+                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed && data.length > 0"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
                     </template>
                 </el-table-column>
-                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :column="item" :key='item.label + item.prop + index' v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
+                <hosjoy-column ref="hosjoyColumn" v-bind="$attrs" :data="data" :column="item" :key='item.label + item.prop + index' v-if="!item.slot && !item.isHidden && !item.selfSettingHidden"></hosjoy-column>
             </template>
             <el-table-column label="操作" v-if="isAction" align="center" :min-width="actionWidth" class-name="allowDrag" :fixed="isActionFixed?'right':false">
                 <template slot-scope="scope">
