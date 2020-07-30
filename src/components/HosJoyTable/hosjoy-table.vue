@@ -41,7 +41,8 @@
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
-            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>
+<!--            todo 测试那边提bug，一会发预发布-->
+<!--            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>-->
         </el-table>
         <!-- 分页 -->
         <div class="pages">
