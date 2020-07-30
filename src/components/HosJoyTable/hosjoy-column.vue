@@ -10,7 +10,7 @@
         :column-key="column.columnKey"
         :width="column.width"
         :min-width="column.minWidth"
-        :fixed="column.fixed"
+        :fixed="column.fixed && data && data.length > 0"
         :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader"
         :sortable="column.sortable || false"
         :sort-method="column.sortMethod"
@@ -99,7 +99,8 @@ export default {
     props: {
         column: Object,
         headerAlign: String,
-        align: String
+        align: String,
+        data: Array
     },
     components: {
         HosjoyRender
