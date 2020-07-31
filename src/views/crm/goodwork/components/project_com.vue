@@ -115,7 +115,7 @@ import { mapGetters, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE } from '../../const'
 export default {
     name: 'projectcom',
     props: {
@@ -136,8 +136,8 @@ export default {
 
             aduitTitle: '',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '立项' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
-            statusType: STATUS_TYPE,
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
+            // statusType: STATUS_TYPE,
             newstatusType: NEW_STATUS_TYPE,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
