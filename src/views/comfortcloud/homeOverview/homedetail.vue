@@ -144,7 +144,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { findHomeGeneralDetails, findHomeUserList, findRoomDetail } from './api/index'
+import { findHomeGeneralDetails, findHomeUserList, findRoomDetail } from '../api/index'
 
 export default {
     name: 'homedetail',
