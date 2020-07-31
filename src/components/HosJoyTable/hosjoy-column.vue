@@ -10,7 +10,7 @@
         :column-key="column.columnKey"
         :width="column.width"
         :min-width="column.minWidth"
-        :fixed="column.fixed"
+        :fixed="column.fixed && data && data.length > 0"
         :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader"
         :sortable="column.sortable || false"
         :sort-method="column.sortMethod"
@@ -84,7 +84,7 @@ const fundMoneyHaveSpot = function (val, int) {
         let foot = ''
         if (val.toString().indexOf('.') > -1) {
             head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            foot = val.toString().slice(val.toString().indexOf('.'))
+            foot = val.toString().substr(val.toString().indexOf('.'), 3)
         } else {
             head = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         }
@@ -99,7 +99,8 @@ export default {
     props: {
         column: Object,
         headerAlign: String,
-        align: String
+        align: String,
+        data: Array
     },
     components: {
         HosjoyRender
