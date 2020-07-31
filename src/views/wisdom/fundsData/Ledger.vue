@@ -1,6 +1,12 @@
 <template>
     <div class="tags-wrapper page-body amountImport">
         <div class="page-body-cont query-cont">
+            <div class="query-cont-col" v-if="region">
+                <div class="query-col-title">大区：</div>
+                <div class="query-col-input">
+                    <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请选择大区" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                </div>
+            </div>
             <div class="query-cont-col" v-if="branch">
                 <div class="query-col-title">分部：</div>
                 <div class="query-col-input">
@@ -27,6 +33,83 @@
                     </el-input>
                 </div>
             </div>
+            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                <div class="query-col-title">逾期：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.isOverdue" placeholder="请选择" :clearable=true>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="未逾期" :value="0"></el-option>
+                        <el-option label="逾期" :value="1"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                <div class="query-col-title">结清：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.settleType" placeholder="请选择" :clearable=true>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="本金结清" :value="1"></el-option>
+                        <el-option label="本金未结清" :value="2"></el-option>
+                        <el-option label="利息结清" :value="3"></el-option>
+                        <el-option label="利息未结清" :value="4"></el-option>
+                        <el-option label="本金或利息未结清" :value="5"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                <div class="query-col-title">放款日期查询：</div>
+                <div class="query-col-input">
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.loanStartDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('loanEndDate')">
+                    </el-date-picker>
+                    <span class="ml10 mr10">-</span>
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.loanEndDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('loanStartDate')">
+                    </el-date-picker>
+                </div>
+            </div>
+            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                <div class="query-col-title">应还款日期查询：</div>
+                <div class="query-col-input">
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.repaymentStartDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('repaymentEndDate')">
+                    </el-date-picker>
+                    <span class="ml10 mr10">-</span>
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.repaymentEndDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('repaymentStartDate')">
+                    </el-date-picker>
+                </div>
+            </div>
+            <div class="query-cont-col" v-if="accountType == 4">
+                <div class="query-col-title">还款项目：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.repaymentType" placeholder="请选择" :clearable=true>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="还借款本金" :value="1"></el-option>
+                        <el-option label="还借款利息" :value="2"></el-option>
+                        <el-option label="还宽限期利息" :value="3"></el-option>
+                        <el-option label="还逾期罚息" :value="4"></el-option>
+                        <el-option label="还敞口本金" :value="5"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col" v-if="accountType == 4">
+                <div class="query-col-title">还款状态：</div>
+                <div class="query-col-input">
+                    <el-select v-model="queryParams.repaymentStatus" placeholder="请选择" :clearable=true>
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="正常" :value="1"></el-option>
+                        <el-option label="逾期" :value="2"></el-option>
+                        <el-option label="提前" :value="3"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col" v-if="accountType == 4">
+                <div class="query-col-title">还款日期：</div>
+                <div class="query-col-input">
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('endDate')">
+                    </el-date-picker>
+                    <span class="ml10 mr10">-</span>
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('startDate')">
+                    </el-date-picker>
+                </div>
+            </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
@@ -34,9 +117,9 @@
                 <div class="query-col-title" v-if="hosAuthCheck(account_export)">
                     <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                 </div>
-                <!-- <div class="query-col-title">
+                <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                </div> -->
+                </div>
             </div><br>
         </div>
         <div class="page-body-cont">
@@ -87,10 +170,11 @@ export default {
     computed: {
         ...mapState({
             pagination: state => state.fundsData.pagination,
+            regionList: state => state.regionList,
             branchList: state => state.branchList,
             platformData: state => state.platformData
         }),
-        ...mapGetters(['platformData', 'tableData']),
+        ...mapGetters(['platformData', 'tableData', 'tableDataTotal']),
         accountName () {
             return `新增${type.productName[this.productType - 1]}-${type.accountName[this.accountType - 1]}明细`
         }
@@ -101,6 +185,7 @@ export default {
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,
             queryParams: {
+                regionCode: '',
                 pageNumber: 1,
                 pageSize: 10,
                 misCode: '',
@@ -110,7 +195,17 @@ export default {
                 accountType: '1',
                 loanCompanyCode: '',
                 loanCompanyName: '',
-                productType: '1'
+                productType: '1',
+                isOverdue: '',
+                settleType: '',
+                loanStartDate: '',
+                loanEndDate: '',
+                repaymentStartDate: '',
+                repaymentEndDate: '',
+                repaymentType: '',
+                startDate: '',
+                endDate: '',
+                repaymentStatus: ''
             },
             searchParams: {},
             removeValue: false,
@@ -128,6 +223,10 @@ export default {
             account_export: WISDOM_ACCOUNT_EXPORT,
             hasNoneAuth: false,
             selectAuth: {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
                 branchObj: {
                     selectCode: '',
                     selectName: ''
@@ -139,18 +238,41 @@ export default {
             }
         }
     },
-    async mounted () {
+    mounted () {
         this.getUserTabAuth()
         this.onSearch()
-        await this.newBossAuth(['F', 'P'])
+        this.newBossAuth(['D', 'F', 'P'])
     },
     methods: {
         ...mapActions([
             'findPlatformslist',
             'getAccountList',
+            'getAccountTotal',
             'getRepaymentList',
-            'findSummaryList'
+            'getRepaymentTotal',
+            'findSummaryList',
+            'findSummaryTotal'
         ]),
+        pickerOptionsStart (val) {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams[val]
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (val) {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams[val]
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
         linkage (dis) {
             let obj = {
                 selectCode: '',
@@ -163,8 +285,14 @@ export default {
             this.selectAuth.platformObj = { ...obj }
         },
         async backPlat (val, dis) {
-            if (dis === 'F') {
+            if (dis === 'D') {
+                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.queryParams.regionCodeName = val.value.deptName ? val.value.deptName : ''
+                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+                !val.value.pkDeptDoc && this.linkage(dis)
+            } else if (dis === 'F') {
                 this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+                this.queryParams.subsectionCodeName = val.value.deptName ? val.value.deptName : ''
                 if (val.value.pkDeptDoc) {
                     this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
                 } else {
@@ -190,7 +318,37 @@ export default {
                 if (this.accountType == '2') this.exposureAuth()
                 if (this.accountType == '3') this.pointscredit()
             }
-            this.onReset()
+            this.queryParams = { ...this.searchParams }
+            this.onBackHAutocompleteDefaultValue()
+            this.onQuery()
+        },
+        onBackHAutocompleteDefaultValue () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
+            if (!this.queryParams.regionCode) {
+                this.selectAuth.regionObj = { ...obj }
+            } else {
+                this.selectAuth.regionObj.selectCode = this.queryParams.regionCode
+                this.selectAuth.regionObj.selectName = this.queryParams.regionCodeName
+                this.findAuthList({ deptType: 'F', pkDeptDoc: this.selectAuth.regionObj.selectCode })
+                this.linkage('D')
+            }
+            if (!this.queryParams.subsectionCode) {
+                this.selectAuth.branchObj = { ...obj }
+            } else {
+                this.selectAuth.branchObj.selectCode = this.queryParams.subsectionCode
+                this.selectAuth.branchObj.selectName = this.queryParams.subsectionCodeName
+                this.findPlatformslist({ subsectionCode: this.selectAuth.branchObj.selectCode })
+                this.linkage('F')
+            }
+            if (!this.queryParams.loanCompanyCode) {
+                this.selectAuth.platformObj = { ...obj }
+            } else {
+                this.selectAuth.platformObj.selectCode = this.queryParams.loanCompanyCode
+                this.selectAuth.platformObj.selectCode = this.queryParams.loanCompanyName
+            }
         },
         isSuccess (response) {
             this.$message({
@@ -226,26 +384,60 @@ export default {
         async onQuery () {
             this.searchParams.accountType = this.accountType
             this.searchParams.productType = this.productType
+            let tableName = ''
+            let isMore = false
             if (this.accountType == 4) {
-                this.getRepaymentList(this.searchParams)
+                tableName = 'ReimbursementDetail'
+                await Promise.all([this.getRepaymentList(this.searchParams),
+                    this.getRepaymentTotal(this.searchParams)])
             } else if (this.accountType == 0) {
-                this.findSummaryList(this.searchParams)
+                tableName = 'TotalColumn'
+                await Promise.all([this.findSummaryList(this.searchParams), this.findSummaryTotal(this.searchParams)])
             } else {
-                await this.getAccountList(this.searchParams)
+                if (this.accountType == 1) {
+                    tableName = 'FlowToBorrow'
+                } else if (this.accountType == 3) {
+                    tableName = 'PointsCredit'
+                } else if (this.accountType == 2) {
+                    tableName = 'Exposure'
+                }
+                isMore = true
+                await Promise.all([this.getAccountList(this.searchParams), this.getAccountTotal(this.searchParams)])
             }
+            this.$refs.complexTable.totalColumnTotalDo(tableName, this.tableDataTotal, isMore)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onReset () {
+        async onReset () {
+            let obj = {
+                selectCode: '',
+                selectName: ''
+            }
             this.removeValue = !this.removeValue
+            this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'customerName', '')
             this.$set(this.queryParams, 'misCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'standingBookNo', '')
             this.$set(this.queryParams, 'loanCompanyCode', '')
             this.$set(this.queryParams, 'loanCompanyName', '')
+            this.$set(this.queryParams, 'isOverdue', '')
+            this.$set(this.queryParams, 'settleType', '')
+            this.$set(this.queryParams, 'loanStartDate', '')
+            this.$set(this.queryParams, 'loanEndDate', '')
+            this.$set(this.queryParams, 'repaymentStartDate', '')
+            this.$set(this.queryParams, 'repaymentEndDate', '')
+            this.$set(this.queryParams, 'repaymentType', '')
+            this.$set(this.queryParams, 'startDate', '')
+            this.$set(this.queryParams, 'endDate', '')
+            this.$set(this.queryParams, 'repaymentStatus', '')
+            this.selectAuth.regionObj = { ...obj }
+            this.selectAuth.branchObj = { ...obj }
+            this.selectAuth.platformObj = { ...obj }
+            this.accountType = '0'
+            await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         },
         getList (val) {
@@ -321,13 +513,14 @@ export default {
             })
         },
         onExport () {
-            const params = {
-                misCode: this.queryParams.misCode,
-                loanCompanyName: this.queryParams.loanCompanyName,
-                subsectionCode: this.queryParams.subsectionCode,
-                standingBookNo: this.queryParams.standingBookNo
-            }
-            downloadCloudAlarmList(params)
+            // const params = {
+            //     regionCode: this.queryParams.regionCode,
+            //     misCode: this.queryParams.misCode,
+            //     loanCompanyName: this.queryParams.loanCompanyName,
+            //     subsectionCode: this.queryParams.subsectionCode,
+            //     standingBookNo: this.queryParams.standingBookNo
+            // }
+            downloadCloudAlarmList(this.queryParams)
         }
     },
     activated () {

@@ -69,7 +69,7 @@ const fundMoneyHaveSpot = function (val, int) {
         let foot = ''
         if (val.toString().indexOf('.') > -1) {
             head = (val.toString().slice(0, val.toString().indexOf('.'))).replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-            foot = val.toString().slice(val.toString().indexOf('.'))
+            foot = val.toString().substr(val.toString().indexOf('.'), 3)
         } else {
             head = val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
         }
