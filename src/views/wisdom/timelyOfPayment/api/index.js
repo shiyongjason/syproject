@@ -4,17 +4,16 @@ export const getOverduepage = (params) => axios.get(`backend/api/overdue/repayme
 // 合计
 export const getOverdueTotal = (params) => axios.get(`backend/api/overdue/repayment-timely-rate/total`, { params })
 
-// 逾期增量明细列表导出
-export function exportCompanyOverdueDetailExcel (params) {
+// 月度回款及时率
+export function exportOverdueExcel (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(`backend/api/company/overdue/increment/export`, { params }).then(function (response) {
+    axios.get(`backend/api/overdue/repayment-timely-rate/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
-                console.log(params)
                 const a = document.createElement('a')
-                a.download = `逾期增量明细表.xlsx`
+                a.download = `月度回款及时率.xlsx`
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()

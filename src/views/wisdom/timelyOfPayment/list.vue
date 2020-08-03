@@ -24,7 +24,7 @@
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col flex-box-time" >
+                <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
                     <el-date-picker v-model="queryParams.selectDate" type="date" value-format='yyyy-MM-dd' placeholder="选择年" :editable='false' :clearable='false'>
                     </el-date-picker>
@@ -39,7 +39,7 @@
                             </el-button>
                         </el-upload>
                     </div>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" v-if="!hosAuthCheck()">导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -47,10 +47,8 @@
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
                 <hosJoyTable ref="hosjoyTable" border stripe
-                 :showPagination='!!page.total' :column="column"
-                 :data="tableData" align="center" :total="page.total"
-                 :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize"
-                @pagination="getList" >
+                :showPagination='!!page.total' :column="column"
+                 :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -61,10 +59,10 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
-import { platformSummarySheet, annualRepaymentPlan, platformSummarySheetTotal } from './const'
+import { platformSummarySheet, overDueTotal } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
-import { getOverduepage, getOverdueTotal, exportCompanyOverdueExcel } from './api/index'
+import { getOverduepage, getOverdueTotal, exportOverdueExcel } from './api/index'
 import moment from 'moment'
 import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/utils/auth_const'
 export default {
@@ -97,7 +95,7 @@ export default {
                 }
             },
             queryParams: {
-                departmentType: '1',
+                departmentType: '2',
                 regionCode: '',
                 subsectionCode: '',
                 misCode: '',
@@ -111,7 +109,8 @@ export default {
             },
             total: {},
             tableData: [],
-            dialogFormVisible: false
+            dialogFormVisible: false,
+            column: platformSummarySheet
         }
     },
     computed: {
@@ -120,10 +119,7 @@ export default {
             regionList: state => state.regionList,
             branchList: state => state.branchList,
             platformData: state => state.platformData
-        }),
-        column () {
-            return platformSummarySheet
-        }
+        })
     },
     methods: {
         linkage (dis) {
@@ -155,14 +151,55 @@ export default {
                 }
                 !val.value.pkDeptDoc && this.linkage(dis)
             } else if (dis === 'P') {
-                this.queryParams.companyName = val.value.companyShortName ? val.value.companyShortName : ''
+                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
             }
         },
         onExport () {
-            exportCompanyOverdueExcel(this.searchParams)
+            exportOverdueExcel(this.searchParams)
         },
         handleClick () {
             this.tableData = []
+            if (this.queryParams.departmentType == 2) {
+                const newCloum = [...platformSummarySheet]
+                console.log(newCloum)
+                const adddd = {
+                    prop: '',
+                    fixed: true,
+                    minWidth: '200',
+                    children: [
+                        {
+
+                            label: '分部',
+                            children: [
+                                {
+                                    prop: 'subsectionName',
+                                    minWidth: '100',
+                                    label: '合计',
+                                    showOverflowTooltip: true
+                                }
+                            ]
+                        },
+                        {
+                            label: '大区',
+                            minWidth: '100',
+                            children: [
+                                {
+                                    prop: 'regionName',
+                                    minWidth: '100',
+                                    label: '-',
+                                    showOverflowTooltip: true
+                                }
+                            ]
+                        }
+                    ]
+                }
+                this.$nextTick(() => {
+                    this.$set(this.column, 0, adddd)
+                })
+            }
+            // this.$forceUpdate()
+
+            console.log(this.column)
             this.onReset()
         },
         onSearch () {
@@ -177,22 +214,40 @@ export default {
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 if (!res[1].data) {
-                    res[1].data = platformSummarySheetTotal
+                    res[1].data = overDueTotal
                 }
-
+                const rest = res[1].data
+                let temp = { ...overDueTotal, ...rest }
+                for (let key in temp) {
+                    platformSummarySheet.forEach(value => {
+                        value.children.forEach(value1 => {
+                            value1.children.forEach(value2 => {
+                                if (value2.prop === key && temp[key] != null) {
+                                    if (key == 'timelyRepaymentRateNumber') {
+                                        value2.label = String(temp[key]) + '%'
+                                    } else if (key == 'timelyRepaymentRateAmount') {
+                                        value2.label = String(temp[key]) + '%'
+                                    } else if (key == 'increaseAndDecreaseNumber') {
+                                        value2.label = String(temp[key]) + '%'
+                                    } else if (key == 'increaseAndDecreaseAmount') {
+                                        value2.label = String(temp[key]) + '%'
+                                    } else if (key == 'yesterdayTimelyRepaymentRateAmount') {
+                                        value2.label = String(temp[key]) + '%'
+                                    } else if (key == 'yesterdayTimelyRepaymentRateNumber') {
+                                        value2.label = String(temp[key]) + '%'
+                                    } else {
+                                        value2.label = String(temp[key])
+                                    }
+                                }
+                            })
+                        })
+                    })
+                }
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
             this.tableData = data.records
-            console.log(this.tableData)
-            // this.tableData.map(i => {
-            //     if (i.planProportion != null) {
-            //         // i.planProportion *= 100
-            //         if (i.planProportion !== 0) i.planProportion = i.planProportion.toFixed(2)
-            //         i.planProportion += '%'
-            //     }
-            // })
             this.page = {
                 total: data.total,
                 pageSize: data.size,
@@ -214,8 +269,8 @@ export default {
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
-            this.$set(this.queryParams, 'companyName', '')
-            this.$set(this.queryParams, 'year', moment().format('YYYY'))
+            this.$set(this.queryParams, 'misCode', '')
+            this.$set(this.queryParams, 'selectDate', moment().format('YYYY-MM-DD'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
             this.selectAuth.regionObj = { ...obj }
@@ -223,40 +278,11 @@ export default {
             this.selectAuth.platformObj = { ...obj }
             await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
-        },
-        isSuccess (response) {
-            this.$message({
-                message: '批量导入成功！',
-                type: 'success'
-            })
-            this.loading = false
-            this.onSearch()
-        },
-        isError (response) {
-            this.$message({
-                message: '批量导入失败，' + JSON.parse(response.message).message,
-                type: 'error'
-            })
-            this.loading = false
-        },
-        handleUpload (file) {
-            if (file.size / (1024 * 1024) > 100) {
-                this.$message({
-                    message: '附件要保持100M以内',
-                    type: 'warning'
-                })
-                return false
-            }
-            const fileSuffix = file.name.substring(file.name.lastIndexOf('.'))
-            if (this.accept.lastIndexOf(fileSuffix) == -1) {
-                this.$message.error('格式不正确！')
-                return false
-            }
-            this.loading = true
         }
     },
     async mounted () {
         this.onSearch()
+        this.handleClick()
         await this.newBossAuth(['D', 'F', 'P'])
     }
 }
@@ -277,11 +303,11 @@ export default {
     right: 0;
 }
 /deep/.el-table__header .repaymentStyle {
-    background-color: rgba($color: #c65911, $alpha: 1) !important;
+    background-color: rgba($color: #ff7a45, $alpha: 0.8) !important;
     color: #fff !important;
 }
 /deep/.el-table__row .repaymentStyle {
-    background-color: rgba($color: #c65911, $alpha: 0.5) !important;
+    background-color: rgba($color: #ff7a45, $alpha: 0.8) !important;
     color: #fff !important;
 }
 /deep/.el-table__header .colorBlue {
@@ -291,9 +317,5 @@ export default {
 /deep/.el-table__header .colorInfo {
     background-color: rgba($color: #13c2c2, $alpha: 1) !important;
     color: #fff !important;
-}
-
-/deep/.overdueTable td{
-    height: 71px;
 }
 </style>

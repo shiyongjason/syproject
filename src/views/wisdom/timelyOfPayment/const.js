@@ -2,29 +2,27 @@
 // 平台公司逾期汇总表
 export const platformSummarySheet = [
     {
-        label: '-',
+        prop: '',
         fixed: true,
+        minWidth: '400',
         children: [
             {
 
-                minWidth: '100',
                 label: '公司编码',
-                fixed: true,
                 children: [
                     {
-                        prop: 'companyName',
+                        prop: 'misCode',
                         minWidth: '100',
                         label: '合计'
+
                     }
                 ]
             },
             {
-                prop: 'companyName',
                 label: '公司名称',
-                minWidth: '100',
-                fixed: true,
                 children: [
                     {
+                        prop: 'companyName',
                         minWidth: '100',
                         label: '-',
                         showOverflowTooltip: true
@@ -35,7 +33,6 @@ export const platformSummarySheet = [
 
                 label: '分部',
                 minWidth: '100',
-                fixed: true,
                 children: [
                     {
                         prop: 'subsectionName',
@@ -46,7 +43,6 @@ export const platformSummarySheet = [
                 ]
             },
             {
-
                 label: '大区',
                 minWidth: '100',
                 children: [
@@ -68,7 +64,6 @@ export const platformSummarySheet = [
                 prop: 'yesterdayReceivableNumber',
                 label: '应收笔数',
                 width: '100',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'yesterdayReceivableNumber',
@@ -96,13 +91,13 @@ export const platformSummarySheet = [
                 prop: 'yesterdayTimelyRepaymentRateNumber',
                 label: '回款及时率',
                 width: '130',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'yesterdayTimelyRepaymentRateNumber',
                         minWidth: '130',
                         label: '-',
-                        showOverflowTooltip: true
+                        showOverflowTooltip: true,
+                        unit: '%'
                     }
                 ]
             }
@@ -116,7 +111,6 @@ export const platformSummarySheet = [
                 prop: 'receivableNumber',
                 label: '应收笔数',
                 minWidth: '100',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'receivableNumber',
@@ -130,7 +124,6 @@ export const platformSummarySheet = [
                 prop: 'timelyRepaymentNumber',
                 label: '及时回款笔数',
                 minWidth: '110',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'timelyRepaymentNumber',
@@ -144,13 +137,13 @@ export const platformSummarySheet = [
                 prop: 'timelyRepaymentRateNumber',
                 label: '回款及时率',
                 minWidth: '130',
-                displayAs: 'timelyRepaymentRateNumber',
                 children: [
                     {
-                        prop: 'misCode',
+                        prop: 'timelyRepaymentRateNumber',
                         minWidth: '130',
                         label: '-',
-                        showOverflowTooltip: true
+                        showOverflowTooltip: true,
+                        unit: '%'
                     }
                 ]
             },
@@ -165,7 +158,9 @@ export const platformSummarySheet = [
                         prop: 'increaseAndDecreaseNumber',
                         minWidth: '130',
                         label: '-',
-                        showOverflowTooltip: true
+                        showOverflowTooltip: true,
+                        unit: '%',
+                        className: 'repaymentStyle'
                     }
                 ]
             }
@@ -208,13 +203,13 @@ export const platformSummarySheet = [
                 prop: 'yesterdayTimelyRepaymentRateAmount',
                 label: '回款及时率',
                 minWidth: '140',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'yesterdayTimelyRepaymentRateAmount',
                         minWidth: '140',
                         label: '-',
-                        showOverflowTooltip: true
+                        showOverflowTooltip: true,
+                        unit: '%'
                     }
                 ]
             }
@@ -256,13 +251,13 @@ export const platformSummarySheet = [
                 prop: 'timelyRepaymentRateAmount',
                 label: '回款及时率',
                 minWidth: '130',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'timelyRepaymentRateAmount',
                         minWidth: '130',
                         label: '-',
-                        showOverflowTooltip: true
+                        showOverflowTooltip: true,
+                        unit: '%'
                     }
                 ]
             },
@@ -271,16 +266,40 @@ export const platformSummarySheet = [
                 label: '环比增减',
                 className: 'repaymentStyle',
                 minWidth: '140',
-                displayAs: 'fundMoney',
                 children: [
                     {
                         prop: 'increaseAndDecreaseAmount',
                         minWidth: '130',
                         label: '-',
-                        showOverflowTooltip: true
+                        showOverflowTooltip: true,
+                        unit: '%',
+                        className: 'repaymentStyle'
                     }
                 ]
             }
         ]
     }
 ]
+
+export const overDueTotal = {
+    companyName: null,
+    increaseAndDecreaseAmount: null,
+    increaseAndDecreaseNumber: null,
+    misCode: null,
+    receivableAmount: null,
+    receivableNumber: null,
+    regionCode: null,
+    regionName: null,
+    subsectionCode: null,
+    subsectionName: null,
+    timelyRepaymentAmount: null,
+    timelyRepaymentNumber: null,
+    timelyRepaymentRateAmount: null,
+    timelyRepaymentRateNumber: null,
+    yesterdayReceivableAmount: null,
+    yesterdayReceivableNumber: null,
+    yesterdayTimelyRepaymentAmount: null,
+    yesterdayTimelyRepaymentNumber: null,
+    yesterdayTimelyRepaymentRateAmount: null,
+    yesterdayTimelyRepaymentRateNumber: null
+}
