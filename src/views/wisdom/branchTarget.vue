@@ -1,41 +1,46 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">目标年份：</div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.date" type="year" format="yyyy" :clearable="false" :editable="false" placeholder="选择年">
-                        </el-date-picker>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1})">
-                        搜索
-                    </el-button>
-                    <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="exportHref">
-                        导出
-                    </el-button>
-                </div>
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
-                            <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
-                                批量导入
+            <el-collapse-transition>
+                <div v-show="toggle">
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-title">分部：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="branchList" @back-event="backPlat" placeholder="请输入分部名称" :selectObj="branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col">
+                            <div class="query-col-title">目标年份：</div>
+                            <div class="query-col-input">
+                                <el-date-picker v-model="queryParams.date" type="year" format="yyyy" :clearable="false" :editable="false" placeholder="选择年">
+                                </el-date-picker>
+                            </div>
+                        </div>
+                        <div class="query-cont-col">
+                            <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1})">
+                                搜索
                             </el-button>
-                        </el-upload>
-                        <a class="ml20 blue isLink" v-if="hosAuthCheck(downTemplateAuth)" @click="downloadXlsx">
-                            下载分部目标模板
-                        </a>
+                            <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="exportHref">
+                                导出
+                            </el-button>
+                        </div>
+                        <div class="query-cont-row">
+                            <div class="query-cont-col">
+                                <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
+                                    <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
+                                        批量导入
+                                    </el-button>
+                                </el-upload>
+                                <a class="ml20 blue isLink" v-if="hosAuthCheck(downTemplateAuth)" @click="downloadXlsx">
+                                    下载分部目标模板
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </el-collapse-transition>
+            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         </div>
         <div class="page-body-cont">
             <branchTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchTable>
@@ -81,7 +86,8 @@ export default {
             branchObj: {
                 selectCode: '',
                 selectName: ''
-            }
+            },
+            toggle: true
         }
     },
     computed: {

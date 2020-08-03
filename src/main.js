@@ -11,6 +11,7 @@ import HosjoyUI from 'hosjoy-ui'
 import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
+import searchBarOpenAndClose from './components/SearchBarOpenAndClose/index'
 import moment from 'moment'
 import '@/utils/validate/index.js'
 Vue.config.productionTip = false
@@ -21,6 +22,9 @@ Vue.use(HosjoyUI)
 // table公共组件
 Vue.component(
     'basicTable', basicTable
+)
+Vue.component(
+    'searchBarOpenAndClose', searchBarOpenAndClose
 )
 
 Vue.filter('formatDate', (time, param) => {
