@@ -1,0 +1,7 @@
+[auth]
+token = "14d2f0de932e46dbb98b1eb8d10458a9daba735c64444f78b73a2c70f77d4a53"
+
+[defaults]
+url = https://sentry.hosjoy.com
+org = sentry
+project = boss

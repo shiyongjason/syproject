@@ -254,6 +254,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/fundsOverdue/backMoneyTrack.vue')
+                    },
+                    {
+                        path: 'timelyOfPayment',
+                        name: 'timelyOfPayment',
+                        meta: {
+                            title: '月度回款及时率',
+                            tagName: '月度回款及时率',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/timelyOfPayment/list.vue')
                     }
                 ]
             }
@@ -264,7 +276,7 @@ export default [
         meta: {
             title: '资金用款计划',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_money'
         },
         component: Layout,
         children: [
