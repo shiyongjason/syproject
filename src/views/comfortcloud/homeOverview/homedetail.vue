@@ -21,9 +21,7 @@
                 <div class="page-title">
                     <p>家庭成员</p>
                 </div>
-                <!-- 表格使用老毕的组件 -->
-                <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination"
-                            @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                     <template slot="role" slot-scope="scope">
                         {{scope.data.row.role - 0 ===  0 ? '管理员' : '普通成员'}}
                     </template>
@@ -79,63 +77,72 @@
                         <el-tab-pane :label="item.roomName" :name="item.roomName + item.roomId" :key="item.roomId"></el-tab-pane>
                     </template>
                 </el-tabs>
-                <div class="home-wrap">
-                    <p>所有设备</p>
-                    <div class="home-wrap-flex">
-                        <template v-if="this.activeList.devices && this.activeList.devices.length > 0">
-                             <span v-for="(item,index) in this.activeList.devices" :key="index">
-                                {{item.deviceName}} * {{item.deviceCount}}
+                <div v-show="activeName === allDevices">
+                    <basicTable :isShowIndex="true" :tableLabel="devicesTableLabel" :tableData="activeList.devices">
+                        <template slot="state" slot-scope="scope">
+                            <span>{{scope.data.row.state == 1?'在线':'离线'}}</span>
+                        </template>
+                    </basicTable>
+                </div>
+                <div v-show="activeName !== allDevices">
+                    <div class="home-wrap">
+                        <p>所有设备</p>
+                        <div class="home-wrap-flex">
+                            <template v-if="this.activeList.devices && this.activeList.devices.length > 0">
+                                <span v-for="(item,index) in this.activeList.devices" :key="index">
+                                    {{item.deviceName}} * {{item.deviceCount}}
+                                </span>
+                            </template>
+                            <template v-else>
+                                <p class="no-device">暂无设备</p>
+                            </template>
+                        </div>
+                    </div>
+                    <div class="home-wrap">
+                        <p>房间详情</p>
+                        <div class="home-wrap-flex">
+                            <span>房屋面积：
+                                <template v-if="this.activeList.roomSize">
+                                    {{this.activeList.roomSize + 'm²'}}
+                                </template>
+                                <template v-else>-</template>
                             </span>
-                        </template>
-                        <template v-else>
-                            <p class="no-device">暂无设备</p>
-                        </template>
+                            <span>是否有落地窗：
+                                <template v-if="this.activeList.window">
+                                    {{this.activeList.window === 0 ? '无': '有'}}
+                                </template>
+                                <template v-else>-</template>
+                            </span>
+                        </div>
                     </div>
-                </div>
-                <div class="home-wrap">
-                    <p>房间详情</p>
-                    <div class="home-wrap-flex">
-                        <span>房屋面积：
-                            <template v-if="this.activeList.roomSize">
-                                {{this.activeList.roomSize + 'm²'}}
-                            </template>
-                            <template v-else>-</template>
-                        </span>
-                        <span>是否有落地窗：
-                            <template v-if="this.activeList.window">
-                                {{this.activeList.window === 0 ? '无': '有'}}
-                            </template>
-                            <template v-else>-</template>
-                        </span>
-                    </div>
-                </div>
-                <div class="home-wrap">
-                    <p>智能调温</p>
-                    <div class="home-wrap-flex">
-                        <span>是否启用：
-                            <template v-if="this.activeList.bigSwitch">
-                                {{this.activeList.bigSwitch === 0 ? '未启用' : '已启用'}}
-                            </template>
-                            <template v-else>-</template>
-                        </span>
-                        <span>目标温度：
-                            <template v-if="this.activeList.bigSwitch && this.activeList.targetTemperature">
-                                {{this.activeList.targetTemperature + '℃' }}
-                            </template>
-                            <template v-else>-</template>
-                        </span>
-                        <span>模式：
-                            <template v-if="this.activeList.bigSwitch && this.activeList.comfortType">
-                                {{this.activeList.comfortType === 1 ? '制冷': '制热'}}
-                            </template>
-                            <template v-else>-</template>
-                        </span>
-                        <span>目标湿度：
-                            <template v-if="this.activeList.bigSwitch && this.activeList.targetHumidity">
-                                {{this.activeList.targetHumidity + '%'}}
-                            </template>
-                            <template v-else>-</template>
-                        </span>
+                    <div class="home-wrap">
+                        <p>智能调温</p>
+                        <div class="home-wrap-flex">
+                            <span>是否启用：
+                                <template v-if="this.activeList.bigSwitch">
+                                    {{this.activeList.bigSwitch === 0 ? '未启用' : '已启用'}}
+                                </template>
+                                <template v-else>-</template>
+                            </span>
+                            <span>目标温度：
+                                <template v-if="this.activeList.bigSwitch && this.activeList.targetTemperature">
+                                    {{this.activeList.targetTemperature + '℃' }}
+                                </template>
+                                <template v-else>-</template>
+                            </span>
+                            <span>模式：
+                                <template v-if="this.activeList.bigSwitch && this.activeList.comfortType">
+                                    {{this.activeList.comfortType === 1 ? '制冷': '制热'}}
+                                </template>
+                                <template v-else>-</template>
+                            </span>
+                            <span>目标湿度：
+                                <template v-if="this.activeList.bigSwitch && this.activeList.targetHumidity">
+                                    {{this.activeList.targetHumidity + '%'}}
+                                </template>
+                                <template v-else>-</template>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,12 +169,20 @@ export default {
                 { label: '手机号', prop: 'phone' },
                 { label: '角色', prop: 'role' }
             ],
+            devicesTableLabel: [
+                { label: '设备', prop: 'deviceName' },
+                { label: '设备ID', prop: 'iotId' },
+                { label: '设备状态', prop: 'state' },
+                { label: '经销商', prop: 'dealer' },
+                { label: '经销商电话', prop: 'dealerPhone' },
+            ],
             tableData: [],
             pagination: {},
             activeName: '',
             activeList: [],
             comfortInfo: {},
-            roomList: []
+            roomList: [],
+            allDevices: ''
         }
     },
     mounted () {
@@ -200,6 +215,7 @@ export default {
             if (this.roomList.length > 0) {
                 this.activeName = this.roomList[0].roomName + this.roomList[0].roomId
                 this.activeList = this.roomList[0]
+                this.allDevices = this.activeName
             }
         },
         handleTableClick (tab, event) {
@@ -220,92 +236,92 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-    .query-cont {
-        p {
-            font-size: 16px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e5e5e5;
-        }
-
-        .query-flex {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-
-            div {
-                flex: 1;
-                flex-basis: 25%;
-                padding: 10px;
-            }
-        }
+.query-cont {
+    p {
+        font-size: 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e5e5;
     }
 
-    .page-wrap {
-        padding-top: 0;
-
-        .page-title {
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e5e5e5;
-
-            p {
-                font-size: 16px;
-            }
-        }
-
-        .query-flex {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-
-            div {
-                flex: 1;
-                flex-basis: 25%;
-                padding: 10px;
-            }
-        }
-    }
-
-    .home-wrap {
+    .query-flex {
         display: flex;
-        flex-direction: column;
-        margin-top: 30px;
+        justify-content: space-around;
+        flex-wrap: wrap;
+
+        div {
+            flex: 1;
+            flex-basis: 25%;
+            padding: 10px;
+        }
+    }
+}
+
+.page-wrap {
+    padding-top: 0;
+
+    .page-title {
+        margin-bottom: 10px;
+        padding-bottom: 10px;
         border-bottom: 1px solid #e5e5e5;
 
-        &:last-child {
-            border: none;
-        }
-
         p {
             font-size: 16px;
-            padding-bottom: 10px;
-            display: block;
-            font-weight: 600;
-        }
-
-        .home-wrap-flex {
-            flex-direction: row;
-            display: flex;
-            flex-wrap: wrap;
-
-            span {
-                margin: 10px 0;
-                flex-basis: 33%;
-                justify-content: space-between;
-            }
         }
     }
 
-    /deep/ .el-tabs__item.is-active {
-        color: #333;
-        background: transparent;
+    .query-flex {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+
+        div {
+            flex: 1;
+            flex-basis: 25%;
+            padding: 10px;
+        }
+    }
+}
+
+.home-wrap {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    border-bottom: 1px solid #e5e5e5;
+
+    &:last-child {
+        border: none;
     }
 
-    /deep/ .el-tabs__header {
-        margin: 0
+    p {
+        font-size: 16px;
+        padding-bottom: 10px;
+        display: block;
+        font-weight: 600;
     }
-    .no-device{
-        padding: 20px;
-        color: #8c939d;
+
+    .home-wrap-flex {
+        flex-direction: row;
+        display: flex;
+        flex-wrap: wrap;
+
+        span {
+            margin: 10px 0;
+            flex-basis: 33%;
+            justify-content: space-between;
+        }
     }
+}
+
+/deep/ .el-tabs__item.is-active {
+    color: #333;
+    background: transparent;
+}
+
+/deep/ .el-tabs__header {
+    margin: 0;
+}
+.no-device {
+    padding: 20px;
+    color: #8c939d;
+}
 </style>

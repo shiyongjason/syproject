@@ -7,16 +7,16 @@
             <div class="query-cont-col">
                 <div class="query-col-title">设备ID：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.brandName" maxlength="20" placeholder="输入设备ID"></el-input>
+                    <el-input type="text" v-model="queryParams.iotId" maxlength="20" placeholder="输入设备ID"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">出库时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createStartTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.createEndTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照故障库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
-            <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button>
+            <!-- <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button> -->
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
@@ -50,18 +50,15 @@
 <script>
 import { iotUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { downloadEquipmentErrorList, updateCloudEquipment, deleteCloudEquipment } from './api/index'
+import { downloadOutboundList, updateCloudEquipment, deleteCloudEquipment } from './api/index'
 export default {
     name: 'equipmentError',
     data () {
         return {
             queryParams: {
-                createStartTime: '',
-                createEndTime: '',
-                createTimeSortType: '',
-                categoryId: '',
-                code: '',
-                brandName: '',
+                iotId: '',
+                startOutboundTime: '',
+                endOutboundTime: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -71,11 +68,11 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '出库时间', prop: 'source' },
-                { label: '设备类型', prop: 'categoryName' },
-                { label: '设备ID', prop: 'brandName' },
-                { label: '经销商', prop: 'code' },
-                { label: '经销商电话', prop: 'content' }
+                { label: '出库时间', prop: 'outboundTime' },
+                { label: '设备类型', prop: 'deviceType' },
+                { label: '设备ID', prop: 'iotId' },
+                { label: '经销商', prop: 'dealer' },
+                { label: '经销商电话', prop: 'dealerPhone' }
             ],
             uploadShow: false,
             fileList: [],
@@ -96,10 +93,10 @@ export default {
             },
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/api/device/breakdown/import`,
+                action: `${iotUrl}/api/outbound/import`,
                 limit: 1,
                 autoUpload: false,
-                headers: { // todo I'm need a config file
+                headers: {
                     refreshToken: sessionStorage.getItem('refreshToken'),
                     token: `Bearer ` + sessionStorage.getItem('token'),
                     AccessKeyId: '5ksbfewexbfc'
@@ -116,7 +113,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createEndTime
+                    let beginDateVal = this.queryParams.endOutboundTime
                     if (beginDateVal) {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
@@ -128,7 +125,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createStartTime
+                    let beginDateVal = this.queryParams.startOutboundTime
                     if (beginDateVal) {
                         return (
                             time.getTime() < new Date(beginDateVal).getTime()
@@ -147,7 +144,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            onQuery: 'findCloudEquipmentErrorList'
+            onQuery: 'getOutboundList'
         }),
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -173,7 +170,9 @@ export default {
                 this.$message.error(response.message)
             }
         },
-        onExport () { },
+        onExport () {
+            downloadOutboundList(this.queryParams)
+        },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
         },
@@ -226,19 +225,6 @@ export default {
                 this.onQuery(this.queryParams)
             }
         },
-        openFaultEdit (row, type) {
-            if (type === 'code') {
-                this.isCode = true
-            } else if (type === 'content') {
-                this.isCode = false
-            }
-            this.faultCodeEdit = {
-                code: row.code,
-                content: row.content,
-                id: row.id
-            }
-            this.faultEdit = true
-        },
         beforeAvatarUpload (file) {
             const isLt10M = file.size / (1024 * 1024 * 10) < 1
             // const isCsv = file.type === 'application/vnd.ms-excel'
@@ -268,29 +254,6 @@ export default {
                 })
             }
             return isCsv && isLt10M
-        },
-        onSaveFaultCode (formName) {
-            if (this.loading) {
-                return
-            }
-            this.loading = true
-            this.$refs[formName].validate(async (valid) => {
-                if (valid) {
-                    try {
-                        this.faultCodeEdit.operateUserName = this.userInfo.employeeName
-                        await updateCloudEquipment(this.faultCodeEdit)
-                        this.loading = false
-                        this.faultEdit = false
-                        this.$message.success('故障代码修改成功')
-                        this.onQuery(this.queryParams)
-                    } catch (e) {
-                        this.$message.error('故障代码失败')
-                        this.loading = false
-                    }
-                } else {
-                    this.loading = false
-                }
-            })
         },
         onDelete (id) {
             this.$confirm('确认要删除该条记录吗', '删除提示').then(() => {

@@ -438,6 +438,11 @@ const actions = {
     async getQuestionDetailAct ({ commit }, params) {
         const { data } = await Api.getQuestionDetail(params)
         commit(cloud.KNOWLEDGE_QUESTION_DETAIL, data.data)
+    },
+    async getOutboundList ({ commit }, params) {
+        const { data } = await Api.getOutboundList(params)
+        console.log(data)
+        // commit(cloud.GET_OUTBOUND_LIST, data.data)
     }
 }
 export default {

@@ -293,3 +293,34 @@ export function getDeviceFloorHeartDetail (params) {
 export function getDeviceTempCtlValveDetail (params) {
     return axios.get(iotUrl + `/api/device/statistics/home/temp-ctl-valve/details`, { params })
 }
+// 出库管理分页
+export function getOutboundList (params) {
+ axios.get(iotUrl + `/api/outbound`, { params })
+}
+// 删除出库管理
+export function deleteOutboundList (params) {
+ axios.delete(iotUrl + `/api/outbound`, { params })
+}
+// 出库管理导出
+export function downloadOutboundList (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(iotUrl + `/api/outbound/output`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '出库管理.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
