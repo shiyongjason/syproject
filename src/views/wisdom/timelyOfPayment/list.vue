@@ -46,7 +46,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe
+                <hosJoyTable ref="hosjoyTable" border stripe v-if="hosDestroyed"
                 :showPagination='!!page.total' :column="column"
                  :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
@@ -95,7 +95,7 @@ export default {
                 }
             },
             queryParams: {
-                departmentType: '2',
+                departmentType: '1',
                 regionCode: '',
                 subsectionCode: '',
                 misCode: '',
@@ -110,7 +110,8 @@ export default {
             total: {},
             tableData: [],
             dialogFormVisible: false,
-            column: platformSummarySheet
+            column: JSON.parse(JSON.stringify(platformSummarySheet)),
+            hosDestroyed: true
         }
     },
     computed: {
@@ -159,10 +160,10 @@ export default {
         },
         handleClick () {
             this.tableData = []
+            const newCloum = JSON.parse(JSON.stringify(platformSummarySheet))
             if (this.queryParams.departmentType == 2) {
-                const newCloum = [...platformSummarySheet]
                 console.log(newCloum)
-                const adddd = {
+                const newChildren = {
                     prop: '',
                     fixed: true,
                     minWidth: '200',
@@ -193,13 +194,14 @@ export default {
                         }
                     ]
                 }
-                this.$nextTick(() => {
-                    this.$set(this.column, 0, adddd)
-                })
+                this.$set(this.column, 0, newChildren)
+            } else {
+                this.column = newCloum
             }
-            // this.$forceUpdate()
-
-            console.log(this.column)
+            this.hosDestroyed = false
+            this.$nextTick(() => {
+                this.hosDestroyed = true
+            })
             this.onReset()
         },
         onSearch () {
@@ -282,7 +284,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        this.handleClick()
+        this.column = JSON.parse(JSON.stringify(platformSummarySheet))
         await this.newBossAuth(['D', 'F', 'P'])
     }
 }
