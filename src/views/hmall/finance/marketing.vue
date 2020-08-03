@@ -135,8 +135,7 @@
                     {{ activityTypeMap.get(scope.data.row.activityType) || '-' }}
                 </template>
                 <template slot="couponType" slot-scope="scope">
-                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponType)" :key="index" v-show='getCouponArr(scope.data.row.couponType).length'>{{ couponsTypeMap.get(parseInt(item)) }}</p>
-                    <p v-show='!getCouponArr(scope.data.row.couponType).length'>-</p>
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponType)" :key="index" >{{ couponsTypeMap.get(parseInt(item)) }}</p>
                 </template>
                 <template slot="couponCode" slot-scope="scope">
                     <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponCode)" :key="index">{{ item }}</p>
