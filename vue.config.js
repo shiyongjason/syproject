@@ -3,7 +3,7 @@ const SentryPlugin = require('@sentry/webpack-plugin')
 module.exports = {
     configureWebpack: config => {
         // 是否生产和预发布
-        if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'preview') {
+        if (process.env.VUE_APP_TITLE === 'production' || process.env.VUE_APP_TITLE === 'preview') {
             config.plugins.push(
                 new SentryPlugin({
                     include: './dist',
