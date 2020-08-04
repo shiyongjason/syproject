@@ -6,24 +6,25 @@
                 <el-tab-pane label="分部公司月度回款及时率" name="2"></el-tab-pane>
             </el-tabs>
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="region">
-                    <div class="query-col-title">大区：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                <hosjoyAutoCompleteRbp :regionData.sync='queryParams.regionCode' :branchData.sync='queryParams.subsectionCode' :platCompanyData.sync='queryParams.misCode' :showPlatCompany='queryParams.departmentType == 1' />
+                <!-- <div class="query-cont-col" v-if="region">
+                        <div class="query-col-title">大区：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
                     </div>
-                </div>
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    <div class="query-cont-col" v-if="branch">
+                        <div class="query-col-title">分部：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
                     </div>
-                </div>
-                <div class="query-cont-col" v-if="queryParams.departmentType == 1">
-                    <div class="query-col-title">平台公司：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
+                    <div class="query-cont-col" v-if="queryParams.departmentType == 1">
+                        <div class="query-col-title">平台公司：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
+                    </div> -->
                 <div class="query-cont-col flex-box-time">
                     <div class="query-col-title">年份：</div>
                     <el-date-picker v-model="queryParams.selectDate" type="date" value-format='yyyy-MM-dd' placeholder="选择年" :editable='false' :clearable='false'>
@@ -46,9 +47,7 @@
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe v-if="hosDestroyed"
-                :showPagination='!!page.total' :column="column"
-                 :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                <hosJoyTable ref="hosjoyTable" border stripe v-if="hosDestroyed" :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -59,6 +58,7 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import hosjoyAutoCompleteRbp from '@/components/HosjoyAutoCompleteRbp/hosjoyAutoCompleteRbp'
 import { platformSummarySheet, overDueTotal } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
@@ -68,7 +68,7 @@ import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/util
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
-    components: { hosJoyTable, HAutocomplete },
+    components: { hosJoyTable, HAutocomplete, hosjoyAutoCompleteRbp },
     data: function () {
         return {
             platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
@@ -80,20 +80,20 @@ export default {
             accept: '.xlsx,.xls',
             loading: false,
             interfaceUrl: interfaceUrl,
-            selectAuth: {
-                regionObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
-                branchObj: {
-                    selectCode: '',
-                    selectName: ''
-                },
-                platformObj: {
-                    selectCode: '',
-                    selectName: ''
-                }
-            },
+            // selectAuth: {
+            //     regionObj: {
+            //         selectCode: '',
+            //         selectName: ''
+            //     },
+            //     branchObj: {
+            //         selectCode: '',
+            //         selectName: ''
+            //     },
+            //     platformObj: {
+            //         selectCode: '',
+            //         selectName: ''
+            //     }
+            // },
             queryParams: {
                 departmentType: '1',
                 regionCode: '',
@@ -123,38 +123,38 @@ export default {
         })
     },
     methods: {
-        linkage (dis) {
-            let obj = {
-                selectCode: '',
-                selectName: ''
-            }
-            if (dis === 'D') {
-                this.queryParams.subsectionCode = ''
-                this.queryParams.companyName = ''
-                this.selectAuth.branchObj = { ...obj }
-                this.selectAuth.platformObj = { ...obj }
-            } else if (dis === 'F') {
-                this.queryParams.companyName = ''
-                this.selectAuth.platformObj = { ...obj }
-            }
-        },
-        async backPlat (val, dis) {
-            if (dis === 'D') {
-                this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-                !val.value.pkDeptDoc && this.linkage(dis)
-            } else if (dis === 'F') {
-                this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-                if (val.value.pkDeptDoc) {
-                    this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
-                } else {
-                    !this.userInfo.deptType && this.findPlatformslist()
-                }
-                !val.value.pkDeptDoc && this.linkage(dis)
-            } else if (dis === 'P') {
-                this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
-            }
-        },
+        // linkage (dis) {
+        //     let obj = {
+        //         selectCode: '',
+        //         selectName: ''
+        //     }
+        //     if (dis === 'D') {
+        //         this.queryParams.subsectionCode = ''
+        //         this.queryParams.companyName = ''
+        //         this.selectAuth.branchObj = { ...obj }
+        //         this.selectAuth.platformObj = { ...obj }
+        //     } else if (dis === 'F') {
+        //         this.queryParams.companyName = ''
+        //         this.selectAuth.platformObj = { ...obj }
+        //     }
+        // },
+        // async backPlat (val, dis) {
+        //     if (dis === 'D') {
+        //         this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+        //         this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
+        //         !val.value.pkDeptDoc && this.linkage(dis)
+        //     } else if (dis === 'F') {
+        //         this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+        //         if (val.value.pkDeptDoc) {
+        //             this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
+        //         } else {
+        //             !this.userInfo.deptType && this.findPlatformslist()
+        //         }
+        //         !val.value.pkDeptDoc && this.linkage(dis)
+        //     } else if (dis === 'P') {
+        //         this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
+        //     }
+        // },
         onExport () {
             exportOverdueExcel(this.searchParams)
         },
@@ -264,10 +264,10 @@ export default {
             this.onQuery()
         },
         async onReset () {
-            let obj = {
-                selectCode: '',
-                selectName: ''
-            }
+            // let obj = {
+            //     selectCode: '',
+            //     selectName: ''
+            // }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
@@ -275,17 +275,17 @@ export default {
             this.$set(this.queryParams, 'selectDate', moment().format('YYYY-MM-DD'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
-            this.selectAuth.regionObj = { ...obj }
-            this.selectAuth.branchObj = { ...obj }
-            this.selectAuth.platformObj = { ...obj }
-            await this.newBossAuth(['D', 'F', 'P'])
+            // this.selectAuth.regionObj = { ...obj }
+            // this.selectAuth.branchObj = { ...obj }
+            // this.selectAuth.platformObj = { ...obj }
+            // await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         }
     },
     async mounted () {
         this.onSearch()
         this.column = JSON.parse(JSON.stringify(platformSummarySheet))
-        await this.newBossAuth(['D', 'F', 'P'])
+        // await this.newBossAuth(['D', 'F', 'P'])
     }
 }
 </script>
