@@ -110,8 +110,9 @@ export default {
             total: {},
             tableData: [],
             dialogFormVisible: false,
-            column: JSON.parse(JSON.stringify(platformSummarySheet)),
-            hosDestroyed: true
+            column: [],
+            hosDestroyed: true,
+            nowToday: moment().format('DD')
         }
     },
     computed: {
@@ -160,7 +161,7 @@ export default {
         },
         handleClick () {
             this.tableData = []
-            const newCloum = JSON.parse(JSON.stringify(platformSummarySheet))
+            const newCloum = JSON.parse(JSON.stringify(platformSummarySheet(4)))
             if (this.queryParams.departmentType == 2) {
                 console.log(newCloum)
                 const newChildren = {
@@ -210,9 +211,12 @@ export default {
                 ...this.page
             }
             delete this.searchParams.total
-            this.onQuery()
+            const _N = moment(this.queryParams.selectDate).format('DD')
+            this.onQuery(_N)
         },
-        async onQuery () {
+        async onQuery (_N) {
+            const column = platformSummarySheet(parseInt(_N))
+            console.log(column)
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 if (!res[1].data) {
@@ -221,7 +225,7 @@ export default {
                 const rest = res[1].data
                 let temp = { ...overDueTotal, ...rest }
                 for (let key in temp) {
-                    platformSummarySheet.forEach(value => {
+                    column.forEach(value => {
                         value.children.forEach(value1 => {
                             value1.children.forEach(value2 => {
                                 if (value2.prop === key && temp[key] != null) {
@@ -248,6 +252,10 @@ export default {
                 return res[0].data
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
+            })
+            this.hosDestroyed = false
+            this.$nextTick(() => {
+                this.hosDestroyed = true
             })
             this.tableData = data.records
             this.page = {
@@ -284,7 +292,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
-        this.column = JSON.parse(JSON.stringify(platformSummarySheet))
+        this.column = platformSummarySheet(parseInt(this.nowToday))
         await this.newBossAuth(['D', 'F', 'P'])
     }
 }
@@ -305,11 +313,11 @@ export default {
     right: 0;
 }
 /deep/.el-table__header .repaymentStyle {
-    background-color: rgba($color: #ff7a45, $alpha: 0.8) !important;
+    background-color: rgba($color: #e6a23c, $alpha: 0.8) !important;
     color: #fff !important;
 }
 /deep/.el-table__row .repaymentStyle {
-    background-color: rgba($color: #ff7a45, $alpha: 0.8) !important;
+    background-color: rgba($color: #e6a23c, $alpha: 0.8) !important;
     color: #fff !important;
 }
 /deep/.el-table__header .colorBlue {
@@ -318,6 +326,14 @@ export default {
 }
 /deep/.el-table__header .colorInfo {
     background-color: rgba($color: #13c2c2, $alpha: 1) !important;
+    color: #fff !important;
+}
+/deep/.el-table__header .lightBlueStyle {
+    background-color: rgba($color: #1989fa, $alpha: 1) !important;
+    color: #fff !important;
+}
+/deep/.el-table__header .lightBlueStyle {
+    background-color: rgba($color: #1989fa, $alpha: 1) !important;
     color: #fff !important;
 }
 </style>
