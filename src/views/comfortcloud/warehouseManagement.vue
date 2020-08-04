@@ -16,7 +16,7 @@
                     <el-date-picker v-model="queryParams.startOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
@@ -33,12 +33,15 @@
                 <p slot="tip" class="el-upload__tip">2.请按照故障库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
             <!-- <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button> -->
+            <a class="downloadExcel" href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">
+                下载出库管理导入模板
+            </a>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
         </el-dialog>
         <div class="page-body-cont">
-            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="cloudEquipmentErrorList" :pagination="cloudEquipmentErrorPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' @onSortChange="onSortChange" :isAction="true" :actionMinWidth='80'>
+            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                 </template>
@@ -50,7 +53,7 @@
 <script>
 import { iotUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { downloadOutboundList, updateCloudEquipment, deleteCloudEquipment } from './api/index'
+import { downloadOutboundList, updateCloudEquipment, deleteOutboundList } from './api/index'
 export default {
     name: 'equipmentError',
     data () {
@@ -62,11 +65,8 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            searchParams: {},
             tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10
-            },
             tableLabel: [
                 { label: '出库时间', prop: 'outboundTime' },
                 { label: '设备类型', prop: 'deviceType' },
@@ -76,21 +76,6 @@ export default {
             ],
             uploadShow: false,
             fileList: [],
-            faultEdit: false,
-            faultCodeEdit: {
-                code: '',
-                content: '',
-                id: '',
-                operateUserName: ''
-            },
-            rules: {
-                code: [
-                    { required: true, message: '请输入故障代码', trigger: 'blur' }
-                ],
-                content: [
-                    { required: true, message: '请输入故障内容', trigger: 'blur' }
-                ]
-            },
             uploadData: {
                 accept: '.xlsx,.xls',
                 action: `${iotUrl}/api/outbound/import`,
@@ -105,8 +90,7 @@ export default {
                     operateUserName: ''
                 }
             },
-            loading: false,
-            isCode: true
+            loading: false
         }
     },
     computed: {
@@ -134,25 +118,33 @@ export default {
                 }
             }
         },
-        ...mapGetters({
-            cloudEquipmentErrorList: 'cloudEquipmentErrorList',
-            cloudEquipmentErrorPagination: 'cloudEquipmentErrorPagination'
-        }),
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            outBoundList: state => {
+                console.log(state.cloudmanage.outBoundList)
+                return state.cloudmanage.outBoundList
+            },
+            outBoundListPagination: state => {
+                console.log(state.cloudmanage.outBoundListPagination)
+                return state.cloudmanage.outBoundListPagination
+            }
         })
     },
     methods: {
         ...mapActions({
             onQuery: 'getOutboundList'
         }),
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.onQuery(this.searchParams)
+        },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onQuery(this.queryParams)
+            this.searchParams.pageNumber = val.pageNumber
+            this.onQuery(this.searchParams)
         },
         onSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.onQuery(this.queryParams)
+            this.searchParams.pageSize = val
+            this.onQuery(this.searchParams)
         },
         uploadError () {
             this.$refs.upload.clearFiles()
@@ -165,7 +157,7 @@ export default {
             if (response.code === 200) {
                 this.$message.success('文件上传成功')
                 this.uploadShow = false
-                this.onQuery()
+                this.onQuery(this.searchParams)
             } else {
                 this.$message.error(response.message)
             }
@@ -219,18 +211,10 @@ export default {
                 this.uploadShow = false
             }
         },
-        onSortChange (val) {
-            if (val.order) {
-                this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
-                this.onQuery(this.queryParams)
-            }
-        },
         beforeAvatarUpload (file) {
             const isLt10M = file.size / (1024 * 1024 * 10) < 1
-            // const isCsv = file.type === 'application/vnd.ms-excel'
             const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
             if (!isCsv) {
-                // this.$message.error('上传文件只能是 excel 格式!')
                 this.loading = true
                 this.$message({
                     type: 'error',
@@ -242,7 +226,6 @@ export default {
                 })
             }
             if (!isLt10M) {
-                // this.$message.error('上传文件大小不能超过 10MB!')
                 this.loading = true
                 this.$message({
                     type: 'error',
@@ -256,14 +239,19 @@ export default {
             return isCsv && isLt10M
         },
         onDelete (id) {
-            this.$confirm('确认要删除该条记录吗', '删除提示').then(() => {
-                deleteCloudEquipment({ id: id, operateUserName: this.userInfo.employeeName })
-                this.onQuery(this.queryParams)
-            })
+            this.$confirm('确认要删除该条记录吗', '删除提示').then(async () => {
+                await deleteOutboundList({ id: id, operateUserName: this.userInfo.employeeName })
+                this.$message({
+                    showClose: true,
+                    message: '删除成功',
+                    type: 'success'
+                })
+                this.onQuery(this.searchParams)
+            }).catch(() => { })
         }
     },
     mounted () {
-        this.onQuery(this.queryParams)
+        this.onSearch()
     }
 }
 </script>

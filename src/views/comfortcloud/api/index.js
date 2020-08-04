@@ -295,16 +295,16 @@ export function getDeviceTempCtlValveDetail (params) {
 }
 // 出库管理分页
 export function getOutboundList (params) {
- axios.get(iotUrl + `/api/outbound`, { params })
+    return axios.get(iotUrl + `/api/outbound`, { params })
 }
 // 删除出库管理
 export function deleteOutboundList (params) {
- axios.delete(iotUrl + `/api/outbound`, { params })
+    return axios.delete(iotUrl + `/api/outbound`, { params })
 }
 // 出库管理导出
 export function downloadOutboundList (params) {
     axios.defaults.responseType = 'blob'
-    axios.get(iotUrl + `/api/outbound/output`, { params }).then(function (response) {
+    axios.get(iotUrl + `/api/outbound/export`, { params }).then(function (response) {
         try {
             const reader = new FileReader()
             reader.readAsDataURL(response.data)

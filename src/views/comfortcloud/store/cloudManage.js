@@ -47,7 +47,9 @@ const state = {
     cloudComfortEncyclopediaDetail: {},
     klCatalogueList: [],
     klQuestionList: [],
-    klQuestionDetail: {}
+    klQuestionDetail: {},
+    outBoundList: [],
+    outBoundListPagination: {}
 }
 
 const getters = {
@@ -212,11 +214,9 @@ const mutations = {
         state.cloudSendMessageDetailChart = payload
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST] (state, payload) {
-        console.log(payload)
         state.cloudComfortEncyclopediaList = payload
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION] (state, payload) {
-        console.log(payload)
         state.cloudComfortEncyclopediaListPagination = payload
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL] (state, payload) {
@@ -230,6 +230,12 @@ const mutations = {
     },
     [cloud.KNOWLEDGE_QUESTION_DETAIL] (state, payload) {
         state.klQuestionDetail = payload
+    },
+    [cloud.GET_OUTBOUND_LIST] (state, payload) {
+        state.outBoundList = payload
+    },
+    [cloud.OUTBOUND_PAGINATION] (state, payload) {
+        state.outBoundListPagination = payload
     }
 }
 
@@ -441,8 +447,12 @@ const actions = {
     },
     async getOutboundList ({ commit }, params) {
         const { data } = await Api.getOutboundList(params)
-        console.log(data)
-        // commit(cloud.GET_OUTBOUND_LIST, data.data)
+        commit(cloud.GET_OUTBOUND_LIST, data.data.records)
+        commit(cloud.OUTBOUND_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
     }
 }
 export default {
