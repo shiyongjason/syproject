@@ -240,7 +240,9 @@ export default {
                 this.selectItem = { value: item.target.value }
             }
             this.whichInput = flag// 标记选中的那个下拉
-            this.$refs.autocomplete.suggestions = []
+            if (this.$refs.autocomplete) {
+                this.$refs.autocomplete.suggestions = []
+            }
         },
         clearInput () { // 重置，无需父组件通过子组件实例获取来触发。当绑定的值为空时会触发。
             this.choosedItem.regionName = ''
