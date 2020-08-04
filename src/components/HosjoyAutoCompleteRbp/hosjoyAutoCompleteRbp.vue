@@ -128,7 +128,22 @@ export default {
     watch: {
         regionData: {
             handler (val) {
+                console.log('val: ', val)
                 if (!val && !this.branchData && !this.platCompanyData) {
+                    this.clearInput()
+                }
+            }
+        },
+        branchData: {
+            handler (val) {
+                if (!val && !this.regionData && !this.platCompanyData) {
+                    this.clearInput()
+                }
+            }
+        },
+        platCompanyData: {
+            handler (val) {
+                if (!val && !this.regionData && !this.branchData) {
                     this.clearInput()
                 }
             }
@@ -162,7 +177,6 @@ export default {
             const results = this.selectArray && this.selectArray.filter(v => {
                 return (v.value === item.target.value)
             })
-            console.log('results: ', results)
             if (results.length == 0) {
                 if (this.whichInput === 'D') {
                     this.choosedItem.regionName = ''
