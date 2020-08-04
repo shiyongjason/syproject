@@ -195,7 +195,6 @@ export default {
                 }
                 this.$set(newCloum, 0, newChildren)
                 this.column = JSON.parse(JSON.stringify(newCloum))
-                console.log(newCloum)
             } else {
                 this.column = newCloum
             }
