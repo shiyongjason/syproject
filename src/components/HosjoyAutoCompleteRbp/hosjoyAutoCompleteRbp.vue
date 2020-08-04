@@ -162,6 +162,7 @@ export default {
             const results = this.selectArray && this.selectArray.filter(v => {
                 return (v.value === item.target.value)
             })
+            console.log('results: ', results)
             if (results.length == 0) {
                 if (this.whichInput === 'D') {
                     this.choosedItem.regionName = ''
@@ -174,10 +175,10 @@ export default {
                     // this.doBlurMethods && this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }) // watch会触发
                 }
                 if (this.whichInput === 'F') {
-                    if (!this.platCompanyDataSync) {
-                        this.platCompanyDataSync = ''
-                        this.choosedItem.platCompany = ''
-                    }
+                    this.platCompanyDataSync = ''
+                    this.choosedItem.platCompany = ''
+                    this.branchDataSync = ''
+                    this.choosedItem.branchName = ''
                     this.doBlurMethods && this.findPlatformslist()
                 }
                 if (this.whichInput === 'P') {
