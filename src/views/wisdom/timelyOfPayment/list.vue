@@ -63,6 +63,7 @@ import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getOverduepage, getOverdueTotal, exportOverdueExcel } from './api/index'
 import moment from 'moment'
+import filters from '@/utils/filters'
 import { PLATFORM_OVERDUE_SUM_EXPORT, PLATFORM_OVERDUE_SUM_IMPORT } from '@/utils/auth_const'
 export default {
     name: 'commitValue',
@@ -112,6 +113,7 @@ export default {
             column: [],
             hosDestroyed: true,
             nowToday: moment().format('DD')
+
         }
     },
     computed: {
@@ -155,11 +157,13 @@ export default {
         //         this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
         //     }
         // },
+        fundMoneys (val) {
+            return filters.money(val)
+        },
         onExport () {
             exportOverdueExcel(this.searchParams)
         },
-        handleClick () {
-            this.tableData = []
+        changeColumn () {
             const _N = moment(this.queryParams.selectDate).format('DD')
             const newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
             if (this.queryParams.departmentType == 2) {
@@ -202,6 +206,10 @@ export default {
             this.$nextTick(() => {
                 this.hosDestroyed = true
             })
+        },
+        handleClick () {
+            this.tableData = []
+            this.changeColumn()
             this.onReset()
         },
         onSearch () {
@@ -239,6 +247,14 @@ export default {
                                         value2.label = String(temp[key]) + '%'
                                     } else if (key == 'yesterdayTimelyRepaymentRateNumber') {
                                         value2.label = String(temp[key]) + '%'
+                                    } else if (key == 'receivableAmount') {
+                                        value2.label = this.fundMoneys(temp[key])
+                                    } else if (key == 'timelyRepaymentAmount') {
+                                        value2.label = this.fundMoneys(temp[key])
+                                    } else if (key == 'yesterdayTimelyRepaymentAmount') {
+                                        value2.label = this.fundMoneys(temp[key])
+                                    } else if (key == 'yesterdayReceivableAmount') {
+                                        value2.label = this.fundMoneys(temp[key])
                                     } else {
                                         value2.label = String(temp[key])
                                     }
@@ -251,11 +267,7 @@ export default {
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
-            this.column = _column
-            this.hosDestroyed = false
-            this.$nextTick(() => {
-                this.hosDestroyed = true
-            })
+            this.changeColumn()
             this.tableData = data.records
             this.page = {
                 total: data.total,

@@ -3,7 +3,7 @@ export const branchSummarySheet = function () {
     return [
         { prop: 'subsectionName', label: '分部', showOverflowTooltip: true, fixed: true },
         { prop: 'regionName', label: '大区', showOverflowTooltip: true, fixed: true },
-        { prop: 'stockOverdue', label: '存量逾期', showOverflowTooltip: true },
+        { prop: 'stockOverdue', label: '存量逾期', showOverflowTooltip: true, displayAs: 'fundMoney' },
         {
             label: '存量逾期-2020年度还款计划',
             children: [
@@ -308,11 +308,11 @@ export const platformSummarySheet = [
                 prop: 'lastYearSales',
                 label: '19年',
                 width: '100',
-                displayAs: 'fundMoney',
                 showOverflowTooltip: true,
                 children: [
                     {
                         prop: 'lastYearSales',
+                        displayAs: 'fundMoney',
                         label: '-'
                     }
                 ]
@@ -321,10 +321,11 @@ export const platformSummarySheet = [
                 prop: 'currentSales',
                 label: '20年',
                 width: '100',
-                displayAs: 'fundMoney',
+
                 showOverflowTooltip: true,
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'currentSales',
                         label: '-'
                     }
@@ -350,6 +351,7 @@ export const platformSummarySheet = [
         children: [
             {
                 prop: 'capitalAmount',
+                displayAs: 'fundMoney',
                 label: '-'
             }
         ]
@@ -366,6 +368,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'januaryRepayment',
                         label: '-'
                     }
@@ -375,11 +378,12 @@ export const platformSummarySheet = [
                 prop: 'februaryRepayment',
                 label: '2月',
                 width: '100',
-                displayAs: 'fundMoney',
+
                 showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'februaryRepayment',
                         label: '-'
                     }
@@ -394,6 +398,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'marchRepayment',
                         label: '-'
                     }
@@ -408,6 +413,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'aprilRepayment',
                         label: '-'
                     }
@@ -422,6 +428,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'mayRepayment',
                         label: '-'
                     }
@@ -436,6 +443,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'juneRepayment',
                         label: '-'
                     }
@@ -450,6 +458,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'julyRepayment',
                         label: '-'
                     }
@@ -464,6 +473,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'augustRepayment',
                         label: '-'
                     }
@@ -478,6 +488,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'septemberRepayment',
                         label: '-'
                     }
@@ -492,6 +503,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'octoberRepayment',
                         label: '-'
                     }
@@ -506,6 +518,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'novemberRepayment',
                         label: '-'
                     }
@@ -520,6 +533,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'decemberRepayment',
                         label: '-'
                     }
@@ -534,6 +548,7 @@ export const platformSummarySheet = [
                 className: 'repaymentStyle',
                 children: [
                     {
+                        displayAs: 'fundMoney',
                         prop: 'total',
                         label: '-'
                     }
@@ -558,6 +573,7 @@ export const platformSummarySheet = [
         showOverflowTooltip: true,
         children: [
             {
+                displayAs: 'fundMoney',
                 prop: 'noRepaymentPlanAmount',
                 label: '-'
             }

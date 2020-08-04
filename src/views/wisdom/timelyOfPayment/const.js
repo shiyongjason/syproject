@@ -159,7 +159,7 @@ export const platformSummarySheet = function (N) {
                     label: '环比增减',
                     className: 'repaymentStyle',
                     minWidth: '130',
-                    displayAs: 'fundMoney',
+                    displayAs: 'money',
                     children: [
                         {
                             prop: 'increaseAndDecreaseNumber',
@@ -182,12 +182,12 @@ export const platformSummarySheet = function (N) {
                     label: '应收金额',
                     width: '100',
                     className: 'lightBlueStyle',
-                    displayAs: 'fundMoney',
                     children: [
                         {
                             prop: 'yesterdayReceivableAmount',
                             minWidth: '100',
                             label: '-',
+                            displayAs: 'money',
                             showOverflowTooltip: true
                         }
                     ]
@@ -198,11 +198,11 @@ export const platformSummarySheet = function (N) {
                     label: '及时回款金额',
                     className: 'lightBlueStyle',
                     width: '120',
-                    displayAs: 'fundMoney',
                     children: [
                         {
                             prop: 'yesterdayTimelyRepaymentAmount',
                             minWidth: '120',
+                            displayAs: 'money',
                             label: '-',
                             showOverflowTooltip: true
                         }
@@ -233,11 +233,12 @@ export const platformSummarySheet = function (N) {
                     prop: 'receivableAmount',
                     label: '应收金额',
                     minWidth: '100',
-                    displayAs: 'fundMoney',
+
                     className: 'lightBlueStyle',
                     children: [
                         {
                             prop: 'receivableAmount',
+                            displayAs: 'money',
                             minWidth: '100',
                             label: '-',
                             showOverflowTooltip: true
@@ -249,10 +250,10 @@ export const platformSummarySheet = function (N) {
                     label: '及时回款金额',
                     className: 'lightBlueStyle',
                     minWidth: '120',
-                    displayAs: 'fundMoney',
                     children: [
                         {
                             prop: 'timelyRepaymentAmount',
+                            displayAs: 'money',
                             minWidth: '120',
                             label: '-',
                             showOverflowTooltip: true
