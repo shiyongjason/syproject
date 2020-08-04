@@ -451,9 +451,9 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
-            this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
+            this.selfHeight = this.$refs.hosTable && this.$refs.hosTable.getBoundingClientRect().top + 80
             if (this.data.length == 0) {
-                let left = this.$refs.hosTable.getBoundingClientRect().left
+                let left = this.$refs.hosTable && this.$refs.hosTable.getBoundingClientRect().left
                 let windowsWidth = document.documentElement.clientWidth
                 let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
                 this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)

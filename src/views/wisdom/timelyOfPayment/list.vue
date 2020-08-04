@@ -163,10 +163,10 @@ export default {
         onExport () {
             exportOverdueExcel(this.searchParams)
         },
-        changeColumn () {
+        changeColumn (val) {
             const _N = moment(this.queryParams.selectDate).format('DD')
-            const newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
-            if (this.queryParams.departmentType == 2) {
+            this.newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
+            if (val == 2) {
                 const newChildren = {
                     prop: '',
                     fixed: true,
@@ -197,20 +197,20 @@ export default {
                         }
                     ]
                 }
-                this.$set(newCloum, 0, newChildren)
-                this.column = JSON.parse(JSON.stringify(newCloum))
+                this.$set(this.newCloum, 0, newChildren)
+                this.column = JSON.parse(JSON.stringify(this.newCloum))
             } else {
-                this.column = newCloum
+                this.column = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
             }
             this.hosDestroyed = false
             this.$nextTick(() => {
                 this.hosDestroyed = true
             })
+            this.onReset()
         },
         handleClick () {
             this.tableData = []
-            this.changeColumn()
-            this.onReset()
+            this.changeColumn(this.queryParams.departmentType)
         },
         onSearch () {
             this.searchParams = {
@@ -222,7 +222,13 @@ export default {
             this.onQuery(_N)
         },
         async onQuery (_N) {
-            const _column = platformSummarySheet(parseInt(_N))
+            let _column = []
+            if (this.queryParams.departmentType == 1) {
+                _column = platformSummarySheet(parseInt(_N))
+            } else {
+                _column = JSON.parse(JSON.stringify(this.newCloum))
+            }
+            console.log(1, _column)
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 if (!res[1].data) {
@@ -230,6 +236,7 @@ export default {
                 }
                 const rest = res[1].data
                 let temp = { ...overDueTotal, ...rest }
+
                 for (let key in temp) {
                     _column.forEach(value => {
                         value.children.forEach(value1 => {
@@ -267,7 +274,13 @@ export default {
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
-            this.changeColumn()
+            this.column = _column
+            // this.hosDestroyed = false
+            // this.$nextTick(() => {
+            //     this.hosDestroyed = true
+            // })
+            // this.changeColumn()
+
             this.tableData = data.records
             this.page = {
                 total: data.total,
@@ -302,8 +315,9 @@ export default {
         }
     },
     async mounted () {
+        this.changeColumn(2)
         this.onSearch()
-        this.column = platformSummarySheet(parseInt(this.nowToday))
+        // this.column = platformSummarySheet(parseInt(this.nowToday))
     }
 }
 </script>
