@@ -1,28 +1,16 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont query-cont">
-            <h2>2019年线下台账导入</h2>
+            <h2>注资占用</h2>
             <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-还款信息导入模板.xls" download="资金台账-还款信息导入模板.xls">
-                    还款明细表模板导出
+                <a class="downloadExcel" href="/excelTemplate/注资信息导入.xls" download="注资信息导入.xls">
+                    注资模板导出
                 </a>
             </div>
             <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/资金台账-借款信息导入模板.xlsx" download="资金台账-借款信息导入模板.xlsx">
-                    借款模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :headers='headersData' :action="interfaceUrl + 'backend/api/account/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
-                    <el-button type="primary" class='m0' :loading='loading'>
-                        借款信息导入
-                    </el-button>
-                </el-upload>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :headers='headersData' :action="interfaceUrl + 'backend/api/account/repay/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
+                <el-upload class="upload-demo" :show-file-list="false" :headers='headersData' :action="interfaceUrl + 'backend/api/account-efficiency/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
                     <el-button type="primary" class="m0" :loading='loading'>
-                        还款明细表信息导入
+                        注资信息导入
                     </el-button>
                 </el-upload>
             </div>
@@ -34,7 +22,7 @@
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 export default {
-    name: 'brandSale',
+    name: 'importDataSplit',
     data: function () {
         return {
             interfaceUrl: interfaceUrl,
@@ -89,12 +77,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.downloadExcel {
-    padding: 12px 20px;
-    border-radius: 4px;
-    background-color: #ff7a45;
-    color: #fff;
-}
+    .downloadExcel {
+        padding: 12px 20px;
+        border-radius: 4px;
+        background-color: #ff7a45;
+        color: #fff;
+    }
     h2 {
         line-height: 50px;
         margin-bottom: 50px;
