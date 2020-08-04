@@ -3,7 +3,7 @@
         <div class="query-cont-col" v-if="region&&showBranch">
             <div class="query-col-title">大区：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocomplete" :value='choosedItem.regionName' @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
+                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
                     @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('regionDataSync',item)}">{{ item.value }}</div>
@@ -14,7 +14,7 @@
         <div class="query-cont-col" v-if="branch&&showBranch">
             <div class="query-col-title">分部：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocomplete" :value='choosedItem.branchName' @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
+                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
                     @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('branchDataSync',item)}">{{ item.value }}</div>
@@ -25,7 +25,7 @@
         <div class="query-cont-col" v-if="showPlatCompany">
             <div class="query-col-title">平台公司：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocomplete" :value='choosedItem.platCompany' @input="(val)=>{choosedItem['platCompany'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
+                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>{choosedItem['platCompany'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
                     @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}</div>
@@ -128,7 +128,6 @@ export default {
     watch: {
         regionData: {
             handler (val) {
-                console.log('val: ', val)
                 if (!val && !this.branchData && !this.platCompanyData) {
                     this.clearInput()
                 }
@@ -250,13 +249,13 @@ export default {
             }
         },
         focusInput (flag, item) {
+            if (this.$refs[`autocomplete${flag}`]) {
+                this.$refs[`autocomplete${flag}`].suggestions = []
+            }
             if (item) {
                 this.selectItem = { value: item.target.value }
             }
             this.whichInput = flag// 标记选中的那个下拉
-            if (this.$refs.autocomplete) {
-                this.$refs.autocomplete.suggestions = []
-            }
         },
         clearInput () { // 重置，无需父组件通过子组件实例获取来触发。当绑定的值为空时会触发。
             this.choosedItem.regionName = ''
@@ -270,11 +269,12 @@ export default {
         querySearchAsync (queryString, callback) {
             let selectList = this.selectArray // 下拉集合
             let results = queryString ? selectList.filter(this.createStateFilter(queryString)) : selectList
-            // 以下是一个260毫秒转圈圈的效果，可以避免新数据替换就数据的时候会看到一瞬间的旧数据。
-            clearTimeout(this.timeout)
-            this.timeout = setTimeout(() => {
-                callback(results)
-            }, 260)
+            callback(results)
+            // 以下是一个260毫秒转圈圈的效果。
+            // clearTimeout(this.timeout)
+            // this.timeout = setTimeout(() => {
+            //     callback(results)
+            // }, 260)
         },
         createStateFilter (queryString) {
             return (state) => {
