@@ -231,12 +231,12 @@ export default {
             console.log(1, _column)
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                if (!res[1].data) {
+                console.log('res: ', res)
+                /* if (!res[1].data) {
                     res[1].data = overDueTotal
                 }
                 const rest = res[1].data
                 let temp = { ...overDueTotal, ...rest }
-
                 for (let key in temp) {
                     _column.forEach(value => {
                         value.children.forEach(value1 => {
@@ -265,6 +265,18 @@ export default {
                                     } else {
                                         value2.label = String(temp[key])
                                     }
+                                }
+                            })
+                        })
+                    })
+                } */
+                let temp = res[1].data || {}
+                for (let key in temp) {
+                    _column.forEach(value => {
+                        value.children.forEach(value1 => {
+                            value1.children.forEach(value2 => {
+                                if (value2.prop === key && temp[key] != null) {
+                                    value2.label = temp[key]
                                 }
                             })
                         })

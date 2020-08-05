@@ -233,13 +233,12 @@ export const platformSummarySheet = function (N) {
                     prop: 'receivableAmount',
                     label: '应收金额',
                     minWidth: '100',
-
                     className: 'lightBlueStyle',
                     children: [
                         {
                             prop: 'receivableAmount',
                             displayAs: 'money',
-                            minWidth: '100',
+                            minWidth: '200',
                             label: '-',
                             showOverflowTooltip: true
                         }
