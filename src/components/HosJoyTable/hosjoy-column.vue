@@ -194,7 +194,7 @@ export default {
         dealHeader (label, childItem) {
             if (!childItem.displayAs && !childItem.unit) return label
             let res = '-'
-            if (childItem.displayAs) {
+            if (childItem.displayAs && (childItem.displayAs in this.functions)) {
                 if (label || label == 0) {
                     res = this.filterMethods(childItem.displayAs, label)
                 }
