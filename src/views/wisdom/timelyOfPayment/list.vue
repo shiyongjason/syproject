@@ -161,7 +161,7 @@ export default {
             return filters.money(val)
         },
         onExport () {
-            exportOverdueExcel(this.searchParams)
+            exportOverdueExcel(this.searchParams, this.queryParams.departmentType == 1 ? '平台' : '分部')
         },
         changeColumn (val) {
             const _N = moment(this.queryParams.selectDate).format('DD')

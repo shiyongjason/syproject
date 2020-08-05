@@ -5,7 +5,7 @@ export const getOverduepage = (params) => axios.get(`backend/api/overdue/repayme
 export const getOverdueTotal = (params) => axios.get(`backend/api/overdue/repayment-timely-rate/total`, { params })
 
 // 月度回款及时率
-export function exportOverdueExcel (params) {
+export function exportOverdueExcel (params, exlname) {
     axios.defaults.responseType = 'blob'
     axios.get(`backend/api/overdue/repayment-timely-rate/export`, { params }).then(function (response) {
         try {
@@ -13,7 +13,7 @@ export function exportOverdueExcel (params) {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = `月度回款及时率.xlsx`
+                a.download = `${exlname}月度回款及时率.xlsx`
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
