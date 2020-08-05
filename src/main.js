@@ -13,6 +13,8 @@ import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
 import moment from 'moment'
 import '@/utils/validate/index.js'
+// fix前端精度问题
+import precisionMethods from '@/utils/number-precision.js'
 
 // 接入 sentry
 import * as Sentry from '@sentry/browser'
@@ -48,6 +50,30 @@ Vue.filter('formatDate', (time, param) => {
 Object.keys(filters).forEach(key => {
     Vue.filter(key, filters[key])
 })
+/**
+ * 精确加法
+ */
+Vue.prototype.$plus = (num1, num2, ...others) => {
+    return precisionMethods.plus(num1, num2, ...others)
+}
+/**
+ * 精确减法
+ */
+Vue.prototype.$minus = (num1, num2, ...others) => {
+    return precisionMethods.minus(num1, num2, ...others)
+}
+/**
+ * 精确除法
+ */
+Vue.prototype.$divide = (num1, num2, ...others) => {
+    return precisionMethods.divide(num1, num2, ...others)
+}
+/**
+ * 精确乘法
+ */
+Vue.prototype.$multiply = (num1, num2, ...others) => {
+    return precisionMethods.times(num1, num2, ...others)
+}
 
 Vue.mixin({
     methods: {
