@@ -15,6 +15,13 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                label="是否可叠加">
+                <template slot-scope="scope">
+                    {{scope.row.stackable ? '是' : '否'}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
                 label="优惠券类型">
                 <!--优惠券类型(1,满减 2,无门槛)-->
                 <template slot-scope="scope">
