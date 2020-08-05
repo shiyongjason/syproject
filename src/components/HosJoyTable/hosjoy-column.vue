@@ -4,7 +4,7 @@
         v-bind="$attrs"
         v-on="$listeners"
         :prop="column.prop"
-        :label="column.label"
+        :label="getLabel(column.label)"
         :type="column.type"
         :index="column.index"
         :column-key="column.columnKey"
@@ -35,6 +35,7 @@
         <template slot="header" slot-scope="scope">
             <hosjoy-render v-if="column.renderHeader" :scope="scope" :render="column.renderHeader">
             </hosjoy-render>
+            <span v-if='column.displayAs || column.unit'>{{ dealHeader(scope.column.label, column) }}</span>
             <span v-else>{{ scope.column.label }}</span>
         </template>
 
@@ -179,6 +180,29 @@ export default {
                 if (!row) return '-'
                 return moment(row).format(fncName)
             }
+        },
+        getLabel (label) {
+            if (Object.prototype.toString.call(label) == '[object String]') {
+                return label
+            }
+            // fix表头添加合计label为number是类型校验报错
+            if (label || label == 0) {
+                return `${label}`
+            }
+            return label // undefined|null
+        },
+        dealHeader (label, childItem) {
+            if (!childItem.displayAs && !childItem.unit) return label
+            let res = '-'
+            if (childItem.displayAs) {
+                if (label || label == 0) {
+                    res = this.filterMethods(childItem.displayAs, label)
+                }
+            } else {
+                res = label
+            }
+            let unit = childItem.unit ? childItem.unit : '' // 添加单位unit
+            return res === '-' ? res : res + unit
         }
     },
     watch: {
