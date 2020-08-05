@@ -21,24 +21,38 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="onQuery(queryParams)">搜索</el-button>
-                <el-button type="primary" class="ml20" @click="onOpenModel">导入新故障库</el-button>
+                <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                <el-button type="primary" class="ml20" @click="onOpenModel">导入数据</el-button>
                 <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
             </div>
         </div>
-        <el-dialog title="上传故障库" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+        <el-dialog title="上传出仓数据" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
             <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照故障库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
-            <!-- <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button> -->
-            <a class="downloadExcel" href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">
-                下载出库管理导入模板
-            </a>
+            <el-button class="errorBtn" v-if="errorData.containsList.length > 0" @click="errorShow = true">上传失败数据</el-button>
+            <div class="downloadExcel">
+                <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
+            </div>
+            <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
+            <el-dialog width="800px" title="上传结果" :visible.sync="errorShow" append-to-body>
+                <div>
+                    <span class="uploadTips">上传数据：{{errorData.count}}条</span>
+                </div>
+                <div>
+                    <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>
+                    <span class="uploadTips uploadErr">上传重复：{{errorData.containsCount}}条</span>
+                </div>
+                <div class="basic-table">
+                    <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="errorData.containsList" :maxHeight='350'>
+                    </basicTable>
+                </div>
+            </el-dialog>
         </el-dialog>
         <div class="page-body-cont">
             <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
@@ -52,7 +66,7 @@
 
 <script>
 import { iotUrl } from '@/api/config'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import { downloadOutboundList, updateCloudEquipment, deleteOutboundList } from './api/index'
 export default {
     name: 'equipmentError',
@@ -67,6 +81,9 @@ export default {
             },
             searchParams: {},
             tableData: [],
+            errorData: {
+                containsList: []
+            },
             tableLabel: [
                 { label: '出库时间', prop: 'outboundTime' },
                 { label: '设备类型', prop: 'deviceType' },
@@ -75,6 +92,8 @@ export default {
                 { label: '经销商电话', prop: 'dealerPhone' }
             ],
             uploadShow: false,
+            errorShow: false,
+            errMessage: '',
             fileList: [],
             uploadData: {
                 accept: '.xlsx,.xls',
@@ -120,14 +139,8 @@ export default {
         },
         ...mapState({
             userInfo: state => state.userInfo,
-            outBoundList: state => {
-                console.log(state.cloudmanage.outBoundList)
-                return state.cloudmanage.outBoundList
-            },
-            outBoundListPagination: state => {
-                console.log(state.cloudmanage.outBoundListPagination)
-                return state.cloudmanage.outBoundListPagination
-            }
+            outBoundList: state => state.cloudmanage.outBoundList,
+            outBoundListPagination: state => state.cloudmanage.outBoundListPagination
         })
     },
     methods: {
@@ -147,16 +160,18 @@ export default {
             this.onQuery(this.searchParams)
         },
         uploadError () {
+            console.log(1)
             this.$refs.upload.clearFiles()
             this.$message.error('文件上传失败，请重试！')
             this.loading = false
         },
         uploadSuccess (response) {
+            console.log(response)
             this.$refs.upload.clearFiles()
             this.loading = false
             if (response.code === 200) {
-                this.$message.success('文件上传成功')
-                this.uploadShow = false
+                this.errorData = response.data
+                this.errorShow = true
                 this.onQuery(this.searchParams)
             } else {
                 this.$message.error(response.message)
@@ -181,11 +196,9 @@ export default {
                 this.loading = false
             }
         },
-        onDownload () {
-            downloadEquipmentErrorList()
-        },
         onOpenModel () {
             this.uploadShow = true
+            this.errorData.containsList = []
         },
         onCloseDialog () {
             if (this.hasFile()) {
@@ -200,12 +213,7 @@ export default {
                         type: 'success',
                         message: '已取消选中的文件!'
                     })
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    })
-                })
+                }).catch(() => { })
             } else {
                 this.$refs.upload.clearFiles()
                 this.uploadShow = false
@@ -263,10 +271,15 @@ export default {
 }
 .upload-fault {
     margin-top: 30px;
-    margin-bottom: 20px;
+}
+.errorBtn {
+    margin: 10px 0;
 }
 .download-template {
     margin-bottom: 30px;
+}
+.downloadExcel{
+    margin-top: 10px;
 }
 .colred {
     color: #ff7a45;
@@ -280,5 +293,16 @@ export default {
         height: 100px;
         min-height: 100px;
     }
+}
+.uploadTips {
+    font-size: 16px;
+    display: inline-block;
+    margin: 5px;
+}
+.uploadErr {
+    color: red;
+}
+.basic-table {
+    margin: 10px 0;
 }
 </style>

@@ -53,3 +53,6 @@ export const KNOWLEDGE_QUESTION_DETAIL = 'KNOWLEDGE_QUESTION_DETAIL' // 问题�
 
 export const GET_OUTBOUND_LIST = 'GET_OUTBOUND_LIST' // 出仓管理列表
 export const OUTBOUND_PAGINATION = 'OUTBOUND_PAGINATION' // 出仓管理列表页码
+export const SPLASH_SCREEN_LIST = 'SPLASH_SCREEN_LIST' // 闪屏管理列表
+export const SPLASH_SCREEN_PAGINATION = 'SPLASH_SCREEN_PAGINATION' // 闪屏管理列表页码
+export const GET_ALL_ACTIVITY = 'GET_ALL_ACTIVITY' // 获取所有活动

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { iotUrl } from '@/api/config'
+import qs from 'qs'
 
 // 家庭概况
 export function findHomeGeneralSituation (params) {
@@ -323,4 +324,32 @@ export function downloadOutboundList (params) {
     }).catch(function () {
         axios.defaults.responseType = 'json'
     })
+}
+// 闪屏页页面分页查询
+export function getSplashScreenList (params) {
+    return axios.get(iotUrl + `/api/splash-screen`, { params })
+}
+// 闪屏删除
+export function deleteSplashScreen (params) {
+    return axios.delete(iotUrl + `/api/splash-screen`, { params })
+}
+// 设置生效失效状态
+export function setSplashScreenStatus (params) {
+    return axios.put(iotUrl + `/api/splash-screen/status?${qs.stringify(params)}`)
+}
+// 新增闪屏页
+export function createSplashScreen (params) {
+    return axios.post(iotUrl + `/api/splash-screen`, params)
+}
+// 编辑闪屏页
+export function updateSplashScreen (params) {
+    return axios.put(iotUrl + `/api/splash-screen`, params)
+}
+// 查询所有活动
+export function getAllActivity (params) {
+    return axios.get(iotUrl + `/api/activity-center/all`, { params })
+}
+// 闪屏详情
+export function getSplashScreenDetail (id) {
+    return axios.get(iotUrl + `/api/splash-screen/detail/${id}`)
 }

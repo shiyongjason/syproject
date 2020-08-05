@@ -174,7 +174,7 @@ export default {
                 { label: '设备ID', prop: 'iotId' },
                 { label: '设备状态', prop: 'state' },
                 { label: '经销商', prop: 'dealer' },
-                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '经销商电话', prop: 'dealerPhone' }
             ],
             tableData: [],
             pagination: {},

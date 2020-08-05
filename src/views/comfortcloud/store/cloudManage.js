@@ -49,7 +49,10 @@ const state = {
     klQuestionList: [],
     klQuestionDetail: {},
     outBoundList: [],
-    outBoundListPagination: {}
+    outBoundListPagination: {},
+    splashScreenList: [],
+    splashScreenPagination: {},
+    allActivity: []
 }
 
 const getters = {
@@ -91,7 +94,17 @@ const getters = {
     cloudUserFeedbackPagination: state => state.cloudUserFeedbackPagination,
     klCatalogueList: state => state.klCatalogueList,
     klQuestionList: state => state.klQuestionList,
-    klQuestionDetail: state => state.klQuestionDetail
+    klQuestionDetail: state => state.klQuestionDetail,
+    splashScreenList: state => {
+        state.splashScreenList.forEach(v => {
+            v.status = !!v.status
+        })
+        return state.splashScreenList
+    },
+    allActivity: state => state.allActivity.map(v => {
+        const value = v.title.length < 15 ? v.title : v.title.substr(0, 14) + '...'
+        return { selectCode: v.id, value }
+    })
 }
 
 const mutations = {
@@ -236,6 +249,15 @@ const mutations = {
     },
     [cloud.OUTBOUND_PAGINATION] (state, payload) {
         state.outBoundListPagination = payload
+    },
+    [cloud.SPLASH_SCREEN_LIST] (state, payload) {
+        state.splashScreenList = payload
+    },
+    [cloud.SPLASH_SCREEN_PAGINATION] (state, payload) {
+        state.splashScreenPagination = payload
+    },
+    [cloud.GET_ALL_ACTIVITY] (state, payload) {
+        state.allActivity = payload
     }
 }
 
@@ -453,6 +475,20 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async getSplashScreenList ({ commit }, params) {
+        const { data } = await Api.getSplashScreenList(params)
+        console.log(data)
+        commit(cloud.SPLASH_SCREEN_LIST, data.data.records)
+        commit(cloud.SPLASH_SCREEN_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async getAllActivity ({ commit }, params) {
+        const { data } = await Api.getAllActivity(params)
+        commit(cloud.GET_ALL_ACTIVITY, data.data)
     }
 }
 export default {
