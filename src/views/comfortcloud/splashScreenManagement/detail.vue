@@ -82,10 +82,9 @@ export default {
         }
     },
     mounted () {
-        console.log(this)
         this.getAllActivity()
         if (this.smartPlayForm.id) {
-            this.shy()
+            this.getDetail()
         }
     },
     methods: {
@@ -93,13 +92,13 @@ export default {
             setNewTags: 'setNewTags',
             getAllActivity: 'getAllActivity'
         }),
-        async shy () {
+        async getDetail () {
             const { data } = await getSplashScreenDetail(this.smartPlayForm.id)
-            console.log(data)
             this.smartPlayForm = { ...data.data }
+            const activityName = data.data.activityName ? (data.data.activityName.length < 15 ? data.data.activityName : data.data.activityName.substr(0, 14) + '...') : ''
             this.selectObj = {
                 selectCode: data.data.activityId,
-                selectName: data.data.activityName.length < 15 ? data.data.activityName : data.data.activityName.substr(0, 14) + '...'
+                selectName: activityName
             }
         },
         backPlat (val) {

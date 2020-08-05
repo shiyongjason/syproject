@@ -21,14 +21,12 @@
                     <el-switch v-model="scope.data.row.status" @change='onChangeForced(scope.data.row)' active-color="#13ce66">
                     </el-switch>
                 </template>
-                <template slot="activityId" slot-scope="scope">
-                    <span v-if="!scope.data.row.activityId">未关联</span>
-                    <span v-else-if="scope.data.row.activityStatus">已生效</span>
-                    <span v-else>已关联</span>
+                <template slot="statusName" slot-scope="scope">
+                    <span @click="onActive(scope.data.row)" :class="scope.data.row.activityId?'colred':''">{{scope.data.row.statusName}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row.id)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
         </div>
@@ -52,7 +50,7 @@ export default {
             tableLabel: [
                 { label: '标题', prop: 'title' },
                 { label: '创建时间', prop: 'createTime' },
-                { label: '关联活动', prop: 'activityId' },
+                { label: '关联活动', prop: 'statusName' },
                 { label: '是否生效', prop: 'status' }
             ]
         }
@@ -65,6 +63,9 @@ export default {
             userInfo: state => state.userInfo,
             splashScreenPagination: state => state.cloudmanage.splashScreenPagination
         })
+    },
+    mounted () {
+        this.onSearch()
     },
     methods: {
         ...mapActions({
@@ -88,6 +89,9 @@ export default {
         onEdit (id) {
             this.$router.push({ path: '/comfortCloud/operationsManagement/splashScreenDetail', query: { id } })
         },
+        onActive (row) {
+            row.activityId && this.$router.push({ path: '/comfortcloud/operationsManagement/cloudActedit', query: { id: row.activityId } })
+        },
         async onChangeForced (row) {
             const params = {
                 id: row.id,
@@ -97,15 +101,12 @@ export default {
             await setSplashScreenStatus(params)
             this.onQuery(this.searchParams)
         },
-        onDelete (id) {
-            this.$confirm('确认要删除该条记录吗', '删除提示').then(async () => {
-                await deleteSplashScreen({ id: id, operateUserName: this.userInfo.employeeName })
+        onDelete (row) {
+            this.$confirm(`改活动${row.statusName}，是否继续删除`, '删除提示').then(async () => {
+                await deleteSplashScreen({ id: row.id, operateUserName: this.userInfo.employeeName })
                 this.onQuery(this.searchParams)
             })
         }
-    },
-    mounted () {
-        this.onSearch()
     }
 }
 </script>

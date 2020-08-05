@@ -98,6 +98,7 @@ const getters = {
     splashScreenList: state => {
         state.splashScreenList.forEach(v => {
             v.status = !!v.status
+            v.statusName = v.activityId ? v.activityStatus && v.status ? '已生效' : '已关联' : '未关联'
         })
         return state.splashScreenList
     },
@@ -478,7 +479,6 @@ const actions = {
     },
     async getSplashScreenList ({ commit }, params) {
         const { data } = await Api.getSplashScreenList(params)
-        console.log(data)
         commit(cloud.SPLASH_SCREEN_LIST, data.data.records)
         commit(cloud.SPLASH_SCREEN_PAGINATION, {
             pageNumber: data.data.current,
