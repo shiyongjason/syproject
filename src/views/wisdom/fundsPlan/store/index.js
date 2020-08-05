@@ -66,7 +66,7 @@ const getters = {
     platformPlanPagination: state => state.platformPlanPagination,
     planCreditList: state => {
         state.planCreditList.forEach(value => {
-            value.annualTotalEffectiveRate = value.annualTotalEffectiveRate !== null ? (MathJS.evaluate(`${value.annualTotalEffectiveRate} * 100`).toNumber()) + '%' : '-'
+            // value.annualTotalEffectiveRate = value.annualTotalEffectiveRate !== null ? (MathJS.evaluate(`${value.annualTotalEffectiveRate} * 100`).toNumber()) + '%' : '-'
             value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate !== null ? (MathJS.evaluate(`${value.annualTotalProfitAchieveRate} * 100`).toNumber()) + '%' : ''
             value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate !== null ? (MathJS.evaluate(`${value.annualTotalSaleAchieveRate} * 100`).toNumber()) + '%' : ''
         })
@@ -75,7 +75,7 @@ const getters = {
     planCreditTotal: state => {
         for (const key in state.planCreditTotal) {
             switch (key) {
-                case 'annualTotalEffectiveRate':
+                // case 'annualTotalEffectiveRate':
                 case 'annualTotalProfitAchieveRate':
                 case 'annualTotalSaleAchieveRate':
                     state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? MathJS.evaluate(`${state.planCreditTotal[key]} * 100`).toNumber() + '%' : ''

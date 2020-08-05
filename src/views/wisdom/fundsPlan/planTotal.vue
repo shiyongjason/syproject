@@ -1,8 +1,8 @@
 <template>
     <div class="page-body amount">
-        <div class="page-body-cont query-cont">
-            <el-collapse-transition>
-                <div v-show="toggle">
+        <el-collapse-transition>
+            <div v-show="toggle">
+                <div class="page-body-cont query-cont">
                     <div class="query-cont-col">
                         <div class="query-col-title"> 查询期间：</div>
                         <div class="query-col-input">
@@ -32,9 +32,9 @@
                         </div>
                     </div>
                 </div>
-            </el-collapse-transition>
-            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-        </div>
+            </div>
+        </el-collapse-transition>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="tips">
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
         </div>
@@ -86,7 +86,7 @@ export default {
                 mouth: ''
             },
             columnData: [],
-            localName: 'planTotalTable::'
+            localName: '`planTotalTable`::'
         }
     },
     computed: {

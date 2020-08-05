@@ -5,9 +5,9 @@
                 <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
                 <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
             </el-tabs>
-            <div class="query-cont-row">
-                <el-collapse-transition>
-                    <div v-show="toggle">
+            <el-collapse-transition>
+                <div v-show="toggle">
+                    <div class="query-cont-row">
                         <div class="query-cont-col" v-if="region">
                             <div class="query-col-title">大区：</div>
                             <div class="query-col-input">
@@ -44,9 +44,9 @@
                             <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
                         </div>
                     </div>
-                </el-collapse-transition>
-                <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-            </div>
+                </div>
+            </el-collapse-transition>
+            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         </div>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
@@ -337,4 +337,9 @@ export default {
     /deep/.el-tabs__header{
         margin: 0 0 10px;
     }
+/deep/.el-tabs__item {
+    height: 32px;
+    line-height: 32px;
+    font-size: 13px;
+}
 </style>

@@ -1,56 +1,55 @@
 <template>
     <div class="page-body amount">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <el-collapse-transition>
-                    <div v-show="toggle">
-                        <div class="query-cont-col" v-if="branch">
-                            <div class="query-col-title">分部：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="query-col-title">平台公司：</div>
-                            <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="query-col-title">城市：</div>
-                            <div class="query-col-input" style="display: flex;">
-                                <el-select v-model="searchParams.provinceCode" placeholder="省" :clearable=true>
-                                    <el-option v-for="item in provinceDataList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
-                                    </el-option>
-                                </el-select>
-                                <div class="line ml5 mr5">-</div>
-                                <el-select v-model="searchParams.cityCode" placeholder="市" :clearable=true>
-                                    <el-option v-for="item in cityList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="query-cont-col" v-if="false">
-                            <div class="query-col-title">上线时间：</div>
-                            <div class="query-col-input">
-                                <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="query-cont-col pl20">
-                            <el-button type="primary" @click="findCompanyList({...searchParams, pageNumber: 1})">
-                                查询
-                            </el-button>
-                            <el-button type="default" @click="onReset">
-                                重置
-                            </el-button>
-                            <el-button v-if="hosAuthCheck(exportAuth)" type="default" @click="exportTable()">
-                                导出
-                            </el-button>
+        <el-collapse-transition>
+            <div v-show="toggle" class="page-body-cont query-cont">
+                <div class="query-cont-row">
+                    <div class="query-cont-col" v-if="branch">
+                        <div class="query-col-title">分部：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                         </div>
                     </div>
-                </el-collapse-transition>
-                <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">平台公司：</div>
+                        <HAutocomplete @back-event="backPlat($event,'P')" :selectArr="platformData" :placeholder="'选择平台公司'" :selectObj="selectAuth.platformObj"></HAutocomplete>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">城市：</div>
+                        <div class="query-col-input" style="display: flex;">
+                            <el-select v-model="searchParams.provinceCode" placeholder="省" :clearable=true>
+                                <el-option v-for="item in provinceDataList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
+                                </el-option>
+                            </el-select>
+                            <div class="line ml5 mr5">-</div>
+                            <el-select v-model="searchParams.cityCode" placeholder="市" :clearable=true>
+                                <el-option v-for="item in cityList" :key="item.cityId" :label="item.cityName" :value="item.cityId">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="false">
+                        <div class="query-col-title">上线时间：</div>
+                        <div class="query-col-input">
+                            <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col pl20">
+                        <el-button type="primary" @click="findCompanyList({...searchParams, pageNumber: 1})">
+                            查询
+                        </el-button>
+                        <el-button type="default" @click="onReset">
+                            重置
+                        </el-button>
+                        <el-button v-if="hosAuthCheck(exportAuth)" type="default" @click="exportTable()">
+                            导出
+                        </el-button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </el-collapse-transition>
+
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <platCompanyTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
         </div>

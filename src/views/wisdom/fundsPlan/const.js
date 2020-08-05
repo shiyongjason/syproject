@@ -79,22 +79,22 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
             children: [
                 {
                     prop: 'loanBalance',
-                    label: '在贷余额',
-                    minWidth: '150',
+                    label: '在贷余额（含逾期金额）',
+                    minWidth: '160',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期余额',
-                    minWidth: '150',
+                    label: '逾期金额',
+                    minWidth: '100',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'hxjFundAmount',
                     label: '好享家注资占用额',
-                    minWidth: '150',
+                    minWidth: '120',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
@@ -284,14 +284,14 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             children: [
                 {
                     prop: 'loanBalance',
-                    label: '在贷余额',
-                    minWidth: '150',
+                    label: '在贷余额（含逾期金额）',
+                    minWidth: '170',
                     align: 'center',
                     children: [
                         {
                             prop: 'loanBalance',
                             displayAs: 'fundMoney',
-                            minWidth: '150',
+                            minWidth: '170',
                             align: 'center',
                             label: `-`
                         }
@@ -299,8 +299,8 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期余额',
-                    minWidth: '150',
+                    label: '逾期金额',
+                    minWidth: '100',
                     align: 'center',
                     children: [
                         {
@@ -952,16 +952,30 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             ]
         },
         {
-            label: '累计资金支持效率比',
+            label: '本年累计资金支持效率比',
             prop: 'annualTotalEffectiveRate',
-            width: 150,
+            width: 160,
             children: [
                 {
                     label: '-',
-                    width: 150,
-                    isUseCommonRenderHeader: true,
+                    width: 160,
+                    // isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     prop: 'annualTotalEffectiveRate'
+                }
+            ]
+        },
+        {
+            label: '去年累计资金支持效率比',
+            prop: 'lastYearTotalEffectiveRate',
+            width: 160,
+            children: [
+                {
+                    label: '-',
+                    width: 160,
+                    // isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
+                    prop: 'lastYearTotalEffectiveRate'
                 }
             ]
         },

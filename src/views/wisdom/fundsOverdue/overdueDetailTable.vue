@@ -1,72 +1,70 @@
 <template>
     <div class="page-body amount">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <el-collapse-transition>
-                    <div v-show="toggle">
-                        <div class="query-cont-col" v-if="region">
-                            <div class="query-col-title">大区：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col" v-if="branch">
-                            <div class="query-col-title">分部：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="query-col-title">平台公司：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="query-col-title">合同到期日：</div>
-                            <div class="query-col-input">
-                                <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('payEndTime')">
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('payStartTime')">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="query-col-title">宽限期到期日：</div>
-                            <div class="query-col-input">
-                                <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('overdueEndTime')">
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('overdueStartTime')">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="query-col-title">实际还款日：</div>
-                            <div class="query-col-input">
-                                <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('actualPayEndTime')">
-                                </el-date-picker>
-                                <span class="ml10 mr10">-</span>
-                                <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('actualPayStartTime')">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                            <el-button type="default" class="ml20" @click="onReset">重置</el-button>
-                            <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
-                                <el-button type="default" class='ml20' :loading='loading'>
-                                    导入表格
-                                </el-button>
-                            </el-upload>
-                            <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
+        <el-collapse-transition>
+            <div v-show="toggle"  class="page-body-cont query-cont">
+                <div class="query-cont-row">
+                    <div class="query-cont-col" v-if="region">
+                        <div class="query-col-title">大区：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                         </div>
                     </div>
-                </el-collapse-transition>
-                <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
+                    <div class="query-cont-col" v-if="branch">
+                        <div class="query-col-title">分部：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">平台公司：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">合同到期日：</div>
+                        <div class="query-col-input">
+                            <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('payEndTime')">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.payEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('payStartTime')">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">宽限期到期日：</div>
+                        <div class="query-col-input">
+                            <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('overdueEndTime')">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.overdueEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('overdueStartTime')">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">实际还款日：</div>
+                        <div class="query-col-input">
+                            <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('actualPayEndTime')">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker type="date" :editable="false" :clearable="false" v-model="queryParams.actualPayEndTime" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('actualPayStartTime')">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                        <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                        <el-upload v-if="hosAuthCheck(overdueDetailTableImport)" class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 2}'>
+                            <el-button type="default" class='ml20' :loading='loading'>
+                                导入表格
+                            </el-button>
+                        </el-upload>
+                        <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(overdueDetailTableExport)">导出表格</el-button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </el-collapse-transition>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>

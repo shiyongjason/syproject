@@ -1,8 +1,8 @@
 <template>
     <div class="page-body manageoverview">
-        <div class="page-body-cont query-cont search-container">
-            <el-collapse-transition>
-                <div v-show="toggle">
+        <el-collapse-transition>
+            <div v-show="toggle">
+                <div class="page-body-cont query-cont search-container">
                     <div class="query-cont-col" v-if="(userInfo.deptType== deptType[0])">
                         <div class="query-col-title">大区：</div>
                         <div class="query-col-input">
@@ -42,10 +42,11 @@
                         <el-button type="default" @click="onReset">重置
                         </el-button>
                     </div>
+
                 </div>
-            </el-collapse-transition>
-            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-        </div>
+            </div>
+        </el-collapse-transition>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-box top10">
             <el-tabs v-model="activeName" type="card">
                 <el-tab-pane :lazy='true' v-if="hosAuthCheck(firstAuth)" label="概览" name="first">
@@ -187,6 +188,11 @@ export default {
         .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
             background: #ff7a45;
             color: #ffffff;
+        }
+        /deep/.el-tabs__item {
+            height: 32px;
+            line-height: 32px;
+            font-size: 13px;
         }
     }
 </style>

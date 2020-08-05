@@ -1,56 +1,54 @@
 <template>
     <div class="page-body amount">
-        <div class="page-body-cont query-cont">
-            <el-collapse-transition>
-                <div v-show="toggle">
-                    <div class="query-cont-col" v-if="region">
-                        <div class="query-col-title">大区：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col" v-if="branch">
-                        <div class="query-col-title">分部：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col" v-if="district">
-                        <div class="query-col-title">区域：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">平台公司：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title"> 查询期间：</div>
-                        <div class="query-col-input">
-                            <el-date-picker v-model="queryParams.selectTime" type="month" value-format='yyyyMM' placeholder="请选择时间">
-                            </el-date-picker>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">
-                            <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
-                                搜索
-                            </el-button>
-                            <el-button type="default" class="ml20" @click="onReset">
-                                重置
-                            </el-button>
-                            <el-button type="default" class="ml20" @click="onExport">
-                                导出汇总表
-                            </el-button>
-                        </div>
+        <el-collapse-transition>
+            <div v-show="toggle"  class="page-body-cont query-cont">
+                <div class="query-cont-col" v-if="region">
+                    <div class="query-col-title">大区：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-            </el-collapse-transition>
-            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-        </div>
+                <div class="query-cont-col" v-if="branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="district">
+                    <div class="query-col-title">区域：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="areaList" @back-event="backPlat($event,'Q')" placeholder="请输入区域名称" :selectObj="selectAuth.areaObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title"> 查询期间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.selectTime" type="month" value-format='yyyyMM' placeholder="请选择时间">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
+                            搜索
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onReset">
+                            重置
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onExport">
+                            导出汇总表
+                        </el-button>
+                    </div>
+                </div>
+            </div>
+        </el-collapse-transition>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="table-tips">
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>

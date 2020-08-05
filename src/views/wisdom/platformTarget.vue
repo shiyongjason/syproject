@@ -1,80 +1,79 @@
 <template>
     <div class="page-body amount">
-        <div class="page-body-cont query-cont">
-            <el-collapse-transition>
-                <div v-show="toggle">
-                    <div class="query-cont-row">
-                        <div class="query-cont-col" v-if="branch">
-                            <div class="query-cont-title">分部：</div>
-                            <div class="query-cont-input">
-                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
+        <el-collapse-transition>
+            <div v-show="toggle" class="page-body-cont query-cont">
+                <div class="query-cont-row">
+                    <div class="query-cont-col" v-if="branch">
+                        <div class="query-cont-title">分部：</div>
+                        <div class="query-cont-input">
+                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                         </div>
-                        <div class="query-cont-col amount">
-                            <div class="flex-wrap-title">公司简称：</div>
-                            <div class="flex-wrap-cont">
-                                <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' />
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="flex-wrap-title">所在城市：</div>
-                            <div class="flex-wrap-cont">
-                                <HAutocomplete :placeholder="'选择城市'" @back-event="backFindcitycode" :selectArr="cityList" v-if="cityList" :select-obj="selectAuth.cityList"/>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="flex-wrap-title">上线时间：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择时间">
-                                </el-date-picker>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="flex-wrap-title">增量/存量：</div>
-                            <div class="flex-wrap-cont">
-                                <el-select v-model="searchParams.incremental" placeholder="请选择选择" :clearable=true>
-                                    <el-option v-for="item in incrementalList" :key="item.key" :label="item.value" :value="item.key">
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="flex-wrap-title">mis编码：</div>
-                            <div class="flex-wrap-cont">
-                                <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <div class="flex-wrap-title">目标年份：</div>
-                            <div class="flex-wrap-cont">
-                                <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
-                                </el-date-picker>
-                            </div>
-                            <el-button type="primary" @click="onFindTableList({...searchParams, pageNumber: 1})">
-                                查询
-                            </el-button>
-                            <el-button type="default" @click="onReset">
-                                重置
-                            </el-button>
-                            <el-button v-if="hosAuthCheck(exportAuth)" type="default" @click="onExport()">导出
-                            </el-button>
+                    </div>
+                    <div class="query-cont-col amount">
+                        <div class="flex-wrap-title">公司简称：</div>
+                        <div class="flex-wrap-cont">
+                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' />
                         </div>
                     </div>
                     <div class="query-cont-col">
-                        <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload
-                                   :on-progress="uploadProcess">
-                            <el-button type="default" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
-                                批量导入
-                            </el-button>
-                        </el-upload>
-                        <a class="ml20 blue isLink" v-if="hosAuthCheck(downTemplateAuth)" @click="downloadXlsx">
-                            下载平台目标模板
-                        </a>
+                        <div class="flex-wrap-title">所在城市：</div>
+                        <div class="flex-wrap-cont">
+                            <HAutocomplete :placeholder="'选择城市'" @back-event="backFindcitycode" :selectArr="cityList" v-if="cityList" :select-obj="selectAuth.cityList"/>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">上线时间：</div>
+                        <div class="flex-wrap-cont">
+                            <el-date-picker v-model="searchParams.onlineTime" :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择时间">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">增量/存量：</div>
+                        <div class="flex-wrap-cont">
+                            <el-select v-model="searchParams.incremental" placeholder="请选择选择" :clearable=true>
+                                <el-option v-for="item in incrementalList" :key="item.key" :label="item.value" :value="item.key">
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">mis编码：</div>
+                        <div class="flex-wrap-cont">
+                            <el-input v-model="searchParams.misCode" placeholder="请输入mis编码"></el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="flex-wrap-title">目标年份：</div>
+                        <div class="flex-wrap-cont">
+                            <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
+                            </el-date-picker>
+                        </div>
+                        <el-button type="primary" @click="onFindTableList({...searchParams, pageNumber: 1})">
+                            查询
+                        </el-button>
+                        <el-button type="default" @click="onReset">
+                            重置
+                        </el-button>
+                        <el-button v-if="hosAuthCheck(exportAuth)" type="default" @click="onExport()">导出
+                        </el-button>
                     </div>
                 </div>
-            </el-collapse-transition>
-            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-        </div>
+                <div class="query-cont-col">
+                    <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload
+                               :on-progress="uploadProcess">
+                        <el-button type="default" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
+                            批量导入
+                        </el-button>
+                    </el-upload>
+                    <a class="ml20 blue isLink" v-if="hosAuthCheck(downTemplateAuth)" @click="downloadXlsx">
+                        下载平台目标模板
+                    </a>
+                </div>
+            </div>
+        </el-collapse-transition>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
+
         <div class="page-body-cont">
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">

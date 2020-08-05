@@ -1,31 +1,29 @@
 <template>
     <div class="page-body amount">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <el-collapse-transition>
-                    <div v-show="toggle">
-                        <div class="query-cont-col" v-if="region">
-                            <div class="query-col-title">大区：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col" v-if="branch">
-                            <div class="query-col-title">分部：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col">
-                            <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                            <el-button type="default" class="ml20" @click="onReset">重置</el-button>
-                            <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
+        <el-collapse-transition>
+            <div v-show="toggle"  class="page-body-cont query-cont">
+                <div class="query-cont-row">
+                    <div class="query-cont-col" v-if="region">
+                        <div class="query-col-title">大区：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                         </div>
                     </div>
-                </el-collapse-transition>
-                <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
+                    <div class="query-cont-col" v-if="branch">
+                        <div class="query-col-title">分部：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                        <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                        <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(branchOverdueSumExport)">导出表格</el-button>
+                    </div>
+                </div>
             </div>
-        </div>
+        </el-collapse-transition>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
