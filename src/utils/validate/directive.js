@@ -130,7 +130,7 @@ export default {
         Vue.directive('drag', {
             bind: function (el) {
                 let oDiv = el
-                oDiv.addEventListener('mousedown', function run (e) {
+                function run (e) {
                     let disX = e.clientX - oDiv.offsetLeft
                     let disY = e.clientY - oDiv.offsetTop
                     function mousemoveRun (e) {
@@ -149,7 +149,8 @@ export default {
                     document.addEventListener('mouseup', mouseupRun, false)
                     e.stopPropagation()
                     e.preventDefault()
-                }, false)
+                }
+                oDiv.addEventListener('mousedown', run, false)
             }
         })
     }

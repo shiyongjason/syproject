@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body approval">
+    <div class="page-body approval amount">
         <div>
             <el-tabs v-model="params.processType" type="card" @tab-click="handleClick">
                 <el-tab-pane label="我的待办" name="0"></el-tab-pane>
@@ -29,7 +29,7 @@
                         <el-button type="primary" class="ml20" @click="onSearch()">
                             搜索
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onReset()">
+                        <el-button type="default" class="ml20" @click="onReset()">
                             重置
                         </el-button>
                     </div>
@@ -200,7 +200,7 @@ export default {
 <style scoped lang="scss">
 .approval {
     background: #ffffff;
-    padding: 60px 25px 30px;
+    padding: 40px 15px 30px;
     box-sizing: border-box;
 }
 

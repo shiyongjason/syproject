@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body">
+    <div class="page-body amount">
         <div class="page-body-cont query-cont">
             <el-collapse-transition>
                 <div v-show="toggle">
@@ -19,16 +19,19 @@
                         </div>
                         <div class="query-cont-col">
                             <el-button type="primary" class="ml20" @click="onQuery({...queryParams, pageNumber: 1})">
-                                搜索
+                                查询
                             </el-button>
-                            <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="exportHref">
+                            <el-button type="default" class="ml20" @click="onReset">
+                                重置
+                            </el-button>
+                            <el-button type="default" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="exportHref">
                                 导出
                             </el-button>
                         </div>
                         <div class="query-cont-row">
                             <div class="query-cont-col">
                                 <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="baseUrl + 'rms/api/subsection/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload :on-progress="uploadProcess">
-                                    <el-button v-if="hosAuthCheck(importAuth)" type="primary" style="margin-left:0">
+                                    <el-button v-if="hosAuthCheck(importAuth)" type="default" style="margin-left:0">
                                         批量导入
                                     </el-button>
                                 </el-upload>
@@ -42,7 +45,7 @@
             </el-collapse-transition>
             <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         </div>
-        <div class="page-body-cont">
+        <div class="page-body-cont amount">
             <branchTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchTable>
         </div>
     </div>
@@ -158,9 +161,18 @@ export default {
         },
         backPlat (val) {
             this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
+        },
+        onReset () {
+            this.queryParams = this.queryParamsReset
+            this.branchObj = {
+                selectCode: '',
+                selectName: ''
+            }
+            this.onQuery(this.queryParams)
         }
     },
     mounted () {
+        this.queryParamsReset = { ...this.queryParams }
         this.onQuery(this.queryParams)
         this.newBossAuth(['F'])
     }

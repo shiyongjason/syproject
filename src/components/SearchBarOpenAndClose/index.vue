@@ -1,6 +1,6 @@
 <template>
     <div class="bar">
-        <el-button type="primary" @click="$emit('toggle')" class="drag" v-drag>
+        <el-button type="primary" @click="tellClick" class="drag" v-drag>
             {{statusName}}搜索区
             <i :class="status ? 'el-icon-arrow-up': 'el-icon-arrow-down'" class="icon"></i>
         </el-button>
@@ -15,14 +15,20 @@ export default {
             return this.status ? '收起' : '打开'
         }
     },
-    props: ['status']
+    props: ['status'],
+    methods: {
+        tellClick () {
+            this.$emit('toggle')
+            // document.body.scrollTop = document.documentElement.scrollTop = 0
+            document.getElementsByClassName('el-main')[0].scrollTop = 0
+        }
+    }
 }
 </script>
 
 <style scoped lang="scss">
 .bar {
     position: relative;
-    padding-bottom: 10px;
     .icon {
         font-size: 16px;
     }

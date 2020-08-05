@@ -39,6 +39,8 @@
                     <div class="query-cont-col">
                         <el-button type="primary" @click="onSearchForm()">查询
                         </el-button>
+                        <el-button type="default" @click="onReset">重置
+                        </el-button>
                     </div>
                 </div>
             </el-collapse-transition>
@@ -143,8 +145,13 @@ export default {
     async mounted () {
         this.onFindRegionList()
         this.onFindBranchList()
+        this.formDataReset = { ...this.formData }
     },
     methods: {
+        onReset () {
+            this.formData = { ...this.formDataReset }
+            this.onSearchForm()
+        },
         ...mapActions({
             findAuthList: 'findAuthList'
         }),

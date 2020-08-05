@@ -30,7 +30,8 @@
                 {{scope.data.row.developSignInfoVo.oldCompanyScale}}
             </template>
             <template slot="companyOrderVo" slot-scope="scope">
-                <p v-if="scope.data.row.companyOrderVo">
+                <p v-if="scope.data.row.companyOrderVo" class="company-order">
+                    <span v-if="scope.data.row.companyOrderVo.misGlgsVoList.length === 0">-</span>
                     <span v-for="(item,index) in scope.data.row.companyOrderVo.misGlgsVoList" :key="index">{{index>0?','+item.glgsGlgsmc:item.glgsGlgsmc}}</span>
                 </p>
             </template>
@@ -65,58 +66,58 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: '编码', prop: 'misCode' },
-                { label: '公司简称', prop: 'companyShortName', choosed: true },
-                { label: '分部', prop: 'subsectionName', choosed: true },
-                { label: '省份', prop: 'provinceName', choosed: true },
-                { label: '城市', prop: 'cityName', choosed: true },
-                { label: '上线', prop: 'cityName', choosed: true },
+                { label: '编码', prop: 'misCode', width: 100 },
+                { label: '公司简称', prop: 'companyShortName', choosed: true, width: 100 },
+                { label: '分部', prop: 'subsectionName', choosed: true, width: 100 },
+                { label: '省份', prop: 'provinceName', choosed: true, width: 100 },
+                { label: '城市', prop: 'cityName', choosed: true, width: 100 },
+                { label: '上线', prop: 'cityName', choosed: true, width: 100 },
                 {
                     label: '上线信息',
                     tableLabel: [
-                        { label: '上线时间', prop: 'confirmDate', choosed: true },
-                        { label: '最新签约规模/万', prop: 'signScale', choosed: true },
-                        { label: '销售规模增长', prop: 'salesVolume', choosed: true },
-                        { label: '注册资本/万', prop: 'sumRegisterFund', choosed: true },
-                        { label: '我方注册资金/万', prop: 'ourRegisteredFund', choosed: true },
-                        { label: '利润增长', prop: 'profitGrowth', choosed: true }
+                        { label: '上线时间', prop: 'confirmDate', choosed: true, width: 100 },
+                        { label: '最新签约规模/万', prop: 'signScale', choosed: true, width: 120 },
+                        { label: '销售规模增长', prop: 'salesVolume', choosed: true, width: 100 },
+                        { label: '注册资本/万', prop: 'sumRegisterFund', choosed: true, width: 100 },
+                        { label: '我方注册资金/万', prop: 'ourRegisteredFund', choosed: true, width: 120 },
+                        { label: '利润增长', prop: 'profitGrowth', choosed: true, width: 100 }
                     ]
                 },
                 {
                     label: '往期销售',
                     tableLabel: [
-                        { label: '上年度实际/万', prop: 'totalOrderFee', choosed: true }
+                        { label: '上年度实际/万', prop: 'totalOrderFee', choosed: true, width: 100 }
                     ]
                 },
                 {
                     label: '关键人员',
                     tableLabel: [
-                        { label: '实际控制人', prop: 'controllerName', choosed: true },
-                        { label: '新公司总经理', prop: 'signerName', choosed: true },
-                        { label: '自然人股东', prop: 'signerName', choosed: true }
+                        { label: '实际控制人', prop: 'controllerName', choosed: true, width: 100 },
+                        { label: '新公司总经理', prop: 'signerName', choosed: true, width: 100 },
+                        { label: '自然人股东', prop: 'signerName', choosed: true, width: 100 }
                     ]
                 },
                 {
                     label: '业务形态',
                     tableLabel: [
-                        { label: '公司类型', prop: 'companyType', choosed: true },
-                        { label: '主要业务', prop: 'mainFormatName', choosed: true },
-                        { label: '主营系统', prop: 'mainSystem', choosed: true },
-                        { label: '主设备品牌', prop: 'mainBrand', choosed: true }
+                        { label: '公司类型', prop: 'companyType', choosed: true, width: 100 },
+                        { label: '主要业务', prop: 'mainFormatName', choosed: true, width: 100 },
+                        { label: '主营系统', prop: 'mainSystem', choosed: true, width: 100 },
+                        { label: '主设备品牌', prop: 'mainBrand', choosed: true, width: 100 }
                     ]
                 },
                 {
                     label: '老公司',
                     tableLabel: [
-                        { label: '老公司名称', prop: 'originaCompanyName', choosed: true },
-                        { label: '老公司规模', prop: 'developSignInfoVo', choosed: true }
+                        { label: '老公司名称', prop: 'originaCompanyName', choosed: true, width: 100 },
+                        { label: '老公司规模', prop: 'developSignInfoVo', choosed: true, width: 100 }
                     ]
                 },
                 {
                     label: '关联公司',
                     tableLabel: [
-                        { label: '关联公司', prop: 'companyOrderVo', choosed: true },
-                        { label: '实际运作公司', prop: 'aoCompany', choosed: true }
+                        { label: '关联公司', prop: 'companyOrderVo', choosed: true, width: 120 },
+                        { label: '实际运作公司', prop: 'aoCompany', choosed: true, width: 100 }
                     ]
                 }
             ],
@@ -204,4 +205,8 @@ export default {
     float: left;
     width: 100%;
 }
+    .company-order {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>

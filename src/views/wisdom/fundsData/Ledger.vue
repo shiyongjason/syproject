@@ -1,126 +1,131 @@
 <template>
-    <div class="tags-wrapper page-body amountImport">
+    <div class="tags-wrapper page-body amountImport amount">
         <div class="page-body-cont query-cont">
-            <div class="query-cont-col" v-if="region">
-                <div class="query-col-title">大区：</div>
-                <div class="query-col-input">
-                    <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请选择大区" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+            <el-collapse-transition>
+                <div v-show="toggle">
+                    <div class="query-cont-col" v-if="region">
+                        <div class="query-col-title">大区：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请选择大区" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="branch">
+                        <div class="query-col-title">分部：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">平台公司：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">MIS编码：</div>
+                        <div class="query-col-input">
+                            <el-input type="text" maxlength="5" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
+                            </el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">台账编号：</div>
+                        <div class="query-col-input">
+                            <el-input type="text" maxlength="20" v-model="queryParams.standingBookNo" placeholder="请输入台账编号" clearable>
+                            </el-input>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                        <div class="query-col-title">逾期：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.isOverdue" placeholder="请选择" :clearable=true>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="未逾期" :value="0"></el-option>
+                                <el-option label="逾期" :value="1"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                        <div class="query-col-title">结清：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.settleType" placeholder="请选择" :clearable=true>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="本金结清" :value="1"></el-option>
+                                <el-option label="本金未结清" :value="2"></el-option>
+                                <el-option label="利息结清" :value="3"></el-option>
+                                <el-option label="利息未结清" :value="4"></el-option>
+                                <el-option label="本金或利息未结清" :value="5"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                        <div class="query-col-title">放款日期查询：</div>
+                        <div class="query-col-input">
+                            <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.loanStartDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('loanEndDate')">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.loanEndDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('loanStartDate')">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
+                        <div class="query-col-title">应还款日期查询：</div>
+                        <div class="query-col-input">
+                            <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.repaymentStartDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('repaymentEndDate')">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.repaymentEndDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('repaymentStartDate')">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType == 4">
+                        <div class="query-col-title">还款项目：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.repaymentType" placeholder="请选择" :clearable=true>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="还借款本金" :value="1"></el-option>
+                                <el-option label="还借款利息" :value="2"></el-option>
+                                <el-option label="还宽限期利息" :value="3"></el-option>
+                                <el-option label="还逾期罚息" :value="4"></el-option>
+                                <el-option label="还敞口本金" :value="5"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType == 4">
+                        <div class="query-col-title">还款状态：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.repaymentStatus" placeholder="请选择" :clearable=true>
+                                <el-option label="全部" value=""></el-option>
+                                <el-option label="正常" :value="1"></el-option>
+                                <el-option label="逾期" :value="2"></el-option>
+                                <el-option label="提前" :value="3"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="query-cont-col" v-if="accountType == 4">
+                        <div class="query-col-title">还款日期：</div>
+                        <div class="query-col-input">
+                            <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('endDate')">
+                            </el-date-picker>
+                            <span class="ml10 mr10">-</span>
+                            <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('startDate')">
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">
+                            <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
+                        </div>
+                        <div class="query-col-title">
+                            <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                        </div>
+                        <div class="query-col-title" v-if="hosAuthCheck(account_export)">
+                            <el-button type="default" class="ml20" @click="onExport">导出</el-button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col" v-if="branch">
-                <div class="query-col-title">分部：</div>
-                <div class="query-col-input">
-                    <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">平台公司：</div>
-                <div class="query-col-input">
-                    <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' :remove-value='removeValue'></HAutocomplete>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">MIS编码：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="5" v-model="queryParams.misCode" placeholder="请输入MIS编码" clearable>
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">台账编号：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="20" v-model="queryParams.standingBookNo" placeholder="请输入台账编号" clearable>
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
-                <div class="query-col-title">逾期：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.isOverdue" placeholder="请选择" :clearable=true>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="未逾期" :value="0"></el-option>
-                        <el-option label="逾期" :value="1"></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
-                <div class="query-col-title">结清：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.settleType" placeholder="请选择" :clearable=true>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="本金结清" :value="1"></el-option>
-                        <el-option label="本金未结清" :value="2"></el-option>
-                        <el-option label="利息结清" :value="3"></el-option>
-                        <el-option label="利息未结清" :value="4"></el-option>
-                        <el-option label="本金或利息未结清" :value="5"></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
-                <div class="query-col-title">放款日期查询：</div>
-                <div class="query-col-input">
-                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.loanStartDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('loanEndDate')">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.loanEndDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('loanStartDate')">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType != 0 && accountType != 4">
-                <div class="query-col-title">应还款日期查询：</div>
-                <div class="query-col-input">
-                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.repaymentStartDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('repaymentEndDate')">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.repaymentEndDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('repaymentStartDate')">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType == 4">
-                <div class="query-col-title">还款项目：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.repaymentType" placeholder="请选择" :clearable=true>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="还借款本金" :value="1"></el-option>
-                        <el-option label="还借款利息" :value="2"></el-option>
-                        <el-option label="还宽限期利息" :value="3"></el-option>
-                        <el-option label="还逾期罚息" :value="4"></el-option>
-                        <el-option label="还敞口本金" :value="5"></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType == 4">
-                <div class="query-col-title">还款状态：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.repaymentStatus" placeholder="请选择" :clearable=true>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="正常" :value="1"></el-option>
-                        <el-option label="逾期" :value="2"></el-option>
-                        <el-option label="提前" :value="3"></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col" v-if="accountType == 4">
-                <div class="query-col-title">还款日期：</div>
-                <div class="query-col-input">
-                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('endDate')">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('startDate')">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
-                </div>
-                <div class="query-col-title" v-if="hosAuthCheck(account_export)">
-                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
-                </div>
-                <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                </div>
-            </div><br>
+            </el-collapse-transition>
+            <searchBarOpenAndClose :amountResetTable="toggle" :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         </div>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
@@ -147,7 +152,7 @@
                 <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
                 <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
             </div>
-            <complexTable ref="complexTable" v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
+            <complexTable :amountResetTable="toggle" ref="complexTable" v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
 </template>
@@ -181,6 +186,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,

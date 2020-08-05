@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
+            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
                          align="center" border stripe showPagination :column="column"
                          :data="tableData" :total="pagination.total"
                          :pageNumber.sync="pagination.pageNumber"
@@ -124,6 +124,11 @@ export default {
                 return { pageNumber: 1, pageSize: 10, total: 0 }
             }
 
+        },
+        amountResetTable: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     watch: {

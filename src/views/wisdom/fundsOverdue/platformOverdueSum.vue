@@ -1,52 +1,57 @@
 <template>
-    <div class="page-body">
+    <div class="page-body amount">
         <div class="page-body-cont query-cont">
             <el-tabs v-model="queryParams.state" type="card" @tab-click="handleClick">
                 <el-tab-pane label="存量汇总表" name="1"></el-tab-pane>
                 <el-tab-pane label="增量汇总表" name="2"></el-tab-pane>
             </el-tabs>
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="region">
-                    <div class="query-col-title">大区：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                <el-collapse-transition>
+                    <div v-show="toggle">
+                        <div class="query-cont-col" v-if="region">
+                            <div class="query-col-title">大区：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col" v-if="branch">
+                            <div class="query-col-title">分部：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col">
+                            <div class="query-col-title">平台公司：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col flex-box-time" v-if="false">
+                            <div class="query-col-title">年份：</div>
+                            <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
+                            </el-date-picker>
+                        </div>
+                        <div class="query-cont-col">
+                            <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                            <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                            <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
+                                <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
+                                    <el-button type="default" class='ml20' :loading='loading'>
+                                        导入表格
+                                    </el-button>
+                                </el-upload>
+                            </div>
+                            <el-button type="default" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
+                        </div>
                     </div>
-                </div>
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">平台公司：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col flex-box-time" v-if="false">
-                    <div class="query-col-title">年份：</div>
-                    <el-date-picker v-model="queryParams.year" type="year" value-format='yyyy' placeholder="选择年" :editable='false' :clearable='false'>
-                    </el-date-picker>
-                </div>
-                <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
-                            <el-button type="primary" class='ml20' :loading='loading'>
-                                导入表格
-                            </el-button>
-                        </el-upload>
-                    </div>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(platformOverdueSumExport)">导出表格</el-button>
-                </div>
+                </el-collapse-transition>
+                <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
             </div>
         </div>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList" :height="fixedHeight">
+                <hosJoyTable :amountResetTable="toggle" ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -69,6 +74,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            toggle: true,
             platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
             platformOverdueSumImport: PLATFORM_OVERDUE_SUM_IMPORT,
             headersData: {
@@ -119,11 +125,6 @@ export default {
         }),
         column () {
             return platformSummarySheet
-        },
-        fixedHeight () {
-            let oneHeight = 71
-            let isHeight = 180 + (this.tableData.length < 1 ? 1 : this.tableData.length) * oneHeight
-            return isHeight > 450 ? 450 : isHeight
         }
     },
     methods: {
@@ -315,7 +316,6 @@ export default {
 }
 .overdueTable {
     position: relative;
-    margin-top: 10px;
 }
 .util {
     font-size: 10px;
@@ -332,6 +332,9 @@ export default {
     color: #fff !important;
 }
 /deep/.overdueTable td{
-    height: 71px;
+    height: 38px;
 }
+    /deep/.el-tabs__header{
+        margin: 0 0 10px;
+    }
 </style>

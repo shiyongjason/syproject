@@ -36,31 +36,31 @@ export default {
     data () {
         return {
             tableLabel: [
-                { label: '分部编码', prop: 'subsectionCode' },
-                { label: '分部', prop: 'subsectionName', choosed: true },
-                { label: '目标年份', prop: 'date', choosed: true },
-                { label: '新增会员店目标/家', prop: 'memberShopTarget', choosed: true },
+                { label: '分部编码', prop: 'subsectionCode', width: 80 },
+                { label: '分部', prop: 'subsectionName', choosed: true, width: 80 },
+                { label: '目标年份', prop: 'date', choosed: true, width: 80 },
+                { label: '新增会员店目标/家', prop: 'memberShopTarget', choosed: true, width: 130 },
                 { label: '保底目标/万',
                     tableLabel: [
-                        { label: '整体', prop: 'overallGuaranteeStockTarget', choosed: true, formatters: 'money' },
-                        { label: '增量', prop: 'guaranteeIncreaseTarget', choosed: true, formatters: 'money' },
-                        { label: '存量', prop: 'guaranteeStockTarget', choosed: true, formatters: 'money' }
+                        { label: '整体', prop: 'overallGuaranteeStockTarget', choosed: true, formatters: 'money', width: 80 },
+                        { label: '增量', prop: 'guaranteeIncreaseTarget', choosed: true, formatters: 'money', width: 80 },
+                        { label: '存量', prop: 'guaranteeStockTarget', choosed: true, formatters: 'money', width: 80 }
                     ] },
                 { label: '平衡目标/万',
                     tableLabel: [
-                        { label: '整体', prop: 'overallBalanceStockTarget', choosed: true, formatters: 'money' },
-                        { label: '增量', prop: 'balanceIncreaseTarget', choosed: true, formatters: 'money' },
-                        { label: '存量', prop: 'balanceStockTarget', choosed: true, formatters: 'money' }
+                        { label: '整体', prop: 'overallBalanceStockTarget', choosed: true, formatters: 'money', width: 80 },
+                        { label: '增量', prop: 'balanceIncreaseTarget', choosed: true, formatters: 'money', width: 80 },
+                        { label: '存量', prop: 'balanceStockTarget', choosed: true, formatters: 'money', width: 80 }
                     ] },
                 { label: '冲刺目标/万',
                     tableLabel: [
-                        { label: '整体', prop: 'overallSprintStockTarget', choosed: true, formatters: 'money' },
-                        { label: '增量', prop: 'sprintIncreaseTarget', choosed: true, formatters: 'money' },
-                        { label: '存量', prop: 'sprintStockTarget', choosed: true, formatters: 'money' }
+                        { label: '整体', prop: 'overallSprintStockTarget', choosed: true, formatters: 'money', width: 80 },
+                        { label: '增量', prop: 'sprintIncreaseTarget', choosed: true, formatters: 'money', width: 80 },
+                        { label: '存量', prop: 'sprintStockTarget', choosed: true, formatters: 'money', width: 80 }
                     ] },
-                { label: '毛利率目标/％', prop: 'annualGrossProfitTarget', choosed: true },
-                { label: '最近操作人', prop: 'updateUser', choosed: true },
-                { label: '最近操作时间', prop: 'updateTime', choosed: true }
+                { label: '毛利率目标/％', prop: 'annualGrossProfitTarget', choosed: true, width: 100 },
+                { label: '最近操作人', prop: 'updateUser', choosed: true, width: 120 },
+                { label: '最近操作时间', prop: 'updateTime', choosed: true, width: 150 }
             ],
             selectTh: [],
             checkAll: true,
@@ -136,4 +136,13 @@ export default {
     float: left;
     width: 100%;
 }
+/deep/.el-table td{
+    padding: 7px 0;
+}
+/deep/.el-table th{
+    padding: 7px 0;
+}
+    td{
+        padding: 7px 0;
+    }
 </style>

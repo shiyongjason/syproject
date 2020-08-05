@@ -1,77 +1,85 @@
 <template>
-    <div class="page-body">
+    <div class="page-body amount">
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col" v-if="region">
-                    <div class="query-col-title">大区：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col" v-if="branch">
-                    <div class="query-col-title">分部：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">平台公司：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                    </div>
-                </div>
-                <div class="query-cont-col" style="display:flex">
-                    <div class="query-col-title">时间：</div>
-                    <el-date-picker v-model="queryParams.saleTimeStart" :editable="false" :picker-options="saleTimePickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
-                    </el-date-picker>
-                    <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.saleTimeEnd" :editable="false" :picker-options="saleTimePickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
-                    </el-date-picker>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">签约规模：</div>
-                    <div class="query-col-input">
-                        <el-input style="width: 100px" v-model="queryParams.signScaleStart" maxlength="9"></el-input>~
-                        <el-input style="width: 100px" v-model="queryParams.signScaleEnd" maxlength="9"></el-input>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">存量/增量：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.incremental" clearable placeholder="全部">
-                            <el-option v-for="item in incrementalList" :key="item.deptcode" :label="item.deptname" :value="item.deptcode">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">公司状态：</div>
-                    <div class="query-col-input">
-                        <el-checkbox v-model="item.checked" v-for="(item,index) in checkedList" :key=index>{{item.value}}</el-checkbox>
-                    </div>
-                </div>
-                <div class="query-cont-col" style="display:flex">
-                    <div class="query-col-title">上线时间：</div>
-                    <el-date-picker v-model="queryParams.onlineTimeStart" :editable="false" :picker-options="onlineTimePickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
-                    </el-date-picker>
-                    <div class="line ml5 mr5">-</div>
-                    <el-date-picker v-model="queryParams.onlineTimeEnd" :editable="false" :picker-options="onlineTimePickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
-                    </el-date-picker>
-                    <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1}, 'btn')">
-                        查询
-                    </el-button>
-                    <a href="javascript:" @click="downloading" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
-                </div>
-            </div>
-            <div class="page-wrap flex-wrap-col">
-                <div class="flex-wrap-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-input">
-                            <el-radio v-model="queryParams.tagetType" label="1" @change="onChoose" name="target">履约目标</el-radio>
-                            <el-radio v-model="queryParams.tagetType" label="0" @change="onChoose" name="target">冲刺目标</el-radio>
+                <el-collapse-transition>
+                    <div v-show="toggle">
+                        <div class="query-cont-col" v-if="region">
+                            <div class="query-col-title">大区：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col" v-if="branch">
+                            <div class="query-col-title">分部：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col">
+                            <div class="query-col-title">平台公司：</div>
+                            <div class="query-col-input">
+                                <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                            </div>
+                        </div>
+                        <div class="query-cont-col" style="display:flex">
+                            <div class="query-col-title">时间：</div>
+                            <el-date-picker v-model="queryParams.saleTimeStart" :editable="false" :picker-options="saleTimePickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                            </el-date-picker>
+                            <div class="line ml5 mr5">-</div>
+                            <el-date-picker v-model="queryParams.saleTimeEnd" :editable="false" :picker-options="saleTimePickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                            </el-date-picker>
+                        </div>
+                        <div class="query-cont-col">
+                            <div class="query-col-title">签约规模：</div>
+                            <div class="query-col-input">
+                                <el-input style="width: 100px" v-model="queryParams.signScaleStart" maxlength="9"></el-input>~
+                                <el-input style="width: 100px" v-model="queryParams.signScaleEnd" maxlength="9"></el-input>
+                            </div>
+                        </div>
+                        <div class="query-cont-col">
+                            <div class="query-col-title">存量/增量：</div>
+                            <div class="query-col-input">
+                                <el-select v-model="queryParams.incremental" clearable placeholder="全部">
+                                    <el-option v-for="item in incrementalList" :key="item.deptcode" :label="item.deptname" :value="item.deptcode">
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </div>
+                        <div class="query-cont-col">
+                            <div class="query-col-title">公司状态：</div>
+                            <div class="query-col-input">
+                                <el-checkbox v-model="item.checked" v-for="(item,index) in checkedList" :key=index>{{item.value}}</el-checkbox>
+                            </div>
+                        </div>
+                        <div class="query-cont-col" style="display:flex">
+                            <div class="query-col-title">上线时间：</div>
+                            <el-date-picker v-model="queryParams.onlineTimeStart" :editable="false" :picker-options="onlineTimePickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                            </el-date-picker>
+                            <div class="line ml5 mr5">-</div>
+                            <el-date-picker v-model="queryParams.onlineTimeEnd" :editable="false" :picker-options="onlineTimePickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                            </el-date-picker>
+                            <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1}, 'btn')">
+                                查询
+                            </el-button>
+                            <el-button type="default" class="ml20" @click="onReset">
+                                重置
+                            </el-button>
+                            <el-button type="default" class="ml20" @click="downloading" v-if="hosAuthCheck(exportAuth)">导出</el-button>
+                        </div>
+                        <div class="page-wrap flex-wrap-col">
+                            <div class="flex-wrap-row">
+                                <div class="query-cont-col">
+                                    <div class="query-col-input">
+                                        <el-radio v-model="queryParams.tagetType" label="1" @change="onChoose" name="target">履约目标</el-radio>
+                                        <el-radio v-model="queryParams.tagetType" label="0" @change="onChoose" name="target">冲刺目标</el-radio>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </el-collapse-transition>
+                <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
             </div>
         </div>
         <div class="page-body-cont">
@@ -95,6 +103,7 @@ export default {
     mixins: [departmentAuth],
     data: function () {
         return {
+            toggle: true,
             exportAuth: AUTH_WIXDOM_PLATFORM_SALE_EXPORT,
             deptType: DEPT_TYPE,
             checkedList: [{ value: '在线', checked: true, key: 1 }, { value: '未上线', checked: false, key: 2 }, { value: '淘汰', checked: false, key: 3 }],
@@ -408,12 +417,31 @@ export default {
             if (event === 'btn') {
                 this.getPlatformSaleSum()
             }
+        },
+        onReset () {
+            this.queryParams = { ...this.queryParamsRest }
+            this.selectAuth = {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.onQuery(this.queryParams)
         }
     },
     async mounted () {
         this.newBossAuth(['D', 'F', 'P'])
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
+        this.queryParamsRest = { ...this.queryParams }
     }
 }
 </script>

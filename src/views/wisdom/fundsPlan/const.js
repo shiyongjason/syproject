@@ -652,6 +652,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'regionName',
+                    width: '100',
                     label: `合计`
                 }
             ]

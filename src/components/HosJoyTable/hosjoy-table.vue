@@ -101,6 +101,11 @@ export default {
             required: false,
             type: String,
             default: 'TABLE::'
+        },
+        amountResetTable: { // 更改会重新渲染table高度
+            required: false,
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -131,9 +136,10 @@ export default {
         // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
         computedHeight () {
             if (this.height) return 'unset'
-            if (this.data && this.data.length >= this.pageSize) {
+            if (this.amountResetTableChange > -1 && this.data && this.data.length >= this.pageSize) {
                 // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
-                let h = document.documentElement.clientHeight - this.selfHeight
+                let resetH = this.amountResetTable === true ? this.selfHeight : 110
+                let h = document.documentElement.clientHeight - resetH
                 if (Math.floor(h) < 280) {
                     h = 280// 最小高度
                 }
@@ -141,6 +147,9 @@ export default {
             } else {
                 return 'unset'
             }
+        },
+        amountResetTableChange () {
+            return this.amountResetTable || Math.random()
         },
         dataLength () {
             if (this.data) {
@@ -469,7 +478,7 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
-            this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
+            this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top
             if (this.data.length == 0) {
                 let left = this.$refs.hosTable.getBoundingClientRect().left
                 let windowsWidth = document.documentElement.clientWidth
