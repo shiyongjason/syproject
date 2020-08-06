@@ -50,7 +50,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { findHomeGeneralSituation } from './api/index'
+import { findHomeGeneralSituation } from '../api/index'
 export default {
     name: 'homemanage',
     computed: {
