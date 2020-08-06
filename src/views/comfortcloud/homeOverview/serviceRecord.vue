@@ -7,16 +7,16 @@
             <div class="query-cont-col">
                 <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.brandName" maxlength="20" placeholder="输入手机号"></el-input>
+                    <el-input type="text" v-model="queryParams.phone" maxlength="20" placeholder="输入手机号"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.createStartTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.createEndTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
                     </el-date-picker>
                 </div>
             </div>
@@ -51,21 +51,14 @@ export default {
     data () {
         return {
             queryParams: {
-                createStartTime: '',
-                createEndTime: '',
-                createTimeSortType: '',
-                categoryId: '',
-                code: '',
-                brandName: '',
+                startTime: '',
+                endTime: '',
+                phone: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             searchParams: {},
             tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10
-            },
             tableLabel: [
                 { label: '呼叫时间', prop: 'callTime' },
                 { label: '昵称', prop: 'nick' },
@@ -75,47 +68,14 @@ export default {
                 { label: '平台', prop: 'phoneType' },
                 { label: '设备数', prop: 'deviceCount' },
                 { label: '家庭', prop: 'homes' }
-            ],
-            uploadShow: false,
-            fileList: [],
-            faultEdit: false,
-            faultCodeEdit: {
-                code: '',
-                content: '',
-                id: '',
-                operateUserName: ''
-            },
-            rules: {
-                code: [
-                    { required: true, message: '请输入故障代码', trigger: 'blur' }
-                ],
-                content: [
-                    { required: true, message: '请输入故障内容', trigger: 'blur' }
-                ]
-            },
-            uploadData: {
-                accept: '.xlsx,.xls',
-                action: `${iotUrl}/api/device/breakdown/import`,
-                limit: 1,
-                autoUpload: false,
-                headers: {
-                    refreshToken: sessionStorage.getItem('refreshToken'),
-                    token: `Bearer ` + sessionStorage.getItem('token'),
-                    AccessKeyId: '5ksbfewexbfc'
-                },
-                data: {
-                    operateUserName: ''
-                }
-            },
-            loading: false,
-            isCode: true
+            ]
         }
     },
     computed: {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createEndTime
+                    let beginDateVal = this.queryParams.endTime
                     if (beginDateVal) {
                         return (
                             time.getTime() > new Date(beginDateVal).getTime()
@@ -127,7 +87,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.createStartTime
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return (
                             time.getTime() < new Date(beginDateVal).getTime()
@@ -150,7 +110,6 @@ export default {
             onQuery: 'getCustomerService'
         }),
         handleCommand (homeId) {
-            console.log(homeId)
             this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId } })
         },
         onSearch () {

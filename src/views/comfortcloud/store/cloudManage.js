@@ -421,7 +421,6 @@ const actions = {
     },
     async findCloudHomeComfortStatisticsList ({ commit }, params) {
         const { data } = await Api.getCloudHomeComfortStatisticsList(params)
-        console.log(data)
         commit(cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS, data.data.comfortRunStats)
         return data.data.totalRunHours
     },
@@ -435,11 +434,6 @@ const actions = {
     },
     async findUserFeedbackList ({ commit }, params) {
         const { data } = await Api.getCloudUserFeedback(params)
-        console.log({
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
-        })
         commit(cloud.CLOUD_USER_FEEDBACK_LIST, data.data.records)
         commit(cloud.CLOUD_USER_FEEDBACK_PAGINATION, {
             pageNumber: data.data.current,
@@ -449,7 +443,6 @@ const actions = {
     },
     async findCloudComfortEncyclopediaList ({ commit }, params) {
         const { data } = await Api.getComfortEncyclopediaList(params)
-        console.log(data)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST, data.data.records)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION, {
             pageNumber: data.data.current,
@@ -459,17 +452,14 @@ const actions = {
     },
     async findComfortEncyclopediaDetail ({ commit }, params) {
         const { data } = await Api.getComfortEncyclopediaDetail(params)
-        console.log(data)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL, data.data)
     },
     async getCatalogueListAct ({ commit }, params) {
         const { data } = await Api.getCatalogueList()
-        console.log(data)
         commit(cloud.KNOWLEDGE_CATALOGUE_LIST, data.data)
     },
     async getQuestionListAct ({ commit }, params) {
         const { data } = await Api.getQuestionList(params)
-        console.log(data)
         commit(cloud.KNOWLEDGE_QUESTION_LIST, data.data)
     },
     async getQuestionDetailAct ({ commit }, params) {
@@ -500,7 +490,6 @@ const actions = {
     },
     async getCustomerService ({ commit }, params) {
         const { data } = await Api.getCustomerService(params)
-        console.log(data)
         commit(cloud.GET_CUSTOMER_SERVICE_LIST, data.data.records)
         commit(cloud.GET_CUSTOMER_SERVICE_PAGINATION, {
             pageNumber: data.data.current,
