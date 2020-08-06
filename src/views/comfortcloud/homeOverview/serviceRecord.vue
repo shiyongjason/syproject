@@ -34,7 +34,6 @@
 <script>
 import { iotUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { downloadEquipmentErrorList, updateCloudEquipment, deleteCloudEquipment } from '../api/index'
 export default {
     name: 'equipmentError',
     data () {

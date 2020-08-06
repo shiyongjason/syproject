@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import { iotUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { setSplashScreenStatus, deleteSplashScreen } from '../api/index'
 export default {
@@ -57,7 +56,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            splashScreenList: 'splashScreenList',
+            splashScreenList: 'splashScreenList'
         }),
         ...mapState({
             userInfo: state => state.userInfo,
