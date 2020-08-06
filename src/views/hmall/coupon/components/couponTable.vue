@@ -104,7 +104,7 @@
                 :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center
+        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="680px" center
                    :close-on-click-modal="false">
             <el-form class="base" :inline="true">
                 <div>
@@ -144,6 +144,9 @@
                     </el-form-item>
                     <el-form-item label="有效时间：">
                         {{couponDetails.effectiveStartDate}} - {{ couponDetails.effectiveEndDate }}
+                    </el-form-item>
+                    <el-form-item label="是否可叠加：">
+                        <span v-text="couponDetails.stackable ? '是' : '否'"></span>
                     </el-form-item>
                     <el-form-item label="活动规则：">
                         {{couponDetails.rule}}
