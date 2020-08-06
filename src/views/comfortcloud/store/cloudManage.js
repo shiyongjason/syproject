@@ -52,7 +52,9 @@ const state = {
     outBoundListPagination: {},
     splashScreenList: [],
     splashScreenPagination: {},
-    allActivity: []
+    allActivity: [],
+    customerServiceList: [],
+    customerServicePagination: {}
 }
 
 const getters = {
@@ -98,7 +100,7 @@ const getters = {
     splashScreenList: state => {
         state.splashScreenList.forEach(v => {
             v.status = !!v.status
-            v.statusName = v.activityId ? v.activityStatus && v.status ? '已生效' : '已关联' : '未关联'
+            v.statusName = v.activityId ? v.activityStatus ? '已生效' : '已关联' : '未关联'
         })
         return state.splashScreenList
     },
@@ -259,6 +261,12 @@ const mutations = {
     },
     [cloud.GET_ALL_ACTIVITY] (state, payload) {
         state.allActivity = payload
+    },
+    [cloud.GET_CUSTOMER_SERVICE_LIST] (state, payload) {
+        state.customerServiceList = payload
+    },
+    [cloud.GET_CUSTOMER_SERVICE_PAGINATION] (state, payload) {
+        state.customerServicePagination = payload
     }
 }
 
@@ -489,6 +497,16 @@ const actions = {
     async getAllActivity ({ commit }, params) {
         const { data } = await Api.getAllActivity(params)
         commit(cloud.GET_ALL_ACTIVITY, data.data)
+    },
+    async getCustomerService ({ commit }, params) {
+        const { data } = await Api.getCustomerService(params)
+        console.log(data)
+        commit(cloud.GET_CUSTOMER_SERVICE_LIST, data.data.records)
+        commit(cloud.GET_CUSTOMER_SERVICE_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
     }
 }
 export default {

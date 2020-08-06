@@ -353,3 +353,7 @@ export function getAllActivity (params) {
 export function getSplashScreenDetail (id) {
     return axios.get(iotUrl + `/api/splash-screen/detail/${id}`)
 }
+// 获取呼叫记录
+export function getCustomerService (params) {
+    return axios.get(iotUrl + `/api/customer-service`, { params })
+}

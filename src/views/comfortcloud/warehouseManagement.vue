@@ -143,6 +143,9 @@ export default {
             outBoundListPagination: state => state.cloudmanage.outBoundListPagination
         })
     },
+    mounted () {
+        this.onSearch()
+    },
     methods: {
         ...mapActions({
             onQuery: 'getOutboundList'
@@ -257,9 +260,6 @@ export default {
                 this.onQuery(this.searchParams)
             }).catch(() => { })
         }
-    },
-    mounted () {
-        this.onSearch()
     }
 }
 </script>

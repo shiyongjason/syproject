@@ -1,7 +1,7 @@
 <template>
     <div class="tags-wrapper page-body">
         <div class="page-body-cont query-cont spanflex">
-            <span>出库管理</span>
+            <span>客服电话记录</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -21,11 +21,23 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="onQuery(queryParams)">查询</el-button>
+                <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="cloudEquipmentErrorList" :pagination="cloudEquipmentErrorPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' @onSortChange="onSortChange">
+            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="customerServiceList" :pagination="customerServicePagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+                <template slot="homes" slot-scope="scope">
+                    <el-dropdown @command="handleCommand">
+                        <span :class="scope.data.row.homes.length > 0 ? 'el-dropdown-link cursor': 'el-dropdown-link'">
+                            {{scope.data.row.homes.length}}个家庭<i :class="scope.data.row.homes.length > 0 ? 'el-icon-arrow-down el-icon--right': 'el-icon--right'"></i>
+                        </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <template v-for="v in scope.data.row.homes">
+                                <el-dropdown-item :key="v.homeId" :command='v.homeId'>{{v.homeName}}</el-dropdown-item>
+                            </template>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </template>
             </basicTable>
         </div>
     </div>
@@ -48,20 +60,21 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            searchParams: {},
             tableData: [],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10
             },
             tableLabel: [
-                { label: '呼叫时间', prop: 'source' },
-                { label: '昵称', prop: 'categoryName' },
-                { label: '手机号', prop: 'brandName' },
-                { label: '号码归属地', prop: 'code' },
-                { label: '注册时间', prop: 'content' },
-                { label: '平台', prop: 'as' },
-                { label: '注册时间', prop: 's' },
-                { label: '家庭', prop: 'sadas' }
+                { label: '呼叫时间', prop: 'callTime' },
+                { label: '昵称', prop: 'nick' },
+                { label: '手机号', prop: 'phone' },
+                { label: '号码归属地', prop: 'phoneAddress' },
+                { label: '注册时间', prop: 'createTime' },
+                { label: '平台', prop: 'phoneType' },
+                { label: '设备数', prop: 'deviceCount' },
+                { label: '家庭', prop: 'homes' }
             ],
             uploadShow: false,
             fileList: [],
@@ -85,7 +98,7 @@ export default {
                 action: `${iotUrl}/api/device/breakdown/import`,
                 limit: 1,
                 autoUpload: false,
-                headers: { // todo I'm need a config file
+                headers: {
                     refreshToken: sessionStorage.getItem('refreshToken'),
                     token: `Bearer ` + sessionStorage.getItem('token'),
                     AccessKeyId: '5ksbfewexbfc'
@@ -123,35 +136,35 @@ export default {
                 }
             }
         },
-        ...mapGetters({
-            cloudEquipmentErrorList: 'cloudEquipmentErrorList',
-            cloudEquipmentErrorPagination: 'cloudEquipmentErrorPagination'
-        }),
         ...mapState({
-            userInfo: state => state.userInfo
+            userInfo: state => state.userInfo,
+            customerServiceList: state => state.cloudmanage.customerServiceList,
+            customerServicePagination: state => state.cloudmanage.customerServicePagination
         })
+    },
+    mounted () {
+        this.onSearch()
     },
     methods: {
         ...mapActions({
-            onQuery: 'findCloudEquipmentErrorList'
+            onQuery: 'getCustomerService'
         }),
+        handleCommand (homeId) {
+            console.log(homeId)
+            this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId } })
+        },
+        onSearch () {
+            this.searchParams = { ...this.queryParams }
+            this.onQuery(this.searchParams)
+        },
         onCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.onQuery(this.queryParams)
+            this.searchParams.pageNumber = val.pageNumber
+            this.onQuery(this.searchParams)
         },
         onSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.onQuery(this.queryParams)
-        },
-        onSortChange (val) {
-            if (val.order) {
-                this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
-                this.onQuery(this.queryParams)
-            }
+            this.searchParams.pageSize = val
+            this.onQuery(this.searchParams)
         }
-    },
-    mounted () {
-        this.onQuery(this.queryParams)
     }
 }
 </script>
@@ -180,5 +193,8 @@ export default {
         height: 100px;
         min-height: 100px;
     }
+}
+.cursor {
+    cursor: pointer;
 }
 </style>
