@@ -44,8 +44,7 @@
 </template>
 
 <script>
-import { iotUrl } from '@/api/config'
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 export default {
     name: 'equipmentError',
     data () {
