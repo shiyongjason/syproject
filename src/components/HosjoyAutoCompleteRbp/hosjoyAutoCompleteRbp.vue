@@ -63,7 +63,7 @@ export default {
         },
         maxlength: {
             type: Number,
-            default: 15
+            default: 30
         }
     },
     data () {
