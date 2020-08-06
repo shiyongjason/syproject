@@ -115,7 +115,7 @@ import { mapGetters, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, STATUS_TYPE, NEW_STATUS_TYPE } from '../../const'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE } from '../../const'
 export default {
     name: 'projectcom',
     props: {
