@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body amount">
+    <div class="page-body query-cont amount">
         <el-collapse-transition>
             <div v-show="toggle"  class="page-body-cont query-cont">
                 <div class="query-cont-row">
