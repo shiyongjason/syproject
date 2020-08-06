@@ -196,7 +196,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/operationsManagement/cloudList')
+            this.$router.go(-1)
         },
         async getActivityDetail (id) {
             await this.findcloudActDetail(id)

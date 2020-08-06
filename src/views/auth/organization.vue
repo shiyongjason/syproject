@@ -15,7 +15,7 @@
                     <el-input placeholder="请输入工号/姓名/登录名进行检索" v-model="queryParams.keyWord" class="keywords" @keyup.enter.native="findOrganizationEmployee">
                         <i slot="prefix" class="el-input__icon el-icon-search"></i>
                     </el-input>
-                    <el-button type="primary" v-if="true" @click="findOrganizationEmployee">搜索</el-button>
+                    <el-button type="primary" v-if="true" @click="findOrganizationEmployee">查询</el-button>
                     <el-button type="primary" @click="syncOrg">同步金云</el-button>
                 </div>
                 <div class="result">
