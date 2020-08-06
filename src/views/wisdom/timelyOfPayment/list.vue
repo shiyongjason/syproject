@@ -191,20 +191,22 @@ export default {
                     ]
                 }
                 this.$set(this.newCloum, 0, newChildren)
+                console.log('this.newCloum', this.newCloum)
                 this.column = JSON.parse(JSON.stringify(this.newCloum))
             } else {
-                this.newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
+                // this.newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
                 this.column = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
             }
             this.hosDestroyed = false
             this.$nextTick(() => {
                 this.hosDestroyed = true
             })
-            this.onReset()
+            // this.onReset()
         },
         handleClick () {
             this.tableData = []
             this.changeColumn(this.queryParams.departmentType)
+            this.onReset()
         },
         onSearch () {
             this.searchParams = {
@@ -220,9 +222,10 @@ export default {
             if (this.queryParams.departmentType == 1) {
                 _column = platformSummarySheet(parseInt(_N))
             } else {
+                // _column = JSON.parse(JSON.stringify(this.newCloum))
+                this.changeColumn(2)
                 _column = JSON.parse(JSON.stringify(this.newCloum))
             }
-            console.log(1, _column)
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 /* if (!res[1].data) {
