@@ -14,7 +14,7 @@ import basicTable from './components/CommonTable/CommonTable'
 import moment from 'moment'
 import '@/utils/validate/index.js'
 // fix前端精度问题
-import precisionMethods from '@/utils/number-precision.js'
+import precisionMethods from '@/utils/bignumber.js'
 
 // 接入 sentry
 import * as Sentry from '@sentry/browser'
@@ -65,14 +65,14 @@ Vue.prototype.$minus = (num1, num2, ...others) => {
 /**
  * 精确除法
  */
-Vue.prototype.$divide = (num1, num2, ...others) => {
-    return precisionMethods.divide(num1, num2, ...others)
+Vue.prototype.$dividedBy = (num1, num2, ...others) => {
+    return precisionMethods.dividedBy(num1, num2, ...others)
 }
 /**
  * 精确乘法
  */
-Vue.prototype.$multiply = (num1, num2, ...others) => {
-    return precisionMethods.times(num1, num2, ...others)
+Vue.prototype.$multipliedBy = (num1, num2, ...others) => {
+    return precisionMethods.multipliedBy(num1, num2, ...others)
 }
 
 Vue.mixin({
