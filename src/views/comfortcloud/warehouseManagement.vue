@@ -67,7 +67,7 @@
 <script>
 import { iotUrl } from '@/api/config'
 import { mapActions, mapState } from 'vuex'
-import { downloadOutboundList, updateCloudEquipment, deleteOutboundList } from './api/index'
+import { downloadOutboundList, deleteOutboundList } from './api/index'
 export default {
     name: 'equipmentError',
     data () {
@@ -142,6 +142,9 @@ export default {
             outBoundList: state => state.cloudmanage.outBoundList,
             outBoundListPagination: state => state.cloudmanage.outBoundListPagination
         })
+    },
+    mounted () {
+        this.onSearch()
     },
     methods: {
         ...mapActions({
@@ -257,9 +260,6 @@ export default {
                 this.onQuery(this.searchParams)
             }).catch(() => { })
         }
-    },
-    mounted () {
-        this.onSearch()
     }
 }
 </script>

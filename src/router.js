@@ -16,11 +16,6 @@ import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
 Vue.use(Router)
-// 解决重复点击菜单报错
-const originalPush = Router.prototype.push
-Router.prototype.push = function push (location) {
-    return originalPush.call(this, location).catch(err => err)
-}
 
 const routerMapping = [
     {
