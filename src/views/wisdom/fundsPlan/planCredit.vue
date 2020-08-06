@@ -56,7 +56,7 @@
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
             </div>
             <hosJoyTable
-                collapseShow :localName="'planCreditTable::v2.4.0'"
+                collapseShow is-simple-table :localName="'planCreditTable::v2.4.0'"
                 :amountResetTable="toggle" v-if="reRender"
                 ref="hosjoyTable" border stripe showPagination
                 :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">

@@ -120,7 +120,7 @@ export default {
             toggle: true,
             deptType: DEPT_TYPE,
             tableLabel: [
-                { label: '所属分部', prop: 'subsectionName', choosed: true, width: 100 },
+                { label: '所属分部', prop: 'subsectionName', choosed: true, minWidth: 100 },
                 { label: '城市', prop: 'cityName', choosed: true, linkAge: true, width: 100 },
                 { label: 'mis编码', prop: 'misCode', choosed: true, linkAge: true, width: 80 },
                 { label: '平台公司', prop: 'companyShortName', choosed: true, linkAge: true, width: 100 },
@@ -130,11 +130,11 @@ export default {
                 { label: '品牌', prop: 'brandName', choosed: true, queryParams: { brandStatus: 1 }, width: 100 },
                 { label: '销售收入（无税）', prop: 'saleGross', choosed: true, width: 130 },
                 { label: '销售占比', prop: 'saleRatio', choosed: true, width: 100 },
-                { label: '同期（销售收入）', prop: 'yearOverYearSale', choosed: true, width: 130 },
-                { label: '同比（销售收入）', prop: 'yearOnYearSale', choosed: true, width: 130 },
-                { label: '成本', prop: 'orderCost', choosed: true, width: 100 },
-                { label: '毛利', prop: 'grossProfit', choosed: true, formatters: 'money', width: 100 },
-                { label: '毛利率', prop: 'grossProfitRate', choosed: true, width: 100 }
+                { label: '同期（销售收入）', prop: 'yearOverYearSale', choosed: true, minWidth: 130 },
+                { label: '同比（销售收入）', prop: 'yearOnYearSale', choosed: true, minWidth: 130 },
+                { label: '成本', prop: 'orderCost', choosed: true, minWidth: 100 },
+                { label: '毛利', prop: 'grossProfit', choosed: true, formatters: 'money', minWidth: 100 },
+                { label: '毛利率', prop: 'grossProfitRate', choosed: true, minWidth: 100 }
             ],
             pickerOptionsStart: {
                 disabledDate: (time) => {

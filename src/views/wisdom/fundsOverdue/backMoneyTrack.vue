@@ -48,7 +48,7 @@
                 <hosJoyTable
                     ref="hosjoyTable"
                     :amountResetTable="toggle"
-                    collapseShow :localName="'backMoneyTrackTable::v2.4.0'"
+                    isSimpleTable collapseShow :localName="'backMoneyTrackTable::v2.4.0'"
                     border
                     stripe
                     :showPagination='!!backMoneyPagination.total'

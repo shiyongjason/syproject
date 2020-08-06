@@ -79,6 +79,7 @@
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="incremental" slot-scope="scope">
                         <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
+                        <span v-else>-</span>
                     </template>
                     <template slot="updateTime" slot-scope="scope">
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
@@ -109,17 +110,17 @@ export default {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
             },
             tableLabel: [
-                { label: '公司简称', prop: 'companyShortName', choosed: true, width: 100 },
+                { label: '公司简称', prop: 'companyShortName', choosed: true, minWidth: 100 },
                 { label: '公司编码', prop: 'misCode', choosed: true, width: 100 },
                 { label: '分部', prop: 'subsectionName', choosed: true, width: 100 },
                 { label: '所在城市', prop: 'cityName', choosed: true, width: 100 },
-                { label: '上线时间', prop: 'onlineTime', choosed: true, width: 100 },
+                { label: '上线时间', prop: 'onlineTime', choosed: true, minWidth: 100 },
                 { label: '增量/存量', prop: 'incremental', choosed: true, width: 100 },
                 { label: '目标年份', prop: 'targetDate', choosed: true, width: 100 },
-                { label: '履约目标/万', prop: 'performanceTarget', choosed: true, formatters: 'money', width: 100 },
-                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true, formatters: 'money', width: 100 },
-                { label: '最近操作人', prop: 'updateUser', choosed: true, width: 100 },
-                { label: '最近操作时间', prop: 'updateTime', choosed: true, width: 140 }
+                { label: '履约目标/万', prop: 'performanceTarget', choosed: true, formatters: 'money', minWidth: 100 },
+                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true, formatters: 'money', minWidth: 100 },
+                { label: '最近操作人', prop: 'updateUser', choosed: true, minWidth: 100 },
+                { label: '最近操作时间', prop: 'updateTime', choosed: true, minWidth: 140 }
             ],
             incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
             searchParams: {

@@ -106,6 +106,11 @@ export default {
             required: false,
             type: Boolean,
             default: false
+        },
+        isSimpleTable: { // 为了解决多级树 默认会选中子所有的，导致选择无限还是
+            required: false,
+            type: Boolean,
+            default: false
         }
     },
     components: {
@@ -182,6 +187,12 @@ export default {
                     id = value.label
                 }
                 if (id) {
+                    if (this.isSimpleTable) {
+                        return {
+                            id: id,
+                            label: value.label
+                        }
+                    }
                     return { // 只遍历了2级，如果展示的是三级，需要将第一个label设置空
                         id: id,
                         label: value.label,
@@ -268,7 +279,7 @@ export default {
             this.columnRender.forEach(value => {
                 const showColumnLabel = JSON.parse(localStorage.getItem(this.userNameLog))
                 value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
+                if (value.children && !this.isSimpleTable) {
                     let number = 0
                     let ID = ''
                     if (value.prop && value.label) {
@@ -396,7 +407,11 @@ export default {
             }
             arr.forEach(value => {
                 if (value.children) {
-                    this.collectDefaultId(value.children, true)
+                    if (this.isSimpleTable) { // 无子级树入口
+                        this.defaultLabel.push(value.id)
+                    } else {
+                        this.collectDefaultId(value.children, true)
+                    }
                 } else {
                     this.defaultLabel.push(value.id)
                 }
@@ -450,16 +465,18 @@ export default {
         },
         switchLabel: {
             handler () {
-                if (this.prevLocalName) {
-                    localStorage.removeItem(this.prevUserNameLog)
-                }
-                const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
-                if (isLoggedIn && isLoggedIn.length > 0) {
-                    this.defaultLabel = isLoggedIn
-                    this.$forceUpdate()
-                } else {
-                    this.collectDefaultId(this.switchLabel)
-                    localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                if (this.localName !== 'TABLE::') { // 修复如果没传localName 则不用存storage
+                    if (this.prevLocalName) {
+                        localStorage.removeItem(this.prevUserNameLog)
+                    }
+                    const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
+                    if (isLoggedIn && isLoggedIn.length > 0) {
+                        this.defaultLabel = isLoggedIn
+                        this.$forceUpdate()
+                    } else {
+                        this.collectDefaultId(this.switchLabel)
+                        localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                    }
                 }
             },
             deep: true,
