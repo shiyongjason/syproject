@@ -33,14 +33,7 @@
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <div v-if="queryParams.state == 1 && hosAuthCheck(platformOverdueSumImport)">
-                        <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'backend/api/company/annual-repayment-plan/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload :headers='headersData' :data='{state: 1}'>
-                            <el-button type="primary" class='ml20' :loading='loading'>
-                                导入表格
-                            </el-button>
-                        </el-upload>
-                    </div>
-                    <el-button type="primary" class="ml20" @click="onExport" v-if="!hosAuthCheck()">导出表格</el-button>
+                    <el-button type="primary" class="ml20" @click="onExport" >导出表格</el-button>
                 </div>
             </div>
         </div>
@@ -58,7 +51,7 @@
 import { mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import hosjoyAutoCompleteRbp from '@/components/HosjoyAutoCompleteRbp/hosjoyAutoCompleteRbp'
-import { platformSummarySheet, overDueTotal } from './const'
+import { platformSummarySheet } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getOverduepage, getOverdueTotal, exportOverdueExcel } from './api/index'
@@ -200,6 +193,7 @@ export default {
                 this.$set(this.newCloum, 0, newChildren)
                 this.column = JSON.parse(JSON.stringify(this.newCloum))
             } else {
+                this.newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
                 this.column = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
             }
             this.hosDestroyed = false
@@ -231,7 +225,6 @@ export default {
             console.log(1, _column)
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                console.log('res: ', res)
                 /* if (!res[1].data) {
                     res[1].data = overDueTotal
                 }
@@ -287,12 +280,10 @@ export default {
                 this.$message.error(`error:${error}`)
             })
             this.column = _column
-            // this.hosDestroyed = false
-            // this.$nextTick(() => {
-            //     this.hosDestroyed = true
-            // })
-            // this.changeColumn()
-
+            this.hosDestroyed = false
+            this.$nextTick(() => {
+                this.hosDestroyed = true
+            })
             this.tableData = data.records
             this.page = {
                 total: data.total,
