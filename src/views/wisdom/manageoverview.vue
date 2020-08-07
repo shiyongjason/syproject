@@ -144,14 +144,16 @@ export default {
         }
     },
     async mounted () {
+        this.formDataReset = { ...this.formData }
         this.onFindRegionList()
         this.onFindBranchList()
-        this.formDataReset = { ...this.formData }
     },
     methods: {
         onReset () {
             this.formData = { ...this.formDataReset }
-            this.onSearchForm()
+            this.$nextTick(() => {
+                this.onSearchForm()
+            })
         },
         ...mapActions({
             findAuthList: 'findAuthList'

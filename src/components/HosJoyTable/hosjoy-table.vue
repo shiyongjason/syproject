@@ -27,7 +27,7 @@
                 </template>
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="(item, index) in getColumn()">
+            <template v-for="(item, index) in getColumn">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed && data.length > 0"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
@@ -131,13 +131,21 @@ export default {
             defaultLabel: [],
             selectedColumn: [],
             columnRender: [],
-            emptyTxtLeft: ''
+            emptyTxtLeft: '',
+            getColumn: []
         }
     },
     created () {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
+        // getColumn () {
+        //     if (this.collapseShow) {
+        //         return this.columnRender
+        //     }
+        //     console.log(1)
+        //     return this.column
+        // },
         // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
         computedHeight () {
             if (this.height) return 'unset'
@@ -256,12 +264,12 @@ export default {
             }, 300)
             return this.summary
         }, */
-        getColumn () {
-            if (this.collapseShow) {
-                return this.columnRender
-            }
-            return this.column
-        },
+        // getColumn () {
+        //     if (this.collapseShow) {
+        //         return this.columnRender
+        //     }
+        //     return this.column
+        // },
         async updateLabel () {
             if (this.defaultLabel.length < 2) {
                 this.$message.warning('选中不能小于2个')
@@ -278,7 +286,9 @@ export default {
         dealUpdateLabel (val) {
             this.columnRender.forEach(value => {
                 const showColumnLabel = JSON.parse(localStorage.getItem(this.userNameLog))
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
+                if (!value.isHidden) {
+                    value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
+                }
                 if (value.children && !this.isSimpleTable) {
                     let number = 0
                     let ID = ''
@@ -300,10 +310,6 @@ export default {
             this.toggleTable = false
             this.$nextTick(() => {
                 this.toggleTable = true
-                // if (this.showSummary) {
-                //     this.i = 0
-                //     this.getSummary()
-                // }
             })
         },
         toggleTableHandler () {
@@ -487,6 +493,9 @@ export default {
                 if (this.collapseShow) {
                     this.columnRender = this.deepCopy(val)
                     this.dealUpdateLabel(this.columnRender)
+                    this.$set(this, 'getColumn', this.columnRender)
+                } else {
+                    this.$set(this, 'getColumn', val)
                 }
             },
             deep: true,
@@ -655,5 +664,15 @@ export default {
     position: fixed;
     transform: translateX(-50%);
     width: auto;
+}
+.hosjoy-table >>> .el-table--fluid-height .el-table__fixed {
+    bottom: 11px!important;
+}
+    /deep/.el-table .hidden-columns,/deep/.el-table td.is-hidden>*, /deep/.el-table th.is-hidden>*, /deep/.el-table--hidden{
+        visibility: visible;
+
+    }
+/deep/.el-table__fixed-right::before,  /deep/.el-table__fixed::before {
+    display: none;
 }
 </style>

@@ -162,7 +162,7 @@ export default {
             this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
         },
         onReset () {
-            this.queryParams = this.queryParamsReset
+            this.queryParams = { ...this.queryParamsReset }
             this.branchObj = {
                 selectCode: '',
                 selectName: ''
@@ -171,7 +171,7 @@ export default {
         }
     },
     mounted () {
-        this.queryParamsReset = { ...this.queryParams }
+        this.queryParamsReset = JSON.parse(JSON.stringify(this.queryParams))
         this.onQuery(this.queryParams)
         this.newBossAuth(['F'])
     }

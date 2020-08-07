@@ -173,7 +173,7 @@ export default {
             })
             this.tableData.unshift(obj)
         },
-        onReset () {
+        async onReset () {
             this.queryParams = { ...this.queryParamsReset }
             this.selectAuth = {
                 regionObj: {
@@ -186,6 +186,7 @@ export default {
                 }
             }
             this.onSearch()
+            await this.newBossAuth(['D', 'F'])
         }
     },
     async mounted () {

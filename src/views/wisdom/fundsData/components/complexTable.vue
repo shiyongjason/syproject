@@ -477,18 +477,18 @@ export default {
                 {
                     prop: 'account_standingBookNo',
                     fixed: true,
-                    minWidth: '100',
+                    minWidth: '150',
                     label: '',
                     children: [
                         {
                             label: '台账编号',
                             prop: 'account_standingBookNo',
-                            minWidth: '100',
+                            minWidth: '150',
                             children: [
                                 {
                                     prop: 'account_standingBookNo',
                                     label: '台账编号',
-                                    minWidth: '100',
+                                    minWidth: '150',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                                         return render ? <div>

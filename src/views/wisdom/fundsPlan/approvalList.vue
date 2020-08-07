@@ -27,7 +27,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch()">
-                            搜索
+                            查询
                         </el-button>
                         <el-button type="default" class="ml20" @click="onReset()">
                             重置
