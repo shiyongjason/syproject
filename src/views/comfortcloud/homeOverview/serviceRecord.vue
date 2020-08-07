@@ -16,7 +16,7 @@
                     <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
@@ -49,6 +49,7 @@ export default {
     name: 'equipmentError',
     data () {
         return {
+            shy: '',
             queryParams: {
                 startTime: '',
                 endTime: '',
@@ -89,7 +90,7 @@ export default {
                     let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            time.getTime() < new Date(beginDateVal).getTime() - 86399000
                         )
                     }
                 }
