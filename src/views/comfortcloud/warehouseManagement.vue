@@ -131,7 +131,7 @@ export default {
                     let beginDateVal = this.queryParams.startOutboundTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            time.getTime() < new Date(beginDateVal).getTime() - 86399000
                         )
                     }
                 }
