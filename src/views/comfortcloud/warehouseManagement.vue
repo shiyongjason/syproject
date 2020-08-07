@@ -34,7 +34,7 @@
             </el-upload>
             <el-button class="errorBtn" v-if="errorData.containsList.length > 0" @click="errorShow = true">上传失败数据</el-button>
             <div class="downloadExcel">
-                <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
+                <a href="/excelTemplate/出库管理导入模板.xlsx" download="出库管理导入模板.xls">下载出库管理导入模板</a>
             </div>
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
