@@ -853,6 +853,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司编码',
             prop: 'misCode',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 100,
             fixed: true
         },
@@ -860,6 +861,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司名称',
             prop: 'companyName',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 120,
             fixed: true
         },
@@ -867,6 +869,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '区域',
             prop: 'subRegionName',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 150,
             fixed: true
         },

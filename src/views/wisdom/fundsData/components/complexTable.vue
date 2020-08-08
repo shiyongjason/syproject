@@ -69,7 +69,7 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
-import { MathJS } from '../../../../utils/MathUtils'
+import { MathJS } from '@/utils/MathUtils'
 import {
     WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA,
     WISDOM_EXPOSURE_FUNDSDATA_UPDATA,

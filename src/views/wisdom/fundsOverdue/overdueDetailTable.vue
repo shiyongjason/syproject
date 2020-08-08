@@ -84,6 +84,7 @@ import { departmentAuth } from '@/mixins/userAuth'
 import { interfaceUrl } from '@/api/config'
 import { getOverdueIncrementDetailList, getOverdueIncrementDetailTotal, exportCompanyOverdueDetailExcel } from './api/index'
 import { OVERDUE_DETAIL_TABLE_EXPORT, OVERDUE_DETAIL_TABLE_IMPORT } from '@/utils/auth_const'
+import { MathJS } from '@/utils/MathUtils'
 export default {
     name: 'commitValue',
     mixins: [departmentAuth],
@@ -225,7 +226,8 @@ export default {
                         if (value.prop === key && res[1].data[key] != null) {
                             value.children.forEach(value1 => {
                                 if (key === 'planProportion') {
-                                    value1.label = String(res[1].data[key] * 100) + '%'
+                                    let valTemp = MathJS.evaluate(`${res[1].data[key]} * ${100}`).toNumber()
+                                    value1.label = String(valTemp) + '%'
                                 } else {
                                     value1.label = String(res[1].data[key])
                                 }

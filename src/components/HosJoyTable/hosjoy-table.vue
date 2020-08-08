@@ -149,7 +149,7 @@ export default {
         // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
         computedHeight () {
             if (this.height) return 'unset'
-            if (this.amountResetTableChange > -1 && this.data && this.data.length >= this.pageSize) {
+            if (this.amountResetTableChange > -1 && this.data && this.data.length >= 10) {
                 // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
                 let resetH = this.amountResetTable === true ? this.selfHeight : 110
                 let h = document.documentElement.clientHeight - resetH
@@ -279,14 +279,14 @@ export default {
                 this.$nextTick(() => {
                     this.toggleTable = true
                 })
-                this.dealUpdateLabel(this.defaultLabel)
+                this.dealUpdateLabel()
                 this.collapse = false
             }
         },
         dealUpdateLabel (val) {
             this.columnRender.forEach(value => {
                 const showColumnLabel = JSON.parse(localStorage.getItem(this.userNameLog))
-                if (!value.isHidden) {
+                if (!value.coderHidden) {
                     value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
                 }
                 if (value.children && !this.isSimpleTable) {

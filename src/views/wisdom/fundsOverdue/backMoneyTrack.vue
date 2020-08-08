@@ -177,10 +177,14 @@ export default {
             }
             if (this.queryParamsTemp.departmentType === '2') {
                 backMoneyTrack[0].isHidden = true
+                backMoneyTrack[0].coderHidden = true
                 backMoneyTrack[1].isHidden = true
+                backMoneyTrack[1].coderHidden = true
             } else {
                 backMoneyTrack[0].isHidden = false
+                backMoneyTrack[0].coderHidden = false
                 backMoneyTrack[1].isHidden = false
+                backMoneyTrack[1].coderHidden = false
             }
             this.findBackMoneyTrackList(this.queryParamsTemp)
             await this.findBackMoneyTrackTotal(this.queryParamsTemp)
