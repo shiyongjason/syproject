@@ -49,6 +49,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear}年责任状目标`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -56,6 +57,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear}年${targetMonth}月责任状目标`,
                     minWidth: '160',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -63,6 +65,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -70,6 +73,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 }
             ]
@@ -101,6 +105,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -108,6 +113,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -115,6 +121,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'

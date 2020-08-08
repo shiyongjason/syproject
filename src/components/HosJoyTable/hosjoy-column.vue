@@ -35,7 +35,7 @@
         <template slot="header" slot-scope="scope">
             <hosjoy-render v-if="column.renderHeader" :scope="scope" :render="column.renderHeader">
             </hosjoy-render>
-            <span v-if='column.displayAs || column.unit'>{{ dealHeader(scope.column.label, column) }}</span>
+            <span v-if='(column.displayAs || column.unit) && !column.isTHNoTranslate'>{{ dealHeader(scope.column.label, column) }}</span>
             <span v-else>{{ scope.column.label }}</span>
         </template>
 
