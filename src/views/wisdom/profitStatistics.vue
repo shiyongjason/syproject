@@ -482,6 +482,7 @@ export default {
             }
             this.onLineStatusTemp = ['1']
             this.getList()
+            this.newBossAuth(['F', 'P'])
         }
     },
     async mounted () {

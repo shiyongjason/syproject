@@ -196,6 +196,7 @@ export default {
                     selectName: ''
                 }
             }
+            this.newBossAuth()
             this.onSearch()
         },
         onExport () {

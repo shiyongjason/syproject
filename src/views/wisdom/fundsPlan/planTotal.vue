@@ -139,6 +139,7 @@ export default {
             }
             this.params.subsectionCode = ''
             this.params.selectTime = this.targetTime
+            this.newBossAuth(['F'])
             this.queryAndChangeTime(this.params)
         },
         onExport () {

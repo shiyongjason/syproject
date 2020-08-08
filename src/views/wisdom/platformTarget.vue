@@ -336,6 +336,7 @@ export default {
                 }
             }
             this.onFindTableList(this.searchParams)
+            this.newBossAuth(['F'])
         }
     }
 }

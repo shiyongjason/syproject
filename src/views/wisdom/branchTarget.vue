@@ -167,6 +167,7 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
+            this.newBossAuth(['F'])
             this.onQuery(this.queryParams)
         }
     },

@@ -182,8 +182,6 @@ export default {
                 backMoneyTrack[0].isHidden = false
                 backMoneyTrack[1].isHidden = false
             }
-            console.log(backMoneyTrack[0].isHidden)
-            console.log(backMoneyTrack[1].isHidden)
             this.findBackMoneyTrackList(this.queryParamsTemp)
             await this.findBackMoneyTrackTotal(this.queryParamsTemp)
             let noIgnore = true
@@ -202,9 +200,6 @@ export default {
                 }
             })
             this.column = backMoneyTrack
-            // setTimeout(() => {
-            //     this.$refs.hosjoyTable.toggleTableHandler()
-            // }, 10)
         },
         getList (val) {
             this.queryParamsTemp = {

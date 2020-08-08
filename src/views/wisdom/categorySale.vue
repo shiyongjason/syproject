@@ -279,7 +279,7 @@ export default {
             })
             isFind && this.getPlatCategory(this.queryParams)
         },
-        onReset () {
+        async onReset () {
             this.queryParams = { ...this.queryParamsReset }
             this.selectAuth = {
                 branchObj: {
@@ -297,6 +297,7 @@ export default {
             }
             this.onLineStatus = ['1']
             this.getPlatCategory(this.queryParams)
+            await this.newBossAuth(['F', 'P'])
         }
     },
     async mounted () {

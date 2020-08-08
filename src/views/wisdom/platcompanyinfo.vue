@@ -149,6 +149,7 @@ export default {
                     selectName: ''
                 }
             }
+            this.newBossAuth(['F', 'P'])
             this.findCompanyList({ ...this.searchParams, pageNumber: 1 })
         },
         async onCityChange () {

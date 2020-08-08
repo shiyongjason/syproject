@@ -54,7 +54,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    minWidth: '150',
+                    minWidth: '160',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
@@ -140,7 +140,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期余额/在贷余额）',
+                    label: '逾期率=（逾期金额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
                     minWidth: '200'
@@ -397,7 +397,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期余额/在贷余额）',
+                    label: '逾期率=（逾期金额/在贷余额）',
                     align: 'right',
                     children: [
                         {

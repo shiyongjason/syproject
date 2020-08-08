@@ -126,6 +126,7 @@ export default {
             this.selectObj.branch = { ...obj }
             this.selectObj.platformData = { ...obj }
             this.platComList = []
+            this.newBossAuth(['F'])
             this.onSearch()
         },
         onCurrentChange (val) {

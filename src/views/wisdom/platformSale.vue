@@ -416,7 +416,7 @@ export default {
                 this.getPlatformSaleSum()
             }
         },
-        onReset () {
+        async onReset () {
             this.queryParams = { ...this.queryParamsRest }
             this.selectAuth = {
                 regionObj: {
@@ -433,6 +433,7 @@ export default {
                 }
             }
             this.onQuery(this.queryParams)
+            await this.newBossAuth(['D', 'F', 'P'])
         }
     },
     async mounted () {
