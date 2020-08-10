@@ -100,7 +100,7 @@ const getters = {
     splashScreenList: state => {
         state.splashScreenList.forEach(v => {
             v.status = !!v.status
-            v.statusName = v.activityId ? v.activityStatus ? '已生效' : '已关联' : '未关联'
+            v.statusName = v.activityId ? '已关联' : '未关联'
         })
         return state.splashScreenList
     },

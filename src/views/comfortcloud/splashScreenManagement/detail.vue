@@ -17,7 +17,7 @@
                 <el-form-item label="跳转活动：">
                     <HAutocomplete :selectArr="allActivity" @back-event="backPlat" placeholder="请选择跳转活动" :selectObj="selectObj" :maxlength='15' :canDoBlurMethos='true'></HAutocomplete>
                 </el-form-item>
-                <el-form-item style="text-align: center">
+                <el-form-item>
                     <el-button type="primary" @click="onSaveSmartPlay" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
@@ -140,6 +140,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.spanflex {
+    font-size: 16px;
+    padding-bottom: 10px;
+}
 .page-body-title {
     margin-bottom: 20px;
 }
