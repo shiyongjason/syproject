@@ -48,7 +48,7 @@ export default {
             searchParams: {},
             tableLabel: [
                 { label: '标题', prop: 'title' },
-                { label: '创建时间', prop: 'createTime' },
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '关联活动', prop: 'statusName' },
                 { label: '是否生效', prop: 'status' }
             ]

@@ -60,11 +60,11 @@ export default {
             searchParams: {},
             tableData: [],
             tableLabel: [
-                { label: '呼叫时间', prop: 'callTime' },
+                { label: '呼叫时间', prop: 'callTime', formatters: 'dateTime' },
                 { label: '昵称', prop: 'nick' },
                 { label: '手机号', prop: 'phone' },
                 { label: '号码归属地', prop: 'phoneAddress' },
-                { label: '注册时间', prop: 'createTime' },
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '平台', prop: 'phoneType' },
                 { label: '设备数', prop: 'deviceCount' },
                 { label: '家庭', prop: 'homes' }
