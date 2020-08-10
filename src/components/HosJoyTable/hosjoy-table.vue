@@ -119,7 +119,7 @@ export default {
     data () {
         return {
             i: 0,
-            toggleTable: true,
+            toggleTable: false,
             mergeLine: {},
             mergeIndex: {},
             selfHeight: 0,
@@ -145,7 +145,7 @@ export default {
             if (this.amountResetTableChange > -1 && this.data && this.data.length >= 10) {
                 // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
                 // let resetH = this.amountResetTable === true ? this.selfHeight : 110
-                let resetH = this.$refs.hosTable.getBoundingClientRect().top + 40
+                let resetH = ((this.$refs.hosTable && this.$refs.hosTable.getBoundingClientRect().top) || 0) + 40
                 let h = document.documentElement.clientHeight - resetH
                 if (Math.floor(h) < 280) {
                     h = 280// 最小高度
@@ -462,7 +462,11 @@ export default {
                     this.dealUpdateLabel(this.columnRender)
                     this.$set(this, 'getColumn', this.columnRender)
                 } else {
+                    this.toggleTable = false
                     this.$set(this, 'getColumn', val)
+                    this.$nextTick(() => {
+                        this.toggleTable = true
+                    })
                 }
             },
             deep: true,

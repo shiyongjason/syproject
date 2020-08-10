@@ -112,7 +112,7 @@ export default {
                     fixed: true
                 },
                 { prop: 'companyShortName', label: '平台公司名', fixed: true, width: '120' },
-                { prop: 'subsectionName', label: '分部', fixed: true },
+                { prop: 'subsectionName', label: '分部', fixed: true, width: '120' },
                 {
                     label: '销售收入与成本/万',
                     renderHeader: (h, scope) => {

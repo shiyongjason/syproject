@@ -8,24 +8,6 @@
             <div v-show="toggle">
                 <div class="page-body-cont query-cont">
                     <hosjoyAutoCompleteRbp :regionData.sync='queryParams.regionCode' :branchData.sync='queryParams.subsectionCode' :platCompanyData.sync='queryParams.misCode' :showPlatCompany='queryParams.departmentType == 1' />
-                    <!-- <div class="query-cont-col" v-if="region">
-                            <div class="query-col-title">大区：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col" v-if="branch">
-                            <div class="query-col-title">分部：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div>
-                        <div class="query-cont-col" v-if="queryParams.departmentType == 1">
-                            <div class="query-col-title">平台公司：</div>
-                            <div class="query-col-input">
-                                <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                            </div>
-                        </div> -->
                     <div class="query-cont-col flex-box-time">
                         <div class="query-col-title">查询时间：</div>
                         <el-date-picker v-model="queryParams.selectDate" type="date" value-format='yyyy-MM-dd' placeholder="选择年" :editable='false' :clearable='false'>
@@ -45,7 +27,7 @@
                 <div class="util">单位：万元</div>
                 <hosJoyTable
                     :amountResetTable="toggle"
-                    ref="hosjoyTable" border stripe v-if="hosDestroyed" :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
+                    ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="page.pageNumber" :pageSize.sync="page.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -79,20 +61,6 @@ export default {
             accept: '.xlsx,.xls',
             loading: false,
             interfaceUrl: interfaceUrl,
-            // selectAuth: {
-            //     regionObj: {
-            //         selectCode: '',
-            //         selectName: ''
-            //     },
-            //     branchObj: {
-            //         selectCode: '',
-            //         selectName: ''
-            //     },
-            //     platformObj: {
-            //         selectCode: '',
-            //         selectName: ''
-            //     }
-            // },
             queryParams: {
                 departmentType: '1',
                 regionCode: '',
@@ -110,7 +78,6 @@ export default {
             tableData: [],
             dialogFormVisible: false,
             column: [],
-            hosDestroyed: true,
             nowToday: moment().format('DD')
 
         }
@@ -124,94 +91,13 @@ export default {
         })
     },
     methods: {
-        // linkage (dis) {
-        //     let obj = {
-        //         selectCode: '',
-        //         selectName: ''
-        //     }
-        //     if (dis === 'D') {
-        //         this.queryParams.subsectionCode = ''
-        //         this.queryParams.companyName = ''
-        //         this.selectAuth.branchObj = { ...obj }
-        //         this.selectAuth.platformObj = { ...obj }
-        //     } else if (dis === 'F') {
-        //         this.queryParams.companyName = ''
-        //         this.selectAuth.platformObj = { ...obj }
-        //     }
-        // },
-        // async backPlat (val, dis) {
-        //     if (dis === 'D') {
-        //         this.queryParams.regionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-        //         this.findAuthList({ deptType: 'F', pkDeptDoc: val.value.pkDeptDoc ? val.value.pkDeptDoc : this.userInfo.pkDeptDoc })
-        //         !val.value.pkDeptDoc && this.linkage(dis)
-        //     } else if (dis === 'F') {
-        //         this.queryParams.subsectionCode = val.value.pkDeptDoc ? val.value.pkDeptDoc : ''
-        //         if (val.value.pkDeptDoc) {
-        //             this.findPlatformslist({ subsectionCode: val.value.pkDeptDoc })
-        //         } else {
-        //             !this.userInfo.deptType && this.findPlatformslist()
-        //         }
-        //         !val.value.pkDeptDoc && this.linkage(dis)
-        //     } else if (dis === 'P') {
-        //         this.queryParams.misCode = val.value.misCode ? val.value.misCode : ''
-        //     }
-        // },
         fundMoneys (val) {
             return filters.money(val)
         },
         onExport () {
             exportOverdueExcel(this.searchParams, this.queryParams.departmentType == 1 ? '平台' : '分部')
         },
-        changeColumn (val) {
-            const _N = moment(this.queryParams.selectDate).format('DD')
-            this.newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
-            if (val == 2) {
-                const newChildren = {
-                    prop: '',
-                    fixed: true,
-                    minWidth: '200',
-                    children: [
-                        {
-
-                            label: '分部',
-                            children: [
-                                {
-                                    prop: 'subsectionName',
-                                    minWidth: '100',
-                                    label: '合计',
-                                    showOverflowTooltip: true
-                                }
-                            ]
-                        },
-                        {
-                            label: '大区',
-                            children: [
-                                {
-                                    prop: 'regionName',
-                                    minWidth: '100',
-                                    label: '-',
-                                    showOverflowTooltip: true
-                                }
-                            ]
-                        }
-                    ]
-                }
-                this.$set(this.newCloum, 0, newChildren)
-                console.log('this.newCloum', this.newCloum)
-                this.column = JSON.parse(JSON.stringify(this.newCloum))
-            } else {
-                // this.newCloum = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
-                this.column = JSON.parse(JSON.stringify(platformSummarySheet(parseInt(_N))))
-            }
-            this.hosDestroyed = false
-            this.$nextTick(() => {
-                this.hosDestroyed = true
-            })
-            // this.onReset()
-        },
         handleClick () {
-            this.tableData = []
-            this.changeColumn(this.queryParams.departmentType)
             this.onReset()
         },
         onSearch () {
@@ -224,57 +110,23 @@ export default {
             this.onQuery(_N)
         },
         async onQuery (_N) {
-            let _column = []
-            if (this.queryParams.departmentType == 1) {
-                _column = platformSummarySheet(parseInt(_N))
+            this.newCloum = platformSummarySheet(parseInt(_N))
+            if (this.queryParams.departmentType == 2) {
+                this.newCloum[0].children[0].isHidden = true
+                this.newCloum[0].children[0].coderHidden = true
+                this.newCloum[0].children[1].isHidden = true
+                this.newCloum[0].children[1].coderHidden = true
             } else {
-                // _column = JSON.parse(JSON.stringify(this.newCloum))
-                this.changeColumn(2)
-                _column = JSON.parse(JSON.stringify(this.newCloum))
+                this.newCloum[0].children[0].isHidden = false
+                this.newCloum[0].children[0].coderHidden = false
+                this.newCloum[0].children[1].isHidden = false
+                this.newCloum[0].children[1].coderHidden = false
             }
             const promiseArr = [getOverduepage(this.searchParams), getOverdueTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
-                /* if (!res[1].data) {
-                    res[1].data = overDueTotal
-                }
-                const rest = res[1].data
-                let temp = { ...overDueTotal, ...rest }
-                for (let key in temp) {
-                    _column.forEach(value => {
-                        value.children.forEach(value1 => {
-                            value1.children.forEach(value2 => {
-                                if (value2.prop === key && temp[key] != null) {
-                                    if (key == 'timelyRepaymentRateNumber') {
-                                        value2.label = String(temp[key]) + '%'
-                                    } else if (key == 'timelyRepaymentRateAmount') {
-                                        value2.label = String(temp[key]) + '%'
-                                    } else if (key == 'increaseAndDecreaseNumber') {
-                                        value2.label = String(temp[key]) + '%'
-                                    } else if (key == 'increaseAndDecreaseAmount') {
-                                        value2.label = String(temp[key]) + '%'
-                                    } else if (key == 'yesterdayTimelyRepaymentRateAmount') {
-                                        value2.label = String(temp[key]) + '%'
-                                    } else if (key == 'yesterdayTimelyRepaymentRateNumber') {
-                                        value2.label = String(temp[key]) + '%'
-                                    } else if (key == 'receivableAmount') {
-                                        value2.label = this.fundMoneys(temp[key])
-                                    } else if (key == 'timelyRepaymentAmount') {
-                                        value2.label = this.fundMoneys(temp[key])
-                                    } else if (key == 'yesterdayTimelyRepaymentAmount') {
-                                        value2.label = this.fundMoneys(temp[key])
-                                    } else if (key == 'yesterdayReceivableAmount') {
-                                        value2.label = this.fundMoneys(temp[key])
-                                    } else {
-                                        value2.label = String(temp[key])
-                                    }
-                                }
-                            })
-                        })
-                    })
-                } */
                 let temp = res[1].data || {}
                 for (let key in temp) {
-                    _column.forEach(value => {
+                    this.newCloum.forEach(value => {
                         value.children.forEach(value1 => {
                             value1.children.forEach(value2 => {
                                 if (value2.prop === key && temp[key] != null) {
@@ -288,17 +140,13 @@ export default {
             }).catch((error) => {
                 this.$message.error(`error:${error}`)
             })
-            this.column = _column
-            this.hosDestroyed = false
-            this.$nextTick(() => {
-                this.hosDestroyed = true
-            })
             this.tableData = data.records
             this.page = {
                 total: data.total,
                 pageSize: data.size,
                 pageNumber: data.current
             }
+            this.column = this.newCloum
         },
         getList (val) {
             this.searchParams = {
@@ -308,10 +156,6 @@ export default {
             this.onQuery()
         },
         async onReset () {
-            // let obj = {
-            //     selectCode: '',
-            //     selectName: ''
-            // }
             this.$set(this.queryParams, 'regionCode', '')
             this.$set(this.queryParams, 'subsectionCode', '')
             this.$set(this.queryParams, 'subRegionCode', '')
@@ -319,17 +163,11 @@ export default {
             this.$set(this.queryParams, 'selectDate', moment().format('YYYY-MM-DD'))
             this.$set(this.queryParams, 'pageNumber', 1)
             this.$set(this.queryParams, 'pageSize', 10)
-            // this.selectAuth.regionObj = { ...obj }
-            // this.selectAuth.branchObj = { ...obj }
-            // this.selectAuth.platformObj = { ...obj }
-            // await this.newBossAuth(['D', 'F', 'P'])
             this.onSearch()
         }
     },
     async mounted () {
-        this.changeColumn(2)
         this.onSearch()
-        // this.column = platformSummarySheet(parseInt(this.nowToday))
     }
 }
 </script>

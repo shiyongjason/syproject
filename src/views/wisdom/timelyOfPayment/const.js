@@ -15,7 +15,6 @@ export const platformSummarySheet = function (N) {
                             prop: 'misCode',
                             minWidth: '100',
                             label: '合计'
-
                         }
                     ]
                 },
