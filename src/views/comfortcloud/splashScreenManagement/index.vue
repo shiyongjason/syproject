@@ -101,10 +101,10 @@ export default {
             this.onQuery(this.searchParams)
         },
         onDelete (row) {
-            this.$confirm(`改活动${row.statusName}，是否继续删除`, '删除提示').then(async () => {
+            this.$confirm(`该闪屏${row.status ? '还在生效中，删除后客户端无法查询，' : '还未生效'}，是否继续删除`, '删除提示').then(async () => {
                 await deleteSplashScreen({ id: row.id, operateUserName: this.userInfo.employeeName })
                 this.onQuery(this.searchParams)
-            })
+            }).catch(() => {})
         }
     }
 }
