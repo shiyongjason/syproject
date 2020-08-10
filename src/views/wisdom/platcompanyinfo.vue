@@ -47,8 +47,8 @@
             </div>
         </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-        <div class="page-body-cont">
-            <platCompanyTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
+        <div class="page-body-cont" ref="hosTable">
+            <platCompanyTable :computedHeight="computedHeight" ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
         </div>
     </div>
 </template>
@@ -57,13 +57,14 @@ import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 
 export default {
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
             deptType: DEPT_TYPE,
@@ -121,6 +122,7 @@ export default {
         this.findCompanyList(this.searchParams)
         this.newBossAuth(['F', 'P'])
         this.searchParamsReset = { ...this.searchParams }
+        this.countHeight()
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {

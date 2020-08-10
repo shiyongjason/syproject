@@ -121,7 +121,7 @@ export default {
     data () {
         return {
             i: 0,
-            toggleTable: false,
+            toggleTable: true,
             mergeLine: {},
             mergeIndex: {},
             selfHeight: 0,

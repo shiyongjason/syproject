@@ -41,8 +41,8 @@
             </div>
         </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
-        <div class="page-body-cont amount">
-            <branchTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchTable>
+        <div class="page-body-cont amount" ref="hosTable">
+            <branchTable :computedHeight="computedHeight" ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchTable>
         </div>
     </div>
 </template>
@@ -53,11 +53,12 @@ import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import branchTable from './components/branch.vue'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { AUTH_WIXDOM_BRANCH_TARGET_EXPORT, AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT, AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
     name: 'branchTarget',
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data: function () {
         return {
             uploadLoading: false,
@@ -172,6 +173,7 @@ export default {
         this.queryParamsReset = JSON.parse(JSON.stringify(this.queryParams))
         this.onQuery(this.queryParams)
         this.newBossAuth(['F'])
+        this.countHeight()
     }
 }
 </script>

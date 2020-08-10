@@ -6,7 +6,6 @@ export const getTableTop = {
                 // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
                 // let resetH = this.amountResetTable === true ? this.selfHeight : 110
                 let resetH = ((this.$refs.hosTable && this.$refs.hosTable.getBoundingClientRect().top) || 0) + 40
-                console.log(document.documentElement.clientHeight, resetH, this.$refs.hosTable)
                 let h = document.documentElement.clientHeight - resetH
                 if (Math.floor(h) < 280) {
                     h = 280// 最小高度
@@ -27,7 +26,7 @@ export const getOldTableTop = {
     methods: {
         countHeight () {
             this.$nextTick(() => {
-                let resetH = this.$refs.hosTable.getBoundingClientRect().top
+                let resetH = this.$refs.hosTable.getBoundingClientRect().top + 10
                 let h = document.documentElement.clientHeight - resetH
                 if (Math.floor(h) < 280) {
                     h = 280// 最小高度

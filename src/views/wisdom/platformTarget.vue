@@ -73,8 +73,8 @@
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
 
         <div class="page-body-cont">
-            <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
+            <div class="page-table" ref="hosTable">
+                <basicTable :max-height="computedHeight" :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="incremental" slot-scope="scope">
                         <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
                         <span v-else>-</span>
@@ -91,12 +91,13 @@
 import { findTableList, getCompany, getCityList, exportPlatTarget, findPlatformTargetPlat } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
             uploadLoading: false,
@@ -201,6 +202,7 @@ export default {
         !this.userInfo.deptType && this.findPlatformTargetPlat()
         await this.newBossAuth(['F'])
         this.searchParamsReset = { ...this.searchParams }
+        this.countHeight()
     },
     methods: {
         uploadProcess () {

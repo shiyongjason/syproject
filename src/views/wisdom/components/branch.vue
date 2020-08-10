@@ -1,6 +1,6 @@
 <template>
     <div class="page-table">
-        <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 >
+        <basicTable :max-height="computedHeight" :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 >
         </basicTable>
     </div>
 </template>
@@ -31,6 +31,9 @@ export default {
                     pageNumber: 1
                 }
             }
+        },
+        computedHeight: {
+            type: Number
         }
     },
     data () {

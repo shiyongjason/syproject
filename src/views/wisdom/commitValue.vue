@@ -231,7 +231,6 @@ export default {
             return this.column[1].label
         },
         async onQuery () {
-            this.$refs.hosjoyTable.toggleTableHandler()
             const promiseArr = [getCommitmentList(this.searchParams), getCommitmentTotal(this.searchParams)]
             var data = await Promise.all(promiseArr).then((res) => {
                 if (res[1].data) {
@@ -253,7 +252,6 @@ export default {
             } else {
                 this.column[2].label = `${this.queryParams.commitmentYear}年度销售承诺值`
             }
-            this.$refs.hosjoyTable.toggleTableHandler()
         },
         getList (val) {
             console.log(val)
