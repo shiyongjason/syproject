@@ -157,7 +157,6 @@ export default {
             this.onQuery()
         },
         onEdit (row) {
-            sessionStorage.setItem('comfortCloud', JSON.stringify(row))
             this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId: row.homeId } })
         }
     }

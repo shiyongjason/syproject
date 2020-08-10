@@ -103,6 +103,7 @@ export default {
         },
         backPlat (val) {
             this.smartPlayForm.activityId = val.value.selectCode
+            this.smartPlayForm.activityName = val.value.value
         },
         readUrl (val) {
             this.smartPlayForm.picture = val.imageUrl

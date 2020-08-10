@@ -151,7 +151,7 @@
 </template>
 <script>
 import { mapState } from 'vuex'
-import { findHomeGeneralDetails, findHomeUserList, findRoomDetail } from '../api/index'
+import { findHomeGeneralDetails, findHomeUserList, findRoomDetail, getHomeDetail } from '../api/index'
 
 export default {
     name: 'homedetail',
@@ -186,12 +186,17 @@ export default {
         }
     },
     mounted () {
-        this.comfortInfo = JSON.parse(sessionStorage.getItem('comfortCloud'))
-        this.findHomeGeneralDetails()
-        this.findHomePopulationDetails()
-        this.findRoomDetail()
+        const homeId = this.$route.query.homeId
+        this.findHomeGeneralDetails(homeId)
+        this.findHomePopulationDetails(homeId)
+        this.findRoomDetail(homeId)
+        this.getHomeDetail(homeId)
     },
     methods: {
+        async getHomeDetail (homeId) {
+            const { data } = await getHomeDetail(homeId)
+            this.comfortInfo = data.data
+        },
         // TODO 还未提供接口
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -201,16 +206,16 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        async findHomeGeneralDetails () {
-            const { data } = await findHomeGeneralDetails(this.$route.query.homeId)
+        async findHomeGeneralDetails (homeId) {
+            const { data } = await findHomeGeneralDetails(homeId)
             this.homeDetail = data.data
         },
-        async findHomePopulationDetails () {
-            const { data } = await findHomeUserList(this.$route.query.homeId)
+        async findHomePopulationDetails (homeId) {
+            const { data } = await findHomeUserList(homeId)
             this.tableData = data.data
         },
-        async findRoomDetail () {
-            const { data } = await findRoomDetail(this.$route.query.homeId)
+        async findRoomDetail (homeId) {
+            const { data } = await findRoomDetail(homeId)
             this.roomList = data.data
             if (this.roomList.length > 0) {
                 this.activeName = this.roomList[0].roomName + this.roomList[0].roomId
