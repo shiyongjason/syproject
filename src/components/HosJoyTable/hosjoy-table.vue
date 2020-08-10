@@ -139,19 +139,13 @@ export default {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
-        // getColumn () {
-        //     if (this.collapseShow) {
-        //         return this.columnRender
-        //     }
-        //     console.log(1)
-        //     return this.column
-        // },
         // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
         computedHeight () {
             if (this.height) return 'unset'
             if (this.amountResetTableChange > -1 && this.data && this.data.length >= 10) {
                 // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
-                let resetH = this.amountResetTable === true ? this.selfHeight : 110
+                // let resetH = this.amountResetTable === true ? this.selfHeight : 110
+                let resetH = this.$refs.hosTable.getBoundingClientRect().top + 40
                 let h = document.documentElement.clientHeight - resetH
                 if (Math.floor(h) < 280) {
                     h = 280// 最小高度
@@ -244,32 +238,6 @@ export default {
                 document.removeEventListener('click', this.onClickCollapse, false)
             }
         },
-        /* getSummary () {
-            // todo use: show-summary :summary=sums summary-merge='3'
-            if (!this.showSummary && this.summary.length > 0) return null
-            setTimeout(() => {
-                if (this.i > 0) return
-                let foot = document.querySelectorAll('.el-table__footer')
-                let copyFoot = foot[0].cloneNode(true)
-                let totalTd = copyFoot.querySelectorAll('tbody>tr>td')
-                totalTd[0].setAttribute('colspan', this.summaryMerge)
-                document.querySelector('.el-table__header-wrapper').appendChild(copyFoot)
-                // document.querySelector('.el-table__footer-wrapper').removeChild(foot[0])
-                if (foot[0]) foot[0].style.display = 'none'
-                if (foot[1]) foot[1].style.display = 'none'
-                let n = document.querySelectorAll('.el-table__footer')
-                this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + n[0].clientHeight
-                this.i++
-                this.doLayout()
-            }, 300)
-            return this.summary
-        }, */
-        // getColumn () {
-        //     if (this.collapseShow) {
-        //         return this.columnRender
-        //     }
-        //     return this.column
-        // },
         async updateLabel () {
             if (this.defaultLabel.length < 2) {
                 this.$message.warning('选中不能小于2个')
@@ -343,7 +311,6 @@ export default {
         indexMethod (index) {
             return this.pageNum * (this.currentPage - 1) + index + 1
         },
-        //
         clearSelection () {
             this.$refs.hosjoyTable.clearSelection()
         },
@@ -505,7 +472,7 @@ export default {
     mounted () {
         this.$nextTick(() => {
             if (this.$refs.hosTable) {
-                this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top
+                this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 40
                 if (this.data.length == 0) {
                     let left = this.$refs.hosTable.getBoundingClientRect().left
                     let windowsWidth = document.documentElement.clientWidth

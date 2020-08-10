@@ -1,58 +1,56 @@
 <template>
     <div class="page-body amount">
-        <el-collapse-transition>
-            <div v-show="toggle" class="page-body-cont query-cont">
-                <div class="query-cont-row">
-                    <div class="query-cont-col" v-if="branch">
-                        <div class="query-col-title">分部：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">平台公司：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">mis编码：</div>
-                        <div class="query-col-input">
-                            <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15" clearable></el-input>
-                        </div>
-                    </div>
-                    <div class="query-cont-col flex-box-time">
-                        <div class="query-col-title">时间：</div>
-                        <el-date-picker v-model="queryParams.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始月份">
-                        </el-date-picker>
-                        <div class="line ml5 mr5">-</div>
-                        <el-date-picker v-model="queryParams.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束月份">
-                        </el-date-picker>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">公司上线状态：</div>
-                        <div class="query-col-input">
-                            <el-checkbox-group v-model="onLineStatusTemp">
-                                <el-checkbox label="1">上线</el-checkbox>
-                                <el-checkbox label="2">未上线</el-checkbox>
-                                <el-checkbox label="3">淘汰</el-checkbox>
-                            </el-checkbox-group>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-button type="primary" class="ml20" @click="getList(1)">
-                            查询
-                        </el-button>
-                        <el-button type="default" class="ml20" @click="onReset">
-                            重置
-                        </el-button>
-                        <el-button v-if="hosAuthCheck(AUTH_PROFIT_STATISTICS_EXPORT)" type="default" class="ml20" @click="onExport(queryParams)">
-                            导出
-                        </el-button>
+        <div v-show="toggle" class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col" v-if="branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">mis编码：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.misCode" placeholder="请输入mis编码" maxlength="15" clearable></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col flex-box-time">
+                    <div class="query-col-title">时间：</div>
+                    <el-date-picker v-model="queryParams.startDate" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始月份">
+                    </el-date-picker>
+                    <div class="line ml5 mr5">-</div>
+                    <el-date-picker v-model="queryParams.endDate" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束月份">
+                    </el-date-picker>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">公司上线状态：</div>
+                    <div class="query-col-input">
+                        <el-checkbox-group v-model="onLineStatusTemp">
+                            <el-checkbox label="1">上线</el-checkbox>
+                            <el-checkbox label="2">未上线</el-checkbox>
+                            <el-checkbox label="3">淘汰</el-checkbox>
+                        </el-checkbox-group>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <el-button type="primary" class="ml20" @click="getList(1)">
+                        查询
+                    </el-button>
+                    <el-button type="default" class="ml20" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button v-if="hosAuthCheck(AUTH_PROFIT_STATISTICS_EXPORT)" type="default" class="ml20" @click="onExport(queryParams)">
+                        导出
+                    </el-button>
+                </div>
             </div>
-        </el-collapse-transition>
+        </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">

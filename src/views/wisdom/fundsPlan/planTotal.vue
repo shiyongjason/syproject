@@ -1,39 +1,37 @@
 <template>
     <div class="page-body amount">
-        <el-collapse-transition>
-            <div v-show="toggle">
-                <div class="page-body-cont query-cont">
-                    <div class="query-cont-col">
-                        <div class="query-col-title"> 查询期间：</div>
-                        <div class="query-col-input">
-                            <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
-                            </el-date-picker>
-                        </div>
+        <div v-show="toggle">
+            <div class="page-body-cont query-cont">
+                <div class="query-cont-col">
+                    <div class="query-col-title"> 查询期间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="params.selectTime" type="month"  value-format='yyyyMM' placeholder="请选择时间">
+                        </el-date-picker>
                     </div>
-                    <div class="query-cont-col" v-if="this.branch">
-                        <div class="query-col-title">分部：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="branchList" @back-event="backPlat"
-                                           placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
-                                           :canDoBlurMethos='false'></HAutocomplete>
-                        </div>
+                </div>
+                <div class="query-cont-col" v-if="this.branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat"
+                                       placeholder="请选择分部" :selectObj="selectPlatObj" :maxlength='30'
+                                       :canDoBlurMethos='false'></HAutocomplete>
                     </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">
-                            <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
-                                查询
-                            </el-button>
-                            <el-button type="default" class="ml20" @click="onReset">
-                                重置
-                            </el-button>
-                            <el-button type="default" class="ml20" @click="onExport">
-                                导出汇总表
-                            </el-button>
-                        </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="queryAndChangeTime(params)">
+                            查询
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onReset">
+                            重置
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onExport">
+                            导出汇总表
+                        </el-button>
                     </div>
                 </div>
             </div>
-        </el-collapse-transition>
+        </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="tips">
             <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>

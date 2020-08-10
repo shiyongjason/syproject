@@ -1,77 +1,75 @@
 <template>
     <div class="page-body amount">
-        <el-collapse-transition>
-            <div v-show="toggle" class="page-body-cont query-cont">
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-cont-title">分部：</div>
-                        <div class="query-cont-input">
-                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="query-col-title">平台公司名：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="flex-wrap-title">MIS编码：</div>
-                        <div class="flex-wrap-cont">
-                            <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
-                        </div>
-                    </div>
-                    <div class="query-cont-col flex-box-time">
-                        <div class="query-col-title">时间：</div>
-                        <el-date-picker v-model="queryParams.startDate" :clearable='false' :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
-                        </el-date-picker>
-                        <div class="line ml5 mr5">-</div>
-                        <el-date-picker v-model="queryParams.endDate" :clearable='false' :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
-                        </el-date-picker>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="flex-wrap-title">上线状态：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select v-model="queryParams.onlineStatus" placeholder="请选择选择" :clearable=true>
-                                <el-option v-for="item in onlineStatus" :key="item.key" :label="item.value" :value="item.key">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="flex-wrap-title">好享家注资：</div>
-                        <div class="flex-wrap-cont">
-                            <el-select v-model="queryParams.capital" placeholder="请选择选择" :clearable=true>
-                                <el-option v-for="item in  hosjoyInjection" :key="item.key" :label="item.value" :value="item.key">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <div class="flex-wrap-title">资金支持
-                            <el-tooltip placement="top" effect="light">
-                                <div slot="content">1、无支持：资金敞口占用+资金借款占用+资金分授信=0<br />2、有支持：资金敞口占用+资金借款占用+资金分授信≠0</div>
-                                <i class="el-icon-question"></i>
-                            </el-tooltip>：
-                        </div>
-                        <div class="flex-wrap-cont">
-                            <el-select v-model="queryParams.financialSupport" placeholder="请选择选择" :clearable=true>
-                                <el-option v-for="item in financialSupport" :key="item.key" :label="item.value" :value="item.key">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-button type="primary" @click="onSearch">查询
-                        </el-button>
-                        <el-button type="default" @click="onReset">重置
-                        </el-button>
-                        <el-button type="default" @click="onExport">导出表格
-                        </el-button>
+        <div v-show="toggle" class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col">
+                    <div class="query-cont-title">分部：</div>
+                    <div class="query-cont-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">平台公司名：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">MIS编码：</div>
+                    <div class="flex-wrap-cont">
+                        <el-input :disabled='disabled' v-model="queryParams.misCode" placeholder="请输入MIS编码"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col flex-box-time">
+                    <div class="query-col-title">时间：</div>
+                    <el-date-picker v-model="queryParams.startDate" :clearable='false' :editable="false" :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    </el-date-picker>
+                    <div class="line ml5 mr5">-</div>
+                    <el-date-picker v-model="queryParams.endDate" :clearable='false' :editable="false" :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    </el-date-picker>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">上线状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.onlineStatus" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in onlineStatus" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">好享家注资：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.capital" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in  hosjoyInjection" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">资金支持
+                        <el-tooltip placement="top" effect="light">
+                            <div slot="content">1、无支持：资金敞口占用+资金借款占用+资金分授信=0<br />2、有支持：资金敞口占用+资金借款占用+资金分授信≠0</div>
+                            <i class="el-icon-question"></i>
+                        </el-tooltip>：
+                    </div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.financialSupport" placeholder="请选择选择" :clearable=true>
+                            <el-option v-for="item in financialSupport" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <el-button type="primary" @click="onSearch">查询
+                    </el-button>
+                    <el-button type="default" @click="onReset">重置
+                    </el-button>
+                    <el-button type="default" @click="onExport">导出表格
+                    </el-button>
+                </div>
             </div>
-        </el-collapse-transition>
+        </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">

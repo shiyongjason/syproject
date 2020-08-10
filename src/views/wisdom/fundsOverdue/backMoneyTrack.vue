@@ -5,41 +5,39 @@
                 <el-tab-pane label="平台公司回款跟踪" name="1"></el-tab-pane>
                 <el-tab-pane label="分部回款跟踪" name="2"></el-tab-pane>
             </el-tabs>
-            <el-collapse-transition>
-                <div v-show="toggle" class="page-body-cont query-cont">
-                    <div class="query-cont-col" v-if="region">
-                        <div class="query-col-title">大区：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col" v-if="branch">
-                        <div class="query-col-title">分部：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col" v-if="queryParams.departmentType === '1'">
-                        <div class="query-col-title">平台公司：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
-                    </div>
-                    <div class="query-cont-col flex-box-time">
-                        <div class="query-col-title">查询时间：</div>
-                        <el-date-picker v-model="queryParams.startDate" @change="restEndTime" :clearable='false' :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
-                        </el-date-picker>
-                        <div class="line ml5 mr5">-</div>
-                        <el-date-picker v-model="queryParams.endDate" :clearable='false' :editable="false" :picker-options="pickerOptions" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
-                        </el-date-picker>
-                    </div>
-                    <div class="query-cont-col">
-                        <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                        <el-button type="default" class="ml20" @click="onReset">重置</el-button>
-                        <el-button type="default" class="ml20" @click="onExport">导出表格</el-button>
+            <div v-show="toggle" class="page-body-cont query-cont">
+                <div class="query-cont-col" v-if="region">
+                    <div class="query-col-title">大区：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-            </el-collapse-transition>
+                <div class="query-cont-col" v-if="branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col" v-if="queryParams.departmentType === '1'">
+                    <div class="query-col-title">平台公司：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" placeholder="请输入平台公司名称" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
+                    </div>
+                </div>
+                <div class="query-cont-col flex-box-time">
+                    <div class="query-col-title">查询时间：</div>
+                    <el-date-picker v-model="queryParams.startDate" @change="restEndTime" :clearable='false' :editable="false" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    </el-date-picker>
+                    <div class="line ml5 mr5">-</div>
+                    <el-date-picker v-model="queryParams.endDate" :clearable='false' :editable="false" :picker-options="pickerOptions" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    </el-date-picker>
+                </div>
+                <div class="query-cont-col">
+                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="default" class="ml20" @click="onExport">导出表格</el-button>
+                </div>
+            </div>
             <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         </div>
         <div class="page-body-cont">

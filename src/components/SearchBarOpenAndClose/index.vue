@@ -1,6 +1,6 @@
 <template>
     <div class="bar">
-        <el-button type="primary" @click="tellClick" class="drag" v-drag>
+        <el-button type="primary" @click="tellClick" class="drag">
             {{statusName}}搜索区
             <i :class="status ? 'el-icon-arrow-up': 'el-icon-arrow-down'" class="icon"></i>
         </el-button>

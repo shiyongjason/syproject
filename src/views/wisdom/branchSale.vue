@@ -1,51 +1,49 @@
 <template>
     <div class="page-body amount">
-        <el-collapse-transition>
-            <div v-show="toggle" class="page-body-cont query-cont">
-                <div class="query-cont-row">
-                    <div class="query-cont-col" v-if="region">
-                        <div class="query-col-title">大区：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
+        <div v-show="toggle" class="page-body-cont query-cont">
+            <div class="query-cont-row">
+                <div class="query-cont-col" v-if="region">
+                    <div class="query-col-title">大区：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="regionList" @back-event="backPlat($event,'D')" placeholder="请输入大区名称" :selectObj="selectAuth.regionObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
-                    <div class="query-cont-col" v-if="branch">
-                        <div class="query-col-title">分部：</div>
-                        <div class="query-col-input">
-                            <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
-                        </div>
+                </div>
+                <div class="query-cont-col" v-if="branch">
+                    <div class="query-col-title">分部：</div>
+                    <div class="query-col-input">
+                        <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
-                    <div class="query-cont-col flex-box-time">
-                        <div class="query-col-title">时间：</div>
-                        <el-date-picker v-model="queryParams.startDate" :editable="false" :clearable='false' :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
-                        </el-date-picker>
-                        <div class="line ml5 mr5">-</div>
-                        <el-date-picker v-model="queryParams.endDate" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
-                        </el-date-picker>
-                        <el-button type="primary" class="ml20" @click="onSearch()">
-                            查询
-                        </el-button>
-                        <el-button type="default" class="ml20" @click="onReset">
-                            重置
-                        </el-button>
-                        <el-button type="default" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="onExport()">
-                            导出
-                        </el-button>
-                    </div>
-                    <div class="page-wrap flex-wrap-col">
-                        <div class="query-cont-row">
-                            <div class="query-cont-col">
-                                <div class="query-col-input">
-                                    <el-radio v-model="queryParams.targetStatus" label="1" name="target" @change="onChoose">保底目标</el-radio>
-                                    <el-radio v-model="queryParams.targetStatus" label="2" name="target" @change="onChoose">平衡目标</el-radio>
-                                    <el-radio v-model="queryParams.targetStatus" label="3" name="target" @change="onChoose">冲刺目标</el-radio>
-                                </div>
+                </div>
+                <div class="query-cont-col flex-box-time">
+                    <div class="query-col-title">时间：</div>
+                    <el-date-picker v-model="queryParams.startDate" :editable="false" :clearable='false' :picker-options="pickerOptionsStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择开始时间" style="width: 180px">
+                    </el-date-picker>
+                    <div class="line ml5 mr5">-</div>
+                    <el-date-picker v-model="queryParams.endDate" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
+                    </el-date-picker>
+                    <el-button type="primary" class="ml20" @click="onSearch()">
+                        查询
+                    </el-button>
+                    <el-button type="default" class="ml20" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button type="default" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="onExport()">
+                        导出
+                    </el-button>
+                </div>
+                <div class="page-wrap flex-wrap-col">
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-input">
+                                <el-radio v-model="queryParams.targetStatus" label="1" name="target" @change="onChoose">保底目标</el-radio>
+                                <el-radio v-model="queryParams.targetStatus" label="2" name="target" @change="onChoose">平衡目标</el-radio>
+                                <el-radio v-model="queryParams.targetStatus" label="3" name="target" @change="onChoose">冲刺目标</el-radio>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </el-collapse-transition>
+        </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">
