@@ -72,8 +72,15 @@
         </div>
         <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
-            <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange" :showCheckAll='false'>
+            <div class="page-table" ref="hosTable">
+                <basicTable :max-height="computedHeight"
+                             :tableData="tableData"
+                             :tableLabel="tableLabel"
+                             :pagination="paginationData"
+                             @onCurrentChange="onCurrentChange"
+                             @onSizeChange="onSizeChange" :isMultiple="false"
+                             :isAction="false" :actionMinWidth=250
+                             @field-change="onFieldChange" :showCheckAll='false'>
                     <template slot="remark" slot-scope="scope">
                         <span v-if="scope.data.row.misCode == '合计'">-</span>
                         <span v-else>{{scope.data.row.remark ? scope.data.row.remark.substring(0, 6) + '...' : '-'}}<i class="el-icon-edit cursor" @click="onRemark(scope.data.row)"></i></span>
@@ -98,9 +105,10 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState } from 'vuex'
 import { CAPITAL_EFFICIENCY_TABLE, ONLINESTATUS, HOSJOYINJECTION, FINANCIALSUPPORT } from './const'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 export default {
     name: 'capitalEfficiency',
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
             toggle: true,
@@ -175,6 +183,7 @@ export default {
     },
     async mounted () {
         this.onSearch()
+        this.countHeight()
         await this.newBossAuth()
         if (this.userInfo.deptType == 2) {
             this.queryParams.subsectionCode = this.branchList[0].pkDeptDoc

@@ -53,6 +53,7 @@
 
 <script>
 import hosjoyColumn from './hosjoy-column'
+import { getTableTop } from '@/utils/getTableTop'
 
 export default {
     props: {
@@ -116,6 +117,7 @@ export default {
     components: {
         hosjoyColumn
     },
+    mixins: [getTableTop],
     data () {
         return {
             i: 0,
@@ -139,22 +141,6 @@ export default {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
-        // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
-        computedHeight () {
-            if (this.height) return 'unset'
-            if (this.amountResetTableChange > -1 && this.data && this.data.length >= 10) {
-                // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
-                // let resetH = this.amountResetTable === true ? this.selfHeight : 110
-                let resetH = ((this.$refs.hosTable && this.$refs.hosTable.getBoundingClientRect().top) || 0) + 40
-                let h = document.documentElement.clientHeight - resetH
-                if (Math.floor(h) < 280) {
-                    h = 280// 最小高度
-                }
-                return `${Math.floor(h)}px` // fix windows浏览器max-height 不能有小数
-            } else {
-                return 'unset'
-            }
-        },
         amountResetTableChange () {
             return this.amountResetTable || Math.random()
         },
