@@ -357,3 +357,7 @@ export function getSplashScreenDetail (id) {
 export function getCustomerService (params) {
     return axios.get(iotUrl + `/api/customer-service`, { params })
 }
+// 根据homeId获取家庭概况
+export function getHomeDetail (params) {
+    return axios.get(iotUrl + `/api/home-manage/${params}`)
+}
