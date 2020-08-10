@@ -98,6 +98,11 @@ export default {
             exportOverdueExcel(this.searchParams, this.queryParams.departmentType == 1 ? '平台' : '分部')
         },
         handleClick () {
+            this.page = {
+                total: 0,
+                pageSize: 10,
+                pageNumber: 1
+            }
             this.onReset()
         },
         onSearch () {
