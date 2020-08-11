@@ -361,3 +361,7 @@ export function getCustomerService (params) {
 export function getHomeDetail (params) {
     return axios.get(iotUrl + `/api/home-manage/${params}`)
 }
+// 根据item查询字典
+export function getDictionary (params) {
+    return axios.get(iotUrl + `/uc/dictionary/search-by-item`, { params })
+}
