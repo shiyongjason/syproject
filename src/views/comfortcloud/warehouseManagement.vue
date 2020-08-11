@@ -85,7 +85,7 @@ export default {
                 containsList: []
             },
             tableLabel: [
-                { label: '出库时间', prop: 'outboundTime', formatters: 'dateTime' },
+                { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
                 { label: '设备类型', prop: 'deviceType' },
                 { label: '设备ID', prop: 'iotId' },
                 { label: '经销商', prop: 'dealer' },
