@@ -115,3 +115,12 @@ export const MATELIST = [
     { key: 3, value: '已通过' },
     { key: 4, value: '已打回' }
 ]
+
+// 类型
+
+// 是否注册
+export const REGISTEROR = [
+    { key: '', value: '全部' },
+    { key: 0, value: '是' },
+    { key: 1, value: '否' }
+]
