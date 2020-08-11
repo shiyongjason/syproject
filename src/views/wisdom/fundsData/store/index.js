@@ -1,7 +1,7 @@
 
 // 资金台账 store
 import * as types from './const'
-import { findPlatformslist, getAccountList, getRepaymentList, getSummaryList, findDepartment } from '@/views/wisdom/fundsData/api'
+import { findPlatformslist, getAccountList, getAccountTotal, getRepaymentList, getRepaymentTotal, getSummaryList, findDepartment, getSummaryTotal } from '@/views/wisdom/fundsData/api'
 const state = {
     platformData: [], // 平台公司list
     // 阶梯逾期默认值
@@ -15,6 +15,7 @@ const state = {
         total: 0
     },
     tableData: [], // 台账列表
+    tableDataTotal: {}, // 台账列表合计
     branchList: [] // 分部列表
 }
 
@@ -39,7 +40,8 @@ const getters = {
             }
         })
         return state.tableData
-    }
+    },
+    tableDataTotal: state => state.tableDataTotal
 }
 
 const mutations = {
@@ -82,6 +84,10 @@ const mutations = {
             total: payload.total || 0
         }
         state.tableData = payload.records || []
+    },
+    [types.TABLE_DATE_TOTAL] (state, payload) {
+        if (!payload) return
+        state.tableDataTotal = payload
     }
 }
 
@@ -98,9 +104,17 @@ const actions = {
         const { data } = await getAccountList(params)
         commit(types.STANDINGB_BOOK, data)
     },
+    async getAccountTotal ({ commit }, params) {
+        const { data } = await getAccountTotal(params)
+        commit(types.TABLE_DATE_TOTAL, data)
+    },
     async getRepaymentList ({ commit }, params) {
         const { data } = await getRepaymentList(params)
         commit(types.REPAYMENT_SCHEDULE, data)
+    },
+    async getRepaymentTotal ({ commit }, params) {
+        const { data } = await getRepaymentTotal(params)
+        commit(types.TABLE_DATE_TOTAL, data)
     },
     async findBranchList ({ commit }, params) {
         // 查询分部（不用做权限，现在是总部在使用）
@@ -111,6 +125,10 @@ const actions = {
     async findSummaryList ({ commit }, params) {
         const { data } = await getSummaryList(params)
         commit(types.GET_SUMMARY, data)
+    },
+    async findSummaryTotal ({ commit }, params) {
+        const { data } = await getSummaryTotal(params)
+        commit(types.TABLE_DATE_TOTAL, data)
     }
 
 }

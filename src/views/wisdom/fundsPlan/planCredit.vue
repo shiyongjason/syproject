@@ -1,11 +1,11 @@
 <template>
-    <div class="page-body approval">
+    <div class="page-body approval amount">
         <div>
             <el-tabs v-model="queryParams.selectType" type="card" @tab-click="handleClick">
                 <el-tab-pane label="平台公司资金用信情况" name="0"></el-tab-pane>
                 <el-tab-pane label="分部资金用信情况" name="1"></el-tab-pane>
             </el-tabs>
-            <div class="page-body-cont query-cont">
+            <div v-show="toggle"  class="page-body-cont query-cont">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
@@ -38,21 +38,26 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
-                            搜索
+                            查询
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onReset">
+                        <el-button type="default" class="ml20" @click="onReset">
                             重置
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onExport">
+                        <el-button type="default" class="ml20" @click="onExport">
                             导出表格
                         </el-button>
                     </div>
                 </div>
             </div>
+            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
             <div class="tips">
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
             </div>
-            <hosJoyTable v-if="reRender" ref="hosjoyTable" border stripe showPagination :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
+            <hosJoyTable
+                collapseShow is-simple-table :localName="'planCreditTable::v2.4.0'"
+                :amountResetTable="toggle" v-if="reRender"
+                ref="hosjoyTable" border stripe showPagination
+                :column="columnData" :data="planCreditList" align="center" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="planCreditPagination.total" @pagination="getList">
             </hosJoyTable>
         </div>
     </div>
@@ -88,6 +93,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             queryParams: {
                 selectType: '0',
                 selectTime: '0',
@@ -259,7 +265,7 @@ export default {
 <style scoped lang="scss">
 .approval {
     background: #ffffff;
-    padding: 60px 25px 30px;
+    padding: 40px 15px 30px;
     box-sizing: border-box;
 }
 .tips {
@@ -278,5 +284,13 @@ export default {
             float: right;
         }
     }
+}
+    /deep/ .el-tabs__header{
+        margin-bottom: 10px;
+    }
+/deep/.el-tabs__item {
+    height: 32px;
+    line-height: 32px;
+    font-size: 13px;
 }
 </style>

@@ -2,8 +2,14 @@ import axios from 'axios'
 import { interfaceUrl } from '@/api/config'
 // 台账列表
 export const getAccountList = (params) => axios.get(interfaceUrl + `backend/api/account`, { params })
+// 台账列表
+export const getAccountTotal = (params) => axios.get(interfaceUrl + `backend/api/account/total`, { params })
+
 // 还款明细表
 export const getRepaymentList = (params) => axios.get(interfaceUrl + 'backend/api/account/repayment/page', { params })
+// 还款明细表合计
+export const getRepaymentTotal = (params) => axios.get(interfaceUrl + 'backend/api/account/repayment/total', { params })
+
 // 查询平台公司
 export const findPaltList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 // 新增各类台账
@@ -30,6 +36,8 @@ export const setCount = (params) => axios.post(interfaceUrl + 'backend/api/accou
 export const transformPlanType = (params) => axios.get(interfaceUrl + `backend/api/account/plan/account-type`, { params })
 // 台账汇总表
 export const getSummaryList = (params) => axios.get(interfaceUrl + `backend/api/account/summary`, { params })
+// 台账汇总表合计
+export const getSummaryTotal = (params) => axios.get(interfaceUrl + `backend/api/account/summary/total`, { params })
 // 台账数据导出
 export function downloadCloudAlarmList (params) {
     axios.defaults.responseType = 'blob'

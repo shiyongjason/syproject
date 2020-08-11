@@ -26,20 +26,6 @@
                     </el-button>
                 </el-upload>
             </div>
-
-            <h2>注资占用</h2>
-            <div class="query-cont-col">
-                <a class="downloadExcel" href="/excelTemplate/注资信息导入.xls" download="注资信息导入.xls">
-                    注资模板导出
-                </a>
-            </div>
-            <div class="query-cont-col">
-                <el-upload class="upload-demo" :show-file-list="false" :headers='headersData' :action="interfaceUrl + 'backend/api/account-efficiency/import'" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
-                    <el-button type="primary" class="m0" :loading='loading'>
-                        注资信息导入
-                    </el-button>
-                </el-upload>
-            </div>
         </div>
     </div>
 </template>
@@ -109,4 +95,11 @@ export default {
     background-color: #ff7a45;
     color: #fff;
 }
+    h2 {
+        line-height: 50px;
+        margin-bottom: 50px;
+    }
+    .page-body-cont {
+        padding-bottom: 30px;
+    }
 </style>

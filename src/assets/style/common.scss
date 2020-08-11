@@ -108,6 +108,7 @@
         margin-left: 10px;
     }
 }
+
 .query-cont-col-double {
     position: relative;
     margin-bottom: 20px;
@@ -628,3 +629,27 @@ a.isLink {
 }
 
 /*******************  抽屉侧滑 end *******************************/
+
+/*******************  资金相关 start *******************************/
+.page-body.amount {
+    padding: 36px 10px 10px 10px;
+    .query-cont-col{
+        margin-bottom: 12px;
+    }
+    .page-body-cont {
+        padding: 10px 12px;
+    }
+    .query-cont{
+        padding: 10px 12px 0 12px !important;
+    }
+    //.query-cont-row {
+    //    padding-top: 10px;
+    //}
+}
+.amount .el-table td{
+    padding: 7px 0;
+}
+.amount .el-table th{
+    padding: 7px 0;
+}
+/*******************  资金相关 start *******************************/

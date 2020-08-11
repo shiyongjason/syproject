@@ -186,13 +186,25 @@ export default [
                         path: 'importData',
                         name: 'importData',
                         meta: {
-                            title: '历史数据导入',
-                            tagName: '历史数据导入',
+                            title: '台账线下数据导入',
+                            tagName: '台账线下数据导入',
                             parentName: '好智慧-资金数据',
                             isMenu: true,
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/importData.vue')
+                    },
+                    {
+                        path: 'importDataSplit',
+                        name: 'importDataSplit',
+                        meta: {
+                            title: '注资信息导入',
+                            tagName: '注资信息导入',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/importDataSplit.vue')
                     },
                     {
                         path: 'capitalEfficiency',
@@ -254,6 +266,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/wisdom/fundsOverdue/backMoneyTrack.vue')
+                    },
+                    {
+                        path: 'timelyOfPayment',
+                        name: 'timelyOfPayment',
+                        meta: {
+                            title: '月度回款及时率',
+                            tagName: '月度回款及时率',
+                            parentName: '好智慧-资金数据',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/wisdom/timelyOfPayment/list.vue')
                     }
                 ]
             }
@@ -264,7 +288,7 @@ export default [
         meta: {
             title: '资金用款计划',
             isMenu: true,
-            icon: 'hosjoy_operation'
+            icon: 'hosjoy_money'
         },
         component: Layout,
         children: [

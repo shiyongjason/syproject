@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -60,20 +60,24 @@
                     <el-button type="primary" class="ml20" @click="onQuery({...queryParams,pageNumber: 1}, 'btn')">
                         查询
                     </el-button>
-                    <a href="javascript:" @click="downloading" v-if="hosAuthCheck(exportAuth)" class="ml20 download">导出</a>
+                    <el-button type="default" class="ml20" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button type="default" class="ml20" @click="downloading" v-if="hosAuthCheck(exportAuth)">导出</el-button>
                 </div>
-            </div>
-            <div class="page-wrap flex-wrap-col">
-                <div class="flex-wrap-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-input">
-                            <el-radio v-model="queryParams.tagetType" label="1" @change="onChoose" name="target">履约目标</el-radio>
-                            <el-radio v-model="queryParams.tagetType" label="0" @change="onChoose" name="target">冲刺目标</el-radio>
+                <div class="page-wrap flex-wrap-col">
+                    <div class="flex-wrap-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-input">
+                                <el-radio v-model="queryParams.tagetType" label="1" @change="onChoose" name="target">履约目标</el-radio>
+                                <el-radio v-model="queryParams.tagetType" label="0" @change="onChoose" name="target">冲刺目标</el-radio>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">
                 <platformSaleTable ref="platformSaleTable" :tableData="tableData" :loading="platformLoading" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></platformSaleTable>
@@ -95,6 +99,7 @@ export default {
     mixins: [departmentAuth],
     data: function () {
         return {
+            toggle: true,
             exportAuth: AUTH_WIXDOM_PLATFORM_SALE_EXPORT,
             deptType: DEPT_TYPE,
             checkedList: [{ value: '在线', checked: true, key: 1 }, { value: '未上线', checked: false, key: 2 }, { value: '淘汰', checked: false, key: 3 }],
@@ -408,12 +413,32 @@ export default {
             if (event === 'btn') {
                 this.getPlatformSaleSum()
             }
+        },
+        async onReset () {
+            this.queryParams = { ...this.queryParamsRest }
+            this.selectAuth = {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.onQuery(this.queryParams)
+            await this.newBossAuth(['D', 'F', 'P'])
         }
     },
     async mounted () {
         this.newBossAuth(['D', 'F', 'P'])
         await this.onQuery(this.queryParams)
         this.getPlatformSaleSum()
+        this.queryParamsRest = { ...this.queryParams }
     }
 }
 </script>
