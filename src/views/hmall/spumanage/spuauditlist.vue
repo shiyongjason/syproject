@@ -91,7 +91,7 @@
                 :isMultiple="true"
                 :selectable="selectable"
                 :isAction="true"
-                :actionWidth=150
+                :actionMinWidth=220
                 :rowKey="rowKey"
                 :isShowIndex='true'
             >
@@ -102,6 +102,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
+                    <el-button type="info" size="mini" plain @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</el-button>
                 </template>
             </basicTable>
         </div>
@@ -207,7 +208,8 @@ export default {
             'findAllCategory'
         ]),
         ...mapActions('spumanage', [
-            'findAuditProducts'
+            'findAuditProducts',
+            'setSpuTemplate'
         ]),
         onRest () {
             this.categoryIdArr = []
@@ -276,6 +278,10 @@ export default {
         },
         onAuditSpu (val) {
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'audit', spuId: val.spuId } })
+        },
+        async onSetSpuTemplate (val) {
+            await this.setSpuTemplate(val.spuId)
+            this.$message.success('操作成功')
         }
     },
     beforeRouteEnter (to, from, next) {
