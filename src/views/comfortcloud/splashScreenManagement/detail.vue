@@ -14,9 +14,12 @@
                         建议尺寸：1242*2688或9:19.5比例图片，1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
-                <el-form-item label="跳转活动：">
-                    <HAutocomplete :selectArr="allActivity" @back-event="backPlat" placeholder="请选择跳转活动" :selectObj="selectObj" :maxlength='15' :canDoBlurMethos='true'></HAutocomplete>
-                </el-form-item>
+                <el-form-item label="跳转活动：:">
+                        <el-select v-model="smartPlayForm.activityId" placeholder="请选择跳转活动" clearable>
+                            <el-option v-for="item in allActivity" :key="item.selectCode" :label="item.value" :value="item.selectCode">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSaveSmartPlay" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
                     <el-button @click="onBack()">返回</el-button>
@@ -29,10 +32,8 @@
 import { interfaceUrl } from '@/api/config'
 import { createSplashScreen, updateSplashScreen, getSplashScreenDetail } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     name: 'splashScreenDetail',
-    components: { HAutocomplete },
     data () {
         return {
             smartPlayForm: {
@@ -40,10 +41,6 @@ export default {
                 picture: '',
                 title: '',
                 id: this.$route.query.id || ''
-            },
-            selectObj: {
-                selectCode: '',
-                selectName: ''
             },
             rules: {
                 title: [
@@ -95,11 +92,6 @@ export default {
         async getDetail () {
             const { data } = await getSplashScreenDetail(this.smartPlayForm.id)
             this.smartPlayForm = { ...data.data }
-            const activityName = data.data.activityName ? (data.data.activityName.length < 15 ? data.data.activityName : data.data.activityName.substr(0, 14) + '...') : ''
-            this.selectObj = {
-                selectCode: data.data.activityId,
-                selectName: activityName
-            }
         },
         backPlat (val) {
             this.smartPlayForm.activityId = val.value.selectCode
