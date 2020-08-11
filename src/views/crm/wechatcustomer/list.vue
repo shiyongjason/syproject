@@ -17,16 +17,18 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">是否注册：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-select v-model="queryParams.projectName" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in registeor" :key="item.key"></el-option>
+                        </el-select>
                     </div>
                 </div>
-                     <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">注册账号：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                   <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
@@ -34,7 +36,7 @@
                         </el-select>
                     </div>
                 </div>
-                            <div class="query-cont-col">
+                <div class="query-cont-col">
                     <div class="query-col-title">添加人：</div>
                     <div class="query-col-input">
                         <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
@@ -52,15 +54,9 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
-                            查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
-                            重置
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onExport">
-                            导出
-                        </el-button>
+                        <h-button type='primary'>查询</h-button>
+                        <h-button type='primary'>重置</h-button>
+                        <h-button type='assist'>数据分析</h-button>
                     </div>
                 </div>
             </div>
@@ -68,100 +64,51 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop"></el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
-                <template slot="type" slot-scope="scope">
-                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
-                </template>
-                <template slot="progress" slot-scope="scope">
-                    {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
-                </template>
+                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</el-button>
-                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <h-button table @click="onLookDetail()">查看详情</h-button>
                 </template>
             </hosJoyTable>
         </div>
-        <!-- <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer> -->
+        <detailDrawer ref="detailDrawer"></detailDrawer>
     </div>
 </template>
 <script>
 // import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { deepCopy } from '@/utils/utils'
-import filters from '@/utils/filters.js'
+import { REGISTEROR } from '../const'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import * as Auths from '@/utils/auth_const'
+import detailDrawer from './components/detailDrawer'
 export default {
     name: 'projectlist',
     data () {
         return {
+            registeor: REGISTEROR,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
                 companyName: ''
             },
             tableLabel: [
-                { label: '项目名称', prop: 'projectName', width: '150', showOverflowTooltip: true },
-                { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
-                { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
-                { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
-
-                { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
-                { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
-                { label: '项目类别', prop: 'type', width: '120', slot: 'type', showOverflowTooltip: true },
-                // { label: '工程项目进度', prop: 'progress', width: '120', slot: 'progress' },
-                { label: '工程项目进度', prop: 'progress', width: '120', dicData: [{ value: 1, label: '项目跟踪阶段' }, { value: 2, label: '招投标' }, { value: 3, label: '合同已签订' }, { value: 4, label: '项目已开工' }] },
-                { label: '项目合同总额', prop: 'contractAmount', width: '150', displayAs: 'money', sortable: 'custom' },
-                { label: '设备总额', prop: 'deviceAmount', width: '150', displayAs: 'money', sortable: 'custom' },
-                { label: '赊销总额', prop: 'predictLoanAmount', width: '150', displayAs: 'money', sortable: 'custom' },
-                { label: '设备品类', prop: 'deviceCategory', showOverflowTooltip: true, width: '100', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] },
-                { label: '设备品牌', prop: 'deviceBrand', showOverflowTooltip: true, width: '150' },
-                { label: '上游供应商类型', prop: 'upstreamSupplierType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
-                { label: '上游供应商名称', prop: 'upstreamSupplierName', showOverflowTooltip: true, width: '180' },
-                { label: '上游接受付款方式', prop: 'upstreamPayType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '现金' }, { value: 2, label: '承兑' }, { value: '1,2', label: '现金+承兑' }] },
-                {
-                    label: '上游接受付款周期',
-                    prop: 'upstreamPromiseMonth',
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.upstreamPromiseMonth ? `${scope.row.upstreamPromiseMonth}个月` : '-'}</span>
-                    },
-                    showOverflowTooltip: true
-                },
-                { label: '预估借款时间', prop: 'estimatedLoanTime', width: '150', displayAs: 'YYYY-MM-DD', sortable: 'custom', showOverflowTooltip: true },
-                { label: '预估赊销周期', prop: 'loanMonth', width: '150', unit: '个月' },
-                {
-                    label: '工程项目回款方式',
-                    children: [
-                        { label: '预付款比例', prop: 'advancePaymentProportion', width: '100', unit: '%' },
-                        { label: '货到付款比例', prop: 'deliveryPaymentProportion', width: '100', unit: '%' },
-                        { label: '安装进度款比例', prop: 'installProgressPaymentProportion', width: '130', unit: '%' },
-                        { label: '验收款比例', prop: 'acceptancePaymentProportion', width: '100', unit: '%' },
-                        { label: '交付款比例', prop: 'realPaymentProportion', width: '100', unit: '%' },
-                        { label: '审计结算款比例', prop: 'auditCalculationPaymentProportion', width: '150', unit: '%' },
-                        { label: '其他', prop: 'payOtherText', width: '150', showOverflowTooltip: true }
-                    ],
-                    showOverflowTooltip: true
-                },
-                {
-                    label: '合作进度',
-                    prop: 'status',
-                    width: '150',
-                    render: (h, scope) => {
-                        return <span>{scope.row.status ? this.getStatusList(scope.row.status, scope.row.docProgress).value : '-'}</span>
-                    },
-                    showOverflowTooltip: true
-                },
-                { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
-                { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
+                { label: '姓名', prop: 'projectName', width: '150', showOverflowTooltip: true },
+                { label: '类型', prop: 'address', width: '150', showOverflowTooltip: true },
+                { label: '性别', prop: 'projectNo', width: '150', showOverflowTooltip: true },
+                { label: '是否注册', prop: 'deptName', width: '150', showOverflowTooltip: true },
+                { label: '注册账号', prop: 'companyName', width: '180', showOverflowTooltip: true },
+                { label: '所属分部', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
+                { label: '添加人', prop: 'type', width: '120', slot: 'type', showOverflowTooltip: true },
+                { label: '添加时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
             ],
             rowKey: '',
-            multiSelection: []
+            tableData: [{ projectName: '123' }],
+            branchArr: [],
+            paginationInfo: {},
+            drawer: false
         }
     },
     components: {
-        hosJoyTable
+        hosJoyTable, detailDrawer
     },
     computed: {
         pickerOptionsStart () {
@@ -188,11 +135,13 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            projectData: 'crmmanage/projectData'
+            projectData: 'crmmanage/projectData',
+            crmdepList: 'crmmanage/crmdepList'
         })
     },
     async mounted () {
-
+        this.onGetbranch()
+        this.searchList()
     },
     methods: {
         ...mapActions({
@@ -201,9 +150,17 @@ export default {
             findCrmdeplist: 'crmmanage/findCrmdeplist',
             findProjectrecord: 'crmmanage/findProjectrecord',
             findPunchlist: 'crmmanage/findPunchlist'
+        }),
+        async onGetbranch () {
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+            this.branchArr = this.crmdepList
+        },
+        searchList () {
 
-        })
-
+        },
+        onLookDetail (val) {
+            this.$refs.detailDrawer.onFindCustomer(val)
+        }
     }
 }
 </script>
