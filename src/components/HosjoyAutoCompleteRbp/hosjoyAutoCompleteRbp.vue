@@ -3,7 +3,7 @@
         <div class="query-cont-col" v-if="region&&showBranch">
             <div class="query-col-title">大区：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
+                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="'请输入大区名称'" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
                     @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('regionDataSync',item)}">{{ item.value }}</div>
@@ -14,7 +14,7 @@
         <div class="query-cont-col" v-if="branch&&showBranch">
             <div class="query-col-title">分部：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
+                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="'请输入分部名称'" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
                     @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('branchDataSync',item)}">{{ item.value }}</div>
@@ -25,7 +25,7 @@
         <div class="query-cont-col" v-if="showPlatCompany">
             <div class="query-col-title">平台公司：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>{choosedItem['platCompany'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
+                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>{choosedItem['platCompany'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="'请输入平台公司名称'" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
                     @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}</div>

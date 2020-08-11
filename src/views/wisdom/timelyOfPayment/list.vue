@@ -3,7 +3,7 @@
         <div class="page-body-cont query-cont">
             <el-tabs v-model="queryParams.departmentType" type="card" @tab-click="handleClick">
                 <el-tab-pane label="平台公司月度回款及时率" name="1"></el-tab-pane>
-                <el-tab-pane label="分部公司月度回款及时率" name="2"></el-tab-pane>
+                <el-tab-pane label="分部月度回款及时率" name="2"></el-tab-pane>
             </el-tabs>
             <div v-show="toggle">
                 <div class="page-body-cont query-cont">
@@ -117,11 +117,13 @@ export default {
         async onQuery (_N) {
             this.newCloum = platformSummarySheet(parseInt(_N))
             if (this.queryParams.departmentType == 2) {
+                this.newCloum[0].minWidth = 200
                 this.newCloum[0].children[0].isHidden = true
                 this.newCloum[0].children[0].coderHidden = true
                 this.newCloum[0].children[1].isHidden = true
                 this.newCloum[0].children[1].coderHidden = true
             } else {
+                this.newCloum[0].minWidth = 400
                 this.newCloum[0].children[0].isHidden = false
                 this.newCloum[0].children[0].coderHidden = false
                 this.newCloum[0].children[1].isHidden = false
@@ -158,7 +160,8 @@ export default {
                 ...this.searchParams,
                 ...val
             }
-            this.onQuery()
+            const _N = moment(this.queryParams.selectDate).format('DD')
+            this.onQuery(_N)
         },
         async onReset () {
             this.$set(this.queryParams, 'regionCode', '')
