@@ -189,9 +189,9 @@ export default {
 }
 .util {
     font-size: 10px;
-    position: absolute;
-    top: -22px;
-    right: 0;
+    text-align: right;
+    line-height: 12px;
+    margin-bottom: 8px;
 }
 /deep/.el-table__header .repaymentStyle {
     background-color: rgba($color: #e6a23c, $alpha: 0.8) !important;

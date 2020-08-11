@@ -247,13 +247,12 @@ export default {
     }
     .overdueTable {
         position: relative;
-        margin-top: 10px;
     }
     .util {
         font-size: 10px;
-        position: absolute;
-        top: -16px;
-        right: 0;
+        text-align: right;
+        line-height: 12px;
+        margin-bottom: 8px;
     }
     /deep/.el-tabs__header{
         margin-bottom: 10px;
