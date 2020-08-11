@@ -3,8 +3,11 @@
         <div class="query-cont-col" v-if="region&&showBranch">
             <div class="query-col-title">大区：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="'请输入大区名称'" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
-                    @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
+                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName'
+                                 @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync"
+                                 :placeholder="'请输入大区名称'" :validate-event="true"
+                                 @blur="(item)=>blurInput('regionDataSync',item)"
+                                 @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('regionDataSync',item)}">{{ item.value }}</div>
                     </template>
@@ -14,8 +17,11 @@
         <div class="query-cont-col" v-if="branch&&showBranch">
             <div class="query-col-title">分部：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="'请输入分部名称'" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
-                    @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
+                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName'
+                                 @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync"
+                                 :placeholder="'请输入分部名称'" :validate-event="true"
+                                 @blur="(item)=>blurInput('branchDataSync',item)"
+                                 @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('branchDataSync',item)}">{{ item.value }}</div>
                     </template>
@@ -25,10 +31,14 @@
         <div class="query-cont-col" v-if="showPlatCompany">
             <div class="query-col-title">平台公司：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>{choosedItem['platCompany'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="'请输入平台公司名称'" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
-                    @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
+                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany'
+                                 @input="(val)=>{choosedItem['platCompany'] = val}"
+                                 :fetch-suggestions="querySearchAsync" :placeholder="'请输入平台公司名称'" :validate-event="true"
+                                 @blur="(item)=>blurInput('platCompanyDataSync',item)"
+                                 @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
-                        <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}</div>
+                        <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}
+                        </div>
                     </template>
                 </el-autocomplete>
             </div>
@@ -40,6 +50,7 @@
 // <hosjoyAutoCompleteRbp showRegion showBranch showPlatCompany :regionData.sync='queryParams.regionCode' :branchData.sync='queryParams.subsectionCode' :platCompanyData.sync='queryParams.misCode'>
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState } from 'vuex'
+
 export default {
     name: 'HAutocomplete',
     mixins: [departmentAuth], // 调用以前的权限逻辑。
@@ -198,6 +209,12 @@ export default {
                     this.choosedItem.platCompany = ''
                     this.platCompanyDataSync = ''// 给父组件赋值
                 }
+            } else {
+                if (key === 'platCompanyDataSync') {
+                    this.platCompanyDataSync = results[0].misCode
+                    return
+                }
+                this[key] = results[0].selectCode
             }
         },
         // mousedown的触发会优先于blur，click的优先级低于blur，会导致触发一次无用请求。
@@ -217,7 +234,10 @@ export default {
                         this.branchDataSync = ''
                         this.choosedItem.branchName = ''
                         this.choosedItem.platCompany = ''
-                        this.findAuthList({ deptType: 'F', pkDeptDoc: item.selectCode ? item.selectCode : this.userInfo.pkDeptDoc })
+                        this.findAuthList({
+                            deptType: 'F',
+                            pkDeptDoc: item.selectCode ? item.selectCode : this.userInfo.pkDeptDoc
+                        })
                     }
                 }
                 if (this.whichInput === 'F') {
@@ -289,8 +309,8 @@ export default {
 </script>
 
 <style lang="scss">
-.autocompleterow {
-    display: inline-flex;
-    margin-right: 24px;
-}
+    .autocompleterow {
+        display: inline-flex;
+        margin-right: 24px;
+    }
 </style>
