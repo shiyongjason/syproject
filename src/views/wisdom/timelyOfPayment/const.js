@@ -14,7 +14,7 @@ export const platformSummarySheet = function (N) {
                         {
                             prop: 'misCode',
                             minWidth: '100',
-                            label: '合计'
+                            label: '-'
                         }
                     ]
                 },
@@ -49,7 +49,7 @@ export const platformSummarySheet = function (N) {
                         {
                             prop: 'regionName',
                             minWidth: '100',
-                            label: '-',
+                            label: '合计',
                             showOverflowTooltip: true
                         }
                     ]
