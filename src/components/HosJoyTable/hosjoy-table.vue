@@ -632,4 +632,10 @@ export default {
 /deep/.el-table__fixed-right::before,  /deep/.el-table__fixed::before {
     display: none;
 }
+/deep/.el-table .cell{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+}
 </style>

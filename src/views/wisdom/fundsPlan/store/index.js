@@ -27,12 +27,11 @@ function translateColumn (value) {
 }
 const getters = {
     planTotalList: state => {
-        const temp = state.planTotalList.map(value => {
+        // console.log(temp)
+        return state.planTotalList.map(value => {
             // console.log(value)
             return translateColumn(value)
         })
-        // console.log(temp)
-        return temp
     },
     targetTime: function (state) {
         const temp = state.targetTime.businessDate.slice(6) > 19
