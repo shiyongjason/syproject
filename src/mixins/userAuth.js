@@ -43,7 +43,6 @@ export const departmentAuth = {
                 this.district = this.userInfo.deptType < 4
                 if (this.userInfo.deptType !== 0) {
                     this.platForm = false
-                    console.log('this.platForm: ', this.platForm)
                 }
                 // 0总部 1大区 2分部 3区域
                 if (this.userInfo.deptType == 0 && hasPlatformslist) {
