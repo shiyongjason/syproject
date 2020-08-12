@@ -3,7 +3,7 @@
         <div class="query-cont-col" v-if="region&&showBranch">
             <div class="query-col-title">大区：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
+                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>watchInput('regionName',val,'regionDataSync')" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
                     @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('regionDataSync',item)}">{{ item.value }}</div>
@@ -14,7 +14,7 @@
         <div class="query-cont-col" v-if="branch&&showBranch">
             <div class="query-col-title">分部：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
+                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>watchInput('branchName',val,'branchDataSync')" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
                     @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('branchDataSync',item)}">{{ item.value }}</div>
@@ -22,10 +22,10 @@
                 </el-autocomplete>
             </div>
         </div>
-        <div class="query-cont-col" v-if="showPlatCompany">
+        <div class="query-cont-col" v-if="showPlatCompany&&platForm">
             <div class="query-col-title">平台公司：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>{choosedItem['platCompany'] = val}" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
+                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>watchInput('platCompany',val,'platCompanyDataSync')" :fetch-suggestions="querySearchAsync" :placeholder="placeholder" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
                     @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}</div>
@@ -76,7 +76,8 @@ export default {
                 platCompany: ''
             },
             doBlurMethods: true,
-            doGetList: true
+            doGetList: true,
+            getApi: true
         }
     },
     computed: {
@@ -128,6 +129,7 @@ export default {
     watch: {
         regionData: {
             handler (val) {
+                console.log('val: ', val)
                 if (!val && !this.branchData && !this.platCompanyData) {
                     this.clearInput()
                 }
@@ -167,6 +169,14 @@ export default {
         }
     },
     methods: {
+        watchInput (key, val, keySync) {
+            this.choosedItem[key] = val
+            if (val === '') {
+                this.getApi = false
+                this.doBlurMethods = false
+                this[keySync] = ''
+            }
+        },
         blurInput (key, item) {
             if (!this.doBlurMethods) return
             if (!this.canDoBlurMethos) {
@@ -176,6 +186,7 @@ export default {
             const results = this.selectArray && this.selectArray.filter(v => {
                 return (v.value === item.target.value)
             })
+            console.log('results: ', results)
             if (results.length == 0) {
                 if (this.whichInput === 'D') {
                     this.choosedItem.regionName = ''
@@ -233,9 +244,9 @@ export default {
                         !this.userInfo.deptType && this.findPlatformslist()
                     }
                 }
-                setTimeout(() => {
-                    this.doBlurMethods = true
-                }, 1000)
+                // setTimeout(() => {
+                //     this.doBlurMethods = true
+                // }, 1000)
             } catch (error) {
                 this.doBlurMethods = true
             }
@@ -249,6 +260,7 @@ export default {
             }
         },
         focusInput (flag, item) {
+            this.doBlurMethods = true
             if (this.$refs[`autocomplete${flag}`]) {
                 this.$refs[`autocomplete${flag}`].suggestions = []
             }
@@ -264,7 +276,11 @@ export default {
             this.regionDataSync = ''
             this.branchDataSync = ''
             this.platCompanyDataSync = ''
-            this.newBossAuth(['D', 'F', 'P'])
+            if (this.getApi) {
+                this.newBossAuth(['D', 'F', 'P'])
+            } else {
+                this.getApi = true
+            }
         },
         querySearchAsync (queryString, callback) {
             let selectList = this.selectArray // 下拉集合

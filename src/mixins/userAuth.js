@@ -19,6 +19,7 @@ export const departmentAuth = {
             'findAuthList' // 大区、分部、区域
         ]),
         async newBossAuth (arr = ['D', 'F', 'Q', 'P'], params) {
+            console.log(1)
             let hasPlatformslist = false
             if (arr.indexOf('P') > -1) {
                 hasPlatformslist = true
@@ -29,15 +30,21 @@ export const departmentAuth = {
                 pkDeptDoc: this.userInfo.pkDeptDoc,
                 ...params
             }
+            console.log('arr', arr)
             arr.forEach((value) => {
                 tempParams.deptType = value
                 p1.push(this.findAuthList({ ...tempParams }))
             })
+            console.log('p1: ', p1)
             // 0总部 1大区 2分部 3区域
             await Promise.all(p1).then(res => {
                 this.region = this.userInfo.deptType < 2
                 this.branch = this.userInfo.deptType < 3
                 this.district = this.userInfo.deptType < 4
+                if (this.userInfo.deptType !== 0) {
+                    this.platForm = false
+                    console.log('this.platForm: ', this.platForm)
+                }
                 // 0总部 1大区 2分部 3区域
                 if (this.userInfo.deptType == 0 && hasPlatformslist) {
                     this.findPlatformslist()
