@@ -430,6 +430,9 @@ export default {
                     selectName: ''
                 }
             }
+            this.checkedList.forEach((value, index) => {
+                value.checked = index === 0
+            })
             this.onQuery(this.queryParams)
             await this.newBossAuth(['D', 'F', 'P'])
         }
