@@ -638,4 +638,8 @@ export default {
     overflow: hidden;
     word-break: break-all;
 }
+    /deep/ .el-table__fixed-body-wrapper{
+        padding-bottom: 4px;
+        box-sizing: border-box;
+    }
 </style>
