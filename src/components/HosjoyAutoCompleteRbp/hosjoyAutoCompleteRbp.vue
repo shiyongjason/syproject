@@ -3,11 +3,8 @@
         <div class="query-cont-col" v-if="region&&showBranch">
             <div class="query-col-title">大区：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName'
-                                 @input="(val)=>{choosedItem['regionName'] = val}" :fetch-suggestions="querySearchAsync"
-                                 :placeholder="'请输入大区名称'" :validate-event="true"
-                                 @blur="(item)=>blurInput('regionDataSync',item)"
-                                 @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
+                <el-autocomplete ref="autocompleteD" :value='choosedItem.regionName' @input="(val)=>watchInput('regionName',val,'regionDataSync')" :fetch-suggestions="querySearchAsync" :placeholder="'请输入大区名称'" :validate-event="true" @blur="(item)=>blurInput('regionDataSync',item)"
+                    @focus="(item)=>focusInput('D',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('regionDataSync',item)}">{{ item.value }}</div>
                     </template>
@@ -17,28 +14,21 @@
         <div class="query-cont-col" v-if="branch&&showBranch">
             <div class="query-col-title">分部：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName'
-                                 @input="(val)=>{choosedItem['branchName'] = val}" :fetch-suggestions="querySearchAsync"
-                                 :placeholder="'请输入分部名称'" :validate-event="true"
-                                 @blur="(item)=>blurInput('branchDataSync',item)"
-                                 @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
+                <el-autocomplete ref="autocompleteF" :value='choosedItem.branchName' @input="(val)=>watchInput('branchName',val,'branchDataSync')" :fetch-suggestions="querySearchAsync" placeholder="请输入分部名称" :validate-event="true" @blur="(item)=>blurInput('branchDataSync',item)"
+                    @focus="(item)=>focusInput('F',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
                         <div class="name" @mousedown="()=>{onMousedown('branchDataSync',item)}">{{ item.value }}</div>
                     </template>
                 </el-autocomplete>
             </div>
         </div>
-        <div class="query-cont-col" v-if="showPlatCompany">
+        <div class="query-cont-col" v-if="showPlatCompany&&platForm">
             <div class="query-col-title">平台公司：</div>
             <div class="query-col-input">
-                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany'
-                                 @input="(val)=>{choosedItem['platCompany'] = val}"
-                                 :fetch-suggestions="querySearchAsync" :placeholder="'请输入平台公司名称'" :validate-event="true"
-                                 @blur="(item)=>blurInput('platCompanyDataSync',item)"
-                                 @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
+                <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>watchInput('platCompany',val,'platCompanyDataSync')" :fetch-suggestions="querySearchAsync" :placeholder="'请输入平台公司名称'" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
+                    @focus="(item)=>focusInput('P',item)" :disabled="disabled" :maxlength='maxlength'>
                     <template slot-scope="{ item }">
-                        <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}
-                        </div>
+                        <div class="name" @mousedown="()=>{onMousedown('platCompanyDataSync',item)}">{{ item.value }}</div>
                     </template>
                 </el-autocomplete>
             </div>
@@ -50,7 +40,6 @@
 // <hosjoyAutoCompleteRbp showRegion showBranch showPlatCompany :regionData.sync='queryParams.regionCode' :branchData.sync='queryParams.subsectionCode' :platCompanyData.sync='queryParams.misCode'>
 import { departmentAuth } from '@/mixins/userAuth'
 import { mapState } from 'vuex'
-
 export default {
     name: 'HAutocomplete',
     mixins: [departmentAuth], // 调用以前的权限逻辑。
@@ -87,7 +76,8 @@ export default {
                 platCompany: ''
             },
             doBlurMethods: true,
-            doGetList: true
+            doGetList: true,
+            getApi: true
         }
     },
     computed: {
@@ -178,6 +168,14 @@ export default {
         }
     },
     methods: {
+        watchInput (key, val, keySync) {
+            this.choosedItem[key] = val
+            if (val === '') {
+                this.getApi = false
+                this.doBlurMethods = false
+                this[keySync] = ''
+            }
+        },
         blurInput (key, item) {
             if (!this.doBlurMethods) return
             if (!this.canDoBlurMethos) {
@@ -253,9 +251,9 @@ export default {
                         !this.userInfo.deptType && this.findPlatformslist()
                     }
                 }
-                setTimeout(() => {
-                    this.doBlurMethods = true
-                }, 1000)
+                // setTimeout(() => {
+                //     this.doBlurMethods = true
+                // }, 1000)
             } catch (error) {
                 this.doBlurMethods = true
             }
@@ -269,6 +267,7 @@ export default {
             }
         },
         focusInput (flag, item) {
+            this.doBlurMethods = true
             if (this.$refs[`autocomplete${flag}`]) {
                 this.$refs[`autocomplete${flag}`].suggestions = []
             }
@@ -284,7 +283,11 @@ export default {
             this.regionDataSync = ''
             this.branchDataSync = ''
             this.platCompanyDataSync = ''
-            this.newBossAuth(['D', 'F', 'P'])
+            if (this.getApi) {
+                this.newBossAuth(['D', 'F', 'P'])
+            } else {
+                this.getApi = true
+            }
         },
         querySearchAsync (queryString, callback) {
             let selectList = this.selectArray // 下拉集合
@@ -309,8 +312,8 @@ export default {
 </script>
 
 <style lang="scss">
-    .autocompleterow {
-        display: inline-flex;
-        margin-right: 24px;
-    }
+.autocompleterow {
+    display: inline-flex;
+    margin-right: 24px;
+}
 </style>
