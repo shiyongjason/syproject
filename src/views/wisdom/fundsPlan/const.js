@@ -1078,7 +1078,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             ]
         },
         {
-            label: '剩余逾期',
+            label: '逾期合计',
             prop: 'totalRemainingOverdue',
             children: [
                 {

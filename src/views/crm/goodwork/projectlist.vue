@@ -138,7 +138,7 @@
             </basicTable> -->
             <!-- table -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' localName="V3.*">
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
