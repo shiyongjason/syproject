@@ -47,7 +47,7 @@ export default {
                     { required: true, message: '请输入标题', trigger: 'blur' }
                 ],
                 picture: [
-                    { required: true, message: '请选择列表图片' }
+                    { required: true, message: '请选择闪屏图片' }
                 ]
             },
             loading: false
