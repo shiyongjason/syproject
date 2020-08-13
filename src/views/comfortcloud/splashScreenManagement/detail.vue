@@ -14,7 +14,7 @@
                         建议尺寸：1242*2688或9:19.5比例图片，1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
-                <el-form-item label="跳转活动：:">
+                <el-form-item label="跳转活动：">
                         <el-select v-model="smartPlayForm.activityId" placeholder="请选择跳转活动" clearable>
                             <el-option v-for="item in allActivity" :key="item.selectCode" :label="item.value" :value="item.selectCode">
                             </el-option>
