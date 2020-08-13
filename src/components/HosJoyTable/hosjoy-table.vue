@@ -18,7 +18,7 @@
         <!-- 大表哥 :summary-method="getSummary" :show-summary="showSummary"-->
         <!-- :height=" height || `calc(100vh - ${selfHeight}px)`" -->
         <!--  :max-height="computedHeight" -->
-        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
+        <el-table @header-dragend="dragColumn" v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -210,6 +210,9 @@ export default {
         }
     },
     methods: {
+        dragColumn (newWidth, oldWidth, column) {
+            column.showOverflowTooltip = newWidth < column.minWidth
+        },
         onHanderCollapseClick () {
             this.collapse = !this.collapse
             if (JSON.parse(localStorage.getItem(this.userNameLog))) {
