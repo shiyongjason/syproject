@@ -5,13 +5,15 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">姓名：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">类型：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-select v-model="queryParams.type" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in wxTypeList" :key="item.key"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -25,13 +27,13 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">注册账号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.mobile" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -39,34 +41,34 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">添加人：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.psnname" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">添加时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type='primary'>查询</h-button>
-                        <h-button type='primary'>重置</h-button>
-                        <h-button type='assist'>数据分析</h-button>
+                        <h-button type='primary' @click="searchList">查询</h-button>
+                        <h-button type='primary' @click="onRest">重置</h-button>
+                        <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <el-tag size="medium" class="eltagtop"></el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{tableLoan.totalNum||0}},已注册：{{tableLoan.registerUserNum||0}},未注册:{{tableLoan.waitRegisterUserNum||0}}</el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0'>
+                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onLookDetail()">查看详情</h-button>
+                    <h-button table @click="onLookDetail(1,scope.data.row)">查看详情</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -80,31 +82,47 @@ import { REGISTEROR } from '../const'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import * as Auths from '@/utils/auth_const'
 import detailDrawer from './components/detailDrawer'
+import { deepCopy } from '@/utils/utils'
 export default {
     name: 'projectlist',
     data () {
         return {
             registeor: REGISTEROR,
+            wxTypeList: [{ key: '', value: '全部' }, { key: 1, value: '微信' }, { key: 2, value: '企业微信' }],
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                companyName: ''
+                externalUserid: '',
+                gender: '',
+                maxCreateTime: '',
+                minCreateTime: '',
+                mobile: '',
+                name: '',
+                pkDeptDoc: '',
+                psnCodes: '',
+                psnMobile: '',
+                psncode: '',
+                psnname: '',
+                register: '',
+                type: ''
             },
             tableLabel: [
-                { label: '姓名', prop: 'projectName', width: '150', showOverflowTooltip: true },
-                { label: '类型', prop: 'address', width: '150', showOverflowTooltip: true },
-                { label: '性别', prop: 'projectNo', width: '150', showOverflowTooltip: true },
-                { label: '是否注册', prop: 'deptName', width: '150', showOverflowTooltip: true },
-                { label: '注册账号', prop: 'companyName', width: '180', showOverflowTooltip: true },
-                { label: '所属分部', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
-                { label: '添加人', prop: 'type', width: '120', slot: 'type', showOverflowTooltip: true },
-                { label: '添加时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
+                { label: '姓名', prop: 'name', width: '150', showOverflowTooltip: true },
+                { label: '类型', prop: 'type', width: '150', showOverflowTooltip: true, dicData: [{ value: 1, label: '微信' }, { value: 2, label: '企业微信' }] },
+                { label: '性别', prop: 'gender', width: '150', showOverflowTooltip: true, dicData: [{ value: 1, label: '男' }, { value: 2, label: '女' }] },
+                { label: '是否注册', prop: 'register', width: '150', showOverflowTooltip: true, dicData: [{ value: true, label: '是' }, { value: false, label: '否' }] },
+                { label: '注册账号', prop: 'psnMobile', width: '180', showOverflowTooltip: true },
+                { label: '所属分部', prop: 'deptName', width: '180', showOverflowTooltip: true },
+                { label: '添加人', prop: 'psnname', width: '120', showOverflowTooltip: true },
+                { label: '添加时间', prop: 'createTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
             ],
             rowKey: '',
-            tableData: [{ projectName: '123' }],
+            tableData: [],
+            tableLoan: {},
             branchArr: [],
             paginationInfo: {},
-            drawer: false
+            drawer: false,
+            copyParams: {}
         }
     },
     components: {
@@ -114,7 +132,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxSubmitTime
+                    let beginDateVal = this.queryParams.maxCreateTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -124,7 +142,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minSubmitTime
+                    let beginDateVal = this.queryParams.minCreateTime
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime()
                     }
@@ -135,34 +153,64 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            projectData: 'crmmanage/projectData',
+            wxMemberpage: 'wxMember/wxMemberpage',
+            wxCustomerstaic: 'wxMember/wxCustomerstaic',
             crmdepList: 'crmmanage/crmdepList'
         })
     },
     async mounted () {
+        this.copyParams = deepCopy(this.queryParams)
         this.onGetbranch()
         this.searchList()
     },
     methods: {
         ...mapActions({
-            findProjetpage: 'crmmanage/findProjetpage',
-            findProjectLoan: 'crmmanage/findProjectLoan',
+            findwxMemberpage: 'wxMember/findwxMemberpage',
             findCrmdeplist: 'crmmanage/findCrmdeplist',
-            findProjectrecord: 'crmmanage/findProjectrecord',
-            findPunchlist: 'crmmanage/findPunchlist'
+            findCustomerstatic: 'wxMember/findCustomerstatic'
         }),
         async onGetbranch () {
             await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
             this.branchArr = this.crmdepList
         },
-        searchList () {
-
+        onRest () {
+            this.queryParams = deepCopy(this.copyParams)
+            this.searchList()
         },
-        onLookDetail (val) {
-            this.$refs.detailDrawer.onFindCustomer(val)
+        async searchList () {
+            await this.findwxMemberpage(this.queryParams)
+            this.tableData = this.wxMemberpage.records
+            this.paginationInfo = {
+                pageNumber: this.wxMemberpage.current,
+                pageSize: this.wxMemberpage.size,
+                total: this.wxMemberpage.total
+            }
+            await this.findCustomerstatic(this.queryParams)
+            this.tableLoan = this.wxCustomerstaic
+        },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.searchList()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.searchList()
+        },
+        onLookDetail (type, val) {
+            this.$refs.detailDrawer.onFindCustomer(type, val)
+        },
+        sortChange (e) {
+            console.log('e: ', e)
+            if (e.prop == 'createTime') {
+                // this.queryParams.field = 'predict_loan_amount'
+                // this.queryParams.isAsc = e.order === 'ascending'
+            }
         }
     }
 }
 </script>
 <style lang="scss" scoped>
+.eltagtop {
+    margin-bottom: 10px;
+}
 </style>

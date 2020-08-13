@@ -1,65 +1,68 @@
 <template>
-    <div class="drawer-wrap">
+    <div class="drawer-wrap" >
         <el-drawer title="客户详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
-                <!-- <div class="drawer-cont">
+                <div class="drawer-cont" v-if="modelType==1">
                     <div class="drawer-cont_top">
-                        <img src="../../../../assets/images/img_0.png" alt="">
-                        施勇
+                        <img :src="wxUserForm.avatar?wxUserForm.avatar:require('../../../../assets/images/hosjoy_logo48@2x.png')" alt="">
+                        {{wxUserForm.name||'-'}}
                     </div>
                     <div class="drawer-cont_text">
                         <h3 class="drawer-cont_text-tit">注册信息</h3>
-                        <div class="drawer-cont_text-info">是否注册：是</div>
-                        <div class="drawer-cont_text-info">注册账号：<span>15195954045</span></div>
+                        <div class="drawer-cont_text-info">是否注册：{{wxUserForm.register?'是':'否'}}</div>
+                        <div class="drawer-cont_text-info">注册账号：<span>{{wxUserForm.mobile||'-'}}</span></div>
                     </div>
                     <div class="drawer-cont_text">
                         <h3 class="drawer-cont_text-tit">基本信息</h3>
-                        <div class="drawer-cont_text-info">性别：女</div>
-                        <div class="drawer-cont_text-info">电话：15195954045、137789890876</div>
-                        <div class="drawer-cont_text-info">添加人：赵娟</div>
-                        <div class="drawer-cont_text-info">添加时间：2020-07-20 09:08</div>
-                        <div class="drawer-cont_text-info">类型：微信联系人</div>
-                        <div class="drawer-cont_text-info">企业：江苏舒适云信息技术有限公司</div>
+                        <div class="drawer-cont_text-info">性别：{{wxUserForm.gender==1?'男':wxUserForm.gender==0?'女':'-'}}</div>
+                        <div class="drawer-cont_text-info">电话：<i v-for="(item,index) in wxUserForm.remarkMobile" :key="index">{{item}}</i> <em v-if="!wxUserForm.remarkMobile">-</em></div>
+                        <div class="drawer-cont_text-info">添加人：{{wxUserForm.psnname||'-'}}</div>
+                        <div class="drawer-cont_text-info">添加时间：{{wxUserForm.createTime|formatterTimes}}</div>
+                        <div class="drawer-cont_text-info">类型：{{wxUserForm.type==1?'微信':"企业微信"}}</div>
+                        <div class="drawer-cont_text-info">企业：{{wxUserForm.corpFullName||'-'}}</div>
                     </div>
                     <div class="drawer-cont_text">
                         <h3 class="drawer-cont_text-tit">标签</h3>
                         <div class="drawer-cont_text-info">经营规模（万元）：<i>1千万一下</i></div>
                         <div class="drawer-cont_text-info">是否有关联平台公司：-</div>
                     </div>
-                </div> -->
-                <div class="drawer-table">
+                </div>
+                <div class="drawer-table" v-if="modelType==2">
                     <div class="drawer-table_search">
                         <div class="drawer-table_search-title">添加时间：</div>
                         <div class="drawer-table_search-input">
-                            <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                            <el-date-picker v-model="modelParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                             </el-date-picker>
                             <span>-</span>
-                            <el-date-picker type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                            <el-date-picker v-model="modelParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
-                        <h-button type='primary'>查询</h-button>
-                        <h-button type='primary'>重置</h-button>
+                        <h-button type='primary' @click="onFindallPage">查询</h-button>
+                        <h-button type='primary' @click="onRest">重置</h-button>
                     </div>
                     <h3>数据</h3>
 
                     <div class="drawer-table_row">
-                        <div class="drawer-table_col"><b>123</b>
+                        <div class="drawer-table_col"><b>{{staticInfo.memberNum}}</b>
                             <p>企业微信客户数（个）</p>
                         </div>
-                        <div class="drawer-table_col"><b>123</b>
-                            <p>企业微信客户数（个）</p>
+                        <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
+                            <p>注册用户（个）</p>
                         </div>
-                        <div class="drawer-table_col"><b>123</b>
-                            <p>企业微信客户数（个）</p>
+                        <div class="drawer-table_col"><b>{{staticInfo.conversionRate}}</b>
+                            <p>注册转化率（%）</p>
                         </div>
                     </div>
-                    <h-button type='assist'>导出数据分析</h-button>
+                    <h-button type='assist' @click="onExport">导出数据分析</h-button>
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
                         <el-tab-pane label="按分部" name="first"></el-tab-pane>
                         <el-tab-pane label="按员工" name="second"></el-tab-pane>
                     </el-tabs>
-                    <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' isShowIndex>
-                    </basicTable>
+                    <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
+                    </basicTable> -->
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="onFindallPage"
+                        actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                    </hosJoyTable>
                 </div>
                 <div class="drawer-footer">
                     <div class="drawer-button">
@@ -71,54 +74,166 @@
     </div>
 </template>
 <script>
-import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import * as Auths from '@/utils/auth_const'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 export default {
-    name: 'businessdrawer',
+    name: 'userOrdepart',
     data () {
         return {
             drawer: false,
-            activeName: 'second',
-            tableLabel: [{ label: '任务标题', prop: 'taskTitle' },
-                { label: '任务内容', prop: 'taskContent' },
-                { label: '待审批人员', prop: 'approver' },
-                { label: '创建日期', prop: 'createTime', formatters: 'dateTime' }]
+            activeName: 'first',
+            modelParams: {
+                maxCreateTime: '',
+                minCreateTime: '',
+                pageNumber: 1,
+                pageSize: 5
+            },
+            tableLabel: [
+
+            ],
+            tableDepart: [{ label: '分部', prop: 'deptName' },
+                { label: '企业微信客户数', prop: 'memberNum' },
+                { label: '注册用户数', prop: 'registerMemberNum' },
+                { label: '注册转化率', prop: 'conversionRate' }],
+            tableUser: [
+                { label: '员工', prop: 'psnname' },
+                { label: '企业微信客户数', prop: 'memberNum' },
+                { label: '注册用户数', prop: 'registerMemberNum' },
+                { label: '注册转化率', prop: 'conversionRate' }
+            ],
+            pagination: {},
+            tableData: [],
+            modelType: 1,
+            staticInfo: {},
+            paginationInfo: {},
+            wxUser: {},
+            wxUserForm: {}
         }
     },
     components: {
-        HAutocomplete
+        hosJoyTable
     },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            nestDdata: 'nestDdata',
-            branchList: 'crmmanage/crmdepList',
-            crmauthDetail: 'crmauthen/crmauthDetail',
-            platlist: 'crmauthen/platlist',
-            whiteRecords: 'crmauthen/whiteRecords'
-        })
-    },
-    watch: {
-
+            wxMemberloan: 'wxMember/wxMemberloan',
+            wxDepartstatic: 'wxMember/wxDepartstatic',
+            wxUserstatic: 'wxMember/wxUserstatic',
+            wxMemberUser: 'wxMember/wxMemberUser'
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.modelParams.maxCreateTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.modelParams.minCreateTime
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        }
     },
     methods: {
         ...mapActions({
-            findNest: 'findNest',
-            findBusinessDetail: 'crmauthen/findBusinessDetail',
-            findCrmdeplist: 'crmmanage/findCrmdeplist',
-            findPlatlist: 'crmauthen/findPlatlist',
-            findWhiterecords: 'crmauthen/findWhiterecords'
+            findwxMemberloan: 'wxMember/findwxMemberloan',
+            findDepartstatic: 'wxMember/findDepartstatic',
+            findUserstatic: 'wxMember/findUserstatic',
+            findWxmemberUser: 'wxMember/findWxmemberUser'
         }),
-        onFindCustomer () {
-            this.drawer = true
+        onFindCustomer (type, val) {
+            this.modelType = type
+            this.wxUserForm = {}
+            if (val) {
+                this.wxUser = {
+                    externalUserid: val.externalUserid,
+                    wxCorpUserId: val.wxCorpUserId
+                }
+            }
+            this.onFindallPage(() => {
+                this.drawer = true
+            })
         },
         handleClose () {
             this.drawer = false
         },
-        handleClick () {
+        handleClick (tab, index) {
+            this.modelParams.pageNumber = 1
+            this.onFindallPage()
+        },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.onFindallPage()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.onFindallPage()
+        },
+        async onFindallPage (callback) {
+            if (this.modelType == 1) {
+                await this.onFindWxmemberUser(this.wxUser)
+                this.wxUserForm = this.wxMemberUser
+            } else {
+                await this.findwxMemberloan(this.modelParams)
+                this.staticInfo = this.wxMemberloan
+                if (this.activeName == 'first') {
+                    this.tableLabel = this.tableDepart
+                    await this.findDepartstatic(this.modelParams)
+                    this.tableData = this.wxDepartstatic.records
+                    this.paginationInfo = {
+                        pageNumber: this.wxDepartstatic.current,
+                        pageSize: this.wxDepartstatic.size,
+                        total: this.wxDepartstatic.total
+                    }
+                } else {
+                    this.tableLabel = this.tableUser
+                    await this.findUserstatic(this.modelParams)
+                    this.tableData = this.wxUserstatic.records
+                    this.paginationInfo = {
+                        pageNumber: this.wxUserstatic.current,
+                        pageSize: this.wxUserstatic.size,
+                        total: this.wxUserstatic.total
+                    }
+                }
+            }
+            if (callback) {
+                callback()
+            }
+        },
+        async onFindWxmemberUser () {
+            await this.findWxmemberUser(this.wxUser)
+        },
+        onExport () {
+            let url = ''
+            for (const key in this.modelParams) {
+                if (this.modelParams[key] !== '') {
+                    url += (`${key}=${this.modelParams[key]}&`)
+                }
+            }
+            if (this.activeName == 'first') {
+                window.location = interfaceUrl + 'memeber/wx/company/member/department/export?' + url
+            } else {
+                window.location = interfaceUrl + 'memeber/wx/company/member/users/export?' + url
+            }
+        },
+        onRest () {
+            this.modelParams.minCreateTime = ''
+            this.modelParams.maxCreateTime = ''
+            this.onFindallPage()
+        },
+        sortChange (e) {
 
         }
     },
@@ -132,7 +247,7 @@ export default {
     overflow-y: scroll;
 }
 .drawer-content {
-    padding: 0 20px;
+    padding: 0 20px 100px 20px;
     .drawer-cont {
         &_top {
             display: flex;
@@ -143,6 +258,7 @@ export default {
                 width: 50px;
                 height: 50px;
                 margin-right: 15px;
+                border-radius: 50%;
             }
         }
         &_text {
@@ -160,21 +276,21 @@ export default {
                     background: #e5e5e5;
                     color: #ff7a45;
                     font-style: normal;
-                    border-radius: 6px;
-                    padding: 0 10px;
-                    font-style: 14px;
+                    border-radius: 2px;
+                    padding: 0 5px;
+                    font-size: 12px;
                 }
             }
         }
     }
     .drawer-table {
-        h3{
+        h3 {
             margin-top: 15px;
         }
         &_search {
             display: flex;
             align-items: center;
-             border-bottom: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
             padding-bottom: 15px;
             &-input {
                 margin-right: 10px;
@@ -216,7 +332,7 @@ export default {
         }
     }
 }
-/deep/ .el-tabs{
+/deep/ .el-tabs {
     margin-top: 15px;
 }
 </style>
