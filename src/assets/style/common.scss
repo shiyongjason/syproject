@@ -648,8 +648,20 @@ a.isLink {
 }
 .amount .el-table td{
     padding: 7px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .amount .el-table th{
     padding: 7px 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+}
+.amount .el-table th>.cell{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
 }
 /*******************  资金相关 start *******************************/
