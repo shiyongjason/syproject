@@ -645,4 +645,7 @@ export default {
         padding-bottom: 4px;
         box-sizing: border-box;
     }
+    /deep/.el-table .cell.el-tooltip{
+        min-width: 10px;
+    }
 </style>
