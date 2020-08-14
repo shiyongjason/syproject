@@ -22,7 +22,7 @@
                 </el-autocomplete>
             </div>
         </div>
-        <div class="query-cont-col" v-if="showPlatCompany&&platForm">
+        <div class="query-cont-col" v-if="showPlatCompany">
             <div class="query-col-title">平台公司：</div>
             <div class="query-col-input">
                 <el-autocomplete ref="autocompleteP" :value='choosedItem.platCompany' @input="(val)=>watchInput('platCompany',val,'platCompanyDataSync')" :fetch-suggestions="querySearchAsync" :placeholder="'请输入平台公司名称'" :validate-event="true" @blur="(item)=>blurInput('platCompanyDataSync',item)"
