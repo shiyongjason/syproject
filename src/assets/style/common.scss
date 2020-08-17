@@ -664,4 +664,7 @@ a.isLink {
     overflow: hidden;
     word-break: break-all;
 }
+.amount /deep/.el-table .cell.el-tooltip{
+    min-width: 10px;
+}
 /*******************  资金相关 start *******************************/
