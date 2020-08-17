@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-wrap" >
+    <div class="drawer-wrap">
         <el-drawer title="客户详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <div class="drawer-cont" v-if="modelType==1">
@@ -23,8 +23,10 @@
                     </div>
                     <div class="drawer-cont_text">
                         <h3 class="drawer-cont_text-tit">标签</h3>
-                        <div class="drawer-cont_text-info">经营规模（万元）：<i>1千万一下</i></div>
-                        <div class="drawer-cont_text-info">是否有关联平台公司：-</div>
+                        <div v-for="(item,index) in wxUserForm.tagList" :key="index">
+                            <div class="drawer-cont_text-info">经营规模（万元）：<i>{{item.groupName}}</i></div>
+                            <div class="drawer-cont_text-info">是否有关联平台公司：{{item.tagName}}</div>
+                        </div>
                     </div>
                 </div>
                 <div class="drawer-table" v-if="modelType==2">
@@ -37,7 +39,7 @@
                             <el-date-picker v-model="modelParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
-                        <h-button type='primary' @click="onFindallPage">查询</h-button>
+                        <h-button type='primary' @click="onFindallPage()">查询</h-button>
                         <h-button type='primary' @click="onRest">重置</h-button>
                     </div>
                     <h3>数据</h3>
@@ -60,7 +62,7 @@
                     </el-tabs>
                     <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="onFindallPage"
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="()=>onFindallPage()"
                         actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                     </hosJoyTable>
                 </div>

@@ -19,7 +19,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">是否注册：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.projectName" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.register" placeholder="请选择" :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in registeor" :key="item.key"></el-option>
                         </el-select>
                     </div>

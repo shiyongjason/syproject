@@ -121,6 +121,6 @@ export const MATELIST = [
 // 是否注册
 export const REGISTEROR = [
     { key: '', value: '全部' },
-    { key: 0, value: '是' },
-    { key: 1, value: '否' }
+    { key: true, value: '是' },
+    { key: false, value: '否' }
 ]
