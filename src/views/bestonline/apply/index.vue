@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button type="primary" @click="onSearch()">搜索
+                    <el-button type="primary" @click="onSearch()">查询
                     </el-button>
                 </div>
             </div>
