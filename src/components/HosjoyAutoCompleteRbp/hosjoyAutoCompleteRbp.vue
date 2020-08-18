@@ -213,6 +213,15 @@ export default {
                     return
                 }
                 this[key] = results[0].selectCode
+                if (key === 'regionDataSync') {
+                    this.findAuthList({
+                        deptType: 'F',
+                        pkDeptDoc: results[0].selectCode
+                    })
+                }
+                if (key === 'branchDataSync') {
+                    this.findPlatformslist({ subsectionCode: results[0].selectCode })
+                }
             }
         },
         // mousedown的触发会优先于blur，click的优先级低于blur，会导致触发一次无用请求。
