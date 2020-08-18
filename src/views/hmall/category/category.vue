@@ -3,13 +3,13 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onShowAdd('child')" v-if="current.level !== 3">
+                    <h-button type="create" class="ml20" @click="onShowAdd('child')" v-if="current.level !== 3">
                         添加子类目
-                    </el-button>
-                    <el-button class="ml20 disabeld" v-else>添加子类目</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowAdd('brother')">
+                    </h-button>
+                    <h-button type="create" disabled class="ml20" v-else>添加子类目</h-button>
+                    <h-button type="create" class="ml20" @click="onShowAdd('brother')">
                         添加同类目
-                    </el-button>
+                    </h-button>
                 </div>
             </div>
         </div>
@@ -33,8 +33,10 @@
                     <img :src="scope.row.imgUrl" class="img-table" v-if="scope.row.level === 3">
                 </template>
                 <template slot="operations" slot-scope="scope">
-                    <span class="action mr10" @click="onShowEdit(scope.row)">修改</span>
-                    <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span>
+                    <h-button table @click="onShowEdit(scope.row)">修改</h-button>
+                    <h-button table @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</h-button>
+                    <!-- <span class="action mr10" @click="onShowEdit(scope.row)">修改</span> -->
+                    <!-- <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span> -->
                 </template>
             </tree-table>
         </div>
@@ -73,8 +75,8 @@
                     </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button @click="editVisible = false">取消</el-button>
-                    <el-button type="primary" @click="onEditCategory">保存</el-button>
+                    <h-button @click="editVisible = false">取消</h-button>
+                    <h-button type='primary' @click="onEditCategory">保存</h-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
