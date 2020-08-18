@@ -43,12 +43,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button type="primary" class="ml20" @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_LOOK_DETAIL)">查看详情</el-button>
+                    <h-button  table plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_LOOK_DETAIL)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>

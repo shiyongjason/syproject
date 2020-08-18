@@ -17,34 +17,34 @@
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
-                        <el-button @click="onCallBack()">打回补充</el-button>
+                        <h-button @click="onCallBack()">打回补充</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==12&&activeName==='2'&&form.docAfterStatus==2">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FINAL)&&status==11&&activeName==='4'">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_QIANYUE)&&status==6">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FANGKUAN)&&status==7">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_HUIKUAN)&&status==8">
-                        <el-button type="info" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</el-button>
+                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
                     </template>
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_CHOINGZHI)">
-                        <el-button type="warning" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</el-button>
+                        <h-button type="create" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</h-button>
                     </template>
-                    <el-button @click="cancelForm">取 消</el-button>
-                    <el-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                    <h-button @click="cancelForm">取 消</h-button>
+                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                 </div>
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
@@ -65,8 +65,8 @@
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
-                        <el-button @click="dialogVisible = false">取 消</el-button>
-                        <el-button type="primary" @click="onUpdateAudit">确 定</el-button>
+                        <h-button @click="dialogVisible = false">取 消</h-button>
+                        <h-button type="primary" @click="onUpdateAudit">确 定</h-button>
                     </span>
                 </el-dialog>
 
@@ -91,8 +91,8 @@
                 </hosjoyUpload>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onColseSignOrLoan">取 消</el-button>
-                <el-button type="primary" @click="onSubmitSignOrLoan">确 定</el-button>
+                <h-button @click="onColseSignOrLoan">取 消</h-button>
+                <h-button type="primary" @click="onSubmitSignOrLoan">确 定</h-button>
             </span>
         </el-dialog>
     </div>

@@ -63,8 +63,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onColseApprove">取 消</el-button>
-                <el-button type="primary" @click="onSaveapproveOrfinal(2)">确 定</el-button>
+                <h-button @click="onColseApprove">取 消</h-button>
+                <h-button type="primary" @click="onSaveapproveOrfinal(2)">确 定</h-button>
             </span>
         </el-dialog>
     </div>

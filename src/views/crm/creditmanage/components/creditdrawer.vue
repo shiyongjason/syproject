@@ -148,8 +148,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseCol">取 消</el-button>
-                <el-button type="primary" @click="onRefuse" :loading=resloading>{{resloading?'确 定':'保 存'}}</el-button>
+                <h-button  @click="onCloseCol">取 消</h-button>
+                <h-button  type="primary" @click="onRefuse" :loading=resloading>{{resloading?'确 定':'保 存'}}</h-button>
             </span>
         </el-dialog>
     </div>
