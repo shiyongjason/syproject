@@ -47,7 +47,14 @@ const state = {
     cloudComfortEncyclopediaDetail: {},
     klCatalogueList: [],
     klQuestionList: [],
-    klQuestionDetail: {}
+    klQuestionDetail: {},
+    outBoundList: [],
+    outBoundListPagination: {},
+    splashScreenList: [],
+    splashScreenPagination: {},
+    allActivity: [],
+    customerServiceList: [],
+    customerServicePagination: {}
 }
 
 const getters = {
@@ -89,7 +96,18 @@ const getters = {
     cloudUserFeedbackPagination: state => state.cloudUserFeedbackPagination,
     klCatalogueList: state => state.klCatalogueList,
     klQuestionList: state => state.klQuestionList,
-    klQuestionDetail: state => state.klQuestionDetail
+    klQuestionDetail: state => state.klQuestionDetail,
+    splashScreenList: state => {
+        state.splashScreenList.forEach(v => {
+            v.status = !!v.status
+            v.statusName = v.activityId ? '已关联' : '未关联'
+        })
+        return state.splashScreenList
+    },
+    allActivity: state => state.allActivity.map(v => {
+        const value = v.title.length < 15 ? v.title : v.title.substr(0, 14) + '...'
+        return { selectCode: v.id, value }
+    })
 }
 
 const mutations = {
@@ -212,11 +230,9 @@ const mutations = {
         state.cloudSendMessageDetailChart = payload
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST] (state, payload) {
-        console.log(payload)
         state.cloudComfortEncyclopediaList = payload
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION] (state, payload) {
-        console.log(payload)
         state.cloudComfortEncyclopediaListPagination = payload
     },
     [cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL] (state, payload) {
@@ -230,6 +246,27 @@ const mutations = {
     },
     [cloud.KNOWLEDGE_QUESTION_DETAIL] (state, payload) {
         state.klQuestionDetail = payload
+    },
+    [cloud.GET_OUTBOUND_LIST] (state, payload) {
+        state.outBoundList = payload
+    },
+    [cloud.OUTBOUND_PAGINATION] (state, payload) {
+        state.outBoundListPagination = payload
+    },
+    [cloud.SPLASH_SCREEN_LIST] (state, payload) {
+        state.splashScreenList = payload
+    },
+    [cloud.SPLASH_SCREEN_PAGINATION] (state, payload) {
+        state.splashScreenPagination = payload
+    },
+    [cloud.GET_ALL_ACTIVITY] (state, payload) {
+        state.allActivity = payload
+    },
+    [cloud.GET_CUSTOMER_SERVICE_LIST] (state, payload) {
+        state.customerServiceList = payload
+    },
+    [cloud.GET_CUSTOMER_SERVICE_PAGINATION] (state, payload) {
+        state.customerServicePagination = payload
     }
 }
 
@@ -384,7 +421,6 @@ const actions = {
     },
     async findCloudHomeComfortStatisticsList ({ commit }, params) {
         const { data } = await Api.getCloudHomeComfortStatisticsList(params)
-        console.log(data)
         commit(cloud.CLOUD_HOME_COMFORT_SCENE_STATISTICS, data.data.comfortRunStats)
         return data.data.totalRunHours
     },
@@ -398,11 +434,6 @@ const actions = {
     },
     async findUserFeedbackList ({ commit }, params) {
         const { data } = await Api.getCloudUserFeedback(params)
-        console.log({
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
-        })
         commit(cloud.CLOUD_USER_FEEDBACK_LIST, data.data.records)
         commit(cloud.CLOUD_USER_FEEDBACK_PAGINATION, {
             pageNumber: data.data.current,
@@ -412,7 +443,6 @@ const actions = {
     },
     async findCloudComfortEncyclopediaList ({ commit }, params) {
         const { data } = await Api.getComfortEncyclopediaList(params)
-        console.log(data)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST, data.data.records)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_LIST_PAGINATION, {
             pageNumber: data.data.current,
@@ -422,22 +452,50 @@ const actions = {
     },
     async findComfortEncyclopediaDetail ({ commit }, params) {
         const { data } = await Api.getComfortEncyclopediaDetail(params)
-        console.log(data)
         commit(cloud.CLOUD_COMFORT_ENCYCLOPEDIA_DETAIL, data.data)
     },
     async getCatalogueListAct ({ commit }, params) {
         const { data } = await Api.getCatalogueList()
-        console.log(data)
         commit(cloud.KNOWLEDGE_CATALOGUE_LIST, data.data)
     },
     async getQuestionListAct ({ commit }, params) {
         const { data } = await Api.getQuestionList(params)
-        console.log(data)
         commit(cloud.KNOWLEDGE_QUESTION_LIST, data.data)
     },
     async getQuestionDetailAct ({ commit }, params) {
         const { data } = await Api.getQuestionDetail(params)
         commit(cloud.KNOWLEDGE_QUESTION_DETAIL, data.data)
+    },
+    async getOutboundList ({ commit }, params) {
+        const { data } = await Api.getOutboundList(params)
+        commit(cloud.GET_OUTBOUND_LIST, data.data.records)
+        commit(cloud.OUTBOUND_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async getSplashScreenList ({ commit }, params) {
+        const { data } = await Api.getSplashScreenList(params)
+        commit(cloud.SPLASH_SCREEN_LIST, data.data.records)
+        commit(cloud.SPLASH_SCREEN_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async getAllActivity ({ commit }, params) {
+        const { data } = await Api.getAllActivity(params)
+        commit(cloud.GET_ALL_ACTIVITY, data.data)
+    },
+    async getCustomerService ({ commit }, params) {
+        const { data } = await Api.getCustomerService(params)
+        commit(cloud.GET_CUSTOMER_SERVICE_LIST, data.data.records)
+        commit(cloud.GET_CUSTOMER_SERVICE_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
     }
 }
 export default {

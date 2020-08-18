@@ -35,7 +35,7 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
+        iotUrl = 'https://iot-test.hosjoy.com'
         break
     case 'test':
         interfaceUrl = 'https://hbp-test.hosjoy.com/'
@@ -65,7 +65,7 @@ switch (env) {
         B2bUrl = 'https://staging-b2b-gateway.hosjoy.com/'
         ccpBaseUrl = 'https://staging-ccp.hosjoy.com/'
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
+        iotUrl = 'https://iot-test.hosjoy.com'
         break
     case 'production':
         // TODO: 给产品调用
