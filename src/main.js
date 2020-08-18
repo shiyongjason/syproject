@@ -20,7 +20,8 @@ import precisionMethods from '@/utils/bignumber.js'
 // 接入 sentry
 import * as Sentry from '@sentry/browser'
 import { Vue as VueIntegration } from '@sentry/integrations'
-if (process.env.VUE_APP_TITLE === 'production' || process.env.VUE_APP_TITLE === 'preview') {
+if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'preview') {
+    console.log(process.env)
     Sentry.init({
         dsn: 'https://96d38d85c5da49bfacdada98edca3ea7@sentry.hosjoy.com/4',
         integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
