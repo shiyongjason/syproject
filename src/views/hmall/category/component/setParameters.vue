@@ -7,7 +7,7 @@
                       <h-button type="create" class="ml20" @click="onAdd">
                           新增参数
                       </h-button>
-                      <h-button type="assist" class="ml20" @click="onDelete">
+                      <h-button class="ml20" @click="onDelete">
                           批量删除
                       </h-button>
                   </div>
@@ -360,7 +360,6 @@ export default {
             this.tableData = []
         },
         async findSpecificationsAsync () {
-            console.log(123)
             await this.findSpecifications({ categoryId: this.categoryId })
             // 这边如果后台返回data是空，则手动赋值数值，并记录为第一次新增操作是新增，以后的所有操作都是编辑
             if (this.specificationsInfo) {
