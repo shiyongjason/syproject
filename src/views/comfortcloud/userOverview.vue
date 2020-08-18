@@ -155,7 +155,7 @@ export default {
             this.myChart = echarts.init(document.getElementById('firstchart'))
             // 绘制图表
             var charts = {
-                unit: '单位',
+                unit: '单位（个）',
                 names: [m.get(this.tabindex)],
                 lineX: [],
                 value: []
