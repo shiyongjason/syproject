@@ -19,7 +19,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                 </div>
             </div>
         </div>
