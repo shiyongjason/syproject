@@ -291,6 +291,11 @@ export default {
     font-weight: 400;
     background: rgba(242, 242, 244, 1);
 }
+/deep/ .el-table .cell.el-tooltip .couponP{
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 // 暂无数据
 /deep/ .el-table__empty-block {
     min-height: 49px;
