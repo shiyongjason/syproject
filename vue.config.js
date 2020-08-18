@@ -3,7 +3,7 @@ const SentryPlugin = require('@sentry/webpack-plugin')
 module.exports = {
     configureWebpack: config => {
         // 是否生产和预发布
-        if (process.env.VUE_APP_TITLE === 'production' || process.env.VUE_APP_TITLE === 'preview') {
+        if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'preview') {
             config.plugins.push(
                 new SentryPlugin({
                     include: './dist',
@@ -12,15 +12,6 @@ module.exports = {
                     ignore: ['node_modules', 'webpack.config.js'],
                     urlPrefix: '~' // 这里指的你项目需要观测的文件如果你的项目有publicPath这里加上就对了
                 })
-            // new SentryPlugin(Object.assign({
-            //     release: process.env.RELEASE_VERSION,
-            //     deleteAfterCompile: true,
-            //     // exclude: /(\.css\.map| \.css | \.html)$/,
-            //     include: /(\.js\.map | \.js)$/, // 只上传js和map文件
-            //     filenameTransform: function (filename) {
-            //         return '~/' + filename
-            //     }
-            // }, require('./sentry.config.js')))
             )
         }
     },
