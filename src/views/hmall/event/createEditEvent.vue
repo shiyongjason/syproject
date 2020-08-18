@@ -35,7 +35,7 @@
                                     <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
                                     <img :src="item.url" :alt="item.url">
                                     <span class="picture-setting" @click="pictureSetting(index)">
-                                       banner
+                                        banner
                                     </span>
                                 </li>
                             </template>
@@ -274,12 +274,10 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
-                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>折
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>折{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }

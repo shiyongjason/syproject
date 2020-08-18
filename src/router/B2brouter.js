@@ -515,6 +515,30 @@ export default [
                         component: () => import('@/views/hmall/dataBoard/biGoodDetail.vue')
                     }
                 ]
+            },
+            {
+                path: 'searchProject',
+                name: 'searchProject',
+                meta: {
+                    title: '搜索方案',
+                    tagName: '搜索方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'searchData',
+                        name: 'searchData',
+                        meta: {
+                            title: '搜索数据报表',
+                            tagName: '搜索数据报表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/searchProject/searchData.vue')
+                    }
+                ]
             }
         ]
     }
