@@ -224,7 +224,7 @@ export default {
                 }
             }
         },
-        // mousedown的触发会优先于blur，click的优先级低于blur，会导致触发一次无用请求。
+        // mousedown的触发会优先于blur，click的优先级低于blur，会导致触发一次无用请求。。
         onMousedown (key, item) {
             if (key === 'platCompanyDataSync') {
                 this.platCompanyDataSync = item.misCode// 给父组件赋值
