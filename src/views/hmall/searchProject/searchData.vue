@@ -1,7 +1,11 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <h-button>默认按钮</h-button>
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" isShowIndex>
+                <template slot="action" slot-scope="scope">
+                    <h-button table></h-button>
+                </template>
+            </basicTable>
         </div>
     </div>
 </template>
@@ -11,7 +15,15 @@ export default {
     name: 'searchDataList',
     data () {
         return {
-
+            tableLabel: [
+                { label: '会员名称', value: '' },
+                { label: '会员账号', value: '' },
+                { label: '搜索词', value: '' },
+                { label: '时间', value: '' },
+                { label: '点击商品次数', value: '' },
+                { label: '点击商品个数', value: '' }
+            ],
+            tableData: []
         }
     },
     computed: {
