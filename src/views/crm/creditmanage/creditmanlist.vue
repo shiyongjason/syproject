@@ -71,12 +71,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button type="primary" class="ml20" @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                     {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-2].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</el-button>
+                    <h-button table  plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -116,7 +116,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <h-button @click="dialogVisible = false">取 消</h-button>
                 <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
             </span>
         </el-dialog>

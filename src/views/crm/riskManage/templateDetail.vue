@@ -35,7 +35,7 @@
                                 </template>
                             </td>
                             <td>
-                                <el-button size="mini" type="primary" @click="onEditTem(obj.templateId)">编辑</el-button>
+                                <el-button  size="mini" type="primary" @click="onEditTem(obj.templateId)">编辑</el-button>
                             </td>
                         </tr>
                     </template>
@@ -77,8 +77,8 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="handleClose">取 消</el-button>
-                <el-button type="primary" @click="onSaveTemp" :loading=loading>{{loading?'保存中':'确 定'}}</el-button>
+                <h-button @click="handleClose">取 消</h-button>
+                <h-button type='primary'  @click="onSaveTemp" :loading=loading>{{loading?'保存中':'确 定'}}</h-button>
             </span>
         </el-dialog>
     </div>

@@ -74,12 +74,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button  type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button  type="primary" class="ml20" @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -118,9 +118,9 @@
 
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)">查看详情</el-button>
+                        <h-button table type="success" size="mini" plain @click="onLookproject(scope.data.row)">查看详情</h-button>
                         <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 2的时候点进去能看到，但不能修改-->
-                        <el-button type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</el-button>
+                        <h-button table type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</h-button>
                     </template>
                 </hosJoyTable>
             </div>
@@ -296,7 +296,7 @@ export default {
         },
         async onGetbranch () {
             // 分部下拉接口
-            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+            await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') })
             this.branchArr = this.crmdepList
         },
         getStatusList (key, docProgress) {

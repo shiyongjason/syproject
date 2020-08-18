@@ -24,8 +24,8 @@
                     <div class="drawer-cont_text">
                         <h3 class="drawer-cont_text-tit">标签</h3>
                         <div v-for="(item,index) in wxUserForm.tagList" :key="index">
-                            <div class="drawer-cont_text-info">经营规模（万元）：<i>{{item.groupName}}</i></div>
-                            <div class="drawer-cont_text-info">是否有关联平台公司：{{item.tagName}}</div>
+                            <div class="drawer-cont_text-info">{{item.groupName}}：<i>{{item.tagName}}</i></div>
+
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="drawer-footer">
                     <div class="drawer-button">
-                        <el-button @click="drawer=false">取 消</el-button>
+                        <h-button @click="drawer=false">取 消</h-button>
                     </div>
                 </div>
             </div>
@@ -78,7 +78,6 @@
 <script>
 import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import * as Auths from '@/utils/auth_const'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 export default {
     name: 'userOrdepart',

@@ -80,7 +80,6 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { REGISTEROR } from '../const'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import * as Auths from '@/utils/auth_const'
 import detailDrawer from './components/detailDrawer'
 import { deepCopy } from '@/utils/utils'
 export default {

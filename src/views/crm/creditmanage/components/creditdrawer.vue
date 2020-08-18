@@ -18,7 +18,7 @@
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</el-button>
+                        <h-button table plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
                     </template>
                 </basicTable>
                 <p>
@@ -117,8 +117,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseDrawer">取 消</el-button>
-                <el-button type="primary" @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</el-button>
+                <h-button @click="onCloseDrawer">取 消</h-button>
+                <h-button type='primary' @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</h-button>
             </span>
         </el-dialog>
         <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
