@@ -226,6 +226,7 @@ export default {
         this.onFindPlatformslist()
         this.planListItem.overDueInterest = 12
         this.ruleForm.planList.push({ ...this.planListItem })
+        console.log(this.ruleForm)
     },
     methods: {
         ...mapActions({

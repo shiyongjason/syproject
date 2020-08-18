@@ -61,7 +61,7 @@ const ringChartOption = {
     series: {
         name: '告警离线时长分布',
         type: 'pie',
-        radius: ['0', '60%'],
+        radius: ['0', '80%'],
         label: {
             show: false,
             position: 'center',

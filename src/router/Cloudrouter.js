@@ -79,6 +79,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/equipmentError/equipmentError.vue')
+                    },
+                    {
+                        path: 'warehouseManagement',
+                        name: 'warehouseManagement',
+                        meta: {
+                            title: '出库管理',
+                            tagName: '出库管理',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/warehouseManagement.vue')
                     }
                 ]
             },
@@ -92,7 +104,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/comfortcloud/homeManage.vue')
+                component: () => import('@/views/comfortcloud/homeOverview/index.vue')
             },
             {
                 path: 'homedetail',
@@ -104,7 +116,7 @@ export default [
                     isMenu: false,
                     icon: ''
                 },
-                component: () => import('@/views/comfortcloud/homedetail.vue')
+                component: () => import('@/views/comfortcloud/homeOverview/homedetail.vue')
             },
             {
                 path: 'membermanage',
@@ -129,18 +141,6 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/comfortcloud/memberDetail.vue')
-            },
-            {
-                path: 'knowledge',
-                name: 'knowledge',
-                meta: {
-                    title: '知识库管理',
-                    tagName: '知识库管理',
-                    parentName: '舒适云概览',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/comfortcloud/knowledge')
             },
             {
                 path: 'knowledgeEdit',
@@ -282,6 +282,54 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/userFeedback/userFeedback.vue')
+                    },
+                    {
+                        path: 'splashScreenManagement',
+                        name: 'splashScreenManagement',
+                        meta: {
+                            title: '闪屏管理',
+                            tagName: '闪屏管理',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/splashScreenManagement/index.vue')
+                    },
+                    {
+                        path: 'splashScreenDetail',
+                        name: 'splashScreenDetail',
+                        meta: {
+                            title: '闪屏管理信息',
+                            tagName: '闪屏管理信息',
+                            parentName: '舒适云概览',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/splashScreenManagement/detail.vue')
+                    },
+                    {
+                        path: 'serviceRecord',
+                        name: 'serviceRecord',
+                        meta: {
+                            title: '客服记录',
+                            tagName: '客服记录',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/homeOverview/serviceRecord.vue')
+                    },
+                    {
+                        path: 'knowledge',
+                        name: 'knowledge',
+                        meta: {
+                            title: '知识库管理',
+                            tagName: '知识库管理',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/knowledge')
                     }
                 ]
             }
