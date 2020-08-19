@@ -37,7 +37,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <h-button type="primary" class="ml20" @click="searchList()">查询</h-button>
-                        <!-- <el-button type="primary" class="ml20" @click="onRest()">重置</el-button> -->
+                        <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
                         <h-button class="ml20" @click="onExport">导出</h-button>
                     </div>
                 </div>
