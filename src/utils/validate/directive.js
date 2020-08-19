@@ -126,5 +126,32 @@ export default {
                 addWaterMarker(binding.value, el)
             }
         })
+
+        Vue.directive('drag', {
+            bind: function (el) {
+                let oDiv = el
+                function run (e) {
+                    let disX = e.clientX - oDiv.offsetLeft
+                    let disY = e.clientY - oDiv.offsetTop
+                    function mousemoveRun (e) {
+                        let left = e.clientX - disX
+                        let top = e.clientY - disY
+                        oDiv.style.left = left + 'px'
+                        oDiv.style.top = top + 'px'
+                        e.stopPropagation()
+                        e.preventDefault()
+                    }
+                    function mouseupRun (e) {
+                        document.removeEventListener('mousemove', mousemoveRun, false)
+                        document.removeEventListener('mouseup', mouseupRun, false)
+                    }
+                    document.addEventListener('mousemove', mousemoveRun, false)
+                    document.addEventListener('mouseup', mouseupRun, false)
+                    e.stopPropagation()
+                    e.preventDefault()
+                }
+                oDiv.addEventListener('mousedown', run, false)
+            }
+        })
     }
 }

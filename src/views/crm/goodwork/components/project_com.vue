@@ -232,7 +232,7 @@ export default {
     },
     methods: {
         onLinkBus (val) {
-            this.$router.push({ name: 'authenlist', params: { name: val.companyName, code: val.companyCode } })
+            this.$router.push({ name: 'authenlist', query: { name: val.companyName, code: val.companyCode } })
         },
         handleChange (value) {
 
