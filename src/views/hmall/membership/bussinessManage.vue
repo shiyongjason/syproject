@@ -74,12 +74,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="onFindMlist(1)">
+                        <h-button type="primary" class="ml20" @click="onFindMlist(1)">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button class="ml20" @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -113,8 +113,8 @@
                     {{scope.data.row.authenticationTime | formatDate}}
                 </template>
                 <template slot="action" slot-scope="scope" >
-                    <!-- <el-button size="mini" :type="scope.data.row.isEnabled==0?'success':'danger'" plain @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</el-button> -->
-                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</el-button>
+                    <!-- <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button> -->
+                    <h-button table @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
