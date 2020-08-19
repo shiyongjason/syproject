@@ -75,11 +75,11 @@
                     <!--当审核状态=审核通过时，展示查看-->
                     <!--当审核状态=审核不通过时，展示查看-->
                     <!--2.进行中 3.未审核 4.已结束 5.未通过-->
-                    <el-button class="orangeBtn" v-if="scope.row.status === 3"
+                    <h-button table v-if="scope.row.status === 3"
                                @click="showDialog(scope.row.id,'review')">审核
-                    </el-button>
-                    <el-button class="orangeBtn" @click="showDialog(scope.row.id,'watch')">查看
-                    </el-button>
+                    </h-button>
+                    <h-button table @click="showDialog(scope.row.id,'watch')">查看
+                    </h-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -189,11 +189,11 @@
                 </div>
                 <div class="suggest-btn">
                     <el-form-item v-if="dialogParams.type === 'review'">
-                        <el-button name="hosjoy-color" @click="createCouponReview">确认</el-button>
-                        <el-button name="white-color" @click="cancel">取消</el-button>
+                        <h-button type='primary' @click="createCouponReview">确认</h-button>
+                        <h-button @click="cancel">取消</h-button>
                     </el-form-item>
                     <el-form-item v-if="dialogParams.type === 'watch'">
-                        <el-button name="white-color" @click="close">关闭</el-button>
+                        <h-button @click="close">关闭</h-button>
                     </el-form-item>
                 </div>
             </el-form>
