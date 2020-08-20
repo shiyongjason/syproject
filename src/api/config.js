@@ -26,7 +26,6 @@ switch (env) {
         B2bUrl = 'http://192.168.20.248:40000/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
-
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'

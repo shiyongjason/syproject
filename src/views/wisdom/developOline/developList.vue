@@ -53,16 +53,16 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" @click="getList('onSearch')">搜索</el-button>
+                <el-button type="primary" @click="getList('onSearch')">查询</el-button>
             </div>
         </div>
         <div class="page-body-cont ">
             <div class="query-cont-col">
-                <el-button type="primary" @click="editPlatform()">添加平台公司</el-button>
+                <el-button type="default" @click="editPlatform()">添加平台公司</el-button>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" :show-file-list="false" :action="interfaceUrl + 'develop/developbasicinfo/import'" :data="{createUser: userInfo.employeeName}" :on-success="isSuccess" :on-error="isError" :before-upload="handleUpload" auto-upload>
-                    <el-button type="primary" :loading='uploadLoading'>批量导入</el-button>
+                    <el-button type="default" :loading='uploadLoading'>批量导入</el-button>
                 </el-upload>
             </div>
             <div class="query-cont-col">
