@@ -14,33 +14,17 @@
                 <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate"
                                 :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
                 </el-date-picker>
-                <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.runTimeModuleName + 'Line',
-                smartparams.runTimeModuleName + 'Bar')">
+                <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.modeType + 'Line',
+                smartparams.modeType + 'Bar')">
                     查询
                 </el-button>
             </div>
         </div>
         <div class="tab-container">
-            <el-tabs v-model="homeParams.runTimeModuleName" @tab-click="handleClick">
-                <el-tab-pane label="所有设备" name="all" class="echart-wrap">
-                    <div class="chart-flex2" id="allLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="allBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="中央空调控制器WC-03" name="Op" class="echart-wrap">
-                    <div class="chart-flex2" id="OpLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="OpBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="中央空调控制器LC-305" name="Co" class="echart-wrap">
-                    <div class="chart-flex2" id="CoLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="CoBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="地暖智控面板WH-04" name="Ap" class="echart-wrap">
-                    <div class="chart-flex2" id="ApLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="ApBar" style="height:500px"></div>
-                </el-tab-pane>
-                <el-tab-pane label="智能温控阀LR-307" name="Rt" class="echart-wrap">
-                    <div class="chart-flex2" id="RtLine" style="height:500px"></div>
-                    <div class="chart-flex1" id="RtBar" style="height:500px"></div>
+            <el-tabs v-model="homeParams.modeType" @tab-click="handleClick">
+                <el-tab-pane :key="item.name" v-for="item in cloudHomeModeTypeList" :label="item.name" :name="item.type" class="echart-wrap">
+                    <div class="chart-flex2" :id="item.type + 'Line'" style="height:500px"></div>
+                    <div class="chart-flex1" :id="item.type + 'Bar'" style="height:500px"></div>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -67,7 +51,7 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="homeParams.runTimeModuleName === 'all'">
+                <div class="query-cont-col" v-if="homeParams.modeType === 'all'">
                     <div class="query-col-title">设备种类：</div>
                     <div class="query-col-input">
                         <el-select v-model="homeParams.type" clearable>
@@ -85,7 +69,7 @@
         </div>
         <div class="page-body-cont">
 <!--            @onSortChange="onSortChange"-->
-            <basicTable :tableLabel="tableLabelSwitch" :tableData="tablePaginationListSwitch"
+            <basicTable :tableLabel="tableLabelSwitch" :tableData="cloudHomeDetailList"
                         :pagination="cloudHomeDetailPagination"
                         isShowIndex @onCurrentChange='onCurrentChange'
                         @onSizeChange='onSizeChange'>
@@ -108,13 +92,8 @@ export default {
             smartparams: {
                 startDate: moment().subtract(7, 'days').format('YYYY-MM-DD'),
                 endDate: moment().format('YYYY-MM-DD'),
-                runTimeModuleName: 'all'
+                modeType: 'all'
             },
-            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, {
-                key: 'sensor',
-                name: '传感器'
-            }, { key: 'smartAppliance', name: '智能家电' },
-            { key: 'switchPanel', name: '开关面板' }],
             smartData: {},
             homeParams: {
                 pageSize: 10,
@@ -123,7 +102,7 @@ export default {
                 startDate: '',
                 endDate: '',
                 type: '',
-                runTimeModuleName: 'all'
+                modeType: 'all'
             }
         }
     },
@@ -132,11 +111,8 @@ export default {
             cloudRuntimeReport: 'cloudRuntimeReport',
             cloudHomeDetailList: 'cloudHomeDetailList',
             cloudHomeDetailPagination: 'cloudHomeDetailPagination',
-            cloudHomeOpDetailList: 'cloudHomeOpDetailList',
-            cloudHomeCoDetailList: 'cloudHomeCoDetailList',
-            cloudHomeApDetailList: 'cloudHomeApDetailList',
-            cloudHomeRtDetailList: 'cloudHomeRtDetailList',
-            cloudHomeDetailDict: 'cloudHomeDetailDict'
+            cloudHomeDetailDict: 'cloudHomeDetailDict',
+            cloudHomeModeTypeList: 'cloudHomeModeTypeList'
         }),
         pickerOptionsStart () {
             return {
@@ -180,42 +156,30 @@ export default {
         },
         tableLabelSwitch () {
             let temp
-            switch (this.homeParams.runTimeModuleName) {
+            switch (this.homeParams.modeType) {
                 case 'all':
                     temp = Const.totalTableLabel
                     break
                 case 'Op':
-                    temp = Const.wuLianTableLabel
-                    break
                 case 'Co':
-                    temp = Const.zeroKeMiTableLabel
+                case 'Zco':
+                case 'Lco':
+                    temp = Const.OpTableLabel
                     break
                 case 'Ap':
-                    temp = Const.floorTableLabel
+                case 'Th':
+                    temp = Const.ApTableLabel
+                    break
+                case 'Lth':
+                case 'Lwh':
+                case 'Lhs':
+                    temp = Const.lthTableLabel
                     break
                 case 'Rt':
-                    temp = Const.smartTableLabel
+                    temp = Const.rtTableLabel
                     break
-            }
-            return temp
-        },
-        tablePaginationListSwitch () {
-            let temp = []
-            switch (this.homeParams.runTimeModuleName) {
-                case 'all':
-                    temp = this.cloudHomeDetailList
-                    break
-                case 'Op':
-                    temp = this.cloudHomeOpDetailList
-                    break
-                case 'Co':
-                    temp = this.cloudHomeCoDetailList
-                    break
-                case 'Ap':
-                    temp = this.cloudHomeApDetailList
-                    break
-                case 'Rt':
-                    temp = this.cloudHomeRtDetailList
+                case 'Lct':
+                    temp = Const.lctTableLabel
                     break
             }
             return temp
@@ -225,16 +189,14 @@ export default {
         this.onFindRuntimeR('allLine', 'allBar')
         this.findCloudHomeDetailList(this.homeParams)
         this.findCloudHomeDetailSearchDict()
+        this.getCloudHomeModeTypeList()
     },
     methods: {
         ...mapActions({
             findRuntimeReport: 'findRuntimeReport',
             findCloudHomeDetailList: 'findCloudHomeDetailList',
-            findCloudHomeOpDetailList: 'findCloudHomeOpDetailList',
-            findCloudHomeCoDetailList: 'findCloudHomeCoDetailList',
-            findCloudHomeApDetailList: 'findCloudHomeApDetailList',
-            findCloudHomeRtDetailList: 'findCloudHomeRtDetailList',
-            findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict'
+            findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict',
+            getCloudHomeModeTypeList: 'getCloudHomeModeTypeList'
         }),
         onSortChange (val) {
             if (val.order) {
@@ -243,23 +205,7 @@ export default {
             }
         },
         onQuery () {
-            switch (this.homeParams.runTimeModuleName) {
-                case 'all':
-                    this.findCloudHomeDetailList(this.homeParams)
-                    break
-                case 'Op':
-                    this.findCloudHomeOpDetailList(this.homeParams)
-                    break
-                case 'Co':
-                    this.findCloudHomeCoDetailList(this.homeParams)
-                    break
-                case 'Ap':
-                    this.findCloudHomeApDetailList(this.homeParams)
-                    break
-                case 'Rt':
-                    this.findCloudHomeRtDetailList(this.homeParams)
-                    break
-            }
+            this.findCloudHomeDetailList(this.homeParams)
         },
         onCurrentChange (val) {
             this.homeParams.pageNumber = val.pageNumber
@@ -277,7 +223,7 @@ export default {
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.runTimeModuleName === 'all' ? '' : this.homeParams.runTimeModuleName
+                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
             })
         },
         drawLine (data, id) {
@@ -428,38 +374,23 @@ export default {
             this.drawChart(option, id)
         },
         handleClick () {
-            this.smartparams.runTimeModuleName = this.homeParams.runTimeModuleName
-            this.onFindRuntimeR(this.smartparams.runTimeModuleName + 'Line',
-                this.smartparams.runTimeModuleName + 'Bar')
+            this.smartparams.modeType = this.homeParams.modeType
+            this.onFindRuntimeR(this.smartparams.modeType + 'Line',
+                this.smartparams.modeType + 'Bar')
             Object.assign(this.homeParams, {
                 pageSize: 10,
                 pageNumber: 1,
                 phone: '',
                 type: '',
                 startDate: '',
-                endDate: ''
+                endDate: '',
+                modeType: this.homeParams.modeType
             })
-            switch (this.homeParams.runTimeModuleName) {
-                case 'all':
-                    this.findCloudHomeDetailList(this.homeParams)
-                    break
-                case 'Op':
-                    this.findCloudHomeOpDetailList(this.homeParams)
-                    break
-                case 'Co':
-                    this.findCloudHomeCoDetailList(this.homeParams)
-                    break
-                case 'Ap':
-                    this.findCloudHomeApDetailList(this.homeParams)
-                    break
-                case 'Rt':
-                    this.findCloudHomeRtDetailList(this.homeParams)
-                    break
-            }
+            this.findCloudHomeDetailList(this.homeParams)
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.runTimeModuleName === 'all' ? '' : this.homeParams.runTimeModuleName
+                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
             })
         },
         drawChart (option, id) {
