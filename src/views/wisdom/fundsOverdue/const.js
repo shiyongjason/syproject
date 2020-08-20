@@ -256,48 +256,55 @@ export const platformSummarySheet = [
     {
         prop: 'misCode',
         label: '公司编码',
-        showOverflowTooltip: true,
         fixed: true,
         children: [
             {
                 prop: 'misCode',
-                label: '合计'
+                showOverflowTooltip: true,
+                label: '合计',
+                width: 80
             }
         ]
     },
     {
         prop: 'loanCompanyName',
         label: '公司名称',
-        showOverflowTooltip: true,
         fixed: true,
+        width: 100,
         children: [
             {
                 prop: 'loanCompanyName',
-                label: '-'
+                showOverflowTooltip: true,
+                label: '-',
+                width: 100
             }
         ]
     },
     {
         prop: 'subsectionName',
         label: '分部',
-        showOverflowTooltip: true,
         fixed: true,
+        width: 100,
         children: [
             {
                 prop: 'subsectionName',
-                label: '-'
+                showOverflowTooltip: true,
+                label: '-',
+                width: 100
             }
         ]
     },
     {
         prop: 'regionName',
         label: '大区',
-        showOverflowTooltip: true,
         fixed: true,
+        width: 100,
         children: [
             {
                 prop: 'regionName',
-                label: '-'
+                showOverflowTooltip: true,
+                label: '-',
+                width: 100
             }
         ]
     },
@@ -308,12 +315,13 @@ export const platformSummarySheet = [
                 prop: 'lastYearSales',
                 label: '19年',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 children: [
                     {
                         prop: 'lastYearSales',
-                        label: '-'
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        label: '-',
+                        width: 100
                     }
                 ]
             },
@@ -321,12 +329,13 @@ export const platformSummarySheet = [
                 prop: 'currentSales',
                 label: '20年',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 children: [
                     {
                         prop: 'currentSales',
-                        label: '-'
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        label: '-',
+                        width: 100
                     }
                 ]
             }
@@ -335,22 +344,24 @@ export const platformSummarySheet = [
     {
         prop: 'arrearsCount',
         label: '欠款笔数',
-        showOverflowTooltip: true,
         children: [
             {
                 prop: 'arrearsCount',
-                label: '-'
+                showOverflowTooltip: true,
+                label: '-',
+                width: 100
             }
         ]
     },
     {
         prop: 'capitalAmount',
         label: '剩余欠款',
-        showOverflowTooltip: true,
         children: [
             {
                 prop: 'capitalAmount',
-                label: '-'
+                label: '-',
+                showOverflowTooltip: true,
+                width: 100
             }
         ]
     },
@@ -361,12 +372,13 @@ export const platformSummarySheet = [
                 prop: 'januaryRepayment',
                 label: '1月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'januaryRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: '100',
                         label: '-'
                     }
                 ]
@@ -375,12 +387,13 @@ export const platformSummarySheet = [
                 prop: 'februaryRepayment',
                 label: '2月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'februaryRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: '100',
                         label: '-'
                     }
                 ]
@@ -389,13 +402,14 @@ export const platformSummarySheet = [
                 prop: 'marchRepayment',
                 label: '3月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'marchRepayment',
-                        label: '-'
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        label: '-',
+                        width: '100'
                     }
                 ]
             },
@@ -403,12 +417,13 @@ export const platformSummarySheet = [
                 prop: 'aprilRepayment',
                 label: '4月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'aprilRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -417,13 +432,14 @@ export const platformSummarySheet = [
                 prop: 'mayRepayment',
                 label: '5月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'mayRepayment',
-                        label: '-'
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        label: '-',
+                        width: 100
                     }
                 ]
             },
@@ -431,12 +447,13 @@ export const platformSummarySheet = [
                 prop: 'juneRepayment',
                 label: '6月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'juneRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -445,12 +462,13 @@ export const platformSummarySheet = [
                 prop: 'julyRepayment',
                 label: '7月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'julyRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -459,12 +477,13 @@ export const platformSummarySheet = [
                 prop: 'augustRepayment',
                 label: '8月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'augustRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -473,12 +492,13 @@ export const platformSummarySheet = [
                 prop: 'septemberRepayment',
                 label: '9月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'septemberRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -487,12 +507,13 @@ export const platformSummarySheet = [
                 prop: 'octoberRepayment',
                 label: '10月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'octoberRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -501,12 +522,13 @@ export const platformSummarySheet = [
                 prop: 'novemberRepayment',
                 label: '11月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'novemberRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -515,12 +537,13 @@ export const platformSummarySheet = [
                 prop: 'decemberRepayment',
                 label: '12月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'decemberRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -529,12 +552,13 @@ export const platformSummarySheet = [
                 prop: 'total',
                 label: '合计',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'total',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -544,10 +568,11 @@ export const platformSummarySheet = [
     {
         prop: 'planProportion',
         label: '计划还款占比',
-        showOverflowTooltip: true,
         children: [
             {
                 prop: 'planProportion',
+                showOverflowTooltip: true,
+                width: 120,
                 label: '-'
             }
         ]
@@ -555,10 +580,11 @@ export const platformSummarySheet = [
     {
         prop: 'noRepaymentPlanAmount',
         label: '无计划金额',
-        showOverflowTooltip: true,
         children: [
             {
                 prop: 'noRepaymentPlanAmount',
+                showOverflowTooltip: true,
+                width: 120,
                 label: '-'
             }
         ]
@@ -570,10 +596,12 @@ export const overdueDetailTable = [
         prop: 'standingBookNo',
         label: '借款编号',
         fixed: true,
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'standingBookNo',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '合计'
             }
         ]
@@ -582,10 +610,12 @@ export const overdueDetailTable = [
         prop: 'misCode',
         label: '公司编码',
         fixed: true,
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'misCode',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '-'
             }
         ]
@@ -594,12 +624,13 @@ export const overdueDetailTable = [
         prop: 'loanCompanyName',
         label: '公司名称',
         fixed: true,
-        showOverflowTooltip: true,
-
+        width: 100,
         children: [
             {
                 prop: 'loanCompanyName',
-                label: '-'
+                showOverflowTooltip: true,
+                label: '-',
+                width: 100
             }
         ]
     },
@@ -607,10 +638,12 @@ export const overdueDetailTable = [
         prop: 'subsectionName',
         label: '分部',
         fixed: true,
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'subsectionName',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '-'
             }
         ]
@@ -619,10 +652,12 @@ export const overdueDetailTable = [
         prop: 'regionName',
         label: '大区',
         fixed: true,
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'regionName',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '-'
             }
         ]
@@ -630,10 +665,12 @@ export const overdueDetailTable = [
     {
         prop: 'loanAmount',
         label: '借款金额',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'loanAmount',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '合计'
             }
         ]
@@ -641,10 +678,12 @@ export const overdueDetailTable = [
     {
         prop: 'payTime',
         label: '合同到期日',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'payTime',
+                width: 100,
+                showOverflowTooltip: true,
                 label: '-'
             }
         ]
@@ -652,10 +691,12 @@ export const overdueDetailTable = [
     {
         prop: 'capitalAmount',
         label: '应还本金',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'capitalAmount',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '合计'
             }
         ]
@@ -663,10 +704,12 @@ export const overdueDetailTable = [
     {
         prop: 'overdueTime',
         label: '宽限期到期日',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'overdueTime',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '-'
             }
         ]
@@ -674,10 +717,12 @@ export const overdueDetailTable = [
     {
         prop: 'actualPayTime',
         label: '实际还款日',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'actualPayTime',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '-'
             }
         ]
@@ -685,10 +730,12 @@ export const overdueDetailTable = [
     {
         prop: 'amountPaid',
         label: '已还本金',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'amountPaid',
+                width: 100,
+                showOverflowTooltip: true,
                 label: '合计'
             }
         ]
@@ -696,10 +743,12 @@ export const overdueDetailTable = [
     {
         prop: 'overdueTotal',
         label: '当前逾期合计',
-        showOverflowTooltip: true,
+        width: 100,
         children: [
             {
                 prop: 'overdueTotal',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '合计'
             }
         ]
@@ -711,12 +760,13 @@ export const overdueDetailTable = [
                 prop: 'januaryRepayment',
                 label: '1月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'januaryRepayment',
+                        width: '100',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
                         label: '-'
                     }
                 ]
@@ -725,12 +775,13 @@ export const overdueDetailTable = [
                 prop: 'februaryRepayment',
                 label: '2月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'februaryRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -739,12 +790,13 @@ export const overdueDetailTable = [
                 prop: 'marchRepayment',
                 label: '3月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'marchRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -753,12 +805,13 @@ export const overdueDetailTable = [
                 prop: 'aprilRepayment',
                 label: '4月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'aprilRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -767,12 +820,13 @@ export const overdueDetailTable = [
                 prop: 'mayRepayment',
                 label: '5月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'mayRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -781,12 +835,13 @@ export const overdueDetailTable = [
                 prop: 'juneRepayment',
                 label: '6月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'juneRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -795,12 +850,13 @@ export const overdueDetailTable = [
                 prop: 'julyRepayment',
                 label: '7月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'julyRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -809,12 +865,13 @@ export const overdueDetailTable = [
                 prop: 'augustRepayment',
                 label: '8月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'augustRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -823,12 +880,13 @@ export const overdueDetailTable = [
                 prop: 'septemberRepayment',
                 label: '9月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'septemberRepayment',
+                        width: 100,
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
                         label: '-'
                     }
                 ]
@@ -837,12 +895,13 @@ export const overdueDetailTable = [
                 prop: 'octoberRepayment',
                 label: '10月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'octoberRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -851,12 +910,13 @@ export const overdueDetailTable = [
                 prop: 'novemberRepayment',
                 label: '11月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'novemberRepayment',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '-'
                     }
                 ]
@@ -865,12 +925,13 @@ export const overdueDetailTable = [
                 prop: 'decemberRepayment',
                 label: '12月',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'decemberRepayment',
+                        width: 100,
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
                         label: '-'
                     }
                 ]
@@ -879,12 +940,13 @@ export const overdueDetailTable = [
                 prop: 'total',
                 label: '合计',
                 width: '100',
-                displayAs: 'fundMoney',
-                showOverflowTooltip: true,
                 className: 'repaymentStyle',
                 children: [
                     {
                         prop: 'total',
+                        displayAs: 'fundMoney',
+                        showOverflowTooltip: true,
+                        width: 100,
                         label: '合计'
                     }
                 ]
@@ -894,10 +956,11 @@ export const overdueDetailTable = [
     {
         prop: 'planProportion',
         label: '计划占比',
-        showOverflowTooltip: true,
         children: [
             {
                 prop: 'planProportion',
+                showOverflowTooltip: true,
+                width: 100,
                 label: '合计'
             }
         ]
@@ -905,11 +968,13 @@ export const overdueDetailTable = [
     {
         prop: 'noRepaymentPlanAmount',
         label: '无还款计划金额',
-        displayAs: 'fundMoney',
-        showOverflowTooltip: true,
+        width: 120,
         children: [
             {
                 prop: 'noRepaymentPlanAmount',
+                displayAs: 'fundMoney',
+                showOverflowTooltip: true,
+                width: 120,
                 label: '合计'
             }
         ]

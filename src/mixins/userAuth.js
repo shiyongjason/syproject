@@ -38,6 +38,9 @@ export const departmentAuth = {
                 this.region = this.userInfo.deptType < 2
                 this.branch = this.userInfo.deptType < 3
                 this.district = this.userInfo.deptType < 4
+                if (this.userInfo.deptType !== 0) {
+                    this.platForm = false
+                }
                 // 0总部 1大区 2分部 3区域
                 if (this.userInfo.deptType == 0 && hasPlatformslist) {
                     this.findPlatformslist()

@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle"  class="page-body-cont query-cont">
             <div class="query-cont-col" v-if="region">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
@@ -35,17 +35,18 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="btnQuery({...queryParams, pageSize:10, pageNumber: 1})">
-                        搜索
+                        查询
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">
+                    <el-button type="default" class="ml20" @click="onReset">
                         重置
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">
+                    <el-button type="default" class="ml20" @click="onExport">
                         导出汇总表
                     </el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="table-tips">
                 <p><b>{{paramTargetDate.year}}</b>年<b>{{paramTargetDate.mouth}}</b>月<span class="right">单位：万元</span></p>
@@ -102,6 +103,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             localName: 'platformPlanTable::',
             toggleTable: false,
             queryParams: {
@@ -345,7 +347,6 @@ export default {
 }
 .tips {
     display: flex;
-    height: 90px;
     padding: 10px 0;
     text-align: justify;
     line-height: 20px;

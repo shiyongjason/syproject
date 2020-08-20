@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle"  class="page-body-cont query-cont">
             <div class="query-cont-col" v-if="region">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
@@ -29,16 +29,17 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="btnQuery">
-                        搜索
+                        查询
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">
+                    <el-button type="default" class="ml20" @click="onReset">
                         重置
                     </el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="default" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
+                    <el-button type="default" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="tips">
             <p><b>{{params.valueYear}}</b>年<span class="right">单位：万元</span></p>
         </div>
@@ -108,6 +109,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             selectAuth: {
                 regionObj: {
                     selectCode: '',
@@ -313,7 +315,7 @@ export default {
     p {
         max-width: 1000px;
         margin: auto;
-        line-height: 100px;
+        line-height: 30px;
         text-align: center;
 
         b {

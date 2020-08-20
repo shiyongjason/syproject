@@ -15,8 +15,8 @@
             </div>
         </div>
         <div class="query-cont-col">
-            <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
-            <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+            <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+            <el-button type="default" class="ml20" @click="onReset">重置</el-button>
         </div>
         <div class="p24">
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='120'>
