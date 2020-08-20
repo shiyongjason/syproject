@@ -1,7 +1,7 @@
 <template>
     <div class="page-body">
         <div class="page-table">
-            <hosJoyTable v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
+            <hosJoyTable :amountResetTable="amountResetTable" v-if="isShowParent" :collapseShow="collapseShow" ref="hosjoyTable"
                          align="center" border stripe showPagination :column="column"
                          :data="tableData" :total="pagination.total"
                          :pageNumber.sync="pagination.pageNumber"
@@ -69,7 +69,7 @@ import { getAccountBasic, getLoan, getRespAccountRepaymentPlan, transformPlanTyp
 import moment from 'moment'
 import { mapState } from 'vuex'
 import filters from '@/utils/filters.js'
-import { MathJS } from '../../../../utils/MathUtils'
+import { MathJS } from '@/utils/MathUtils'
 import {
     WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA,
     WISDOM_EXPOSURE_FUNDSDATA_UPDATA,
@@ -124,6 +124,11 @@ export default {
                 return { pageNumber: 1, pageSize: 10, total: 0 }
             }
 
+        },
+        amountResetTable: {
+            type: Boolean,
+            required: false,
+            default: false
         }
     },
     watch: {
@@ -472,18 +477,18 @@ export default {
                 {
                     prop: 'account_standingBookNo',
                     fixed: true,
-                    minWidth: '100',
+                    minWidth: '150',
                     label: '',
                     children: [
                         {
                             label: '台账编号',
                             prop: 'account_standingBookNo',
-                            minWidth: '100',
+                            minWidth: '150',
                             children: [
                                 {
                                     prop: 'account_standingBookNo',
                                     label: '台账编号',
-                                    minWidth: '100',
+                                    minWidth: '150',
                                     render: (h, scope) => {
                                         let render = this.hosAuthCheck(WISDOM_FLOWTOBORROW_FUNDSDATA_UPDATA)
                                         return render ? <div>

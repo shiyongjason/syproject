@@ -1,11 +1,11 @@
 <template>
-    <div class="page-body back-money-track">
+    <div class="page-body back-money-track amount">
         <div>
             <el-tabs v-model="queryParams.departmentType" type="card" @tab-click="handleClick">
                 <el-tab-pane label="平台公司回款跟踪" name="1"></el-tab-pane>
                 <el-tab-pane label="分部回款跟踪" name="2"></el-tab-pane>
             </el-tabs>
-            <div class="page-body-cont query-cont">
+            <div v-show="toggle" class="page-body-cont query-cont">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
                     <div class="query-col-input">
@@ -34,16 +34,19 @@
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="default" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
+            <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         </div>
         <div class="page-body-cont">
             <div class="page-table overdueTable">
                 <div class="util">单位：万元</div>
                 <hosJoyTable
                     ref="hosjoyTable"
+                    :amountResetTable="toggle"
+                    isSimpleTable collapseShow :localName="'backMoneyTrackTable::v2.4.0'"
                     border
                     stripe
                     :showPagination='!!backMoneyPagination.total'
@@ -72,6 +75,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            toggle: true,
             loading: false,
             selectAuth: {
                 regionObj: {
@@ -165,30 +169,39 @@ export default {
             this.onReset()
         },
         async onSearch () {
-            this.$refs.hosjoyTable.toggleTableHandler()
+            // this.$refs.hosjoyTable.toggleTableHandler()
             this.queryParamsTemp = {
                 ...this.queryParams
             }
             if (this.queryParamsTemp.departmentType === '2') {
                 backMoneyTrack[0].isHidden = true
+                backMoneyTrack[0].coderHidden = true
                 backMoneyTrack[1].isHidden = true
+                backMoneyTrack[1].coderHidden = true
             } else {
                 backMoneyTrack[0].isHidden = false
+                backMoneyTrack[0].coderHidden = false
                 backMoneyTrack[1].isHidden = false
+                backMoneyTrack[1].coderHidden = false
             }
             this.findBackMoneyTrackList(this.queryParamsTemp)
             await this.findBackMoneyTrackTotal(this.queryParamsTemp)
+            let noIgnore = true
             backMoneyTrack.forEach(value => {
                 if (value.children && value.children.length > 0) {
                     for (let key in this.backMoneyTotal) {
+                        noIgnore = String(this.backMoneyTotal[key]).indexOf('%') === -1
                         if (key === value.children[0].prop && this.backMoneyTotal[key] !== null) {
-                            value.children[0].label = String(filters.fundMoneyHaveSpot(this.backMoneyTotal[key]))
+                            if (noIgnore) {
+                                value.children[0].label = String(filters.fundMoneyHaveSpot(this.backMoneyTotal[key]))
+                            } else {
+                                value.children[0].label = String(this.backMoneyTotal[key])
+                            }
                         }
                     }
                 }
             })
             this.column = backMoneyTrack
-            this.$refs.hosjoyTable.toggleTableHandler()
         },
         getList (val) {
             this.queryParamsTemp = {
@@ -229,17 +242,24 @@ export default {
 <style lang="scss" scoped>
     .back-money-track {
         background: #ffffff;
-        padding: 60px 25px 0;
+        padding: 40px 15px 0;
         box-sizing: border-box;
     }
     .overdueTable {
         position: relative;
-        margin-top: 10px;
     }
     .util {
         font-size: 10px;
-        position: absolute;
-        top: -16px;
-        right: 0;
+        text-align: right;
+        line-height: 12px;
+        margin-bottom: 8px;
+    }
+    /deep/.el-tabs__header{
+        margin-bottom: 10px;
+    }
+    /deep/.el-tabs__item {
+        height: 32px;
+        line-height: 32px;
+        font-size: 13px;
     }
 </style>
