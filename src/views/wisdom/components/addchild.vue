@@ -237,6 +237,9 @@ export default {
                 ]
             })
         }
+    },
+    destroyed () {
+        this.myChart.clear()
     }
 }
 </script>

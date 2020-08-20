@@ -73,12 +73,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest">
+                        </h-button>
+                        <h-button type="primary" class="ml20" @click="onRest">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@
                     {{scope.data.row.received?'是':'否'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</el-button>
+                    <h-button  table plain @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</h-button>
                 </template>
             </basicTable>
         </div>
@@ -122,8 +122,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm" :loading=isloading>{{isloading?'提交中...':'分配'}}</el-button>
+                <h-button  @click="dialogVisible = false">取 消</h-button>
+                <h-button  type="primary" @click="submitForm" :loading=isloading>{{isloading?'提交中...':'分配'}}</h-button>
             </span>
         </el-dialog>
     </div>

@@ -1,6 +1,6 @@
 {
   "name": "boss",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -14,9 +14,10 @@
   },
   "dependencies": {
     "app-info-parser": "^0.3.5",
+    "bignumber.js": "^9.0.0",
     "echarts": "^4.2.1",
     "highcharts": "^7.2.1",
-    "hosjoy-ui": "^1.1.9",
+    "hosjoy-ui": "^2.0.0",
     "jwt-decode": "^2.2.0",
     "mathjs": "^7.0.1",
     "moment": "^2.24.0",
@@ -30,6 +31,9 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "@sentry/browser": "^5.20.1",
+    "@sentry/integrations": "^5.20.0",
+    "@sentry/webpack-plugin": "^1.12.0",
     "@vue/cli-plugin-babel": "^3.5.0",
     "@vue/cli-plugin-eslint": "^3.5.0",
     "@vue/cli-service": "^3.5.0",
@@ -42,6 +46,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "webpack-sentry-plugin": "^2.0.3"
   }
 }

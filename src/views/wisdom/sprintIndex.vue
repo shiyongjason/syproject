@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -21,15 +21,16 @@
                 </div>
                 <div class="query-cont-col">
                     <el-button type="primary" class="ml20" @click="btnQuery">查询</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出表格</el-button>
+                    <el-button type="default" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="default" class="ml20" @click="onShowImport" v-if="showImport">导入表格</el-button>
+                    <el-button type="default" class="ml20" @click="onExport">导出表格</el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :amountResetTable="toggle" :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">
-                <hosJoyTable ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
+                <hosJoyTable :amountResetTable="toggle" ref="hosjoyTable" border stripe :showPagination='!!page.total' :column="column" :data="tableData" align="center" :total="page.total" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" @pagination="getList">
                 </hosJoyTable>
             </div>
         </div>
@@ -76,6 +77,7 @@ export default {
     components: { hosJoyTable, HAutocomplete },
     data: function () {
         return {
+            toggle: true,
             uploadData: {
                 valueYear: ''
             },

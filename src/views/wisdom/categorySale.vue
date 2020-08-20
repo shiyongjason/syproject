@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
@@ -28,47 +28,51 @@
                     <el-date-picker v-model="queryParams.endTime" :editable="false" :clearable='false' :picker-options="pickerOptionsEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="选择结束时间" style="width: 180px">
                     </el-date-picker>
                 </div>
-            </div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">业务类型：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.businessType" clearable placeholder="全部">
-                            <el-option v-for="item in bustype" :key="item.value" :label="item.name" :value="item.value">
-                            </el-option>
-                        </el-select>
+                <div class="query-cont-row">
+                    <div class="query-cont-col">
+                        <div class="query-col-title">业务类型：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.businessType" clearable placeholder="全部">
+                                <el-option v-for="item in bustype" :key="item.value" :label="item.name" :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </div>
                     </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">品牌：</div>
-                    <div class="query-col-input">
-                        <HAutocomplete :selectArr="brandList" v-if="brandList" @back-event="brandListBackPlat" :placeholder="'全部'"></HAutocomplete>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">品牌：</div>
+                        <div class="query-col-input">
+                            <HAutocomplete :selectArr="brandList" :selectObj="selectAuth.brandList" v-if="brandList" @back-event="brandListBackPlat" :placeholder="'全部'"></HAutocomplete>
+                        </div>
                     </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">品类：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="queryParams.systemId" clearable placeholder="全部">
-                            <el-option v-for="item in sysList" :key="item.systemId" :label="item.systemName" :value="item.systemId">
-                            </el-option>
-                        </el-select>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">品类：</div>
+                        <div class="query-col-input">
+                            <el-select v-model="queryParams.systemId" clearable placeholder="全部">
+                                <el-option v-for="item in sysList" :key="item.systemId" :label="item.systemName" :value="item.systemId">
+                                </el-option>
+                            </el-select>
+                        </div>
                     </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">公司上线状态：</div>
-                    <div class="query-col-input">
-                        <el-checkbox-group v-model="onLineStatus">
-                            <el-checkbox label=1>上线</el-checkbox>
-                            <el-checkbox label=2>未上线</el-checkbox>
-                            <el-checkbox label=3>淘汰</el-checkbox>
-                        </el-checkbox-group>
+                    <div class="query-cont-col">
+                        <div class="query-col-title">公司上线状态：</div>
+                        <div class="query-col-input">
+                            <el-checkbox-group v-model="onLineStatus">
+                                <el-checkbox label=1>上线</el-checkbox>
+                                <el-checkbox label=2>未上线</el-checkbox>
+                                <el-checkbox label=3>淘汰</el-checkbox>
+                            </el-checkbox-group>
+                        </div>
+                        <el-button type="primary" class="ml20" @click="getPlatCategory({...queryParams, current: 1})">
+                            查询
+                        </el-button>
+                        <el-button type="default" class="ml20" @click="onReset">
+                            重置
+                        </el-button>
                     </div>
-                    <el-button type="primary" class="ml20" @click="getPlatCategory({...queryParams, current: 1})">
-                        查询
-                    </el-button>
                 </div>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
@@ -111,23 +115,24 @@ export default {
     components: { HAutocomplete },
     data: function () {
         return {
+            toggle: true,
             deptType: DEPT_TYPE,
             tableLabel: [
-                { label: '所属分部', prop: 'subsectionName', choosed: true },
-                { label: '城市', prop: 'cityName', choosed: true, linkAge: true },
-                { label: 'mis编码', prop: 'misCode', choosed: true, linkAge: true },
-                { label: '平台公司', prop: 'companyShortName', choosed: true, linkAge: true },
-                { label: '上线状态', prop: 'onLineStatus', choosed: true, linkAge: true },
-                { label: '业务类型', prop: 'businessType', choosed: true, queryParams: { businessTypeStatus: 1 } },
-                { label: '品类', prop: 'systemName', choosed: true, queryParams: { systemStatus: 1 } },
-                { label: '品牌', prop: 'brandName', choosed: true, queryParams: { brandStatus: 1 } },
-                { label: '销售收入（无税）', prop: 'saleGross', choosed: true },
-                { label: '销售占比', prop: 'saleRatio', choosed: true },
-                { label: '同期（销售收入）', prop: 'yearOverYearSale', choosed: true },
-                { label: '同比（销售收入）', prop: 'yearOnYearSale', choosed: true },
-                { label: '成本', prop: 'orderCost', choosed: true },
-                { label: '毛利', prop: 'grossProfit', choosed: true, formatters: 'money' },
-                { label: '毛利率', prop: 'grossProfitRate', choosed: true }
+                { label: '所属分部', prop: 'subsectionName', choosed: true, minWidth: 100 },
+                { label: '城市', prop: 'cityName', choosed: true, linkAge: true, width: 100 },
+                { label: 'mis编码', prop: 'misCode', choosed: true, linkAge: true, width: 80 },
+                { label: '平台公司', prop: 'companyShortName', choosed: true, linkAge: true, width: 100 },
+                { label: '上线状态', prop: 'onLineStatus', choosed: true, linkAge: true, width: 100 },
+                { label: '业务类型', prop: 'businessType', choosed: true, queryParams: { businessTypeStatus: 1 }, width: 100 },
+                { label: '品类', prop: 'systemName', choosed: true, queryParams: { systemStatus: 1 }, width: 100 },
+                { label: '品牌', prop: 'brandName', choosed: true, queryParams: { brandStatus: 1 }, width: 100 },
+                { label: '销售收入（无税）', prop: 'saleGross', choosed: true, width: 130 },
+                { label: '销售占比', prop: 'saleRatio', choosed: true, width: 100 },
+                { label: '同期（销售收入）', prop: 'yearOverYearSale', choosed: true, minWidth: 130 },
+                { label: '同比（销售收入）', prop: 'yearOnYearSale', choosed: true, minWidth: 130 },
+                { label: '成本', prop: 'orderCost', choosed: true, minWidth: 100 },
+                { label: '毛利', prop: 'grossProfit', choosed: true, formatters: 'money', minWidth: 100 },
+                { label: '毛利率', prop: 'grossProfitRate', choosed: true, minWidth: 100 }
             ],
             pickerOptionsStart: {
                 disabledDate: (time) => {
@@ -271,6 +276,26 @@ export default {
                 }
             })
             isFind && this.getPlatCategory(this.queryParams)
+        },
+        async onReset () {
+            this.queryParams = { ...this.queryParamsReset }
+            this.selectAuth = {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                brandList: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.onLineStatus = ['1']
+            this.getPlatCategory(this.queryParams)
+            await this.newBossAuth(['F', 'P'])
         }
     },
     async mounted () {
@@ -278,6 +303,7 @@ export default {
         await this.getPaltSys()
         await this.getPlatCategory(this.queryParams)
         await this.newBossAuth(['F', 'P'])
+        this.queryParamsReset = { ...this.queryParams }
     }
 }
 </script>

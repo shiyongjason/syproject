@@ -17,7 +17,6 @@ import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
 Vue.use(Router)
 
-
 const routerMapping = [
     {
         path: '/',
@@ -326,7 +325,7 @@ router.beforeEach(async (to, from, next) => {
         })
     }
     // TODO 获取B2b token 项目路径 hmall（重新获取token）
-    if (to.path.indexOf('b2b') > 0 || to.path.indexOf('paymentCentral') > 0 ) {
+    if (to.path.indexOf('b2b') > 0 || to.path.indexOf('paymentCentral') > 0) {
         // 登录token带到请求的头部中，用于校验登录状态
         const token = sessionStorage.getItem('tokenB2b')
         if (token) {

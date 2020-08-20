@@ -49,13 +49,15 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear}年责任状目标`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
                     prop: 'currentMonthCommitment',
                     label: `${targetYear}年${targetMonth}月责任状目标`,
-                    minWidth: '150',
+                    minWidth: '160',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -63,6 +65,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear - 1}年${targetMonth}月实际销售`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 },
                 {
@@ -70,6 +73,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                     label: `${targetYear}年${targetMonth}月预计销售`,
                     minWidth: '150',
                     displayAs: 'fundMoney',
+                    isTHNoTranslate: true,
                     align: 'right'
                 }
             ]
@@ -79,28 +83,29 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
             children: [
                 {
                     prop: 'loanBalance',
-                    label: '在贷余额',
-                    minWidth: '150',
+                    label: '在贷余额（含逾期金额）',
+                    minWidth: '160',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期余额',
-                    minWidth: '150',
+                    label: '逾期金额',
+                    minWidth: '100',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'hxjFundAmount',
                     label: '好享家注资占用额',
-                    minWidth: '150',
+                    minWidth: '120',
                     displayAs: 'fundMoney',
                     align: 'right'
                 },
                 {
                     prop: 'estimateRepayment',
                     label: `${targetYear}年${targetMonth}月预计还款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -108,6 +113,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'lastYearActualUse',
                     label: `${targetYear - 1}年${targetMonth}月实际用款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -115,6 +121,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 {
                     prop: 'preBorrowCurrentMonth',
                     label: `${targetYear}年${targetMonth}月预计用款`,
+                    isTHNoTranslate: true,
                     minWidth: '150',
                     displayAs: 'fundMoney',
                     align: 'right'
@@ -140,7 +147,7 @@ export const summarySheet = function (targetYear, targetMonth, isF, isHideCompan
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期余额/在贷余额）',
+                    label: '逾期率=（逾期金额/在贷余额）',
                     align: 'right',
                     className: 'wisdom-total-background',
                     minWidth: '200'
@@ -284,14 +291,14 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
             children: [
                 {
                     prop: 'loanBalance',
-                    label: '在贷余额',
-                    minWidth: '150',
+                    label: '在贷余额（含逾期金额）',
+                    minWidth: '170',
                     align: 'center',
                     children: [
                         {
                             prop: 'loanBalance',
                             displayAs: 'fundMoney',
-                            minWidth: '150',
+                            minWidth: '170',
                             align: 'center',
                             label: `-`
                         }
@@ -299,8 +306,8 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'totalOverdue',
-                    label: '逾期余额',
-                    minWidth: '150',
+                    label: '逾期金额',
+                    minWidth: '100',
                     align: 'center',
                     children: [
                         {
@@ -397,7 +404,7 @@ export const platformPlan = function (targetYear, targetMonth, fn) {
                 },
                 {
                     prop: 'overduePercent',
-                    label: '逾期率=（逾期余额/在贷余额）',
+                    label: '逾期率=（逾期金额/在贷余额）',
                     align: 'right',
                     children: [
                         {
@@ -652,6 +659,7 @@ export const planApproval = function (targetYear) {
             children: [
                 {
                     prop: 'regionName',
+                    width: '100',
                     label: `合计`
                 }
             ]
@@ -845,6 +853,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司编码',
             prop: 'misCode',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 100,
             fixed: true
         },
@@ -852,6 +861,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '公司名称',
             prop: 'companyName',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 120,
             fixed: true
         },
@@ -859,6 +869,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             label: '区域',
             prop: 'subRegionName',
             isHidden: tabCheck,
+            coderHidden: tabCheck,
             width: 150,
             fixed: true
         },
@@ -951,16 +962,30 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             ]
         },
         {
-            label: '累计资金支持效率比',
+            label: '本年累计资金支持效率比',
             prop: 'annualTotalEffectiveRate',
-            width: 150,
+            width: 160,
             children: [
                 {
                     label: '-',
-                    width: 150,
-                    isUseCommonRenderHeader: true,
+                    width: 160,
+                    // isUseCommonRenderHeader: true,
                     showOverflowTooltip: true,
                     prop: 'annualTotalEffectiveRate'
+                }
+            ]
+        },
+        {
+            label: '去年累计资金支持效率比',
+            prop: 'lastYearTotalEffectiveRate',
+            width: 160,
+            children: [
+                {
+                    label: '-',
+                    width: 160,
+                    // isUseCommonRenderHeader: true,
+                    showOverflowTooltip: true,
+                    prop: 'lastYearTotalEffectiveRate'
                 }
             ]
         },
@@ -1053,7 +1078,7 @@ export const planCreditLabel = function (tabCheck, hosAuthCheck) {
             ]
         },
         {
-            label: '剩余逾期',
+            label: '逾期合计',
             prop: 'totalRemainingOverdue',
             children: [
                 {

@@ -2,7 +2,7 @@
     <div class="hosjoy-table" ref="hosTable">
         <!-- 筛选 -->
         <div v-if="collapseShow" ref="collapseShow">
-            <div class="collapse" :class="collapse ? 'on' : ''">
+            <div :class="['collapse',collapse ? 'collapseW on' : '']">
                 <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse">
                 <!-- 以下代码能实现点击空白关闭筛选窗口，误删。 -->
@@ -18,7 +18,7 @@
         <!-- 大表哥 :summary-method="getSummary" :show-summary="showSummary"-->
         <!-- :height=" height || `calc(100vh - ${selfHeight}px)`" -->
         <!--  :max-height="computedHeight" -->
-        <el-table v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
+        <el-table @header-dragend="dragColumn" v-if="toggleTable" ref="hosjoyTable" v-bind="$attrs" v-on="$listeners" :data="data" :height=" height" :max-height="computedHeight" class="hosjoy-in-table" :span-method="this.merge ? this.mergeMethod : this.spanMethod" :row-class-name="tableRowClassName">
             <el-table-column v-if="isShowselection" type="selection" align="center" :selectable="selectable">
             </el-table-column>
             <el-table-column type="expand" v-if="expand" align="center">
@@ -27,7 +27,7 @@
                 </template>
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="(item, index) in getColumn()">
+            <template v-for="(item, index) in getColumn">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed && data.length > 0"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
@@ -41,8 +41,8 @@
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
-<!--            todo 测试那边提bug，一会发预发布-->
-<!--            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>-->
+            <!--            todo 测试那边提bug，一会发预发布-->
+            <!--            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>-->
         </el-table>
         <!-- 分页 -->
         <div class="pages">
@@ -53,6 +53,7 @@
 
 <script>
 import hosjoyColumn from './hosjoy-column'
+import { getTableTop } from '@/utils/getTableTop'
 
 export default {
     props: {
@@ -101,11 +102,22 @@ export default {
             required: false,
             type: String,
             default: 'TABLE::'
+        },
+        amountResetTable: { // 更改会重新渲染table高度
+            required: false,
+            type: Boolean,
+            default: false
+        },
+        isSimpleTable: { // 为了解决多级树 默认会选中子所有的，导致选择无限还是
+            required: false,
+            type: Boolean,
+            default: false
         }
     },
     components: {
         hosjoyColumn
     },
+    mixins: [getTableTop],
     data () {
         return {
             i: 0,
@@ -121,26 +133,16 @@ export default {
             defaultLabel: [],
             selectedColumn: [],
             columnRender: [],
-            emptyTxtLeft: ''
+            emptyTxtLeft: '',
+            getColumn: []
         }
     },
     created () {
         this.getMergeArr(this.data, this.merge)
     },
     computed: {
-        // fix表格无数据显示"暂无数据"占到个列表范围好大，改成那种放在一行里(见样式里面的.hosjoy-in-table)，现添加max-height来实现以前的需要滚动条的需求。
-        computedHeight () {
-            if (this.height) return 'unset'
-            if (this.data && this.data.length >= this.pageSize) {
-                // 获取页面可视区的高度-this.selfHeight， `calc(100vh - ${selfHeight}px)`
-                let h = document.documentElement.clientHeight - this.selfHeight
-                if (Math.floor(h) < 280) {
-                    h = 280// 最小高度
-                }
-                return `${Math.floor(h)}px` // fix windows浏览器max-height 不能有小数
-            } else {
-                return 'unset'
-            }
+        amountResetTableChange () {
+            return this.amountResetTable || Math.random()
         },
         dataLength () {
             if (this.data) {
@@ -173,6 +175,12 @@ export default {
                     id = value.label
                 }
                 if (id) {
+                    if (this.isSimpleTable) {
+                        return {
+                            id: id,
+                            label: value.label
+                        }
+                    }
                     return { // 只遍历了2级，如果展示的是三级，需要将第一个label设置空
                         id: id,
                         label: value.label,
@@ -202,6 +210,9 @@ export default {
         }
     },
     methods: {
+        dragColumn (newWidth, oldWidth, column) {
+            column.showOverflowTooltip = newWidth < column.minWidth
+        },
         onHanderCollapseClick () {
             this.collapse = !this.collapse
             if (JSON.parse(localStorage.getItem(this.userNameLog))) {
@@ -216,32 +227,6 @@ export default {
                 document.removeEventListener('click', this.onClickCollapse, false)
             }
         },
-        /* getSummary () {
-            // todo use: show-summary :summary=sums summary-merge='3'
-            if (!this.showSummary && this.summary.length > 0) return null
-            setTimeout(() => {
-                if (this.i > 0) return
-                let foot = document.querySelectorAll('.el-table__footer')
-                let copyFoot = foot[0].cloneNode(true)
-                let totalTd = copyFoot.querySelectorAll('tbody>tr>td')
-                totalTd[0].setAttribute('colspan', this.summaryMerge)
-                document.querySelector('.el-table__header-wrapper').appendChild(copyFoot)
-                // document.querySelector('.el-table__footer-wrapper').removeChild(foot[0])
-                if (foot[0]) foot[0].style.display = 'none'
-                if (foot[1]) foot[1].style.display = 'none'
-                let n = document.querySelectorAll('.el-table__footer')
-                this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + n[0].clientHeight
-                this.i++
-                this.doLayout()
-            }, 300)
-            return this.summary
-        }, */
-        getColumn () {
-            if (this.collapseShow) {
-                return this.columnRender
-            }
-            return this.column
-        },
         async updateLabel () {
             if (this.defaultLabel.length < 2) {
                 this.$message.warning('选中不能小于2个')
@@ -251,15 +236,17 @@ export default {
                 this.$nextTick(() => {
                     this.toggleTable = true
                 })
-                this.dealUpdateLabel(this.defaultLabel)
+                this.dealUpdateLabel()
                 this.collapse = false
             }
         },
         dealUpdateLabel (val) {
             this.columnRender.forEach(value => {
                 const showColumnLabel = JSON.parse(localStorage.getItem(this.userNameLog))
-                value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
-                if (value.children) {
+                if (!value.coderHidden) {
+                    value.isHidden = showColumnLabel.indexOf(value.prop || value.label) === -1
+                }
+                if (value.children && !this.isSimpleTable) {
                     let number = 0
                     let ID = ''
                     if (value.prop && value.label) {
@@ -280,10 +267,6 @@ export default {
             this.toggleTable = false
             this.$nextTick(() => {
                 this.toggleTable = true
-                // if (this.showSummary) {
-                //     this.i = 0
-                //     this.getSummary()
-                // }
             })
         },
         toggleTableHandler () {
@@ -317,7 +300,6 @@ export default {
         indexMethod (index) {
             return this.pageNum * (this.currentPage - 1) + index + 1
         },
-        //
         clearSelection () {
             this.$refs.hosjoyTable.clearSelection()
         },
@@ -387,7 +369,11 @@ export default {
             }
             arr.forEach(value => {
                 if (value.children) {
-                    this.collectDefaultId(value.children, true)
+                    if (this.isSimpleTable) { // 无子级树入口
+                        this.defaultLabel.push(value.id)
+                    } else {
+                        this.collectDefaultId(value.children, true)
+                    }
                 } else {
                     this.defaultLabel.push(value.id)
                 }
@@ -441,16 +427,18 @@ export default {
         },
         switchLabel: {
             handler () {
-                if (this.prevLocalName) {
-                    localStorage.removeItem(this.prevUserNameLog)
-                }
-                const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
-                if (isLoggedIn && isLoggedIn.length > 0) {
-                    this.defaultLabel = isLoggedIn
-                    this.$forceUpdate()
-                } else {
-                    this.collectDefaultId(this.switchLabel)
-                    localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                if (this.localName !== 'TABLE::') { // 修复如果没传localName 则不用存storage
+                    if (this.prevLocalName) {
+                        localStorage.removeItem(this.prevUserNameLog)
+                    }
+                    const isLoggedIn = JSON.parse(localStorage.getItem(this.userNameLog))
+                    if (isLoggedIn && isLoggedIn.length > 0) {
+                        this.defaultLabel = isLoggedIn
+                        this.$forceUpdate()
+                    } else {
+                        this.collectDefaultId(this.switchLabel)
+                        localStorage.setItem(this.userNameLog, JSON.stringify(this.defaultLabel))
+                    }
                 }
             },
             deep: true,
@@ -461,6 +449,13 @@ export default {
                 if (this.collapseShow) {
                     this.columnRender = this.deepCopy(val)
                     this.dealUpdateLabel(this.columnRender)
+                    this.$set(this, 'getColumn', this.columnRender)
+                } else {
+                    this.toggleTable = false
+                    this.$set(this, 'getColumn', val)
+                    this.$nextTick(() => {
+                        this.toggleTable = true
+                    })
                 }
             },
             deep: true,
@@ -469,12 +464,14 @@ export default {
     },
     mounted () {
         this.$nextTick(() => {
-            this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 80
-            if (this.data.length == 0) {
-                let left = this.$refs.hosTable.getBoundingClientRect().left
-                let windowsWidth = document.documentElement.clientWidth
-                let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
-                this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)
+            if (this.$refs.hosTable) {
+                this.selfHeight = this.$refs.hosTable.getBoundingClientRect().top + 40
+                if (this.data.length == 0) {
+                    let left = this.$refs.hosTable.getBoundingClientRect().left
+                    let windowsWidth = document.documentElement.clientWidth
+                    let tableWidth = windowsWidth - left// fix position: fixed是相对于窗口的，有可能表格左边有别的东西
+                    this.emptyTxtLeft = left + Math.ceil(tableWidth / 2)
+                }
             }
         })
     }
@@ -545,16 +542,20 @@ export default {
 /*    background: rgb(253, 233, 217);*/
 /*    font-weight: bold;*/
 /*}*/
+.collapseW {
+    width: 280px;
+}
 .collapse {
     position: absolute;
     box-sizing: border-box;
     padding: 10px 15px;
-    width: 280px;
+
     height: 50px;
-    right: 10px;
+    right: -10px;
     top: -10px;
     z-index: 2;
     cursor: pointer;
+
     img {
         float: right;
         width: 20px;
@@ -628,4 +629,27 @@ export default {
     transform: translateX(-50%);
     width: auto;
 }
+.hosjoy-table >>> .el-table--fluid-height .el-table__fixed {
+    bottom: 11px!important;
+}
+    /deep/.el-table .hidden-columns,/deep/.el-table td.is-hidden>*, /deep/.el-table th.is-hidden>*, /deep/.el-table--hidden{
+        visibility: visible;
+
+    }
+/deep/.el-table__fixed-right::before,  /deep/.el-table__fixed::before {
+    display: none;
+}
+/deep/.el-table .cell{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+}
+    /deep/ .el-table__fixed-body-wrapper{
+        padding-bottom: 4px;
+        box-sizing: border-box;
+    }
+    /deep/.el-table .cell.el-tooltip{
+        min-width: 10px;
+    }
 </style>

@@ -18,18 +18,13 @@
                 <div class="query-col-title">问题类型：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.type">
-                        <el-option label="全部" value="全部"></el-option>
-                        <el-option label="设备配网" value="设备配网"></el-option>
-                        <el-option label="设备离线" value="设备离线"></el-option>
-                        <el-option label="设备控制" value="设备控制"></el-option>
-                        <el-option label="场景相关" value="场景相关"></el-option>
-                        <el-option label="其他" value="其他"></el-option>
+                        <el-option v-for="(value, index) in typeArr" :key="index" :label="value.dataValue" :value="value.dataValue"></el-option>
                     </el-select>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="findUserFeedbackList(queryParams)">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="findUserFeedbackList(queryParams)">查询</el-button>
                 </div>
             </div>
         </div>
@@ -41,12 +36,6 @@
                 </template>
             </basicTable>
         </div>
-<!--        <el-dialog-->
-<!--            title="问题图片"-->
-<!--            :visible.sync="dialogVisible"-->
-<!--            width="30%">-->
-
-<!--        </el-dialog>-->
         <div v-if="dialogVisible" class="dialog">
             <div class="container">
                 <div class="title">问题图片</div>
@@ -54,8 +43,7 @@
                     <i class="el-icon-close" @click="dialogVisible = false"></i>
                 </div>
                 <div class="image-container">
-                    <el-image v-for="(item,index) in previewList" :src="item" :key="item" @click="makeIndex(index,item)"
-                              :preview-src-list="previewListTemp" class="wrapper-image">
+                    <el-image v-for="(item,index) in previewList" :src="item" :key="item" @click="makeIndex(index,item)" :preview-src-list="previewListTemp" class="wrapper-image">
                     </el-image>
                 </div>
             </div>
@@ -65,6 +53,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { getDictionary } from '../api/index'
 
 export default {
     name: 'userFeedback',
@@ -83,6 +72,7 @@ export default {
                 { label: '反馈时间', prop: 'date' },
                 { label: '联系方式', prop: 'contacts' }
             ],
+            typeArr: [],
             tableData: [],
             pagination: {},
             dialogVisible: false,
@@ -102,7 +92,6 @@ export default {
                     if (endDateVal) {
                         return time.getTime() >= new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -113,12 +102,22 @@ export default {
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
     },
+    mounted () {
+        this.findUserFeedbackList(this.queryParams)
+        this.getDictionary()
+    },
     methods: {
+        async getDictionary () {
+            const { data } = await getDictionary({
+                item: 'feedback_type'
+            })
+            this.typeArr = data.data
+            this.typeArr.unshift({ dataValue: '全部' })
+        },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.findUserFeedbackList(this.queryParams)
@@ -140,66 +139,63 @@ export default {
             this.previewListTemp.splice(index, 1)
             this.previewListTemp.unshift(item)
         }
-    },
-    mounted () {
-        this.findUserFeedbackList(this.queryParams)
     }
 }
 </script>
 
 <style scoped lang="scss">
-    .spanflex {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 10px;
-        span {
-            flex: 1;
-        }
+.spanflex {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    span {
+        flex: 1;
     }
-    .wrapper-image {
-        width: 100px;
-        height: 100px;
-        margin-top: 20px;
-        margin-right: 20px;
-        /deep/.el-image-viewer__wrapper{
-            width: 100%;
-            height: 100%;
-        }
-    }
-    /deep/.el-icon-circle-close{
-        color: #ffffff;
-    }
-    .dialog {
-        position: fixed;
-        top: 0;
-        left: 0;
+}
+.wrapper-image {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+    margin-right: 20px;
+    /deep/.el-image-viewer__wrapper {
         width: 100%;
         height: 100%;
-        z-index: 999;
-        background: rgba(0,0,0,.2);
-        padding-top: 30vh;
-        .container {
-            margin: auto;
-            width: 340px;
-            padding: 20px;
-            background: #ffffff;
-            position: relative;
-        }
-        .image-container {
-            display: flex;
-            justify-content: flex-start;
-            flex-wrap: wrap;
-            margin-right: -20px;
-        }
-        .close-icon{
-            position: absolute;
-            right: 20px;
-            top: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            width: 20px;
-            height: 20px;
-            color: #999999;
-        }
     }
+}
+/deep/.el-icon-circle-close {
+    color: #ffffff;
+}
+.dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background: rgba(0, 0, 0, 0.2);
+    padding-top: 30vh;
+    .container {
+        margin: auto;
+        width: 340px;
+        padding: 20px;
+        background: #ffffff;
+        position: relative;
+    }
+    .image-container {
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        margin-right: -20px;
+    }
+    .close-icon {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        cursor: pointer;
+        font-size: 24px;
+        width: 20px;
+        height: 20px;
+        color: #999999;
+    }
+}
 </style>

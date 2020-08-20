@@ -47,14 +47,15 @@ export const DEVICE_LIST = [
 
 export const UPSTREAM_LIST = [{ key: 1, value: '厂商' }, { key: 2, value: '代理商' }, { key: 3, value: '经销商' }]
 
-export const STATUS_TYPE = [
-    { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 4, value: '立项' },
-    { key: 5, value: '合作关闭' }, { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }, { key: 9, value: '合作完成' }
-]
+// export const STATUS_TYPE = [
+//     { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 4, value: '立项' },
+//     { key: 5, value: '合作关闭' }, { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }, { key: 9, value: '合作完成' }
+// ]
 
 export const NEW_STATUS_TYPE = [
-    { key: 2, value: '初审' }, { key: 3, value: '资料收集中' }, { key: 12, value: '资料待审核' }, { key: 4, value: '待立项' }, { key: 11, value: '待终审' },
-    { key: 6, value: '待签约' }, { key: 7, value: '待放款' }, { key: 8, value: '贷中' }
+    { key: 2, value: '初审', num: 0 }, { key: 3, value: '资料收集中', num: 1 }, { key: 12, value: '资料待审核', num: 2 }, { key: 4, value: '待立项', num: 3 }, { key: 11, value: '待终审', num: 4 },
+    { key: 6, value: '待签约', num: 5 }, { key: 7, value: '待放款', num: 6 }, { key: 8, value: '贷中', num: 7 }, { key: 9, value: '合作完成', num: 8 },
+    { key: 5, value: '合作完成', num: 8 }, { key: 10, value: '信息待完善', num: 1 }
 ]
 
 export const BUS_TYPE_LIST = [
@@ -114,4 +115,13 @@ export const MATELIST = [
     { key: 2, value: '已提交' },
     { key: 3, value: '已通过' },
     { key: 4, value: '已打回' }
+]
+
+// 类型
+
+// 是否注册
+export const REGISTEROR = [
+    { key: '', value: '全部' },
+    { key: true, value: '是' },
+    { key: false, value: '否' }
 ]

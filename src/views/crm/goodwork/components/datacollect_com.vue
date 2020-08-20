@@ -61,7 +61,7 @@
                 </template>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="recordsVisible = false">取 消</el-button>
+                <h-button @click="recordsVisible = false">取 消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="onCloseCol" :modal=false>
@@ -82,8 +82,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseCol">取 消</el-button>
-                <el-button type="primary" @click="onUpdatecolApprove">确 定</el-button>
+                <h-button @click="onCloseCol">取 消</h-button>
+                <h-button type="primary" @click="onUpdatecolApprove">确 定</h-button>
             </span>
         </el-dialog>
     </div>

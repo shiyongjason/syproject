@@ -103,15 +103,15 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button type="primary" class="ml20" @click="onRest()">
                             重置
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
+                        </h-button>
+                        <h-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
                             导出
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,7 @@
             </basicTable> -->
             <!-- table -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' localName="V3.*">
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
@@ -146,9 +146,9 @@
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</el-button>
-                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <h-button table plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
+                    <h-button table plain @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
+                    <h-button table v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -414,7 +414,8 @@ export default {
                 return res
             }, {})
             if (key == 3) {
-                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
+                // let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
+                let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
             } else {
                 return map[key]

@@ -135,8 +135,20 @@ export default [
 
                 },
                 component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
-            }
+            },
+            {
+                path: 'wechatList',
+                name: 'wechatList',
+                meta: {
+                    title: '企业微信客户管理',
+                    tagName: '企业微信客户管理',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/wechatList'
 
+                },
+                component: () => import('@/views/crm/wechatcustomer/list.vue')
+            }
         ]
     }
 

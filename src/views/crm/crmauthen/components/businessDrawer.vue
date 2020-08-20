@@ -94,9 +94,9 @@
                 </el-form>
                 <div class="drawer-footer">
                     <div class="drawer-button">
-                        <el-button type="info" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</el-button>
-                        <el-button @click="cancelForm">取 消</el-button>
-                        <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                        <h-button  type="assist" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</h-button>
+                        <h-button   @click="cancelForm">取 消</h-button>
+                        <h-button  type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                     </div>
                 </div>
             </div>
@@ -121,8 +121,8 @@
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
+                <h-button  @click="dialogVisible = false">取 消</h-button>
+                <h-button  type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</h-button>
             </span>
         </el-dialog>
     </div>

@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-cont-title">分部：</div>
@@ -8,7 +8,7 @@
                         <HAutocomplete :selectArr="branchList" @back-event="backPlat($event,'F')" placeholder="请输入分部名称" :selectObj="selectAuth.branchObj" :maxlength='30' :canDoBlurMethos='true'></HAutocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col amount">
                     <div class="flex-wrap-title">公司简称：</div>
                     <div class="flex-wrap-cont">
                         <HAutocomplete :selectArr="platformData" @back-event="backPlat($event,'P')" :placeholder="'选择公司简称'" :selectObj="selectAuth.platformObj" :maxlength='30' :canDoBlurMethos='true' />
@@ -17,7 +17,7 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">所在城市：</div>
                     <div class="flex-wrap-cont">
-                        <HAutocomplete :placeholder="'选择城市'" @back-event="backFindcitycode" :selectArr="cityList" v-if="cityList" />
+                        <HAutocomplete :placeholder="'选择城市'" @back-event="backFindcitycode" :selectArr="cityList" v-if="cityList" :select-obj="selectAuth.cityList"/>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -48,16 +48,20 @@
                         <el-date-picker type="year" :editable=false :clearable=false placeholder="选择年份" format="yyyy" value-format="yyyy" v-model="searchParams.targetDate">
                         </el-date-picker>
                     </div>
-                    <el-button type="primary" @click="onFindTableList({...searchParams, pageNumber: 1})">搜索
+                    <el-button type="primary" @click="onFindTableList({...searchParams, pageNumber: 1})">
+                        查询
                     </el-button>
-                    <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="onExport()">导出
+                    <el-button type="default" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button v-if="hosAuthCheck(exportAuth)" type="default" @click="onExport()">导出
                     </el-button>
                 </div>
             </div>
             <div class="query-cont-col">
                 <el-upload class="upload-demo" v-loading='uploadLoading' :show-file-list="false" :action="interfaceUrl + 'rms/api/company/target/import'" :data="{createUser: userInfo.employeeName}" :headers='headersData' :on-success="isSuccess" :on-error="isError" auto-upload
-                    :on-progress="uploadProcess">
-                    <el-button type="primary" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
+                           :on-progress="uploadProcess">
+                    <el-button type="default" v-if="hosAuthCheck(importAuth)" style="margin-left:0">
                         批量导入
                     </el-button>
                 </el-upload>
@@ -66,11 +70,14 @@
                 </a>
             </div>
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
+
         <div class="page-body-cont">
-            <div class="page-table">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
+            <div class="page-table" ref="hosTable">
+                <basicTable :max-height="computedHeight" :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationData" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 @field-change="onFieldChange">
                     <template slot="incremental" slot-scope="scope">
                         <span v-if="scope.data.row.onlineTime">{{scope.data.row.incremental == 1?'增量':'存量'}}</span>
+                        <span v-else>-</span>
                     </template>
                     <template slot="updateTime" slot-scope="scope">
                         {{scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
@@ -84,12 +91,13 @@
 import { findTableList, getCompany, getCityList, exportPlatTarget, findPlatformTargetPlat } from './api/index.js'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_PLATFORM_TARGET_EXPORT, AUTH_WIXDOM_PLATFORM_TARGET_BULK_IMPORT, AUTH_WIXDOM_PLATFORM_TARGET_DOWN_TEMPLATE } from '@/utils/auth_const'
 export default {
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
             uploadLoading: false,
@@ -101,17 +109,17 @@ export default {
                 'Authorization': 'Bearer ' + sessionStorage.getItem('token')
             },
             tableLabel: [
-                { label: '公司简称', prop: 'companyShortName', choosed: true },
-                { label: '公司编码', prop: 'misCode', choosed: true },
-                { label: '分部', prop: 'subsectionName', choosed: true },
-                { label: '所在城市', prop: 'cityName', choosed: true },
-                { label: '上线时间', prop: 'onlineTime', choosed: true },
-                { label: '增量/存量', prop: 'incremental', choosed: true },
-                { label: '目标年份', prop: 'targetDate', choosed: true },
-                { label: '履约目标/万', prop: 'performanceTarget', choosed: true, formatters: 'money' },
-                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true, formatters: 'money' },
-                { label: '最近操作人', prop: 'updateUser', choosed: true },
-                { label: '最近操作时间', prop: 'updateTime', choosed: true }
+                { label: '公司简称', prop: 'companyShortName', choosed: true, minWidth: 100 },
+                { label: '公司编码', prop: 'misCode', choosed: true, width: 100 },
+                { label: '分部', prop: 'subsectionName', choosed: true, width: 100 },
+                { label: '所在城市', prop: 'cityName', choosed: true, width: 100 },
+                { label: '上线时间', prop: 'onlineTime', choosed: true, minWidth: 100 },
+                { label: '增量/存量', prop: 'incremental', choosed: true, width: 100 },
+                { label: '目标年份', prop: 'targetDate', choosed: true, width: 100 },
+                { label: '履约目标/万', prop: 'performanceTarget', choosed: true, formatters: 'money', minWidth: 100 },
+                { label: '冲刺目标/万', prop: 'sprintTarget', choosed: true, formatters: 'money', minWidth: 100 },
+                { label: '最近操作人', prop: 'updateUser', choosed: true, minWidth: 100 },
+                { label: '最近操作时间', prop: 'updateTime', choosed: true, minWidth: 140 }
             ],
             incrementalList: [{ key: '', value: '全部' }, { key: 1, value: '增量' }, { key: 0, value: '存量' }],
             searchParams: {
@@ -163,9 +171,14 @@ export default {
                 platformObj: {
                     selectCode: '',
                     selectName: ''
+                },
+                cityList: {
+                    selectCode: '',
+                    selectName: ''
                 }
             },
-            platformData: []
+            platformData: [],
+            toggle: true
         }
     },
     components: {
@@ -188,6 +201,8 @@ export default {
         this.getCityList()
         !this.userInfo.deptType && this.findPlatformTargetPlat()
         await this.newBossAuth(['F'])
+        this.searchParamsReset = { ...this.searchParams }
+        this.countHeight()
     },
     methods: {
         uploadProcess () {
@@ -303,6 +318,25 @@ export default {
                 selectCode: '',
                 selectName: ''
             }
+        },
+        onReset () {
+            this.searchParams = { ...this.searchParamsReset }
+            this.selectAuth = {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                cityList: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.onFindTableList(this.searchParams)
+            this.newBossAuth(['F'])
         }
     }
 }
