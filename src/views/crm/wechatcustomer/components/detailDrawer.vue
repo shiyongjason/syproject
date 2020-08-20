@@ -89,20 +89,22 @@ export default {
                 maxCreateTime: '',
                 minCreateTime: '',
                 pageNumber: 1,
-                pageSize: 5
+                pageSize: 5,
+                field: '',
+                sort: 'desc'
             },
             tableLabel: [
 
             ],
             tableDepart: [{ label: '分部', prop: 'deptName' },
-                { label: '企业微信客户数', prop: 'memberNum' },
-                { label: '注册用户数', prop: 'registerMemberNum' },
-                { label: '注册转化率', prop: 'conversionRate' }],
+                { label: '企业微信客户数', prop: 'memberNum', sortable: 'custom' },
+                { label: '注册用户数', prop: 'registerMemberNum', sortable: 'custom' },
+                { label: '注册转化率', prop: 'conversionRate', sortable: 'custom' }],
             tableUser: [
                 { label: '员工', prop: 'psnname' },
-                { label: '企业微信客户数', prop: 'memberNum' },
-                { label: '注册用户数', prop: 'registerMemberNum' },
-                { label: '注册转化率', prop: 'conversionRate' }
+                { label: '企业微信客户数', prop: 'memberNum', sortable: 'custom' },
+                { label: '注册用户数', prop: 'registerMemberNum', sortable: 'custom' },
+                { label: '注册转化率', prop: 'conversionRate', sortable: 'custom' }
             ],
             pagination: {},
             tableData: [],
@@ -235,7 +237,17 @@ export default {
             this.onFindallPage()
         },
         sortChange (e) {
-
+            if (e.prop == 'memberNum') {
+                this.modelParams.field = 'memberNum'
+                this.modelParams.sort = e.order === 'ascending' ? 'asc' : 'desc '
+            } else if (e.prop == 'registerMemberNum') {
+                this.modelParams.field = 'registerMemberNum'
+                this.modelParams.sort = e.order === 'ascending' ? 'asc' : 'desc '
+            } else if (e.prop == 'conversionRate') {
+                this.modelParams.field = 'conversionRate'
+                this.modelParams.sort = e.order === 'ascending' ? 'asc' : 'desc '
+            }
+            this.onFindallPage()
         }
     },
     mounted () {

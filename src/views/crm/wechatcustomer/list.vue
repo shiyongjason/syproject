@@ -103,7 +103,9 @@ export default {
                 psncode: '',
                 psnname: '',
                 register: '',
-                type: ''
+                type: '',
+                field: 'create_time',
+                sort: 'desc'
             },
             tableLabel: [
                 { label: '姓名', prop: 'name', width: '150', showOverflowTooltip: true },
@@ -202,8 +204,9 @@ export default {
             console.log('e: ', e)
             if (e.prop == 'createTime') {
                 // this.queryParams.field = 'predict_loan_amount'
-                // this.queryParams.isAsc = e.order === 'ascending'
+                this.queryParams.sort = e.order === 'ascending' ? 'asc' : 'desc '
             }
+            this.searchList()
         }
     }
 }
