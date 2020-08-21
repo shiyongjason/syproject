@@ -56,7 +56,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type='primary' @click="searchList">查询</h-button>
+                        <h-button type='primary' @click="searchList(1)">查询</h-button>
                         <h-button type='primary' @click="onRest">重置</h-button>
                         <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
                     </div>
@@ -176,9 +176,11 @@ export default {
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
-            this.searchList()
+            this.searchList(1)
         },
-        async searchList () {
+        async searchList (val) {
+            console.log(val)
+            if (val == 1) { this.queryParams.pageNumber = val }
             await this.findwxMemberpage(this.queryParams)
             this.tableData = this.wxMemberpage.records
             this.paginationInfo = {
