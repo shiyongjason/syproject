@@ -49,10 +49,7 @@ export default {
     props: {
         form: {
             type: Object,
-            default: () => ({
-                specifications: [],
-                reqDetailList: [{content: ''}]
-            })
+            default: () => ({})
         },
         pictureContainer: {
             type: Array,
