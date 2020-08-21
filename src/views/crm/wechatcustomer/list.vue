@@ -112,7 +112,7 @@ export default {
                 { label: '类型', prop: 'type', width: '150', showOverflowTooltip: true, dicData: [{ value: 1, label: '微信' }, { value: 2, label: '企业微信' }] },
                 { label: '性别', prop: 'gender', width: '150', showOverflowTooltip: true, dicData: [{ value: 1, label: '男' }, { value: 2, label: '女' }] },
                 { label: '是否注册', prop: 'register', width: '150', showOverflowTooltip: true, dicData: [{ value: true, label: '是' }, { value: false, label: '否' }] },
-                { label: '注册账号', prop: 'psnMobile', width: '180', showOverflowTooltip: true },
+                { label: '注册账号', prop: 'mobile', width: '180', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '180', showOverflowTooltip: true },
                 { label: '添加人', prop: 'psnname', width: '120', showOverflowTooltip: true },
                 { label: '添加时间', prop: 'createTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
