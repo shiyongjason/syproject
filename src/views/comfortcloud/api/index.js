@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { iotUrl } from '@/api/config'
+import qs from 'qs'
 
 // 家庭概况
 export function findHomeGeneralSituation (params) {
@@ -292,4 +293,75 @@ export function getDeviceFloorHeartDetail (params) {
 // 设备统计 智能温控阀
 export function getDeviceTempCtlValveDetail (params) {
     return axios.get(iotUrl + `/api/device/statistics/home/temp-ctl-valve/details`, { params })
+}
+// 出库管理分页
+export function getOutboundList (params) {
+    return axios.get(iotUrl + `/api/outbound`, { params })
+}
+// 删除出库管理
+export function deleteOutboundList (params) {
+    return axios.delete(iotUrl + `/api/outbound`, { params })
+}
+// 出库管理导出
+export function downloadOutboundList (params) {
+    axios.defaults.responseType = 'blob'
+    axios.get(iotUrl + `/api/outbound/export`, { params }).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '出库管理.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 闪屏页页面分页查询
+export function getSplashScreenList (params) {
+    return axios.get(iotUrl + `/api/splash-screen`, { params })
+}
+// 闪屏删除
+export function deleteSplashScreen (params) {
+    return axios.delete(iotUrl + `/api/splash-screen`, { params })
+}
+// 设置生效失效状态
+export function setSplashScreenStatus (params) {
+    return axios.put(iotUrl + `/api/splash-screen/status?${qs.stringify(params)}`)
+}
+// 新增闪屏页
+export function createSplashScreen (params) {
+    return axios.post(iotUrl + `/api/splash-screen`, params)
+}
+// 编辑闪屏页
+export function updateSplashScreen (params) {
+    return axios.put(iotUrl + `/api/splash-screen`, params)
+}
+// 查询所有活动
+export function getAllActivity (params) {
+    return axios.get(iotUrl + `/api/activity-center/all`, { params })
+}
+// 闪屏详情
+export function getSplashScreenDetail (id) {
+    return axios.get(iotUrl + `/api/splash-screen/detail/${id}`)
+}
+// 获取呼叫记录
+export function getCustomerService (params) {
+    return axios.get(iotUrl + `/api/customer-service`, { params })
+}
+// 根据homeId获取家庭概况
+export function getHomeDetail (params) {
+    return axios.get(iotUrl + `/api/home-manage/${params}`)
+}
+// 根据item查询字典
+export function getDictionary (params) {
+    return axios.get(iotUrl + `/uc/dictionary/search-by-item`, { params })
 }

@@ -1,6 +1,6 @@
 <template>
-    <div class="tags-wrapper page-body amountImport">
-        <div class="page-body-cont query-cont">
+    <div class="tags-wrapper page-body amountImport amount">
+        <div v-show="toggle"  class="page-body-cont query-cont">
             <div class="query-cont-col" v-if="region">
                 <div class="query-col-title">大区：</div>
                 <div class="query-col-input">
@@ -112,16 +112,17 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onSearch">搜索</el-button>
-                </div>
-                <div class="query-col-title" v-if="hosAuthCheck(account_export)">
-                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                    <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                 </div>
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                    <el-button type="default" class="ml20" @click="onReset">重置</el-button>
                 </div>
-            </div><br>
+                <div class="query-col-title" v-if="hosAuthCheck(account_export)">
+                    <el-button type="default" class="ml20" @click="onExport">导出</el-button>
+                </div>
+            </div>
         </div>
+        <searchBarOpenAndClose :amountResetTable="toggle" :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <el-tabs v-model="accountType" type="card" @tab-click="handleClick(1)">
                 <el-tab-pane v-if="tabAuth('台账汇总表')" label="资金支持余额汇总表" name="0"></el-tab-pane>
@@ -147,7 +148,7 @@
                 <el-button v-if="accountType == '2' && hosAuthCheck(addExposureData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
                 <el-button v-if="accountType == '3' && hosAuthCheck(addPointscreditData)" type="primary" @click="onLinddialog">{{accountName}}</el-button>
             </div>
-            <complexTable ref="complexTable" v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
+            <complexTable :amountResetTable="toggle" ref="complexTable" v-show="!hasNoneAuth" :tableData='tableData' :pagination='pagination' :productType='productType' :source='accountType' @getList='getList' />
         </div>
     </div>
 </template>
@@ -181,6 +182,7 @@ export default {
     },
     data () {
         return {
+            toggle: true,
             accountType: '0', // 1：流贷 2：敞口 3：分授信 4：还款明细表，0:汇总表
             productType: '1', // 1：好信用 2：供应链 3：好橙工
             interfaceUrl: interfaceUrl,

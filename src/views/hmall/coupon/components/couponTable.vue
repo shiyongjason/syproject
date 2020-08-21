@@ -15,6 +15,13 @@
             </el-table-column>
             <el-table-column
                 align="center"
+                label="是否可叠加">
+                <template slot-scope="scope">
+                    {{scope.row.stackable ? '是' : '否'}}
+                </template>
+            </el-table-column>
+            <el-table-column
+                align="center"
                 label="优惠券类型">
                 <!--优惠券类型(1,满减 2,无门槛)-->
                 <template slot-scope="scope">
@@ -97,7 +104,7 @@
                 :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="650px" center
+        <el-dialog :title="dialogParams.title" :visible.sync="dialogParams.show" width="680px" center
                    :close-on-click-modal="false">
             <el-form class="base" :inline="true">
                 <div>
@@ -137,6 +144,9 @@
                     </el-form-item>
                     <el-form-item label="有效时间：">
                         {{couponDetails.effectiveStartDate}} - {{ couponDetails.effectiveEndDate }}
+                    </el-form-item>
+                    <el-form-item label="是否可叠加：">
+                        <span v-text="couponDetails.stackable ? '是' : '否'"></span>
                     </el-form-item>
                     <el-form-item label="活动规则：">
                         {{couponDetails.rule}}

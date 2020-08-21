@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="branch">
                     <div class="query-col-title">分部：</div>
@@ -34,15 +34,21 @@
                     </div>
                 </div>
                 <div class="query-cont-col pl20">
-                    <el-button type="primary" @click="findCompanyList({...searchParams, pageNumber: 1})">搜索
+                    <el-button type="primary" @click="findCompanyList({...searchParams, pageNumber: 1})">
+                        查询
                     </el-button>
-                    <el-button v-if="hosAuthCheck(exportAuth)" type="primary" @click="exportTable()">导出
+                    <el-button type="default" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button v-if="hosAuthCheck(exportAuth)" type="default" @click="exportTable()">
+                        导出
                     </el-button>
                 </div>
             </div>
         </div>
-        <div class="page-body-cont">
-            <platCompanyTable ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
+        <div class="page-body-cont" ref="hosTable">
+            <platCompanyTable :computedHeight="computedHeight" ref="baseTable" :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" />
         </div>
     </div>
 </template>
@@ -51,13 +57,14 @@ import { findCompanyList, findPaltList, findProvinceAndCity } from './api/index.
 import platCompanyTable from './components/platCompanyTable'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { departmentAuth } from '@/mixins/userAuth'
+import { getOldTableTop } from '@/utils/getTableTop'
 import { mapState } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { DEPT_TYPE } from './store/const'
 import { AUTH_WIXDOM_BASIC_INFO_EXPORT } from '@/utils/auth_const'
 
 export default {
-    mixins: [departmentAuth],
+    mixins: [departmentAuth, getOldTableTop],
     data () {
         return {
             deptType: DEPT_TYPE,
@@ -95,7 +102,8 @@ export default {
                     keyValue: 'misCode'
                 }
             },
-            exportAuth: AUTH_WIXDOM_BASIC_INFO_EXPORT
+            exportAuth: AUTH_WIXDOM_BASIC_INFO_EXPORT,
+            toggle: true
         }
     },
     components: {
@@ -113,6 +121,8 @@ export default {
         this.provinceDataList = await this.findProvinceAndCity(0)
         this.findCompanyList(this.searchParams)
         this.newBossAuth(['F', 'P'])
+        this.searchParamsReset = { ...this.searchParams }
+        this.countHeight()
     },
     watch: {
         async 'searchParams.provinceCode' (newV, oldV) {
@@ -126,6 +136,21 @@ export default {
         }
     },
     methods: {
+        onReset () {
+            this.searchParams = { ...this.searchParamsReset }
+            this.selectAuth = {
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                platformObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.newBossAuth(['F', 'P'])
+            this.findCompanyList({ ...this.searchParams, pageNumber: 1 })
+        },
         async onCityChange () {
             this.cityList = await this.findProvinceAndCity(this.searchParams.provinceCode)
         },

@@ -1,6 +1,6 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body amount">
+        <div v-show="toggle" class="page-body-cont query-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col" v-if="region">
                     <div class="query-col-title">大区：</div>
@@ -24,24 +24,27 @@
                     <el-button type="primary" class="ml20" @click="onSearch()">
                         查询
                     </el-button>
-                    <el-button type="primary" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="onExport()">
+                    <el-button type="default" class="ml20" @click="onReset">
+                        重置
+                    </el-button>
+                    <el-button type="default" v-if="hosAuthCheck(exportAuth)" class="ml20" @click="onExport()">
                         导出
                     </el-button>
                 </div>
-            </div>
-            <div class="page-wrap flex-wrap-col">
-                <div class="query-cont-row">
-                    <div class="query-cont-col">
-                        <div class="query-col-input">
-                            <el-radio v-model="queryParams.targetStatus" label="1" name="target" @change="onChoose">保底目标</el-radio>
-                            <el-radio v-model="queryParams.targetStatus" label="2" name="target" @change="onChoose">平衡目标</el-radio>
-                            <el-radio v-model="queryParams.targetStatus" label="3" name="target" @change="onChoose">冲刺目标</el-radio>
+                <div class="page-wrap flex-wrap-col">
+                    <div class="query-cont-row">
+                        <div class="query-cont-col">
+                            <div class="query-col-input">
+                                <el-radio v-model="queryParams.targetStatus" label="1" name="target" @change="onChoose">保底目标</el-radio>
+                                <el-radio v-model="queryParams.targetStatus" label="2" name="target" @change="onChoose">平衡目标</el-radio>
+                                <el-radio v-model="queryParams.targetStatus" label="3" name="target" @change="onChoose">冲刺目标</el-radio>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
+        <searchBarOpenAndClose :status="toggle" @toggle="toggle = !toggle"></searchBarOpenAndClose>
         <div class="page-body-cont">
             <div class="page-table">
                 <branchSaleTable :tableData="tableData" :paginationData="paginationData" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></branchSaleTable>
@@ -105,7 +108,8 @@ export default {
                     selectCode: '',
                     selectName: ''
                 }
-            }
+            },
+            toggle: true
         }
     },
     computed: {
@@ -166,11 +170,27 @@ export default {
                 obj[totalKye] = res[1].data.data[key]
             })
             this.tableData.unshift(obj)
+        },
+        async onReset () {
+            this.queryParams = { ...this.queryParamsReset }
+            this.selectAuth = {
+                regionObj: {
+                    selectCode: '',
+                    selectName: ''
+                },
+                branchObj: {
+                    selectCode: '',
+                    selectName: ''
+                }
+            }
+            this.onSearch()
+            await this.newBossAuth(['D', 'F'])
         }
     },
     async mounted () {
         await this.onSearch()
         await this.newBossAuth(['D', 'F'])
+        this.queryParamsReset = { ...this.queryParams }
     }
 }
 </script>

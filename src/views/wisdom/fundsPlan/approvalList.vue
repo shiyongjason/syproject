@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body approval">
+    <div class="page-body approval amount">
         <div>
             <el-tabs v-model="params.processType" type="card" @tab-click="handleClick">
                 <el-tab-pane label="我的待办" name="0"></el-tab-pane>
@@ -27,9 +27,9 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch()">
-                            搜索
+                            查询
                         </el-button>
-                        <el-button type="primary" class="ml20" @click="onReset()">
+                        <el-button type="default" class="ml20" @click="onReset()">
                             重置
                         </el-button>
                     </div>
@@ -126,6 +126,7 @@ export default {
             this.selectObj.branch = { ...obj }
             this.selectObj.platformData = { ...obj }
             this.platComList = []
+            this.newBossAuth(['F'])
             this.onSearch()
         },
         onCurrentChange (val) {
@@ -200,7 +201,7 @@ export default {
 <style scoped lang="scss">
 .approval {
     background: #ffffff;
-    padding: 60px 25px 30px;
+    padding: 40px 15px 30px;
     box-sizing: border-box;
 }
 
@@ -213,4 +214,9 @@ export default {
         padding-bottom: 10px;
         font-size: 12px;
     }
+/deep/.el-tabs__item {
+    height: 32px;
+    line-height: 32px;
+    font-size: 13px;
+}
 </style>
