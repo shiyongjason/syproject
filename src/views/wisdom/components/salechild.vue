@@ -339,6 +339,9 @@ export default {
             }
             this.myChart.setOption(option)
         }
+    },
+    destroyed () {
+        this.myChart.clear()
     }
 }
 </script>

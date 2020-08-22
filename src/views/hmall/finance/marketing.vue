@@ -108,8 +108,8 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="onQuery">查询</el-button>
-                        <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                        <h-button type="primary" class="ml20" @click="onQuery">查询</h-button>
+                        <h-button class="ml20" @click="onReset">重置</h-button>
                     </div>
                 </div>
             </div>
@@ -117,7 +117,7 @@
         <div class="page-body-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <button type="button" class="el-button ml20 el-button--primary" @click="onExport"><span>导出</span></button>
+                    <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange"
@@ -131,11 +131,20 @@
                 <template slot="source" slot-scope="scope">
                     {{ orderChannelMap.get(scope.data.row.source) || '-' }}
                 </template>
-                <template slot="couponType" slot-scope="scope">
-                    {{ couponsTypeMap.get(scope.data.row.couponType) || '-' }}
-                </template>
                 <template slot="activityType" slot-scope="scope">
                     {{ activityTypeMap.get(scope.data.row.activityType) || '-' }}
+                </template>
+                <template slot="couponType" slot-scope="scope">
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponType)" :key="index" >{{ couponsTypeMap.get(parseInt(item)) }}</p>
+                </template>
+                <template slot="couponCode" slot-scope="scope">
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponCode)" :key="index">{{ item }}</p>
+                </template>
+                <template slot="couponName" slot-scope="scope">
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponName)" :key="index">{{ item }}</p>
+                </template>
+                <template slot="couponAmount" slot-scope="scope">
+                    <p class="couponP" v-for="(item, index) in getCouponArr(scope.data.row.couponAmount)" :key="index">{{ parseFloat(item) | moneyShow}}</p>
                 </template>
             </basicTable>
         </div>
@@ -195,7 +204,7 @@ export default {
                 { label: '券编码', prop: 'couponCode' },
                 { label: '券名称', prop: 'couponName' },
                 { label: '券类型', prop: 'couponType' },
-                { label: '券金额（元）', prop: 'couponAmount', formatters: 'moneyShow' },
+                { label: '券金额（元）', prop: 'couponAmount' },
                 { label: '活动编码', prop: 'activityCode' },
                 { label: '活动名称', prop: 'activityName' },
                 { label: '活动类型', prop: 'activityType' },
@@ -283,6 +292,12 @@ export default {
                 }
                 location.href = B2bUrl + 'order/api/boss/orders/finance-market/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
             }
+        },
+        getCouponArr (val) {
+            if (!val) {
+                return []
+            }
+            return String(val).split(',')
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val

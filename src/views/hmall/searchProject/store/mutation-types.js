@@ -1,0 +1,2 @@
+export const SEARCH_WORD_DATA = 'SEARCH_WORD_DATA'
+export const SEARCH_WORD_INFO = 'SEARCH_WORD_INFO'

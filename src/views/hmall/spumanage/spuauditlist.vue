@@ -69,14 +69,14 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList">
+                        <h-button type="primary" class="ml20" @click="searchList">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest">
+                        </h-button>
+                        <h-button class="ml20" @click="onRest">
                             重置
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onChangeStatus">批量审核</el-button>
-                        <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                        </h-button>
+                        <h-button class="ml20" @click="onChangeStatus">批量审核</h-button>
+                        <h-button class="ml20" @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>
@@ -101,8 +101,8 @@
                     </span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
-                    <el-button type="info" size="mini" plain @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</el-button>
+                    <h-button table @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</h-button>
+                    <h-button table @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</h-button>
                 </template>
             </basicTable>
         </div>

@@ -38,12 +38,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button class="ml20" @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -51,9 +51,9 @@
         <div class="page-body-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onAddevent">
+                    <h-button type="create" class="ml20" @click="onAddevent">
                         新建活动
-                    </el-button>
+                    </h-button>
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
@@ -64,13 +64,13 @@
                     {{IsEventName(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onEditEvent(scope.data.row)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</el-button>
-                    <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
-                    <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
-                    <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
+                    <h-button table @click="onEditEvent(scope.data.row)" v-if="scope.data.row.status!=5&&scope.data.row.status!=4">编辑</h-button>
+                    <h-button table @click="onCopy(scope.data.row.id)">复制</h-button>
+                    <h-button table @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</h-button>
+                    <h-button table @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</h-button>
                     <el-tooltip placement="bottom-start" >
                         <div slot="content" v-if="scope.data.row.pvdata">截止到{{scope.data.row.pvdata.expiryDate}}<br>累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付金额：{{scope.data.row.pvdata.totalMoney}}</div>
-                        <el-button type="info" size="mini" v-show="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
+                        <h-button table v-show="scope.data.row.status!=1" @click="onClickStatics(scope.data.row)">数据统计</h-button>
                     </el-tooltip>
                 </template>
             </basicTable>

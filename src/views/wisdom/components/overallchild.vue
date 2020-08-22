@@ -274,7 +274,6 @@ export default {
             this.myChart.setOption(option)
         },
         drawPieChart (data) {
-            console.log(data)
             const dataAll = []
             const yAxisData = []
             const pieAll = []
@@ -538,7 +537,13 @@ export default {
             }
             this.mapchina.setOption(option)
         }
+    },
+    destroyed () {
+        this.myChart.clear()
+        this.pie.clear()
+        this.mapchina.clear()
     }
+
 }
 
 </script>
