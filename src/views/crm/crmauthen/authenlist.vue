@@ -81,12 +81,8 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
-                            查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
-                            重置
-                        </el-button>
+                        <h-button type='primary' class="ml20" @click="searchList">查询</h-button>
+                        <h-button @click="onRest">好 的</h-button>
                     </div>
                 </div>
             </div>
@@ -116,7 +112,7 @@
                     <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</el-button>
+                    <h-button table  @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -304,9 +300,13 @@ export default {
             }
             this.searchList()
         },
-        onLookauthen (val) {
+        async onLookauthen (val) {
             this.drawer = true
-            this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$refs.drawercom.getAuthenticationDetail(val)
+            await this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$nextTick(() => {
+                this.$refs.drawercom.onClearV()
+            })
         },
         restDrawer () {
             this.drawer = false

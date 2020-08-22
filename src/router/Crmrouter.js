@@ -22,17 +22,6 @@ export default [
                 component: () => import('@/views/crm/goodwork/projectlist')
             },
             {
-                path: 'crmAccount',
-                name: 'crmAccount',
-                meta: {
-                    title: 'crm企业管理',
-                    tagName: 'crm企业管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/crm/crmAccount/index')
-            },
-            {
                 path: 'authenlist',
                 name: 'authenlist',
                 meta: {
