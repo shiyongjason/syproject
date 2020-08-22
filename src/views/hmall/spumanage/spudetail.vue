@@ -1,7 +1,13 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px">
+            <Detail :form="form" :pictureContainer="pictureContainer" v-if="operate == 'show'">
+                <el-form-item style="text-align: center">
+                    <el-button @click="onBack()">返回</el-button>
+                    <el-button @click="onSetSpuTemplate()">设置为SPU模板</el-button>
+                </el-form-item>
+            </Detail>
+            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px" v-else>
                 <div class="page-body-title">
                     <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
                 </div>
@@ -133,8 +139,12 @@ import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { findSpuAttr, saveSpuTemplate, findSpuTemplateDetail, putSpuTemplate, findSpudetail, AuditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
+import Detail from './component/detail.vue'
 export default {
     name: 'spudetail',
+    components: {
+        Detail
+    },
     data () {
         return {
             form: {
@@ -215,9 +225,11 @@ export default {
             this.form.imgUrls = val.map(v => v.url).join()
         },
         'form.imgUrls' (value) {
-            this.$refs['formmain'].validateField('imgUrls')
-            if (value) {
-                this.$refs['formmain'].clearValidate('imgUrls')
+            if (this.$refs['formmain']) {
+                this.$refs['formmain'].validateField('imgUrls')
+                if (value) {
+                    this.$refs['formmain'].clearValidate('imgUrls')
+                }
             }
         }
     },
@@ -273,9 +285,9 @@ export default {
         await this.findAllCategory()
         await this.findAllBrands()
         this.operate = this.$route.query.type
-        if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
+        if (this.$route.query.spuTemplateId) {
             this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
-        } else if (this.$route.query.type === 'audit' && this.$route.query.spuId) {
+        } else if (this.$route.query.spuId) {
             this.findSpuDetailAsync(this.$route.query.spuId)
         } else {
             this.resetForm()
@@ -518,8 +530,9 @@ export default {
             })
             this.$forceUpdate()
         },
-        onSetSpuTemplate () {
-            this.setSpuTemplate(this.$route.query.spuId)
+        async onSetSpuTemplate () {
+            await this.setSpuTemplate(this.$route.query.spuId)
+            this.$message.success(`设置模板成功`)
         }
     }
 }
