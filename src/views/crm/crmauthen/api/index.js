@@ -16,7 +16,7 @@ export const getBusinessAuthen = (params) => {
 }
 // CRM 认证信息
 export const getAuthenticationMessage = (companyCode) => {
-    return axios.get(`member/api/crm/company/open-record/${companyCode}`)
+    return axios.get(`memeber/api/crm/company/open-record/${companyCode}`)
 }
 
 // CRM 认证状态
