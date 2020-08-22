@@ -56,7 +56,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type='primary' @click="searchList">查询</h-button>
+                        <h-button type='primary' @click="searchList(1)">查询</h-button>
                         <h-button type='primary' @click="onRest">重置</h-button>
                         <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
                     </div>
@@ -66,7 +66,7 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{tableLoan.totalNum||0}},已注册：{{tableLoan.registerUserNum||0}},未注册:{{tableLoan.waitRegisterUserNum||0}}</el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onLookDetail(1,scope.data.row)">查看详情</h-button>
                 </template>
@@ -112,7 +112,7 @@ export default {
                 { label: '类型', prop: 'type', width: '150', showOverflowTooltip: true, dicData: [{ value: 1, label: '微信' }, { value: 2, label: '企业微信' }] },
                 { label: '性别', prop: 'gender', width: '150', showOverflowTooltip: true, dicData: [{ value: 1, label: '男' }, { value: 2, label: '女' }] },
                 { label: '是否注册', prop: 'register', width: '150', showOverflowTooltip: true, dicData: [{ value: true, label: '是' }, { value: false, label: '否' }] },
-                { label: '注册账号', prop: 'psnMobile', width: '180', showOverflowTooltip: true },
+                { label: '注册账号', prop: 'mobile', width: '180', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '180', showOverflowTooltip: true },
                 { label: '添加人', prop: 'psnname', width: '120', showOverflowTooltip: true },
                 { label: '添加时间', prop: 'createTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
@@ -176,9 +176,11 @@ export default {
         },
         onRest () {
             this.queryParams = deepCopy(this.copyParams)
-            this.searchList()
+            this.searchList(1)
         },
-        async searchList () {
+        async searchList (val) {
+            console.log(val)
+            if (val == 1) { this.queryParams.pageNumber = val }
             await this.findwxMemberpage(this.queryParams)
             this.tableData = this.wxMemberpage.records
             this.paginationInfo = {

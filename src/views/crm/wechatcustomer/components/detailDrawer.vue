@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="客户详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
+        <el-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <div class="drawer-cont" v-if="modelType==1">
                     <div class="drawer-cont_top">
@@ -51,7 +51,7 @@
                         <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
                             <p>注册用户（个）</p>
                         </div>
-                        <div class="drawer-table_col"><b>{{staticInfo.conversionRate}}</b>
+                        <div class="drawer-table_col"><b> {{this.$multipliedBy(staticInfo.conversionRate, 100)}}</b>
                             <p>注册转化率（%）</p>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                     <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
                     <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="()=>onFindallPage()"
-                        actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                        actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
                     </hosJoyTable>
                 </div>
                 <div class="drawer-footer">
@@ -89,7 +89,7 @@ export default {
                 maxCreateTime: '',
                 minCreateTime: '',
                 pageNumber: 1,
-                pageSize: 5,
+                pageSize: 10,
                 field: '',
                 sort: 'desc'
             },
@@ -174,6 +174,8 @@ export default {
         },
         handleClick (tab, index) {
             this.modelParams.pageNumber = 1
+            this.modelParams.field = ''
+            this.modelParams.sort = ''
             this.onFindallPage()
         },
         handleSizeChange (val) {
