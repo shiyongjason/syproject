@@ -346,19 +346,19 @@ export default {
         },
         onQuery_two () {
             this.queryParams_two.pageNumber = 1
-            this.findValidSearchList()
+            this.getValidSearchList()
         },
         onReset_two () {
             this.queryParams_two = { ...this.resetParams_two }
-            this.findValidSearchList()
+            this.getValidSearchList()
         },
         onSizeChange_two (value) {
             this.queryParams_two.pageSize = value
-            this.findValidSearchList()
+            this.getValidSearchList()
         },
         onCurrentChange_two (value) {
             this.queryParams_two.pageNumber = value.pageNumber
-            this.findValidSearchList()
+            this.getValidSearchList()
         },
         onQuery_three () {
             this.queryParams_three.pageNumber = 1
@@ -419,7 +419,6 @@ export default {
         },
         async getValidSearchList () {
             await this.findValidSearchList(this.queryParams_two)
-            console.log(this.validSearchData)
             this.tableData_two = this.validSearchData.records
             this.pagination_two = {
                 pageNumber: this.validSearchData.current,
