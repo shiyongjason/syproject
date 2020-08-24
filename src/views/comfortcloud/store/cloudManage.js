@@ -47,7 +47,8 @@ const state = {
     allActivity: [],
     customerServiceList: [],
     customerServicePagination: {},
-    cloudHomeModeTypeList: []
+    cloudHomeModeTypeList: [],
+    serviceManageHistoryList: []
 }
 
 const getters = {
@@ -101,7 +102,8 @@ const getters = {
         const value = v.title.length < 15 ? v.title : v.title.substr(0, 14) + '...'
         return { selectCode: v.id, value }
     }),
-    cloudHomeModeTypeList: state => state.cloudHomeModeTypeList
+    cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
+    serviceManageHistoryList: state => state.serviceManageHistoryList
 }
 
 const mutations = {
@@ -240,6 +242,9 @@ const mutations = {
     },
     [cloud.GET_CLOUD_HOME_MODE_TYPE_LIST] (state, payload) {
         state.cloudHomeModeTypeList = payload
+    },
+    [cloud.GET_SERVICE_MANAGE_HISTORY_LIST] (state, payload) {
+        state.serviceManageHistoryList = payload
     }
 }
 
@@ -437,6 +442,10 @@ const actions = {
     async getCloudHomeModeTypeList ({ commit }, params) {
         const { data } = await Api.getCloudHomeModeTypeList(params)
         commit(cloud.GET_CLOUD_HOME_MODE_TYPE_LIST, data.data)
+    },
+    async getServiceManageHistoryList ({ commit }, params) {
+        const { data } = await Api.getServiceManageHistoryList(params)
+        commit(cloud.GET_SERVICE_MANAGE_HISTORY_LIST, data.data)
     }
 }
 export default {

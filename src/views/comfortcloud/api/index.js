@@ -367,5 +367,9 @@ export function getDictionary (params) {
 }
 
 export function getCloudHomeModeTypeList (params) {
-    return axios.get(iotUrl + '/api/device/statistics/mode-type-list',{ params })
+    return axios.get(iotUrl + '/api/device/statistics/mode-type-list', { params })
+}
+
+export function getServiceManageHistoryList (params) {
+    return axios.get(iotUrl + '/api/customer-service/service-order', { params })
 }
