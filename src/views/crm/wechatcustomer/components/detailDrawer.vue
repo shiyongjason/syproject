@@ -62,8 +62,8 @@
                     </el-tabs>
                     <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="()=>onFindallPage()"
-                        actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total"
+                        @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
                     </hosJoyTable>
                 </div>
                 <div class="drawer-footer">
@@ -99,12 +99,26 @@ export default {
             tableDepart: [{ label: '分部', prop: 'deptName' },
                 { label: '企业微信客户数', prop: 'memberNum', sortable: 'custom' },
                 { label: '注册用户数', prop: 'registerMemberNum', sortable: 'custom' },
-                { label: '注册转化率', prop: 'conversionRate', sortable: 'custom' }],
+                {
+                    label: '注册转化率',
+                    prop: 'conversionRate',
+                    sortable: 'custom',
+                    render: (h, scope) => {
+                        return <span>{this.getStatusList(scope.row.conversionRate, 100)}</span>
+                    }
+                }],
             tableUser: [
                 { label: '员工', prop: 'psnname' },
                 { label: '企业微信客户数', prop: 'memberNum', sortable: 'custom' },
                 { label: '注册用户数', prop: 'registerMemberNum', sortable: 'custom' },
-                { label: '注册转化率', prop: 'conversionRate', sortable: 'custom' }
+                {
+                    label: '注册转化率',
+                    prop: 'conversionRate',
+                    sortable: 'custom',
+                    render: (h, scope) => {
+                        return <span>{this.getStatusList(scope.row.conversionRate, 100)}</span>
+                    }
+                }
             ],
             pagination: {},
             tableData: [],
@@ -156,6 +170,11 @@ export default {
             findUserstatic: 'wxMember/findUserstatic',
             findWxmemberUser: 'wxMember/findWxmemberUser'
         }),
+        getStatusList (docProgress) {
+            // let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
+            let label = `${this.$multipliedBy(docProgress, 100)}%`
+            return label
+        },
         onFindCustomer (type, val) {
             this.modelType = type
             this.wxUserForm = {}
