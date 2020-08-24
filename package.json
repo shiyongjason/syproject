@@ -13,9 +13,8 @@
     "count": "cloc src/views/serviceManagement"
   },
   "dependencies": {
-    "@sentry/browser": "^5.21.3",
-    "@sentry/integrations": "^5.21.3",
-    "@sentry/webpack-plugin": "^1.12.1",
+    "@sentry/browser": "^5.21.1",
+    "@sentry/integrations": "^5.21.1",
     "app-info-parser": "^0.3.5",
     "bignumber.js": "^9.0.0",
     "echarts": "^4.2.1",
