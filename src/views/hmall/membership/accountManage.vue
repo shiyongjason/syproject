@@ -21,7 +21,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">账号来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.source" multiple collapse-tags clearable>
+                        <el-select v-model="queryParams.sources" multiple collapse-tags clearable>
                             <el-option v-for="item in options" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -65,7 +65,7 @@ export default {
                 pageNumber: 1,
                 createTimeStart: '',
                 createTimeEnd: '',
-                source: '',
+                sources: [],
                 registerTimeOrderBy: 'desc'
             },
             copyParams: {},
@@ -153,7 +153,9 @@ export default {
         },
         async onFindAccountList (val) {
             if (val) this.queryParams.pageNumber = val
-            await this.findAccountList(this.queryParams)
+            let queryParams = { ...this.queryParams }
+            queryParams.sources = this.queryParams.source.join(',')
+            await this.findAccountList(queryParams)
             this.tableData = this.accountData.records
             this.paginationInfo = {
                 total: this.accountData.total,
