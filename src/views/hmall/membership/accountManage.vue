@@ -154,7 +154,7 @@ export default {
         async onFindAccountList (val) {
             if (val) this.queryParams.pageNumber = val
             let queryParams = { ...this.queryParams }
-            queryParams.sources = this.queryParams.source.join(',')
+            queryParams.sources = this.queryParams.sources.join(',')
             await this.findAccountList(queryParams)
             this.tableData = this.accountData.records
             this.paginationInfo = {
