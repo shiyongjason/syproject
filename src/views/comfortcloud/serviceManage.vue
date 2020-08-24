@@ -81,8 +81,9 @@
             <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
             <p class="detailLine">图片</p>
             <div class="picContainer">
-                <el-image :style="index===0?firstPic:pic" v-for="(item, index) in detailData.picUlrs" :src="item" alt="" :key="index" @click="onPicClick(item)" :preview-src-list="detailData.picUlrs">
-                </el-image>
+                <viewer :images="detailData.picUlrs">
+                    <img v-for="(src,index) in detailData.picUlrs" :src="src" :key="src" :style="index===0?firstPic:pic">
+                </viewer>
             </div>
         </el-dialog>
             
@@ -92,6 +93,10 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import 'viewerjs/dist/viewer.css'
+  import Viewer from 'v-viewer'
+  import Vue from 'vue'
+  Vue.use(Viewer)
 export default {
     name: 'serviceManage',
     data () {
@@ -171,9 +176,7 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        onPicClick(url){
-            
-        }
+       
     },
     mounted () {
         this.onSearch()
