@@ -38,7 +38,7 @@
             </basicTable>
             <div class="table-cont-title">
                 <span class="table-title-name">明细数据</span>
-                <h-button table @click="onExportInfo">导出</h-button>
+                <h-button @click="onExportInfo">导出</h-button>
             </div>
             <basicTable :tableLabel="tableLabelInfo" :tableData="tableDataInfo" :pagination="paginationDataInfo" @onSizeChange="onSizeChangeInfo" @onCurrentChange="onCurrentChangeInfo"></basicTable>
         </div>
