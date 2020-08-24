@@ -1,6 +1,6 @@
 {
   "name": "boss",
-  "version": "0.1.0",
+  "version": "3.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -33,6 +33,7 @@
     "vuex": "^3.1.1"
   },
   "devDependencies": {
+    "@sentry/webpack-plugin": "^1.12.1",
     "@vue/cli-plugin-babel": "^3.7.0",
     "@vue/cli-plugin-eslint": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
