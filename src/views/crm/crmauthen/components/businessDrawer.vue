@@ -129,15 +129,15 @@
                                 <div v-else>-</div>
                             </el-form-item>
                             <el-form-item label="认证结果：">
-                                <p v-if="authenticationDetail.authenticationStatus === 1">未认证</p>
-                                <p v-if="authenticationDetail.authenticationStatus === 2">认证中</p>
-                                <p v-if="authenticationDetail.authenticationStatus === 3">认证成功</p>
-                                <p v-if="authenticationDetail.authenticationStatus === 4">认证失败</p>
+                                <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>
+                                <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>
+                                <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>
+                                <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>
                                 <p v-else>-</p>
                             </el-form-item>
                             <el-form-item label="认证方式：">
                                 <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>
-                                <p v-if="authenticationDetail.authenticationType === 2">e签宝-企业四要素</p>
+                                <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-企业四要素</p>
                                 <p v-else>-</p>
                             </el-form-item>
                             <el-form-item label="关联/认证时间：">
@@ -605,6 +605,10 @@ export default {
         justify-content: center;
         p{
             margin-right: 10px;
+            img {
+                width: 100px;
+                height: 100px;
+            }
         }
     }
 </style>
