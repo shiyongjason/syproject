@@ -21,7 +21,6 @@ export default {
     data () {
         return {
             editableTabsValue: '首页',
-            closeByClickTags: false,
             clickTags: false,
             oldRoute: '',
             newTags: [],
@@ -73,7 +72,6 @@ export default {
         },
         // 关闭单个标签
         closeTags (index, isSelf) {
-            this.closeByClickTags = true
             let cloneTagsList = JSON.parse(JSON.stringify(this.tagsList))
             this.tagsList.splice(index, 1)
             if (this.tagsList.length < 1) {
@@ -107,9 +105,6 @@ export default {
                     cloneTagsList[index] && cloneTagsList[index].middleComponents && this.cachedExclude.indexOf(cloneTagsList[index].middleComponents) == -1 && clearCache(cloneTagsList[index].middleComponents)
                 }
                 this.tagUpdate(this.tagsList)
-                this.$nextTick(() => {
-                    this.closeByClickTags = false
-                })
             }
         },
         // 设置标签
