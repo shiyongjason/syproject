@@ -4,7 +4,7 @@
             <div class="drawer-content">
                 <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                     <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
-                       <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
+                        <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
                     </el-form-item>
                     <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                         {{businessDetail.userAccount||'-'}}
@@ -94,9 +94,9 @@
                 </el-form>
                 <div class="drawer-footer">
                     <div class="drawer-button">
-                        <h-button  type="assist" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</h-button>
-                        <h-button   @click="cancelForm">取 消</h-button>
-                        <h-button  type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
+                        <h-button type="assist" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</h-button>
+                        <h-button @click="cancelForm">取消</h-button>
+                        <h-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
                     </div>
                 </div>
             </div>
@@ -121,8 +121,8 @@
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button  @click="dialogVisible = false">取 消</h-button>
-                <h-button  type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</h-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确定' }}</h-button>
             </span>
         </el-dialog>
     </div>

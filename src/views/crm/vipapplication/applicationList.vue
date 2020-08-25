@@ -73,10 +73,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
-                        <h-button type="primary" class="ml20" @click="onRest">
+                        <h-button @click="onRest">
                             重置
                         </h-button>
                     </div>
@@ -96,11 +96,11 @@
                     {{scope.data.row.received?'是':'否'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button  table plain @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</h-button>
+                    <h-button table @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</h-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="分配" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
+        <el-dialog title="分配" :visible.sync="dialogVisible" width="35%" :before-close="()=>dialogVisible = false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="分配给（员工）" prop="assignedUserId" ref="assignedUserId">
                     <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
@@ -122,8 +122,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button  @click="dialogVisible = false">取 消</h-button>
-                <h-button  type="primary" @click="submitForm" :loading=isloading>{{isloading?'提交中...':'分配'}}</h-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button type="primary" @click="submitForm" :loading=isloading>{{isloading?'提交中...':'分配'}}</h-button>
             </span>
         </el-dialog>
     </div>
@@ -285,7 +285,7 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams

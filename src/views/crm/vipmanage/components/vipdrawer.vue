@@ -6,7 +6,7 @@
                 <div class="drawer-wrap_btn">
                     <div class="drawer-wrap_btn-flex">VIP签约信息</div>
                     <div class="drawer-wrap_btn-flex">
-                        <el-button type="primary" size="mini" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</el-button>
+                        <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button>
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
@@ -17,7 +17,7 @@
                         <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button  table plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
+                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
                     </template>
                 </basicTable>
                 <p>
@@ -29,7 +29,7 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <el-button @click="handleClose">取 消</el-button>
+                    <h-button @click="handleClose">取消</h-button>
                 </div>
             </div>
         </el-drawer>
@@ -75,8 +75,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseDrawer">取 消</el-button>
-                <el-button type="primary" @click="submitForm()" :loading=isloading>{{isloading?'提交中...':'提交'}}</el-button>
+                <h-button @click="onCloseDrawer">取消</h-button>
+                <h-button type="primary" @click="submitForm()" :loading=isloading>{{isloading?'提交中...':'提交'}}</h-button>
             </span>
         </el-dialog>
     </div>
@@ -332,7 +332,7 @@ export default {
 
     // position: relative;
 }
-/deep/.el-dialog__form{
+/deep/.el-dialog__form {
     height: 500px;
     overflow-y: scroll;
 }
