@@ -53,11 +53,7 @@
                     <div class="flex-wrap-title">审核状态：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.auditStatus" style="width: 100%">
-                            <el-option
-                                v-for="item in auditStatusOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -82,19 +78,8 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable
-                :tableData="tableData"
-                :tableLabel="tableLabel"
-                :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-                @onSizeChange="handleSizeChange"
-                :multiSelection.sync='multiSelection'
-                :isMultiple="true"
-                :selectable="selectable"
-                :isAction="true"
-                :actionMinWidth=220
-                :rowKey="rowKey"
-                :isShowIndex='true'
-            >
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="true" :selectable="selectable" :isAction="true" :actionMinWidth=220
+                :rowKey="rowKey" :isShowIndex='true'>
                 <template slot="auditStatus" slot-scope="scope">
                     <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">
                         {{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}
@@ -102,6 +87,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</h-button>
+                    <h-button table @click="onShowSpu(scope.data.row)" v-else>查看</h-button>
                     <h-button table @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</h-button>
                 </template>
             </basicTable>
@@ -278,6 +264,9 @@ export default {
         },
         onAuditSpu (val) {
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'audit', spuId: val.spuId } })
+        },
+        onShowSpu (val) {
+            this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'show', spuId: val.spuId } })
         },
         async onSetSpuTemplate (val) {
             await this.setSpuTemplate(val.spuId)

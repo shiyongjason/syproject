@@ -21,7 +21,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">账号来源：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.source">
+                        <el-select v-model="queryParams.sources" multiple collapse-tags clearable>
                             <el-option v-for="item in options" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
@@ -65,7 +65,7 @@ export default {
                 pageNumber: 1,
                 createTimeStart: '',
                 createTimeEnd: '',
-                source: '',
+                sources: [],
                 registerTimeOrderBy: 'desc'
             },
             copyParams: {},
@@ -82,7 +82,7 @@ export default {
             ],
             tableData: [],
             drawer: false,
-            options: [{ key: '', value: '全部' }, { key: 1, value: '存量会员店' }, { key: 2, value: '存量平台公司' }, { key: 3, value: 'app注册' },
+            options: [{ key: 1, value: '存量会员店' }, { key: 2, value: '存量平台公司' }, { key: 3, value: 'app注册' },
                 { key: 4, value: '商家注册' }, { key: 5, value: '好友推荐' }, { key: 6, value: '商家邀请' }, { key: 7, value: '单分享小程序' }, { key: 8, value: '好享家会员小程序' }, { key: 9, value: '代注册' }]
         }
     },
@@ -153,7 +153,9 @@ export default {
         },
         async onFindAccountList (val) {
             if (val) this.queryParams.pageNumber = val
-            await this.findAccountList(this.queryParams)
+            let queryParams = { ...this.queryParams }
+            queryParams.sources = this.queryParams.sources.join(',')
+            await this.findAccountList(queryParams)
             this.tableData = this.accountData.records
             this.paginationInfo = {
                 total: this.accountData.total,
