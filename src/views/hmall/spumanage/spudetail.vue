@@ -295,7 +295,7 @@ export default {
     },
 
     // 因为keepAlive的原因，需要做很多重置工作
-    activated () {
+    /* activated () {
         // this.operate = this.$route.query.type
         // if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
         //     this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
@@ -304,7 +304,7 @@ export default {
         // } else {
         //     this.resetForm()
         // }
-    },
+    }, */
     methods: {
         ...mapActions('category', [
             'findAllCategory'

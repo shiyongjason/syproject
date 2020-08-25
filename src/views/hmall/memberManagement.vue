@@ -42,7 +42,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
+                        <el-button type="primary" class="ml20" @click="()=>onQuery(1)">搜索</el-button>
                         <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
 
 <script>
 export default {
-    name: 'memberManagement',
+    name: 'b2bmemberManagement',
     data () {
         return {
             tableLabel: [
@@ -107,8 +107,11 @@ export default {
         }
     },
     methods: {
-        onQuery () {
+        onQuery (val) {
             console.log('搜索')
+            if (val) {
+                this.paginationData.pageNumber = val
+            }
             const { ...params } = { ...this.queryParams }
             this.searchParams = params
             this.search()

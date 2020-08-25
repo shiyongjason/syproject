@@ -16,7 +16,7 @@
 <script>
 import { mapState } from 'vuex'
 export default {
-    name: 'productTotalTable',
+    name: 'orderRecordproductTotalTable',
     props: {
         tableData: {
             type: Array,

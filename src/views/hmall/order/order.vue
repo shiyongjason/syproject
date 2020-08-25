@@ -327,7 +327,7 @@ import {
 } from './api/index'
 
 export default {
-    name: 'order',
+    name: 'orderRecordOrder',
     components: {
         orderTable,
         receivablesTable,

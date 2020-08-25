@@ -127,7 +127,7 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { changeState } from './api/index'
 export default {
-    name: 'bussinessmanage',
+    name: 'membershipBussinessmanage',
     data () {
         return {
             queryParams: {

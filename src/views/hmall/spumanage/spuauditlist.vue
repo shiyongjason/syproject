@@ -69,7 +69,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList">
+                        <el-button type="primary" class="ml20" @click="()=>searchList(1)">
                             查询
                         </el-button>
                         <el-button type="primary" class="ml20" @click="onRest">
@@ -201,9 +201,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    activated () {
-        this.searchList()
-    },
+    // activated () {
+    //     this.searchList()
+    // },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
@@ -229,7 +229,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        async searchList () {
+        async searchList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
             await this.findAuditProducts(params)
@@ -287,8 +290,8 @@ export default {
             await this.setSpuTemplate(val.spuId)
             this.$message.success('操作成功')
         }
-    },
-    beforeRouteEnter (to, from, next) {
+    }
+    /* beforeRouteEnter (to, from, next) {
         newCache('spuauditlist')
         next()
     },
@@ -297,7 +300,7 @@ export default {
             clearCache('spuauditlist')
         }
         next()
-    }
+    } */
 }
 </script>
 <style lang="scss" scoped>

@@ -64,7 +64,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="findPublicShop">
+                        <el-button type="primary" class="ml20" @click="()=>findPublicShop(1)">
                             搜索
                         </el-button>
                         <el-button type="primary" class="ml20" @click="reset">
@@ -143,7 +143,10 @@ export default {
             this.queryParams.pageNumber = val
             this.findPublicShop()
         },
-        async findPublicShop () {
+        async findPublicShop (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.startTime) params.startTime = this.$root.$options.filters.formatterTime(params.startTime)
             if (params.endTime) params.endTime = this.$root.$options.filters.formatterTime(params.endTime)

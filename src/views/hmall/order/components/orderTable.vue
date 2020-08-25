@@ -67,7 +67,7 @@
 import { mapState } from 'vuex'
 import { findChildOrder } from '../api/index'
 export default {
-    name: 'orderTable',
+    name: 'orderRecordorderTable',
     props: {
         tableData: {
             type: Array,

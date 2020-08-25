@@ -702,7 +702,7 @@ export default {
         this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
     }, */
     beforeRouteEnter (to, from, next) {
-        newCache('createEditEvent')
+        // newCache('createEditEvent')
         next(vm => {
             if (from.path == '/b2b/marketing/addProducts') {
                 vm.isFirst = false
@@ -721,7 +721,7 @@ export default {
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addProducts') {
-            clearCache('createEditEvent')
+            // clearCache('createEditEvent')
             this.EMPTY_EVENT_PRODUCTS()
         }
         next()

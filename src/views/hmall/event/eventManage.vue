@@ -141,7 +141,7 @@ export default {
         this.onFindeSpike()
         this.copyParams = { ...this.queryParams }
     },
-    activated () {
+    /* activated () {
         this.onFindeSpike()
     },
     beforeRouteEnter (to, from, next) {
@@ -153,7 +153,7 @@ export default {
             clearCache('eventmanage')
         }
         next()
-    },
+    }, */
     methods: {
         ...mapActions({
             findSpike: 'findSpike',

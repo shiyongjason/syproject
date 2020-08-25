@@ -175,7 +175,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { putMerchantDetail, putMemberDetail } from './api/index'
 import { deepCopy } from '@/utils/utils'
 export default {
-    name: 'account',
+    name: 'membershipDrawerCom',
     props: {
         drawer: {
             type: Boolean,

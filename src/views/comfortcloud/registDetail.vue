@@ -45,7 +45,7 @@
 import { interfaceUrl } from '@/api/config'
 import { mapState } from 'vuex'
 export default {
-    name: 'membermanage',
+    name: 'comfortcloudregistDetail',
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -146,7 +146,7 @@ export default {
             this.$router.push({ path: '/comfortCloud/homedetail', query: {} })
         }
     }
-} 
+}
 </script>
 
 <style lang='scss' scoped>

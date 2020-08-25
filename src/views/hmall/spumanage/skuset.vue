@@ -33,7 +33,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="searchList()">
+                    <el-button type="primary" class="ml20" @click="()=>searchList(1)">
                         查询
                     </el-button>
                 </div>
@@ -333,7 +333,10 @@ export default {
             this.modifyId = val.id
             this.dialogAttributeEdit = true
         },
-        async searchList () {
+        async searchList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             const { data } = await findAttributeList(params)
             this.tableData = data.records

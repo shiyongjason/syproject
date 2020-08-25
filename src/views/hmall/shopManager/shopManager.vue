@@ -70,7 +70,7 @@
                     </div>
                     <div class="query-cont-col">
                         <div class="flex-wrap-cont">
-                            <el-button type="primary" class="ml20" @click="onQuery()">
+                            <el-button type="primary" class="ml20" @click="()=>onQuery(1)">
                                 搜索
                             </el-button>
                             <el-button type="primary" class="ml20" @click="onExport()">
@@ -361,7 +361,10 @@ export default {
                 this.categoryThird = data
             }
         },
-        async onQuery () {
+        async onQuery (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.startDate) {
                 params.startDate = this.$root.$options.filters.formatterTime(params.startDate)

@@ -55,7 +55,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="findMerchantList">
+                        <el-button type="primary" class="ml20" @click="()=>findMerchantList(1)">
                             搜索
                         </el-button>
                         <el-button type="primary" class="ml20" @click="reset">
@@ -127,7 +127,10 @@ export default {
             this.queryParams.pageNumber = val
             this.findMerchantList()
         },
-        async findMerchantList () {
+        async findMerchantList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.startTime) {
                 params.startTime = this.$root.$options.filters.formatDate(params.startTime, 'YYYY-MM-DD HH:mm:ss')

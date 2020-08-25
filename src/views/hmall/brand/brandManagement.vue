@@ -106,7 +106,7 @@ import { AUDIT_STATUS_MAP } from './const'
 import { mapState, mapActions, mapGetters } from 'vuex'
 
 export default {
-    name: 'brandAudit',
+    name: 'brandManagement',
     data () {
         return {
             categoryProps: {

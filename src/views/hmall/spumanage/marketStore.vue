@@ -74,7 +74,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
+                    <el-button type="primary" class="ml20" @click="()=>onQuery(1)">搜索</el-button>
                     <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                     <el-button type="primary" class="ml20" @click="onOffShelves()">批量下架</el-button>
                     <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
@@ -181,7 +181,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        onQuery () {
+        onQuery (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             this.search()
         },
         onReset () {

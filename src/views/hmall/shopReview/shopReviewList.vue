@@ -106,7 +106,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onQuery()">
+                        <el-button type="primary" class="ml20" @click="()=>onQuery(1)">
                             搜索
                         </el-button>
                     </div>
@@ -195,7 +195,10 @@ export default {
         ...mapMutations({
             changePage: 'CHANGE_REVIEW_LIST_PAGE_NUMBER'
         }),
-        async onQuery () {
+        async onQuery (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.checkStartDate) {
                 params.checkStartDate = this.$root.$options.filters.formatterTime(params.checkStartDate)
