@@ -277,18 +277,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
-                    },
-                    {
-                        path: 'orderRecord',
-                        name: 'orderRecord',
-                        meta: {
-                            title: '订单／收款记录查询',
-                            tagName: '订单／收款记录查询',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/order/order.vue')
                     }
+                    // {
+                    //     path: 'orderRecord',
+                    //     name: 'orderRecord',
+                    //     meta: {
+                    //         title: '订单／收款记录查询',
+                    //         tagName: '订单／收款记录查询',
+                    //         isMenu: true,
+                    //         icon: ''
+                    //     },
+                    //     component: () => import('@/views/hmall/order/order.vue')
+                    // }
                 ]
             },
             {
@@ -415,17 +415,17 @@ export default [
             //     },
             //     component: () => import('@/views/hmall/shopReview/merchantReview.vue')
             // },
-            {
-                path: 'selectCategory',
-                name: 'selectCategory',
-                meta: {
-                    title: '商品库管理',
-                    tagName: '商品库管理',
-                    isMenu: false,
-                    icon: ''
-                },
-                component: () => import('@/views/hmall/shopManager/selectCategory.vue')
-            },
+            // {
+            //     path: 'selectCategory',
+            //     name: 'selectCategory',
+            //     meta: {
+            //         title: '商品库管理',
+            //         tagName: '商品库管理',
+            //         isMenu: false,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/hmall/shopManager/selectCategory.vue')
+            // },
             {
                 path: 'dataBoard',
                 name: 'dataBoard',

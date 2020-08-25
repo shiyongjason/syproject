@@ -4,10 +4,10 @@
           <div class="page-body-cont query-cont">
               <div class="query-cont-row">
                   <div class="query-cont-col">
-                      <h-button type="create" class="ml20" @click="onAdd">
+                      <h-button type="create" @click="onAdd">
                           新增参数
                       </h-button>
-                      <h-button class="ml20" @click="onDelete">
+                      <h-button @click="onDelete">
                           批量删除
                       </h-button>
                   </div>
