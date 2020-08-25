@@ -119,14 +119,17 @@
                                 <p> {{authenticationDetail.legalCredentialNumber ? authenticationDetail.legalCredentialNumber : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="营业执照：">
-                                <p> {{authenticationDetail.businessLicensePhoto?authenticationDetail.businessLicensePhoto: '-'}}</p>
+                                <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
+                                    <img :src="authenticationDetail.businessLicensePhoto" alt="" v-if="authenticationDetail.businessLicensePhoto">
+                                    <span v-else>-</span>
+                                </div>
                             </el-form-item>
                             <el-form-item label="法人身份证：">
-                                <div class="people-id" v-if="authenticationDetail.certPhotoA">
-                                    <p> {{authenticationDetail.certPhotoA}}</p>
-                                    <p> {{authenticationDetail.certPhotoB}}</p>
+                                <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
+                                    <img :src="authenticationDetail.certPhotoA" alt="" v-if="authenticationDetail.certPhotoA">
+                                    <img :src="authenticationDetail.certPhotoB" alt="" v-if="authenticationDetail.certPhotoB">
                                 </div>
-                                <div v-else>-</div>
+                                <span v-else>-</span>
                             </el-form-item>
                             <el-form-item label="认证结果：">
                                 <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>
@@ -602,13 +605,13 @@ export default {
 }
     .people-id {
         display: flex;
-        justify-content: center;
         p{
             margin-right: 10px;
-            img {
-                width: 100px;
-                height: 100px;
-            }
+        }
+        img {
+            width: 158px;
+            height: 100px;
+            margin-right: 20px;
         }
     }
 </style>
