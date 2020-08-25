@@ -3,7 +3,7 @@
         <el-form :model="projectForm" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
             <p class="drawer-by">项目提交人：{{projectForm.createBy}}</p>
             <el-form-item label="经销商：">
-                {{projectForm.companyName}} <el-button type="primary" size="mini" @click="onLinkBus(projectForm)">查看详情</el-button>
+                {{projectForm.companyName}} <h-button table @click="onLinkBus(projectForm)">查看详情</h-button>
             </el-form-item>
             <el-form-item label="分部：">
                 <el-select v-model="projectForm.pkDeptDoc" placeholder="请选择" :clearable=true>

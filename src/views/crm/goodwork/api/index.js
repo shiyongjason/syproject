@@ -32,3 +32,5 @@ export const saveProjectdoc = (params) => axios.post(`/fms/api/risk-check/save/p
 
 // 审核（签约和放款使用）
 export const signAudit = (params) => axios.post(`/memeber/openapi/project/sign-audit`, params)
+
+export const checkTemplatedoc = (params) => axios.post(`/fms/api/risk-check/project/template-doc`, params)

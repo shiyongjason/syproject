@@ -43,8 +43,8 @@
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_CHOINGZHI)">
                         <h-button type="create" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</h-button>
                     </template>
-                    <h-button @click="cancelForm">取 消</h-button>
-                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
+                    <h-button @click="cancelForm">取消</h-button>
+                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
                 </div>
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
@@ -65,8 +65,8 @@
                         </el-form-item>
                     </el-form>
                     <span slot="footer" class="dialog-footer">
-                        <h-button @click="dialogVisible = false">取 消</h-button>
-                        <h-button type="primary" @click="onUpdateAudit">确 定</h-button>
+                        <h-button @click="dialogVisible = false">取消</h-button>
+                        <h-button type="primary" @click="onUpdateAudit">确定</h-button>
                     </span>
                 </el-dialog>
 
@@ -91,8 +91,8 @@
                 </hosjoyUpload>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button @click="onColseSignOrLoan">取 消</h-button>
-                <h-button type="primary" @click="onSubmitSignOrLoan">确 定</h-button>
+                <h-button @click="onColseSignOrLoan">取消</h-button>
+                <h-button type="primary" @click="onSubmitSignOrLoan">确定</h-button>
             </span>
         </el-dialog>
     </div>

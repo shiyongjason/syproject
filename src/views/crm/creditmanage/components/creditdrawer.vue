@@ -18,7 +18,7 @@
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table plain @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
+                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
                     </template>
                 </basicTable>
                 <p>
@@ -31,7 +31,7 @@
             <div class="collect-wrapbox" v-if="activeName=='2'">
                 <el-form ref="approveForm" class="demo-ruleForm">
                     <div class="" v-for="item in approveForm" :key="item.firstCatagoryId">
-                        <div class="collect-title">{{item.firstCatagoryName}} <el-button type="primary" size="mini" @click="onClickRecord">打回记录</el-button>
+                        <div class="collect-title">{{item.firstCatagoryName}}<h-button table @click="onClickRecord">打回记录</h-button>
                         </div>
                         <template v-for="obj in item.respRiskCheckDocTemplateList">
                             <el-form-item label="" prop="type" :key="'item'+obj.templateId">
@@ -67,7 +67,7 @@
                                         <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                                     </p>
                                 </div>
-                                <hosjoyUpload v-if="(documentStatus!=3)" v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
+                                <hosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                     <el-button type="primary">上 传</el-button>
                                 </hosjoyUpload>
                             </el-form-item>
@@ -77,9 +77,9 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <el-button type="success" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</el-button>
-                    <el-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</el-button>
-                    <el-button @click="handleClose">取 消</el-button>
+                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</h-button>
+                    <h-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <h-button @click="handleClose">取消</h-button>
                 </div>
             </div>
         </el-drawer>
@@ -117,7 +117,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button @click="onCloseDrawer">取 消</h-button>
+                <h-button @click="onCloseDrawer">取消</h-button>
                 <h-button type='primary' @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</h-button>
             </span>
         </el-dialog>
@@ -138,7 +138,7 @@
                 </template>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="recordsVisible = false">取 消</el-button>
+                <h-button @click="recordsVisible = false">取消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="onCloseCol" :modal=false>
@@ -148,8 +148,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button  @click="onCloseCol">取 消</h-button>
-                <h-button  type="primary" @click="onRefuse" :loading=resloading>{{resloading?'确 定':'保 存'}}</h-button>
+                <h-button @click="onCloseCol">取消</h-button>
+                <h-button type="primary" @click="onRefuse" :loading=resloading>{{resloading?'确定':'保存'}}</h-button>
             </span>
         </el-dialog>
     </div>
@@ -318,14 +318,19 @@ export default {
                 })
             })
         },
-        async  handleSuccessCb (row) {
+        async handleSuccessCb (row) {
             row.creditDocuments.map(item => {
                 item.companyId = this.companyId
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
-            const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
-            await uploadCredit(newDocuments)
+            // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
+            // await uploadCredit(newDocuments)
+            // this.$message.success('资料上传成功!')
+        },
+        async  handleSuccessArg (val) {
+            // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
+            await uploadCredit([val])
             this.$message.success('资料上传成功!')
         },
         onDelete (item, index) {

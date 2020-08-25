@@ -74,10 +74,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button  type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
-                        <h-button  type="primary" class="ml20" @click="onRest()">
+                        <h-button @click="onRest()">
                             重置
                         </h-button>
                     </div>
@@ -105,8 +105,8 @@
             </basicTable> -->
             <!--  -->
             <div class="page-table">
-                <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                    actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+                <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
+                    @pagination="searchList" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template slot="contractAmount" slot-scope="scope">
                         {{scope.data.row.contractAmount?fundMoneys(scope.data.row.contractAmount):0}}
                     </template>
@@ -118,9 +118,9 @@
 
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table type="success" size="mini" plain @click="onLookproject(scope.data.row)">查看详情</h-button>
+                        <h-button table @click="onLookproject(scope.data.row)">查看详情</h-button>
                         <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回 2的时候点进去能看到，但不能修改-->
-                        <h-button table type="warning" size="mini" plain @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</h-button>
+                        <h-button table @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=3&&scope.data.row.status==3">修改</h-button>
                     </template>
                 </hosJoyTable>
             </div>
@@ -280,7 +280,7 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
             const { ...params } = this.queryParams

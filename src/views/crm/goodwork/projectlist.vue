@@ -103,13 +103,13 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
-                        <h-button type="primary" class="ml20" @click="onRest()">
+                        <h-button @click="onRest()">
                             重置
                         </h-button>
-                        <h-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
+                        <h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
                             导出
                         </h-button>
                     </div>
@@ -146,9 +146,9 @@
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
-                    <h-button table plain @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
-                    <h-button table v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
+                    <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
+                    <h-button table v-if="scope.data.row.pushRecord" @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -180,7 +180,7 @@
 
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">

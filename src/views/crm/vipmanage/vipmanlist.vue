@@ -43,10 +43,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
-                        <h-button type="primary" class="ml20" @click="onRest()">
+                        <h-button @click="onRest()">
                             重置
                         </h-button>
                     </div>
@@ -60,7 +60,7 @@
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button  table plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_LOOK_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_LOOK_DETAIL)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -178,7 +178,7 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.maxServiceFeeDiscount = this.maxServiceFeeDiscount ? (this.maxServiceFeeDiscount * 0.1).toFixed(2) : ''
             this.queryParams.minServiceFeeDiscount = this.minServiceFeeDiscount ? (this.minServiceFeeDiscount * 0.1).toFixed(2) : ''
             this.queryParams.jobNumber = this.userInfo.jobNumber

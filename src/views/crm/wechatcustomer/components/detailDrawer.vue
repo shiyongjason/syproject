@@ -40,7 +40,7 @@
                             </el-date-picker>
                         </div>
                         <h-button type='primary' @click="onFindallPage()">查询</h-button>
-                        <h-button type='primary' @click="onRest">重置</h-button>
+                        <h-button @click="onRest">重置</h-button>
                     </div>
                     <h3>数据</h3>
 

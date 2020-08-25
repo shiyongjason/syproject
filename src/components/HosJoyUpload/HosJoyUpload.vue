@@ -153,6 +153,7 @@ export default {
                     this.progressFlag = false
                     this.loading = false
                     this.$emit('successCb')
+                    this.$emit('successArg', obj)
                 }, 500)
             }
         },

@@ -57,7 +57,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-input">
                         <h-button type='primary' @click="searchList(1)">查询</h-button>
-                        <h-button type='primary' @click="onRest">重置</h-button>
+                        <h-button @click="onRest">重置</h-button>
                         <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
                     </div>
                 </div>
