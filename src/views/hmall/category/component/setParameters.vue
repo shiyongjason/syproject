@@ -315,7 +315,7 @@ export default {
         },
         // 通过判断是否传递的是row，删除单个或者多个，注意取消的时候，单个要清空数组
         onDelete (row) {
-            if (row.k) {
+            if (row && row.k) {
                 this.multiSelection = [row]
             } else {
                 if (this.multiSelection.length === 0) {
