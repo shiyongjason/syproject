@@ -101,12 +101,14 @@
             </el-form>
         </div>
         <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</el-button>
+            <!-- <el-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</el-button> -->
+            <el-button @click="dealBack">返回</el-button>
             <el-button type="primary" @click='onSave(1)'>保存</el-button>
             <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
         </div>
         <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <el-button @click='()=>{$router.go(-1)}'>返回</el-button>
+            <!-- <el-button @click='()=>{$router.go(-1)}'>返回</el-button> -->
+            <el-button @click='onGoBack'>返回</el-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
             <center>
@@ -345,7 +347,15 @@ export default {
     },
     methods: {
         ...mapMutations(['REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS']),
-        ...mapActions(['eventInfo', 'copy']),
+        ...mapActions(['eventInfo', 'copy', 'setNewTags']),
+        dealBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/b2b/marketing/eventMange')
+        },
+        onGoBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.go(-1)
+        },
         beforeAvatarUpload (file) {
             const isImage = ['image/jpeg', 'image/jpg', 'image/png']
             const isJPG = file.type
