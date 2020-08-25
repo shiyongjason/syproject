@@ -55,9 +55,9 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList()">查询</h-button>
+                        <h-button type="primary" @click="searchList()">查询</h-button>
                         <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
-                        <h-button class="ml20" @click="onExport">导出</h-button>
+                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>

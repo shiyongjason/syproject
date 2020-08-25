@@ -47,10 +47,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-cont">
-                        <h-button type="primary" class="ml20" @click="onQuery()">
+                        <h-button type="primary" @click="onQuery()">
                             查询
                         </h-button>
-                        <h-button class="ml20" @click="onReset()">重置</h-button>
+                        <h-button @click="onReset()">重置</h-button>
                     </div>
                 </div>
             </div>

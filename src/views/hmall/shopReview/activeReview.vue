@@ -74,10 +74,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <h-button type="primary" class="ml20" @click="findActiveList">
+                        <h-button type="primary" @click="findActiveList">
                             查询
                         </h-button>
-                        <h-button class="ml20" @click="reset">
+                        <h-button @click="reset">
                             重置
                         </h-button>
                     </div>

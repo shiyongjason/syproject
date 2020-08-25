@@ -29,10 +29,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="onFindAccountList(1)">
+                        <h-button type="primary" @click="onFindAccountList(1)">
                             查询
                         </h-button>
-                        <h-button class="ml20" @click="onRest()">
+                        <h-button @click="onRest()">
                             重置
                         </h-button>
                     </div>
