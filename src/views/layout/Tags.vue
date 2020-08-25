@@ -22,7 +22,6 @@ export default {
         return {
             editableTabsValue: '首页',
             clickTags: false,
-            oldRoute: '',
             newTags: [],
             oldTags: []
         }
@@ -170,15 +169,14 @@ export default {
     },
     watch: {
         $route (newValue, oldValue) {
-            this.oldRoute = oldValue
             this.$nextTick(() => {
                 this.clickTags = false
             })
             if (this.clickTags === false) {
                 const c = '/'
                 const regex = new RegExp(c, 'g')
-                const result = this.oldRoute.path.match(regex)
-                let oldRouteComponents = this.oldRoute.matched[result.length - 1].components.default
+                const result = oldValue.path.match(regex)
+                let oldRouteComponents = oldValue.matched[result.length - 1].components.default
                 const isExist = this.tagsList.some(item => {
                     return item.componentsName === oldRouteComponents.name
                 })
@@ -210,7 +208,6 @@ export default {
             tags.map(item => {
                 if (item.middleComponents && (this.cachedInclude.indexOf(item.middleComponents) == -1)) {
                     newCache(item.middleComponents)
-                    // sessionStorage.setItem('cachedInclude_bak', this.cachedInclude)
                 }
                 if (!item.componentsName) {
                     console.error(`:::请给${item.path}组件加个组件唯一name:::`)
