@@ -8,9 +8,10 @@
                 <div class="query-col-title">服务单号：</div>
                 <div class="query-col-input">
                     <el-input
-                        v-model="queryParams.phone"
+                        v-model="queryParams.serviceNo"
                         placeholder="请输入服务单号"
                         maxlength="50"
+                        clearable
                     ></el-input>
                 </div>
             </div>
@@ -22,6 +23,7 @@
                         v-model="queryParams.operator"
                         placeholder="请输入申请人账号"
                         maxlength="11"
+                        clearable
                     ></el-input>
                 </div>
             </div>
