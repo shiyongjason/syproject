@@ -40,9 +40,9 @@
                     </div>
                 </div> -->
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onQuery()">搜索</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
-                    <el-button type="primary" class="ml20" @click="onImport()">导出</el-button>
+                    <h-button type="primary" class="ml20" @click="onQuery()">查询</h-button>
+                    <h-button class="ml20" @click="onReset()">重置</h-button>
+                    <h-button class="ml20" @click="onImport()">导出</h-button>
                 </div>
             </div>
         </div>

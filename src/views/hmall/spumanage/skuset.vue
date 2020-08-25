@@ -33,18 +33,18 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="searchList()">
+                    <h-button type="primary" class="ml20" @click="searchList()">
                         查询
-                    </el-button>
+                    </h-button>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" class="ml20" @click="openMark()">
+                <h-button type="create" class="ml20" @click="openMark()">
                     新增属性
-                </el-button>
-                <el-button type="primary" class="ml20" @click="onUpdateAttr(1)">批量生效</el-button>
-                <el-button type="primary" class="ml20" @click="onUpdateAttr(2)">批量失效</el-button>
-                <!-- <el-button type="primary" class="ml20" @click="onExport()">导出</el-button> -->
+                </h-button>
+                <h-button class="ml20" @click="onUpdateAttr(1)">批量生效</h-button>
+                <h-button class="ml20" @click="onUpdateAttr(2)">批量失效</h-button>
+                <!-- <h-button class="ml20" @click="onExport()">导出</h-button> -->
             </div>
         </div>
         <!-- <AttributeTable :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateAttribute="updateAttributeChange" @openMark="openMark" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
@@ -58,15 +58,13 @@
                     {{scope.data.row.updateTime|formatDate}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">修改</el-button>
-                    <el-button
-                        :type="scope.data.row.status ==2?'primary':''"
-                        size="mini"
-                        plain
+                    <h-button table @click="onEditSpu(scope.data.row)">修改</h-button>
+                    <h-button
+                        table
                         :disabled='!scope.data.row.canInvalid'
                         @click="onChangeSpu(scope.data.row)"
                         v-text="scope.data.row.status === 1 ? '失效' : '生效'">
-                    </el-button>
+                    </h-button>
                 </template>
             </basicTable>
         </div>
@@ -106,8 +104,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogAttributeEdit = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm()" :loading="isSaving">保 存</el-button>
+                <h-button @click="dialogAttributeEdit = false">取 消</h-button>
+                <h-button type="primary" @click="submitForm()" :loading="isSaving">保 存</h-button>
             </div>
         </el-dialog>
     </div>

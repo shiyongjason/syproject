@@ -7,7 +7,7 @@
                         <el-input placeholder="请输入岗位名称进行检索" v-model="positionName" style="width: 415px" maxlength="25">
                         </el-input>
                     </div>
-                    <el-button type="primary" @click="searchpositionName()">搜索
+                    <el-button type="primary" @click="searchpositionName()">查询
                     </el-button>
                 </div>
             </div>

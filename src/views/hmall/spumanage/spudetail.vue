@@ -1,7 +1,13 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px">
+            <Detail :form="form" :pictureContainer="pictureContainer" v-if="operate == 'show'">
+                <el-form-item style="text-align: center">
+                    <el-button @click="onBack()">返回</el-button>
+                    <el-button @click="onSetSpuTemplate()">设置为SPU模板</el-button>
+                </el-form-item>
+            </Detail>
+            <el-form ref="formmain" :model="form" :rules="rules" label-width="110px" v-else>
                 <div class="page-body-title">
                     <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
                 </div>
@@ -101,9 +107,9 @@
                 </div>
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
-                        <el-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</el-button>
-                        <el-button type="primary" @click="onSave(2)" v-if="operate=='modify'">保存</el-button>
-                        <el-button @click="onBack()">返回</el-button>
+                        <h-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</h-button>
+                        <h-button type="primary" @click="onSave(2)" v-if="operate=='modify'">保存</h-button>
+                        <h-button @click="onBack()">返回</h-button>
                     </el-form-item>
                 </el-row>
                 <el-form ref="auditForm" :model="auditForm" :rules="auditrules" label-width="110px">
@@ -117,9 +123,9 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item style="text-align: center">
-                            <el-button type="primary" @click="onAudit()">确定</el-button>
-                            <el-button @click="onBack()">返回</el-button>
-                            <el-button @click="onSetSpuTemplate()">设置为SPU模板</el-button>
+                            <h-button type="primary" @click="onAudit()">确定</h-button>
+                            <h-button @click="onBack()">返回</h-button>
+                            <h-button @click="onSetSpuTemplate()">设置为SPU模板</h-button>
                         </el-form-item>
                     </el-row>
                 </el-form>
@@ -133,8 +139,12 @@ import { interfaceUrl } from '@/api/config'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { findSpuAttr, saveSpuTemplate, findSpuTemplateDetail, putSpuTemplate, findSpudetail, AuditSpu } from './api/index'
 import { deepCopy } from '@/utils/utils'
+import Detail from './component/detail.vue'
 export default {
     name: 'spudetail',
+    components: {
+        Detail
+    },
     data () {
         return {
             form: {
@@ -215,9 +225,11 @@ export default {
             this.form.imgUrls = val.map(v => v.url).join()
         },
         'form.imgUrls' (value) {
-            this.$refs['formmain'].validateField('imgUrls')
-            if (value) {
-                this.$refs['formmain'].clearValidate('imgUrls')
+            if (this.$refs['formmain']) {
+                this.$refs['formmain'].validateField('imgUrls')
+                if (value) {
+                    this.$refs['formmain'].clearValidate('imgUrls')
+                }
             }
         }
     },
@@ -273,9 +285,9 @@ export default {
         await this.findAllCategory()
         await this.findAllBrands()
         this.operate = this.$route.query.type
-        if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
+        if (this.$route.query.spuTemplateId) {
             this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
-        } else if (this.$route.query.type === 'audit' && this.$route.query.spuId) {
+        } else if (this.$route.query.spuId) {
             this.findSpuDetailAsync(this.$route.query.spuId)
         } else {
             this.resetForm()
@@ -518,8 +530,9 @@ export default {
             })
             this.$forceUpdate()
         },
-        onSetSpuTemplate () {
-            this.setSpuTemplate(this.$route.query.spuId)
+        async onSetSpuTemplate () {
+            await this.setSpuTemplate(this.$route.query.spuId)
+            this.$message.success(`设置模板成功`)
         }
     }
 }

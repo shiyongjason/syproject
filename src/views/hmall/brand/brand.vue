@@ -47,10 +47,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="flex-wrap-cont">
-                        <el-button type="primary" class="ml20" @click="onQuery()">
-                            搜索
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onReset()">重置</el-button>
+                        <h-button type="primary" class="ml20" @click="onQuery()">
+                            查询
+                        </h-button>
+                        <h-button class="ml20" @click="onReset()">重置</h-button>
                     </div>
                 </div>
             </div>
@@ -110,8 +110,8 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogBrandEdit = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm('form')" :loading="isSaving">保 存</el-button>
+                <h-button @click="dialogBrandEdit = false">取 消</h-button>
+                <h-button type="primary" @click="submitForm('form')" :loading="isSaving">保 存</h-button>
             </div>
         </el-dialog>
     </div>

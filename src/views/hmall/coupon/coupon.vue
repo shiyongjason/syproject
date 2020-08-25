@@ -73,13 +73,23 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">是否可叠加：</div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.stackable">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="是" value="true"></el-option>
+                            <el-option label="否" value="false"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="findCouponList">
-                            搜索
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="reset">
+                        <h-button type="primary" class="ml20" @click="findCouponList">
+                            查询
+                        </h-button>
+                        <h-button class="ml20" @click="reset">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -134,7 +144,8 @@ export default {
                 endDate: '',
                 auditStatus: '',
                 couponType: '',
-                merchantName: ''
+                merchantName: '',
+                stackable: ''
             },
             tableData: [],
             paginationData: {},
