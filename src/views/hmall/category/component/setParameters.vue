@@ -330,7 +330,7 @@ export default {
             }).then(() => {
                 this.deleteAsync()
             }).catch(() => {
-                if (row.k) {
+                if (row && row.k) {
                     this.multiSelection = []
                 }
             })
