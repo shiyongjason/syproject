@@ -37,7 +37,11 @@
                                     </a>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
                                 </div>
+
                             </div>
+                              <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
+                                    <el-button type="primary">上 传</el-button>
+                                </hosjoyUpload>
                         </div>
 
                     </el-form-item>
@@ -90,9 +94,11 @@
 </template>
 <script>
 import moment from 'moment'
-import { refuseDoc, submitProjectdoc } from '../api/index'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { refuseDoc, submitProjectdoc, checkTemplatedoc } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { handleImgDownload } from '../../projectInformation/utils'
+import { interfaceUrl } from '@/api/config'
 export default {
     name: 'datacollectcom',
     props: {
@@ -112,6 +118,11 @@ export default {
     data () {
         return {
             handleImgDownload,
+            action: interfaceUrl + 'tms/files/upload',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: true
+            },
             moment,
             colFormrules: {},
             recordsVisible: false,
@@ -142,6 +153,9 @@ export default {
                 remark: ''
             }
         }
+    },
+    components: {
+        hosjoyUpload
     },
     computed: {
         ...mapState({
@@ -236,6 +250,17 @@ export default {
             this.collectVisible = false
             this.refuseForm.remark = ''
             this.reasonVisible = false
+        },
+        handleSuccessCb (row) {
+            console.log(row)
+            row.riskCheckProjectDocPos.map(item => {
+                item.templateId = row.templateId
+                item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
+                item.projectId = this.colForm.projectId
+            })
+            //
+            const newDoc = row.riskCheckProjectDocPos.filter(val => !val.projectDocId)
+            // checkTemplatedoc({ projectTemplateDocList: newDoc })
         }
     }
 }
