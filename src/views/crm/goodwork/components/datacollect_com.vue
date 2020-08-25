@@ -39,7 +39,7 @@
                                 </div>
 
                             </div>
-                              <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
+                              <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                     <el-button type="primary">上 传</el-button>
                                 </hosjoyUpload>
                         </div>
@@ -252,15 +252,15 @@ export default {
             this.reasonVisible = false
         },
         handleSuccessCb (row) {
-            console.log(row)
+            console.log('row', row)
             row.riskCheckProjectDocPos.map(item => {
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
                 item.projectId = this.colForm.projectId
             })
-            //
-            const newDoc = row.riskCheckProjectDocPos.filter(val => !val.projectDocId)
-            // checkTemplatedoc({ projectTemplateDocList: newDoc })
+        },
+        handleSuccessArg (val) {
+            checkTemplatedoc({ projectTemplateDocList: [val] })
         }
     }
 }

@@ -67,7 +67,7 @@
                                         <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                                     </p>
                                 </div>
-                                <hosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" style="margin:10px 0 0 5px">
+                                <hosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                     <el-button type="primary">上 传</el-button>
                                 </hosjoyUpload>
                             </el-form-item>
@@ -324,8 +324,13 @@ export default {
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
-            const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
-            await uploadCredit(newDocuments)
+            // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
+            // await uploadCredit(newDocuments)
+            // this.$message.success('资料上传成功!')
+        },
+        async  handleSuccessArg (val) {
+            // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
+            await uploadCredit([val])
             this.$message.success('资料上传成功!')
         },
         onDelete (item, index) {
