@@ -39,10 +39,10 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList">
+                        <h-button type="primary" @click="searchList">
                             查询
                         </h-button>
-                        <h-button class="ml20" @click="onRest">
+                        <h-button @click="onRest">
                             重置
                         </h-button>
                     </div>
@@ -50,11 +50,11 @@
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <h-button type="create" class="ml20" @click="gotoProductAdd">
+                    <h-button type="create" @click="gotoProductAdd">
                         新建SPU模板
                     </h-button>
-                    <h-button class="ml20" @click="onDisable()">批量禁用</h-button>
-                    <h-button class="ml20" @click="onEnable()">批量启用</h-button>
+                    <h-button @click="onDisable()">批量禁用</h-button>
+                    <h-button @click="onEnable()">批量启用</h-button>
                 </div>
             </div>
         </div>

@@ -2,11 +2,11 @@
     <div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <h-button type="create" class="ml20" @click="openMark('add')">
+                <h-button type="create" @click="openMark('add')">
                     新增品牌
                 </h-button>
-                <h-button class="ml20" @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</h-button>
-                <h-button class="ml20" @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</h-button>
+                <h-button @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</h-button>
+                <h-button @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</h-button>
             </div>
         </div>
         <div class="page-body-cont">
