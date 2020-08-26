@@ -8,9 +8,10 @@
                 <div class="query-col-title">服务单号：</div>
                 <div class="query-col-input">
                     <el-input
-                        v-model="queryParams.phone"
                         placeholder="请输入服务单号"
+                        v-model="queryParams.serviceNo"
                         maxlength="50"
+                        clearable
                     ></el-input>
                 </div>
             </div>
@@ -22,6 +23,7 @@
                         v-model="queryParams.operator"
                         placeholder="请输入申请人账号"
                         maxlength="11"
+                        clearable
                     ></el-input>
                 </div>
             </div>
@@ -81,8 +83,9 @@
             <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
             <p class="detailLine">图片</p>
             <div class="picContainer">
-                <el-image :style="index===0?firstPic:pic" v-for="(item, index) in detailData.picUlrs" :src="item" alt="" :key="index" @click="onPicClick(item)" :preview-src-list="detailData.picUlrs">
-                </el-image>
+                <viewer :images="detailData.picUlrs">
+                    <img v-for="(src,index) in detailData.picUlrs" :src="src" :key="src" :style="index===0?firstPic:pic">
+                </viewer>
             </div>
         </el-dialog>
             
@@ -92,6 +95,10 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import 'viewerjs/dist/viewer.css'
+  import Viewer from 'v-viewer'
+  import Vue from 'vue'
+  Vue.use(Viewer)
 export default {
     name: 'serviceManage',
     data () {
@@ -171,9 +178,7 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        onPicClick(url){
-            
-        }
+       
     },
     mounted () {
         this.onSearch()
