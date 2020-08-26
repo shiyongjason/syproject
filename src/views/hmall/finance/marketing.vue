@@ -205,6 +205,7 @@ export default {
                 { label: '券名称', prop: 'couponName' },
                 { label: '券类型', prop: 'couponType' },
                 { label: '券金额（元）', prop: 'couponAmount' },
+                { label: '券总金额（元）', prop: 'totalCouponAmount', formatters: 'moneyShow' },
                 { label: '活动编码', prop: 'activityCode' },
                 { label: '活动名称', prop: 'activityName' },
                 { label: '活动类型', prop: 'activityType' },
