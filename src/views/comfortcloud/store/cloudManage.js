@@ -26,14 +26,6 @@ const state = {
     cloudDeviceDetailPagination: {},
     cloudHomeDetailList: [],
     cloudHomeDetailPagination: {},
-    cloudHomeOpDetailList: [],
-    cloudHomeOpDetailPagination: {},
-    cloudHomeCoDetailList: [],
-    cloudHomeCoDetailPagination: {},
-    cloudHomeApDetailList: [],
-    cloudHomeApDetailPagination: {},
-    cloudHomeRtDetailList: [],
-    cloudHomeRtDetailPagination: {},
     cloudHomeDetailDict: [],
     comfortableSceneList: [],
     comfortableSceneListPagination: {},
@@ -54,7 +46,9 @@ const state = {
     splashScreenPagination: {},
     allActivity: [],
     customerServiceList: [],
-    customerServicePagination: {}
+    customerServicePagination: {},
+    cloudHomeModeTypeList: [],
+    serviceManageHistoryList: []
 }
 
 const getters = {
@@ -107,7 +101,9 @@ const getters = {
     allActivity: state => state.allActivity.map(v => {
         const value = v.title.length < 15 ? v.title : v.title.substr(0, 14) + '...'
         return { selectCode: v.id, value }
-    })
+    }),
+    cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
+    serviceManageHistoryList: state => state.serviceManageHistoryList
 }
 
 const mutations = {
@@ -180,30 +176,6 @@ const mutations = {
     [cloud.CLOUD_HOME_DETAIL_PAGINATION] (state, payload) {
         state.cloudHomeDetailPagination = payload
     },
-    [cloud.CLOUD_HOME_OP_DETAIL_LIST] (state, payload) {
-        state.cloudHomeOpDetailList = payload
-    },
-    [cloud.CLOUD_HOME_OP_DETAIL_PAGINATION] (state, payload) {
-        state.cloudHomeDetailPagination = payload
-    },
-    [cloud.CLOUD_HOME_CO_DETAIL_LIST] (state, payload) {
-        state.cloudHomeCoDetailList = payload
-    },
-    [cloud.CLOUD_HOME_CO_DETAIL_PAGINATION] (state, payload) {
-        state.cloudHomeCoDetailPagination = payload
-    },
-    [cloud.CLOUD_HOME_AP_DETAIL_LIST] (state, payload) {
-        state.cloudHomeApDetailList = payload
-    },
-    [cloud.CLOUD_HOME_AP_DETAIL_PAGINATION] (state, payload) {
-        state.cloudHomeDetailPagination = payload
-    },
-    [cloud.CLOUD_HOME_RT_DETAIL_LIST] (state, payload) {
-        state.cloudHomeRtDetailList = payload
-    },
-    [cloud.CLOUD_HOME_RT_DETAIL_PAGINATION] (state, payload) {
-        state.cloudHomeRtDetailPagination = payload
-    },
     [cloud.CLOUD_HOME_DETAIL_SEARCH_DICT] (state, payload) {
         state.cloudHomeDetailDict = payload
     },
@@ -267,6 +239,12 @@ const mutations = {
     },
     [cloud.GET_CUSTOMER_SERVICE_PAGINATION] (state, payload) {
         state.customerServicePagination = payload
+    },
+    [cloud.GET_CLOUD_HOME_MODE_TYPE_LIST] (state, payload) {
+        state.cloudHomeModeTypeList = payload
+    },
+    [cloud.GET_SERVICE_MANAGE_HISTORY_LIST] (state, payload) {
+        state.serviceManageHistoryList = payload
     }
 }
 
@@ -370,42 +348,6 @@ const actions = {
             total: data.data.total
         })
     },
-    async findCloudHomeOpDetailList ({ commit }, params) {
-        const { data } = await Api.getDeviceAirDetail(params)
-        commit(cloud.CLOUD_HOME_OP_DETAIL_LIST, data.data.records)
-        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
-        })
-    },
-    async findCloudHomeCoDetailList ({ commit }, params) {
-        const { data } = await Api.getDeviceAirDetail(params)
-        commit(cloud.CLOUD_HOME_CO_DETAIL_LIST, data.data.records)
-        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
-        })
-    },
-    async findCloudHomeApDetailList ({ commit }, params) {
-        const { data } = await Api.getDeviceFloorHeartDetail(params)
-        commit(cloud.CLOUD_HOME_AP_DETAIL_LIST, data.data.records)
-        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
-        })
-    },
-    async findCloudHomeRtDetailList ({ commit }, params) {
-        const { data } = await Api.getDeviceTempCtlValveDetail(params)
-        commit(cloud.CLOUD_HOME_RT_DETAIL_LIST, data.data.records)
-        commit(cloud.CLOUD_HOME_DETAIL_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
-        })
-    },
     async findCloudHomeDetailSearchDict ({ commit }, params) {
         const { data } = await Api.getCloudHomeDetailSearchDict(params)
         commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
@@ -496,6 +438,14 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async getCloudHomeModeTypeList ({ commit }, params) {
+        const { data } = await Api.getCloudHomeModeTypeList(params)
+        commit(cloud.GET_CLOUD_HOME_MODE_TYPE_LIST, data.data)
+    },
+    async getServiceManageHistoryList ({ commit }, params) {
+        const { data } = await Api.getServiceManageHistoryList(params)
+        commit(cloud.GET_SERVICE_MANAGE_HISTORY_LIST, data.data)
     }
 }
 export default {

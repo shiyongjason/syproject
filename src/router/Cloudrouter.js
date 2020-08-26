@@ -332,6 +332,18 @@ export default [
                         component: () => import('@/views/comfortcloud/knowledge')
                     }
                 ]
+            },
+            {
+                path: 'serviceManage',
+                name: 'serviceManage',
+                meta: {
+                    title: '服务管理',
+                    tagName: '服务管理',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/serviceManage.vue')
             }
         ]
     }

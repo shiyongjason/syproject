@@ -19,7 +19,7 @@
             <div ref="chart" style="height:500px"></div>
         </div>
         <div class="page-body-cont query-cont">
-            <h3>设备明细</h3>
+            <h3 class="home-detail-title">设备明细</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-title">手机号：</div>
@@ -28,9 +28,15 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">网关号：</div>
+                    <div class="query-col-title">设备ID：</div>
                     <div class="query-col-input">
-                        <el-input v-model="deviceDetailParams.iotId" placeholder="输入网关号" maxlength="20"></el-input>
+                        <el-input v-model="deviceDetailParams.subIotId" placeholder="输入设备ID" maxlength="20"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">网关ID：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="deviceDetailParams.iotId" placeholder="输入网关ID" maxlength="20"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -84,11 +90,17 @@ export default {
                 startDate: '',
                 endDate: '',
                 phone: '',
+                subIotId: '',
                 pageSize: 10,
                 pageNumber: 1
             },
-            smartList: [{ key: 'smartHost', name: '智能主机' }, { key: 'smartCont', name: '智能控制器' }, { key: 'sensor', name: '传感器' }, { key: 'smartAppliance', name: '智能家电' },
-                { key: 'switchPanel', name: '开关面板' }, { key: 'lvs', name: '腾亚智能新风机' }],
+            smartList: [{ key: 'smartHost', name: '智能主机' },
+                { key: 'airCondition', name: '空调控制' },
+                { key: 'heating', name: '采暖控制' },
+                { key: 'freshAir', name: '新风控制' },
+                { key: 'sensor', name: '传感器' },
+                { key: 'smartAppliance', name: '智能家电' },
+                { key: 'switchPanel', name: '开关面板' }],
             smartData: {}
         }
     },
@@ -296,3 +308,9 @@ export default {
     }
 }
 </script>
+
+<style lang="scss" scoped>
+    .home-detail-title {
+        padding-bottom: 20px;
+    }
+</style>
