@@ -260,7 +260,7 @@ export default {
             action: fileUploadUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             checkIdCard
 

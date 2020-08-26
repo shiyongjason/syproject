@@ -147,7 +147,7 @@ export default {
             return {
                 action: interfaceUrl + 'tms/files/upload',
                 data: {
-                    reservedName: true
+                    reservedName: false
                 },
                 accept: '.apk',
                 name: 'multiFile',
