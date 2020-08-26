@@ -107,7 +107,7 @@
                     <div class="drawer-content">
                         <el-form :label-width="'150px'" :label-position="'right'">
                             <el-form-item label="企业名称：">
-                                <p> {{authenticationDetail.companyName ? authenticationDetail.companyName : '-'}}</p>
+                                <p> {{authenticationDetail.corporationName ? authenticationDetail.corporationName : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="统一社会信用代码：">
                                 <p> {{authenticationDetail.unifiedSocialCreditCode ? authenticationDetail.unifiedSocialCreditCode : '-'}}</p>
