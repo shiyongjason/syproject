@@ -8,8 +8,8 @@
                 <div class="query-col-title">服务单号：</div>
                 <div class="query-col-input">
                     <el-input
-                        v-model="queryParams.serviceNo"
                         placeholder="请输入服务单号"
+                        v-model="queryParams.serviceNo"
                         maxlength="50"
                         clearable
                     ></el-input>
