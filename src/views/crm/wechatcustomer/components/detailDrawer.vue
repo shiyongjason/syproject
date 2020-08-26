@@ -45,7 +45,7 @@
                     <h3>数据</h3>
 
                     <div class="drawer-table_row">
-                        <div class="drawer-table_col"><b>{{staticInfo.memberNum}}</b>
+                        <div class="drawer-table_col"><b>{{staticInfo.memberNum|fundMoney}}</b>
                             <p>企业微信客户数（个）</p>
                         </div>
                         <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
