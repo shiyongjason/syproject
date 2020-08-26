@@ -79,14 +79,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="searchList()">
+                        <h-button type="primary" @click="searchList">
                             查询
                         </h-button>
-                        <h-button @click="onRest()">
+                        <h-button @click="onRest">
                             重置
                         </h-button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -301,9 +299,13 @@ export default {
             }
             this.searchList()
         },
-        onLookauthen (val) {
+        async onLookauthen (val) {
             this.drawer = true
-            this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$refs.drawercom.getAuthenticationDetail(val)
+            await this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$nextTick(() => {
+                this.$refs.drawercom.onClearV()
+            })
         },
         restDrawer () {
             this.drawer = false
