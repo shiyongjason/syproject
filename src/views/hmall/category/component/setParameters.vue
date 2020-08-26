@@ -406,9 +406,6 @@ export default {
     line-height: 40px;
     vertical-align: top;
 }
-.set-drawer {
-    padding: 20px;
-}
 .center-btn {
     text-align: center;
     margin-top: 10px;

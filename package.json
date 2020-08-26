@@ -19,7 +19,7 @@
     "bignumber.js": "^9.0.0",
     "echarts": "^4.2.1",
     "highcharts": "^7.2.1",
-    "hosjoy-ui": "^2.0.0",
+    "hosjoy-ui": "^2.1.0",
     "jwt-decode": "^2.2.0",
     "mathjs": "^7.0.1",
     "moment": "^2.24.0",

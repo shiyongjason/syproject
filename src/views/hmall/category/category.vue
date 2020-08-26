@@ -1,97 +1,95 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <h-button type="create" class="ml20" @click="onShowAdd('child')" v-if="current.level !== 3">
+    <div class="B2b">
+        <div class="page-body">
+            <div class="page-body-cont">
+                <div class="button-cont">
+                    <h-button type="create" @click="onShowAdd('child')" v-if="current.level !== 3">
                         添加子类目
                     </h-button>
-                    <h-button type="create" disabled class="ml20" v-else>添加子类目</h-button>
+                    <h-button type="create" disabled v-else>添加子类目</h-button>
                     <h-button type="create" class="ml20" @click="onShowAdd('brother')">
                         添加同类目
                     </h-button>
                 </div>
+                <tree-table
+                    ref="treeTable"
+                    :data="data"
+                    :columns="columns"
+                    :selectable="false"
+                    :expand-type="false"
+                    :row-style="tableRowStyle"
+                    children-prop="subCategoryList"
+                    @cell-click="onCellSelected"
+                    @expand-cell-click="onExpandCell"
+                    @tree-icon-click="onExpandCell"
+                    >
+                    <template slot="sort" slot-scope="scope">
+                        <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @change="inputChange(scope.row.sort)" @focus="inputFocus(scope.row)"></el-input>
+                    </template>
+                    <template slot="imgUrl" slot-scope="scope">
+                        <img :src="scope.row.imgUrl" class="img-table" v-if="scope.row.level === 3">
+                    </template>
+                    <template slot="operations" slot-scope="scope">
+                        <h-button table @click="onShowEdit(scope.row)">修改</h-button>
+                        <h-button table @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</h-button>
+                        <!-- <span class="action mr10" @click="onShowEdit(scope.row)">修改</span> -->
+                        <!-- <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span> -->
+                    </template>
+                </tree-table>
             </div>
-        </div>
-        <div class="page-body-cont">
-            <tree-table
-                ref="treeTable"
-                :data="data"
-                :columns="columns"
-                :selectable="false"
-                :expand-type="false"
-                :row-style="tableRowStyle"
-                children-prop="subCategoryList"
-                @cell-click="onCellSelected"
-                @expand-cell-click="onExpandCell"
-                @tree-icon-click="onExpandCell"
-                >
-                <template slot="sort" slot-scope="scope">
-                    <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @change="inputChange(scope.row.sort)" @focus="inputFocus(scope.row)"></el-input>
-                </template>
-                <template slot="imgUrl" slot-scope="scope">
-                    <img :src="scope.row.imgUrl" class="img-table" v-if="scope.row.level === 3">
-                </template>
-                <template slot="operations" slot-scope="scope">
-                    <h-button table @click="onShowEdit(scope.row)">修改</h-button>
-                    <h-button table @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</h-button>
-                    <!-- <span class="action mr10" @click="onShowEdit(scope.row)">修改</span> -->
-                    <!-- <span class="action mr10" @click="onShowParams(scope.row)" v-if="scope.row.level === 2">设置参数</span> -->
-                </template>
-            </tree-table>
-        </div>
-        <el-dialog title="类目编辑" :visible.sync="editVisible">
-            <el-form
-                ref="form"
-                :model="form"
-                :rules="rules"
-                label-width="150px">
-                <div class="edit-form-item">
-                    <span class="mr20">
-                        <label class="item-label">类目编号：</label>{{ this.form.code ? this.form.code : '--' }}
-                    </span>
-                    <span><label class="item-label">类目层级：</label>{{ this.form.level }}</span>
-                </div>
-                <div class="edit-form-item">
-                    <span><label class="item-label">父类目：</label>{{ this.form.parentName ? this.form.parentName : '--'  }}</span>
-                </div>
-                <el-form-item label="类目名称" prop="name" v-if="editVisible">
-                    <el-input
-                        class="form-input"
-                        v-model="form.name"
-                        placeholder="请输入类目名称"
-                        maxlength="20"></el-input>
-                </el-form-item>
-                <el-form-item prop="imgUrl" label="类目logo：" v-if="form.level === 3">
-                    <!--imgUrl-->
-                    <SingleUpload
-                        sizeLimit="500K"
-                        :upload="uploadInfo"
-                        :imageUrl="imageUrl"
-                        ref="uploadImg"
-                        @back-event="readUrl"/>
-                    <div class="upload-tips">
-                        上传750*750，大小不超过500K，仅支持jpeg，jpg，png格式
+            <el-dialog title="类目编辑" :visible.sync="editVisible">
+                <el-form
+                    ref="form"
+                    :model="form"
+                    :rules="rules"
+                    label-width="150px">
+                    <div class="edit-form-item">
+                        <span class="mr20">
+                            <label class="item-label">类目编号：</label>{{ this.form.code ? this.form.code : '--' }}
+                        </span>
+                        <span><label class="item-label">类目层级：</label>{{ this.form.level }}</span>
                     </div>
-                </el-form-item>
-                <el-form-item>
-                    <h-button @click="editVisible = false">取消</h-button>
-                    <h-button type='primary' @click="onEditCategory">保存</h-button>
-                </el-form-item>
-            </el-form>
-        </el-dialog>
-        <el-drawer
-            class="page-body-drawer"
-            title="参数详情"
-            :visible.sync="setVisible"
-            :before-close="closeDialog"
-            direction="rtl"
-            size='900px'>
-            <setParameters
-                ref="setting"
-                :categoryId="current.id"
-            />
-        </el-drawer>
+                    <div class="edit-form-item">
+                        <span><label class="item-label">父类目：</label>{{ this.form.parentName ? this.form.parentName : '--'  }}</span>
+                    </div>
+                    <el-form-item label="类目名称" prop="name" v-if="editVisible">
+                        <el-input
+                            class="form-input"
+                            v-model="form.name"
+                            placeholder="请输入类目名称"
+                            maxlength="20"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="imgUrl" label="类目logo：" v-if="form.level === 3">
+                        <!--imgUrl-->
+                        <SingleUpload
+                            sizeLimit="500K"
+                            :upload="uploadInfo"
+                            :imageUrl="imageUrl"
+                            ref="uploadImg"
+                            @back-event="readUrl"/>
+                        <div class="upload-tips">
+                            上传750*750，大小不超过500K，仅支持jpeg，jpg，png格式
+                        </div>
+                    </el-form-item>
+                    <el-form-item>
+                        <h-button @click="editVisible = false">取消</h-button>
+                        <h-button type='primary' @click="onEditCategory">保存</h-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
+            <el-drawer
+                class="page-body-drawer"
+                title="参数详情"
+                :visible.sync="setVisible"
+                :before-close="closeDialog"
+                direction="rtl"
+                size='900px'>
+                <setParameters
+                    ref="setting"
+                    :categoryId="current.id"
+                />
+            </el-drawer>
+        </div>
     </div>
 </template>
 
