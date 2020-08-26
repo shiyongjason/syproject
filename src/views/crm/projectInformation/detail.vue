@@ -113,7 +113,7 @@ export default {
             // 上传时附带的额外参数同el-upload 的 data
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],
