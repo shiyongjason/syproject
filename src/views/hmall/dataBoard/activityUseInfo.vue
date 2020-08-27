@@ -1,48 +1,50 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
+        <div class="page-body-cont">
             <el-tabs type="card" v-model="tabName" @tab-click="onTab">
                 <el-tab-pane label="特价活动" name="spike"></el-tab-pane>
                 <el-tab-pane label="专题活动" name="special"></el-tab-pane>
             </el-tabs>
-        </div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">创建时间：</div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                    </el-date-picker>
+            <div class="query-cont__row mt20">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">创建时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col" v-if="tabName == 'special'">
+                    <div class="query-col__lable">所属商家：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入所属商家">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
                 </div>
             </div>
-            <div class="query-cont-col" v-if="tabName == 'special'">
-                <div class="query-col-title">所属商家：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入所属商家">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <h-button type="primary" @click="onQuery">查询</h-button>
-                <h-button @click="onReset">重置</h-button>
-                <h-button @click="onExport">导出</h-button>
-            </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableLabel="tableColumn" :tableData="tableData" :pagination="paginationData" :isAction="true" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onLookInfo(scope.data.row)">查看明细</h-button>
                 </template>
             </basicTable>
-            <div class="table-cont-title">
-                <span class="table-title-name">明细数据</span>
-                <h-button @click="onExportInfo">导出</h-button>
+            <div class="title-cont">
+                <span class="title-cont__label">明细数据</span>
+                <span class="title-cont__bt">
+                    <h-button @click="onExportInfo">导出</h-button>
+                </span>
             </div>
             <basicTable :tableLabel="tableLabelInfo" :tableData="tableDataInfo" :pagination="paginationDataInfo" @onSizeChange="onSizeChangeInfo" @onCurrentChange="onCurrentChangeInfo"></basicTable>
         </div>
     </div>
+</div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
