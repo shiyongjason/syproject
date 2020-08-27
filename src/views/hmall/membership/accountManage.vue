@@ -1,16 +1,17 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">账号/姓名：</div>
-                    <div class="query-col-input">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">账号/姓名：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.username" placeholder="请输入账号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">注册时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">注册时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -18,28 +19,24 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">账号来源：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">账号来源：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.sources" multiple collapse-tags clearable>
                             <el-option v-for="item in options" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="onFindAccountList(1)">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onFindAccountList(1)">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{accountData.total}} 项 </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
             @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
@@ -50,6 +47,7 @@
         </div>
         <accountCp :drawer=drawer @backEvent='restDrawer' ref="account"></accountCp>
     </div>
+</div>
 </template>
 <script>
 import accountCp from './accountCp'
