@@ -4,22 +4,22 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col-title">供应商：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__lable">供应商：</div>
+                    <div class="query-col__input">
                         <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col-title">品牌名称：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__lable">品牌名称：</div>
+                    <div class="query-col__input">
                         <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
                         </el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col-title">申请时间：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__lable">申请时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.applicationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
@@ -40,7 +40,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col-title">
+                    <div class="query-col__lable">
                         <h-button type="primary" @click="onQuery">查询</h-button>
                         <h-button @click="onReset">重置</h-button>
                     </div>

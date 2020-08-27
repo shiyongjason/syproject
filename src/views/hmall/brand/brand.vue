@@ -4,8 +4,8 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="flex-wrap-title">品牌编码：</div>
-                    <div class="flex-wrap-cont">
+                    <div class="query-col__lable">品牌编码：</div>
+                    <div class="query-col__input">
                         <el-input
                             type="text"
                             v-model="queryParams.code"
@@ -14,8 +14,8 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="flex-wrap-title">品牌名称：</div>
-                    <div class="flex-wrap-cont">
+                    <div class="query-col__lable">品牌名称：</div>
+                    <div class="query-col__input">
                         <el-input
                             type="text"
                             v-model="queryParams.name"
@@ -24,8 +24,8 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="flex-wrap-title">品牌状态：</div>
-                    <div class="flex-wrap-cont">
+                    <div class="query-col__lable">品牌状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.status" style="width: 100%">
                             <el-option
                                 v-for="item in brandStatusOptions"
@@ -37,8 +37,8 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="flex-wrap-title">维护人：</div>
-                    <div class="flex-wrap-cont">
+                    <div class="query-col__lable">维护人：</div>
+                    <div class="query-col__input">
                         <el-input
                             type="text"
                             v-model="queryParams.operator"
@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="flex-wrap-cont">
+                    <div class="query-col__input">
                         <h-button type="primary" @click="onQuery()">
                             查询
                         </h-button>
