@@ -1,6 +1,6 @@
 <template>
     <div class="tags-wrapper page-body">
-        <div class="page-body-cont">
+        <div class="page-body-cont spanflex">
             <span>服务管理</span>
         </div>
         <div class="page-body-cont query-cont">
@@ -73,17 +73,17 @@
         </div>
 
         <el-dialog title="服务详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
-            <div class="detailLine">
-                <span>服务类型：{{detailData.serviceType===1?'预约维修':'清洗保养'}}</span><span class="detailLineRight">服务产品：{{detailData.product}}</span>
+           <div class="detailLine">
+                <span>服务类型：{{detailData.serviceType===1?'预约维修':'清洗保养'}}</span><span class="centerLine">服务产品：{{detailData.product}}</span><span class="rightLine">服务时间：{{detailData.serviceTime}}</span>
             </div>
             <div class="detailLine">
-                <span>客户姓名：{{detailData.customerName}}</span><span class="detailLineRight">客户电话：{{detailData.customerPhone}}</span>
+                <span>客户姓名：{{detailData.customerName}}</span><span class="centerLine">客户电话：{{detailData.customerPhone}}</span>
             </div>
             <p class="detailLine">客户地址：{{detailData.customerAddress}}</p>
             <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
             <p class="detailLine">图片</p>
-            <div class="picContainer">
-                <viewer :images="detailData.picUlrs" style="z-index: 9999!important">
+            <div class="detailLine lastLine">
+                <viewer :images="detailData.picUlrs">
                     <img v-for="(src,index) in detailData.picUlrs" :src="src" :key="src" :style="index===0?firstPic:pic">
                 </viewer>
             </div>
@@ -96,7 +96,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import 'viewerjs/dist/viewer.css'
 import Viewer from 'v-viewer'
 import Vue from 'vue'
-Vue.use(Viewer,{defaultOptions:{zIndex:9999}})
+Vue.use(Viewer, { defaultOptions: { zIndex: 9999 } })
 export default {
     name: 'serviceManage',
     data () {
@@ -215,14 +215,31 @@ export default {
     color: black;
     margin-top: 20px;
 }
-.detailLineRight{
+.lastLine{
+    margin-bottom: 20px;
+}
+.centerLine{
     position: absolute;
-    left: 50%;
+    left: 33%;
+}
+.rightLine{
+    position: absolute;
+    left: 66%;
 }
 .picContainer{
     display: flex;
     margin-top: 20px;
     margin-bottom: 20px;
+}
+.spanflex {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    span {
+        &:first-child {
+            font-size: 16px;
+        }
+    }
 }
 
 </style>
