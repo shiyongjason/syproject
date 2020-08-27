@@ -1,86 +1,87 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">SPU编码：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.spuCode" placeholder="请输入SPU编码">
-                    </el-input>
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">SPU编码：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.spuCode" placeholder="请输入SPU编码">
+                        </el-input>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">商品名称：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.spuName" placeholder="请输入商品名称">
-                    </el-input>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品名称：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.spuName" placeholder="请输入商品名称">
+                        </el-input>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">商品品牌：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入商品品牌">
-                    </el-input>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品品牌：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入商品品牌">
+                        </el-input>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">商品类目：</div>
-                <div class="query-col-input">
-                    <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品类目：</div>
+                    <div class="query-col__input">
+                        <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
+                    </div>
                 </div>
-            </div>
-
-            <div class="query-cont-col">
-                <div class="query-col-title">商品型号：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品型号">
-                    </el-input>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品型号：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.model" placeholder="请输入商品型号">
+                        </el-input>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">商品来源：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商品来源">
-                    </el-input>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品来源：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商品来源">
+                        </el-input>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">上架状态：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.isOnShelf" style="width: 100%">
-                        <el-option
-                            v-for="item in shelfStatus"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">上架状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.isOnShelf" style="width: 100%">
+                            <el-option
+                                v-for="item in shelfStatus"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">是否共享：</div>
-                <div class="query-col-input">
-                    <el-select v-model="queryParams.isShared" style="width: 100%">
-                        <el-option
-                            v-for="item in shareStatus"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">是否共享：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.isShared" style="width: 100%">
+                            <el-option
+                                v-for="item in shareStatus"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </div>
                 </div>
-            </div>
-            <div class="query-cont-col">
-                <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
-            </div>
-            <div>
-
-            </div>
-                <div class="button-cont">
+                <div class="query-cont__col">
+                    <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                     <h-button @click="onExport">导出</h-button>
-                    <h-button @click="onOffShelves()">批量下架</h-button>
                 </div>
+            </div>
+            <div class="button-cont">
+                <h-button @click="onOffShelves()">批量下架</h-button>
+            </div>
             <basicTable
                 :tableLabel="tableLabel"
                 :tableData="tableData"
@@ -105,6 +106,7 @@
             </basicTable>
         </div>
     </div>
+</div>
 </template>
 
 <script>
