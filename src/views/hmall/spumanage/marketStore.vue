@@ -72,16 +72,15 @@
             <div class="query-cont-col">
                 <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
             </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
+            <div>
+
+            </div>
+                <div class="button-cont">
                     <h-button type="primary" @click="onQuery">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                     <h-button @click="onExport">导出</h-button>
                     <h-button @click="onOffShelves()">批量下架</h-button>
                 </div>
-            </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable
                 :tableLabel="tableLabel"
                 :tableData="tableData"

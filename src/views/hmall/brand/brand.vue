@@ -47,12 +47,10 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__input">
-                        <h-button type="primary" @click="onQuery()">
-                            查询
-                        </h-button>
-                        <h-button @click="onReset()">重置</h-button>
-                    </div>
+                    <h-button type="primary" @click="onQuery()">
+                        查询
+                    </h-button>
+                    <h-button @click="onReset()">重置</h-button>
                 </div>
             </div>
             <brandTable

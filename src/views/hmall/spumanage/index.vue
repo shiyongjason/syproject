@@ -39,14 +39,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__input">
-                        <h-button type="primary" @click="searchList">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest">
-                            重置
-                        </h-button>
-                    </div>
+                    <h-button type="primary" @click="searchList">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest">
+                        重置
+                    </h-button>
                 </div>
             </div>
             <div class="button-cont">

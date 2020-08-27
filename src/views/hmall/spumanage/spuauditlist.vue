@@ -51,8 +51,8 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="flex-wrap-title">审核状态：</div>
-                    <div class="flex-wrap-cont">
+                    <div class="query-col__lable">审核状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.auditStatus" style="width: 100%">
                             <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
@@ -60,20 +60,18 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col-input">
+                    <div class="query-col__input">
                         <el-checkbox v-model="queryParams.isOwnOperated">自营</el-checkbox>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="searchList">查询</h-button>
-                        <h-button @click="onRest">重置</h-button>
-                    </div>
+                    <h-button type="primary" @click="searchList">查询</h-button>
+                    <h-button @click="onRest">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
                 </div>
             </div>
             <div class="button-cont">
                 <h-button @click="onChangeStatus">批量审核</h-button>
-                <h-button @click="onExport">导出</h-button>
             </div>
             <div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="true" :selectable="selectable" :isAction="true" :actionMinWidth=220

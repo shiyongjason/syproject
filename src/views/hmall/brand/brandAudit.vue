@@ -40,10 +40,8 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">
-                        <h-button type="primary" @click="onQuery">查询</h-button>
-                        <h-button @click="onReset">重置</h-button>
-                    </div>
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
