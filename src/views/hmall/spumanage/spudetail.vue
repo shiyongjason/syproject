@@ -13,7 +13,7 @@
                     <span class="title-cont__label"> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</span>
                 </div>
                 <!-- 更新或者审核 start  -->
-                <div v-if="operate=='modify'||operate=='audit'" style="margin:10px 0 20px 0">
+                <div v-if="operate=='modify'||operate=='audit'" style="margin-bottom:20px">
                     <el-form-item label="商品类目：" style="width: 460px;">
                         {{form.categoryPathName}}
                     </el-form-item>
@@ -77,7 +77,7 @@
                 <div class="title-cont" v-if="form.specifications.length>0">
                     <span class="title-cont__label">商品参数信息</span>
                 </div>
-                <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px; margin-top: 20px">
+                <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px;">
                     <!--  -->
                     <el-form-item
                         :label="item.k"
@@ -103,7 +103,7 @@
                 <div class="title-cont">
                     <span class="title-cont__label">商品详情</span>
                 </div>
-                <div style="padding-left: 110px; margin-top: 20px">
+                <div style="padding-left: 110px;">
                     <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </div>
                 <el-row v-if="operate=='modify'||operate=='add'">

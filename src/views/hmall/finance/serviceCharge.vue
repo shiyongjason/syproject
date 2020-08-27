@@ -1,9 +1,12 @@
 <template>
+<div class="B2b">
     <div class="page-body">
         <div class="page-body-cont">
-            <div class="table-cont-title">
-                <span class="table-title-name">账户概览</span>
-                <h-button type='assist' @click="onWithdrawal">提现</h-button>
+            <div class="title-cont">
+                <span class="title-cont__label">账户概览</span>
+                <span class="title-cont__btn">
+                    <h-button type='assist' @click="onWithdrawal">提现</h-button>
+                </span>
             </div>
             <div class="balance-cont-row">
                 <div class="balance-cont-col">
@@ -16,17 +19,19 @@
                     </div>
                 </div>
             </div>
-            <div class="table-cont-title">服务费收取明细</div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">客户名称：</div>
-                    <div class="query-col-input">
+            <div class="title-cont">
+                <span class="title-cont__label">服务费收取明细</span>
+            </div>
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">客户名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">提现时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">提现时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.withdrawTimeStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
@@ -34,22 +39,18 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="searchList()">查询</h-button>
-                        <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
-                        <h-button @click="onExport">导出</h-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="searchList()">查询</h-button>
+                    <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
+                    <h-button @click="onExport">导出</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
-            <!-- :rowKey="rowKey" -->
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange"
                 :isShowIndex='true'>
             </basicTable>
         </div>
     </div>
+</div>
 </template>
 
 <script>

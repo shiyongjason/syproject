@@ -7,7 +7,7 @@
                     <div class="title-cont">
                         <span class="title-cont__label">1.设置活动基本信息</span>
                     </div>
-                    <div class="query-cont-row mt20">
+                    <div class="query-cont-row">
                         <div class="query-cont-col">
                             <div class="query-col-input">
                                 <el-form-item prop="spikeName" label="活动名称：" style="display: flex;">
@@ -53,7 +53,7 @@
                     <div class="title-cont">
                         <span class="title-cont__label">2.设置规则和优惠</span>
                     </div>
-                    <div class="query-cont-row mt20">
+                    <div class="query-cont-row">
                         <div class="query-cont-col">
                             <div class="query-col-input">
                                 <el-form-item prop="discountType" label="优惠方式：" style="display: flex;">
@@ -79,7 +79,7 @@
                     <div class="title-cont">
                         <span class="title-cont__label">3.选择活动商品</span>
                     </div>
-                    <div class="query-cont-row mt20">
+                    <div class="query-cont-row">
                         <div class="query-cont-col">
                             <div class="query-col-title">活动商品：</div>
                             <div class="query-col-input">

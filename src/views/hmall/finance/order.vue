@@ -1,46 +1,47 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">子订单号：</div>
-                    <div class="query-col-input">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">子订单号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">客户名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">客户名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.customerName" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">支付方式：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">支付方式：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.payWay">
                             <el-option v-for="item in paymethodOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">订单状态：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">订单状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.childOrderStatus">
                             <el-option v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">订单渠道：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">订单渠道：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.source">
                             <el-option v-for="item in orderChannelOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">支付时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">支付时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.startPayTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
@@ -48,37 +49,29 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">自有商品：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">自有商品：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.own">
                             <el-option v-for="item in selfSupportOptions" :label="item.label" :value="item.value" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">订单来源：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">订单来源：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.sourceMerchantName" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品所属：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品所属：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.merchantName" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="onQuery">查询</h-button>
-                        <h-button @click="onReset">重置</h-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page-body-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
                     <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
@@ -99,6 +92,7 @@
             </basicTable>
         </div>
     </div>
+</div>
 </template>
 
 <script>
