@@ -26,7 +26,7 @@ export default [
             {
                 path: 'equipmentOverview',
                 meta: {
-                    title: '设备概览',
+                    title: '设备管理',
                     isMenu: true,
                     icon: ''
                 },
