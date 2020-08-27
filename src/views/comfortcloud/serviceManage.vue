@@ -72,7 +72,7 @@
             </basicTable>
         </div>
 
-        <el-dialog title="服务详情" :visible.sync="detailDialogVisible" width="50%">
+        <el-dialog title="服务详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
             <div class="detailLine">
                 <span>服务类型：{{detailData.serviceType===1?'预约维修':'清洗保养'}}</span><span class="detailLineRight">服务产品：{{detailData.product}}</span>
             </div>
@@ -83,32 +83,30 @@
             <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
             <p class="detailLine">图片</p>
             <div class="picContainer">
-                <viewer :images="detailData.picUlrs">
+                <viewer :images="detailData.picUlrs" style="z-index: 9999!important">
                     <img v-for="(src,index) in detailData.picUlrs" :src="src" :key="src" :style="index===0?firstPic:pic">
                 </viewer>
             </div>
         </el-dialog>
-            
-
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import 'viewerjs/dist/viewer.css'
-  import Viewer from 'v-viewer'
-  import Vue from 'vue'
-  Vue.use(Viewer)
+import Viewer from 'v-viewer'
+import Vue from 'vue'
+Vue.use(Viewer,{defaultOptions:{zIndex:9999}})
 export default {
     name: 'serviceManage',
     data () {
         return {
-            pic:{
+            pic: {
                 marginLeft: '20px',
                 width: '100px',
                 height: '100px'
             },
-            firstPic:{
+            firstPic: {
                 width: '100px',
                 height: '100px'
             },
@@ -122,10 +120,10 @@ export default {
             },
             searchParams: {},
             tableData: [],
-             tableLabel: [
+            tableLabel: [
                 { label: '申请时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '服务单号', prop: 'serviceNo'},
-                { label: '申请人账号', prop: 'operator', width: '120px'  },
+                { label: '服务单号', prop: 'serviceNo' },
+                { label: '申请人账号', prop: 'operator', width: '120px' },
                 { label: '客户姓名', prop: 'customerName' },
                 { label: '客户电话', prop: 'customerPhone' },
                 { label: '客户地址', prop: 'customerAddress' },
@@ -137,15 +135,15 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            detailData : {},
-            detailDialogVisible:false
+            detailData: {},
+            detailDialogVisible: false
         }
     },
-    methods:{
-         ...mapActions({
-            getServiceManageHistoryList: 'getServiceManageHistoryList',
+    methods: {
+        ...mapActions({
+            getServiceManageHistoryList: 'getServiceManageHistoryList'
         }),
-         async onQuery () {
+        async onQuery () {
             await this.getServiceManageHistoryList(this.searchParams)
             this.tableData = this.serviceHistory.records
             this.pagination = {
@@ -154,21 +152,20 @@ export default {
                 total: this.serviceHistory.total
             }
         },
-         onSearch () {
+        onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         onEdit (val) {
-            this.detailData=val
-            if(typeof(val.pictureUrl) == "string"){
-                let urls=val.pictureUrl.split(",")
-                this.detailData.picUlrs=urls
-            }else{
-                this.detailData.picUlrs=[]
+            this.detailData = val
+            if (val.pictureUrl) {
+                let urls = val.pictureUrl.split(',')
+                this.detailData.picUlrs = urls
+            } else {
+                this.detailData.picUlrs = []
             }
-           
             console.log(this.detailData)
-            this.detailDialogVisible=true;
+            this.detailDialogVisible = true
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -177,8 +174,7 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery()
-        },
-       
+        }
     },
     mounted () {
         this.onSearch()
@@ -188,7 +184,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            serviceHistory: 'serviceManageHistoryList',
+            serviceHistory: 'serviceManageHistoryList'
         }),
         pickerOptionsStart () {
             return {
