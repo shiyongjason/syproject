@@ -113,21 +113,33 @@
                                 <p> {{authenticationDetail.unifiedSocialCreditCode ? authenticationDetail.unifiedSocialCreditCode : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="法人姓名：">
-                                <p> {{authenticationDetail.legalPersonName ? authenticationDetail.legalPersonName : ''}}</p>
+                                <p> {{authenticationDetail.legalPersonName ? authenticationDetail.legalPersonName : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="法人身份证号：">
                                 <p> {{authenticationDetail.legalCredentialNumber ? authenticationDetail.legalCredentialNumber : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="营业执照：">
                                 <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
-                                    <img :src="authenticationDetail.businessLicensePhoto" alt="" v-if="authenticationDetail.businessLicensePhoto">
-                                    <span v-else>-</span>
+                                    <el-image
+                                        style="width: 158px; height: 100px"
+                                        :src="authenticationDetail.businessLicensePhoto"
+                                        :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
+                                    </el-image>
                                 </div>
+                                <span v-else>-</span>
                             </el-form-item>
                             <el-form-item label="法人身份证：">
                                 <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
-                                    <img :src="authenticationDetail.certPhotoA" alt="" v-if="authenticationDetail.certPhotoA">
-                                    <img :src="authenticationDetail.certPhotoB" alt="" v-if="authenticationDetail.certPhotoB">
+                                    <el-image
+                                        style="width: 158px; height: 100px;margin-right: 20px"
+                                        :src="authenticationDetail.certPhotoA"
+                                        :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
+                                    </el-image>
+                                    <el-image
+                                        style="width: 158px; height: 100px"
+                                        :src="authenticationDetail.certPhotoB"
+                                        :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
+                                    </el-image>
                                 </div>
                                 <span v-else>-</span>
                             </el-form-item>
