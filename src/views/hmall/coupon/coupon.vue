@@ -84,14 +84,12 @@
                         </div>
                     </div>
                     <div class="query-cont__col">
-                        <div class="query-col__lable">
-                            <h-button type="primary" @click="findCouponList">
-                                查询
-                            </h-button>
-                            <h-button @click="reset">
-                                重置
-                            </h-button>
-                        </div>
+                        <h-button type="primary" @click="findCouponList">
+                            查询
+                        </h-button>
+                        <h-button @click="reset">
+                            重置
+                        </h-button>
                     </div>
                 </div>
                 <couponTable
