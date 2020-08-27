@@ -1,47 +1,48 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">SPU编码：</div>
-                    <div class="query-col-input">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">SPU编码：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.spuCode" placeholder="请输入SPU编码" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.spuName" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品品牌：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品品牌：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.brandName" placeholder="请输入商品品牌" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品类目：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品类目：</div>
+                    <div class="query-col__input">
                         <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品型号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品型号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.model" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
 
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品来源：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品来源：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.merchantName" placeholder="输入商品来源" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">提交时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">提交时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
@@ -49,7 +50,7 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <div class="flex-wrap-title">审核状态：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.auditStatus" style="width: 100%">
@@ -58,37 +59,40 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <div class="query-col-input">
                         <el-checkbox v-model="queryParams.isOwnOperated">自营</el-checkbox>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <div class="query-col-input">
                         <h-button type="primary" @click="searchList">查询</h-button>
                         <h-button @click="onRest">重置</h-button>
-                        <h-button @click="onChangeStatus">批量审核</h-button>
-                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="true" :selectable="selectable" :isAction="true" :actionMinWidth=220
-                :rowKey="rowKey" :isShowIndex='true'>
-                <template slot="auditStatus" slot-scope="scope">
-                    <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">
-                        {{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}
-                    </span>
-                </template>
-                <template slot="action" slot-scope="scope">
-                    <h-button table @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</h-button>
-                    <h-button table @click="onShowSpu(scope.data.row)" v-else>查看</h-button>
-                    <h-button table @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</h-button>
-                </template>
-            </basicTable>
+            <div class="button-cont">
+                <h-button @click="onChangeStatus">批量审核</h-button>
+                <h-button @click="onExport">导出</h-button>
+            </div>
+            <div>
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="true" :selectable="selectable" :isAction="true" :actionMinWidth=220
+                    :rowKey="rowKey" :isShowIndex='true'>
+                    <template slot="auditStatus" slot-scope="scope">
+                        <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">
+                            {{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}
+                        </span>
+                    </template>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</h-button>
+                        <h-button table @click="onShowSpu(scope.data.row)" v-else>查看</h-button>
+                        <h-button table @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</h-button>
+                    </template>
+                </basicTable>
+            </div>
         </div>
     </div>
+</div>
 </template>
 <script>
 import { spuAuditBatch } from './api/index'

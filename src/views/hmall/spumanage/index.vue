@@ -1,10 +1,11 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品品牌：</div>
-                    <div class="query-col-input">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品品牌：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.brandId" filterable placeholder="请选择">
                             <el-option
                             label="全部"
@@ -19,26 +20,26 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品类目：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品类目：</div>
+                    <div class="query-col__input">
                         <el-cascader :options="categoryOptions" v-model="categoryIdArr" clearable @change="productCategoryChange"></el-cascader>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品型号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品型号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.model" placeholder="请输入商品型号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">商品名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.name" placeholder="请输入商品名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__input">
                         <h-button type="primary" @click="searchList">
                             查询
                         </h-button>
@@ -48,17 +49,13 @@
                     </div>
                 </div>
             </div>
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <h-button type="create" @click="gotoProductAdd">
-                        新建SPU模板
-                    </h-button>
-                    <h-button @click="onDisable()">批量禁用</h-button>
-                    <h-button @click="onEnable()">批量启用</h-button>
-                </div>
+            <div class="button-cont">
+                <h-button type="create" @click="gotoProductAdd">
+                    新建SPU模板
+                </h-button>
+                <h-button @click="onDisable()">批量禁用</h-button>
+                <h-button @click="onEnable()">批量启用</h-button>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="true" :actionMinWidth=250 ::rowKey="rowKey"
                 :isShowIndex='true'>
                 <template slot="brandName" slot-scope="scope">
@@ -79,6 +76,7 @@
             </basicTable>
         </div>
     </div>
+</div>
 </template>
 <script>
 import { templateDisable, templateEnable } from './api/index'

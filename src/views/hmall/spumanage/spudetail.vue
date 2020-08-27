@@ -1,4 +1,5 @@
 <template>
+<div class="B2b">
     <div class="page-body">
         <div class="page-body-cont">
             <Detail :form="form" :pictureContainer="pictureContainer" v-if="operate == 'show'">
@@ -8,11 +9,11 @@
                 </el-form-item>
             </Detail>
             <el-form ref="formmain" :model="form" :rules="rules" label-width="110px" v-else>
-                <div class="page-body-title">
-                    <h3> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</h3>
+                <div class="title-cont">
+                    <span class="title-cont__label"> {{ operate=='modify'||operate=='add' ? '模板信息' : '商品信息（spu）'}}</span>
                 </div>
                 <!-- 更新或者审核 start  -->
-                <div v-if="operate=='modify'||operate=='audit'" style="margin-bottom: 20px">
+                <div v-if="operate=='modify'||operate=='audit'" style="margin:10px 0 20px 0">
                     <el-form-item label="商品类目：" style="width: 460px;">
                         {{form.categoryPathName}}
                     </el-form-item>
@@ -26,7 +27,7 @@
                 <!-- 更新或者审核 end  -->
 
                 <!-- 新增 start -->
-                <div v-if="operate=='add'" style="margin-bottom: 20px">
+                <div v-if="operate=='add'" style="margin:10px 0 20px 0">
                     <el-form-item label="商品类目：" prop="categoryId" style="width: 460px;" v-if="operate=='add'">
                         <el-cascader :options="categoryOptions" v-model="categoryIdArr" @change="productCategoryChange" ></el-cascader>
                     </el-form-item>
@@ -73,10 +74,10 @@
                     </div>
                 </el-form-item>
 
-                <div class="page-body-title" v-if="form.specifications.length>0">
-                    <h3>商品参数信息</h3>
+                <div class="title-cont" v-if="form.specifications.length>0">
+                    <span class="title-cont__label">商品参数信息</span>
                 </div>
-                <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px;">
+                <div :key="index" v-for="(item,index) in form.specifications" class="el-form-item" style="width: 460px; margin-top: 20px">
                     <!--  -->
                     <el-form-item
                         :label="item.k"
@@ -99,10 +100,10 @@
                     </el-form-item>
                 </div>
 
-                <div class="page-body-title">
-                    <h3>商品详情</h3>
+                <div class="title-cont">
+                    <span class="title-cont__label">商品详情</span>
                 </div>
-                <div style="padding-left: 110px">
+                <div style="padding-left: 110px; margin-top: 20px">
                     <RichEditor v-model="form.reqDetailList[0].content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                 </div>
                 <el-row v-if="operate=='modify'||operate=='add'">
@@ -132,6 +133,7 @@
             </el-form>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -539,16 +541,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.page-body-title {
-    background: #f5f7fa;
-    height: 40px;
-    line-height: 40px;
-    padding-left: 10px;
-    margin-bottom: 10px;
-    h3 {
-        font-size: 20px;
-    }
-}
 .picture-container {
     float: left;
 }
