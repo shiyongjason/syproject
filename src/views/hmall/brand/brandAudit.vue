@@ -1,50 +1,51 @@
 <template>
+<div class="B2b">
     <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">供应商：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">品牌名称：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">申请时间：</div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.applicationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.applicationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="flex-wrap-title">审核状态：</div>
-                <div class="flex-wrap-cont">
-                    <el-select v-model="queryParams.status" style="width: 100%">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="待审核" value="0"></el-option>
-                        <el-option label="审核通过" value="1"></el-option>
-                        <el-option label="审核未通过" value="2"></el-option>
-                        <el-option label="过期失效" value="3"></el-option>
-                    </el-select>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
-                    <h-button type="primary" @click="onQuery">查询</h-button>
-                    <h-button @click="onReset">重置</h-button>
-                </div>
-            </div>
-        </div>
         <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col-title">供应商：</div>
+                    <div class="query-col-input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入商家名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col-title">品牌名称：</div>
+                    <div class="query-col-input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入品牌名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col-title">申请时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.applicationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker v-model="queryParams.applicationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="flex-wrap-title">审核状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.status" style="width: 100%">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="待审核" value="0"></el-option>
+                            <el-option label="审核通过" value="1"></el-option>
+                            <el-option label="审核未通过" value="2"></el-option>
+                            <el-option label="过期失效" value="3"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col-title">
+                        <h-button type="primary" @click="onQuery">查询</h-button>
+                        <h-button @click="onReset">重置</h-button>
+                    </div>
+                </div>
+            </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isAction="true" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="status" slot-scope="scope">
                     {{ auditStatusMap.get(scope.data.row.status) || '-' }}
@@ -126,6 +127,7 @@
             </div>
         </el-drawer>
     </div>
+</div>
 </template>
 
 <script>
