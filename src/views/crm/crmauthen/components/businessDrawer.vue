@@ -113,16 +113,16 @@
                                 <p> {{authenticationDetail.unifiedSocialCreditCode ? authenticationDetail.unifiedSocialCreditCode : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="法人姓名：">
-                                <p> {{authenticationDetail.legalPersonName ? authenticationDetail.legalPersonName : ''}}</p>
+                                <p> {{authenticationDetail.legalPersonName ? authenticationDetail.legalPersonName : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="法人身份证号：">
                                 <p> {{authenticationDetail.legalCredentialNumber ? authenticationDetail.legalCredentialNumber : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="营业执照：">
                                 <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
-                                    <img :src="authenticationDetail.businessLicensePhoto" alt="" v-if="authenticationDetail.businessLicensePhoto">
-                                    <span v-else>-</span>
+                                    <img :src="authenticationDetail.businessLicensePhoto" alt="">
                                 </div>
+                                <span v-else>-</span>
                             </el-form-item>
                             <el-form-item label="法人身份证：">
                                 <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
