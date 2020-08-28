@@ -152,7 +152,7 @@
                             </el-form-item>
                             <el-form-item label="认证方式：">
                                 <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>
-                                <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-企业四要素</p>
+                                <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>
                                 <p v-else>-</p>
                             </el-form-item>
                             <el-form-item label="关联/认证时间：">
@@ -160,8 +160,16 @@
                                 <p v-else>-</p>
                             </el-form-item>
                             <el-form-item label="关联/认证人：">
-                                <p v-if="authenticationDetail.authenticationBy"> {{authenticationDetail.authenticationBy}}</p>
-                                <p v-else>-</p>
+                                <p>
+                                    <span v-if="authenticationDetail.authenticationBy">
+                                        {{authenticationDetail.authenticationBy}}
+                                    </span>
+                                    <span v-else>-</span>
+                                    <span v-if="authenticationDetail.authenticationPhone">
+                                        ({{}})
+                                    </span>
+                                    <span v-else>(-)</span>
+                                </p>
                             </el-form-item>
                         </el-form>
                         <div class="drawer-footer">
