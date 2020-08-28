@@ -242,7 +242,9 @@ export default {
                     if (index === 0) charts.lineX.push(value1.dateTime)
                 })
             })
-            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,35,67', 'rgba(25,135,67']
+            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,35,67', 'rgba(25,135,67',
+                'rgba(7,128,207', 'rgba(118,80,5', 'rgba(250,109,29', 'rgba(14,44,130', 'rgba(182,181,31', 'rgba(218,31,24', 'rgba(112,24,102',
+                'rgba(244,122,117', 'rgba(0,157,178', 'rgba(2,75,81', 'rgba(7,128,207', 'rgba(118,80,5']
             var lineY = []
             // 根据数据条数 渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
@@ -291,7 +293,7 @@ export default {
                     // right: '4%'
                 },
                 grid: {
-                    top: '10%',
+                    top: '17%',
                     left: '3%',
                     right: '8%',
                     bottom: '3%',
