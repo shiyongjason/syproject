@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <el-tabs type="card" v-model="tabName" @tab-click="onTab">
                 <el-tab-pane label="特价活动" name="spike"></el-tab-pane>
@@ -44,7 +43,6 @@
             <basicTable :tableLabel="tableLabelInfo" :tableData="tableDataInfo" :pagination="paginationDataInfo" @onSizeChange="onSizeChangeInfo" @onCurrentChange="onCurrentChangeInfo"></basicTable>
         </div>
     </div>
-</div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'

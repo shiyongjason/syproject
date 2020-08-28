@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="title-cont">
                 <span class="title-cont__label">账户概览</span>
@@ -50,7 +49,6 @@
             </basicTable>
         </div>
     </div>
-</div>
 </template>
 
 <script>

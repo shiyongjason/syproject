@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont pb20">
             <el-form :model="form" ref='form' :rules="rules.event" label-position='left'>
                 <div class="forminfo">
@@ -126,7 +125,6 @@
             </span>
         </el-dialog>
     </div>
-</div>
 </template>
 
 <script>

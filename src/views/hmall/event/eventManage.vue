@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
@@ -72,7 +71,6 @@
         </div>
         <!-- <shopManagerTable ref="shopManagerTable" :tableData="tableData" :paginationData="paginationData" @updateStatus="onQuery" @updateBrand="updateBrandChange" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange"></shopManagerTable> -->
     </div>
-</div>
 </template>
 <script>
 import { EVENT_LIST } from '../store/const'

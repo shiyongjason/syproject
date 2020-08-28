@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
@@ -47,7 +46,6 @@
         </div>
         <accountCp :drawer=drawer @backEvent='restDrawer' ref="account"></accountCp>
     </div>
-</div>
 </template>
 <script>
 import accountCp from './accountCp'

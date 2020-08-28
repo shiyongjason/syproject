@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
@@ -74,7 +73,6 @@
             </basicTable>
         </div>
     </div>
-</div>
 </template>
 <script>
 import { templateDisable, templateEnable } from './api/index'

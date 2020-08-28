@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <Detail :form="form" :pictureContainer="pictureContainer" v-if="operate == 'show'">
                 <el-form-item style="text-align: center">
@@ -133,7 +132,6 @@
             </el-form>
         </div>
     </div>
-</div>
 </template>
 
 <script>

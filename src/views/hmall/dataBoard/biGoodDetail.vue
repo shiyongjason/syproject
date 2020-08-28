@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <el-tabs v-model="queryParams.type" type="card" @tab-click="handleTabClick">
                 <el-tab-pane label="普通商品" name="0"></el-tab-pane>
@@ -48,8 +47,6 @@
             </basicTable>
         </div>
     </div>
-
-</div>
 </template>
 <script>
 import { createNamespacedHelpers, mapState } from 'vuex'

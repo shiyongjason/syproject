@@ -1,6 +1,5 @@
 <template>
-<div class="B2b">
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col" style="width: 400px;">
@@ -46,8 +45,6 @@
                     <h-button @click="onImport()">导出</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 :isShowIndex='false'>
                 <!-- <template slot="authenticated" slot-scope="scope">
                     {{scope.data.row.authenticated==1?'是':'否'}}
@@ -61,7 +58,6 @@
             </basicTable>
         </div>
     </div>
-</div>
 </template>
 
 <script>
