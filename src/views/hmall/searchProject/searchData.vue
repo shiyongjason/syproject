@@ -35,8 +35,8 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams_two.orderTimeStart" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart_two"></el-date-picker>
-                        <el-date-picker v-model="queryParams_two.orderTimeEnd" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd_two" default-time="23:59:59"></el-date-picker>
+                        <el-date-picker v-model="queryParams_two.startTime" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart_two"></el-date-picker>
+                        <el-date-picker v-model="queryParams_two.endTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd_two" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -169,7 +169,7 @@ export default {
             },
             resetParams_two: {},
             tableLabel_two: [
-                { label: '日期', prop: 'date', formatters: 'dateTime' },
+                { label: '日期', prop: 'date', formatters: 'date' },
                 { label: '搜索UV', prop: 'searchUv' },
                 { label: '搜索PV', prop: 'searchCount' },
                 { label: '首页UV', prop: 'homepageUv' },
@@ -204,7 +204,7 @@ export default {
             },
             resetParams_four: {},
             tableLabel_four: [
-                { label: '日期', prop: 'time', formatters: 'dateTime' },
+                { label: '日期', prop: 'time', formatters: 'date' },
                 { label: '账号', prop: 'account' },
                 { label: '会员名称', prop: 'memberName' },
                 { label: '无结果词', prop: 'word' }
