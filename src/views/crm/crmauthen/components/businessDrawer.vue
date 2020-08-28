@@ -166,7 +166,7 @@
                                     </span>
                                     <span v-else>-</span>
                                     <span v-if="authenticationDetail.authenticationPhone">
-                                        ({{}})
+                                        ({{authenticationDetail.authenticationPhone}})
                                     </span>
                                     <span v-else>(-)</span>
                                 </p>
