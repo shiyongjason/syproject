@@ -156,7 +156,7 @@ export default {
                 pageSize: 10
             },
             tableLabel_info: [
-                { label: '商品编码', prop: 'spuCode' },
+                // { label: '商品编码', prop: 'spuCode' },
                 { label: '商品名称', prop: 'spuName' }
             ],
             tableData_info: [],
