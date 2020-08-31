@@ -151,6 +151,7 @@ export default {
             tableData_one: [],
             pagination_one: {},
             queryParams_info: {
+                searchId: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -326,7 +327,8 @@ export default {
         },
         onSeeInfo ({ searchId }) {
             this.drawer = true
-            this.getSearchWordInfo(searchId)
+            this.queryParams_info.searchId = searchId
+            this.getSearchWordInfo()
         },
         onSizeChange_one (value) {
             this.queryParams_one.pageSize = value
@@ -408,8 +410,8 @@ export default {
                 total: this.searchWordData.total
             }
         },
-        async getSearchWordInfo (searchId) {
-            await this.findSearchWordInfo({ searchId: searchId, pageNumber: this.queryParams_info.pageNumber, pageSize: this.queryParams_info.pageSize })
+        async getSearchWordInfo () {
+            await this.findSearchWordInfo(this.queryParams_info)
             this.tableData_info = this.searchWordInfo.records
             this.pagination_info = {
                 pageNumber: this.searchWordInfo.current,
