@@ -41,29 +41,29 @@
                                         <tr v-for="(itemc, indexc) in itemb.childAuthList" :key="`${index}_${indexa}_${indexb}_${indexc}`">
                                             <td :id="index" :rowspan="computedRowspan(item.childAuthList, 0)" v-if="indexa==0 && indexb==0 && indexc==0">
                                                 <div @click="onEdit(1, item)">{{item.authName}}</div>
-                                                <el-button @click="popupMenu(2, item)" type="success">添加</el-button>
-                                                <el-button v-show="item.authName" @click="onDelete(item)" class="orangeBtn">删除</el-button>
+                                                <h-button table @click="popupMenu(2, item)">添加</h-button>
+                                                <h-button v-show="item.authName" @click="onDelete(item)">删除</h-button>
                                             </td>
                                             <td :rowspan="computedRowspan(itema.childAuthList, 0)" v-if="indexb==0 && indexc==0">
                                                 <div>
                                                     <div @click="onEdit(2, itema, item)">
                                                         <span class="point">{{itema.authName}}</span>
                                                     </div>
-                                                    <el-button @click="popupMenu(3, itema, itemb)" type="success">添加</el-button>
-                                                    <el-button v-show="itema.authName" @click="onDelete(itema)" class="orangeBtn">删除</el-button>
+                                                    <h-button table @click="popupMenu(3, itema, itemb)">添加</h-button>
+                                                    <h-button v-show="itema.authName" @click="onDelete(itema)">删除</h-button>
                                                 </div>
                                             </td>
                                             <td :rowspan="computedRowspan(itemb.childAuthList, 0)" v-if="indexc==0">
                                                 <div>
                                                     <div @click="onEdit(3, itemb, itema)">{{itemb.authName}}</div>
-                                                    <el-button @click="popupMenu(4, itemb, itema)" type="success">添加</el-button>
-                                                    <el-button v-show="itemb.authName" @click="onDelete(itemb)" class="orangeBtn">删除</el-button>
+                                                    <h-button table @click="popupMenu(4, itemb, itema)">添加</h-button>
+                                                    <h-button v-show="itemb.authName" @click="onDelete(itemb)">删除</h-button>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div>
                                                     <div @click="onEdit(4, itemc, itemb)">{{itemc.authName}}</div>
-                                                    <el-button v-show="itemc.authName" @click="onDelete(itemc)" class="orangeBtn">删除</el-button>
+                                                    <h-button v-show="itemc.authName" @click="onDelete(itemc)">删除</h-button>
                                                 </div>
                                             </td>
                                             <!-- 敏感字段和敏感操作 -->
@@ -71,11 +71,11 @@
                                                 <td v-if="i.id" :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
                                                     <div>{{i.authType==0 ? '敏感字段' : i.authType==1 ? '敏感操作' : '已添加敏感数据'  }}</div>
                                                     <div class="el-radio-group">
-                                                        <el-button v-if="i.authType != 2" class="el-radio-button__inner" @click="onShowFieldConfig(itemc.authTypes[i.authType])" type="primary">配置</el-button>
+                                                        <h-button type="primary" v-if="i.authType != 2" @click="onShowFieldConfig(itemc.authTypes[i.authType])">配置</h-button>
                                                     </div>
                                                 </td>
                                                 <td v-else :key="`${index}_${indexa}_${indexb}_${indexc}_${d}`" width='300'>
-                                                    <el-button @click="addSensitive(itemc, itemb, itema, i.authType)" type="success">添加</el-button>
+                                                    <h-button table @click="addSensitive(itemc, itemb, itema, i.authType)">添加</h-button>
                                                 </td>
                                             </template>
                                         </tr>
@@ -87,24 +87,27 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="title" :visible.sync="dialogSeedVisible" :close-on-click-modal='false'>
+        <el-dialog :title="title" :visible.sync="dialogSeedVisible" width="30%" :close-on-click-modal='false'>
             <el-form :model="form" :rules="formRules" ref="form">
-                <el-form-item label="菜单名称" label-width="120px" prop="authName">
+                <el-form-item label="菜单名称" label-width="80px" prop="authName">
                     <el-input v-model="form.authName" autocomplete="off"></el-input>
+                    <el-select v-model="value" placeholder="请选择菜单" @change="onChangeHandle">
+                        <el-option v-for="(item, index) in options" :key="index" :label="item.meta.title" :value="JSON.stringify(item)"></el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="菜单路由" label-width="120px" prop="authUri">
-                    <el-input v-model="form.authUri" autocomplete="off"></el-input>
+                <el-form-item label="菜单路由" label-width="80px" prop="authUri">
+                    <el-input v-model="form.authUri" autocomplete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="排序" label-width="120px">
+                <el-form-item label="排序" label-width="80px">
                     <el-input v-model="form.sort" autocomplete="off" type='number'></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogSeedVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onAddMenuSure('form')">确 定</el-button>
+                <h-button @click="dialogSeedVisible = false">取消</h-button>
+                <h-button type="primary" @click="onAddMenuSure('form')">确定</h-button>
             </div>
         </el-dialog>
-        <el-dialog title="敏感配置" :visible.sync="fieldVisible" width="60%" :close-on-click-modal='false'>
+        <el-dialog title="敏感配置" :visible.sync="fieldVisible" width="50%" :close-on-click-modal='false'>
             <div class="h-dialog">
                 <table class="tablelist textCenter">
                     <thead>
@@ -132,18 +135,17 @@
                                 <el-input v-model="value.resourceAddress" placeholder="资源uri"></el-input>
                             </td>
                             <td>
-                                <el-button @click="onResourceSure(index)">保 存</el-button>
-                                <!-- <el-button class="orangeBtn">删除</el-button> -->
+                                <h-button @click="onResourceSure(index)">保存</h-button>
                             </td>
                             <td>
-                                <el-button type="success" @click="addAuthList" v-show="index + 1 == list.length">添加</el-button>
+                                <h-button table @click="addAuthList" v-show="index + 1 == list.length">添加</h-button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onClose">关 闭</el-button>
+                <h-button @click="onClose">关闭</h-button>
                 <!-- <el-button @click="fieldVisible = false">取 消</el-button>
                 <el-button type="primary" @click="fieldVisible = false">保 存</el-button> -->
             </span>
@@ -153,9 +155,12 @@
 
 <script>
 import { getAuth, addAuth, addAuthType, addAuthResource, editAuthResource, editAuth, clearCache, deleteAuth } from './auth/api'
+import { routerMapping } from '../router'
 export default {
     data () {
         return {
+            options: [],
+            value: '',
             tableList: [],
             list: [
                 {
@@ -197,11 +202,31 @@ export default {
         this.init()
     },
     methods: {
+        onChangeHandle (value) {
+            let obj = JSON.parse(value)
+            console.log(obj)
+            this.form.authUri = obj.path
+            this.form.authName = obj.meta.title
+        },
+        handleRouterData (data, uid) {
+            data.map(i => {
+                if (i.path) {
+                    i.uid = uid + i.path
+                } else {
+                    i.uid = uid
+                }
+                if (i.children && i.children.length !== 0) {
+                    this.handleRouterData(i.children, i.uid + '/')
+                }
+            })
+        },
         async init () {
             const { data } = await getAuth()
             var shy = JSON.parse(JSON.stringify(data))
-            this.handleData(shy)
-            // console.log(shy)
+            // this.handleRouterData(routerMapping, '')
+            this.handleData(shy, '')
+            // console.log('shy: ', shy);
+            // console.log('routerMapping: ', routerMapping);
             this.tableList = this.handlerTableList(shy, 0)
         },
         // 计算table合并行数
@@ -214,12 +239,13 @@ export default {
             })
             return len
         },
-        handleData (data) {
+        handleData (data, uid) {
             data.map(i => {
+                i.uid = uid + i.authUri
                 if (i.childAuthList.length === 0) {
                     i.authTypes = this.compare(i.authTypes)
                 } else {
-                    this.handleData(i.childAuthList)
+                    this.handleData(i.childAuthList, i.uid + '/')
                 }
             })
         },
@@ -296,6 +322,7 @@ export default {
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
             this.$set(this.form, 'sort', '')
+            this.options = []
             this.levObj = {
                 lev,
                 parent
@@ -305,10 +332,21 @@ export default {
                 this.$message.warning('上级菜单不存在')
                 return
             }
-            if (lev == 1) this.title = '添加一级菜单'
-            if (lev == 2) this.title = '添加二级菜单'
-            if (lev == 3) this.title = '添加三级菜单'
-            if (lev == 4) this.title = '添加四级菜单'
+            console.log(routerMapping)
+            console.log(parent)
+            if (lev == 1) {
+                this.options = routerMapping
+                this.title = '添加一级菜单'
+            }
+            if (lev == 2) {
+                this.title = '添加二级菜单'
+            }
+            if (lev == 3) {
+                this.title = '添加三级菜单'
+            }
+            if (lev == 4) {
+                this.title = '添加四级菜单'
+            }
             this.dialogSeedVisible = true
             this.$nextTick(() => {
                 this.$refs['form'].clearValidate()
@@ -490,7 +528,7 @@ td .el-button {
 .point {
     cursor: pointer;
 }
-.h-dialog{
+.h-dialog {
     padding: 20px;
 }
 </style>
