@@ -40,12 +40,12 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.startDate"
+                        <el-date-picker type="date" clearable v-model="homeParams.startDate"
                                         value-format="yyyy-MM-dd" placeholder="开始日期"
                                         :picker-options="pickerHomeDetailStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" :editable="false" :clearable="false" v-model="homeParams.endDate"
+                        <el-date-picker type="date" clearable v-model="homeParams.endDate"
                                         value-format="yyyy-MM-dd" placeholder="结束日期"
                                         :picker-options="pickerHomeDetailEnd">
                         </el-date-picker>

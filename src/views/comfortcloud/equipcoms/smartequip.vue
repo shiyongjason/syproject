@@ -42,10 +42,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">入网时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" v-model="deviceDetailParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerDeviceStart">
+                        <el-date-picker type="date" :editable="false" clearable v-model="deviceDetailParams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerDeviceStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" v-model="deviceDetailParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerDeviceEnd">
+                        <el-date-picker type="date" :editable="false" clearable v-model="deviceDetailParams.endDate" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerDeviceEnd">
                         </el-date-picker>
                     </div>
                 </div>
