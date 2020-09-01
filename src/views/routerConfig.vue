@@ -87,16 +87,18 @@
                 </div>
             </div>
         </div>
-        <el-dialog :title="title" :visible.sync="dialogSeedVisible" width="30%" :close-on-click-modal='false'>
+        <el-dialog :title="title" :visible.sync="dialogSeedVisible" width="30%" :close-on-click-modal='false' @close="handleClose">
             <el-form :model="form" :rules="formRules" ref="form">
-                <el-form-item label="菜单名称" label-width="80px" prop="authName">
-                    <el-input v-model="form.authName" autocomplete="off"></el-input>
+                <el-form-item v-show="title.indexOf('编辑') === -1" label="开发中..." label-width="80px">
                     <el-select v-model="value" placeholder="请选择菜单" @change="onChangeHandle">
                         <el-option v-for="(item, index) in options" :key="index" :label="item.meta.title" :value="JSON.stringify(item)"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="菜单名称" label-width="80px" prop="authName">
+                    <el-input v-model="form.authName" autocomplete="off"></el-input>
+                </el-form-item>
                 <el-form-item label="菜单路由" label-width="80px" prop="authUri">
-                    <el-input v-model="form.authUri" autocomplete="off" disabled></el-input>
+                    <el-input v-model="form.authUri" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="排序" label-width="80px">
                     <el-input v-model="form.sort" autocomplete="off" type='number'></el-input>
@@ -202,6 +204,11 @@ export default {
         this.init()
     },
     methods: {
+        handleClose () {
+            this.$nextTick(() => {
+                this.$refs['form'].clearValidate()
+            })
+        },
         onChangeHandle (value) {
             let obj = JSON.parse(value)
             console.log(obj)
@@ -223,10 +230,10 @@ export default {
         async init () {
             const { data } = await getAuth()
             var shy = JSON.parse(JSON.stringify(data))
-            // this.handleRouterData(routerMapping, '')
+            this.handleRouterData(routerMapping, '')
             this.handleData(shy, '')
-            // console.log('shy: ', shy);
-            // console.log('routerMapping: ', routerMapping);
+            console.log('resultData: ', shy)
+            console.log('routerMapping: ', routerMapping)
             this.tableList = this.handlerTableList(shy, 0)
         },
         // 计算table合并行数
@@ -322,20 +329,24 @@ export default {
             this.$set(this.form, 'authName', '')
             this.$set(this.form, 'authUri', '')
             this.$set(this.form, 'sort', '')
+            this.value = ''
             this.options = []
             this.levObj = {
                 lev,
                 parent
             }
-            console.log(this.levObj)
             if (this.levObj.parent && !this.levObj.parent.id) {
                 this.$message.warning('上级菜单不存在')
                 return
             }
             console.log(routerMapping)
             console.log(parent)
-            if (lev == 1) {
+            if (!parent) {
                 this.options = routerMapping
+            } else {
+                this.options = this.getChidlren(parent.uid) && this.getChidlren(parent.uid).children ? this.getChidlren(parent.uid).children : []
+            }
+            if (lev == 1) {
                 this.title = '添加一级菜单'
             }
             if (lev == 2) {
@@ -348,9 +359,35 @@ export default {
                 this.title = '添加四级菜单'
             }
             this.dialogSeedVisible = true
-            this.$nextTick(() => {
-                this.$refs['form'].clearValidate()
-            })
+        },
+        // 循环判断数组a里的元素在b里面有没有，有的话就放入新建立的数组中
+        FilterData (a, b) {
+            var result = []
+            var c = b.toString()
+            for (var i = 0; i < a.length; i++) {
+                if (c.indexOf(a[i].toString()) == -1) {
+                    result.push(a[i])
+                }
+            }
+            return result
+        },
+        getChidlren (uid) {
+            var hasFound = false // 表示是否有找到uid
+            var result = null
+            var fn = function (data) {
+                if (Array.isArray(data) && !hasFound) { // 判断是否是数组并且没有的情况下
+                    data.forEach(item => {
+                        if (item.uid === uid) { // 数据循环每个子项，并且判断子项下边是否有uid值
+                            result = item // 返回的结果等于每一项
+                            hasFound = true // 并且找到id值
+                        } else if (item.children) {
+                            fn(item.children) // 递归调用下边的子项
+                        }
+                    })
+                }
+            }
+            fn(routerMapping) // 调用一下
+            return result
         },
         async addMenuCommon (level) {
             if (level !== 1 && !this.levObj.parent.id) {
