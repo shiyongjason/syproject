@@ -374,6 +374,6 @@ export default {
     margin-top: 15px;
 }
 /deep/.el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width: 120px;
+    width:180px;
 }
 </style>
