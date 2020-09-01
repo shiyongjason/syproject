@@ -39,9 +39,10 @@
                             <el-date-picker v-model="modelParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                             </el-date-picker>
                         </div>
-                        <h-button type='primary' @click="onFindallPage()">查询</h-button>
-                        <h-button @click="onRest">重置</h-button>
+
                     </div>
+                     <h-button type='primary' @click="onFindallPage()">查询</h-button>
+                        <h-button @click="onRest">重置</h-button>
                     <h3>数据</h3>
 
                     <div class="drawer-table_row">
@@ -126,7 +127,9 @@ export default {
             staticInfo: {},
             paginationInfo: {},
             wxUser: {},
-            wxUserForm: {}
+            wxUserForm: {
+                remarkMobile: []
+            }
         }
     },
     components: {
@@ -177,7 +180,9 @@ export default {
         },
         onFindCustomer (type, val) {
             this.modelType = type
-            this.wxUserForm = {}
+            this.wxUserForm = {
+                remarkMobile: []
+            }
             if (val) {
                 this.wxUser = {
                     externalUserid: val.externalUserid,
@@ -208,7 +213,7 @@ export default {
         async onFindallPage (callback) {
             if (this.modelType == 1) {
                 await this.onFindWxmemberUser(this.wxUser)
-                this.wxUserForm = this.wxMemberUser
+                this.wxUserForm = { ...this.wxMemberUser }
             } else {
                 await this.findwxMemberloan(this.modelParams)
                 this.staticInfo = this.wxMemberloan
@@ -307,7 +312,7 @@ export default {
                     color: #ff7a45;
                 }
                 i {
-                    background: #e5e5e5;
+                    background: #fffcfc;
                     color: #ff7a45;
                     font-style: normal;
                     border-radius: 2px;
@@ -324,7 +329,6 @@ export default {
         &_search {
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #e5e5e5;
             padding-bottom: 15px;
             &-input {
                 margin-right: 10px;
@@ -368,5 +372,8 @@ export default {
 }
 /deep/ .el-tabs {
     margin-top: 15px;
+}
+/deep/.el-date-editor.el-input, .el-date-editor.el-input__inner{
+    width: 120px;
 }
 </style>
