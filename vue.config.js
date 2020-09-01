@@ -1,6 +1,9 @@
 const SentryPlugin = require('@sentry/webpack-plugin')
 // const SentryPlugin = require('webpack-sentry-plugin')
 module.exports = {
+    devServer: {
+        // host: '192.168.27.33'
+    },
     configureWebpack: config => {
         // 是否生产和预发布
         if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'preview') {

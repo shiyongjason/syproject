@@ -39,22 +39,22 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList">
+                        <h-button type="primary" @click="searchList">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest">
+                        </h-button>
+                        <h-button @click="onRest">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="gotoProductAdd">
+                    <h-button type="create" @click="gotoProductAdd">
                         新建SPU模板
-                    </el-button>
-                    <el-button type="primary" class="ml20" @click="onDisable()">批量禁用</el-button>
-                    <el-button type="primary" class="ml20" @click="onEnable()">批量启用</el-button>
+                    </h-button>
+                    <h-button @click="onDisable()">批量禁用</h-button>
+                    <h-button @click="onEnable()">批量启用</h-button>
                 </div>
             </div>
         </div>
@@ -68,12 +68,12 @@
                     <span :class="scope.data.row.isEnable===1?'colred':'colgry'">{{scope.data.row.isEnable===1?'启用':'禁用'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onEditSpu(scope.data.row)">编辑</el-button>
+                    <h-button table @click="onEditSpu(scope.data.row)">编辑</h-button>
                     <template v-if="scope.data.row.isEnable ===1">
-                        <el-button type="primary" size="mini" plain   @click="onDisable(scope.data.row.id)">禁用</el-button>
+                        <h-button table plain @click="onDisable(scope.data.row.id)">禁用</h-button>
                     </template>
                     <template v-else>
-                        <el-button size="mini" plain @click="onEnable(scope.data.row.id)">启用</el-button>
+                        <h-button table @click="onEnable(scope.data.row.id)">启用</h-button>
                     </template>
                 </template>
             </basicTable>
