@@ -19,15 +19,15 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button class="ml20" @click="onRest()">
                             重置
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onBack">
+                        </h-button>
+                        <h-button class="ml20" @click="onBack">
                             返回
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -35,9 +35,9 @@
         <div class="page-body-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <el-button type="primary" class="ml20" @click="onAddproduct">
+                    <h-button type="primary" class="ml20" @click="onAddproduct">
                         添加({{'已添加'+eventProducts.length}}个)
-                    </el-button>
+                    </h-button>
                 </div>
             </div>
             <div class="query-cont-row">已选择{{multiSelection.length}}</div>

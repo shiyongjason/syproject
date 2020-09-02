@@ -39,8 +39,8 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
         </div>
@@ -53,8 +53,8 @@
                     {{ scope.data.row.status == 0 ? '-' : scope.data.row.auditTime }}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button v-if="scope.data.row.status == 0 || scope.data.row.status == 3" class="orangeBtn" @click="showDrawer(scope.data.row, 'review')">审核</el-button>
-                    <el-button v-else class="orangeBtn" @click="showDrawer(scope.data.row, 'watch')">查看</el-button>
+                    <h-button table v-if="scope.data.row.status == 0 || scope.data.row.status == 3" @click="showDrawer(scope.data.row, 'review')">审核</h-button>
+                    <h-button table v-else @click="showDrawer(scope.data.row, 'watch')">查看</h-button>
                 </template>
             </basicTable>
         </div>
@@ -121,8 +121,8 @@
                 </template>
             </el-form>
             <div class="drawer-footer">
-                <el-button name="white-color" @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</el-button>
-                <el-button name="hosjoy-color" @click="onConfirm" v-if="drawerMsg.type === 'review'">提交</el-button>
+                <h-button @click="onCancel">{{ drawerMsg.type === 'review' ? '取消' : '关闭' }}</h-button>
+                <h-button type='primary' @click="onConfirm" v-if="drawerMsg.type === 'review'">提交</h-button>
             </div>
         </el-drawer>
     </div>
