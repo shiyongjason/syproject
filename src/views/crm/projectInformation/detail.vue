@@ -55,13 +55,13 @@
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
-                    <el-button style="width:130px;" @click="onBack">返回</el-button>
+                    <h-button  style="width:130px;" @click="onBack">返回</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</el-button>
+                    <h-button  type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <el-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</el-button>
+                    <h-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</h-button>
                 </p>
             </div>
         </div>
@@ -76,8 +76,8 @@
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <h-button  @click="dialogVisible = false">取 消</h-button>
+                <h-button  type="primary" @click="dialogVisible = false">确 定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -113,7 +113,7 @@ export default {
             // 上传时附带的额外参数同el-upload 的 data
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],

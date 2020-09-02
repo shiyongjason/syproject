@@ -1,7 +1,7 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
-            <el-button size="small" type="primary" @click="onGetrefuse">打回记录</el-button>
+            <h-button table @click="onGetrefuse">打回记录</h-button>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
                 <template v-for="obj in item.respRiskCheckDocTemplateList">
@@ -37,7 +37,11 @@
                                     </a>
                                     <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
                                 </div>
+
                             </div>
+                              <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
+                                    <el-button type="primary">上 传</el-button>
+                                </hosjoyUpload>
                         </div>
 
                     </el-form-item>
@@ -61,7 +65,7 @@
                 </template>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="recordsVisible = false">取 消</el-button>
+                <h-button @click="recordsVisible = false">取消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="打回原因" :visible.sync="reasonVisible" width="30%" :before-close="onCloseCol" :modal=false>
@@ -71,8 +75,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseCol">取 消</el-button>
-                <el-button type="primary" @click="onRefuse" :loading=loading>{{loading?'确 定':'保 存'}}</el-button>
+                <el-button @click="onCloseCol">取消</el-button>
+                <el-button type="primary" @click="onRefuse" :loading=loading>{{loading?'确定':'保存'}}</el-button>
             </span>
         </el-dialog>
         <el-dialog :title="collectTitle" :visible.sync="collectVisible" width="30%" :before-close="onCloseCol" :modal=false :close-on-click-modal=false>
@@ -82,17 +86,19 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCloseCol">取 消</el-button>
-                <el-button type="primary" @click="onUpdatecolApprove">确 定</el-button>
+                <h-button @click="onCloseCol">取消</h-button>
+                <h-button type="primary" @click="onUpdatecolApprove">确定</h-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
 import moment from 'moment'
-import { refuseDoc, submitProjectdoc } from '../api/index'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { refuseDoc, submitProjectdoc, checkTemplatedoc } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { handleImgDownload } from '../../projectInformation/utils'
+import { interfaceUrl } from '@/api/config'
 export default {
     name: 'datacollectcom',
     props: {
@@ -112,6 +118,11 @@ export default {
     data () {
         return {
             handleImgDownload,
+            action: interfaceUrl + 'tms/files/upload',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
             moment,
             colFormrules: {},
             recordsVisible: false,
@@ -142,6 +153,9 @@ export default {
                 remark: ''
             }
         }
+    },
+    components: {
+        hosjoyUpload
     },
     computed: {
         ...mapState({
@@ -236,6 +250,17 @@ export default {
             this.collectVisible = false
             this.refuseForm.remark = ''
             this.reasonVisible = false
+        },
+        handleSuccessCb (row) {
+            console.log('row', row)
+            row.riskCheckProjectDocPos.map(item => {
+                item.templateId = row.templateId
+                item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
+                item.projectId = this.colForm.projectId
+            })
+        },
+        handleSuccessArg (val) {
+            checkTemplatedoc({ projectTemplateDocList: [val] })
         }
     }
 }
