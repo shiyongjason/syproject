@@ -48,7 +48,7 @@ export default {
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             }
         }
     },
