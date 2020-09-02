@@ -1,7 +1,7 @@
 <template>
     <div class="page-body B2b">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
                 <div class="query-cont__col">
                     <div class="query-col__label">时间：</div>
                     <div class="query-col__input">
@@ -30,8 +30,8 @@
                 </template>
             </basicTable>
         </div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
                 <div class="query-cont__col">
                     <div class="query-col__label">时间：</div>
                     <div class="query-col__input">
@@ -39,7 +39,7 @@
                         <el-date-picker v-model="queryParams_two.endTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd_two" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <div class="query-col__label">终端：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams_two.source">
@@ -57,24 +57,24 @@
             <basicTable :tableLabel="tableLabel_two" :tableData="tableData_two" :pagination="pagination_two" @onSizeChange="onSizeChange_two" @onCurrentChange="onCurrentChange_two">
             </basicTable>
         </div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">时间：</div>
-                    <div class="query-col-input">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams_three.startTime" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart_three"></el-date-picker>
                         <el-date-picker v-model="queryParams_three.endTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd_three" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">终端：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">终端：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams_three.source">
                             <el-option v-for="item in terminalOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery_three">查询</h-button>
                     <h-button @click="onReset_three">重置</h-button>
                 </div>
@@ -84,24 +84,24 @@
             <basicTable :tableLabel="tableLabel_three" :tableData="tableData_three" :pagination="pagination_three" @onSizeChange="onSizeChange_three" @onCurrentChange="onCurrentChange_three">
             </basicTable>
         </div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">时间：</div>
-                    <div class="query-col-input">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams_four.startTime" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsStart_four"></el-date-picker>
                         <el-date-picker v-model="queryParams_four.endTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :picker-options="pickerOptionsEnd_four" default-time="23:59:59"></el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">终端：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">终端：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams_four.source">
                             <el-option v-for="item in terminalOption" :key="item.value" :label="item.label" :value="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery_four">查询</h-button>
                     <h-button @click="onReset_four">重置</h-button>
                 </div>
