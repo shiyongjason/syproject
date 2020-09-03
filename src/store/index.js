@@ -24,6 +24,8 @@ import riskManage from '@/views/crm/riskManage/store/riskManage'
 import vipManage from '@/views/crm/vipmanage/store/vipManage'
 import creditManage from '@/views/crm/creditmanage/store/creditManage'
 import vipApply from '@/views/crm/vipapplication/store/vipApplication'
+import wxMember from '@/views/crm/wechatcustomer/store/wxMember'
+
 Vue.use(Vuex)
 
 const userInfo = sessionStorage.getItem('userInfo')
@@ -69,7 +71,8 @@ const store = new Vuex.Store({
         riskManage,
         vipManage,
         vipApply,
-        creditManage
+        creditManage,
+        wxMember
     }
 })
 export default store
