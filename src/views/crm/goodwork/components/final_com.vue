@@ -36,7 +36,7 @@
                             </p>
                         </div>
                         <hosjoyUpload v-model="fileList" :showPreView=false :fileSize='200' :fileNum='15' :action='action' :uploadParameters='uploadParameters' @successCb="onSuccessCb()" style="margin-top:10px">
-                            <el-button type="primary">上 传</el-button>
+                            <el-button>上传</el-button>
                         </hosjoyUpload>
                     </el-form-item>
                 </template>
@@ -69,7 +69,7 @@ export default {
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             fileList: []
         }

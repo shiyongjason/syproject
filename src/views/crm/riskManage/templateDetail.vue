@@ -35,7 +35,7 @@
                                 </template>
                             </td>
                             <td>
-                                <el-button size="mini" type="primary" @click="onEditTem(obj.templateId)">编辑</el-button>
+                                <h-button table @click="onEditTem(obj.templateId)">编辑</h-button>
                             </td>
                         </tr>
                     </template>
@@ -55,7 +55,7 @@
                         <el-input v-model="formTemp.functionName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="规定格式：">
-                       <el-select v-model="formTemp.formatId"   placeholder="请选择">
+                        <el-select v-model="formTemp.formatId" placeholder="请选择">
                             <el-option v-for="item in formatList" :key="item.formatId" :label="item.formatName" :value="item.formatId">
                             </el-option>
                         </el-select>
@@ -77,8 +77,8 @@
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="handleClose">取 消</el-button>
-                <el-button type="primary" @click="onSaveTemp" :loading=loading>{{loading?'保存中':'确 定'}}</el-button>
+                <h-button @click="handleClose">取消</h-button>
+                <h-button type='primary' @click="onSaveTemp" :loading=loading>{{loading?'保存中':'确定'}}</h-button>
             </span>
         </el-dialog>
     </div>
@@ -101,7 +101,7 @@ export default {
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             queryParams: {
                 bizType: this.$route.query.bizType
@@ -210,7 +210,7 @@ export default {
     }
     tbody {
         td {
-            em{
+            em {
                 font-style: normal;
                 color: #f00;
             }
@@ -229,7 +229,7 @@ export default {
         }
     }
 }
-/deep/.el-textarea .el-input__count{
+/deep/.el-textarea .el-input__count {
     background: transparent;
 }
 /deep/.el-upload-dragger {

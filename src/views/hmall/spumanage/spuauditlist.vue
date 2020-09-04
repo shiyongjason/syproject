@@ -53,11 +53,7 @@
                     <div class="flex-wrap-title">审核状态：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.auditStatus" style="width: 100%">
-                            <el-option
-                                v-for="item in auditStatusOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in auditStatusOptions" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -69,41 +65,26 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="()=>searchList(1)">
-                            查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest">
-                            重置
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onChangeStatus">批量审核</el-button>
-                        <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
+                        <h-button type="primary" @click="()=>searchList(1)">查询</h-button>
+                        <h-button @click="onRest">重置</h-button>
+                        <h-button @click="onChangeStatus">批量审核</h-button>
+                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable
-                :tableData="tableData"
-                :tableLabel="tableLabel"
-                :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-                @onSizeChange="handleSizeChange"
-                :multiSelection.sync='multiSelection'
-                :isMultiple="true"
-                :selectable="selectable"
-                :isAction="true"
-                :actionMinWidth=220
-                :rowKey="rowKey"
-                :isShowIndex='true'
-            >
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync='multiSelection' :isMultiple="true" :selectable="selectable" :isAction="true" :actionMinWidth=220
+                :rowKey="rowKey" :isShowIndex='true'>
                 <template slot="auditStatus" slot-scope="scope">
                     <span :class="scope.data.row.auditStatus==0?'colgry':scope.data.row.auditStatus==1?'':'colred'">
                         {{scope.data.row.auditStatus==0?'待审核':scope.data.row.auditStatus==1?'通过':'未通过'}}
                     </span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</el-button>
-                    <el-button type="primary" size="mini" plain @click="onShowSpu(scope.data.row)" v-else>查看</el-button>
-                    <el-button type="info" size="mini" plain @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</el-button>
+                    <h-button table @click="onAuditSpu(scope.data.row)" v-if="scope.data.row.auditStatus==0">审核</h-button>
+                    <h-button table @click="onShowSpu(scope.data.row)" v-else>查看</h-button>
+                    <h-button table @click="onSetSpuTemplate(scope.data.row)">设置为SPU模板</h-button>
                 </template>
             </basicTable>
         </div>

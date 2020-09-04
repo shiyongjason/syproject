@@ -22,16 +22,16 @@
                     <el-form-item label="验证码" prop="smsCode">
                         <el-input v-model="withdrawalForm.smsCode" placeholder="请填写" maxlength="6"></el-input>
                         <span style="margin-left: 20px">{{phoneNumber}}</span>
-                        <el-button
-                            style="margin-left: 20px"
-                            size="mini"
+                        <h-button
+                            table
+                            class="ml20"
                             :disabled="after?false:true"
                             @click="onMobileVerifica"
-                        >{{content}}</el-button>
+                        >{{content}}</h-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="onCancel">取消</el-button>
-                        <el-button type="primary" @click="onSubmit">确定</el-button>
+                        <h-button @click="onCancel">取消</h-button>
+                        <h-button type="primary" @click="onSubmit">确定</h-button>
                     </el-form-item>
                 </el-form>
             </div>
@@ -55,9 +55,9 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">查询</el-button>
-                        <!-- <el-button type="primary" class="ml20" @click="onRest()">重置</el-button> -->
-                        <button type="button" class="el-button ml20 el-button--primary" @click="onExport"><span>导出</span></button>
+                        <h-button type="primary" @click="searchList()">查询</h-button>
+                        <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
+                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>

@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'prev
         dsn: 'https://96d38d85c5da49bfacdada98edca3ea7@sentry.hosjoy.com/4',
         integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
         release: process.env.RELEASE_VERSION,
-        environment: process.env.VUE_APP_TITLE
+        environment: process.env.VUE_APP_TITLE || process.env.NODE_ENV
     })
 }
 

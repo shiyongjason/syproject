@@ -71,24 +71,23 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-             @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" actionWidth='300' :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" actionWidth='300' :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
-                  <template slot="status" slot-scope="scope">
+                <template slot="status" slot-scope="scope">
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                 </template>
                 <template slot="endTime" slot-scope="scope">
@@ -98,7 +97,7 @@
                     {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-2].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</el-button>
+                    <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -116,8 +115,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button type="primary" @click="submitForm('ruleForm')">确定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -242,7 +241,7 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams

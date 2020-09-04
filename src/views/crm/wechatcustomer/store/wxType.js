@@ -1,0 +1,9 @@
+export const WX_MEMBER_PAGE = 'WX_MEMBER_PAGE'
+export const WX_MEMBER_LOAN = 'WX_MEMBER_LOAN'
+
+export const WX_DEPART_STATIC = 'WX_DEPART_STATIC'
+export const WX_USER_STATIC = 'WX_USER_STATIC'
+
+export const WX_MEMEBER_USER = 'WX_MEMEBER_USER'
+
+export const WX_CUSTOMER_STATIC = 'WX_CUSTOMER_STATIC'
