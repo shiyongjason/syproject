@@ -85,21 +85,20 @@ axios.interceptors.response.use(
     },
     (error) => {
         requestLoading--
+        let timer = null
         if (axios.isCancel(error)) {
             return Promise.reject(error)
         }
         store.commit('LOAD_STATE', false)
-        if (error.config.timeout === 0 && !(error.response && error.response.data)) {
+        if (error.config.timeout === 0 && !error.response) {
             requestArr.splice(0, requestArr.length)
             if (!messageShowing) {
-                sessionStorage.clear()
                 messageShowing = Message({
-                    message: '权限无效，已为你重定向到登录页',
+                    message: '网络连接故障，请检查您的网络！',
                     type: 'error'
                 })
-                setTimeout(function () {
+                timer = setTimeout(function () {
                     messageShowing = null
-                    location.href = '/login'
                 }, 1200)
             }
         } else {
@@ -111,15 +110,32 @@ axios.interceptors.response.use(
             if (specialHandle.length > 0) {
                 message = error.response.data.message
             }
-            if (error.response.status === 400 && data.message !== '') {
-                message = data.message ? data.message : '操作失败'
+            if (error.response.status === 401) {
+                requestArr.splice(0, requestArr.length)
+                if (!messageShowing) {
+                    sessionStorage.clear()
+                    messageShowing = Message({
+                        message: '权限无效，已为你重定向到登录页',
+                        type: 'error'
+                    })
+                    timer = setTimeout(function () {
+                        messageShowing = null
+                        window.location.href = '/login'
+                    }, 1200)
+                    return
+                }
+            } else {
+                if (error.response.status === 400 && data.message !== '') {
+                    message = data.message ? data.message : '操作失败'
+                }
+                Message({
+                    message: message,
+                    type: 'error'
+                })
             }
-            Message({
-                message: message,
-                type: 'error'
-            })
-            return Promise.reject(error)
         }
+        clearTimeout(timer)
+        return Promise.reject(error)
     }
 )
 
