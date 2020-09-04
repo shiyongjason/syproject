@@ -107,9 +107,9 @@
                 </div>
                 <el-row v-if="operate=='modify'||operate=='add'">
                     <el-form-item style="text-align: center">
-                        <el-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</el-button>
-                        <el-button type="primary" @click="onSave(2)" v-if="operate=='modify'">保存</el-button>
-                        <el-button @click="onBack()">返回</el-button>
+                        <h-button type="primary" @click="onSave(1)" v-if="operate=='add'">保存</h-button>
+                        <h-button type="primary" @click="onSave(2)" v-if="operate=='modify'">保存</h-button>
+                        <h-button @click="onBack()">返回</h-button>
                     </el-form-item>
                 </el-row>
                 <el-form ref="auditForm" :model="auditForm" :rules="auditrules" label-width="110px">
@@ -123,9 +123,9 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item style="text-align: center">
-                            <el-button type="primary" @click="onAudit()">确定</el-button>
-                            <el-button @click="onBack()">返回</el-button>
-                            <el-button @click="onSetSpuTemplate()">设置为SPU模板</el-button>
+                            <h-button type="primary" @click="onAudit()">确定</h-button>
+                            <h-button @click="onBack()">返回</h-button>
+                            <h-button @click="onSetSpuTemplate()">设置为SPU模板</h-button>
                         </el-form-item>
                     </el-row>
                 </el-form>
@@ -295,7 +295,7 @@ export default {
     },
 
     // 因为keepAlive的原因，需要做很多重置工作
-    activated () {
+    /* activated () {
         // this.operate = this.$route.query.type
         // if (this.$route.query.type === 'modify' && this.$route.query.spuTemplateId) {
         //     this.findSpuTemplateDetailAsync(this.$route.query.spuTemplateId)
@@ -304,7 +304,7 @@ export default {
         // } else {
         //     this.resetForm()
         // }
-    },
+    }, */
     methods: {
         ...mapActions('category', [
             'findAllCategory'

@@ -74,12 +74,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="findActiveList">
-                            搜索
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="reset">
+                        <h-button type="primary" @click="()=>findActiveList(1)">
+                            查询
+                        </h-button>
+                        <h-button @click="reset">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -150,7 +150,10 @@ export default {
             this.queryParams.pageNumber = val
             this.findActiveList()
         },
-        async findActiveList () {
+        async findActiveList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.startDate) params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
             if (params.endDate) params.endDate = this.$root.$options.filters.formatterTime(params.endDate)

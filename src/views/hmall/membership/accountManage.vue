@@ -29,12 +29,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="onFindAccountList(1)">
+                        <h-button type="primary" @click="onFindAccountList(1)">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button @click="onRest()">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
             @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="primary" size="mini" plain @click="onFindInfo(scope.data.row.username)">查看详情</el-button>
+                    <h-button table @click="onFindInfo(scope.data.row.username)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -56,7 +56,7 @@ import accountCp from './accountCp'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 export default {
-    name: 'spumange',
+    name: 'membershipSpumange',
     data () {
         return {
             queryParams: {

@@ -74,10 +74,10 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onQuery">搜索</el-button>
-                    <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
-                    <el-button type="primary" class="ml20" @click="onOffShelves()">批量下架</el-button>
-                    <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                    <h-button type="primary" @click="()=>onQuery(1)">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
+                    <h-button @click="onOffShelves()">批量下架</h-button>
                 </div>
             </div>
         </div>
@@ -100,8 +100,8 @@
                     {{ shareStatusMap.get(scope.data.row.isShared) }}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <!-- <el-button class="orangeBtn" @click="">查看</el-button> -->
-                    <el-button class="orangeBtn" v-if="scope.data.row.isOnShelf " @click="onOffShelves(scope.data.row.spuId)">下架</el-button>
+                    <!-- <h-button table @click="">查看</h-button> -->
+                    <h-button table v-if="scope.data.row.isOnShelf " @click="onOffShelves(scope.data.row.spuId)">下架</h-button>
                 </template>
             </basicTable>
         </div>
@@ -181,7 +181,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        onQuery () {
+        onQuery (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             this.search()
         },
         onReset () {

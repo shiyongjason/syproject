@@ -5,25 +5,25 @@
                 <div class="page-risk_title">
                     材料清单配置：
                     <div class="page-risk_btn">
-                        好橙工项目材料清单 <el-button size="mini" type="primary" @click="onEdittemp(1)">编辑</el-button>
+                        好橙工项目材料清单 <h-button table @click="onEdittemp(1)">编辑</h-button>
                     </div>
                 </div>
                 <div class="page-risk_title">
                     立项清单配置：
                     <div class="page-risk_btn">
-                        好橙工立项材料清单 <el-button size="mini" type="primary" @click="onEdittemp(2)">编辑</el-button>
+                        好橙工立项材料清单 <h-button table @click="onEdittemp(2)">编辑</h-button>
                     </div>
                 </div>
                 <div class="page-risk_title">
                     终审清单配置：
                     <div class="page-risk_btn">
-                        好橙工终审材料清单 <el-button size="mini" type="primary" @click="onEdittemp(3)">编辑</el-button>
+                        好橙工终审材料清单 <h-button table @click="onEdittemp(3)">编辑</h-button>
                     </div>
                 </div>
-                   <div class="page-risk_title">
+                <div class="page-risk_title">
                     授信清单配置：
                     <div class="page-risk_btn">
-                        好橙工授信材料清单 <el-button size="mini" type="primary" @click="onEdittemp(4)">编辑</el-button>
+                        好橙工授信材料清单 <h-button table @click="onEdittemp(4)">编辑</h-button>
                     </div>
                 </div>
             </div>

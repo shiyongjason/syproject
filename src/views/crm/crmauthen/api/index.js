@@ -14,6 +14,10 @@ export const getCompanyBosslist = (params) => {
 export const getBusinessAuthen = (params) => {
     return axios.get(B2bUrl + `merchant/api/crm/company/authentication-info/${params}`)
 }
+// CRM 认证信息
+export const getAuthenticationMessage = (companyCode) => {
+    return axios.get(`memeber/api/crm/company/open-record/${companyCode}`)
+}
 
 // CRM 认证状态
 export const getBusinessDetail = (params) => {

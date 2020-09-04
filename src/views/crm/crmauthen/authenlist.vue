@@ -23,7 +23,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">所属分部：</div>
                     <div class="query-col-input">
-                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true  @change="onChooseDep">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -31,8 +31,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-col-input">
-                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr"  ref="myCascader" :clearable=true :collapse-tags=true
-                        :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
+                        <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" ref="myCascader" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
@@ -80,28 +79,24 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" @click="searchList">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button @click="onRest">
                             重置
-                        </el-button>
-                    </div>
+                        </h-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>; 体系外 <b>{{crmauthLoan.outSystemNum||0}}
                 </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.waitToAuditNum||0}}</b></el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-             @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
-             ::rowKey="rowKey" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
-                   <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
                 </template>
                 <template slot="userName" slot-scope="scope">
-                   <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
                 </template>
                 <template slot="areaname" slot-scope="scope">
                     {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
@@ -116,7 +111,7 @@
                     <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</el-button>
+                    <h-button table @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -276,7 +271,7 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val
         },
-        async  searchList (val) {
+        async searchList (val) {
             if (val) this.queryParams.pageNumber = val
             const { ...params } = this.queryParams
             await this.findBusinesspage(params)
@@ -304,9 +299,13 @@ export default {
             }
             this.searchList()
         },
-        onLookauthen (val) {
+        async onLookauthen (val) {
             this.drawer = true
-            this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$refs.drawercom.getAuthenticationDetail(val)
+            await this.$refs.drawercom.getMerchtMemberDetail(val)
+            this.$nextTick(() => {
+                this.$refs.drawercom.onClearV()
+            })
         },
         restDrawer () {
             this.drawer = false
@@ -324,7 +323,7 @@ export default {
     color: #ff0000;
 }
 .colgry {
-    color:#06c306;
+    color: #06c306;
 }
 .colblue {
     color: #50b7f7;

@@ -4,12 +4,12 @@
           <div class="page-body-cont query-cont">
               <div class="query-cont-row">
                   <div class="query-cont-col">
-                      <el-button type="primary" class="ml20" @click="onAdd">
+                      <h-button type="create" @click="onAdd">
                           新增参数
-                      </el-button>
-                      <el-button type="primary" class="ml20" @click="onDelete">
+                      </h-button>
+                      <h-button @click="onDelete">
                           批量删除
-                      </el-button>
+                      </h-button>
                   </div>
               </div>
           </div>
@@ -40,8 +40,8 @@
                       </template>
                   </template>
                   <template slot="action" slot-scope="scope">
-                      <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
-                      <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
+                      <h-button table @click="onEdit(scope.data.row)">编辑</h-button>
+                      <h-button table @click="onDelete(scope.data.row)">删除</h-button>
                   </template>
               </basicTable>
           </div>
@@ -110,8 +110,8 @@
                 </el-form-item>
             </el-form>
             <div class="mt10 center-btn">
-                <el-button @click="closeDialog">取消</el-button>
-                <el-button type="primary" @click="onSave">保存</el-button>
+                <h-button @click="closeDialog">取消</h-button>
+                <h-button type="primary" @click="onSave">保存</h-button>
             </div>
         </el-dialog>
     </div>
@@ -125,6 +125,7 @@ import { SETTING_REQUIRED_MAP, SETTING_TYPE_MAP } from '../const'
 import { mapState, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 export default {
+    name: 'setParameters',
     props: {
         categoryId: {
             type: Number,
@@ -315,7 +316,7 @@ export default {
         },
         // 通过判断是否传递的是row，删除单个或者多个，注意取消的时候，单个要清空数组
         onDelete (row) {
-            if (row.k) {
+            if (row && row.k) {
                 this.multiSelection = [row]
             } else {
                 if (this.multiSelection.length === 0) {
@@ -330,7 +331,7 @@ export default {
             }).then(() => {
                 this.deleteAsync()
             }).catch(() => {
-                if (row.k) {
+                if (row && row.k) {
                     this.multiSelection = []
                 }
             })

@@ -145,7 +145,7 @@
                                     <el-button type="primary" class="ml20" @click="onQueryOrder">
                                         搜索
                                     </el-button>
-                                    <el-button type="primary" class="ml20" @click="exportTabOrder">
+                                    <el-button class="ml20" @click="exportTabOrder">
                                         导出
                                     </el-button>
                                 </div>
@@ -327,7 +327,7 @@ import {
 } from './api/index'
 
 export default {
-    name: 'order',
+    name: 'orderRecordOrder',
     components: {
         orderTable,
         receivablesTable,

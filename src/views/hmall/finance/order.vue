@@ -70,8 +70,8 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="onQuery">查询</el-button>
-                        <el-button type="primary" class="ml20" @click="onReset">重置</el-button>
+                        <h-button type="primary" @click="onQuery">查询</h-button>
+                        <h-button @click="onReset">重置</h-button>
                     </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@
         <div class="page-body-cont">
             <div class="query-cont-row">
                 <div class="query-cont-col">
-                    <button type="button" class="el-button ml20 el-button--primary" @click="onExport"><span>导出</span></button>
+                    <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
@@ -107,6 +107,7 @@ import { PAY_METHOD_OPTIONS, PAY_METHOD_MAP } from '@/utils/const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
+    name: 'financeorder',
     data () {
         return {
             orderStatusOptions: ORDER_STATUS_OPTIONS,
