@@ -17,9 +17,10 @@
     "@sentry/integrations": "^5.21.1",
     "app-info-parser": "^0.3.5",
     "bignumber.js": "^9.0.0",
+    "core-js": "^2.6.5",
     "echarts": "^4.2.1",
     "highcharts": "^7.2.1",
-    "hosjoy-ui": "^2.1.0",
+    "hosjoy-ui": "^2.1.1",
     "jwt-decode": "^2.2.0",
     "mathjs": "^7.0.1",
     "moment": "^2.24.0",
@@ -44,7 +45,7 @@
     "element-ui": "~2.12.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.2",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.14.1",
     "sass-loader": "^7.1.0",
     "vue-template-compiler": "^2.6.10"
   }
