@@ -624,6 +624,7 @@ export default {
                     }
                     this.isPending = false
                     this.$message.success(`提交成功！`)
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/b2b/marketing/eventMange')
                 } catch (error) {
                     this.isPending = false
