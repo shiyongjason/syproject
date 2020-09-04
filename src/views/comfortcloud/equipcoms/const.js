@@ -79,5 +79,6 @@ export const lctTableLabel = [
     { label: '双制热（h)', prop: 'doubleHotTime' },
     { label: '制冷时长（h)', prop: 'codeTime' },
     { label: '通风时长（h)', prop: 'supplyTime' },
+    { label: '智慧模式开启时长（h)', prop: 'wisdomElapsedTime' },
     { label: '注册时间', prop: 'createTime' }
 ]
