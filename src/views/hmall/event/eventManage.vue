@@ -68,7 +68,7 @@
                     <el-button type="primary" size="mini" plain @click="onCopy(scope.data.row.id)">复制</el-button>
                     <el-button type="warning" size="mini" plain @click="onOperate(scope.data.row,2)" v-if="(scope.data.row.status==1)&&scope.data.row.status!=4&&scope.data.row.status!=5">发布</el-button>
                     <el-button type="danger" size="mini" plain @click="onOperate(scope.data.row,3)" v-if="(scope.data.row.status==3||scope.data.row.status==2)&&scope.data.row.status!=4">终止</el-button>
-                    <el-tooltip placement="bottom-start" >
+                    <el-tooltip placement="bottom-start">
                         <div slot="content" v-if="scope.data.row.pvdata">截止到{{scope.data.row.pvdata.expiryDate}}<br>累计PV：{{scope.data.row.pvdata.pv}}<br />累计UV：{{scope.data.row.pvdata.uv}}<br /> 累计订单数：{{scope.data.row.pvdata.orderCommits}}<br />累计支付金额：{{scope.data.row.pvdata.totalMoney}}</div>
                         <el-button type="info" size="mini" v-show="scope.data.row.status!=1" plain @click="onClickStatics(scope.data.row)">数据统计</el-button>
                     </el-tooltip>
@@ -141,6 +141,14 @@ export default {
         this.onFindeSpike()
         this.copyParams = { ...this.queryParams }
     },
+    beforeRouteEnter (to, from, next) {
+        console.log('from: ', from)
+        next(vm => {
+            if (from.path === '/b2b/marketing/createEditEvent') {
+                vm.onFindeSpike('fromCreat')
+            }
+        })
+    },
     /* activated () {
         this.onFindeSpike()
     },
@@ -178,8 +186,14 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.onFindeSpike()
         },
-        async onFindeSpike () {
-            await this.findSpike(this.queryParams)
+        async onFindeSpike (key = '') {
+            let req = ''
+            if (key === 'fromCreat') {
+                req = this.copyParams
+            } else {
+                req = this.queryParams
+            }
+            await this.findSpike(req)
             let spikelist = this.spikeData.records
             // TODO 影响性能吗
             spikelist && spikelist.map(async (item, index) => {
