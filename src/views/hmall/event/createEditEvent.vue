@@ -76,7 +76,7 @@
                         <div class="query-cont-col">
                             <div class="query-col-title">活动商品：</div>
                             <div class="query-col-input">
-                                <el-button type="primary" size='small' @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</el-button>
+                                <h-button type="create" @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</h-button>
                             </div>
                         </div>
                     </div>
@@ -91,24 +91,22 @@
                             </div>
                         </template>
                         <template slot="action" slot-scope="scope">
-                            <el-button type="primary" size='small' @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</el-button>
-                            <el-button type="primary" size='small' @click="onOrder(scope.data.row)" :disabled='canNotOrder'>
+                            <h-button table @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</h-button>
+                            <h-button table @click="onOrder(scope.data.row)" :disabled='canNotOrder'>
                                 刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
-                            </el-button>
+                            </h-button>
                         </template>
                     </hosJoyTable>
                 </div>
             </el-form>
         </div>
         <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <!-- <el-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</el-button> -->
-            <el-button @click="dealBack">返回</el-button>
-            <el-button type="primary" @click='onSave(1)'>保存</el-button>
-            <el-button type="primary" @click='onSave(2)'>活动发布</el-button>
+            <h-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</h-button>
+            <h-button type="primary" @click='onSave(1)'>保存</h-button>
+            <h-button type="primary" @click='onSave(2)'>活动发布</h-button>
         </div>
         <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <!-- <el-button @click='()=>{$router.go(-1)}'>返回</el-button> -->
-            <el-button @click='onGoBack'>返回</el-button>
+            <h-button @click='()=>{$router.go(-1)}'>返回</h-button>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
             <center>
@@ -116,8 +114,8 @@
                 <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
             </center>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onCancle">取 消</el-button>
-                <el-button type="primary" @click="onSureOrder">确 定</el-button>
+                <h-button @click="onCancle">取 消</h-button>
+                <h-button type="primary" @click="onSureOrder">确 定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -276,12 +274,10 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
-                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>折
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>折{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元
-                                    {scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }

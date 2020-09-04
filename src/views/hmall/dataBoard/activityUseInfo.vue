@@ -25,20 +25,20 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-button type="primary" @click="onQuery">搜索</el-button>
-                <el-button type="primary" @click="onReset">重置</el-button>
-                <el-button type="primary" @click="onExport">导出</el-button>
+                <h-button type="primary" @click="onQuery">查询</h-button>
+                <h-button @click="onReset">重置</h-button>
+                <h-button @click="onExport">导出</h-button>
             </div>
         </div>
         <div class="page-body-cont">
             <basicTable :tableLabel="tableColumn" :tableData="tableData" :pagination="paginationData" :isAction="true" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onLookInfo(scope.data.row)">查看明细</el-button>
+                    <h-button table @click="onLookInfo(scope.data.row)">查看明细</h-button>
                 </template>
             </basicTable>
             <div class="table-cont-title">
                 <span class="table-title-name">明细数据</span>
-                <el-button type="primary" @click="onExportInfo">导出</el-button>
+                <h-button @click="onExportInfo">导出</h-button>
             </div>
             <basicTable :tableLabel="tableLabelInfo" :tableData="tableDataInfo" :pagination="paginationDataInfo" @onSizeChange="onSizeChangeInfo" @onCurrentChange="onCurrentChangeInfo"></basicTable>
         </div>

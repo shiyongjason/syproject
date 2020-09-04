@@ -84,12 +84,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="findCouponList">
-                            搜索
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="reset">
+                        <h-button type="primary" @click="findCouponList">
+                            查询
+                        </h-button>
+                        <h-button @click="reset">
                             重置
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>

@@ -102,8 +102,8 @@
                 </el-form>
                 <div class="drawer-footer" v-if="activeName=='first'">
                     <div class="drawer-button">
-                        <el-button @click="cancelForm">取 消</el-button>
-                        <el-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                        <h-button @click="cancelForm">取 消</h-button>
+                        <h-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                     </div>
                 </div>
                 <!-- <div class="" v-if="activeName=='second'">

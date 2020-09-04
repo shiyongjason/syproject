@@ -14,12 +14,12 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                        <h-button type="primary" class="ml20" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onExportTable()">
+                        </h-button>
+                        <h-button class="ml20" @click="onExportTable()">
                             导出详情
-                        </el-button>
+                        </h-button>
                     </div>
                 </div>
             </div>
