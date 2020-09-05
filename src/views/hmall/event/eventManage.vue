@@ -142,7 +142,6 @@ export default {
         this.copyParams = { ...this.queryParams }
     },
     beforeRouteEnter (to, from, next) {
-        console.log('from: ', from)
         next(vm => {
             if (from.path === '/b2b/marketing/createEditEvent') {
                 vm.onFindeSpike('fromCreat')
