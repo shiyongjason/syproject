@@ -75,6 +75,36 @@
                             <el-form-item label="客户分类：" :label-width="formLabelWidth">
                                 {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
                             </el-form-item>
+                            <!-- #################### -->
+                            <el-form-item label="注册时间：" :label-width="formLabelWidth">
+                                123
+                            </el-form-item>
+                            <el-form-item label="主营品牌：" :label-width="formLabelWidth" prop="note">
+                                <el-input v-model.trim="statusForm.note" maxlength="200" class="lageinput"></el-input>
+                            </el-form-item>
+                            <el-form-item label="主营品类：" :label-width="formLabelWidth" prop="pkDeptDoc">
+                                <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="业务类型：" :label-width="formLabelWidth" prop="note">
+                                <span class="sinput">
+                                    工程: <el-input v-model.trim="statusForm.note" maxlength="200" class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </span>
+                                <span class="sinput">
+                                    批发: <el-input v-model.trim="statusForm.note" maxlength="200" class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </span>
+                                <span class="sinput">
+                                    零售: <el-input v-model.trim="statusForm.note" maxlength="200" class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </span>
+                            </el-form-item>
+                            <!-- #################### -->
                             <el-form-item label="创建时间：" :label-width="formLabelWidth">
                                 {{businessDetail.createTime | formatterTime}}
                             </el-form-item>
@@ -120,25 +150,16 @@
                             </el-form-item>
                             <el-form-item label="营业执照：">
                                 <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
-                                    <el-image
-                                        style="width: 158px; height: 100px"
-                                        :src="authenticationDetail.businessLicensePhoto"
-                                        :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
+                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.businessLicensePhoto" :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
                                     </el-image>
                                 </div>
                                 <span v-else>-</span>
                             </el-form-item>
                             <el-form-item label="法人身份证：">
                                 <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
-                                    <el-image
-                                        style="width: 158px; height: 100px;margin-right: 20px"
-                                        :src="authenticationDetail.certPhotoA"
-                                        :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
+                                    <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
                                     </el-image>
-                                    <el-image
-                                        style="width: 158px; height: 100px"
-                                        :src="authenticationDetail.certPhotoB"
-                                        :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
+                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
                                     </el-image>
                                 </div>
                                 <span v-else>-</span>
@@ -174,7 +195,7 @@
                         </el-form>
                         <div class="drawer-footer">
                             <div class="drawer-button">
-                                <h-button  @click="cancelForm">好 的</h-button>
+                                <h-button @click="cancelForm">好 的</h-button>
                             </div>
                         </div>
                     </div>
@@ -623,15 +644,24 @@ export default {
         word-break: keep-all;
     }
 }
-    .people-id {
-        display: flex;
-        p{
-            margin-right: 10px;
-        }
-        img {
-            width: 158px;
-            height: 100px;
-            margin-right: 20px;
-        }
+.people-id {
+    display: flex;
+    p {
+        margin-right: 10px;
     }
+    img {
+        width: 158px;
+        height: 100px;
+        margin-right: 20px;
+    }
+}
+/deep/ .lageinput .el-input__inner {
+    width: 300px;
+}
+.sinput {
+    margin-right: 20px;
+}
+/deep/ .sinput .el-input {
+    width: 130px !important;
+}
 </style>
