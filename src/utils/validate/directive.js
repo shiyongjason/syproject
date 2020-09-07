@@ -116,7 +116,7 @@ export default {
                 div.style.left = '20px'
                 div.style.position = 'fixed'
                 div.style.zIndex = '1990'
-                div.style.transform = 'rotate(-15deg)'
+                // div.style.transform = 'rotate(-15deg)'
                 div.style.width = document.documentElement.clientWidth - 50 + 'px'
                 div.style.height = document.documentElement.clientHeight - 100 + 'px'
                 div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
