@@ -22,8 +22,6 @@
                     <h-button @click="onReset_one">重置</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel_one" :tableData="tableData_one" :pagination="pagination_one" isShowIndex isAction @onSizeChange="onSizeChange_one" @onCurrentChange="onCurrentChange_one">
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onSeeInfo(scope.data.row)">查看详情</h-button>
@@ -52,8 +50,6 @@
                     <h-button @click="onReset_two">重置</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel_two" :tableData="tableData_two" :pagination="pagination_two" @onSizeChange="onSizeChange_two" @onCurrentChange="onCurrentChange_two">
             </basicTable>
         </div>
@@ -79,8 +75,6 @@
                     <h-button @click="onReset_three">重置</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel_three" :tableData="tableData_three" :pagination="pagination_three" @onSizeChange="onSizeChange_three" @onCurrentChange="onCurrentChange_three">
             </basicTable>
         </div>
@@ -106,8 +100,6 @@
                     <h-button @click="onReset_four">重置</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel_four" :tableData="tableData_four" :pagination="pagination_four" @onSizeChange="onSizeChange_four" @onCurrentChange="onCurrentChange_four">
             </basicTable>
         </div>
