@@ -1,52 +1,52 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">姓名：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">姓名：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">类型：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">类型：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.type" placeholder="请选择" :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in wxTypeList" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否注册：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">是否注册：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.register" placeholder="请选择" :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in registeor" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">注册账号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">注册账号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.mobile" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">添加人：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">添加人：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.psnname" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">添加时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">添加时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -54,16 +54,13 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+                <div class="query-cont__col">
                         <h-button type='primary' @click="searchList(1)">查询</h-button>
                         <h-button @click="onRest">重置</h-button>
                         <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
+
             <el-tag size="medium" class="eltagtop">已筛选 {{tableLoan.totalNum||0}},已注册：{{tableLoan.registerUserNum||0}},未注册:{{tableLoan.waitRegisterUserNum||0}}</el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
                 actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
