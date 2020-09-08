@@ -1,60 +1,60 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目编号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目编号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经销商：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">经销商：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">甲方名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">甲方名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目类别：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目类别：</div>
+                    <div class="query-col__input">
                         <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="(item,index) in typeList" :key="index" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">合作进度：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">合作进度：</div>
+                    <div class="query-col__input">
                         <el-select v-model="status" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="(item,index) in coopreation" :key="index" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">初审通过时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">初审通过时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minFirstApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFirstApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -62,9 +62,9 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">材料审核通过时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">材料审核通过时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minFinalApproveTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart(queryParams.maxFinalApproveTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -72,19 +72,15 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+                <div class="query-cont__col">
                         <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
                         <h-button @click="onRest()">
                             重置
                         </h-button>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <!-- <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>

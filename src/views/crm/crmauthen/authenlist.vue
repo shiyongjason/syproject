@@ -1,43 +1,43 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">管理员账号：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">管理员账号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.userAccount" placeholder="请输入管理员账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">管理员姓名：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">管理员姓名：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.userName" placeholder="请输入管理员姓名" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">经营区域：</div>
+                    <div class="query-col__input">
                         <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" ref="myCascader" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">企业类型：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">企业类型：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.companyType">
                             <el-option label="全部" value="">
                             </el-option>
@@ -47,8 +47,8 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">客户分类：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">客户分类：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.customerType">
                             <el-option label="全部" value="">
                             </el-option>
@@ -58,8 +58,8 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">认证状态：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">认证状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.authenticationStatus">
                             <el-option label="全部" value="">
                             </el-option>
@@ -69,8 +69,8 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">关联/认证时间：</div>
-                    <div class="query-col-input">
+                    <div class="query-col__label">关联/认证时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -87,8 +87,6 @@
                     </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,体系内 <b>{{crmauthLoan.inSystemNum||0}}</b>; 体系外 <b>{{crmauthLoan.outSystemNum||0}}
                 </b>; 白名单 <b>{{crmauthLoan.whiteListNum||0}}</b>; 黑名单 <b>{{crmauthLoan.blackListNum||0}}</b>; 待审核 <b>{{crmauthLoan.waitToAuditNum||0}}</b></el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>

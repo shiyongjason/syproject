@@ -60,7 +60,6 @@
                         <h-button type='assist' @click="onLookDetail(2)">数据分析</h-button>
                 </div>
             </div>
-
             <el-tag size="medium" class="eltagtop">已筛选 {{tableLoan.totalNum||0}},已注册：{{tableLoan.registerUserNum||0}},未注册:{{tableLoan.waitRegisterUserNum||0}}</el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
                 actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
