@@ -196,7 +196,7 @@
                     <div v-for="(i) in whiteRecordsList" :key=i.id>
                         <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| formatterTime}}</b> 将 客户分类 设置为了
                         <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
-                        <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p>
+                        <!-- <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p> -->
                     </div>
                 </div>
             </el-form>
