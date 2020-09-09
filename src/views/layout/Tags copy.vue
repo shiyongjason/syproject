@@ -190,13 +190,14 @@ export default {
                 }
             }
             this.setTags(newValue)
-        },
+        }
+        /*,
         cachedInclude (val) {
             sessionStorage.setItem('cachedInclude', val)
         },
         cachedExclude (val) {
             sessionStorage.setItem('cachedExclude', val)
-        }
+        } */
     },
     mounted () {
         let tags = []

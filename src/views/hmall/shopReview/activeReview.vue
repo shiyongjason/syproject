@@ -74,7 +74,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <h-button type="primary" @click="findActiveList">
+                        <h-button type="primary" @click="()=>findActiveList(1)">
                             查询
                         </h-button>
                         <h-button @click="reset">
@@ -150,7 +150,10 @@ export default {
             this.queryParams.pageNumber = val
             this.findActiveList()
         },
-        async findActiveList () {
+        async findActiveList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.startDate) params.startDate = this.$root.$options.filters.formatterTime(params.startDate)
             if (params.endDate) params.endDate = this.$root.$options.filters.formatterTime(params.endDate)
