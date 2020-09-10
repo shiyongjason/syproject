@@ -43,3 +43,6 @@ export const getPlatList = (params) => axios.get(interfaceUrl + 'develop/develop
 export const putWhiterecord = (params) => axios.post(B2bUrl + 'merchant/api/crm/company/white-list-record', params)
 
 export const findWhiterecord = (params) => axios.get(B2bUrl + 'merchant/api/crm/company/white-list-record/list', { params })
+
+// 删除企业
+export const delCompany = (params) => axios.delete(`memeber/api/crm/company/${params}`)
