@@ -44,6 +44,8 @@ const state = {
     outBoundListPagination: {},
     splashScreenList: [],
     splashScreenPagination: {},
+    adPopList: [],
+    adPopPagination: {},
     allActivity: [],
     customerServiceList: [],
     customerServicePagination: {},
@@ -97,6 +99,12 @@ const getters = {
             v.statusName = v.activityId ? '已关联' : '未关联'
         })
         return state.splashScreenList
+    },
+    adPopList: state => {
+        state.adPopList.forEach(v => {
+            v.status = !!v.status
+        })
+        return state.adPopList
     },
     allActivity: state => state.allActivity.map(v => {
         const value = v.title.length < 15 ? v.title : v.title.substr(0, 14) + '...'
@@ -230,6 +238,12 @@ const mutations = {
     },
     [cloud.SPLASH_SCREEN_PAGINATION] (state, payload) {
         state.splashScreenPagination = payload
+    },
+    [cloud.AD_POP_LIST] (state, payload) {
+        state.adPopList = payload
+    },
+    [cloud.AD_POP_PAGINATION] (state, payload) {
+        state.adPopPagination = payload
     },
     [cloud.GET_ALL_ACTIVITY] (state, payload) {
         state.allActivity = payload
@@ -421,6 +435,15 @@ const actions = {
         const { data } = await Api.getSplashScreenList(params)
         commit(cloud.SPLASH_SCREEN_LIST, data.data.records)
         commit(cloud.SPLASH_SCREEN_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async getAdPopList ({ commit }, params) {
+        const { data } = await Api.getAdPopList(params)
+        commit(cloud.AD_POP_LIST, data.data.records)
+        commit(cloud.AD_POP_PAGINATION, {
             pageNumber: data.data.current,
             pageSize: data.data.size,
             total: data.data.total
