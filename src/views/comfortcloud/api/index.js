@@ -401,5 +401,10 @@ export function saveCloudMerchantAd (params) {
 
 // 招商订单列表
 export function getCloudMerchantOrderList (params) {
-    return axios.get(iotUrl + '/api/merchants-advertising/page', { params })
+    return axios.get(iotUrl + '/api/boss/agent-sign/order-page', { params })
+}
+
+// 获取招商代理品类列表
+export function getCloudMerchantCategory () {
+    return axios.get(iotUrl + '/api/agent-category/page')
 }

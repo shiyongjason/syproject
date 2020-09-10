@@ -8,15 +8,15 @@
                 <div class="query-col-title">订单号：</div>
                 <div class="query-col-input">
                     <el-input type="text"
-                              v-model="queryParams.id" maxlength="50" placeholder="输入订单号" clearable></el-input>
+                              v-model="queryParams.payNo" maxlength="50" placeholder="输入订单号" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="queryParams.startDate"
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="queryParams.payStartDate"
                                 :picker-options="pickerOptionsStart" clearable :editable="false">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="queryParams.endDate"
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="queryParams.payEndDate"
                                 :picker-options="pickerOptionsEnd" clearable :editable="false">
                 </el-date-picker>
             </div>
@@ -48,17 +48,19 @@ export default {
     data () {
         return {
             queryParams: {
-                id: '',
-                startDate: '',
-                endDate: ''
+                payNo: '',
+                payStartDate: '',
+                payEndDate: '',
+                pageNumber: 1,
+                pageSize: 10
             },
             tableLabel: [
-                { label: '支付时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '订单号', prop: 'agentCode' },
-                { label: '微信支付订单号', prop: 'cityName' },
-                { label: '联系人', prop: 'companyName' },
-                { label: '客户电话', prop: 'level' },
-                { label: '联系地址', prop: 'contactUser' },
+                { label: '支付时间', prop: 'successTime', formatters: 'dateTime' },
+                { label: '订单号', prop: 'payNo' },
+                { label: '微信支付订单号', prop: 'wxPayNo' },
+                { label: '联系人', prop: 'contactUser' },
+                { label: '客户电话', prop: 'contactNumber' },
+                { label: '联系地址', prop: 'contactAddress' },
                 { label: '代理级别', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
                 { label: '付款金额', prop: 'payAmount' }]
@@ -71,7 +73,26 @@ export default {
         ...mapGetters({
             cloudMerchantOrderList: 'cloudMerchantOrderList',
             cloudMerchantOrderListPagination: 'cloudMerchantOrderListPagination'
-        })
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    return time.getTime() > Date.now()
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.payStartDate
+                    if (beginDateVal) {
+                        return (
+                            time.getTime() < new Date(beginDateVal).getTime()
+                        )
+                    }
+                }
+            }
+        }
     },
     methods: {
         ...mapActions({

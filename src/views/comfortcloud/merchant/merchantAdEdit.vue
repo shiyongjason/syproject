@@ -10,10 +10,7 @@
                 </el-form-item>
                 <el-form-item label="招商品类：" prop="category">
                     <el-checkbox-group v-model="form.category">
-                        <el-checkbox label="地暖智控面板" name="type"></el-checkbox>
-                        <el-checkbox label="暖气片智能温控阀" name="type"></el-checkbox>
-                        <el-checkbox label="水机二联供智控面板" name="type"></el-checkbox>
-                        <el-checkbox label="中央空调控制器" name="type"></el-checkbox>
+                        <el-checkbox v-for="item in categorys" :label="item" name="type"></el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="page-body-title">
@@ -44,7 +41,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveCloudMerchantAd } from '../api'
+import { saveCloudMerchantAd, getCloudMerchantCategory } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -56,6 +53,7 @@ export default {
                 category: [],
                 content: ''
             },
+            categorys: [],
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -149,6 +147,7 @@ export default {
         if (this.$route.query.id) {
             this.getAdDetail(this.$route.query.id)
         }
+        this.getCategory()
     },
     methods: {
         ...mapActions({
@@ -156,13 +155,19 @@ export default {
             getCloudMerchantAdDetail: 'getCloudMerchantAdDetail'
         }),
 
+        async getCategory () {
+            let { data } = await getCloudMerchantCategory()
+            this.categorys = data.data.map(function (value) {
+                return value.agentCategoryName
+            })
+        },
+
         async getAdDetail (id) {
             await this.getCloudMerchantAdDetail(id)
             this.form = {
                 title: this.cloudMerchantAdDetail.title,
                 category: this.cloudMerchantAdDetail.merchantsCategory.split(','),
                 content: this.cloudMerchantAdDetail.content
-
             }
         },
         onBack () {
