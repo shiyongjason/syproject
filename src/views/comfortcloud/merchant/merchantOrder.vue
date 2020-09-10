@@ -41,7 +41,6 @@
 
 <script>
 
-import moment from 'moment'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {

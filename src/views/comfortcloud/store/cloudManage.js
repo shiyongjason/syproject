@@ -2,7 +2,7 @@ import * as types from '../../../store/mutation-types'
 import * as cloud from './cloudTypes'
 // import { getMembersituation, getMemberDetail, getFamilyDetail, getActdetail, getCloudActlist } from '@/views/comfortcloud/api'
 import * as Api from '@/views/comfortcloud/api'
-import { getCloudMerchantAdList } from '../api'
+
 const state = {
     iotmemberData: {},
     iotmemberDetail: {},
@@ -118,7 +118,7 @@ const getters = {
     cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
     cloudMerchantAdDetail: state => state.cloudMerchantAdDetail,
     cloudMerchantOrderList: state => state.cloudMerchantOrderList,
-    cloudMerchantOrderListPagination: state =>state.cloudMerchantOrderListPagination
+    cloudMerchantOrderListPagination: state => state.cloudMerchantOrderListPagination
 }
 
 const mutations = {
@@ -281,7 +281,7 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_ORDER_LIST_PAGINATION]  (state, payload) {
         state.cloudMerchantOrderListPagination = payload
-    },
+    }
 }
 
 const actions = {
@@ -513,7 +513,7 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
-    },
+    }
 }
 export default {
     state,
