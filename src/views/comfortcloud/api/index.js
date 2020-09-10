@@ -373,3 +373,8 @@ export function getCloudHomeModeTypeList (params) {
 export function getServiceManageHistoryList (params) {
     return axios.get(iotUrl + '/api/customer-service/service-order', { params })
 }
+
+// 获取招商代理商列表
+export function getCloudMerchantList (params) {
+    return axios.get(iotUrl + '/api/boss/agent-sign/page', { params })
+}
