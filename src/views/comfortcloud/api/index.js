@@ -378,3 +378,23 @@ export function getServiceManageHistoryList (params) {
 export function getCloudMerchantList (params) {
     return axios.get(iotUrl + '/api/boss/agent-sign/page', { params })
 }
+
+// 获取招商广告列表
+export function getCloudMerchantAdList (params) {
+    return axios.get(iotUrl + '/api/merchants-advertising/page', { params })
+}
+
+// 删除招商广告
+export function deleteCloudMerchantAd (params) {
+    return axios.put(iotUrl + '/api/merchants-advertising/' + params)
+}
+
+// 获取招商广告详情
+export function getCloudMerchantAdDetail (params) {
+    return axios.get(iotUrl + '/api/merchants-advertising/' + params)
+}
+
+// 招商广告保存
+export function saveCloudMerchantAd (params) {
+    return axios.post(iotUrl + '/api//merchants-advertising', params)
+}

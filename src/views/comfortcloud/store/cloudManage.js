@@ -2,6 +2,7 @@ import * as types from '../../../store/mutation-types'
 import * as cloud from './cloudTypes'
 // import { getMembersituation, getMemberDetail, getFamilyDetail, getActdetail, getCloudActlist } from '@/views/comfortcloud/api'
 import * as Api from '@/views/comfortcloud/api'
+import { getCloudMerchantAdList } from '../api'
 const state = {
     iotmemberData: {},
     iotmemberDetail: {},
@@ -50,7 +51,10 @@ const state = {
     cloudHomeModeTypeList: [],
     serviceManageHistoryList: [],
     cloudMerchantList: [],
-    cloudMerchantListPagination:{}
+    cloudMerchantListPagination: {},
+    cloudMerchantAdList: [],
+    cloudMerchantAdListPagination: {},
+    cloudMerchantAdDetail: {}
 }
 
 const getters = {
@@ -107,7 +111,10 @@ const getters = {
     cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
     serviceManageHistoryList: state => state.serviceManageHistoryList,
     cloudMerchantList: state => state.cloudMerchantList,
-    cloudMerchantListPagination: state => state.cloudMerchantListPagination
+    cloudMerchantListPagination: state => state.cloudMerchantListPagination,
+    cloudMerchantAdList: state => state.cloudMerchantAdList,
+    cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
+    cloudMerchantAdDetail: state => state.cloudMerchantAdDetail
 }
 
 const mutations = {
@@ -255,6 +262,15 @@ const mutations = {
     },
     [cloud.CLOUD_MERCHANT_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AD_LIST]  (state, payload) {
+        state.cloudMerchantAdList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION]  (state, payload) {
+        state.cloudMerchantAdListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AD_DETAIL] (state, payload) {
+        state.cloudMerchantAdDetail = payload
     }
 }
 
@@ -465,6 +481,19 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async findCloudMerchantAdList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAdList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async getCloudMerchantAdDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAdDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data.data)
     }
 }
 export default {

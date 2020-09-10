@@ -77,7 +77,7 @@ export default {
             this.queryList(this.queryParams)
         },
         onSizeChange: function (val) {
-            this.queryParams.pageSize = val.pageSize
+            this.queryParams.pageSize = val
             this.queryList(this.queryParams)
         },
         queryList: function (params) {
