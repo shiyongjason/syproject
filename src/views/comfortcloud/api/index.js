@@ -398,3 +398,8 @@ export function getCloudMerchantAdDetail (params) {
 export function saveCloudMerchantAd (params) {
     return axios.post(iotUrl + '/api//merchants-advertising', params)
 }
+
+// 招商订单列表
+export function getCloudMerchantOrderList (params) {
+    return axios.get(iotUrl + '/api/merchants-advertising/page', { params })
+}
