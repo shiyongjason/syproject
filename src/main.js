@@ -5,9 +5,10 @@ import store from '@/store/index'
 import '@/api/axios.js'
 import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
+import HosjoyUI from 'hosjoy-ui'
+import 'hosjoy-ui/lib/hosjoy-ui.css'
 import '../src/theme/index.css'
 import '@/assets/style/common.scss'
-import HosjoyUI from 'hosjoy-ui'
 import TreeTable from 'tree-table-vue'
 import filters from './utils/filters'
 import basicTable from './components/CommonTable/CommonTable'
@@ -26,7 +27,7 @@ if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'prev
         dsn: 'https://96d38d85c5da49bfacdada98edca3ea7@sentry.hosjoy.com/4',
         integrations: [new VueIntegration({ Vue, attachProps: true, logErrors: true })],
         release: process.env.RELEASE_VERSION,
-        environment: process.env.VUE_APP_TITLE
+        environment: process.env.VUE_APP_TITLE || process.env.NODE_ENV
     })
 }
 

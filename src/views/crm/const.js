@@ -116,3 +116,33 @@ export const MATELIST = [
     { key: 3, value: '已通过' },
     { key: 4, value: '已打回' }
 ]
+
+// 类型
+
+// 是否注册
+export const REGISTEROR = [
+    { key: '', value: '全部' },
+    { key: true, value: '是' },
+    { key: false, value: '否' }
+]
+// 代理级别
+export const AGENTLEVEL = [
+    { key: 1, value: '一级代理商（囤货商）' },
+    { key: 2, value: '经销商' },
+    { key: 3, value: '其他' }
+]
+// 近3年的年度工程规模
+export const THREEYEARPROJECTSCALE = [
+    { key: 1, value: '1000万以内' },
+    { key: 2, value: '1001万～3000万' },
+    { key: 3, value: '3001万～5000万' },
+    { key: 4, value: '5001万～1亿' },
+    { key: 5, value: '1亿～2亿' },
+    { key: 6, value: '2亿以上' }
+]
+// 主辅材渠道
+export const MATERIALSCHANNEL = [
+    { key: '1', value: '厂商直采' },
+    { key: '2', value: '一级囤货商采购' },
+    { key: '3', value: '经销商采购' }
+]

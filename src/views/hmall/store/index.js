@@ -6,6 +6,8 @@ import brand from '@/views/hmall/brand/store/index'
 import category from '@/views/hmall/category/store/index'
 import spumanage from '@/views/hmall/spumanage/store/index'
 import dataBoard from '@/views/hmall/dataBoard/store/index'
+import searchProject from '@/views/hmall/searchProject/store/index'
+
 export default {
     state,
     mutations,
@@ -15,6 +17,7 @@ export default {
         brand,
         category,
         spumanage,
-        dataBoard
+        dataBoard,
+        searchProject
     }
 }

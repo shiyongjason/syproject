@@ -2,7 +2,7 @@
     <div class="hosjoy-table" ref="hosTable">
         <!-- 筛选 -->
         <div v-if="collapseShow" ref="collapseShow">
-            <div class="collapse" :class="collapse ? 'on' : ''">
+            <div :class="['collapse',collapse ? 'collapseW on' : '']">
                 <el-button class="save-btn" type="mini" @click="updateLabel" v-if="collapse === true">保存</el-button>
                 <img src="../../../src/assets/images/typeIcon.png" alt="" @click="collapse = !collapse">
                 <!-- 以下代码能实现点击空白关闭筛选窗口，误删。 -->
@@ -41,8 +41,8 @@
                     <slot class="action" name="action" :data="scope"></slot>
                 </template>
             </el-table-column>
-<!--            todo 测试那边提bug，一会发预发布-->
-<!--            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>-->
+            <!--            todo 测试那边提bug，一会发预发布-->
+            <!--            <font slot="empty" class="emptylayout" :style="{left:emptyTxtLeft+'px'}">暂无数据</font>-->
         </el-table>
         <!-- 分页 -->
         <div class="pages">
@@ -134,7 +134,9 @@ export default {
             selectedColumn: [],
             columnRender: [],
             emptyTxtLeft: '',
-            getColumn: []
+            getColumn: [],
+            pageSizeTemp: 10,
+            pageNumberTemp: 1
         }
     },
     created () {
@@ -285,20 +287,22 @@ export default {
             }
             return ''
         },
-        handleSizeChange (val) {
-            this.$emit('pagination', {
+        async handleSizeChange (val) {
+            await this.$emit('pagination', {
                 pageNumber: this.currentPage,
                 pageSize: val
             })
+            this.pageNumberTemp = this.currentPage
         },
-        handleCurrentChange (val) {
-            this.$emit('pagination', {
+        async handleCurrentChange (val) {
+            await this.$emit('pagination', {
                 pageNumber: val,
                 pageSize: this.pageNum
             })
+            this.pageSizeTemp = this.pageNum
         },
         indexMethod (index) {
-            return this.pageNum * (this.currentPage - 1) + index + 1
+            return this.pageSizeTemp * (this.pageNumberTemp - 1) + index + 1
         },
         clearSelection () {
             this.$refs.hosjoyTable.clearSelection()
@@ -542,16 +546,20 @@ export default {
 /*    background: rgb(253, 233, 217);*/
 /*    font-weight: bold;*/
 /*}*/
+.collapseW {
+    width: 280px;
+}
 .collapse {
     position: absolute;
     box-sizing: border-box;
     padding: 10px 15px;
-    width: 280px;
+
     height: 50px;
-    right: 10px;
+    right: -10px;
     top: -10px;
     z-index: 2;
     cursor: pointer;
+
     img {
         float: right;
         width: 20px;

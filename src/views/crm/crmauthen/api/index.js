@@ -14,6 +14,10 @@ export const getCompanyBosslist = (params) => {
 export const getBusinessAuthen = (params) => {
     return axios.get(B2bUrl + `merchant/api/crm/company/authentication-info/${params}`)
 }
+// CRM 认证信息
+export const getAuthenticationMessage = (companyCode) => {
+    return axios.get(`memeber/api/crm/company/open-record/${companyCode}`)
+}
 
 // CRM 认证状态
 export const getBusinessDetail = (params) => {
@@ -36,6 +40,9 @@ export const updateCrmauthen = (params) => {
 
 export const getPlatList = (params) => axios.get(interfaceUrl + 'develop/developbasicinfo/queryCompany', { params })
 
-export const putWhiterecord = (params) => axios.post(B2bUrl + 'merchant/api/crm/company/white-list-record', params)
+export const putWhiterecord = (params) => axios.post('memeber/api/crm/company/white-list-record', params)
 
 export const findWhiterecord = (params) => axios.get(B2bUrl + 'merchant/api/crm/company/white-list-record/list', { params })
+
+// 删除企业
+export const delCompany = (params) => axios.delete(`memeber/api/crm/company/${params}`)

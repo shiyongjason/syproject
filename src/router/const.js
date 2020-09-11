@@ -7,7 +7,7 @@ export const tabAuth = [
         path: '台账汇总表',
         name: '台账汇总表',
         meta: {
-            title: 'Error',
+            title: '台账汇总表',
             tagName: 'Error',
             parentName: '好智慧-资金数据',
             isMenu: false,
@@ -19,7 +19,7 @@ export const tabAuth = [
         path: '流贷台账',
         name: '流贷台账',
         meta: {
-            title: 'Error',
+            title: '流贷台账',
             tagName: 'Error',
             parentName: '好智慧-资金数据',
             isMenu: false,
@@ -31,7 +31,7 @@ export const tabAuth = [
         path: '敞口台账',
         name: '敞口台账',
         meta: {
-            title: 'Error',
+            title: '敞口台账',
             tagName: 'Error',
             parentName: '好智慧-资金数据',
             isMenu: false,
@@ -43,7 +43,7 @@ export const tabAuth = [
         path: '分授信台账',
         name: '分授信台账',
         meta: {
-            title: 'Error',
+            title: '分授信台账',
             tagName: 'Error',
             parentName: '好智慧-资金数据',
             isMenu: false,
@@ -55,7 +55,7 @@ export const tabAuth = [
         path: '还款明细表',
         name: '还款明细表',
         meta: {
-            title: 'Error',
+            title: '还款明细表',
             tagName: 'Error',
             parentName: '好智慧-资金数据',
             isMenu: false,

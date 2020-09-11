@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="table-cont-title">
                 <span class="table-title-name">账户概览</span>
-                <el-button name="hosjoy-color" @click="onWithdrawal">提现</el-button>
+                <h-button type='assist' @click="onWithdrawal">提现</h-button>
             </div>
             <div class="balance-cont-row">
                 <div class="balance-cont-col">
@@ -36,9 +36,9 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">查询</el-button>
-                        <!-- <el-button type="primary" class="ml20" @click="onRest()">重置</el-button> -->
-                        <button type="button" class="el-button ml20 el-button--primary" @click="onExport"><span>导出</span></button>
+                        <h-button type="primary" @click="searchList()">查询</h-button>
+                        <!-- <h-button class="ml20" @click="onRest()">重置</h-button> -->
+                        <h-button @click="onExport">导出</h-button>
                     </div>
                 </div>
             </div>
@@ -56,6 +56,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
+    name: 'financeserviceCharge',
     data () {
         return {
             queryParams: {

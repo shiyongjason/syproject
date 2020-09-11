@@ -44,7 +44,7 @@
                         </div>
                         <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
                             style="margin:10px 0 0 5px">
-                            <el-button type="primary">上 传</el-button>
+                            <h-button>上传</h-button>
                         </hosjoyUpload>
                     </el-form-item>
                 </template>
@@ -63,8 +63,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onColseApprove">取 消</el-button>
-                <el-button type="primary" @click="onSaveapproveOrfinal(2)">确 定</el-button>
+                <h-button @click="onColseApprove">取消</h-button>
+                <h-button type="primary" @click="onSaveapproveOrfinal(2)">确定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -102,7 +102,7 @@ export default {
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
-                reservedName: true
+                reservedName: false
             },
             approveTitle: '',
             approveVisible: false,

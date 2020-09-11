@@ -1,55 +1,55 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">经营区域：</div>
+                    <div class="query-col__input">
                         <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">联系人/手机号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">联系人/手机号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.contract" placeholder="请输入联系人/手机号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否分配：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">是否分配：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.assigned" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否接收：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">是否接收：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.received" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">分配员工：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">分配员工：</div>
+                    <div class="query-col__input">
                         <!-- <el-input v-model="queryParams.assignedUserId" placeholder="请输入分配员工" maxlength="50"></el-input> -->
                         <el-autocomplete v-model="stateUser" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
                             <template slot-scope="{ item }">
@@ -61,9 +61,9 @@
                         </el-autocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">申请时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">申请时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minApplyTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -71,19 +71,15 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                <div class="query-cont__col">
+                        <h-button type="primary" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest">
+                        </h-button>
+                        <h-button @click="onRest">
                             重置
-                        </el-button>
-                    </div>
+                        </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
@@ -96,11 +92,11 @@
                     {{scope.data.row.received?'是':'否'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</el-button>
+                    <h-button table @click="onDistribution(scope.data.row)" v-if="hosAuthCheck(auths.CRM_APPLY_ASSIGN)">分配</h-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="分配" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false">
+        <el-dialog title="分配" :visible.sync="dialogVisible" width="35%" :before-close="()=>dialogVisible = false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
                 <el-form-item label="分配给（员工）" prop="assignedUserId" ref="assignedUserId">
                     <el-autocomplete v-model="stateN" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
@@ -122,8 +118,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm" :loading=isloading>{{isloading?'提交中...':'分配'}}</el-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button type="primary" @click="submitForm" :loading=isloading>{{isloading?'提交中...':'分配'}}</h-button>
             </span>
         </el-dialog>
     </div>
@@ -285,7 +281,7 @@ export default {
             this.queryParams.pageNumber = val.pageNumber
             this.searchList()
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             const { ...params } = this.queryParams

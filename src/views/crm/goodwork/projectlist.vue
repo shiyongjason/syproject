@@ -1,22 +1,22 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">项目编号：</div>
-                    <div class="query-col-input">
+                <!-- <div class="query-cont__col">
+                    <div class="query-col__label">项目编号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
                 </div> -->
-                <div class="query-cont-col">
-                    <div class="query-col-title">项目提交时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目提交时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -24,21 +24,21 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经销商：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">经销商：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入经销商" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">甲方名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">甲方名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">更新时间：</div>
-                    <div class="query-col-input">
+                <!-- <div class="query-cont__col">
+                    <div class="query-col__label">更新时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxUpdateTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -46,54 +46,54 @@
                         </el-date-picker>
                     </div>
                 </div> -->
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">项目类别：</div>
-                    <div class="query-col-input">
+                <!-- <div class="query-cont__col">
+                    <div class="query-col__label">项目类别：</div>
+                    <div class="query-col__input">
                         <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div> -->
-                <div class="query-cont-col">
-                    <div class="query-col-title">合作进度：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">合作进度：</div>
+                    <div class="query-col__input">
                         <el-select v-model="status" multiple collapse-tags placeholder="请选择">
                             <el-option v-for="item in statusList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
 
-                <div class="query-cont-col">
-                    <div class="query-col-title">设备品类：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">设备品类：</div>
+                    <div class="query-col__input">
                         <el-select v-model="deviceCategoryChange" multiple collapse-tags placeholder="请选择" :clearable=true>
                             <el-option v-for="item in deviceList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">上游供应商类型：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">上游供应商类型：</div>
+                    <div class="query-col__input">
                         <el-select v-model="upstreamSupplierTypeChange" multiple collapse-tags placeholder="请选择" :clearable=true>
                             <el-option v-for="item in upstreamList" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">预估借款时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">预估借款时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -101,22 +101,21 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <el-button type="primary" class="ml20" @click="searchList()">
+                <div class="query-cont__col">
+
+                        <h-button type="primary" @click="searchList()">
                             查询
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onRest()">
+                        </h-button>
+                        <h-button @click="onRest()">
                             重置
-                        </el-button>
-                        <el-button type="primary" class="ml20" @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
+                        </h-button>
+                        <h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
                             导出
-                        </el-button>
-                    </div>
+                        </h-button>
+
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
+
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <!-- <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
                 :isShowIndex='true'>
@@ -146,11 +145,12 @@
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</el-button>
-                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
+                    <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
+                    <h-button table v-if="scope.data.row.pushRecord" @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
                 </template>
             </hosJoyTable>
+
         </div>
         <projectDrawer :drawer=drawer :status=projectstatus @backEvent='restDrawer' ref="drawercom"></projectDrawer>
         <el-dialog :title="title" ref='recordDialog' :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" v-if="dialogVisible">
@@ -180,7 +180,7 @@
 
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
             </span>
         </el-dialog>
         <el-dialog title="预览" :visible.sync="imgVisible">
@@ -597,7 +597,7 @@ export default {
         padding: 10px;
     }
 }
-/deep/.query-cont-col .query-col-input .el-input {
+/deep/.query-cont__col .query-col__input .el-input {
     width: 150px;
 }
 /deep/.el-table__row >span {

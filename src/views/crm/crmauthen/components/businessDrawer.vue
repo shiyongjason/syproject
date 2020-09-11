@@ -1,105 +1,266 @@
 <template>
     <div class="drawer-wrap">
         <el-drawer title="企业详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose" :wrapperClosable=false>
-            <div class="drawer-content">
-                <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
-                    <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
-                       <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
-                    </el-form-item>
-                    <el-form-item label="管理员账号：" :label-width="formLabelWidth">
-                        {{businessDetail.userAccount||'-'}}
-                    </el-form-item>
-                    <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
-                        {{businessDetail.userName||'-'}}
-                    </el-form-item>
-                    <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
-                        <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
-                        <el-col :span="6">
-                            <el-form-item prop="provinceId">
-                                <el-select v-model="businessDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)" class="selectInput">
-                                    <el-option label="请选择" value=""></el-option>
-                                    <template v-for="item in proviceList">
-                                        <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
-                                        </el-option>
-                                    </template>
+            <el-tabs v-model="activeName">
+                <el-tab-pane label="功能管理" name="first">
+                    <div class="drawer-content">
+                        <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
+                            <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
+                                <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
+                            </el-form-item>
+                            <el-form-item label="管理员账号：" :label-width="formLabelWidth">
+                                {{businessDetail.userAccount||'-'}}
+                            </el-form-item>
+                            <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
+                                {{businessDetail.userName||'-'}}
+                            </el-form-item>
+                            <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
+                                <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                                 </el-select>
                             </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="1">-</el-col>
-                        <el-col :span="6">
-                            <el-form-item prop="cityId">
-                                <el-select v-model="businessDetail.cityId" placeholder="请选择市" @change="onChangeList(2)" class="selectInput">
-                                    <el-option label="请选择" value=""></el-option>
-                                    <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
-                                    </el-option>
+                            <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
+                                <el-col :span="6">
+                                    <el-form-item prop="provinceId">
+                                        <el-select v-model="businessDetail.provinceId" placeholder="请选择省" @change="onChangeList(1)" class="selectInput">
+                                            <el-option label="请选择" value=""></el-option>
+                                            <template v-for="item in proviceList">
+                                                <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
+                                                </el-option>
+                                            </template>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col class="line" :span="1">-</el-col>
+                                <el-col :span="6">
+                                    <el-form-item prop="cityId">
+                                        <el-select v-model="businessDetail.cityId" placeholder="请选择市" @change="onChangeList(2)" class="selectInput">
+                                            <el-option label="请选择" value=""></el-option>
+                                            <el-option v-for="(item) in cityList" :key="item.cityId" :label="item.name" :value="item.cityId">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col class="line" :span="1">-</el-col>
+                                <el-col :span="6">
+                                    <el-form-item prop="countryId">
+                                        <el-select v-model="businessDetail.countryId" placeholder="请选择区" @change="onChangeList(3)" class="selectInput">
+                                            <el-option label="请选择" value=""></el-option>
+                                            <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-col>
+                            </el-form-item>
+                            <el-form-item label="企业类型：" prop="companyType" :label-width="formLabelWidth">
+                                <el-radio-group v-model="businessDetail.companyType" @change="onClearType">
+                                    <el-radio :label=1>体系内</el-radio>
+                                    <el-radio :label=2>体系外</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="developOnlineCompanyCode" ref="developOnlineCompany">
+                                <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand($event,1)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                            </el-form-item>
+                            <template v-if="businessDetail.companyType==2">
+                                <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" ref="isRelated">
+                                    <el-radio-group v-model="businessDetail.isRelated" @change="onClearRelated">
+                                        <el-radio :label=true>是</el-radio>
+                                        <el-radio :label=false>否</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                                <el-form-item label="关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.isRelated" prop="relationCompanyCode" ref="relationCompany">
+                                    <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand($event,2)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                                </el-form-item>
+                            </template>
+                            <el-form-item label="客户分类：" :label-width="formLabelWidth">
+                                {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
+                            </el-form-item>
+                            <!-- #################### -->
+                            <el-form-item label="注册时间：" :label-width="formLabelWidth">
+                                {{businessDetail.estiblishTime||'-'}}
+                            </el-form-item>
+                            <el-form-item label="主营品牌：" :label-width="formLabelWidth">
+                                <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="200" class="lageinput"></el-input>
+                            </el-form-item>
+                            <el-form-item label="主营品类：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.deviceCategory" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in deviceList" :key="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
-                        </el-col>
-                        <el-col class="line" :span="1">-</el-col>
-                        <el-col :span="6">
-                            <el-form-item prop="countryId">
-                                <el-select v-model="businessDetail.countryId" placeholder="请选择区" @change="onChangeList(3)" class="selectInput">
-                                    <el-option label="请选择" value=""></el-option>
-                                    <el-option v-for="(item) in areaList" :key="item.countryId" :label="item.name" :value="item.countryId">
-                                    </el-option>
+                            <el-form-item label="业务类型：" :label-width="formLabelWidth" prop="note">
+                                <div class="sinput">
+                                    <!-- `checked` 为 true 或 false -->
+                                    <el-checkbox v-model="businessType.isEngineering">
+                                        <font>工程:</font>
+                                    </el-checkbox>
+                                    <el-input v-model.trim="businessType.engineering" :disabled='!businessType.isEngineering' v-isNum:0 v-inputMAX='100' class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </div>
+                                <div class="sinput">
+                                    <el-checkbox v-model="businessType.isWholesale">
+                                        <font>批发:</font>
+                                    </el-checkbox>
+                                    <el-input v-model.trim="businessType.wholesale" :disabled='!businessType.isWholesale' v-isNum:0 v-inputMAX='100' class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </div>
+                                <div class="sinput">
+                                    <el-checkbox v-model="businessType.isRetail">
+                                        <font>零售:</font>
+                                    </el-checkbox>
+                                    <el-input v-model.trim="businessType.retail" :disabled='!businessType.isRetail' v-isNum:0 v-inputMAX='100' class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="代理级别：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.agentLevel" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in agentLevel" :key="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
-                        </el-col>
-                    </el-form-item>
-                    <el-form-item label="企业类型：" prop="companyType" :label-width="formLabelWidth">
-                        <el-radio-group v-model="businessDetail.companyType" @change="onClearType">
-                            <el-radio :label=1>体系内</el-radio>
-                            <el-radio :label=2>体系外</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.companyType===1" prop="developOnlineCompanyCode" ref="developOnlineCompany">
-                        <HAutocomplete :placeholder="'请选择平台公司'" :maxlength=30 @back-event="backFindbrand($event,1)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
-                    </el-form-item>
-                    <template v-if="businessDetail.companyType==2">
-                        <el-form-item label="是否关联平台公司：" prop="isRelated" :label-width="formLabelWidth" ref="isRelated">
-                            <el-radio-group v-model="businessDetail.isRelated" @change="onClearRelated">
-                                <el-radio :label=true>是</el-radio>
-                                <el-radio :label=false>否</el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                        <el-form-item label="关联平台公司：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.isRelated" prop="relationCompanyCode" ref="relationCompany">
-                            <HAutocomplete :placeholder="'请选择关联平台公司'" :maxlength=30 @back-event="backFindbrand($event,2)" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
-                        </el-form-item>
-                    </template>
-                    <el-form-item label="客户分类：" :label-width="formLabelWidth">
-                        {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
-                    </el-form-item>
-                    <el-form-item label="创建时间：" :label-width="formLabelWidth">
-                        {{businessDetail.createTime | formatterTime}}
-                    </el-form-item>
-                    <el-form-item label="创建人：" :label-width="formLabelWidth">
-                        {{businessDetail.createBy}} {{businessDetail.createPhone}}
-                    </el-form-item>
-                    <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
-                        {{businessDetail.authenticationTime | formatterTime}}
-                    </el-form-item>
-                    <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
-                        {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
-                    </el-form-item>
-                    <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
-                        {{businessDetail.updateTime| formatterTime}}
-                    </el-form-item>
-                    <el-form-item label="最近维护人：" :label-width="formLabelWidth">
-                        {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
-                    </el-form-item>
-                </el-form>
-                <div class="drawer-footer">
-                    <div class="drawer-button">
-                        <el-button type="info" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</el-button>
-                        <el-button @click="cancelForm">取 消</el-button>
-                        <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                            <el-form-item label="近3年年度工程规模：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.threeYearProjectScale" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in threeYearProjectScale" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="主营项目类别：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.type" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in type_list" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="主辅材品牌：" :label-width="formLabelWidth">
+                                <el-input v-model.trim="businessDetail.materialsBrand" placeholder='备注主辅材品牌' maxlength="200" class="lageinput"></el-input>
+                            </el-form-item>
+                            <el-form-item label="主辅材采购渠道：" :label-width="formLabelWidth">
+                                <el-select multiple collapse-tags v-model="materialsChannelArr" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in materialsChannel" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="服务能力：" :label-width="formLabelWidth">
+                                <el-radio-group v-model="businessDetail.serviceCapability" @change="serviceCapabilityChange()">
+                                    <el-radio :label=1>有</el-radio>
+                                    <el-radio :label=2>无</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.serviceCapability===1">
+                                <el-checkbox-group v-model="serviceCapabilityDetail">
+                                    <el-checkbox label="1">项目经理</el-checkbox>
+                                    <el-checkbox label="2">预算</el-checkbox>
+                                    <el-checkbox label="3">设计</el-checkbox>
+                                    <el-checkbox label="4">售维专员</el-checkbox>
+                                    <el-checkbox label="5">技术</el-checkbox>
+                                </el-checkbox-group>
+                            </el-form-item>
+                            <el-form-item label="建筑资质-资质资格：" :label-width="formLabelWidth">
+                                <div v-if="!businessDetail.qualification||businessDetail.qualification.length==0">-</div>
+                                <template v-else>
+                                    <div v-for='(item,index) in businessDetail.qualification' :key="index">
+                                        <p class="qualification" @click="()=>{qualificationDialogVisible=true;qualificationDialogData=item}">
+                                            {{item.qualificationName}}
+                                        </p>
+                                    </div>
+                                </template>
+
+                            </el-form-item>
+                            <!-- #################### -->
+                            <el-form-item label="创建时间：" :label-width="formLabelWidth">
+                                {{businessDetail.createTime | formatterTime}}
+                            </el-form-item>
+                            <el-form-item label="创建人：" :label-width="formLabelWidth">
+                                {{businessDetail.createBy}} {{businessDetail.createPhone}}
+                            </el-form-item>
+                            <!-- <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
+                                {{businessDetail.authenticationTime | formatterTime}}
+                            </el-form-item>
+                            <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
+                                {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
+                            </el-form-item> -->
+                            <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
+                                {{businessDetail.updateTime| formatterTime}}
+                            </el-form-item>
+                            <el-form-item label="最近维护人：" :label-width="formLabelWidth">
+                                {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
+                                <span class="delcompany" @click="onRemove">删除该企业</span>
+                            </el-form-item>
+                        </el-form>
+                        <div class="drawer-footer">
+                            <div class="drawer-button">
+                                <el-button type="info" @click="onSetWhite()" v-if="hosAuthCheck(authen_operate)">设置白名单</el-button>
+                                <el-button @click="cancelForm">取 消</el-button>
+                                <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                </el-tab-pane>
+                <el-tab-pane label="认证信息" name="second">
+                    <div class="drawer-content">
+                        <el-form :label-width="'150px'" :label-position="'right'">
+                            <el-form-item label="企业名称：">
+                                <p> {{authenticationDetail.corporationName ? authenticationDetail.corporationName : '-'}}</p>
+                            </el-form-item>
+                            <el-form-item label="统一社会信用代码：">
+                                <p> {{authenticationDetail.unifiedSocialCreditCode ? authenticationDetail.unifiedSocialCreditCode : '-'}}</p>
+                            </el-form-item>
+                            <el-form-item label="法人姓名：">
+                                <p> {{authenticationDetail.legalPersonName ? authenticationDetail.legalPersonName : '-'}}</p>
+                            </el-form-item>
+                            <el-form-item label="法人身份证号：">
+                                <p> {{authenticationDetail.legalCredentialNumber ? authenticationDetail.legalCredentialNumber : '-'}}</p>
+                            </el-form-item>
+                            <el-form-item label="营业执照：">
+                                <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
+                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.businessLicensePhoto" :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
+                                    </el-image>
+                                </div>
+                                <span v-else>-</span>
+                            </el-form-item>
+                            <el-form-item label="法人身份证：">
+                                <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
+                                    <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
+                                    </el-image>
+                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
+                                    </el-image>
+                                </div>
+                                <span v-else>-</span>
+                            </el-form-item>
+                            <el-form-item label="认证结果：">
+                                <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>
+                                <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>
+                                <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>
+                                <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>
+                                <p v-else>-</p>
+                            </el-form-item>
+                            <el-form-item label="认证方式：">
+                                <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>
+                                <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>
+                                <p v-else>-</p>
+                            </el-form-item>
+                            <el-form-item label="关联/认证时间：">
+                                <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>
+                                <p v-else>-</p>
+                            </el-form-item>
+                            <el-form-item label="关联/认证人：">
+                                <p>
+                                    <span v-if="authenticationDetail.authenticationBy">
+                                        {{authenticationDetail.authenticationBy}}
+                                    </span>
+                                    <span v-else>-</span>
+                                    <span v-if="authenticationDetail.authenticationPhone">
+                                        ({{authenticationDetail.authenticationPhone}})
+                                    </span>
+                                    <span v-else>(-)</span>
+                                </p>
+                            </el-form-item>
+                        </el-form>
+                        <div class="drawer-footer">
+                            <div class="drawer-button">
+                                <h-button @click="cancelForm">好 的</h-button>
+                            </div>
+                        </div>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </el-drawer>
         <el-dialog title="设置白名单" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :close-on-click-modal=false>
             <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
@@ -116,13 +277,41 @@
                     <div v-for="(i) in whiteRecordsList" :key=i.id>
                         <i class="el-icon-edit"></i><b>{{i.operator}} {{i.operatorPhone}}</b> 在 <b>{{i.operateTime| formatterTime}}</b> 将 客户分类 设置为了
                         <b> {{i.customerType==1?'黑名单':i.customerType==2?'白名单':i.customerType==3?'待审核':'-'}}</b> 说明：<b>{{i.note}}</b>；
-                        <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p>
+                        <!-- <p v-if="i.customerType==2">白名单失效时间为：<b>{{i.failureTime| formatterTime}}</b></p> -->
                     </div>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确 定' }}</el-button>
+                <h-button @click="dialogVisible = false">取消</h-button>
+                <h-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确定' }}</h-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="建筑资质-资质资格" :visible.sync="qualificationDialogVisible" width="500px" :before-close="()=>{qualificationDialogVisible = false;qualificationDialogData=''}" :close-on-click-modal=false>
+            <div class="qualificationlist">
+                <p>
+                    <b>资质名称：</b>
+                    <font>{{qualificationDialogData.qualificationName}}</font>
+                </p>
+                <p>
+                    <b>发证机关：</b>
+                    <font>{{qualificationDialogData.organ}}</font>
+                </p>
+                <p>
+                    <b>证书有效期：</b>
+                    <font>{{qualificationDialogData.effectiveTime}}</font>
+                </p>
+                <p>
+                    <b>发证日期：</b>
+                    <font>{{qualificationDialogData.certDate}}</font>
+                </p>
+                <p>
+                    <b>资质类别：</b>
+                    <font>{{qualificationDialogData.type}}</font>
+                </p>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="qualificationDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="qualificationDialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -130,9 +319,11 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen, putWhiterecord } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany } from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
+import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
+
 export default {
     name: 'businessdrawer',
     props: {
@@ -143,6 +334,23 @@ export default {
     },
     data () {
         return {
+            qualificationDialogData: '',
+            qualificationDialogVisible: false,
+            serviceCapabilityDetail: [],
+            businessType: {
+                retail: '',
+                isRetail: false,
+                wholesale: '',
+                isWholesale: false,
+                engineering: '',
+                isEngineering: false
+            },
+            materialsChannelArr: [],
+            materialsChannel: MATERIALSCHANNEL,
+            type_list: TYPE_LIST,
+            threeYearProjectScale: THREEYEARPROJECTSCALE,
+            deviceList: DEVICE_LIST,
+            agentLevel: AGENTLEVEL,
             authen_operate: Auths.CRM_WHITE_OPERATE,
             authen_baocun: Auths.CRM_WHITE_BAOCUN,
             removeValue: true,
@@ -204,7 +412,9 @@ export default {
                     { required: true, message: '请输入说明' }
                 ]
             },
-            whiteRecordsList: []
+            whiteRecordsList: [],
+            activeName: 'first',
+            authenticationDetail: {}
         }
     },
     components: {
@@ -236,9 +446,6 @@ export default {
             return []
         }
     },
-    watch: {
-
-    },
     methods: {
         ...mapActions({
             findNest: 'findNest',
@@ -248,6 +455,30 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        serviceCapabilityChange () {
+            if (this.businessDetail.serviceCapability == 2) {
+                this.serviceCapabilityDetail = []
+            }
+        },
+        onRemove () {
+            this.$confirm('此操作将永久删除该企业, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await delCompany(this.businessDetail.companyId)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+                this.$emit('backEvent')
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                })
+            })
+        },
         onClearV () {
             this.$refs['ruleForm'].clearValidate()
         },
@@ -293,6 +524,7 @@ export default {
             } else {
                 this.$emit('backEvent')
             }
+            this.activeName = 'first'
         },
         cancelForm () {
             if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
@@ -306,6 +538,7 @@ export default {
             } else {
                 this.$emit('backEvent')
             }
+            this.activeName = 'first'
         },
         async getMerchtMemberDetail (val) {
             const { data } = await getBusinessAuthen(val)
@@ -318,8 +551,23 @@ export default {
             this.statusForm.customerType = ''
             this.statusForm.note = ''
             this.copyStatusForm = deepCopy(this.statusForm)
+            this.materialsChannelArr = this.businessDetail.materialsChannel ? this.businessDetail.materialsChannel.toString().split(',') : []
+            if (this.businessDetail.businessType) {
+                this.businessType = JSON.parse(this.businessDetail.businessType)
+            }
+            if (this.businessDetail.serviceCapability == 1 && this.businessDetail.serviceCapabilityDetail) {
+                this.serviceCapabilityDetail = this.businessDetail.serviceCapabilityDetail.toString().split(',')
+            }
+        },
+        async getAuthenticationDetail (val) {
+            const { data } = await getAuthenticationMessage(val)
+            this.authenticationDetail = { ...data }
         },
         onSaveDetail () {
+            console.log('this.businessDetail: ', this.businessDetail)
+            this.businessDetail.materialsChannel = this.materialsChannelArr.toString()
+            this.businessDetail.serviceCapabilityDetail = this.serviceCapabilityDetail.toString()
+            this.businessDetail.businessType = JSON.stringify(this.businessType)
             this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)[0].name
             this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId)[0].name
             this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId)[0].name
@@ -457,6 +705,9 @@ export default {
         }
     }
 }
+/deep/.el-tabs__nav-scroll {
+    padding-left: 20px;
+}
 .page-title {
     font-size: 16px;
     border-bottom: 1px solid #e5e5e5;
@@ -499,6 +750,7 @@ export default {
 /deep/.el-drawer__header {
     padding: 20px 20px;
     border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 10px;
 }
 .el-form-item__content .el-input {
     width: 200px !important;
@@ -510,8 +762,11 @@ export default {
     width: 215px;
 }
 /deep/ .selectInput {
+    width: 100%;
+}
+/deep/ .selectInput {
     .el-input {
-        width: 160px;
+        width: 90%;
     }
 }
 .authTag {
@@ -533,5 +788,65 @@ export default {
     /deep/ .el-form-item__content {
         word-break: keep-all;
     }
+}
+.people-id {
+    display: flex;
+    p {
+        margin-right: 10px;
+    }
+    img {
+        width: 158px;
+        height: 100px;
+        margin-right: 20px;
+    }
+}
+/deep/ .lageinput .el-input__inner {
+    width: 300px;
+}
+.sinput {
+    margin-right: 2%;
+    margin-bottom: 2%;
+}
+/deep/ .sinput .el-input {
+    width: 100px !important;
+}
+/deep/.sinput .smallinput .el-input-group__append,
+.el-input-group__prepend {
+    padding: 0 15px !important;
+}
+/deep/.el-select__tags {
+    margin-left: 10px !important;
+}
+.input-name {
+    margin-left: 10px;
+}
+.qualification {
+    line-height: 21px;
+    margin-top: 10px;
+    color: #ff7a45;
+    cursor: pointer;
+}
+.qualification:hover {
+    color: #f55f23;
+}
+.qualification:first {
+    margin-top: 0px;
+}
+.qualificationlist p {
+    display: flex;
+    margin: 13px 0;
+}
+.qualificationlist p b {
+    flex: 0 0 90px;
+    text-align: right;
+}
+.delcompany {
+    font-size: 14px;
+    padding: 8px 18px;
+    border: 1px solid #d4d3d3;
+    color: #b6b5b5;
+    cursor: pointer;
+    float: right;
+    line-height: 20px;
 }
 </style>
