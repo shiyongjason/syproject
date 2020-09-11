@@ -130,6 +130,7 @@ export default {
             this.uploadPercent = Math.floor(event.percent)
         },
         handleSuccess (response, file, fileList) {
+            console.log('fileList: ', fileList)
             let obj = {
                 fileName: response.data.fileName,
                 fileUrl: response.data.accessUrl

@@ -74,7 +74,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button type="primary" @click="()=>onQuery(1)">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                     <h-button @click="onExport">导出</h-button>
                     <h-button @click="onOffShelves()">批量下架</h-button>
@@ -181,7 +181,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        onQuery () {
+        onQuery (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             this.search()
         },
         onReset () {

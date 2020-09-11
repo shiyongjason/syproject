@@ -186,7 +186,8 @@ export default [
                             title: '创建/编辑活动',
                             tagName: '创建/编辑活动',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/marketing/eventMange'
                         },
                         component: () => import('@/views/hmall/event/createEditEvent')
                     },
@@ -291,18 +292,18 @@ export default [
                     // }
                 ]
             },
-            {
-                path: 'payment',
-                name: 'payment',
-                meta: {
-                    title: '支付管理(二级菜单)',
-                    tagName: '支付管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: InterlayerContainer,
-                children: []
-            },
+            // {
+            //     path: 'payment',
+            //     name: 'payment',
+            //     meta: {
+            //         title: '支付管理(二级菜单)',
+            //         tagName: '支付管理',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: InterlayerContainer,
+            //     children: []
+            // },
             {
                 path: 'account',
                 name: 'account',

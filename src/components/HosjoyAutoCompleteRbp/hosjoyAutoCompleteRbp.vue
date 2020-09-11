@@ -76,8 +76,8 @@ export default {
                 platCompany: ''
             },
             doBlurMethods: true,
-            doGetList: true,
-            getApi: true
+            getApi: true,
+            focusInputData: ''// 获取当前input框的值，与失焦时对比，相等就不请求api
         }
     },
     computed: {
@@ -172,8 +172,32 @@ export default {
             this.choosedItem[key] = val
             if (val === '') {
                 this.getApi = false
-                this.doBlurMethods = false
+                // this.doBlurMethods = false
                 this[keySync] = ''
+            }
+        },
+        onRest (item) {
+            console.log(this.whichInput)
+            if (this.whichInput === 'D') {
+                this.choosedItem.regionName = ''
+                this.choosedItem.branchName = ''
+                this.choosedItem.platCompany = ''
+                this.regionDataSync = ''
+                this.branchDataSync = ''
+                this.platCompanyDataSync = ''
+                // 大区框有数据清空后，重置之前的分部数据
+                // this.doBlurMethods && this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }) // watch会触发
+            }
+            if (this.whichInput === 'F') {
+                this.platCompanyDataSync = ''
+                this.choosedItem.platCompany = ''
+                this.branchDataSync = ''
+                this.choosedItem.branchName = ''
+                this.focusInputData !== item.target.value && this.doBlurMethods && this.findPlatformslist()
+            }
+            if (this.whichInput === 'P') {
+                this.choosedItem.platCompany = ''
+                this.platCompanyDataSync = ''// 给父组件赋值
             }
         },
         blurInput (key, item) {
@@ -182,37 +206,32 @@ export default {
                 this[key] = item.target.value
                 return false
             }
+            if (this.focusInputData !== item.target.value) {
+                // this.whichInput=失焦之前的input
+                if (this.whichInput === 'D') {
+                    this.platCompanyDataSync = ''
+                    this.choosedItem.platCompany = ''
+                    this.branchDataSync = ''
+                    this.choosedItem.branchName = ''
+                    this.focusInputData !== item.target.value && this.doBlurMethods && this.findPlatformslist()
+                }
+                if (this.whichInput === 'F') {
+                    this.choosedItem.platCompany = ''
+                    this.platCompanyDataSync = ''// 给父组件赋值
+                }
+            }
             const results = this.selectArray && this.selectArray.filter(v => {
                 return (v.value === item.target.value)
             })
             if (results.length == 0) {
-                if (this.whichInput === 'D') {
-                    this.choosedItem.regionName = ''
-                    this.choosedItem.branchName = ''
-                    this.choosedItem.platCompany = ''
-                    this.regionDataSync = ''
-                    this.branchDataSync = ''
-                    this.platCompanyDataSync = ''
-                    // 大区框有数据清空后，重置之前的分部数据
-                    // this.doBlurMethods && this.findAuthList({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc }) // watch会触发
-                }
-                if (this.whichInput === 'F') {
-                    this.platCompanyDataSync = ''
-                    this.choosedItem.platCompany = ''
-                    this.branchDataSync = ''
-                    this.choosedItem.branchName = ''
-                    this.doBlurMethods && this.findPlatformslist()
-                }
-                if (this.whichInput === 'P') {
-                    this.choosedItem.platCompany = ''
-                    this.platCompanyDataSync = ''// 给父组件赋值
-                }
+                this.onRest(item)
             } else {
                 if (key === 'platCompanyDataSync') {
                     this.platCompanyDataSync = results[0].misCode
                     return
                 }
                 this[key] = results[0].selectCode
+                if (this.focusInputData === item.target.value) return
                 if (key === 'regionDataSync') {
                     this.findAuthList({
                         deptType: 'F',
@@ -226,16 +245,18 @@ export default {
         },
         // mousedown的触发会优先于blur，click的优先级低于blur，会导致触发一次无用请求。。
         onMousedown (key, item) {
+            console.log('key, item: ', key, item)
             if (key === 'platCompanyDataSync') {
                 this.platCompanyDataSync = item.misCode// 给父组件赋值
             } else {
                 this[key] = item.selectCode// 给父组件赋值
             }
             try {
-                this.doBlurMethods = false
+                // this.doBlurMethods = (this.focusInputData && (this.focusInputData !== item.value))// pre false
+                this.doBlurMethods = false// pre false
                 if (this.whichInput === 'D') {
                     // 判断选择的是否和上一次一样,一样则无需再请求
-                    if (this.choosedItem.regionName === item.value) return
+                    if (this.focusInputData === item.value) return
                     if (this.selectItem != item.value) {
                         this.platCompanyDataSync = ''
                         this.branchDataSync = ''
@@ -249,7 +270,7 @@ export default {
                 }
                 if (this.whichInput === 'F') {
                     // 判断选择的是否和上一次一样,一样则无需再请求
-                    if (this.choosedItem.branchName === item.value) return
+                    if (this.focusInputData === item.value) return
                     if (this.selectItem != item.value) {
                         this.platCompanyDataSync = ''
                         this.choosedItem.platCompany = ''
@@ -276,6 +297,7 @@ export default {
             }
         },
         focusInput (flag, item) {
+            this.focusInputData = item.target.value
             this.doBlurMethods = true
             if (this.$refs[`autocomplete${flag}`]) {
                 this.$refs[`autocomplete${flag}`].suggestions = []

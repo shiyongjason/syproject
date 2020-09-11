@@ -17,6 +17,14 @@
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                     <router-view></router-view>
                 </keep-alive>
+                <!-- 这边以前就没加key -->
+                <!-- !!!!!!!加了tags缓存，为了适配三级路由缓存不能加key，如果要加，搞个啥的判断下v-if,v-else，就需要的页面才用这加key!!!!!!! -->
+                <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-if="">
+                    <router-view :key=''></router-view>
+                </keep-alive>
+                <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-else>
+                    <router-view></router-view>
+                </keep-alive> -->
             </el-main>
         </el-container>
         <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
@@ -99,7 +107,14 @@ export default {
             userInfo: state => state.userInfo,
             cachedInclude: state => state.cachedInclude,
             cachedExclude: state => state.cachedExclude
-        })
+        }),
+        key () {
+            const index = this.$route.fullPath.indexOf('#')
+            if (index !== -1) {
+                return this.$route.fullPath.substring(0, index)
+            }
+            return this.$route.fullPath
+        }
     },
     methods: {
         init () {

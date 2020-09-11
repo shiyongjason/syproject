@@ -24,7 +24,7 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="findUserFeedbackList(queryParams)">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="searchBtnClick()">查询</el-button>
                 </div>
             </div>
         </div>
@@ -138,7 +138,12 @@ export default {
             this.previewListTemp = this.previewList.concat()
             this.previewListTemp.splice(index, 1)
             this.previewListTemp.unshift(item)
+        },
+        searchBtnClick () {
+            this.queryParams.pageNumber = 1
+            this.findUserFeedbackList(this.queryParams)
         }
+
     }
 }
 </script>
