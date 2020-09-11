@@ -10,7 +10,7 @@
                 </el-form-item>
                 <el-form-item label="招商品类：" prop="category">
                     <el-checkbox-group v-model="form.category">
-                        <el-checkbox v-for="item in categorys" :label="item" name="type"></el-checkbox>
+                        <el-checkbox v-for="item in categorys" :label="item.id" name="type">{{ item.agentCategoryName }}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="page-body-title">
@@ -157,9 +157,7 @@ export default {
 
         async getCategory () {
             let { data } = await getCloudMerchantCategory()
-            this.categorys = data.data.map(function (value) {
-                return value.agentCategoryName
-            })
+            this.categorys = data.data
         },
 
         async getAdDetail (id) {
@@ -183,7 +181,7 @@ export default {
                         let params = {
                             title: this.form.title,
                             content: this.form.content,
-                            merchantsCategory: this.form.category.join(',')
+                            merchantsCategory: this.form.category.sort().join(',')
                         }
 
                         if (this.$route.query.id) {
