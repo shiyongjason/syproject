@@ -91,6 +91,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/warehouseManagement.vue')
+                    },
+                    {
+                        path: 'deviceDetail',
+                        name: 'deviceDetail',
+                        meta: {
+                            title: '设备详情',
+                            tagName: '设备详情',
+                            parentName: '设备管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/equipcoms/deviceDetail.vue')
                     }
                 ]
             },
