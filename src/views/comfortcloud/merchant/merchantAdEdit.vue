@@ -164,7 +164,9 @@ export default {
             await this.getCloudMerchantAdDetail(id)
             this.form = {
                 title: this.cloudMerchantAdDetail.title,
-                category: this.cloudMerchantAdDetail.merchantsCategory.split(','),
+                category: this.cloudMerchantAdDetail.merchantsCategory.split(',').map(function (value) {
+                    return parseInt(value)
+                }),
                 content: this.cloudMerchantAdDetail.content
             }
         },

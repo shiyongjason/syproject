@@ -93,7 +93,7 @@ export default {
             this.H5Preview = this.getPreviewLink(val.id)
         },
         getPreviewLink: function (id) {
-            return iotUrl + '/iot/xxx/?xxx=' + id
+            return iotUrl + '/uc/wechat/auth?appId=wx6a4e71b7fb2b4d0e&id=' + id
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
