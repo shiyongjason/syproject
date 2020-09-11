@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <el-form ref="form" :model="form" :rules="rules" label-width="130px">
                 <div class="page-body-title">
-                    <h3>活动管理</h3>
+                    <h3>招商广告编辑</h3>
                 </div>
                 <el-form-item label="招商广告标题：" prop="title">
                     <el-input v-model.trim="form.title" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>

@@ -118,5 +118,8 @@ export default {
 </script>
 
 <style scoped>
-
+    .spanflex {
+        font-size: 16px;
+        padding-bottom: 10px;
+    }
 </style>
