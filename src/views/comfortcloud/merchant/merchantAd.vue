@@ -90,10 +90,7 @@ export default {
             })
         },
         onShowPreview: function (val) {
-            this.H5Preview = this.getPreviewLink(val.id)
-        },
-        getPreviewLink: function (id) {
-            return iotUrl + '/uc/wechat/auth?appId=wx6a4e71b7fb2b4d0e&id=' + id
+            this.H5Preview = iotUrl + '/uc/wechat/auth?appId=wx6a4e71b7fb2b4d0e&id=' + val.id
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -131,7 +128,7 @@ export default {
             }).catch(() => {})
         },
         onCopyLink: function (row) {
-            let text = this.getPreviewLink(row.id)
+            let text = iotUrl + '/uc/wechat/auth?appId=wx6a4e71b7fb2b4d0e&id=' + row.id
             let clipboard = new Clipboard('.clipBtn', {
                 text: function () {
                     return text
