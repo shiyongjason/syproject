@@ -365,9 +365,9 @@ export default {
                 pkDeptDoc: [
                     { required: true, message: '请选择分部', trigger: 'change' }
                 ],
-                companyType: [
-                    { required: true, message: '请选择企业类型', trigger: 'change' }
-                ],
+                // companyType: [
+                //     { required: true, message: '请选择企业类型', trigger: 'change' }
+                // ],
                 countryId: [
                     { required: true, message: '请选择区', trigger: 'change' }
                 ],
@@ -376,16 +376,16 @@ export default {
                 ],
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
-                ],
-                relationCompanyCode: [
-                    { required: true, message: '请选择关联公司' }
-                ],
-                developOnlineCompanyCode: [
-                    { required: true, message: '请选择平台公司' }
-                ],
-                isRelated: [
-                    { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
                 ]
+                // relationCompanyCode: [
+                //     { required: true, message: '请选择关联公司' }
+                // ],
+                // developOnlineCompanyCode: [
+                //     { required: true, message: '请选择平台公司' }
+                // ],
+                // isRelated: [
+                //     { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
+                // ]
             },
             targetObj: {
                 selectName: '',
@@ -461,7 +461,8 @@ export default {
             }
         },
         onRemove () {
-            this.$confirm('此操作将永久删除该企业, 是否继续?', '提示', {
+            let num = this.businessDetail.projects ? this.businessDetail.projects.length : 0
+            this.$confirm(num > 0 ? '删除后企业下的项目也将被删除，是否确认删除该企业？' : '是否确认删除该企业，删除后不可恢复', '是否确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
