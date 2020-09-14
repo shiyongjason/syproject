@@ -96,6 +96,7 @@
                                     <el-input v-model.trim="businessType.engineering" :disabled='!businessType.isEngineering' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
                                     </el-input>
+                                    <font class="errortxt" v-if="businessType.isEngineering&&businessType.engineering==''">请填写工程比例</font>
                                 </div>
                                 <div class="sinput">
                                     <el-checkbox v-model="businessType.isWholesale">
@@ -104,6 +105,7 @@
                                     <el-input v-model.trim="businessType.wholesale" :disabled='!businessType.isWholesale' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
                                     </el-input>
+                                    <font class="errortxt" v-if="businessType.isWholesale&&businessType.wholesale==''">请填写批发比例</font>
                                 </div>
                                 <div class="sinput">
                                     <el-checkbox v-model="businessType.isRetail">
@@ -112,6 +114,7 @@
                                     <el-input v-model.trim="businessType.retail" :disabled='!businessType.isRetail' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
                                     </el-input>
+                                    <font class="errortxt" v-if="businessType.isRetail&&businessType.retail==''">请填写零售比例</font>
                                 </div>
                             </el-form-item>
                             <el-form-item label="代理级别：" :label-width="formLabelWidth">
@@ -565,7 +568,27 @@ export default {
             this.authenticationDetail = { ...data }
         },
         onSaveDetail () {
-            console.log('this.businessDetail: ', this.businessDetail)
+            if (this.businessType.isEngineering && this.businessType.engineering == '') {
+                this.$message({
+                    message: '请填写工程比例',
+                    type: 'error'
+                })
+                return
+            }
+            if (this.businessType.isWholesale && this.businessType.wholesale == '') {
+                this.$message({
+                    message: '请填写批发比例',
+                    type: 'error'
+                })
+                return
+            }
+            if (this.businessType.isRetail && this.businessType.retail == '') {
+                this.$message({
+                    message: '请填写零售比例',
+                    type: 'error'
+                })
+                return
+            }
             this.businessDetail.materialsChannel = this.materialsChannelArr.toString()
             this.businessDetail.serviceCapabilityDetail = this.serviceCapabilityDetail.toString()
             this.businessDetail.businessType = JSON.stringify(this.businessType)
@@ -849,5 +872,9 @@ export default {
     cursor: pointer;
     float: right;
     line-height: 20px;
+}
+.errortxt {
+    color: #f56c6c;
+    margin-left: 10px;
 }
 </style>
