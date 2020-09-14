@@ -16,6 +16,9 @@
                         :pagination="pagination"
                         isShowIndex @onCurrentChange='onCurrentChange'
                         @onSizeChange='onSizeChange'>
+                <template slot="status" slot-scope="scope">
+                    {{ scope.data.row.status == 1 ? '在线' : '离线' }}
+                </template>
             </basicTable>
         </div>
     </div>
@@ -69,18 +72,18 @@ export default {
             if (data) {
                 this.deviceInfo = data.data.data
                 this.pagination = {
-                    pageSize: data.data.data.deviceLogins.pageable.pageSize,
-                    pageNumber: data.data.data.deviceLogins.pageable.pageNumber,
+                    pageNumber: data.data.data.deviceLogins.number + 1,
+                    pageSize: data.data.data.deviceLogins.size,
                     total: data.data.data.deviceLogins.totalElements
                 }
             }
         },
         onCurrentChange (val) {
-            this.deviceDetailParams.pageNumber = val.pageNumber
+            this.queryParams.pageNumber = val.pageNumber
             this.requestDeviceInfo(this.queryParams)
         },
         onSizeChange (val) {
-            this.deviceDetailParams.pageSize = val
+            this.queryParams.pageSize = val
             this.requestDeviceInfo(this.queryParams)
         }
 
