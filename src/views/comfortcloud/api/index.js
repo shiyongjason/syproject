@@ -373,3 +373,11 @@ export function getCloudHomeModeTypeList (params) {
 export function getServiceManageHistoryList (params) {
     return axios.get(iotUrl + '/api/customer-service/service-order', { params })
 }
+
+export function getCloudDeviceDetail (params) {
+    return axios.get(iotUrl + '/api/device/statistics/device/specific/details', { params })
+}
+
+export function getCloudSubDeviceDetail (params) {
+    return axios.get(iotUrl + '/api/device/statistics/subDevice/specific/details', { params })
+}

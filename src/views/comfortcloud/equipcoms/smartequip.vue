@@ -191,7 +191,11 @@ export default {
             this.drawLine(this.smartData)
         },
         onDetail (val) {
-            this.$router.push({ path: '/comfortcloud/equipmentOverview/deviceDetail', query: val })
+            this.$router.push({ path: '/comfortcloud/equipmentOverview/deviceDetail',
+                query: { iotId: val.iotId,
+                    subIotId: val.subIotId,
+                    deviceClass: val.deviceClass
+                } })
         },
         drawLine (data) {
             // 绘制图表
