@@ -33,7 +33,7 @@
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList" :pagination="cloudMerchantOrderListPagination" @onCurrentChange='onCurrentChange'
                         isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
-                    {{scope.data.row.level === 1 ? '一级': '二级'}}
+                    {{ scope.data.row.level === 1 ? '一级': '二级' }}
                 </template>
                 <template slot="payAmount" slot-scope="scope">
                     {{ scope.data.row.payAmount ? scope.data.row.payAmount + '元' : '-' }}
@@ -64,6 +64,8 @@ export default {
                 { label: '微信支付订单号', prop: 'wxPayNo' },
                 { label: '联系人', prop: 'contactUser' },
                 { label: '客户电话', prop: 'contactNumber' },
+                { label: '省', prop: 'provinceName' },
+                { label: '市', prop: 'cityName' },
                 { label: '联系地址', prop: 'contactAddress' },
                 { label: '代理级别', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
@@ -130,5 +132,9 @@ export default {
     .spanflex {
         font-size: 16px;
         padding-bottom: 10px;
+    }
+    .address {
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
