@@ -44,7 +44,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '维护时间', prop: 'updateTime', formatters: 'dateTime' },
+                { label: '代理时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '省', prop: 'provinceName' },
                 { label: '市', prop: 'cityName' },
                 { label: '代理商公司名称', prop: 'companyName' },
