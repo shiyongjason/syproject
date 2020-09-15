@@ -39,8 +39,6 @@ export const DEVICE_LIST = [
     { key: 5, value: '智能化' },
     { key: 6, value: '辅材' },
     { key: 7, value: '电梯' },
-    { key: 9, value: '电器' },
-    { key: 10, value: '热水器' },
     { key: 8, value: '其他' }
 
 ]
