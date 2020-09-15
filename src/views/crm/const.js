@@ -25,7 +25,7 @@ export const TYPE_LIST =
     [
         { key: 1, value: '地产项目' },
         { key: 2, value: '政府公建项目' },
-        { key: 3, value: '市政项目' },
+        { key: 3, value: '市政工程' },
         { key: 4, value: '办公楼' },
         { key: 5, value: '厂房' },
         { key: 6, value: '其他' }
