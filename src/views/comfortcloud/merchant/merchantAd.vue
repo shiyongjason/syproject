@@ -90,7 +90,7 @@ export default {
             })
         },
         onShowPreview: function (val) {
-            this.H5Preview = iotUrl + '/uc/wechat/auth?appId=wx6a4e71b7fb2b4d0e&id=' + val.id
+            this.H5Preview = iotUrl + '/previewPoster&id=' + val.id
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
