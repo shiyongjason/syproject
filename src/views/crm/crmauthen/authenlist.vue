@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                        <h-button type="primary" @click="searchList">
+                        <h-button type="primary" @click="searchList(1)">
                             查询
                         </h-button>
                         <h-button @click="onRest">
