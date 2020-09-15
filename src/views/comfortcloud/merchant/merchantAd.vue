@@ -26,7 +26,7 @@
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantAdList" :pagination="cloudMerchantAdListPagination" @onCurrentChange='onCurrentChange'
                         isShowIndex @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
                 <template slot="title" slot-scope="scope">
-                    <p @click="onShowPreview(scope.data.row)" class="colred">{{scope.data.row.title}}</p>
+                    <p @click="onShowPreview(scope.data.row)" class="colred title">{{scope.data.row.title}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="goEdit(scope.data.row.id)">编辑</el-button>
@@ -157,5 +157,10 @@ export default {
     .colred {
         color: #ff7a45;
         cursor: pointer;
+    }
+
+    .title {
+        overflow: hidden;
+        text-overflow:ellipsis;
     }
 </style>
