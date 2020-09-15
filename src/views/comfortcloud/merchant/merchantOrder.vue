@@ -35,6 +35,9 @@
                 <template slot="level" slot-scope="scope">
                     {{scope.data.row.level === 1 ? '一级': '二级'}}
                 </template>
+                <template slot="payAmount" slot-scope="scope">
+                    {{ scope.data.row.payAmount ? scope.data.row.payAmount + '元' : '-' }}
+                </template>
             </basicTable>
         </div>
     </div>
@@ -78,6 +81,10 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
+                    let beginDateVal = this.queryParams.payEndDate
+                    if (beginDateVal) {
+                        return (time.getTime() > new Date(beginDateVal).getTime()) || (time.getTime() > Date.now())
+                    }
                     return time.getTime() > Date.now()
                 }
             }
@@ -88,9 +95,10 @@ export default {
                     let beginDateVal = this.queryParams.payStartDate
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            (time.getTime() < new Date(beginDateVal).getTime()) || (time.getTime() > Date.now())
                         )
                     }
+                    return time.getTime() > Date.now()
                 }
             }
         }
