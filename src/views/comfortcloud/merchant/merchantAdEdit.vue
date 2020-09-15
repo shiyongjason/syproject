@@ -16,9 +16,9 @@
                 <div class="page-body-title">
                     <h3>广告内容</h3>
                 </div>
-                <el-form-item label="详情：" prop="detail">
+                <el-form-item label="详情：" prop="content">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor @blur="$refs['form'].validateField('detail')" tabindex="0" hidefocus="true" ref="editors" v-model="form.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @blur="$refs['form'].validateField('content')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.content"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveAd()" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
