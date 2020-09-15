@@ -12,6 +12,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                <div class="query-col-title">支付时间：</div>
                 <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="queryParams.payStartDate"
                                 :picker-options="pickerOptionsStart" clearable :editable="false">
                 </el-date-picker>
