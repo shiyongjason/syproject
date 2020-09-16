@@ -43,7 +43,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Clipboard from 'clipboard'
-import { iotUrl } from '@/api/config'
+import { iotZsUrl } from '@/api/config'
 import H5Preview from '../../../components/h5Preview/index'
 import { deleteCloudMerchantAd } from '../api/index'
 
@@ -90,7 +90,9 @@ export default {
             })
         },
         onShowPreview: function (val) {
-            this.H5Preview = iotUrl + '/previewPoster&id=' + val.id
+            let url = iotZsUrl + '/previewPoster?id=' + val.id
+            console.log(url)
+            this.H5Preview = url
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
