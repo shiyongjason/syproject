@@ -77,10 +77,10 @@
                             </el-form-item>
                             <!-- #################### -->
                             <el-form-item label="注册时间：" :label-width="formLabelWidth">
-                                {{businessDetail.estiblishTime||'-'}}
+                                {{businessDetail.estiblishTime|momentFormat}}
                             </el-form-item>
                             <el-form-item label="主营品牌：" :label-width="formLabelWidth">
-                                <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="200" class="lageinput"></el-input>
+                                <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="20" class="lageinput"></el-input>
                             </el-form-item>
                             <el-form-item label="主营品类：" :label-width="formLabelWidth">
                                 <el-select v-model="businessDetail.deviceCategory" placeholder="请选择" :clearable=true>
@@ -90,8 +90,8 @@
                             <el-form-item label="业务类型：" :label-width="formLabelWidth" prop="note">
                                 <div class="sinput">
                                     <!-- `checked` 为 true 或 false -->
-                                    <el-checkbox v-model="businessType.isEngineering">
-                                        <font>工程:</font>
+                                    <el-checkbox v-model="businessType.isEngineering" @change="()=>onChangeCheckbox(businessType.isEngineering,'engineering')">
+                                        <font class="labelname">工程:</font>
                                     </el-checkbox>
                                     <el-input v-model.trim="businessType.engineering" :disabled='!businessType.isEngineering' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
@@ -99,8 +99,8 @@
                                     <font class="errortxt" v-if="businessType.isEngineering&&businessType.engineering==''">请填写工程比例</font>
                                 </div>
                                 <div class="sinput">
-                                    <el-checkbox v-model="businessType.isWholesale">
-                                        <font>批发:</font>
+                                    <el-checkbox v-model="businessType.isWholesale" @change="()=>onChangeCheckbox(businessType.isWholesale,'wholesale')">
+                                        <font class="labelname">批发:</font>
                                     </el-checkbox>
                                     <el-input v-model.trim="businessType.wholesale" :disabled='!businessType.isWholesale' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
@@ -108,8 +108,8 @@
                                     <font class="errortxt" v-if="businessType.isWholesale&&businessType.wholesale==''">请填写批发比例</font>
                                 </div>
                                 <div class="sinput">
-                                    <el-checkbox v-model="businessType.isRetail">
-                                        <font>零售:</font>
+                                    <el-checkbox v-model="businessType.isRetail" @change="()=>onChangeCheckbox(businessType.isRetail,'retail')">
+                                        <font class="labelname">零售:</font>
                                     </el-checkbox>
                                     <el-input v-model.trim="businessType.retail" :disabled='!businessType.isRetail' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
@@ -133,10 +133,10 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="主辅材品牌：" :label-width="formLabelWidth">
-                                <el-input v-model.trim="businessDetail.materialsBrand" placeholder='备注主辅材品牌' maxlength="200" class="lageinput"></el-input>
+                                <el-input v-model.trim="businessDetail.materialsBrand" placeholder='备注主辅材品牌' maxlength="20" class="lageinput"></el-input>
                             </el-form-item>
                             <el-form-item label="主辅材采购渠道：" :label-width="formLabelWidth">
-                                <el-select multiple collapse-tags v-model="materialsChannelArr" placeholder="请选择" :clearable=true>
+                                <el-select multiple v-model="materialsChannelArr" placeholder="请选择" :clearable=true>
                                     <el-option :label="item.value" :value="item.key" v-for="item in materialsChannel" :key="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -457,6 +457,11 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onChangeCheckbox (b, key) {
+            if (!b) {
+                this.businessType[key] = ''
+            }
+        },
         serviceCapabilityChange () {
             if (this.businessDetail.serviceCapability == 2) {
                 this.serviceCapabilityDetail = []
@@ -476,10 +481,10 @@ export default {
                 })
                 this.$emit('backEvent')
             }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                })
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // })
             })
         },
         onClearV () {
@@ -549,8 +554,10 @@ export default {
             this.businessDetail = this.crmauthDetail
             this.businessDetail.authenticationStatus = data.authenticationStatus
             this.copyDetail = deepCopy(this.businessDetail)
-            this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
-            this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
+            // this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
+            // this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
+            this.targetObj.selectCode = this.businessDetail.developOnlineCompanyCode || ''
+            this.targetObj.selectName = this.businessDetail.developOnlineCompanyName || ''
             this.statusForm.customerType = ''
             this.statusForm.note = ''
             this.copyStatusForm = deepCopy(this.statusForm)
@@ -838,7 +845,10 @@ export default {
     padding: 0 15px !important;
 }
 /deep/.el-select__tags {
-    margin-left: 10px !important;
+    // margin-left: 10px !important;
+}
+/deep/.el-form .el-input:not(:first-child) {
+    margin-left: 0px;
 }
 .input-name {
     margin-left: 10px;
@@ -875,5 +885,8 @@ export default {
 .errortxt {
     color: #f56c6c;
     margin-left: 10px;
+}
+.labelname {
+    margin-right: 10px;
 }
 </style>

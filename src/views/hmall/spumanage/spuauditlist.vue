@@ -95,7 +95,6 @@ import { spuAuditBatch } from './api/index'
 import { AUDIT_STATUS } from './const'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
 import { B2bUrl } from '@/api/config'
 export default {
     name: 'spuauditlist',
