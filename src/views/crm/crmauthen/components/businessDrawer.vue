@@ -90,8 +90,8 @@
                             <el-form-item label="业务类型：" :label-width="formLabelWidth" prop="note">
                                 <div class="sinput">
                                     <!-- `checked` 为 true 或 false -->
-                                    <el-checkbox v-model="businessType.isEngineering">
-                                        <font>工程:</font>
+                                    <el-checkbox v-model="businessType.isEngineering" @change="()=>onChangeCheckbox(businessType.isEngineering,'engineering')">
+                                        <font class="labelname">工程:</font>
                                     </el-checkbox>
                                     <el-input v-model.trim="businessType.engineering" :disabled='!businessType.isEngineering' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
@@ -99,8 +99,8 @@
                                     <font class="errortxt" v-if="businessType.isEngineering&&businessType.engineering==''">请填写工程比例</font>
                                 </div>
                                 <div class="sinput">
-                                    <el-checkbox v-model="businessType.isWholesale">
-                                        <font>批发:</font>
+                                    <el-checkbox v-model="businessType.isWholesale" @change="()=>onChangeCheckbox(businessType.isWholesale,'wholesale')">
+                                        <font class="labelname">批发:</font>
                                     </el-checkbox>
                                     <el-input v-model.trim="businessType.wholesale" :disabled='!businessType.isWholesale' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
@@ -108,8 +108,8 @@
                                     <font class="errortxt" v-if="businessType.isWholesale&&businessType.wholesale==''">请填写批发比例</font>
                                 </div>
                                 <div class="sinput">
-                                    <el-checkbox v-model="businessType.isRetail">
-                                        <font>零售:</font>
+                                    <el-checkbox v-model="businessType.isRetail" @change="()=>onChangeCheckbox(businessType.isRetail,'retail')">
+                                        <font class="labelname">零售:</font>
                                     </el-checkbox>
                                     <el-input v-model.trim="businessType.retail" :disabled='!businessType.isRetail' v-isNum:0 v-inputMAX='100' class="smallinput">
                                         <template slot="append">%</template>
@@ -457,6 +457,11 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onChangeCheckbox (b, key) {
+            if (!b) {
+                this.businessType[key] = ''
+            }
+        },
         serviceCapabilityChange () {
             if (this.businessDetail.serviceCapability == 2) {
                 this.serviceCapabilityDetail = []
@@ -880,5 +885,8 @@ export default {
 .errortxt {
     color: #f56c6c;
     margin-left: 10px;
+}
+.labelname {
+    margin-right: 10px;
 }
 </style>
