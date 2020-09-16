@@ -80,7 +80,7 @@
                                 {{businessDetail.estiblishTime||'-'}}
                             </el-form-item>
                             <el-form-item label="主营品牌：" :label-width="formLabelWidth">
-                                <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="200" class="lageinput"></el-input>
+                                <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="20" class="lageinput"></el-input>
                             </el-form-item>
                             <el-form-item label="主营品类：" :label-width="formLabelWidth">
                                 <el-select v-model="businessDetail.deviceCategory" placeholder="请选择" :clearable=true>
@@ -133,10 +133,10 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="主辅材品牌：" :label-width="formLabelWidth">
-                                <el-input v-model.trim="businessDetail.materialsBrand" placeholder='备注主辅材品牌' maxlength="200" class="lageinput"></el-input>
+                                <el-input v-model.trim="businessDetail.materialsBrand" placeholder='备注主辅材品牌' maxlength="20" class="lageinput"></el-input>
                             </el-form-item>
                             <el-form-item label="主辅材采购渠道：" :label-width="formLabelWidth">
-                                <el-select multiple collapse-tags v-model="materialsChannelArr" placeholder="请选择" :clearable=true>
+                                <el-select multiple v-model="materialsChannelArr" placeholder="请选择" :clearable=true>
                                     <el-option :label="item.value" :value="item.key" v-for="item in materialsChannel" :key="item.key"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -549,8 +549,10 @@ export default {
             this.businessDetail = this.crmauthDetail
             this.businessDetail.authenticationStatus = data.authenticationStatus
             this.copyDetail = deepCopy(this.businessDetail)
-            this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
-            this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
+            // this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
+            // this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
+            this.targetObj.selectCode = this.businessDetail.developOnlineCompanyCode || ''
+            this.targetObj.selectName = this.businessDetail.developOnlineCompanyName || ''
             this.statusForm.customerType = ''
             this.statusForm.note = ''
             this.copyStatusForm = deepCopy(this.statusForm)
@@ -838,7 +840,10 @@ export default {
     padding: 0 15px !important;
 }
 /deep/.el-select__tags {
-    margin-left: 10px !important;
+    // margin-left: 10px !important;
+}
+/deep/.el-form .el-input:not(:first-child) {
+    margin-left: 0px;
 }
 .input-name {
     margin-left: 10px;

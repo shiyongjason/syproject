@@ -151,14 +151,14 @@ export default {
             tableData: [],
             paginationInfo: {},
             tableLabel: [
-                { label: '企业名称', prop: 'companyName' },
+                { label: '企业名称', prop: 'companyName', width: '200' },
                 { label: '管理员账号', prop: 'userAccount', width: '120' },
                 { label: '管理员姓名', prop: 'userName', width: '120' },
                 { label: '所属分部', prop: 'subsectionName', width: '150' },
                 { label: '经营区域', prop: 'areaname', width: '150' },
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
-                { label: '认证状态', prop: 'isAuthentication', width: '100' },
+                { label: '认证状态', prop: 'isAuthentication' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
             ],
