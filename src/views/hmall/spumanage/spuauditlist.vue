@@ -65,7 +65,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" @click="searchList">查询</h-button>
+                        <h-button type="primary" @click="()=>searchList(1)">查询</h-button>
                         <h-button @click="onRest">重置</h-button>
                         <h-button @click="onChangeStatus">批量审核</h-button>
                         <h-button @click="onExport">导出</h-button>
@@ -95,7 +95,6 @@ import { spuAuditBatch } from './api/index'
 import { AUDIT_STATUS } from './const'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
 import { B2bUrl } from '@/api/config'
 export default {
     name: 'spuauditlist',
@@ -182,9 +181,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    activated () {
-        this.searchList()
-    },
+    // activated () {
+    //     this.searchList()
+    // },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
@@ -210,7 +209,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        async searchList () {
+        async searchList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             const { ...params } = this.queryParams
             if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
             await this.findAuditProducts(params)
@@ -268,8 +270,8 @@ export default {
             await this.setSpuTemplate(val.spuId)
             this.$message.success('操作成功')
         }
-    },
-    beforeRouteEnter (to, from, next) {
+    }
+    /* beforeRouteEnter (to, from, next) {
         newCache('spuauditlist')
         next()
     },
@@ -278,7 +280,7 @@ export default {
             clearCache('spuauditlist')
         }
         next()
-    }
+    } */
 }
 </script>
 <style lang="scss" scoped>

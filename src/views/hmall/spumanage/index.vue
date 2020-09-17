@@ -39,7 +39,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-input">
-                        <h-button type="primary" @click="searchList">
+                        <h-button type="primary" @click="()=>searchList(1)">
                             查询
                         </h-button>
                         <h-button @click="onRest">
@@ -84,7 +84,6 @@
 import { templateDisable, templateEnable } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'spumange',
     data () {
@@ -137,9 +136,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    activated () {
-        this.searchList()
-    },
+    // activated () {
+    //     this.searchList()
+    // },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
@@ -166,7 +165,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        async searchList () {
+        async searchList (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             await this.findProductsTemplate(this.queryParams)
             this.tableData = this.productsTemplateInfo.records
             this.paginationInfo = {
@@ -201,8 +203,8 @@ export default {
         onEditSpu (val) {
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
         }
-    },
-    beforeRouteEnter (to, from, next) {
+    }
+    /* beforeRouteEnter (to, from, next) {
         newCache('spumange')
         next()
     },
@@ -211,7 +213,7 @@ export default {
             clearCache('spumange')
         }
         next()
-    }
+    } */
 }
 </script>
 <style lang="scss" scoped>

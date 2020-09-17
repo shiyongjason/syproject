@@ -1,14 +1,16 @@
 <template>
-    <ul class="tabs-tags__cont" v-if="showTags">
-        <li class="tabs-tags__item" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index">
-            <router-link :to="item.path + serializeLink(item.query)" class="tabs-tags__item--title">
-                {{item.title}}
-            </router-link>
-            <span class="tabs-tags__item--icon" @click="closeTags(index,isActive(item.path))">
-                <i class="el-icon-close"></i>
-            </span>
-        </li>
-    </ul>
+    <div class="tags" v-if="showTags">
+        <ul>
+            <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index">
+                <router-link :to="item.path + serializeLink(item.query)" class="tags-li-title">
+                    <font @click='onClickTags'>{{item.title}}</font>
+                </router-link>
+                <span class="tags-li-icon" @click="closeTags(index,isActive(item.path))">
+                    <i class="el-icon-close"></i>
+                </span>
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -188,13 +190,14 @@ export default {
                 }
             }
             this.setTags(newValue)
-        },
+        }
+        /*,
         cachedInclude (val) {
             sessionStorage.setItem('cachedInclude', val)
         },
         cachedExclude (val) {
             sessionStorage.setItem('cachedExclude', val)
-        }
+        } */
     },
     mounted () {
         let tags = []
@@ -222,69 +225,41 @@ export default {
 </script>
 
 <style  lang="scss">
-.tabs-container__tags {
-    display: flex;
-    padding: 0 20px;
-    height: 50px;
+.tags {
+    position: relative;
+    overflow: hidden;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-.tabs-tags {
-    &__cont {
-        display: flex;
-        align-items: center;
-        margin: 7px 20px 0;
-        overflow: scroll;
-    }
-
-    &__item {
-        margin-right: 4px;
-        padding: 0 20px;
-        box-sizing: border-box;
-        height: 36px;
-        line-height: 36px;
-        cursor: pointer;
-        background: #f5f7fa;
-        border-radius: 2px;
-        white-space: nowrap;
-        transition: all 0.3s ease-in;
-
-        &--title {
-            display: inline-block;
-            max-width: 80px;
-            color: #666;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-
-        &--icon {
-            display: inline-block;
-            margin-left: 4px;
-            overflow: hidden;
-        }
-
-        &.active {
-            background: #ff7a45;
-            color: #ffffff;
-
-            a {
-                color: #ffffff;
-            }
-        }
-
-        &:not(.active) {
-            .tabs-tags__item--icon {
-                display: none;
-            }
-
-            &:hover {
-                .tabs-tags__item--icon {
-                    display: inline-block;
-                }
-            }
-        }
-    }
+.tags ul {
+    // box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    white-space: nowrap;
+    overflow-x: scroll;
 }
+
+.tags-li {
+    white-space: nowrap;
+    display: inline-block;
+    // float: left;
+    margin: 0px 2px 0px 0px;
+    font-size: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    height: 28px;
+    line-height: 28px;
+    border: 1px solid #e9eaec;
+    background: #fff;
+    padding: 0 5px 0 12px;
+    vertical-align: middle;
+    color: #666;
+    -webkit-transition: all 0.3s ease-in;
+    -moz-transition: all 0.3s ease-in;
+    transition: all 0.3s ease-in;
+}
+
 .tags-li:not(.active):hover {
     background: #f8f8f8;
 }
@@ -295,16 +270,16 @@ export default {
     background-color: #ff7a45;
 }
 
-// .tags-li-title {
-//     float: left;
-//     max-width: 80px;
-//     overflow: hidden;
-//     white-space: nowrap;
-//     text-overflow: ellipsis;
-//     // margin-right: 5px;
-//     margin: 0 10px;
-//     color: #666;
-// }
+.tags-li-title {
+    float: left;
+    max-width: 80px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    // margin-right: 5px;
+    margin: 0 10px;
+    color: #666;
+}
 
 .tags-li.active .tags-li-title {
     color: #fff;

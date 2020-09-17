@@ -56,7 +56,7 @@ import accountCp from './accountCp'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 export default {
-    name: 'spumange',
+    name: 'membershipSpumange',
     data () {
         return {
             queryParams: {

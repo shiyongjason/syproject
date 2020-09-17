@@ -155,7 +155,6 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { clearCache, newCache } from '@/utils/index'
 import complexTable from './components/complexTable.vue'
 import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD, WISDOM_ACCOUNT_EXPORT } from '@/utils/auth_const'
 import { downloadCloudAlarmList } from './api/index'
@@ -524,20 +523,20 @@ export default {
             // }
             downloadCloudAlarmList(this.queryParams)
         }
-    },
-    activated () {
-        this.onQuery()
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('standingBook')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'newFlowdialog') {
-            clearCache('standingBook')
-        }
-        next()
     }
+    // activated () {
+    //     this.onQuery()
+    // },
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('standingBook')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name != 'newFlowdialog') {
+    //         clearCache('standingBook')
+    //     }
+    //     next()
+    // }
 }
 </script>
 
