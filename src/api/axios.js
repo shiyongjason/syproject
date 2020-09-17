@@ -94,12 +94,12 @@ axios.interceptors.response.use(
             requestArr.splice(0, requestArr.length)
             if (!messageShowing) {
                 messageShowing = Message({
-                    message: '网络故障，请重新登录！',
+                    message: '网络发生故障了~',
                     type: 'error'
                 })
                 timer = setTimeout(function () {
                     messageShowing = null
-                    window.location.href = '/login'
+                    clearTimeout(timer)
                 }, 1200)
             }
         } else {
@@ -122,6 +122,7 @@ axios.interceptors.response.use(
                     timer = setTimeout(function () {
                         messageShowing = null
                         window.location.href = '/login'
+                        clearTimeout(timer)
                     }, 1200)
                     return
                 }
@@ -135,7 +136,6 @@ axios.interceptors.response.use(
                 })
             }
         }
-        clearTimeout(timer)
         return Promise.reject(error)
     }
 )
