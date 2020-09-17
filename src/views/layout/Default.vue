@@ -1,42 +1,45 @@
 <template>
     <el-container class="body-container" v-watermark="$store.state.userInfo.employeeName">
         <el-header class="header">
-            <NavMenuHead @editPassword="editPasswordShow"/>
+            <NavMenuHead @editPassword="editPasswordShow" />
         </el-header>
 
         <el-container class="container clearfix">
             <el-aside class="aside" :class="isCollapse?'close':'open'">
-                <NavMenuAside @back-event="menuBack"/>
+                <NavMenuAside @back-event="menuBack" />
             </el-aside>
-            <el-main class="content" v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading"
-                     element-loading-background="rgba(0, 0, 0, 0.5)">
+            <el-main class="content" v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
                 <div :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
                     <H-tags></H-tags>
                 </div>
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                     <router-view></router-view>
                 </keep-alive>
+                <!-- 这边以前就没加key -->
+                <!-- !!!!!!!加了tags缓存，为了适配三级路由缓存不能加key，如果要加，搞个啥的判断下v-if,v-else，就需要的页面才用这加key!!!!!!! -->
+                <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-if="">
+                    <router-view :key=''></router-view>
+                </keep-alive>
+                <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-else>
+                    <router-view></router-view>
+                </keep-alive> -->
             </el-main>
         </el-container>
-        <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password"
-                   :before-close="closePassword">
+        <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
             <el-form ref="editPassword" :model="editPassword" :rules="passwordRules" class="edit-password">
                 <el-form-item label="登录手机号：" label-width="132px">
                     {{userInfo.user_name}}
                 </el-form-item>
                 <el-form-item prop="currentPassword" label="旧密码：" label-width="132px">
-                    <el-input type="password" v-model="editPassword.currentPassword" placeholder="请输入您的旧密码"
-                              maxlength="16"></el-input>
+                    <el-input type="password" v-model="editPassword.currentPassword" placeholder="请输入您的旧密码" maxlength="16"></el-input>
                     <i class="iconfont hosjoy_right1"></i>
                 </el-form-item>
                 <el-form-item prop="newPassword" label="新密码：" label-width="132px">
-                    <el-input type="password" v-model="editPassword.newPassword" placeholder="请输入8-16位密码"
-                              maxlength="16"></el-input>
+                    <el-input type="password" v-model="editPassword.newPassword" placeholder="请输入8-16位密码" maxlength="16"></el-input>
                     <i class="iconfont hosjoy_right1"></i>
                 </el-form-item>
                 <el-form-item prop="confirmPassword" label="确认新密码：" label-width="132px">
-                    <el-input type="password" v-model="editPassword.confirmPassword" placeholder="请再次输入你的新密码"
-                              maxlength="16"></el-input>
+                    <el-input type="password" v-model="editPassword.confirmPassword" placeholder="请再次输入你的新密码" maxlength="16"></el-input>
                     <i class="iconfont hosjoy_right1"></i>
                 </el-form-item>
             </el-form>
@@ -103,7 +106,14 @@ export default {
             userInfo: state => state.userInfo,
             cachedInclude: state => state.cachedInclude,
             cachedExclude: state => state.cachedExclude
-        })
+        }),
+        key () {
+            const index = this.$route.fullPath.indexOf('#')
+            if (index !== -1) {
+                return this.$route.fullPath.substring(0, index)
+            }
+            return this.$route.fullPath
+        }
     },
     methods: {
         closePassword () {
@@ -152,128 +162,128 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .headdiv {
-        position: fixed;
-        left: 0;
-        right: 0;
-        z-index: 99;
-    }
+.headdiv {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 99;
+}
 
-    .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 10;
-        height: 50px !important;
-        background-color: $blackColor;
-    }
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    height: 50px !important;
+    background-color: $blackColor;
+}
 
-    .container {
-        position: absolute;
-        top: 50px;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: #efeff4;
-    }
+.container {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #efeff4;
+}
 
-    .aside {
-        position: relative;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        background-color: $blackLight;
-        z-index: 1999;
-    }
+.aside {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    background-color: $blackLight;
+    z-index: 1999;
+}
 
-    .content {
-        position: relative;
-    }
+.content {
+    position: relative;
+}
 
-    .minLeft {
-        left: 64px;
-        transition: 0.3s;
-    }
+.minLeft {
+    left: 64px;
+    transition: 0.3s;
+}
 
-    .maxLeft {
-        left: 200px;
-        transition: 0.3s;
-    }
+.maxLeft {
+    left: 200px;
+    transition: 0.3s;
+}
 
-    /deep/ .el-loading-spinner i {
-        color: $hosjoyColor;
-    }
+/deep/ .el-loading-spinner i {
+    color: $hosjoyColor;
+}
 
-    /deep/ .el-loading-spinner .el-loading-text {
-        color: $hosjoyColor;
-    }
+/deep/ .el-loading-spinner .el-loading-text {
+    color: $hosjoyColor;
+}
 
-    /deep/ .el-loading-parent--relative {
-        position: relative !important;
-        overflow: hidden;
-    }
+/deep/ .el-loading-parent--relative {
+    position: relative !important;
+    overflow: hidden;
+}
 
-    /deep/ .el-loading-mask {
-        position: fixed;
-        z-index: 2000;
-        background-color: rgba(255, 255, 255, 0.9);
-        top: 0;
-        left: 0;
-        -webkit-transition: opacity 0.3s;
-        transition: opacity 0.3s;
-        height: 100%;
-        width: 100%;
-    }
+/deep/ .el-loading-mask {
+    position: fixed;
+    z-index: 2000;
+    background-color: rgba(255, 255, 255, 0.9);
+    top: 0;
+    left: 0;
+    -webkit-transition: opacity 0.3s;
+    transition: opacity 0.3s;
+    height: 100%;
+    width: 100%;
+}
 
-    .edit-password {
-        padding: 34px 0;
-    }
+.edit-password {
+    padding: 34px 0;
+}
 
-    .hosjoy_right1 {
-        color: #52c41a;
-        margin-left: 12px;
-        display: none;
-    }
+.hosjoy_right1 {
+    color: #52c41a;
+    margin-left: 12px;
+    display: none;
+}
 
-    .el-form .el-form-item__label {
-        color: #000000;
-    }
+.el-form .el-form-item__label {
+    color: #000000;
+}
 
-    .el-form .el-input__inner {
+.el-form .el-input__inner {
+    border: 1px solid #e5e5ea;
+    /*width: 224px;*/
+    /*line-height: 40px;*/
+}
+
+.dialog-footer {
+    .el-button {
         border: 1px solid #e5e5ea;
-        /*width: 224px;*/
-        /*line-height: 40px;*/
+        border-radius: 4px;
+        color: #666666;
     }
+    .el-button--primary {
+        border: 1px solid #ff7a45;
+        background: #ff7a45;
+        color: #ffffff;
+    }
+    .el-button--primary:hover {
+        border: 1px solid #ff7a45;
+        background: rgba(229, 109, 61, 1);
+        color: #ffffff;
+    }
+    .el-button--primary:focus {
+        border: 1px solid #ff7a45;
+        background: rgba(229, 109, 61, 1);
+        color: #ffffff;
+    }
+}
 
-    .dialog-footer {
-        .el-button {
-            border: 1px solid #e5e5ea;
-            border-radius: 4px;
-            color: #666666;
-        }
-        .el-button--primary {
-            border: 1px solid #ff7a45;
-            background: #ff7a45;
-            color: #ffffff;
-        }
-        .el-button--primary:hover {
-            border: 1px solid #ff7a45;
-            background: rgba(229, 109, 61, 1);
-            color: #ffffff;
-        }
-        .el-button--primary:focus {
-            border: 1px solid #ff7a45;
-            background: rgba(229, 109, 61, 1);
-            color: #ffffff;
-        }
-    }
+.el-form-item.is-error .el-input__inner {
+    border: 1px solid #e02020;
+}
 
-    .el-form-item.is-error .el-input__inner {
-        border: 1px solid #e02020;
-    }
-
-    .el-form-item.is-success .hosjoy_right1 {
-        display: inline-block;
-    }
+.el-form-item.is-success .hosjoy_right1 {
+    display: inline-block;
+}
 </style>

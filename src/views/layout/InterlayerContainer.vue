@@ -1,12 +1,16 @@
 <template>
-    <keep-alive :include="cachedInclude" :exclude="cachedExclude">
+    <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude"> -->
+        <!-- <router-view :key='$route.fullPath'></router-view> -->
+    <!-- </keep-alive> -->
+     <keep-alive :include="cachedInclude" :exclude="cachedExclude">
         <router-view></router-view>
-    </keep-alive>
+     </keep-alive>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 export default {
+    name: 'interlayerContainer',
     computed: {
         ...mapState({
             cachedInclude: state => state.cachedInclude,

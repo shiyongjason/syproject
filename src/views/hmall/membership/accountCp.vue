@@ -73,7 +73,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 export default {
-    name: 'account',
+    name: 'membershipAccount',
     props: {
         drawer: {
             type: Boolean,

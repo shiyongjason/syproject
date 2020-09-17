@@ -186,7 +186,8 @@ export default [
                             title: '创建/编辑活动',
                             tagName: '创建/编辑活动',
                             isMenu: false,
-                            icon: ''
+                            icon: '',
+                            showMenuAs: '/b2b/marketing/eventMange'
                         },
                         component: () => import('@/views/hmall/event/createEditEvent')
                     },
