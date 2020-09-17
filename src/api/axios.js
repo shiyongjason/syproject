@@ -94,11 +94,12 @@ axios.interceptors.response.use(
             requestArr.splice(0, requestArr.length)
             if (!messageShowing) {
                 messageShowing = Message({
-                    message: '网络连接故障，请检查您的网络！',
+                    message: '网络故障，请重新登录！',
                     type: 'error'
                 })
                 timer = setTimeout(function () {
                     messageShowing = null
+                    window.location.href = '/login'
                 }, 1200)
             }
         } else {
