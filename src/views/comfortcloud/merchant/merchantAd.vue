@@ -43,7 +43,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import Clipboard from 'clipboard'
-import { iotZsUrl } from '@/api/config'
+import { iotZsUrl, iotUrl } from '@/api/config'
 import H5Preview from '../../../components/h5Preview/index'
 import { deleteCloudMerchantAd } from '../api/index'
 
