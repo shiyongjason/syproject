@@ -125,6 +125,7 @@ import { SETTING_REQUIRED_MAP, SETTING_TYPE_MAP } from '../const'
 import { mapState, mapActions } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 export default {
+    name: 'setParameters',
     props: {
         categoryId: {
             type: Number,

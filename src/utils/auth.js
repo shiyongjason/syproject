@@ -1,8 +1,9 @@
-import { deepCopy } from '@/utils/utils'
-
+// import { deepCopy } from '@/utils/utils'
+import { cloneDeep } from 'lodash'
 // 根据后端返回的URI，生成router
 export const makeMenus = (Route, Data) => {
-    const tempRoute = deepCopy(Route)
+    // const tempRoute = deepCopy(Route)
+    const tempRoute = cloneDeep(Route)
     return tempRoute.filter(value => {
         if (value.path === '') {
             return true

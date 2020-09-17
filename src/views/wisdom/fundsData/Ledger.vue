@@ -524,20 +524,20 @@ export default {
             // }
             downloadCloudAlarmList(this.queryParams)
         }
-    },
-    activated () {
-        this.onQuery()
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('standingBook')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'newFlowdialog') {
-            clearCache('standingBook')
-        }
-        next()
     }
+    // activated () {
+    //     this.onQuery()
+    // },
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('standingBook')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name != 'newFlowdialog') {
+    //         clearCache('standingBook')
+    //     }
+    //     next()
+    // }
 }
 </script>
 

@@ -343,7 +343,15 @@ export default {
     },
     methods: {
         ...mapMutations(['REMOVE_EVENT_PRODUCTS', 'ADD_EVENT_PRODUCTS', 'EMPTY_EVENT_PRODUCTS']),
-        ...mapActions(['eventInfo', 'copy']),
+        ...mapActions(['eventInfo', 'copy', 'setNewTags']),
+        dealBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/b2b/marketing/eventMange')
+        },
+        onGoBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.go(-1)
+        },
         beforeAvatarUpload (file) {
             const isImage = ['image/jpeg', 'image/jpg', 'image/png']
             const isJPG = file.type
@@ -616,6 +624,7 @@ export default {
                     }
                     this.isPending = false
                     this.$message.success(`提交成功！`)
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/b2b/marketing/eventMange')
                 } catch (error) {
                     this.isPending = false
@@ -700,7 +709,7 @@ export default {
         this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
     }, */
     beforeRouteEnter (to, from, next) {
-        newCache('createEditEvent')
+        // newCache('createEditEvent')
         next(vm => {
             if (from.path == '/b2b/marketing/addProducts') {
                 vm.isFirst = false
@@ -719,7 +728,7 @@ export default {
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'addProducts') {
-            clearCache('createEditEvent')
+            // clearCache('createEditEvent')
             this.EMPTY_EVENT_PRODUCTS()
         }
         next()

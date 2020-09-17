@@ -218,6 +218,7 @@ export default {
         })
     },
     mounted () {
+        console.log('domounted')
         if (this.$route.query.accountType == 1) {
             this.planListItem.isStepOverInterest = 1 // 流贷默认是是
         } else {
