@@ -77,7 +77,7 @@
                             </el-form-item>
                             <!-- #################### -->
                             <el-form-item label="注册时间：" :label-width="formLabelWidth">
-                                {{businessDetail.estiblishTime|momentFormat}}
+                                {{businessDetail.estiblishTime|momentFormat('YYYY-MM-DD')}}
                             </el-form-item>
                             <el-form-item label="主营品牌：" :label-width="formLabelWidth">
                                 <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="20" class="lageinput"></el-input>
