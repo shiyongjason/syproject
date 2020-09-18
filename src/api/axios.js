@@ -16,6 +16,7 @@ axios.defaults.baseURL = interfaceUrl
 // axios.defaults.timeout = TIME_OUT
 axios.defaults.headers['AccessKeyId'] = '5ksbfewexbfc'
 const requestArr = []
+let messageShowing = null
 /** 声明一个数组用于存储每个请求的取消函数和标识(请求如果还在pending，同个请求就被取消) */
 const cancelRequst = (config) => {
     for (const key in requestArr) {
@@ -48,13 +49,7 @@ axios.interceptors.request.use(
         // 以下两个字段是用于埋点的
         config.headers['Request-Source'] = '4'
         config.headers['Backend-Request'] = 'true'
-        // 下面这个字段是一些特殊埋点时使用
-        // config.headers['Header-Buz-Params'] = JSON.stringify({})
 
-        // cancelRequst(config) // 在一个请求发送前执行一下取消操作
-        // config.cancelToken = new CancelToken(cancelMethod => {
-        //     requestArr.push({ url: `${config.url}&${config.method}`, cancel: cancelMethod })
-        // })
         const skipLoading = specialReqUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
         if (skipLoading.length === 0) store.commit('LOAD_STATE', true)
         return config
@@ -90,54 +85,57 @@ axios.interceptors.response.use(
     },
     (error) => {
         requestLoading--
+        let timer = null
         if (axios.isCancel(error)) {
             return Promise.reject(error)
         }
-        // TODO: 后面还是按照后台返回401解决 error.response.status === 401
-        if (error.config.url.indexOf('/uaa/api/auth/details') > -1 && error.config.timeout === 0) {
-            Message({
-                message: '权限无效，已为你重定向到登录页',
-                type: 'error'
-            })
-            setTimeout(function () {
-                location.href = '/login'
-            }, 1200)
-            return Promise.reject(error)
-        }
-        // if (error.response && error.response.status) {
-        //     switch (error.response.status) {
-        //         case 401:
-        //             Message({
-        //                 message: '权限无效，已为你重定向到登录页',
-        //                 type: 'error'
-        //             })
-        //             setTimeout(() => {
-        //                 location.href = '/login'
-        //             }, 1200)
-        //             return Promise.reject(error)
-        //         case 400:
-        //             console.log(error.response)
-        //             errorMessage = error.response.data.message
-        //             break
-        //         default:
-        //     }
-        // }
         store.commit('LOAD_STATE', false)
-        const data = error.response.data
-        let message = '服务器响应错误：' + error
-        // 处理特殊
-        const config = error.response.config
-        const specialHandle = responseErrorUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
-        if (specialHandle.length > 0) {
-            message = error.response.data.message
+        if (error.config.timeout === 0 && !error.response) {
+            requestArr.splice(0, requestArr.length)
+            if (!messageShowing) {
+                messageShowing = Message({
+                    message: '网络发生故障了~',
+                    type: 'error'
+                })
+                timer = setTimeout(function () {
+                    messageShowing = null
+                    clearTimeout(timer)
+                }, 1200)
+            }
+        } else {
+            const data = error.response.data
+            let message = '服务器响应错误：' + error
+            // 处理特殊
+            const config = error.response.config
+            const specialHandle = responseErrorUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
+            if (specialHandle.length > 0) {
+                message = error.response.data.message
+            }
+            if (error.response.status === 401) {
+                requestArr.splice(0, requestArr.length)
+                if (!messageShowing) {
+                    sessionStorage.clear()
+                    messageShowing = Message({
+                        message: '权限无效，已为你重定向到登录页',
+                        type: 'error'
+                    })
+                    timer = setTimeout(function () {
+                        messageShowing = null
+                        window.location.href = '/login'
+                        clearTimeout(timer)
+                    }, 1200)
+                    return
+                }
+            } else {
+                if (error.response.status === 400 && data.message !== '') {
+                    message = data.message ? data.message : '操作失败'
+                }
+                Message({
+                    message: message,
+                    type: 'error'
+                })
+            }
         }
-        if (error.response.status === 400 && data.message !== '') {
-            message = data.message ? data.message : '操作失败'
-        }
-        Message({
-            message: message,
-            type: 'error'
-        })
         return Promise.reject(error)
     }
 )

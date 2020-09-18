@@ -75,23 +75,115 @@
                             <el-form-item label="客户分类：" :label-width="formLabelWidth">
                                 {{businessDetail.customerType==1?'黑名单':businessDetail.customerType==2?'白名单':businessDetail.customerType==3?'待审核':'-'}}
                             </el-form-item>
+                            <!-- #################### -->
+                            <el-form-item label="注册时间：" :label-width="formLabelWidth">
+                                {{businessDetail.estiblishTime|momentFormat('YYYY-MM-DD')}}
+                            </el-form-item>
+                            <el-form-item label="主营品牌：" :label-width="formLabelWidth">
+                                <el-input v-model.trim="businessDetail.deviceBrand" placeholder='请输入' maxlength="20" class="lageinput"></el-input>
+                            </el-form-item>
+                            <el-form-item label="主营品类：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.deviceCategory" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in deviceList" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="业务类型：" :label-width="formLabelWidth" prop="note">
+                                <div class="sinput">
+                                    <!-- `checked` 为 true 或 false -->
+                                    <el-checkbox v-model="businessType.isEngineering" @change="()=>onChangeCheckbox(businessType.isEngineering,'engineering')">
+                                        <font class="labelname">工程:</font>
+                                    </el-checkbox>
+                                    <el-input v-model.trim="businessType.engineering" :disabled='!businessType.isEngineering' v-isNum:0 v-inputMAX='100' class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                    <font class="errortxt" v-if="businessType.isEngineering&&businessType.engineering==''">请填写工程比例</font>
+                                </div>
+                                <div class="sinput">
+                                    <el-checkbox v-model="businessType.isWholesale" @change="()=>onChangeCheckbox(businessType.isWholesale,'wholesale')">
+                                        <font class="labelname">批发:</font>
+                                    </el-checkbox>
+                                    <el-input v-model.trim="businessType.wholesale" :disabled='!businessType.isWholesale' v-isNum:0 v-inputMAX='100' class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                    <font class="errortxt" v-if="businessType.isWholesale&&businessType.wholesale==''">请填写批发比例</font>
+                                </div>
+                                <div class="sinput">
+                                    <el-checkbox v-model="businessType.isRetail" @change="()=>onChangeCheckbox(businessType.isRetail,'retail')">
+                                        <font class="labelname">零售:</font>
+                                    </el-checkbox>
+                                    <el-input v-model.trim="businessType.retail" :disabled='!businessType.isRetail' v-isNum:0 v-inputMAX='100' class="smallinput">
+                                        <template slot="append">%</template>
+                                    </el-input>
+                                    <font class="errortxt" v-if="businessType.isRetail&&businessType.retail==''">请填写零售比例</font>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="代理级别：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.agentLevel" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in agentLevel" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="近3年年度工程规模：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.threeYearProjectScale" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in threeYearProjectScale" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="主营项目类别：" :label-width="formLabelWidth">
+                                <el-select v-model="businessDetail.type" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in type_list" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="主辅材品牌：" :label-width="formLabelWidth">
+                                <el-input v-model.trim="businessDetail.materialsBrand" placeholder='备注主辅材品牌' maxlength="20" class="lageinput"></el-input>
+                            </el-form-item>
+                            <el-form-item label="主辅材采购渠道：" :label-width="formLabelWidth">
+                                <el-select multiple v-model="materialsChannelArr" placeholder="请选择" :clearable=true>
+                                    <el-option :label="item.value" :value="item.key" v-for="item in materialsChannel" :key="item.key"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="服务能力：" :label-width="formLabelWidth">
+                                <el-radio-group v-model="businessDetail.serviceCapability" @change="serviceCapabilityChange()">
+                                    <el-radio :label=1>有</el-radio>
+                                    <el-radio :label=2>无</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="哪些专业管理人员：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.serviceCapability===1">
+                                <el-checkbox-group v-model="serviceCapabilityDetail">
+                                    <el-checkbox label="1">项目经理</el-checkbox>
+                                    <el-checkbox label="2">预算</el-checkbox>
+                                    <el-checkbox label="3">设计</el-checkbox>
+                                    <el-checkbox label="4">售维专员</el-checkbox>
+                                    <el-checkbox label="5">技术</el-checkbox>
+                                </el-checkbox-group>
+                            </el-form-item>
+                            <el-form-item label="建筑资质-资质资格：" :label-width="formLabelWidth">
+                                <div v-if="!businessDetail.qualification||businessDetail.qualification.length==0">-</div>
+                                <template v-else>
+                                    <div v-for='(item,index) in businessDetail.qualification' :key="index">
+                                        <p class="qualification" @click="()=>{qualificationDialogVisible=true;qualificationDialogData=item}">
+                                            {{item.qualificationName}}
+                                        </p>
+                                    </div>
+                                </template>
+
+                            </el-form-item>
                             <el-form-item label="创建时间：" :label-width="formLabelWidth">
                                 {{businessDetail.createTime | formatterTime}}
                             </el-form-item>
                             <el-form-item label="创建人：" :label-width="formLabelWidth">
                                 {{businessDetail.createBy}} {{businessDetail.createPhone}}
                             </el-form-item>
-                            <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
+                            <!-- <el-form-item label="关联/认证时间：" :label-width="formLabelWidth">
                                 {{businessDetail.authenticationTime | formatterTime}}
                             </el-form-item>
                             <el-form-item label="关联/认证人：" :label-width="formLabelWidth">
                                 {{businessDetail.authenticationBy||'-'}} {{businessDetail.authenticationPhone}}
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item label="最近维护时间：" :label-width="formLabelWidth">
                                 {{businessDetail.updateTime| formatterTime}}
                             </el-form-item>
                             <el-form-item label="最近维护人：" :label-width="formLabelWidth">
                                 {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
+                                <span class="delcompany" @click="onRemove">删除该企业</span>
                             </el-form-item>
                         </el-form>
                         <div class="drawer-footer">
@@ -120,25 +212,16 @@
                             </el-form-item>
                             <el-form-item label="营业执照：">
                                 <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
-                                    <el-image
-                                        style="width: 158px; height: 100px"
-                                        :src="authenticationDetail.businessLicensePhoto"
-                                        :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
+                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.businessLicensePhoto" :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
                                     </el-image>
                                 </div>
                                 <span v-else>-</span>
                             </el-form-item>
                             <el-form-item label="法人身份证：">
                                 <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
-                                    <el-image
-                                        style="width: 158px; height: 100px;margin-right: 20px"
-                                        :src="authenticationDetail.certPhotoA"
-                                        :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
+                                    <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
                                     </el-image>
-                                    <el-image
-                                        style="width: 158px; height: 100px"
-                                        :src="authenticationDetail.certPhotoB"
-                                        :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
+                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
                                     </el-image>
                                 </div>
                                 <span v-else>-</span>
@@ -174,7 +257,7 @@
                         </el-form>
                         <div class="drawer-footer">
                             <div class="drawer-button">
-                                <h-button  @click="cancelForm">好 的</h-button>
+                                <h-button @click="cancelForm">好 的</h-button>
                             </div>
                         </div>
                     </div>
@@ -205,14 +288,44 @@
                 <h-button type="primary" @click="onPutwhite" :loading="statusLoading">{{ statusLoading ? '提交中 ...' : '确定' }}</h-button>
             </span>
         </el-dialog>
+        <el-dialog title="建筑资质-资质资格" :visible.sync="qualificationDialogVisible" width="500px" :before-close="()=>{qualificationDialogVisible = false;qualificationDialogData=''}" :close-on-click-modal=false>
+            <div class="qualificationlist">
+                <p>
+                    <b>资质名称：</b>
+                    <font>{{qualificationDialogData.qualificationName}}</font>
+                </p>
+                <p>
+                    <b>发证机关：</b>
+                    <font>{{qualificationDialogData.organ}}</font>
+                </p>
+                <p>
+                    <b>证书有效期：</b>
+                    <font>{{qualificationDialogData.effectiveTime}}</font>
+                </p>
+                <p>
+                    <b>发证日期：</b>
+                    <font>{{qualificationDialogData.certDate}}</font>
+                </p>
+                <p>
+                    <b>资质类别：</b>
+                    <font>{{qualificationDialogData.type}}</font>
+                </p>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="qualificationDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="qualificationDialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany } from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
+import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
+
 export default {
     name: 'businessdrawer',
     props: {
@@ -223,6 +336,23 @@ export default {
     },
     data () {
         return {
+            qualificationDialogData: '',
+            qualificationDialogVisible: false,
+            serviceCapabilityDetail: [],
+            businessType: {
+                retail: '',
+                isRetail: false,
+                wholesale: '',
+                isWholesale: false,
+                engineering: '',
+                isEngineering: false
+            },
+            materialsChannelArr: [],
+            materialsChannel: MATERIALSCHANNEL,
+            type_list: TYPE_LIST,
+            threeYearProjectScale: THREEYEARPROJECTSCALE,
+            deviceList: DEVICE_LIST,
+            agentLevel: AGENTLEVEL,
             authen_operate: Auths.CRM_WHITE_OPERATE,
             authen_baocun: Auths.CRM_WHITE_BAOCUN,
             removeValue: true,
@@ -237,9 +367,9 @@ export default {
                 pkDeptDoc: [
                     { required: true, message: '请选择分部', trigger: 'change' }
                 ],
-                companyType: [
-                    { required: true, message: '请选择企业类型', trigger: 'change' }
-                ],
+                // companyType: [
+                //     { required: true, message: '请选择企业类型', trigger: 'change' }
+                // ],
                 countryId: [
                     { required: true, message: '请选择区', trigger: 'change' }
                 ],
@@ -248,16 +378,16 @@ export default {
                 ],
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
-                ],
-                relationCompanyCode: [
-                    { required: true, message: '请选择关联公司' }
-                ],
-                developOnlineCompanyCode: [
-                    { required: true, message: '请选择平台公司' }
-                ],
-                isRelated: [
-                    { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
                 ]
+                // relationCompanyCode: [
+                //     { required: true, message: '请选择关联公司' }
+                // ],
+                // developOnlineCompanyCode: [
+                //     { required: true, message: '请选择平台公司' }
+                // ],
+                // isRelated: [
+                //     { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
+                // ]
             },
             targetObj: {
                 selectName: '',
@@ -327,6 +457,36 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onChangeCheckbox (b, key) {
+            if (!b) {
+                this.businessType[key] = ''
+            }
+        },
+        serviceCapabilityChange () {
+            if (this.businessDetail.serviceCapability == 2) {
+                this.serviceCapabilityDetail = []
+            }
+        },
+        onRemove () {
+            let num = this.businessDetail.projects ? this.businessDetail.projects.length : 0
+            this.$confirm(num > 0 ? '删除后企业下的项目也将被删除，是否确认删除该企业？' : '是否确认删除该企业，删除后不可恢复', '是否确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await delCompany(this.businessDetail.companyId)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+                this.$emit('backEvent')
+            }).catch(() => {
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // })
+            })
+        },
         onClearV () {
             this.$refs['ruleForm'].clearValidate()
         },
@@ -394,17 +554,50 @@ export default {
             this.businessDetail = this.crmauthDetail
             this.businessDetail.authenticationStatus = data.authenticationStatus
             this.copyDetail = deepCopy(this.businessDetail)
-            this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
-            this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
+            // this.targetObj.selectCode = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyCode : this.businessDetail.isRelated ? this.businessDetail.relationCompanyCode : ''
+            // this.targetObj.selectName = this.businessDetail.companyType == 1 ? this.businessDetail.developOnlineCompanyName : this.businessDetail.isRelated ? this.businessDetail.relationCompanyName : ''
+            this.targetObj.selectCode = this.businessDetail.developOnlineCompanyCode || ''
+            this.targetObj.selectName = this.businessDetail.developOnlineCompanyName || ''
             this.statusForm.customerType = ''
             this.statusForm.note = ''
             this.copyStatusForm = deepCopy(this.statusForm)
+            this.materialsChannelArr = this.businessDetail.materialsChannel ? this.businessDetail.materialsChannel.toString().split(',') : []
+            if (this.businessDetail.businessType) {
+                this.businessType = JSON.parse(this.businessDetail.businessType)
+            }
+            if (this.businessDetail.serviceCapability == 1 && this.businessDetail.serviceCapabilityDetail) {
+                this.serviceCapabilityDetail = this.businessDetail.serviceCapabilityDetail.toString().split(',')
+            }
         },
         async getAuthenticationDetail (val) {
             const { data } = await getAuthenticationMessage(val)
             this.authenticationDetail = { ...data }
         },
         onSaveDetail () {
+            if (this.businessType.isEngineering && this.businessType.engineering == '') {
+                this.$message({
+                    message: '请填写工程比例',
+                    type: 'error'
+                })
+                return
+            }
+            if (this.businessType.isWholesale && this.businessType.wholesale == '') {
+                this.$message({
+                    message: '请填写批发比例',
+                    type: 'error'
+                })
+                return
+            }
+            if (this.businessType.isRetail && this.businessType.retail == '') {
+                this.$message({
+                    message: '请填写零售比例',
+                    type: 'error'
+                })
+                return
+            }
+            this.businessDetail.materialsChannel = this.materialsChannelArr.toString()
+            this.businessDetail.serviceCapabilityDetail = this.serviceCapabilityDetail.toString()
+            this.businessDetail.businessType = JSON.stringify(this.businessType)
             this.businessDetail.provinceName = this.businessDetail.provinceId && this.proviceList.filter(item => item.provinceId == this.businessDetail.provinceId)[0].name
             this.businessDetail.cityName = this.businessDetail.cityId && this.cityList.filter(item => item.cityId == this.businessDetail.cityId)[0].name
             this.businessDetail.countryName = this.businessDetail.countryId && this.areaList.filter(item => item.countryId == this.businessDetail.countryId)[0].name
@@ -599,8 +792,11 @@ export default {
     width: 215px;
 }
 /deep/ .selectInput {
+    width: 100%;
+}
+/deep/ .selectInput {
     .el-input {
-        width: 160px;
+        width: 90%;
     }
 }
 .authTag {
@@ -623,15 +819,74 @@ export default {
         word-break: keep-all;
     }
 }
-    .people-id {
-        display: flex;
-        p{
-            margin-right: 10px;
-        }
-        img {
-            width: 158px;
-            height: 100px;
-            margin-right: 20px;
-        }
+.people-id {
+    display: flex;
+    p {
+        margin-right: 10px;
     }
+    img {
+        width: 158px;
+        height: 100px;
+        margin-right: 20px;
+    }
+}
+/deep/ .lageinput .el-input__inner {
+    width: 300px;
+}
+.sinput {
+    margin-right: 2%;
+    margin-bottom: 2%;
+}
+/deep/ .sinput .el-input {
+    width: 100px !important;
+}
+/deep/.sinput .smallinput .el-input-group__append,
+.el-input-group__prepend {
+    padding: 0 15px !important;
+}
+/deep/.el-select__tags {
+    // margin-left: 10px !important;
+}
+/deep/.el-form .el-input:not(:first-child) {
+    margin-left: 0px;
+}
+.input-name {
+    margin-left: 10px;
+}
+.qualification {
+    line-height: 21px;
+    margin-top: 10px;
+    color: #ff7a45;
+    cursor: pointer;
+}
+.qualification:hover {
+    color: #f55f23;
+}
+.qualification:first {
+    margin-top: 0px;
+}
+.qualificationlist p {
+    display: flex;
+    margin: 13px 0;
+}
+.qualificationlist p b {
+    flex: 0 0 90px;
+    text-align: right;
+}
+.delcompany {
+    font-size: 14px;
+    padding: 8px 18px;
+    border: 1px solid #d4d3d3;
+    color: #b6b5b5;
+    cursor: pointer;
+    float: right;
+    line-height: 20px;
+}
+.errortxt {
+    color: #f56c6c;
+    margin-left: 10px;
+}
+.labelname {
+    margin-right: 10px;
+}
 </style>

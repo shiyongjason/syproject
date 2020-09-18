@@ -2,6 +2,7 @@ import * as types from '../../../store/mutation-types'
 import * as cloud from './cloudTypes'
 // import { getMembersituation, getMemberDetail, getFamilyDetail, getActdetail, getCloudActlist } from '@/views/comfortcloud/api'
 import * as Api from '@/views/comfortcloud/api'
+
 const state = {
     iotmemberData: {},
     iotmemberDetail: {},
@@ -50,7 +51,14 @@ const state = {
     customerServiceList: [],
     customerServicePagination: {},
     cloudHomeModeTypeList: [],
-    serviceManageHistoryList: []
+    serviceManageHistoryList: [],
+    cloudMerchantList: [],
+    cloudMerchantListPagination: {},
+    cloudMerchantAdList: [],
+    cloudMerchantAdListPagination: {},
+    cloudMerchantAdDetail: {},
+    cloudMerchantOrderList: [],
+    cloudMerchantOrderListPagination: {}
 }
 
 const getters = {
@@ -111,7 +119,14 @@ const getters = {
         return { selectCode: v.id, value }
     }),
     cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
-    serviceManageHistoryList: state => state.serviceManageHistoryList
+    serviceManageHistoryList: state => state.serviceManageHistoryList,
+    cloudMerchantList: state => state.cloudMerchantList,
+    cloudMerchantListPagination: state => state.cloudMerchantListPagination,
+    cloudMerchantAdList: state => state.cloudMerchantAdList,
+    cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
+    cloudMerchantAdDetail: state => state.cloudMerchantAdDetail,
+    cloudMerchantOrderList: state => state.cloudMerchantOrderList,
+    cloudMerchantOrderListPagination: state => state.cloudMerchantOrderListPagination
 }
 
 const mutations = {
@@ -259,6 +274,27 @@ const mutations = {
     },
     [cloud.GET_SERVICE_MANAGE_HISTORY_LIST] (state, payload) {
         state.serviceManageHistoryList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_LIST] (state, payload) {
+        state.cloudMerchantList = payload
+    },
+    [cloud.CLOUD_MERCHANT_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AD_LIST]  (state, payload) {
+        state.cloudMerchantAdList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION]  (state, payload) {
+        state.cloudMerchantAdListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AD_DETAIL] (state, payload) {
+        state.cloudMerchantAdDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_ORDER_LIST]  (state, payload) {
+        state.cloudMerchantOrderList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_ORDER_LIST_PAGINATION]  (state, payload) {
+        state.cloudMerchantOrderListPagination = payload
     }
 }
 
@@ -469,6 +505,37 @@ const actions = {
     async getServiceManageHistoryList ({ commit }, params) {
         const { data } = await Api.getServiceManageHistoryList(params)
         commit(cloud.GET_SERVICE_MANAGE_HISTORY_LIST, data.data)
+    },
+    async findCloudMerchantList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_LIST, data.data.records)
+        commit(cloud.CLOUD_MERCHANT_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudMerchantAdList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAdList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async getCloudMerchantAdDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAdDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data.data)
+    },
+    async findCloudMerchantOrderList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantOrderList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_ORDER_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_ORDER_LIST_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
     }
 }
 export default {

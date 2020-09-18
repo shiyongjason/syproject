@@ -82,7 +82,6 @@
 import { EVENT_LIST } from '../store/const'
 import { mapActions, mapState } from 'vuex'
 import { updateSpikeStatus } from './api/index'
-import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'eventmanage',
     data () {
