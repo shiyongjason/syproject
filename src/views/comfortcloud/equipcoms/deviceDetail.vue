@@ -16,6 +16,9 @@
                         :pagination="pagination"
                         isShowIndex @onCurrentChange='onCurrentChange'
                         @onSizeChange='onSizeChange'>
+                <template slot="homeName" slot-scope="scope">
+                    <p @click="onShowHome(scope.data.row)" class="colred overflowhidden">{{ scope.data.row.homeName | isNotBlank }}</p>
+                </template>
                 <template slot="status" slot-scope="scope">
                     {{ scope.data.row.status == 1 ? '在线' : '离线' }}
                 </template>
@@ -25,7 +28,7 @@
 </template>
 
 <script>
-import { getCloudDeviceDetail, getCloudSubDeviceDetail } from '../api'
+import { getCloudDeviceDetail, getCloudSubDeviceDetail, findHomeGeneralDetails } from '../api'
 
 export default {
     name: 'deviceDetail',
@@ -85,6 +88,16 @@ export default {
         onSizeChange (val) {
             this.queryParams.pageSize = val
             this.requestDeviceInfo(this.queryParams)
+        },
+        async onShowHome (val) {
+            if (val.homeId) {
+                let { data } = await findHomeGeneralDetails(val.homeId)
+                if (data.data.homeId == null) {
+                    this.$message.warning('该家庭已被删除')
+                } else {
+                    this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId: val.homeId } })
+                }
+            }
         }
 
     }
@@ -111,4 +124,14 @@ export default {
     }
     }
     }
+
+    .colred {
+        color: #ff7a45;
+    }
+
+    .overflowhidden {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
 </style>
