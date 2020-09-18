@@ -84,7 +84,6 @@
 import { templateDisable, templateEnable } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
-import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'spumange',
     data () {

@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+    boss-web:
+        #
+        container_name: boss-web-test #自定义容器名
+        image: nginx #如果本地不存在compose会拉取镜像
+        volumes:
+            - ./dist/:/usr/share/nginx/html/
+            - $PWD/default.conf:/etc/nginx/conf.d/default.conf
+        #
+        # or
+        # build:
+        #     context: .
+        #     dockerfile: Dockerfile #指定使用的Dockerfile
+        #
+        ports:
+            - '9008:80' #自定义端口
+        restart: always
+        networks:
+            - boss
+    mysql:
+        container_name: hosjoyMysql-lalala-text #自定义容器名
+        image: mysql #指定使用的镜像,如果本地不存在compose会拉取镜像
+        volumes:
+            - ~/docker-mysql/data:/var/lib/mysql #持久化
+        ports:
+            - '3307:3306'
+        command: ['--character-set-server=utf8', '--collation-server=utf8_general_ci']
+        environment:
+            MYSQL_DATABASE: hello
+            MYSQL_ROOT_PASSWORD: 123456
+            MYSQL_ROOT_HOST: '%'
+        restart: always
+        networks:
+            - boss
+networks:
+    boss: #创建名为 boss的network
+        driver: bridge
+        # external: true

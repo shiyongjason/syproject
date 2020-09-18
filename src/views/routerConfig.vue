@@ -91,7 +91,7 @@
             <el-form :model="form" :rules="formRules" ref="form">
                 <el-form-item v-show="title.indexOf('编辑') === -1" label="开发中..." label-width="80px">
                     <el-select v-model="value" placeholder="请选择菜单" @change="onChangeHandle">
-                        <el-option v-for="(item, index) in options" :key="index" :label="item.meta.title" :value="JSON.stringify(item)"></el-option>
+                        <el-option v-for="(item, index) in options" :key="index" :label="item.meta.title" :value="JSON.stringify(item)" :disabled="item.disabled"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="菜单名称" label-width="80px" prop="authName">
@@ -343,8 +343,10 @@ export default {
             console.log(parent)
             if (!parent) {
                 this.options = routerMapping
+                this.findDiffent(this.options, this.tableList)
             } else {
                 this.options = this.getChidlren(parent.uid) && this.getChidlren(parent.uid).children ? this.getChidlren(parent.uid).children : []
+                this.findDiffent(this.options, parent.childAuthList)
             }
             if (lev == 1) {
                 this.title = '添加一级菜单'
@@ -360,16 +362,16 @@ export default {
             }
             this.dialogSeedVisible = true
         },
-        // 循环判断数组a里的元素在b里面有没有，有的话就放入新建立的数组中
-        FilterData (a, b) {
-            var result = []
-            var c = b.toString()
-            for (var i = 0; i < a.length; i++) {
-                if (c.indexOf(a[i].toString()) == -1) {
-                    result.push(a[i])
+        // 根据uid循环找到本地路由与表中路由不同，限制页面选择
+        findDiffent (localRouter, originRouter) {
+            localRouter.forEach(li => {
+                const result = originRouter.findIndex(ri => li.uid === ri.uid)
+                if (result > -1) {
+                    li.disabled = true
+                } else {
+                    li.disabled = false
                 }
-            }
-            return result
+            })
         },
         getChidlren (uid) {
             var hasFound = false // 表示是否有找到uid

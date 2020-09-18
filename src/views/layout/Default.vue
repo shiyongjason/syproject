@@ -1,17 +1,19 @@
 <template>
-    <el-container class="body-container" v-watermark="$store.state.userInfo.employeeName">
+    <!-- v-watermark="$store.state.userInfo.employeeName" -->
+    <el-container class="body-container">
+        <div id="watermark-dom"></div>
         <el-header class="header">
             <NavMenuHead @editPassword="editPasswordShow" />
         </el-header>
-
         <el-container class="container clearfix">
             <el-aside class="aside" :class="isCollapse?'close':'open'">
                 <NavMenuAside @back-event="menuBack" />
             </el-aside>
             <el-main class="content" v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
-                <div :class="isCollapse?'minLeft':'maxLeft'" class="headdiv">
+                <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container">
                     <H-tags></H-tags>
                 </div>
+                <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container__height"></div>
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                     <router-view></router-view>
                 </keep-alive>
@@ -55,7 +57,6 @@
 import { changePassword } from './api/index'
 import NavMenuHead from './NavMenuHead'
 import NavMenuAside from './NavMenuAside'
-
 import HTags from './Tags'
 import { mapState } from 'vuex'
 
@@ -116,6 +117,64 @@ export default {
         }
     },
     methods: {
+        init () {
+            this.createWaterMarker()
+            window.onresize = () => {
+                this.createWaterMarker()
+            }
+        },
+        createWaterMarker () {
+            const canvas = document.createElement('canvas')
+            canvas.width = 150
+            canvas.height = 70
+
+            const context = canvas.getContext('2d')
+            context.font = '20px Vedana'
+            context.fillStyle = 'rgba(200, 200, 200, .3)'
+            context.textAlign = 'left'
+            context.textBaseline = 'Middle'
+            context.rotate(Math.PI / 180 * -15)
+            context.fillText(this.userInfo.employeeName, 0, canvas.height)
+
+            const el = document.getElementById('watermark-dom')
+            el.style.pointerEvents = 'none'
+            el.style.position = 'fixed'
+            el.style.top = '50px'
+            el.style.left = '0px'
+            el.style.zIndex = '98'
+            el.style.width = document.documentElement.clientWidth - 50 + 'px'
+            el.style.height = document.documentElement.clientHeight + 'px'
+            el.style.background = 'url(' + canvas.toDataURL('image/png') + ') left top repeat'
+            // function addWaterMarker (str, parentNode) {
+            //     let can = document.createElement('canvas')
+            //     can.width = 150
+            //     can.height = 70
+
+            //     let cans = can.getContext('2d')
+            //     cans.rotate(-20 * Math.PI / 180)
+            //     cans.font = '20px Vedana'
+            //     cans.fillStyle = 'rgba(200, 200, 200, .3)'
+            //     cans.textAlign = 'left'
+            //     cans.textBaseline = 'Middle'
+            //     cans.fillText(str, 0, can.height)
+
+            //     let div = document.createElement('div')
+            //     div.id = 'watermark-dom'
+            //     div.style.pointerEvents = 'none'
+            //     div.style.top = '100px'
+            //     div.style.left = '20px'
+            //     div.style.position = 'fixed'
+            //     div.style.zIndex = '1990'
+            //     // div.style.transform = 'rotate(-15deg)'
+            //     div.style.width = document.documentElement.clientWidth - 50 + 'px'
+            //     div.style.height = document.documentElement.clientHeight - 100 + 'px'
+            //     div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
+            //     parentNode.appendChild(div)
+            // }
+            // if (!document.getElementById('watermark-dom')) {
+            //     // addWaterMarker(binding.value, el)
+            // }
+        },
         closePassword () {
             this.editPasswordVisible = false
             this.$refs.editPassword.resetFields()
@@ -155,18 +214,16 @@ export default {
         }
     },
     mounted () {
-
+        this.init()
     }
-
 }
 </script>
 
 <style lang="scss" scoped>
-.headdiv {
-    position: fixed;
-    left: 0;
-    right: 0;
-    z-index: 99;
+.tabs-container {
+    &__height {
+        height: 50px;
+    }
 }
 
 .header {
