@@ -146,7 +146,7 @@
                                     <el-radio :label=2>无</el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.serviceCapability===1">
+                            <el-form-item label="哪些专业管理人员：" :label-width="formLabelWidth" class="autoInput" v-if="businessDetail.serviceCapability===1">
                                 <el-checkbox-group v-model="serviceCapabilityDetail">
                                     <el-checkbox label="1">项目经理</el-checkbox>
                                     <el-checkbox label="2">预算</el-checkbox>
