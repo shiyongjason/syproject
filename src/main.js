@@ -5,7 +5,6 @@ import store from '@/store/index'
 import '@/api/axios.js'
 import ElementUI from 'element-ui'
 // import 'element-ui/lib/theme-chalk/index.css'
-
 import HosjoyUI from 'hosjoy-ui'
 import 'hosjoy-ui/lib/hosjoy-ui.css'
 import '../src/theme/index.css'

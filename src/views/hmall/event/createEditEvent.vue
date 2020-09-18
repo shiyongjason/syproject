@@ -128,7 +128,6 @@ import { interfaceUrl } from '@/api/config'
 import Sortable from 'sortablejs'
 import { mapState, mapMutations, mapActions } from 'vuex'
 import { saveEvent, editEvent, clickFarming } from './api/index'
-import { clearCache, newCache } from '@/utils/index'
 import moment from 'moment'
 export default {
     name: 'createEditEvent',

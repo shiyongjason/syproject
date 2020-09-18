@@ -381,3 +381,37 @@ export function getCloudDeviceDetail (params) {
 export function getCloudSubDeviceDetail (params) {
     return axios.get(iotUrl + '/api/device/statistics/subDevice/specific/details', { params })
 }
+// 获取招商代理商列表
+export function getCloudMerchantList (params) {
+    return axios.get(iotUrl + '/api/boss/agent-sign/page', { params })
+}
+
+// 获取招商广告列表
+export function getCloudMerchantAdList (params) {
+    return axios.get(iotUrl + '/api/merchants-advertising/page', { params })
+}
+
+// 删除招商广告
+export function deleteCloudMerchantAd (params) {
+    return axios.put(iotUrl + '/api/merchants-advertising/' + params)
+}
+
+// 获取招商广告详情
+export function getCloudMerchantAdDetail (params) {
+    return axios.get(iotUrl + '/api/merchants-advertising/' + params)
+}
+
+// 招商广告保存
+export function saveCloudMerchantAd (params) {
+    return axios.post(iotUrl + '/api//merchants-advertising', params)
+}
+
+// 招商订单列表
+export function getCloudMerchantOrderList (params) {
+    return axios.get(iotUrl + '/api/boss/agent-sign/order-page', { params })
+}
+
+// 获取招商代理品类列表
+export function getCloudMerchantCategory () {
+    return axios.get(iotUrl + '/api/agent-category/list')
+}

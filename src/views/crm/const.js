@@ -25,7 +25,7 @@ export const TYPE_LIST =
     [
         { key: 1, value: '地产项目' },
         { key: 2, value: '政府公建项目' },
-        { key: 3, value: '市政项目' },
+        { key: 3, value: '市政工程' },
         { key: 4, value: '办公楼' },
         { key: 5, value: '厂房' },
         { key: 6, value: '其他' }
@@ -39,8 +39,6 @@ export const DEVICE_LIST = [
     { key: 5, value: '智能化' },
     { key: 6, value: '辅材' },
     { key: 7, value: '电梯' },
-    { key: 9, value: '电器' },
-    { key: 10, value: '热水器' },
     { key: 8, value: '其他' }
 
 ]
@@ -124,4 +122,25 @@ export const REGISTEROR = [
     { key: '', value: '全部' },
     { key: true, value: '是' },
     { key: false, value: '否' }
+]
+// 代理级别
+export const AGENTLEVEL = [
+    { key: 1, value: '一级代理商（囤货商）' },
+    { key: 2, value: '经销商' },
+    { key: 3, value: '其他' }
+]
+// 近3年的年度工程规模
+export const THREEYEARPROJECTSCALE = [
+    { key: 1, value: '1000万以内' },
+    { key: 2, value: '1001万～3000万' },
+    { key: 3, value: '3001万～5000万' },
+    { key: 4, value: '5001万～1亿' },
+    { key: 5, value: '1亿～2亿' },
+    { key: 6, value: '2亿以上' }
+]
+// 主辅材渠道
+export const MATERIALSCHANNEL = [
+    { key: '1', value: '厂商直采' },
+    { key: '2', value: '一级囤货商采购' },
+    { key: '3', value: '经销商采购' }
 ]
