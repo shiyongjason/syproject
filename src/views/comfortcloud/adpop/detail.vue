@@ -4,9 +4,9 @@
             <span>广告弹窗编辑</span>
         </div>
         <div class="page-body-cont">
-            <el-form ref="smartPlayForm" :model="smartPlayForm" :rules="rules" label-width="110px">
+            <el-form ref="smartPlayForm" :model="smartPlayForm" :rules="rules" label-width="140px">
                 <el-form-item label="广告标题：" prop="title">
-                    <el-input v-model.trim="smartPlayForm.title" show-word-limit placeholder="输入标题" maxlength='20' class="newTitle"></el-input>
+                    <el-input v-model.trim="smartPlayForm.title" show-word-limit placeholder="输入标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="弹窗图片：" prop="picture" ref="picture">
                     <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="smartPlayForm.picture" ref="uploadImg" @back-event="readUrl" :imgW="300" :imgH="100" />
@@ -14,7 +14,7 @@
                         建议尺寸： 600x 800，1M以内，支持jepg,png和jpg格式。
                     </div>
                 </el-form-item>
-                <el-form-item label="点击跳转页面：">
+                <el-form-item label="点击跳转页面：" prop="page" ref="page">
                     <el-radio-group v-model="smartPlayForm.redirectType" @change="onRadioChange">
                         <el-radio :label="1">活动页</el-radio>
                         <el-radio :label="2">指定URL</el-radio>
@@ -24,8 +24,8 @@
                             <el-option v-for="item in allActivity" :key="item.selectCode" :label="item.value" :value="item.selectCode">
                             </el-option>
                         </el-select>
-                        <el-input placeholder="请输入以http或https开头的URL" v-model="smartPlayForm.redirectUrl" v-else clearable>
-                            
+                        <el-input class="newTitle" placeholder="请输入以http或https开头的URL" v-model="smartPlayForm.redirectUrl" v-else clearable>
+
                         </el-input>
                     </div>
                 </el-form-item>
@@ -44,6 +44,27 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'adPopDetail',
     data () {
+        var checkTitle = (rule, value, callback) => {
+            if (this.smartPlayForm.title === '') {
+                return callback(new Error('请输入标题'))
+            }
+            callback()
+        }
+        var checkPic = (rule, value, callback) => {
+            if (this.smartPlayForm.picture === '') {
+                return callback(new Error('请选择弹窗图片'))
+            }
+            callback()
+        }
+        var validatePage = (rule, value, callback) => {
+            if (this.smartPlayForm.redirectType == 1 && this.smartPlayForm.activityId == '') {
+                return callback(new Error('请选择一个活动'))
+            }
+            if (this.smartPlayForm.redirectType == 2 && this.smartPlayForm.redirectUrl == '') {
+                return callback(new Error('请输入URL'))
+            }
+            callback()
+        }
         return {
             smartPlayForm: {
                 activityId: '',
@@ -55,10 +76,13 @@ export default {
             },
             rules: {
                 title: [
-                    { required: true, message: '请输入标题', trigger: 'blur' }
+                    { required: true, validator: checkTitle }
                 ],
                 picture: [
-                    { required: true, message: '请选择弹窗图片' }
+                    { required: true, validator: checkPic }
+                ],
+                page: [
+                    { required: true, validator: validatePage }
                 ]
             },
             loading: false
@@ -135,7 +159,7 @@ export default {
                 }
             })
         },
-        onRadioChange(radio) {
+        onRadioChange (radio) {
             this.smartPlayForm.redirectType = radio
         }
     }
