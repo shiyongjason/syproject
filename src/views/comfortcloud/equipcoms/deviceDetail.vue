@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { getCloudDeviceDetail, getCloudSubDeviceDetail, findHomeGeneralDetails } from '../api'
+import { getCloudDeviceDetail, getCloudSubDeviceDetail, getHomeUser } from '../api'
 
 export default {
     name: 'deviceDetail',
@@ -91,8 +91,8 @@ export default {
         },
         async onShowHome (val) {
             if (val.homeId) {
-                let { data } = await findHomeGeneralDetails(val.homeId)
-                if (data.data.homeId == null) {
+                let { data } = await getHomeUser({ homeId: val.homeId })
+                if (data.data == null) {
                     this.$message.warning('该家庭已被删除')
                 } else {
                     this.$router.push({ path: '/comfortCloud/homedetail', query: { homeId: val.homeId } })

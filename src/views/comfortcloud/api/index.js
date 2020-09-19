@@ -405,6 +405,12 @@ export function getCloudDeviceDetail (params) {
 export function getCloudSubDeviceDetail (params) {
     return axios.get(iotUrl + '/api/device/statistics/subDevice/specific/details', { params })
 }
+
+// 获取房屋信息(判断房屋是否被删除)
+export function getHomeUser (params) {
+    return axios.get(iotUrl + '/api/home-manage/home-user', { params })
+}
+
 // 获取招商代理商列表
 export function getCloudMerchantList (params) {
     return axios.get(iotUrl + '/api/boss/agent-sign/page', { params })

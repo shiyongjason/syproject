@@ -564,6 +564,15 @@ export default {
             this.materialsChannelArr = this.businessDetail.materialsChannel ? this.businessDetail.materialsChannel.toString().split(',') : []
             if (this.businessDetail.businessType) {
                 this.businessType = JSON.parse(this.businessDetail.businessType)
+            } else {
+                this.businessType = {
+                    retail: '',
+                    isRetail: false,
+                    wholesale: '',
+                    isWholesale: false,
+                    engineering: '',
+                    isEngineering: false
+                }
             }
             if (this.businessDetail.serviceCapability == 1 && this.businessDetail.serviceCapabilityDetail) {
                 this.serviceCapabilityDetail = this.businessDetail.serviceCapabilityDetail.toString().split(',')
