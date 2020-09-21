@@ -60,7 +60,9 @@
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="doPlay(scope.data.row.companyCode)">发放</h-button>
+                    <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendSatus === 1">发放</h-button>
+                    <span v-else-if="scope.data.row.sendSatus === 2">已发放</span>
+                    <span v-else>-</span>
                 </template>
             </basicTable>
         </div>
@@ -69,6 +71,8 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
+import { updateRecommenderPaid } from '@/views/crm/recommender/api'
+import { deleteAppVersion } from '@/views/appUpdate/api'
 
 export default {
     name: 'awardManage',
@@ -81,15 +85,14 @@ export default {
             tableData: [],
             paginationInfo: {},
             tableLabel: [
-                { label: '企业名称', prop: 'companyName' },
-                { label: '信用评级', prop: 'creditLevel', width: '120' },
+                { label: '企业名称', prop: 'companyName', width: '200' },
+                { label: '信用评级', prop: 'creditLevel', width: '100' },
                 { label: '推荐人账号', prop: 'recommenderUserMobile', width: '120' },
                 { label: '推荐人', prop: 'recommenderUserName', width: '150' },
                 { label: '应奖励金额', prop: 'rewardAmount', width: '150' },
                 { label: '发放状态', prop: 'sendSatus', width: '100' },
-                { label: '信用评审通过时间', prop: 'creditApprovedTime', width: '100', sortable: 'custom' },
-                { label: '认证时间', prop: 'authenticationTime', width: '100', sortable: 'custom' },
-                { label: '操作', prop: 'createTime', width: '150', formatters: 'dateTimes' }
+                { label: '信用评审通过时间', prop: 'creditApprovedTime', width: '200', sortable: 'creditApprovedTime', formatters: 'dateTimes' },
+                { label: '认证时间', prop: 'authenticationTime', width: '150', sortable: 'authenticationTime', formatters: 'dateTimes' }
             ]
         }
     },
@@ -139,8 +142,15 @@ export default {
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
         },
-        doPlay () {
-
+        doPlay (row) {
+            console.log(row)
+            this.$confirm(`是否确认已给推荐官发放这笔奖励？`, '确认发放', {
+                confirmButtonText: '确认已发放',
+                cancelButtonText: '暂未发放'
+            }).then(async () => {
+                await updateRecommenderPaid(row)
+                this.onQuery()
+            })
         },
         async onQuery () {
             await this.getRecommenderRewardList(this.queryParams)
