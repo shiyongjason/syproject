@@ -17,8 +17,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">发放状态：</div>
                     <div class="query-col-input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="已发放" :value="1"></el-option>
+                            <el-option label="待发放" :value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -43,10 +45,10 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="searchList(1)">
+                    <h-button type="primary" @click="onQuery">
                         查询
                     </h-button>
-                    <h-button @click="onRest">
+                    <h-button @click="onReset">
                         重置
                     </h-button>
                 </div>
@@ -54,37 +56,20 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{businessData.total}} 项 &nbsp; 待发放：{{5}}个；已发放：{{10}}个；
+                已筛选 {{0}} 项 &nbsp; 待发放：{{5}}个；已发放：{{10}}个；
             </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
-                <template slot="userAccount" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
-                </template>
-                <template slot="userName" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
-                </template>
-                <template slot="areaname" slot-scope="scope">
-                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
-                </template>
-                <template slot="companyType" slot-scope="scope">
-                    {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
-                </template>
-                <template slot="customerType" slot-scope="scope">
-                    {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
-                </template>
-                <template slot="isAuthentication" slot-scope="scope">
-                    <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
-                </template>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
+                    <h-button table @click="doPlay(scope.data.row.companyCode)">发放</h-button>
                 </template>
             </basicTable>
         </div>
-        <businessDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
     </div>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
+
 export default {
     name: 'awardManage',
     data () {
@@ -97,20 +82,85 @@ export default {
             paginationInfo: {},
             tableLabel: [
                 { label: '企业名称', prop: 'companyName' },
-                { label: '信用评级', prop: 'userAccount', width: '120' },
-                { label: '推荐人账号', prop: 'userName', width: '120' },
-                { label: '推荐人', prop: 'subsectionName', width: '150' },
-                { label: '应奖励金额', prop: 'areaname', width: '150' },
-                { label: '发放状态', prop: 'companyType', width: '100' },
-                { label: '信用评审通过时间', prop: 'customerType', width: '100', sortable: 'custom' },
-                { label: '认证时间', prop: 'isAuthentication', width: '100', sortable: 'custom' },
+                { label: '信用评级', prop: 'creditLevel', width: '120' },
+                { label: '推荐人账号', prop: 'recommenderUserMobile', width: '120' },
+                { label: '推荐人', prop: 'recommenderUserName', width: '150' },
+                { label: '应奖励金额', prop: 'rewardAmount', width: '150' },
+                { label: '发放状态', prop: 'sendSatus', width: '100' },
+                { label: '信用评审通过时间', prop: 'creditApprovedTime', width: '100', sortable: 'custom' },
+                { label: '认证时间', prop: 'authenticationTime', width: '100', sortable: 'custom' },
                 { label: '操作', prop: 'createTime', width: '150', formatters: 'dateTimes' }
             ]
         }
+    },
+    computed: {
+        pickerOptionsStart (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = date
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = date
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
+        ...mapState({
+            rcommenderRewardList: state => state.crmRecommeder.rcommenderRewardList
+        })
+    },
+    methods: {
+        ...mapActions({
+            getRecommenderRewardList: 'crmRecommeder/getRecommenderRewardList'
+        }),
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.onQuery()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.onQuery()
+        },
+        onSortChange (val) {
+            if (val.order) {
+                this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
+                this.onQuery()
+            }
+        },
+        onReset () {
+            this.queryParams = { ...this.queryParamsTemp }
+        },
+        doPlay () {
+
+        },
+        async onQuery () {
+            await this.getRecommenderRewardList(this.queryParams)
+            this.tableData = this.rcommenderRewardList.records || []
+            this.paginationInfo = {
+                pageNumber: this.rcommenderRewardList.current,
+                pageSize: this.rcommenderRewardList.size,
+                total: this.rcommenderRewardList.total
+            }
+        }
+    },
+    mounted () {
+        this.queryParamsTemp = { ...this.queryParams }
+        this.onQuery()
     }
 }
 </script>
 
 <style scoped>
-
+    .eltagtop {
+        margin-bottom: 10px;
+    }
 </style>

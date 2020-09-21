@@ -174,19 +174,6 @@ export default [
 
                 },
                 component: () => import('@/views/crm/awardManage/awardManage.vue')
-            },
-            {
-                path: 'accountManage',
-                name: 'accountManage',
-                meta: {
-                    title: '账号管理',
-                    tagName: '账号管理',
-                    isMenu: true,
-                    icon: '',
-                    showMenuAs: '/goodwork/accountManage'
-
-                },
-                component: () => import('@/views/crm/accountManage/accountManage.vue')
             }
         ]
     }
