@@ -82,7 +82,8 @@ export default {
         /**
          * @description 限制输入最大值
          * @param number 输入最大值
-         * @example  <el-input v-model="form.a" v-inputMax="100"></el-input>
+         * @example  <el-input v-model="form.a" v-inputMAX="100"></el-input>
+         * @example  v-isNum:0 v-inputMAX='100'  0到100，0位小数，可结合使用。
          */
         Vue.directive('inputMAX', {
             bind (el, binding, vnode) {
@@ -116,7 +117,7 @@ export default {
                 div.style.left = '20px'
                 div.style.position = 'fixed'
                 div.style.zIndex = '1990'
-                div.style.transform = 'rotate(-15deg)'
+                // div.style.transform = 'rotate(-15deg)'
                 div.style.width = document.documentElement.clientWidth - 50 + 'px'
                 div.style.height = document.documentElement.clientHeight - 100 + 'px'
                 div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'

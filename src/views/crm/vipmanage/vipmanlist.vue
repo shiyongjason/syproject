@@ -1,59 +1,58 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
 
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">VIP等级：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">VIP等级：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.vipRuleId" placeholder="请选择" :clearable=true>
                             <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevels" :key="item.id"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">VIP折扣：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">VIP折扣：</div>
+                    <div class="query-col__input">
                         <el-input v-model="minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:1><template slot="append">折</template></el-input>
                         ~
                         <el-input v-model="maxServiceFeeDiscount" placeholder="请输入最大折扣" v-isNum:1><template slot="append">折</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">VIP目标：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">VIP目标：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.minVipTarget" placeholder="请输入最小目标" v-isNum:4="queryParams.minVipTarget" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
                         <el-input v-model="queryParams.maxVipTarget" placeholder="请输入最大目标" v-isNum:4="queryParams.maxVipTarget" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+
                         <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
                         <h-button @click="onRest()">
                             重置
                         </h-button>
-                    </div>
+
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
+
             <el-tag size="medium" class="eltagtop">已筛选 {{vipManagedata.total||0}}； VIP：{{vipPageLoan.vipCount||0}}； VIP目标总额（万元）：{{vipPageLoan.totalTarget||0 |money}} </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
