@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="getRecommenderList(queryParams)">
+                    <h-button type="primary" @click="onQuery">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -155,6 +155,7 @@ export default {
                 ]
             ).then(() => {
                 this.tableData = this.recommenderList.records || []
+                console.log(this.recommenderList.records)
                 this.paginationInfo = {
                     pageNumber: this.recommenderList.current,
                     pageSize: this.recommenderList.size,
