@@ -173,6 +173,7 @@ export default {
             } else {
                 this.queryParams['sort.direction'] = ''
                 this.queryParams['sort.property'] = ''
+                this.onQuery()
             }
         },
         openDetail (userId) {
