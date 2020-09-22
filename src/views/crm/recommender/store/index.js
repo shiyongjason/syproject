@@ -1,24 +1,24 @@
 import * as types from '@/views/crm/recommender/store/const'
-import { getRecommenderList, getRecommenderRewardList } from '@/views/crm/recommender/api'
+import { getRecommenderList, getRecommenderRewardList, getRecommenderTotal } from '@/views/crm/recommender/api'
 
 const state = {
     recommenderList: [],
-    statisticsList: [],
-    rcommenderRewardList: []
+    recommenderTotal: {},
+    statisticsList: []
 }
 
 const getters = {
     recommenderList: state => state.recommenderList,
-    statisticsList: state => state.statisticsList,
-    rcommenderRewardList: state => state.rcommenderRewardList
+    recommenderTotal: state => state.recommenderTotal,
+    statisticsList: state => state.statisticsList
 }
 
 const mutations = {
     [types.RECOMMENDER_LIST] (state, payload) {
         state.recommenderList = payload
     },
-    [types.RCOMMENDE_RREWARD_LIST] (state, payload) {
-        state.rcommenderRewardList = payload
+    [types.RECOMMENDER_TOTAL] (state, payload) {
+        state.recommenderTotal = payload
     }
 }
 
@@ -27,10 +27,9 @@ const actions = {
         const { data } = await getRecommenderList(params)
         commit(types.RECOMMENDER_LIST, data)
     },
-    async getRecommenderRewardList ({ commit }, params) {
-        const { data } = await getRecommenderRewardList(params)
-        console.log(data)
-        commit(types.RCOMMENDE_RREWARD_LIST, data)
+    async getRecommenderTotal ({ commit }, params) {
+        const { data } = await getRecommenderTotal(params)
+        commit(types.RECOMMENDER_TOTAL, data)
     }
 }
 export default {

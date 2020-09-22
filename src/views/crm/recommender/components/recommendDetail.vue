@@ -6,7 +6,7 @@
                     <p class="avatar">
                         <img :src="detail.avatarUrl" alt="">
                     </p>
-                    <p>
+                    <p class="info">
                         <span>{{detail.userName}}</span>
                         <span>{{detail.mobile}}</span>
                     </p>
@@ -20,12 +20,29 @@
                 </p>
                 <h2>推荐记录</h2>
                 <el-tabs v-model="activeName" @tab-click="handleClick">
-                    <el-tab-pane label="已注册" name="first">用户管理</el-tab-pane>
-                    <el-tab-pane label="已认证" name="second">配置管理</el-tab-pane>
-                    <el-tab-pane label="以评级" name="third">角色管理</el-tab-pane>
-                    <el-tab-pane label="已失效" name="fourth">定时任务补偿</el-tab-pane>
+                    <el-tab-pane label="已注册" name="first">
+                        <List :list="list" :type="1"></List>
+                    </el-tab-pane>
+                    <el-tab-pane label="已认证" name="second">
+                        <List :list="list" :type="2"></List>
+                    </el-tab-pane>
+                    <el-tab-pane label="以评级" name="third">
+                        <List :list="list" :type="3"></List>
+                    </el-tab-pane>
+                    <el-tab-pane label="已失效" name="fourth">
+                        <List :list="list" :type="4"></List>
+                    </el-tab-pane>
                 </el-tabs>
-                <h2>奖励记录：累计获得{{detail.rewards}}元</h2>
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    layout="prev, pager, next"
+                    class="pagination"
+                    :page-size="5"
+                    :current-page="pagination.pageNumber"
+                    :total="pagination.total">
+                </el-pagination>
+                <h2>奖励记录：累计获得{{ '0' || detail.rewards}}元</h2>
                 <div>
                     <p class="row-info" v-for="(item,index) in detail.rewardList" :key="item.companyName + index">
                         {{item.companyName}}
@@ -45,52 +62,108 @@
 
 <script>
 import { getRecommenderInfo, getStatisticsCompanyList, getStatisticsUserList } from '../api/index'
+import List from './list'
 export default {
     name: 'recommendDetail',
-    props: {
-        userId: {
-            type: String
-        }
+    components: {
+        List
     },
     data () {
         return {
             activeName: 'first',
             companyParams: {
                 pageNumber: 1,
-                pageSize: 10,
-                recommenderUserId: this.userId,
-                status: ''
+                pageSize: 5,
+                recommenderUserId: '',
+                status: 1
             },
             userParams: {
                 pageNum: 1,
-                pageSize: 10,
-                userId: this.userId
+                pageSize: 5,
+                userId: ''
             },
             open: false,
-            detail: {}
+            detail: {},
+            list: [],
+            pagination: {
+                total: 0,
+                pageNumber: 1,
+                pageSize: 10
+            }
         }
     },
     methods: {
         handleClose () {
             this.open = false
+            this.list = []
+            this.detail = {}
         },
         handleOpen () {
             this.open = true
         },
         handleClick (tab, event) {
-            console.log(tab, event)
+            if (this.activeName === 'first') {
+                this.userParams = { ...this.userParamsTemp }
+                this.getStatisticsUserList(this.userId)
+            } else {
+                this.companyParams = { ...this.companyParamsTemp }
+                if (this.activeName === 'second') {
+                    this.companyParams.status = 1
+                }
+                if (this.activeName === 'third') {
+                    this.companyParams.status = 2
+                }
+                if (this.activeName === 'fourth') {
+                    this.companyParams.status = 3
+                }
+                this.getStatisticsCompanyList(this.userId)
+            }
         },
-        async getStatisticsUserList() {
-            const {data} = await getStatisticsUserList(this.userParams)
+        commonSetting (data) {
+            this.list = data.records
+            this.pagination = {
+                total: data.total,
+                pageNumber: data.current,
+                pageSize: data.size
+            }
         },
-        async getStatisticsCompanyList() {
-            const {data} = await getStatisticsCompanyList(this.companyParams)
+        async getStatisticsUserList (userId) {
+            this.userId = userId
+            this.userParams.userId = userId
+            const { data } = await getStatisticsUserList(this.userParams)
+            this.commonSetting(data)
+        },
+        async getStatisticsCompanyList (userId) {
+            this.companyParams.recommenderUserId = userId
+            const { data } = await getStatisticsCompanyList(this.companyParams)
+            this.commonSetting(data)
         },
         async getRecommenderInfo (userId) {
-            const {data} = await getRecommenderInfo(userId)
-            console.log(data)
+            const { data } = await getRecommenderInfo(userId)
             this.detail = data
+        },
+        handleSizeChange (val) {
+            if (this.activeName === 'first') {
+                this.userParams.pageSize = val
+                this.getStatisticsUserList(this.userId)
+            } else {
+                this.companyParams.pageSize = val
+                this.getStatisticsCompanyList(this.userId)
+            }
+        },
+        handleCurrentChange (val) {
+            if (this.activeName === 'first') {
+                this.userParams.pageNumber = val
+                this.getStatisticsUserList(this.userId)
+            } else {
+                this.companyParams.pageNumber = val
+                this.getStatisticsCompanyList(this.userId)
+            }
         }
+    },
+    mounted () {
+        this.userParamsTemp = { ...this.userParams }
+        this.companyParamsTemp = { ...this.companyParams }
     }
 }
 </script>
@@ -102,14 +175,64 @@ export default {
         margin-bottom: 10px;
         font-size: 16px;
     }
+    .el-drawer__body {
+        position: relative;
+    }
     .drawer-wrap {
-        padding: 12px 20px;
+        box-sizing: border-box;
+        padding: 12px 20px 200px 20px;
+        font-size: 13px;
+        color: #333333;
+        overflow: hidden;
+        overflow-y: scroll;
+        height: 100vh;
         .avatar img{
             width: 50px;
+            border-radius: 5px;
         }
         h2 {
             color: #ff690b;
             font-size: 14px;
+            line-height: 20px;
+            padding-top: 12px;
+            padding-bottom: 5px;
         }
+        .user-base-info{
+            background: rgba(245,245,249, 0.9);
+            padding: 12px 20px;
+            display: flex;
+            .info {
+                margin-left: 12px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+        .row-info {
+            line-height: 24px;
+            .time {
+                color: #999999;
+                padding: 0 6px;
+            }
+        }
+    }
+    .drawer-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 24px;
+        border-top: 1px solid #e5e5ea;
+        background: #fff;
+        z-index: 1000;
+        button {
+            flex: 1;
+        }
+        .drawer-button {
+            text-align: right;
+        }
+    }
+    .pagination {
+        text-align: center;
     }
 </style>

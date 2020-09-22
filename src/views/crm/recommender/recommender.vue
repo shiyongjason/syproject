@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">账号/姓名：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.username" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -44,12 +44,22 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{1}} 项 &nbsp;  累计注册：{{25}}；累计认证：{{25}}；累计评级：{{25}}；累计失效：{{25}}；累计获得奖励：{{9}}元；
+                已筛选 {{paginationInfo.total}} 项 &nbsp;
+                累计注册：{{fundMoneys(recommenderTotal.registeredNumber)}}；
+                累计认证：{{fundMoneys(recommenderTotal.certifiedNumber)}}；
+                累计评级：{{fundMoneys(recommenderTotal.ratedNumber)}}；
+                累计失效：{{fundMoneys(recommenderTotal.invalidNumber)}}；
+                累计获得奖励：{{fundMoneys(recommenderTotal.rewardAmount)}}元；
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" :showCheckAll="false"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
                         :isShowIndex='true'>
+                <template slot="source" slot-scope="scope">
+<!--                    <span v-if="+ scope.data.row.source === 1">客户经理分享</span>-->
+                    <span v-if="+ scope.data.row.source === 1">客户经理分享</span>
+                    <span v-if="+ scope.data.row.source === 2">小程序自主</span>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="openDetail(scope.data.row.userId)">
                         邀请详情
@@ -64,6 +74,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import RecommendDetail from './components/recommendDetail'
+import filters from '@/utils/filters'
 export default {
     name: 'recommender',
     components: {
@@ -72,6 +83,10 @@ export default {
     data () {
         return {
             queryParams: {
+                username: '',
+                deptDoc: '',
+                authenticationStartTime: '',
+                authenticationEndTime: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -88,7 +103,8 @@ export default {
                 { label: '已失效', prop: 'invalidNumber', width: '120', sortable: 'custom' },
                 { label: '已获得奖励', prop: 'rewardAmount', width: '150', formatters: 'dateTimes' },
                 { label: '激活时间', prop: 'createTime', width: '150', formatters: 'dateTimes' }
-            ]
+            ],
+            userId: ''
         }
     },
     computed: {
@@ -113,15 +129,18 @@ export default {
             }
         },
         ...mapState({
-            recommenderList: state => state.crmRecommeder.recommenderList
+            recommenderList: state => state.crmRecommeder.recommenderList,
+            recommenderTotal: state => state.crmRecommeder.recommenderTotal
         })
     },
     methods: {
         ...mapActions({
-            getRecommenderList: 'crmRecommeder/getRecommenderList'
+            getRecommenderList: 'crmRecommeder/getRecommenderList',
+            getRecommenderTotal: 'crmRecommeder/getRecommenderTotal'
         }),
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
+            this.onQuery()
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -132,13 +151,19 @@ export default {
             this.onQuery()
         },
         async onQuery () {
-            await this.getRecommenderList(this.queryParams)
-            this.tableData = this.recommenderList.records || []
-            this.paginationInfo = {
-                pageNumber: this.recommenderList.current,
-                pageSize: this.recommenderList.size,
-                total: this.recommenderList.total
-            }
+            Promise.all(
+                [
+                    this.getRecommenderList(this.queryParams),
+                    this.getRecommenderTotal(this.queryParams)
+                ]
+            ).then(() => {
+                this.tableData = this.recommenderList.records || []
+                this.paginationInfo = {
+                    pageNumber: this.recommenderList.current,
+                    pageSize: this.recommenderList.size,
+                    total: this.recommenderList.total
+                }
+            })
         },
         onSortChange (val) {
             if (val.order) {
@@ -148,8 +173,14 @@ export default {
         },
         openDetail (userId) {
             this.$refs.detail.handleOpen()
-            console.log(userId)
             this.$refs.detail.getRecommenderInfo(userId)
+            this.$refs.detail.getStatisticsUserList(userId)
+        },
+        fundMoneys (val) {
+            if (val) {
+                return filters.money(val)
+            }
+            return 0
         }
     },
     mounted () {

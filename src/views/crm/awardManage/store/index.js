@@ -1,21 +1,33 @@
+import * as types from '@/views/crm/awardManage/store/const'
+import { getRecommenderRewardList, getRecommenderRewardTotal } from '@/views/crm/recommender/api'
 
 const state = {
+    rcommenderRewardList: [],
+    rcommenderRewardTotal: {}
 }
 
 const getters = {
-    projectData: state => state.projectData
+    rcommenderRewardList: state => state.rcommenderRewardList,
+    rcommenderRewardTotal: state => state.rcommenderRewardTotal
 }
 
 const mutations = {
-    [types.PROJECT_DATA] (state, payload) {
-        state.projectData = payload
+    [types.RCOMMENDE_RREWARD_LIST] (state, payload) {
+        state.rcommenderRewardList = payload
+    },
+    [types.RCOMMENDE_RREWARD_TOTAL] (state, payload) {
+        state.rcommenderRewardTotal = payload
     }
 }
-
+// getRecommenderRewardTotal
 const actions = {
-    async findProjetpage ({ commit }, params) {
-        const { data } = await Api.getProject(params)
-        commit(types.PROJECT_DATA, data)
+    async getRecommenderRewardList ({ commit }, params) {
+        const { data } = await getRecommenderRewardList(params)
+        commit(types.RCOMMENDE_RREWARD_LIST, data)
+    },
+    async getRecommenderRewardTotal ({ commit }, params) {
+        const { data } = await getRecommenderRewardTotal(params)
+        commit(types.RCOMMENDE_RREWARD_TOTAL, data)
     }
 }
 export default {
