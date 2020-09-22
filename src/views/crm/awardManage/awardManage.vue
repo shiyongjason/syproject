@@ -161,13 +161,13 @@ export default {
         },
         doPlay (row) {
             this.$confirm(`是否确认已给推荐官发放这笔奖励？`, '确认发放', {
-                confirmButtonText: '确认已发放',
-                cancelButtonText: '暂未发放'
+                confirmButtonText: '确认发放',
+                cancelButtonText: '取消'
             }).then(async () => {
                 const params = {
                     companyId: row.companyId,
                     creditLevel: row.creditLevel,
-                    recommendUserId: row.userId,
+                    recommendUserId: row.recommenderUserId,
                     sendStatus: 2
                 }
                 await updateRecommenderPaid(params)
