@@ -73,7 +73,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { updateRecommenderPaid } from '@/views/crm/recommender/api'
+import { updateRecommenderPaid } from '@/views/crm/awardManage/api'
 
 export default {
     name: 'awardManage',
