@@ -11,7 +11,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">推荐官来源：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.source" placeholder="请选择" :clearable=true>
                             <el-option label="全部" value=""></el-option>
                             <el-option label="小程序自主" value="1"></el-option>
                             <el-option label="客户经理分享" value="2"></el-option>
@@ -21,14 +21,14 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">激活时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime"
+                        <el-date-picker v-model="queryParams.startTime" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
-                                        :picker-options="pickerOptionsStart">
+                                        :picker-options="pickerOptionsStart('endTime')">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime"
+                        <el-date-picker v-model="queryParams.endTime" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
-                                        :picker-options="pickerOptionsEnd">
+                                        :picker-options="pickerOptionsEnd('startTime')">
                         </el-date-picker>
                     </div>
                 </div>
@@ -81,9 +81,9 @@ export default {
         return {
             queryParams: {
                 username: '',
-                deptDoc: '',
-                authenticationStartTime: '',
-                authenticationEndTime: '',
+                source: '',
+                startTime: '',
+                endTime: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -105,26 +105,6 @@ export default {
         }
     },
     computed: {
-        pickerOptionsStart (date) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = date
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd (date) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = date
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
-                    }
-                }
-            }
-        },
         ...mapState({
             recommenderList: state => state.crmRecommeder.recommenderList,
             recommenderTotal: state => state.crmRecommeder.recommenderTotal
@@ -135,6 +115,26 @@ export default {
             getRecommenderList: 'crmRecommeder/getRecommenderList',
             getRecommenderTotal: 'crmRecommeder/getRecommenderTotal'
         }),
+        pickerOptionsStart (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams[date]
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams[date]
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
+        },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
             this.onQuery()

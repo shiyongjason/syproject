@@ -19,8 +19,8 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.sendStatus" placeholder="请选择" :clearable=true>
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="已发放" :value="1"></el-option>
-                            <el-option label="待发放" :value="2"></el-option>
+                            <el-option label="待发放" :value="1"></el-option>
+                            <el-option label="已发放" :value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -37,10 +37,10 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">认证时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
+                        <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
+                        <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
                         </el-date-picker>
                     </div>
                 </div>
@@ -156,6 +156,7 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
+            this.onQuery()
         },
         doPlay (row) {
             this.$confirm(`是否确认已给推荐官发放这笔奖励？`, '确认发放', {

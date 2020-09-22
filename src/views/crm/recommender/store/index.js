@@ -1,5 +1,5 @@
 import * as types from '@/views/crm/recommender/store/const'
-import { getRecommenderList, getRecommenderRewardList, getRecommenderTotal } from '@/views/crm/recommender/api'
+import { getRecommenderList, getRecommenderTotal } from '@/views/crm/recommender/api'
 
 const state = {
     recommenderList: [],
