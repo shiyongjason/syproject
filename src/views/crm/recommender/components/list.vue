@@ -23,7 +23,7 @@
             <template v-if="list && list.length>0">
                 <li v-for="item in list" :key="item.mobile" class="info-row">
                     <p class="avatar">
-                        <img :src="item.avatarUrl" alt="">
+                        <img src="../../../../assets/images/crm-company-icon.png" alt="">
                     </p>
                     <p class="info">
                         <span class="user">{{item.companyName}}</span>

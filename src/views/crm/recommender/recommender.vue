@@ -99,10 +99,10 @@ export default {
                 { label: '客户经理', prop: 'customerName', width: '150' },
                 { label: '已注册', prop: 'registeredNumber', width: '150' },
                 { label: '已认证', prop: 'certifiedNumber', width: '120' },
-                { label: '已评级', prop: 'ratedNumber', width: '120', sortable: 'custom' },
-                { label: '已失效', prop: 'invalidNumber', width: '120', sortable: 'custom' },
+                { label: '已评级', prop: 'ratedNumber', width: '120' },
+                { label: '已失效', prop: 'invalidNumber', width: '120' },
                 { label: '已获得奖励', prop: 'rewardAmount', width: '150', formatters: 'dateTimes' },
-                { label: '激活时间', prop: 'createTime', width: '150', formatters: 'dateTimes' }
+                { label: '激活时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' }
             ],
             userId: ''
         }
@@ -167,8 +167,12 @@ export default {
         },
         onSortChange (val) {
             if (val.order) {
-                this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
+                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
+                this.queryParams['sort.property'] = val.prop
                 this.onQuery()
+            } else {
+                this.queryParams['sort.direction'] = ''
+                this.queryParams['sort.property'] = ''
             }
         },
         openDetail (userId) {

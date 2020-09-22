@@ -56,7 +56,7 @@
         </div>
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{paginationInfo.total}} 项 &nbsp; 待发放：{{'0' || rcommenderRewardTotal.payingNum}}个；已发放：{{'0' || rcommenderRewardTotal.paidNum}}个；
+                已筛选 {{paginationInfo.total}} 项 &nbsp; 待发放：{{rcommenderRewardTotal.payingNum || '0'}}个；已发放：{{rcommenderRewardTotal.paidNum || '0'}}个；
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
                 <template slot="sendSatus" slot-scope="scope">
@@ -147,8 +147,12 @@ export default {
         },
         onSortChange (val) {
             if (val.order) {
-                this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
+                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
+                this.queryParams['sort.property'] = val.prop
                 this.onQuery()
+            } else {
+                this.queryParams['sort.direction'] = ''
+                this.queryParams['sort.property'] = ''
             }
         },
         onReset () {
