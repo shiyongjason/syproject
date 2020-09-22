@@ -171,8 +171,8 @@ export default {
                 this.queryParams['sort.property'] = val.prop
                 this.onQuery()
             } else {
-                this.queryParams['sort.direction'] = ''
-                this.queryParams['sort.property'] = ''
+                delete this.queryParams['sort.direction']
+                delete this.queryParams['sort.property']
                 this.onQuery()
             }
         },

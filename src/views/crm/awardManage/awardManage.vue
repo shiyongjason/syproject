@@ -151,8 +151,8 @@ export default {
                 this.queryParams['sort.property'] = val.prop
                 this.onQuery()
             } else {
-                this.queryParams['sort.direction'] = ''
-                this.queryParams['sort.property'] = ''
+                delete this.queryParams['sort.direction']
+                delete this.queryParams['sort.property']
                 this.onQuery()
             }
         },
@@ -164,7 +164,13 @@ export default {
                 confirmButtonText: '确认已发放',
                 cancelButtonText: '暂未发放'
             }).then(async () => {
-                await updateRecommenderPaid(row)
+                const params = {
+                    companyId: row.companyId,
+                    creditLevel: row.creditLevel,
+                    recommendUserId: row.userId,
+                    sendStatus: 2
+                }
+                await updateRecommenderPaid(params)
                 this.onQuery()
             })
         },
