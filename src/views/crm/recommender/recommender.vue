@@ -101,7 +101,7 @@ export default {
                 { label: '已认证', prop: 'certifiedNumber', width: '120' },
                 { label: '已评级', prop: 'ratedNumber', width: '120' },
                 { label: '已失效', prop: 'invalidNumber', width: '120' },
-                { label: '已获得奖励', prop: 'rewardAmount', width: '150', formatters: 'dateTimes' },
+                { label: '已获得奖励', prop: 'rewardAmount', width: '150' },
                 { label: '激活时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' }
             ],
             userId: ''
