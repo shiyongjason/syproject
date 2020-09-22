@@ -41,8 +41,6 @@
                     </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{paginationInfo.total}} 项 &nbsp;
                 累计注册：{{fundMoneys(recommenderTotal.registeredNumber)}}；
@@ -56,7 +54,6 @@
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
                         :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
-<!--                    <span v-if="+ scope.data.row.source === 1">客户经理分享</span>-->
                     <span v-if="+ scope.data.row.source === 1">客户经理分享</span>
                     <span v-if="+ scope.data.row.source === 2">小程序自主</span>
                 </template>

@@ -1,22 +1,22 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">推荐人姓名/账号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">推荐人姓名/账号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.recommenderName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">发放状态：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">发放状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.sendStatus" placeholder="请选择" :clearable=true>
                             <el-option label="全部" value=""></el-option>
                             <el-option label="已发放" :value="1"></el-option>
@@ -24,9 +24,9 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">信用评审通过时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">信用评审通过时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.creditApprovedTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('creditApprovedTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -34,9 +34,9 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">认证时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">认证时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -44,7 +44,7 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery">
                         查询
                     </h-button>
@@ -53,8 +53,6 @@
                     </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{paginationInfo.total}} 项 &nbsp; 待发放：{{rcommenderRewardTotal.payingNum || '0'}}个；已发放：{{rcommenderRewardTotal.paidNum || '0'}}个；
             </el-tag>
