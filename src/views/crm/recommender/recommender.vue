@@ -13,8 +13,8 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.source" placeholder="请选择" :clearable=true>
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="小程序自主" value="1"></el-option>
-                            <el-option label="客户经理分享" value="2"></el-option>
+                            <el-option label="小程序自主" value="2"></el-option>
+                            <el-option label="客户经理分享" value="1"></el-option>
                         </el-select>
                     </div>
                 </div>
