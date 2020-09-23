@@ -83,7 +83,7 @@ export default {
             tableData: [],
             drawer: false,
             options: [{ key: 1, value: '存量会员店' }, { key: 2, value: '存量平台公司' }, { key: 3, value: 'app注册' },
-                { key: 4, value: '商家注册' }, { key: 5, value: '好友推荐' }, { key: 6, value: '商家邀请' }, { key: 7, value: '单分享小程序' }, { key: 8, value: '好享家会员小程序' }, { key: 9, value: '代注册' }]
+                { key: 4, value: '商家注册' }, { key: 5, value: '好友推荐' }, { key: 6, value: '商家邀请' }, { key: 7, value: '单分享小程序' }, { key: 8, value: '好享家会员小程序' }, { key: 9, value: '代注册' }, { key: 12, value: '推荐官' }, { key: 13, value: '推荐官推荐' }]
         }
     },
     components: {

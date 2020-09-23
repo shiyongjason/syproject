@@ -91,6 +91,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/warehouseManagement.vue')
+                    },
+                    {
+                        path: 'deviceDetail',
+                        name: 'deviceDetail',
+                        meta: {
+                            title: '设备详情',
+                            tagName: '设备详情',
+                            parentName: '设备管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/equipcoms/deviceDetail.vue')
                     }
                 ]
             },
@@ -296,6 +308,18 @@ export default [
                         component: () => import('@/views/comfortcloud/splashScreenManagement/index.vue')
                     },
                     {
+                        path: 'adpop',
+                        name: 'adpop',
+                        meta: {
+                            title: '广告弹窗',
+                            tagName: '广告弹窗',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/adpop/index.vue')
+                    },
+                    {
                         path: 'splashScreenDetail',
                         name: 'splashScreenDetail',
                         meta: {
@@ -306,6 +330,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/splashScreenManagement/detail.vue')
+                    },
+                    {
+                        path: 'adPopDetail',
+                        name: 'adPopDetail',
+                        meta: {
+                            title: '广告弹窗信息',
+                            tagName: '广告弹窗信息',
+                            parentName: '舒适云概览',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/adpop/detail.vue')
                     },
                     {
                         path: 'serviceRecord',
@@ -344,6 +380,65 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/comfortcloud/serviceManage.vue')
+            },
+            {
+                path: 'merchant',
+                meta: {
+                    title: '经销商管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantSearch',
+                        name: 'merchantSearch',
+                        meta: {
+                            title: '经销商查询',
+                            tagName: '经销商查询',
+                            parentName: '经销商管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantSearch.vue')
+                    },
+                    {
+                        path: 'merchantAd',
+                        name: 'merchantAd',
+                        meta: {
+                            title: '招商广告',
+                            tagName: '招商广告',
+                            parentName: '经销商管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantAd.vue')
+                    },
+                    {
+                        path: 'merchantAdEdit',
+                        name: 'merchantAdEdit',
+                        meta: {
+                            title: '招商广告编辑',
+                            tagName: '招商广告编辑',
+                            parentName: '经销商管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantAdEdit.vue')
+                    },
+                    {
+                        path: 'merchantOrder',
+                        name: 'merchantOrder',
+                        meta: {
+                            title: '订单查询',
+                            tagName: '订单查询',
+                            parentName: '经销商管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantOrder.vue')
+                    }
+                ]
             }
         ]
     }
