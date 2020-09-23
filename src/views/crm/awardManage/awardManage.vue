@@ -63,7 +63,8 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendStatus === 1 && hosAuthCheck(CRM_AWARD_SEND)">发放</h-button>
-                    <span v-else-if="scope.data.row.sendStatus === 2">已发放</span>
+                    <h-button table @click="doPlay(scope.data.row)" disabled v-else-if="scope.data.row.sendStatus === 2 && hosAuthCheck(CRM_AWARD_SEND)">已发放</h-button>
+<!--                    <span v-else-if="scope.data.row.sendStatus === 2" class="disabled">已发放</span>-->
                     <span v-else>-</span>
                 </template>
             </basicTable>

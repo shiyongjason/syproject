@@ -92,7 +92,7 @@ export default {
             tableLabel: [
                 { label: '推荐官账号', prop: 'username', width: '120' },
                 { label: '推荐官姓名', prop: 'name', width: '120' },
-                { label: '推荐人来源', prop: 'source', width: '120' },
+                { label: '推荐官来源', prop: 'source', width: '120' },
                 { label: '客户经理', prop: 'customerName', width: '150' },
                 { label: '已注册', prop: 'registeredNumber', width: '150' },
                 { label: '已认证', prop: 'certifiedNumber', width: '120' },
