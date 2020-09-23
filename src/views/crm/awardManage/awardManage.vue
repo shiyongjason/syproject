@@ -27,20 +27,20 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">信用评审通过时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.creditApprovedTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('creditApprovedTimeEnd')">
+                        <el-date-picker v-model="queryParams.creditApprovedTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('creditApprovedTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.creditApprovedTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd('creditApprovedTimeStart')">
+                        <el-date-picker v-model="queryParams.creditApprovedTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd('creditApprovedTimeStart')">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">认证时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
+                        <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
+                        <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
                         </el-date-picker>
                     </div>
                 </div>
@@ -57,13 +57,13 @@
                 已筛选 {{paginationInfo.total}} 项 &nbsp; 待发放：{{rcommenderRewardTotal.payingNum || '0'}}个；已发放：{{rcommenderRewardTotal.paidNum || '0'}}个；
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
-                <template slot="sendSatus" slot-scope="scope">
-                    <span v-if="scope.data.row.sendSatus === 1">待发放</span>
-                    <span v-if="scope.data.row.sendSatus === 2">已发放</span>
+                <template slot="sendStatus" slot-scope="scope">
+                    <span v-if="scope.data.row.sendStatus === 1">待发放</span>
+                    <span v-if="scope.data.row.sendStatus === 2">已发放</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendSatus === 1 && hosAuthCheck(CRM_AWARD_SEND)">发放</h-button>
-                    <span v-else-if="scope.data.row.sendSatus === 2">已发放</span>
+                    <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendStatus === 1 && hosAuthCheck(CRM_AWARD_SEND)">发放</h-button>
+                    <span v-else-if="scope.data.row.sendStatus === 2">已发放</span>
                     <span v-else>-</span>
                 </template>
             </basicTable>
@@ -99,7 +99,7 @@ export default {
                 { label: '推荐人账号', prop: 'recommenderUserMobile', width: '120' },
                 { label: '推荐人', prop: 'recommenderUserName', width: '150' },
                 { label: '应奖励金额', prop: 'rewardAmount', width: '150' },
-                { label: '发放状态', prop: 'sendSatus', width: '100' },
+                { label: '发放状态', prop: 'sendStatus', width: '100' },
                 { label: '信用评审通过时间', prop: 'creditApprovedTime', width: '200', sortable: 'creditApprovedTime', formatters: 'dateTimes' },
                 { label: '认证时间', prop: 'authenticationTime', width: '150', sortable: 'authenticationTime', formatters: 'dateTimes' }
             ],
