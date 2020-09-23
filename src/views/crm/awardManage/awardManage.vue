@@ -62,7 +62,7 @@
                     <span v-if="scope.data.row.sendSatus === 2">已发放</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendSatus === 1">发放</h-button>
+                    <h-button table @click="doPlay(scope.data.row)" v-if="scope.data.row.sendSatus === 1 && hosAuthCheck(CRM_AWARD_SEND)">发放</h-button>
                     <span v-else-if="scope.data.row.sendSatus === 2">已发放</span>
                     <span v-else>-</span>
                 </template>
@@ -74,6 +74,7 @@
 <script>
 import { mapActions, mapState } from 'vuex'
 import { updateRecommenderPaid } from '@/views/crm/awardManage/api'
+import { CRM_AWARD_SEND } from '@/utils/auth_const'
 
 export default {
     name: 'awardManage',
@@ -101,7 +102,8 @@ export default {
                 { label: '发放状态', prop: 'sendSatus', width: '100' },
                 { label: '信用评审通过时间', prop: 'creditApprovedTime', width: '200', sortable: 'creditApprovedTime', formatters: 'dateTimes' },
                 { label: '认证时间', prop: 'authenticationTime', width: '150', sortable: 'authenticationTime', formatters: 'dateTimes' }
-            ]
+            ],
+            CRM_AWARD_SEND: CRM_AWARD_SEND
         }
     },
     computed: {
@@ -159,7 +161,7 @@ export default {
             this.onQuery()
         },
         doPlay (row) {
-            this.$confirm(`是否确认已给推荐官发放这笔奖励？`, '确认发放', {
+            this.$confirm(`确认给推荐官发放这笔奖励？`, '确认发放', {
                 confirmButtonText: '确认发放',
                 cancelButtonText: '取消'
             }).then(async () => {
