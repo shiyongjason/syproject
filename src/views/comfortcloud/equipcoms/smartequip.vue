@@ -58,7 +58,10 @@
         </div>
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="cloudDeviceDetailList" :pagination="cloudDeviceDetailPagination"
-                        @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+                        @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth="80">
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn"  @click="onDetail(scope.data.row)">详情</el-button>
+                </template>
             </basicTable>
         </div>
     </div>
@@ -186,6 +189,13 @@ export default {
             await this.findHistoryReport(this.smartparams)
             this.smartData = this.cloudHistoryReport
             this.drawLine(this.smartData)
+        },
+        onDetail (val) {
+            this.$router.push({ path: '/comfortcloud/equipmentOverview/deviceDetail',
+                query: { iotId: val.iotId,
+                    subIotId: val.subIotId,
+                    deviceClass: val.deviceClass
+                } })
         },
         drawLine (data) {
             // 绘制图表
