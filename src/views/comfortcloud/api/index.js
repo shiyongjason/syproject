@@ -329,29 +329,53 @@ export function downloadOutboundList (params) {
 export function getSplashScreenList (params) {
     return axios.get(iotUrl + `/api/splash-screen`, { params })
 }
+// 弹窗广告分页查询
+export function getAdPopList (params) {
+    return axios.get(iotUrl + `/api/pop-up`, { params })
+}
 // 闪屏删除
 export function deleteSplashScreen (params) {
     return axios.delete(iotUrl + `/api/splash-screen`, { params })
 }
-// 设置生效失效状态
+// 弹窗广告删除
+export function deleteAdPop (params) {
+    return axios.delete(iotUrl + `/api/pop-up`, { params })
+}
+// 设置闪屏生效失效状态
 export function setSplashScreenStatus (params) {
     return axios.put(iotUrl + `/api/splash-screen/status?${qs.stringify(params)}`)
+}
+// 设置弹窗广告生效失效状态
+export function setAdPopStatus (params) {
+    return axios.put(iotUrl + `/api/pop-up/status?${qs.stringify(params)}`)
 }
 // 新增闪屏页
 export function createSplashScreen (params) {
     return axios.post(iotUrl + `/api/splash-screen`, params)
 }
+// 新增弹窗广告
+export function createAdPop (params) {
+    return axios.post(iotUrl + `/api/pop-up`, params)
+}
 // 编辑闪屏页
 export function updateSplashScreen (params) {
     return axios.put(iotUrl + `/api/splash-screen`, params)
 }
-// 查询所有活动
-export function getAllActivity (params) {
-    return axios.get(iotUrl + `/api/activity-center/all`, { params })
+// 编辑弹窗广告
+export function updateAdpop (params) {
+    return axios.put(iotUrl + `/api/pop-up`, params)
 }
 // 闪屏详情
 export function getSplashScreenDetail (id) {
     return axios.get(iotUrl + `/api/splash-screen/detail/${id}`)
+}
+// 弹窗广告详情
+export function getAdPopDetail (id) {
+    return axios.get(iotUrl + `/api/pop-up/detail/${id}`)
+}
+// 查询所有活动
+export function getAllActivity (params) {
+    return axios.get(iotUrl + `/api/activity-center/all`, { params })
 }
 // 获取呼叫记录
 export function getCustomerService (params) {
@@ -372,6 +396,19 @@ export function getCloudHomeModeTypeList (params) {
 
 export function getServiceManageHistoryList (params) {
     return axios.get(iotUrl + '/api/customer-service/service-order', { params })
+}
+
+export function getCloudDeviceDetail (params) {
+    return axios.get(iotUrl + '/api/device/statistics/device/specific/details', { params })
+}
+
+export function getCloudSubDeviceDetail (params) {
+    return axios.get(iotUrl + '/api/device/statistics/subDevice/specific/details', { params })
+}
+
+// 获取房屋信息(判断房屋是否被删除)
+export function getHomeUser (params) {
+    return axios.get(iotUrl + '/api/home-manage/home-user', { params })
 }
 
 // 获取招商代理商列表
