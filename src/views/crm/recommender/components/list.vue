@@ -16,7 +16,7 @@
                 </li>
             </template>
             <template v-else>
-                <li class="no-list">占无数据</li>
+                <li class="no-list">暂无数据</li>
             </template>
         </template>
         <template v-else>
@@ -38,7 +38,7 @@
                 </li>
             </template>
             <template v-else>
-                <li class="no-list">占无数据</li>
+                <li class="no-list">暂无数据</li>
             </template>
         </template>
     </ul>

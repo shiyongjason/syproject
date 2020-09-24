@@ -130,7 +130,7 @@ export default {
                 disabledDate: (time) => {
                     let beginDateVal = this.queryParams[date]
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }

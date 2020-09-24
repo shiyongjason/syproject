@@ -26,7 +26,7 @@
                     <el-tab-pane label="已认证" name="second">
                         <List :list="list" :type="2"></List>
                     </el-tab-pane>
-                    <el-tab-pane label="以评级" name="third">
+                    <el-tab-pane label="已评级" name="third">
                         <List :list="list" :type="3"></List>
                     </el-tab-pane>
                     <el-tab-pane label="已失效" name="fourth">
