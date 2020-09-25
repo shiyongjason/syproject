@@ -42,7 +42,7 @@
                     :current-page="pagination.pageNumber"
                     :total="pagination.total">
                 </el-pagination>
-                <h2>奖励记录：累计获得{{ '0' || detail.rewards}}元</h2>
+                <h2>奖励记录：累计获得{{ detail.rewards || '0'}}元</h2>
                 <div>
                     <p class="row-info" v-for="(item,index) in detail.rewardList" :key="item.companyName + index">
                         {{item.companyName}}
@@ -97,6 +97,7 @@ export default {
             this.open = false
             this.list = []
             this.detail = {}
+            this.activeName = 'first'
         },
         handleOpen () {
             this.open = true
