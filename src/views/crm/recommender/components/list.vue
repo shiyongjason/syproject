@@ -4,7 +4,8 @@
             <template v-if="list&& list.length> 0">
                 <li v-for="item in list" :key="item.mobile" class="info-row">
                     <p class="avatar">
-                        <img :src="item.avatarUrl" alt="">
+                        <img v-if="item.avatarUrl" :src="item.avatarUrl" alt="">
+                        <img v-else src="../../../../assets/images/goodwork-default-user.png" alt="">
                     </p>
                     <p class="info">
                         <span class="user">{{item.userName}}{{item.mobile}}</span>
@@ -16,7 +17,7 @@
                 </li>
             </template>
             <template v-else>
-                <li class="no-list">占无数据</li>
+                <li class="no-list">暂无数据</li>
             </template>
         </template>
         <template v-else>
@@ -28,17 +29,17 @@
                     <p class="info">
                         <span class="user">{{item.companyName}}</span>
                         <span class="time">
-                        <template v-if="type === 2">{{item.authenticationTime | formatDate}}</template>
-                        <template v-if="type === 3">{{item.creditApprovedTime | formatDate}}</template>
-                        <template v-if="type === 2">通过认证</template>
-                        <template v-if="type === 3">获得信用评级</template>
-                        <template v-if="type === 4">认证30日仍未通过信用评级，推荐失败</template>
-                    </span>
+                            <template v-if="type === 2">{{item.authenticationTime | formatDate}}</template>
+                            <template v-if="type === 3">{{item.creditApprovedTime | formatDate}}</template>
+                            <template v-if="type === 2">通过认证</template>
+                            <template v-if="type === 3">获得信用评级</template>
+                            <template v-if="type === 4">认证30日仍未通过信用评级，推荐失败</template>
+                        </span>
                     </p>
                 </li>
             </template>
             <template v-else>
-                <li class="no-list">占无数据</li>
+                <li class="no-list">暂无数据</li>
             </template>
         </template>
     </ul>
@@ -64,7 +65,7 @@ export default {
             margin-right: 12px;
             img {
                 width: 100%;
-                border-radius: 5px;
+                border-radius: 50%;
             }
         }
         .info {

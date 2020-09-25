@@ -19,14 +19,14 @@
                     <template v-if="detail.source === 2">小程序自主</template>
                 </p>
                 <h2>推荐记录</h2>
-                <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tabs class="tab-component" v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="已注册" name="first">
                         <List :list="list" :type="1"></List>
                     </el-tab-pane>
                     <el-tab-pane label="已认证" name="second">
                         <List :list="list" :type="2"></List>
                     </el-tab-pane>
-                    <el-tab-pane label="以评级" name="third">
+                    <el-tab-pane label="已评级" name="third">
                         <List :list="list" :type="3"></List>
                     </el-tab-pane>
                     <el-tab-pane label="已失效" name="fourth">
@@ -42,7 +42,7 @@
                     :current-page="pagination.pageNumber"
                     :total="pagination.total">
                 </el-pagination>
-                <h2>奖励记录：累计获得{{ '0' || detail.rewards}}元</h2>
+                <h2>奖励记录：累计获得{{ detail.rewards || '0'}}元</h2>
                 <div>
                     <p class="row-info" v-for="(item,index) in detail.rewardList" :key="item.companyName + index">
                         {{item.companyName}}
@@ -97,6 +97,7 @@ export default {
             this.open = false
             this.list = []
             this.detail = {}
+            this.activeName = 'first'
         },
         handleOpen () {
             this.open = true
@@ -193,21 +194,22 @@ export default {
         }
         h2 {
             color: #ff690b;
-            font-size: 14px;
-            line-height: 20px;
+            font-size: 15px;
+            line-height: 30px;
             padding-top: 12px;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
         }
         .user-base-info{
             background: rgba(245,245,249, 0.9);
             padding: 12px 20px;
             display: flex;
-            .info {
-                margin-left: 12px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-            }
+        }
+        .info {
+            margin-left: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 6px 0;
         }
         .row-info {
             line-height: 24px;
@@ -215,6 +217,9 @@ export default {
                 color: #999999;
                 padding: 0 6px;
             }
+        }
+        /deep/.el-tabs__item{
+            font-size: 13px;
         }
     }
     .drawer-footer {
@@ -235,5 +240,8 @@ export default {
     }
     .pagination {
         text-align: center;
+    }
+    .tab-component {
+        padding-left: 12px;
     }
 </style>
