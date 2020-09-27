@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="button-cont">
-                <h-button type="create" class="ml20" @click="onAddevent">
+                <h-button type="create" @click="onAddevent">
                     新建活动
                 </h-button>
             </div>
