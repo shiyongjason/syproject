@@ -40,7 +40,7 @@
                         <el-date-picker v-model="queryParams.authenticationTimeStart" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart('authenticationTimeEnd')">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
+                        <el-date-picker v-model="queryParams.authenticationTimeEnd" type="datetime" value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd('authenticationTimeStart')">
                         </el-date-picker>
                     </div>
                 </div>
