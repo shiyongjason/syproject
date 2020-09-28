@@ -4,10 +4,11 @@
             <div class="drawer-wrap">
                 <div class="user-base-info">
                     <p class="avatar">
-                        <img :src="detail.avatarUrl" alt="">
+                        <img v-if="detail.avatarUrl" :src="detail.avatarUrl" alt="">
+                        <img v-else src="../../../../assets/images/goodwork-default-user.png" alt="">
                     </p>
                     <p class="info">
-                        <span>{{detail.userName}}</span>
+                        <span>{{detail.userName ? detail.userName : '-'}}</span>
                         <span>{{detail.mobile}}</span>
                     </p>
                 </div>
