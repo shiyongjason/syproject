@@ -54,7 +54,8 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{paginationInfo.total}} 项 &nbsp; 待发放：{{rcommenderRewardTotal.payingNum || '0'}}个；已发放：{{rcommenderRewardTotal.paidNum || '0'}}个；
+                <span class="sub-eltag">已筛选 {{paginationInfo.total}} 项</span>
+                待发放：{{rcommenderRewardTotal.payingNum || '0'}}个；已发放：{{rcommenderRewardTotal.paidNum || '0'}}个；
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
                 <template slot="sendStatus" slot-scope="scope">
@@ -202,5 +203,8 @@ export default {
 <style scoped>
     .eltagtop {
         margin-bottom: 10px;
+    }
+    .sub-eltag {
+        margin-right: 30px;
     }
 </style>
