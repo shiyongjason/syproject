@@ -42,7 +42,7 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{paginationInfo.total}} 项 &nbsp;
+                <span class="sub-eltag">已筛选 {{paginationInfo.total}} 项</span>
                 累计注册：{{fundMoneys(recommenderTotal.registeredNumber)}}；
                 累计认证：{{fundMoneys(recommenderTotal.certifiedNumber)}}；
                 累计评级：{{fundMoneys(recommenderTotal.ratedNumber)}}；
@@ -195,5 +195,8 @@ export default {
 <style scoped>
     .eltagtop {
         margin-bottom: 10px;
+    }
+    .sub-eltag {
+        margin-right: 30px;
     }
 </style>
