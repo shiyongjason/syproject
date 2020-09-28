@@ -10,7 +10,7 @@
                     <p class="info">
                         <span class="user">{{item.userName}}{{item.mobile}}</span>
                         <span class="time">
-                            {{item.createTime | formatDate}}
+                            {{item.createTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                             <template v-if="type === 1">通过推荐注册</template>
                         </span>
                     </p>
@@ -56,13 +56,16 @@ export default {
 .list {
     font-size: 12px;
     li{
-        line-height: 20px;
+        line-height: 24px;
+        margin-bottom: 8px;
     }
     .info-row{
         display: flex;
         .avatar {
             width: 38px;
             margin-right: 12px;
+            display: flex;
+            align-items: center;
             img {
                 width: 100%;
                 border-radius: 50%;
