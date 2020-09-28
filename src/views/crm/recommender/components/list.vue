@@ -29,8 +29,8 @@
                     <p class="info">
                         <span class="user">{{item.companyName}}</span>
                         <span class="time">
-                            <template v-if="type === 2">{{item.authenticationTime | formatDate}}</template>
-                            <template v-if="type === 3">{{item.creditApprovedTime | formatDate}}</template>
+                            <template v-if="type === 2">{{item.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</template>
+                            <template v-if="type === 3">{{item.creditApprovedTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</template>
                             <template v-if="type === 2">通过认证</template>
                             <template v-if="type === 3">获得信用评级</template>
                             <template v-if="type === 4">认证30日仍未通过信用评级，推荐失败</template>
