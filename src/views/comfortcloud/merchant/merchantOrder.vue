@@ -22,6 +22,18 @@
                 </el-date-picker>
             </div>
             <div class="query-cont-col">
+                <div class="flex-wrap-title">订单状态：</div>
+                <div class="flex-wrap-cont">
+                    <el-select v-model="queryParams.status" style="width: 100%">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="已支付" value="0"></el-option>
+                        <el-option label="未支付" value="10"></el-option>
+                        <el-option label="已取消" value="15"></el-option>
+                        <el-option label="已退款" value="30"></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                 </div>
@@ -34,6 +46,9 @@
                         isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
                     {{ scope.data.row.level === 1 ? '一级': '二级' }}
+                </template>
+                <template slot="contactUser" slot-scope="scope">
+                    <p>{{scope.data.row.title}}</p>
                 </template>
                 <template slot="payAmount" slot-scope="scope">
                     {{ scope.data.row.payAmount ? scope.data.row.payAmount + '元' : '-' }}
@@ -53,6 +68,7 @@ export default {
         return {
             queryParams: {
                 payNo: '',
+                status: '',
                 payStartDate: '',
                 payEndDate: '',
                 pageNumber: 1,
@@ -69,7 +85,9 @@ export default {
                 { label: '联系地址', prop: 'contactAddress' },
                 { label: '代理级别', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
-                { label: '付款金额', prop: 'payAmount' }]
+                { label: '订单金额', prop: 'payAmount' },
+                { label: '订单状态', prop: 'payAmount' },
+                { label: '操作', prop: 'payAmount' }]
         }
     },
     mounted () {
