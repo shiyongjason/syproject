@@ -148,6 +148,32 @@ export default [
 
                 },
                 component: () => import('@/views/crm/wechatcustomer/list.vue')
+            },
+            {
+                path: 'recommender',
+                name: 'recommender',
+                meta: {
+                    title: '推荐官管理',
+                    tagName: '推荐官管理',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/recommender'
+
+                },
+                component: () => import('@/views/crm/recommender/recommender.vue')
+            },
+            {
+                path: 'awardManage',
+                name: 'awardManage',
+                meta: {
+                    title: '奖励管理',
+                    tagName: '奖励管理',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/awardManage'
+
+                },
+                component: () => import('@/views/crm/awardManage/awardManage.vue')
             }
         ]
     }
