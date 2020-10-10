@@ -124,7 +124,6 @@ axios.interceptors.response.use(
                         window.location.href = '/login'
                         clearTimeout(timer)
                     }, 1200)
-                    throw Error('权限无效')
                 }
             } else {
                 if (error.response.status === 400 && data.message !== '') {
