@@ -14,14 +14,14 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">城市：</div>
-                <div class="query-cont-col">
-                    <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
-                        <el-option v-for="item in provinceList" :key="item.key" :label="item.value" :value="item.key">
+                <div class="query-cont-col-area">
+                    <el-select  v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
+                        <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                         </el-option>
                     </el-select>
                     <span class="ml10 mr10">-</span>
                     <el-select v-model="queryParams.cityId" placeholder="市" :clearable=true>
-                        <el-option v-for="item in getCity" :key="item.key" :label="item.value" :value="item.key">
+                        <el-option v-for="item in getCity" :key="item.id" :label="item.name" :value="item.cityId">
                         </el-option>
                     </el-select>
                 </div>
@@ -49,7 +49,7 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
-import { getAreacode } from '../../bestonline/api'
+import { getChiness } from '../../hmall/membership/api/index'
 
 export default {
     name: 'merchantSearch',
@@ -85,9 +85,9 @@ export default {
             cloudMerchantListPagination: 'cloudMerchantListPagination'
         }),
         getCity () {
-            const province = this.provinceList.filter(item => item.key == this.queryParams.provinceId)
+            const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
             if (province.length > 0) {
-                return province[0].cityList
+                return province[0].cities
             }
             return []
         }
@@ -114,8 +114,8 @@ export default {
             this.findCloudMerchantList(params)
         },
         async getAreacode () {
-            const { data } = await getAreacode()
-            this.provinceList = data.data.dictpro
+            const { data } = await getChiness()
+            this.provinceList = data
             console.log('sheng' + this.provinceList)
         },
         onProvince (key) {
@@ -137,4 +137,11 @@ export default {
         font-size: 16px;
         padding-bottom: 10px;
     }
+    .query-cont-col-area {
+        position: relative;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-right: 24px;}
 </style>
