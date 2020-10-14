@@ -1,67 +1,68 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="page-tilte">好橙工台账</div>
-            <div class="page-body-cont">
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='false'>
-                    <template slot="type" slot-scope="scope">
-                        {{onAccountType(scope.data.row.type)}}
-                    </template>
-                    <template slot="totalValue" slot-scope="scope">
-                        {{scope.data.row.totalValue?fundMoneys(scope.data.row.totalValue):'-'}}
-                    </template>
-                    <template slot="retainValue" slot-scope="scope">
-                        {{scope.data.row.retainValue?fundMoneys(scope.data.row.retainValue):'-'}}
-                    </template>
-                    <template slot="dataCollectValue" slot-scope="scope">
-                        {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
-                    </template>
-                    <template slot="docAuditValue" slot-scope="scope">
-                        {{scope.data.row.docAuditValue?fundMoneys(scope.data.row.docAuditValue):'-'}}
-                    </template>
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <h-title>
+                <template #label>好橙工台账</template>
+            </h-title>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 ::rowKey="rowKey" :isShowIndex='false'>
+                <template slot="type" slot-scope="scope">
+                    {{onAccountType(scope.data.row.type)}}
+                </template>
+                <template slot="totalValue" slot-scope="scope">
+                    {{scope.data.row.totalValue?fundMoneys(scope.data.row.totalValue):'-'}}
+                </template>
+                <template slot="retainValue" slot-scope="scope">
+                    {{scope.data.row.retainValue?fundMoneys(scope.data.row.retainValue):'-'}}
+                </template>
+                <template slot="dataCollectValue" slot-scope="scope">
+                    {{scope.data.row.dataCollectValue?fundMoneys(scope.data.row.dataCollectValue):'-'}}
+                </template>
+                <template slot="docAuditValue" slot-scope="scope">
+                    {{scope.data.row.docAuditValue?fundMoneys(scope.data.row.docAuditValue):'-'}}
+                </template>
 
-                    <template slot="infoToBeImprovedValue" slot-scope="scope">
-                        {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
-                    </template>
-                    <template slot="trustTrialValue" slot-scope="scope">
-                        {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
-                    </template>
-                    <template slot="pendingLoanValue" slot-scope="scope">
-                        {{scope.data.row.pendingLoanValue?fundMoneys(scope.data.row.pendingLoanValue):'-'}}
-                    </template>
-                    <template slot="toReturnLoanValue" slot-scope="scope">
-                        {{scope.data.row.toReturnLoanValue?fundMoneys(scope.data.row.toReturnLoanValue):'-'}}
-                    </template>
-                    <template slot="cooperCloseValue" slot-scope="scope">
-                        {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
-                    </template>
-                    <template slot="toBeSignedValue" slot-scope="scope">
-                        {{scope.data.row.toBeSignedValue?fundMoneys(scope.data.row.toBeSignedValue):'-'}}
-                    </template>
-                    <template slot="cooperCompleteValue" slot-scope="scope">
-                        {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
-                    </template>
-                    <template slot="finalApproveValue" slot-scope="scope">
-                        {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
-                    </template>
-                    <template slot="action" slot-scope="scope">
-                        <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
-                    </template>
-                </basicTable>
+                <template slot="infoToBeImprovedValue" slot-scope="scope">
+                    {{scope.data.row.infoToBeImprovedValue?fundMoneys(scope.data.row.infoToBeImprovedValue):'-'}}
+                </template>
+                <template slot="trustTrialValue" slot-scope="scope">
+                    {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
+                </template>
+                <template slot="pendingLoanValue" slot-scope="scope">
+                    {{scope.data.row.pendingLoanValue?fundMoneys(scope.data.row.pendingLoanValue):'-'}}
+                </template>
+                <template slot="toReturnLoanValue" slot-scope="scope">
+                    {{scope.data.row.toReturnLoanValue?fundMoneys(scope.data.row.toReturnLoanValue):'-'}}
+                </template>
+                <template slot="cooperCloseValue" slot-scope="scope">
+                    {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
+                </template>
+                <template slot="toBeSignedValue" slot-scope="scope">
+                    {{scope.data.row.toBeSignedValue?fundMoneys(scope.data.row.toBeSignedValue):'-'}}
+                </template>
+                <template slot="cooperCompleteValue" slot-scope="scope">
+                    {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
+                </template>
+                <template slot="finalApproveValue" slot-scope="scope">
+                    {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row.id)">查看详情</el-button>
+                </template>
+            </basicTable>
+
+            <h-title>
+                <template #label>概览</template>
+            </h-title>
+            <div class="page-tabs">
+                <el-radio-group v-model="tabPosition" style="margin-bottom:20px" @change="handleClick">
+                    <el-radio-button :label=1>项目数量</el-radio-button>
+                    <el-radio-button :label=2>工程合同金额</el-radio-button>
+                    <el-radio-button :label=3>设备总金额</el-radio-button>
+                    <el-radio-button :label=4>赊销总金额</el-radio-button>
+                </el-radio-group>
             </div>
-            <div class="page-tilte">概览</div>
-            <div class="page-body-cont">
-                <div class="page-tabs">
-                    <el-radio-group v-model="tabPosition" style="margin-bottom:20px" @change="handleClick">
-                        <el-radio-button :label=1>项目数量</el-radio-button>
-                        <el-radio-button :label=2>工程合同金额</el-radio-button>
-                        <el-radio-button :label=3>设备总金额</el-radio-button>
-                        <el-radio-button :label=4>赊销总金额</el-radio-button>
-                    </el-radio-group>
-                </div>
-                <p>单位：{{barUnit}}</p>
-                <div id="barchart" style="height:600px"></div>
-            </div>
+            <p>单位：{{barUnit}}</p>
+            <div id="barchart" style="height:600px"></div>
         </div>
     </div>
 </template>
@@ -141,7 +142,7 @@ export default {
             findProjetstatic: 'findProjetstatic'
 
         }),
-        async  searchList () {
+        async searchList () {
             const { ...params } = this.queryParams
             await this.findProjetpage(params)
             this.tableData = this.projectData
