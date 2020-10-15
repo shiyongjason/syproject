@@ -51,7 +51,7 @@
                     {{ scope.data.row.level === 1 ? '一级': '二级' }}
                 </template>
                 <template slot="contactUser" slot-scope="scope">
-                    <p>{{scope.data.row.title}}</p>
+                    <p>{{scope.data.row.contactUser}}</p>
                 </template>
                 <template slot="payAmount" slot-scope="scope">
                     {{ scope.data.row.payAmount ? scope.data.row.payAmount + '元' : '-' }}
