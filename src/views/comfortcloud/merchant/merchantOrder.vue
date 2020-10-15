@@ -81,6 +81,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'successTime', formatters: 'dateTime' },
                 { label: '订单号', prop: 'payNo' },
                 { label: '微信支付订单号', prop: 'wxPayNo' },
