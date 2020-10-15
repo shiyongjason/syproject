@@ -3779,7 +3779,6 @@ export default {
             }
             this[tableName].forEach((value) => {
                 value.children.forEach((val) => {
-                    console.log(val)
                     if (newTableDataTotal[val.prop || val.selfProp] !== null && newTableDataTotal[val.prop || val.selfProp] !== undefined) {
                         if (val.children) {
                             val.children[0].label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
@@ -3791,8 +3790,8 @@ export default {
                             if (val.children[0].label !== '合计') {
                                 val.children[0].label = '-'
                             }
-                        } else {
-                            (val.label !== '合计') && (val.label = '-')
+                        } else if (!isNaN(val.label - 0)) {
+                            val.label = '-'
                         }
                     }
                 })
