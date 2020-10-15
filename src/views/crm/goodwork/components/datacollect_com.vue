@@ -1,7 +1,10 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
-            <h-button table @click="onGetrefuse">打回记录</h-button>
+            <div class="collect-wrap_btnflex">
+                <h-button table @click="onGetrefuse">打回记录</h-button>
+                <h-button table @click="onDownzip">一键下载</h-button>
+            </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
                 <template v-for="obj in item.respRiskCheckDocTemplateList">
@@ -39,9 +42,10 @@
                                 </div>
 
                             </div>
-                              <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
-                                    <el-button type="primary">上 传</el-button>
-                                </hosjoyUpload>
+                            <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
+                                style="margin:10px 0 0 5px">
+                                <el-button type="primary">上 传</el-button>
+                            </hosjoyUpload>
                         </div>
 
                     </el-form-item>
@@ -174,6 +178,9 @@ export default {
             this.collectVisible = true
             this.collectTitle = '材料审核'
         },
+        onDownzip () {
+            this.$emit('onBackDownzip')
+        },
         onCallback () {
             const newTempid = []
             const newList = this.colForm.projectDocList
@@ -269,15 +276,22 @@ export default {
 /deep/.el-form {
     padding: 0;
 }
+/deep/.el-form-item__content{
+    line-height: 24px;
+}
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
+    &_btnflex {
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+    }
 }
 .collect-title {
     font-size: 20px;
-    line-height: 45px;
     border-bottom: 1px solid #e5e5e5;
-    margin-top: 10px;
+    padding: 20px 0;
     font-weight: bold;
 }
 .collect-box {
@@ -292,11 +306,22 @@ export default {
     flex-direction: row;
 }
 .collect-boxtxt {
+    h3 {
+        padding: 30px 0 0 0;
+        font-size: 16px;
+        margin: 0;
+    }
     i {
         color: #ff0000;
         vertical-align: middle;
         padding: 0 2 0 0px;
         font-style: normal;
+    }
+    p{
+        font-size: 14px;
+        margin: 0;
+        padding: 16px 0 0  0;
+        line-height: auto;
     }
 }
 .collect-call {
@@ -311,6 +336,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 16px 0 0 0;
     div {
         &:first-child {
             display: flex;
@@ -335,7 +361,6 @@ export default {
             white-space: nowrap;
         }
         &:nth-child(3) {
-            flex: 2;
             word-break: keep-all;
         }
     }
