@@ -3783,6 +3783,7 @@ export default {
                         if (val.children) {
                             val.children[0].label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
                         } else { // 合计有3行和2行的 （重构有帮助）
+                            console.log(newTableDataTotal[val.prop || val.selfProp])
                             val.label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
                         }
                     } else {
@@ -3790,7 +3791,7 @@ export default {
                             if (val.children[0].label !== '合计') {
                                 val.children[0].label = '-'
                             }
-                        } else if (!isNaN(val.label - 0)) {
+                        } else if (!isNaN(val.label.replace(',', '') - 0)) {
                             val.label = '-'
                         }
                     }
