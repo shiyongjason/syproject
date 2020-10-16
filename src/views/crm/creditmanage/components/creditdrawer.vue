@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
-            <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
                 <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>1)"></el-tab-pane>
             </el-tabs>
@@ -30,8 +30,17 @@
             </div>
             <div class="collect-wrapbox" v-if="activeName=='2'">
                 <el-form ref="approveForm" class="demo-ruleForm">
-                    <div class="" v-for="item in approveForm" :key="item.firstCatagoryId">
-                        <div class="collect-title">{{item.firstCatagoryName}}<h-button table @click="onClickRecord">打回记录</h-button>
+                    <div class="collect-wrapbox_btnflex">
+                        <p>
+                            <h-button table @click="onClickRecord">打回记录</h-button>
+                        </p>
+                        <p>
+                            <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                            <span v-if="isDownLoad">下载启动中，请稍后</span>
+                        </p>
+                    </div>
+                    <div class="collect-main" v-for="item in approveForm" :key="item.firstCatagoryId">
+                        <div class="collect-title">{{item.firstCatagoryName}}
                         </div>
                         <template v-for="obj in item.respRiskCheckDocTemplateList">
                             <el-form-item label="" prop="type" :key="'item'+obj.templateId">
@@ -240,7 +249,8 @@ export default {
                 remark: [
                     { required: true, message: '请输入打回原因', trigger: 'blur' }
                 ]
-            }
+            },
+            isDownLoad: false
         }
     },
     components: {
@@ -304,6 +314,7 @@ export default {
             this.drawer = true
         },
         async onShowCreditdocument () {
+            this.isDownLoad = false
             await this.findCreditDocument(this.companyId)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
@@ -328,7 +339,7 @@ export default {
             // await uploadCredit(newDocuments)
             // this.$message.success('资料上传成功!')
         },
-        async  handleSuccessArg (val) {
+        async handleSuccessArg (val) {
             // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
             await uploadCredit([val])
             this.$message.success('资料上传成功!')
@@ -512,6 +523,10 @@ export default {
             this.$nextTick(() => {
                 this.$refs.refuseForm.clearValidate()
             })
+        },
+        onDownzip () {
+            this.isDownLoad = true
+            window.location.href = interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`
         }
     }
 }
@@ -532,13 +547,28 @@ export default {
     height: 500px;
     overflow-y: scroll;
 }
+/deep/.el-dialog .el-input {
+    width: 100%;
+}
+
+/deep/.el-tabs__nav {
+    margin: 0 10px;
+}
+/deep/.el-form-item__content {
+    line-height: 24px;
+}
+/deep/.el-form .el-input:not(:first-child) {
+    margin-left: 0;
+}
 .drawer-wrap {
-    padding: 0 10px;
+    padding: 0 10px 100px 10px;
+    margin-left: 15px;
     &_title {
         background: #efeeee;
         height: 40px;
         line-height: 40px;
         margin-bottom: 10px;
+        padding-left: 10px;
     }
     &_btn {
         display: flex;
@@ -576,20 +606,32 @@ export default {
     }
 }
 
-/deep/.el-dialog .el-input {
-    width: 100%;
-}
-
-/deep/.el-tabs__nav {
-    margin: 0 10px;
-}
 .collect-wrapbox {
     padding: 0 10px 100px 10px;
+    margin-left: 15px;
+    &_btnflex {
+        margin: 0 10px;
+        display: flex;
+        justify-content: flex-end;
+        position: fixed;
+        top: 130px;
+        right: 0;
+        z-index: 11;
+        background: #fff;
+        flex-direction: column;
+        span {
+            color: #ff7a45;
+            font-size: 14px;
+        }
+    }
+}
+.collect-main {
+    margin-top: 70px;
 }
 .collect-title {
     font-size: 20px;
-    line-height: 45px;
-    margin-top: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 20px 0;
     font-weight: bold;
     /deep/ .el-button--mini {
         margin-left: 50px;
@@ -606,13 +648,24 @@ export default {
 .collect-boxflex {
     display: flex;
     flex-direction: row;
+    padding: 30px 0 0 0;
 }
 .collect-boxtxt {
+    h3 {
+        font-size: 16px;
+        margin: 0;
+    }
     i {
         color: #ff0000;
         vertical-align: middle;
         padding: 0 2 0 0px;
         font-style: normal;
+    }
+    p {
+        font-size: 14px;
+        margin: 0;
+        padding: 16px 0 0 0;
+        line-height: auto;
     }
 }
 .collect-call {
@@ -625,6 +678,7 @@ export default {
 }
 .upload-file_list {
     display: flex;
+    margin: 16px 0 0 0;
     // justify-content: space-around;
     p {
         &:first-child {
@@ -669,7 +723,10 @@ export default {
 .project-record {
     margin-top: 15px;
 }
-/deep/.el-form .el-input:not(:first-child) {
-    margin-left: 0;
+.fiextab {
+    position: fixed;
+    background: #ffffff;
+    width: 100%;
+    z-index: 11;
 }
 </style>
