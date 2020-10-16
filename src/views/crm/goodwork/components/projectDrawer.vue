@@ -2,7 +2,7 @@
     <div class="project-wrap">
 
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
-            <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+            <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <template v-for="item in tabs">
                     <template v-if='isShowTab(item.key,status)'>
                         <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
@@ -144,7 +144,7 @@ export default {
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -520,5 +520,11 @@ export default {
 }
 .dialogattachment {
     max-height: 300px;
+}
+.fiextab {
+    position: fixed;
+    background: #ffffff;
+    width: 100%;
+    z-index: 11;
 }
 </style>

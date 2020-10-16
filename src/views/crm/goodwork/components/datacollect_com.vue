@@ -2,9 +2,9 @@
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
-                <h-button table @click="onGetrefuse">打回记录</h-button>
-                <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                <span v-if="isDownLoad">下载启动中，请稍后</span>
+                <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
+               <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                <span v-if="isDownLoad">下载启动中，请稍后</span></p>
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
@@ -286,14 +286,24 @@ export default {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
     &_btnflex {
-        margin: 10px 0;
+         margin:  0 10px;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
+        position: fixed;
+        top: 130px;
+        right: 0;
+        z-index: 11;
+       background: #fff;
+       flex-direction: column;
         span{
               color: #ff7a45;
               font-size: 14px;
+              margin-left: 10px;
         }
     }
+}
+.collect-wrapbox{
+    margin-top: 80px;
 }
 .collect-title {
     font-size: 20px;
@@ -420,6 +430,7 @@ export default {
 .project-record {
     margin-top: 15px;
 }
+
 /deep/.el-card__body {
     padding: 5px;
     p {
