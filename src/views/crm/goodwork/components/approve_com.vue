@@ -1,6 +1,7 @@
 <template>
     <div class="collect-wrap">
-        <h-button table @click="onDownzip">一键下载</h-button>
+        <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+        <span v-if="isDownLoad" class="collect-wrap_span">下载启动中，请稍后</span>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
                 <div class="collect-Info_result">{{approveTitle+'结果：'}} <i>{{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}</i></div>
@@ -114,7 +115,8 @@ export default {
             approvedialgForm: {
                 submitStatus: '',
                 remark: ''
-            }
+            },
+            isDownLoad: false
         }
     },
     mounted () {
@@ -138,6 +140,7 @@ export default {
             return res
         },
         onDownzip () {
+            this.isDownLoad = true
             this.$emit('onBackDownzip')
         },
         async onSaveapproveOrfinal (val) {
@@ -230,6 +233,10 @@ export default {
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
+    &_span{
+        font-size: 14px;
+        color: #ff7a45;
+    }
 }
 .collect-title {
     font-size: 20px;

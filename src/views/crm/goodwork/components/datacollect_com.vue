@@ -3,7 +3,8 @@
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
                 <h-button table @click="onGetrefuse">打回记录</h-button>
-                <h-button table @click="onDownzip">一键下载</h-button>
+                <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                <span v-if="isDownLoad">下载启动中，请稍后</span>
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
@@ -155,7 +156,8 @@ export default {
             },
             coldataForm: {
                 remark: ''
-            }
+            },
+            isDownLoad: false
         }
     },
     components: {
@@ -179,6 +181,7 @@ export default {
             this.collectTitle = '材料审核'
         },
         onDownzip () {
+            this.isDownLoad = true
             this.$emit('onBackDownzip')
         },
         onCallback () {
@@ -286,6 +289,10 @@ export default {
         margin: 10px 0;
         display: flex;
         justify-content: space-between;
+        span{
+              color: #ff7a45;
+              font-size: 14px;
+        }
     }
 }
 .collect-title {
