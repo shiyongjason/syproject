@@ -144,7 +144,7 @@ export default {
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
             statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
+            { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -294,6 +294,18 @@ export default {
             // 打回补充
             this.$refs.datacolCom.onCallback()
         },
+        validFormInfo (list) {
+            const respTemp = this.colForm.projectDocList[0].respRiskCheckDocTemplateList
+            console.log(list, respTemp)
+            let res = ''
+            for (let i = 0; i < respTemp.length; i++) {
+                if (respTemp[i].mondatoryFlag == 1 && respTemp[i].riskCheckProjectDocPos.length == 0) {
+                    res = respTemp[i]
+                    break
+                }
+            }
+            return res
+        },
         async onAuditstatus (val) {
             let status = Object.keys(val)[0]
             let statusTxt = ''
@@ -313,8 +325,27 @@ export default {
                 this.$refs.datacolCom.onShowcollect()
                 return
             } else if (status == 4) {
+                const projectDocList = this.colForm.projectDocList
+                let riskCheckProjectDocPoList = []
+                let newriskCheckProjectDocPoList = []
+                projectDocList && projectDocList.map(val => {
+                    val.respRiskCheckDocTemplateList.map(obj => {
+                        newriskCheckProjectDocPoList = newriskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
+                        if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
+                    })
+                })
+                const params = {}
+                params.bizType = this.status == 4 ? '2' : '3'
+                params.projectId = this.colForm.projectId
+                params.riskCheckProjectDocPoList = newriskCheckProjectDocPoList
+                let res = this.validFormInfo(riskCheckProjectDocPoList)
+                if (res) {
+                    this.$message.error(`二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+                    this.$emit('onBackLoad', false)
+                } else {
+                    this.$refs.approveCom.onShowApprove(status)
+                }
                 // status = !!status // H5端待立项 显示重置按钮和立项  这里需要弹窗  通过 不通过
-                this.$refs.approveCom.onShowApprove(status)
                 return
             } else if (status == 5) {
                 // status = !!status //  合作关闭显示 重置
