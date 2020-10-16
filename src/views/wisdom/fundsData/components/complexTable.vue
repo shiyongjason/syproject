@@ -216,7 +216,7 @@ export default {
                         render: (h, scope) => {
                             return (
                                 <el-tooltip placement="top" effect='light'>
-                                    <div slot="content">MIS编码1：{scope.row.misCode ? scope.row.misCode : '-'}
+                                    <div slot="content">MIS编码：{scope.row.misCode ? scope.row.misCode : '-'}
                                         <br/>平台公司：{scope.row.loanCompanyName ? scope.row.loanCompanyName : '-'}</div>
                                     <span>{scope.row.misCode ? scope.row.misCode : '-'}</span>
                                 </el-tooltip>
@@ -3783,7 +3783,6 @@ export default {
                         if (val.children) {
                             val.children[0].label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
                         } else { // 合计有3行和2行的 （重构有帮助）
-                            console.log(newTableDataTotal[val.prop || val.selfProp])
                             val.label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
                         }
                     } else {
@@ -3791,8 +3790,10 @@ export default {
                             if (val.children[0].label !== '合计') {
                                 val.children[0].label = '-'
                             }
-                        } else if (!isNaN(val.label.replace(',', '') - 0)) {
-                            val.label = '-'
+                        } else if (tableName === 'ReimbursementDetail') {
+                            if (val.label !== '合计') {
+                                val.label = '-'
+                            }
                         }
                     }
                 })
