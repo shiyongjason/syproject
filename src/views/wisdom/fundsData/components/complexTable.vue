@@ -3787,7 +3787,6 @@ export default {
                             val.label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
                         }
                     } else {
-                        console.log(val)
                         if (val.children) {
                             if (val.children[0].label !== '合计') {
                                 val.children[0].label = '-'
