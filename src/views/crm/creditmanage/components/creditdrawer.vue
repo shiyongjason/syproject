@@ -526,6 +526,7 @@ export default {
         },
         onDownzip () {
             this.isDownLoad = true
+            console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
             window.location.href = interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`
         }
     }
