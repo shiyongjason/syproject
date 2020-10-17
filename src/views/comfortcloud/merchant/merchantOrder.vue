@@ -28,8 +28,8 @@
                 <div class="flex-wrap-cont">
                     <el-select v-model="queryParams.status" style="width: 100%">
                         <el-option label="全部" value=""></el-option>
-                        <el-option label="已支付" value="0"></el-option>
-                        <el-option label="未支付" value="10"></el-option>
+                        <el-option label="已支付" value="10"></el-option>
+                        <el-option label="未支付" value="0"></el-option>
                         <el-option label="已取消" value="15"></el-option>
                         <el-option label="已退款" value="30"></el-option>
                     </el-select>
@@ -151,10 +151,10 @@ export default {
         payStatus: function (status) {
             if (status === 0) {
                 // 已支付
-                return '已支付'
+                return '未支付'
             } else if (status === 10) {
                 // 未支付
-                return '未支付'
+                return '已支付'
             } else if (status === 15) {
                 // 已取消
                 return '已取消'

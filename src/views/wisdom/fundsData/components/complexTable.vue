@@ -3781,8 +3781,6 @@ export default {
                 value.children.forEach((val) => {
                     if (newTableDataTotal[val.prop || val.selfProp] !== null && newTableDataTotal[val.prop || val.selfProp] !== undefined) {
                         if (val.children) {
-                            // console.log(newTableDataTotal[val.prop])
-                            // console.log(val)
                             val.children[0].label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
                         } else { // 合计有3行和2行的 （重构有帮助）
                             val.label = String(filters.fundMoneyHaveSpot(newTableDataTotal[val.prop || val.selfProp]))
@@ -3792,6 +3790,8 @@ export default {
                             if (val.children[0].label !== '合计') {
                                 val.children[0].label = '-'
                             }
+                        } else if (!isNaN(val.label - 0)) {
+                            val.label = '-'
                         }
                     }
                 })
