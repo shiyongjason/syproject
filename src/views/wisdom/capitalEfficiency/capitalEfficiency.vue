@@ -233,12 +233,30 @@ export default {
             if (!val.includes('平台公司')) {
                 this.disabled = true
                 this.queryParams.companyType = 2
+                this.tempCompanyQuery = {
+                    loanCompanyCode: this.queryParams.loanCompanyCode,
+                    loanCompanyName: this.queryParams.loanCompanyName,
+                    selectCode: this.selectAuth.platformObj.selectCode,
+                    selectName: this.selectAuth.platformObj.selectName,
+                    misCode: this.queryParams.misCode
+                }
                 this.queryParams.loanCompanyCode = ''
                 this.queryParams.loanCompanyName = ''
+                this.selectAuth.platformObj = {
+                    selectCode: '',
+                    selectName: ''
+                }
                 this.queryParams.misCode = ''
             } else {
                 this.disabled = false
                 this.queryParams.companyType = 1
+                this.queryParams.loanCompanyCode = this.tempCompanyQuery.loanCompanyCode
+                this.queryParams.loanCompanyName = this.tempCompanyQuery.loanCompanyName
+                this.queryParams.misCode = this.tempCompanyQuery.misCode
+                this.selectAuth.platformObj = {
+                    selectCode: this.tempCompanyQuery.selectCode,
+                    selectName: this.tempCompanyQuery.selectName
+                }
             }
             this.tableData = []
             this.onSearch()
