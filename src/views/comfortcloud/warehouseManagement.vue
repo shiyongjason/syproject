@@ -13,10 +13,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">出库时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startOutboundTime" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                    <el-date-picker v-model="queryParams.endOutboundTime" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
