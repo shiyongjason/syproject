@@ -216,7 +216,7 @@ export default {
                         render: (h, scope) => {
                             return (
                                 <el-tooltip placement="top" effect='light'>
-                                    <div slot="content">MIS编码1：{scope.row.misCode ? scope.row.misCode : '-'}
+                                    <div slot="content">MIS编码：{scope.row.misCode ? scope.row.misCode : '-'}
                                         <br/>平台公司：{scope.row.loanCompanyName ? scope.row.loanCompanyName : '-'}</div>
                                     <span>{scope.row.misCode ? scope.row.misCode : '-'}</span>
                                 </el-tooltip>
@@ -3790,8 +3790,10 @@ export default {
                             if (val.children[0].label !== '合计') {
                                 val.children[0].label = '-'
                             }
-                        } else if (!isNaN(val.label - 0)) {
-                            val.label = '-'
+                        } else if (tableName === 'ReimbursementDetail') {
+                            if (val.label !== '合计') {
+                                val.label = '-'
+                            }
                         }
                     }
                 })
