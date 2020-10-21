@@ -43,7 +43,7 @@
                                 </div>
 
                             </div>
-                            <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
+                            <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
                                 style="margin:10px 0 0 5px">
                                 <el-button type="primary">上 传</el-button>
                             </hosjoyUpload>
