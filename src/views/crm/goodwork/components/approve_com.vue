@@ -1,8 +1,14 @@
 <template>
     <div class="collect-wrap">
         <div class="collect-wrap_btnflex">
+            <div v-if="activeName=='3'">
             <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
             <span v-if="isDownLoad" class="collect-wrap_span">下载启动中，请稍后</span>
+            </div>
+              <div v-if="activeName=='4'">
+            <h-button table @click="onDownzip" v-if="!isDownLoads">一键下载</h-button>
+            <span v-if="isDownLoads" class="collect-wrap_span">下载启动中，请稍后</span>
+            </div>
         </div>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
@@ -118,7 +124,8 @@ export default {
                 submitStatus: '',
                 remark: ''
             },
-            isDownLoad: false
+            isDownLoad: false,
+            isDownLoads: false
         }
     },
     mounted () {
@@ -142,7 +149,12 @@ export default {
             return res
         },
         onDownzip () {
-            this.isDownLoad = true
+            if (this.activeName == 3) {
+                this.isDownLoad = true
+            } else {
+                this.isDownLoads = true
+            }
+
             this.$emit('onBackDownzip')
         },
         async onSaveapproveOrfinal (val) {
