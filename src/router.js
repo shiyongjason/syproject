@@ -15,6 +15,7 @@ import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
+import Merchantrouter from "./router/Merchantrouter";
 Vue.use(Router)
 
 const routerMapping = [
@@ -217,6 +218,7 @@ const routerMapping = [
     ...B2brouter,
     ...Jyrouter,
     ...Cloudrouter,
+    ...Merchantrouter,
     ...Crmrouter
 ]
 

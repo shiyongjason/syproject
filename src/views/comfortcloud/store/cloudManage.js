@@ -5,6 +5,7 @@ import * as Api from '@/views/comfortcloud/api'
 
 const state = {
     iotmemberData: {},
+    iotmerchantmemberData: {},
     iotmemberDetail: {},
     familyData: {},
     cloudActivitydetail: {},
@@ -63,6 +64,7 @@ const state = {
 
 const getters = {
     iotmemberData: state => state.iotmemberData,
+    iotmerchantmemberData: state => state.iotmerchantmemberData,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
     cloudActivitydetail: state => state.cloudActivitydetail,
@@ -132,6 +134,9 @@ const getters = {
 const mutations = {
     [types.MEMBERS_DATA] (state, payload) {
         state.iotmemberData = payload
+    },
+    [types.MERCHANT_MEMBERS_DATA] (state, payload) {
+        state.iotmerchantmemberData = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
         state.iotmemberDetail = payload
@@ -302,6 +307,10 @@ const actions = {
     async findMembersituation ({ commit }, params) {
         const { data } = await Api.getMembersituation(params)
         commit(types.MEMBERS_DATA, data.data)
+    },
+    async findMerchantMembersituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMembersituation(params)
+        commit(types.MERCHANT_MEMBERS_DATA, data.data)
     },
     async findIotMemberDetail ({ commit }, params) {
         const { data } = await Api.getMemberDetail(params)

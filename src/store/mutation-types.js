@@ -46,5 +46,7 @@ export const REAL_REPORT = 'REAL_REPORT'
 export const HOSTORY_REPORT = 'HOSTORY_REPORT'
 // iot会员管理
 export const MEMBERS_DATA = 'MEMBERS_DATA'
+// 经销商
+export const MERCHANT_MEMBERS_DATA = 'MERCHANT_MEMBERS_DATA'
 export const MEMBERS_DETAIL = 'MEMBERS_DETAIL'
 export const FAMILY_DATA = 'FAMILY_DATA'

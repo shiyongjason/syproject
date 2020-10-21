@@ -37,6 +37,10 @@ export function findRoomDetail (homeId) {
 export function getMembersituation (params) {
     return axios.get(iotUrl + `/uc/user-manage/general-situation`, { params })
 }
+// 经销商会员列表
+export function getMerchantMembersituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/manage`, { params })
+}
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
 }
@@ -101,7 +105,7 @@ export function downloadQuestionTemp () {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '帮助中心模板.xlsx'
+                a.download = '订单明细模板.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
