@@ -295,6 +295,9 @@ export default {
         z-index: 11;
        background: #fff;
        flex-direction: column;
+       p{
+           margin-bottom: 10px;
+       }
         span{
               color: #ff7a45;
               font-size: 14px;
