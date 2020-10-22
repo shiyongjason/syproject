@@ -36,7 +36,7 @@
                         </p>
                         <p>
                             <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                            <span v-if="isDownLoad">下载启动中，请稍后</span>
+                            <span v-if="isDownLoad">正在下载中，请稍后</span>
                         </p>
                     </div>
                     <div class="collect-main" v-for="item in approveForm" :key="item.firstCatagoryId">
