@@ -78,8 +78,8 @@
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</h-button>
-                    <h-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
-                    <h-button type="primary" @click="onSubmitDoc">审核通过</h-button>
+                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <h-button type="primary" @click="onOnlyCredit">审核通过</h-button>
                     <h-button @click="handleClose">取消</h-button>
                 </div>
             </div>
@@ -118,8 +118,14 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button @click="onCloseDrawer">取消</h-button>
-                <h-button type='primary' @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</h-button>
+                <template v-if="onlyType==1">
+                    <h-button @click="onCloseDrawer">取消</h-button>
+                    <h-button type='primary' @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</h-button>
+                </template>
+                <template v-else>
+                    <h-button @click="onSubmitDoc(2)">仅审核通过，暂不评级</h-button>
+                    <h-button type='primary' @click="onSubmitDoc(3)" :loading=isloading>{{isloading?'保存中...':'审核通过并提交评级'}}</h-button>
+                </template>
             </span>
         </el-dialog>
         <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
@@ -241,7 +247,8 @@ export default {
                 remark: [
                     { required: true, message: '请输入打回原因', trigger: 'blur' }
                 ]
-            }
+            },
+            onlyType: 1
         }
     },
     components: {
@@ -329,7 +336,7 @@ export default {
             // await uploadCredit(newDocuments)
             // this.$message.success('资料上传成功!')
         },
-        async  handleSuccessArg (val) {
+        async handleSuccessArg (val) {
             // const newDocuments = row.creditDocuments.filter(item => !item.creditDocumentId)
             await uploadCredit([val])
             this.$message.success('资料上传成功!')
@@ -375,7 +382,15 @@ export default {
             }
             return res
         },
-        async onSubmitDoc () {
+        onOnlyCredit () {
+            // 新增 审核通过
+            this.onlyType = 1
+            this.dialogVisible = true
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
+            })
+        },
+        async onSubmitDoc (val) {
             this.creditDocumentList = []
             this.approveForm.length > 0 && this.approveForm.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -395,18 +410,14 @@ export default {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
                 console.log(this.creditDocumentList)
-                // 新增 审核通过
-                this.dialogVisible = true
-                this.$nextTick(() => {
-                    this.$refs.ruleForm.clearValidate()
+                this.submitForm()
+                await saveCreditDocument({ companyId: this.companyId, submitStatus: val })
+                this.$message({
+                    message: `审核通过`,
+                    type: 'success'
                 })
-                // await saveCreditDocument({ companyId: this.companyId, submitStatus: 2 })
-                // this.$message({
-                //     message: `审核通过`,
-                //     type: 'success'
-                // })
-                // this.drawer = false
-                // this.$emit('backEvent')
+                this.drawer = false
+                this.$emit('backEvent')
             }
 
             // this.saveCreditDocument()

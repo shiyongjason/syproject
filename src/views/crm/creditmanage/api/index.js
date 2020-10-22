@@ -21,3 +21,8 @@ export const refuseCredit = (params) => axios.post(`/memeber/api/credit-document
 
 // 上传授信
 export const uploadCredit = (params) => axios.post(`/memeber/api/credit-document/upload-file`, params)
+
+// 资料保存
+export const saveDoc = (params) => axios.post(`/fms/api/risk-check/save/project-doc`, params)
+// 资料保存
+export const submitDoc = (params) => axios.post(`/fms/api/risk-check/submit/project-doc`, params)
