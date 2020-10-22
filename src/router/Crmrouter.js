@@ -129,7 +129,7 @@ export default [
                     tagName: '好橙工项目资料详情',
                     isMenu: false,
                     icon: '',
-                    showMenuAs: '/goodwork/projectInformationList'
+                    showMenuAs: '/goodwork/projectlist'
 
                 },
                 component: () => import('@/views/crm/projectInformation/detail.vue')

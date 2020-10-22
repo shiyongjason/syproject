@@ -131,8 +131,9 @@
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onLookproject(scope.data.row)">提交资料</h-button>
-                    <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
+                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回-->
+                    <h-button table @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=2&&scope.data.row.docAfterStatus!=3">提交资料</h-button>
+                    <h-button table @click="onLookproject(scope.data.row)" v-if="scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3&&hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
                     <h-button table @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
                     <h-button table v-if="scope.data.row.pushRecord" @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
                 </template>
@@ -358,6 +359,9 @@ export default {
             findProjectrecord: 'crmmanage/findProjectrecord',
             findPunchlist: 'crmmanage/findPunchlist'
         }),
+        onEditproject (row) {
+            this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
+        },
         getProjectDateForList (type, pDocCount, tempCount) {
             // 资料审核状态type 1：待提交 2：已提交 3：审核通过 4：审核驳回
             let content = null

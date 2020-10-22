@@ -55,10 +55,10 @@
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
-                    <h-button  style="width:130px;" @click="onBack">返回</h-button>
+                    <h-button style="width:130px;" @click="onBack">返回</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <h-button  type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
+                    <h-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
                     <h-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</h-button>
@@ -76,8 +76,8 @@
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <h-button  @click="dialogVisible = false">取 消</h-button>
-                <h-button  type="primary" @click="dialogVisible = false">确 定</h-button>
+                <h-button @click="dialogVisible = false">取 消</h-button>
+                <h-button type="primary" @click="dialogVisible = false">确 定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -88,7 +88,7 @@ import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
-import { saveDoc, submitDoc } from './api/index'
+import { saveDoc, submitDoc, getProjectLevels } from './api/index'
 import moment from 'moment'
 const _reqRiskCheckProjectDoc = {
     bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
@@ -260,15 +260,47 @@ export default {
         },
         async onSubmit () {
             this.dealReqRiskCheckProjectDoc(1)
+            // 提交前先保存----需求要这样做
+            await saveDoc(this.reqRiskCheckProjectDoc)
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
-                await submitDoc(this.reqRiskCheckProjectDoc)
-                this.$message.success('提交成功')
-                this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
-                this.$router.go(-1)
+                const { data } = await getProjectLevels(this.reqRiskCheckProjectDoc.projectId)
+                // 提交前先判断企业是否授信，未授信不能上传项目资料
+                if (data.companyDocumentStatus == 2 || data.companyDocumentStatus == 3) {
+                    await submitDoc(this.reqRiskCheckProjectDoc)
+                    this.$message.success('提交成功')
+                    this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+                    this.$router.go(-1)
+                } else {
+                    this.onCreditDetail()
+                }
             }
+        },
+        // 去企业授信
+        onCreditDetail () {
+            const h = this.$createElement
+            this.$msgbox({
+                title: '',
+                message: h('p', null, [
+                    h('div', null, '您当前未提交企业授信材料，项目资料提交失败'),
+                    h('i', { style: 'color: #FF7A45;fontStyle: normal' }, '注：当前页面资料已为您自动保存')
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '去提交企业授信资料',
+                cancelButtonText: '我知道了'
+            }).then(action => {
+                const params = {
+                    projectId: this.$route.query.projectId,
+                    status: this.$route.query.status,
+                    docAfterStatus: this.$route.query.docAfterStatus
+                }
+                // 跳转上传企业授信资料
+                this.$router.push({ path: '/goodwork/creditDetail', query: params })
+            }).catch(() => {
+                // do nothing
+            })
         },
         async onLookRefuse (val) {
             this.dialogVisible = true
