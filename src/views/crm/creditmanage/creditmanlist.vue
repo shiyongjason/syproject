@@ -71,12 +71,12 @@
                 </div>
                 <div class="query-cont__col">
 
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
 
                 </div>
             </div>
@@ -97,6 +97,8 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onDrawerinfo(scope.data.row)">上传资料</h-button>
+                    <h-button table @click="onDrawerinfo(scope.data.row)">查看资料</h-button>
                 </template>
             </basicTable>
         </div>

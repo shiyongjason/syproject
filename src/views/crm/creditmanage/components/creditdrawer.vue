@@ -79,6 +79,7 @@
                 <div class="drawer-button">
                     <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</h-button>
                     <h-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <h-button type="primary" @click="onSubmitDoc">审核通过</h-button>
                     <h-button @click="handleClose">取消</h-button>
                 </div>
             </div>
@@ -394,13 +395,18 @@ export default {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
                 console.log(this.creditDocumentList)
-                await saveCreditDocument({ companyId: this.companyId, submitStatus: 2 })
-                this.$message({
-                    message: `审核通过`,
-                    type: 'success'
+                // 新增 审核通过
+                this.dialogVisible = true
+                this.$nextTick(() => {
+                    this.$refs.ruleForm.clearValidate()
                 })
-                this.drawer = false
-                this.$emit('backEvent')
+                // await saveCreditDocument({ companyId: this.companyId, submitStatus: 2 })
+                // this.$message({
+                //     message: `审核通过`,
+                //     type: 'success'
+                // })
+                // this.drawer = false
+                // this.$emit('backEvent')
             }
 
             // this.saveCreditDocument()
