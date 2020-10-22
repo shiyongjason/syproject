@@ -324,10 +324,11 @@ export default {
 .collect-boxflex {
     display: flex;
     flex-direction: row;
+    padding: 30px 0 0 0;
 }
 .collect-boxtxt {
     h3 {
-        padding: 30px 0 0 0;
+
         font-size: 16px;
         margin: 0;
     }
