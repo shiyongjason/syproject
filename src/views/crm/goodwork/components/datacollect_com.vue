@@ -3,8 +3,8 @@
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
                 <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
-               <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                <span v-if="isDownLoad">正在下载中，请稍后</span></p>
+               <!-- <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                <span v-if="isDownLoad">正在下载中，请稍后</span></p> -->
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
