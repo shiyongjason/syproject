@@ -37,9 +37,21 @@ export function findRoomDetail (homeId) {
 export function getMembersituation (params) {
     return axios.get(iotUrl + `/uc/user-manage/general-situation`, { params })
 }
-// 经销商会员列表
+// 经销商会员列表分页查询
 export function getMerchantMembersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/manage`, { params })
+}
+// 经销商会员邀请注册列表分页查询
+export function getMerchantMemberInvitationRegistersituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/manage/register`, { params })
+}
+// 经销商会员邀请成交列表分页查询
+export function getMerchantMemberInvitationOrdersituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/manage/order`, { params })
+}
+// 经销商会员总数查询
+export function getMerchantMemberTotalsituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/manage/count`, { params })
 }
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })

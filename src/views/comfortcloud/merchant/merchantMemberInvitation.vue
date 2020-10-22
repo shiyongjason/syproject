@@ -3,32 +3,45 @@
         <div class="page-body-cont ">
             <span>会员信息</span>
         </div>
-        <div class="page-body-cont ">
-            <img style="height: 4rem " src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603281446769&di=2a9ec143434c37042a670e8faa29fdd8&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Fc995d143ad4bd113f78ddcbe51afa40f4afb05fd.jpg">
+        <div class="page-body-cont-top ">
+            <img style="height: 4rem "
+                 src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603281446769&di=2a9ec143434c37042a670e8faa29fdd8&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Fc995d143ad4bd113f78ddcbe51afa40f4afb05fd.jpg">
+            <div class="top-box">
+                <span>舒适云小助手  </span>
+                <span>手机号 ：18205951900  </span>
+            </div>
+            <div class="top-box-right" >
+                <span>注册时间： 2020-10-14 21:15  </span>
+                <span>注册来源： 自主注册</span>
+            </div>
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
                 <el-tab-pane label="已注册" name="0">
-                    <div class="page-body-cont" >
+                    <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableRegisterLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination"
+                        <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true'
+                                    :pagination="pagination"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="已成交" name="1">
-                    <div class="page-body-cont" >
+                    <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableDoneLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination"
+                        <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true'
+                                    :pagination="pagination"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                            <template slot="homeCount" slot-scope="scope">
-                                <p @click="onEditMoney(scope.data.row.homeIds)" class="colred">{{scope.data.row.homeCount}}</p>
+                            <template slot="rewardAmount" slot-scope="scope">
+                                <p @click="onEditMoney(scope.data.row.rewardAmount)" class="colred">
+                                    {{scope.data.row.homeCount}}</p>
                             </template>
-                            <template slot="homeCount1" slot-scope="scope">
-                                <p @click="onEditMonth(scope.data.row.homeIds)" class="colred">{{scope.data.row.homeCount}}</p>
+                            <template slot="rewardMonth" slot-scope="scope">
+                                <p @click="onEditMonth(scope.data.row.rewardMonth)" class="colred">
+                                    {{scope.data.row.homeCount}}</p>
                             </template>
-                            <template slot="wx_openid" slot-scope="scope">
-                                {{scope.data.row.wx_openid?'是':'否'}}
+                            <template slot="source" slot-scope="scope">
+                                {{scope.data.row.source===1?'注册':'推荐'}}
                             </template>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
@@ -39,7 +52,8 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+        <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px"
+                   :close-on-click-modal="false" :before-close="onCloseDialog">
             <el-upload
                 class="upload-fault"
                 ref="upload"
@@ -47,7 +61,7 @@
                 :on-success="uploadSuccess"
                 :on-error="uploadError"
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
-                <el-button type="primary"  slot="trigger">选择本地文件</el-button>
+                <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.批量导入的知识库仅支持文字描述，不支持图片和视频等格式</p>
                 <p slot="tip" class="el-upload__tip">3.请按照知识库模板内容导入问题和答案，否则可能会出现导入异常</p>
@@ -90,6 +104,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { downloadQuestionTemp, editActdetail } from '../api'
 import { iotUrl } from '@/api/config'
+
 export default {
     name: 'merchantMemberInvitation',
     data () {
@@ -97,12 +112,11 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: this.$route.query.phone,
-                endTime: '',
-                startTime: ''
+                phone: this.$route.query.phone
             },
             searchParams: {},
-            tableData: [],
+            tableRegisterData: [],
+            tableDoneData: [],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -111,28 +125,23 @@ export default {
             tableRegisterLabel: [
                 { label: '邀请人手机号', prop: 'phone' },
                 { label: '被邀请人昵称', prop: 'nick', width: '120px' },
-                { label: '被邀请人手机号', prop: 'phone' },
+                { label: '被邀请人手机号', prop: 'invitePhone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
             tableDoneLabel: [
-                { label: '导入时间', prop: 'nick' },
-                { label: '订单来源', prop: 'phone', width: '120px' },
-                { label: '订单编号', prop: 'homeCount' },
-                { label: '收货人', prop: 'createTime', formatters: 'dateTime' },
-                { label: '手机号', prop: 'wx_openid' },
-                { label: '收件人地址', prop: 'wx_openid' },
-                { label: '成交时间', prop: 'wx_openid' },
-                { label: '商品名称', prop: 'wx_openid' },
-                { label: '购买数量', prop: 'wx_openid' },
-                { label: '支付金额', prop: 'wx_openid' },
-                { label: '奖励金额', prop: 'wx_openid' },
-                { label: '奖励归属月份', prop: 'wx_openid' }
+                { label: '导入时间', prop: 'orderTime', formatters: 'dateTime' },
+                { label: '订单来源', prop: 'source' },
+                { label: '订单编号', prop: 'orderId' },
+                { label: '收货人', prop: 'consignee' },
+                { label: '手机号', prop: 'phone' },
+                { label: '收件人地址', prop: 'consigneeAddress' },
+                { label: '成交时间', prop: 'orderTime', formatters: 'dateTime' },
+                { label: '商品名称', prop: 'productName' },
+                { label: '购买数量', prop: 'count' },
+                { label: '支付金额', prop: 'payAmount' },
+                { label: '奖励金额', prop: 'rewardAmount' },
+                { label: '奖励归属月份', prop: 'rewardMonth' }
             ],
-            homeLabel: [
-                { label: '家庭名称', prop: 'homeName' },
-                { label: '管理员手机号', prop: 'phone' }
-            ],
-            homeData: [],
             tabIndex: 0,
             uploadShow: false,
             loading: false,
@@ -162,8 +171,8 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            memberData: 'iotmemberData',
-            familyData: 'familyData'
+            merchantmemberInvitationRegisterData: 'iotmerchantmemberInvitationRegisterData',
+            merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData'
         }),
         pickerOptionsStart () {
             return {
@@ -194,16 +203,18 @@ export default {
     },
     methods: {
         ...mapActions({
-            findMembersituation: 'findMembersituation',
-            findFamilyDetail: 'findFamilyDetail'
+            findMerchantMemberInvitationRegistersituation: 'findMerchantMemberInvitationRegistersituation',
+            findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
         }),
         async onQuery () {
-            await this.findMembersituation(this.searchParams)
-            this.tableData = this.memberData.pageContent
+            await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
+            await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
+            this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
+            this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.pagination = {
-                pageNumber: this.memberData.pageNumber,
-                pageSize: this.memberData.pageSize,
-                total: this.memberData.totalElements
+                pageNumber: this.merchantmemberInvitationRegisterData.pageNumber,
+                pageSize: this.merchantmemberInvitationRegisterData.pageSize,
+                total: this.merchantmemberInvitationRegisterData.totalElements
             }
         },
         onSearch () {
@@ -239,7 +250,8 @@ export default {
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
                 try {
                     await this.$refs.upload.submit()
-                } catch (e) {}
+                } catch (e) {
+                }
             } else {
                 this.$message.error('请选择上传的文件')
                 this.loading = false
@@ -369,4 +381,32 @@ export default {
         display: inline-block;
         margin: 5px;
     }
+
+    .top-box {
+        width: auto;
+        margin-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        height: 4rem;
+        justify-content: space-between;
+        background: #ffffff;
+    }
+    .top-box-right {
+        width: auto;
+        margin-left: 1rem;
+        display: flex;
+        flex-direction: row;
+        justify-content:flex-end;
+        background: #ffffff;
+    }
+    .page-body-cont-top {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+
+    }
+
 </style>

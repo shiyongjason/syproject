@@ -1,8 +1,14 @@
 <template>
     <div class="tags-wrapper page-body amountImport">
-        <div class="page-body-cont query-cont spanflex">
+        <div class="page-body-cont ">
             <span>会员管理 </span>
-            <span>会员数量：{{merchantmemberData.attachData&&merchantmemberData.attachData.totalCount}}个</span>
+        </div>
+        <div class="page-body-cont">
+            <span class="topTitle">已筛选 {{merchantmemberData.total}} 项</span>
+            <span class="topTitle">累计注册: {{merchantmemberTotalData.registerCount}}个</span>
+            <span class="topTitle">累计成交订单: {{merchantmemberTotalData.orderCount}}单</span>
+            <span class="topTitle">累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元</span>
+            <span class="topTitle">累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元</span>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
@@ -29,12 +35,9 @@
         </div>
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="homeCount" slot-scope="scope">
-                    <p @click="onShowHome(scope.data.row.homeIds)" class="colred">{{scope.data.row.homeCount}}</p>
-                </template>
-                <template slot="wx_openid" slot-scope="scope">
-                    {{scope.data.row.wx_openid?'是':'否'}}
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="source" slot-scope="scope">
+                    {{scope.data.row.source===1?'注册':'推荐'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">邀请详情</el-button>
@@ -91,7 +94,8 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            merchantmemberData: 'iotmerchantmemberData'
+            merchantmemberData: 'iotmerchantmemberData',
+            merchantmemberTotalData: 'iotmerchantmemberTotalData'
         }),
         pickerOptionsStart () {
             return {
@@ -122,10 +126,12 @@ export default {
     },
     methods: {
         ...mapActions({
-            findMerchantMembersituation: 'findMerchantMembersituation'
+            findMerchantMembersituation: 'findMerchantMembersituation',
+            findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation'
         }),
         async onQuery () {
             await this.findMerchantMembersituation(this.searchParams)
+            await this.findMerchantMemberTotalsituation()
             this.tableData = this.merchantmemberData.records
             this.pagination = {
                 pageNumber: this.merchantmemberData.pageNumber,
@@ -137,21 +143,8 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onCurrentChange (val) {
-            this.searchParams.pageNumber = val.pageNumber
-            this.onQuery()
-        },
-        onSizeChange (val) {
-            this.searchParams.pageSize = val
-            this.onQuery()
-        },
         onEdit (val) {
             this.$router.push({ path: '/comfortcloud/merchant/merchantMemberInvitation', query: { phone: val.phone } })
-        },
-        async onShowHome (val) {
-            this.dialogVisible = true
-            await this.findFamilyDetail(val)
-            this.homeData = this.familyData
         }
     }
 }
@@ -171,6 +164,9 @@ export default {
             text-align: right;
         }
     }
+}
+.topTitle{
+    margin-left: 2rem;
 }
 .colred {
     color: #ff7a45;
