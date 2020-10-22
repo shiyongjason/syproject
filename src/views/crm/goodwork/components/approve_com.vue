@@ -2,12 +2,12 @@
     <div class="collect-wrap">
         <div class="collect-wrap_btnflex">
             <div v-if="activeName=='3'">
-            <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-            <span v-if="isDownLoad" class="collect-wrap_span">下载启动中，请稍后</span>
+                <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                <span v-if="isDownLoad" class="collect-wrap_span">正在下载中，请稍后</span>
             </div>
-              <div v-if="activeName=='4'">
-            <h-button table @click="onDownzip" v-if="!isDownLoads">一键下载</h-button>
-            <span v-if="isDownLoads" class="collect-wrap_span">下载启动中，请稍后</span>
+            <div v-if="activeName=='4'">
+                <h-button table @click="onDownzip" v-if="!isDownLoads">一键下载</h-button>
+                <span v-if="isDownLoads" class="collect-wrap_span">正在下载中，请稍后</span>
             </div>
         </div>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
@@ -256,6 +256,9 @@ export default {
         right: 0;
         z-index: 11;
         background: #fff;
+        p {
+            margin-bottom: 10px;
+        }
         span {
             color: #ff7a45;
             font-size: 14px;

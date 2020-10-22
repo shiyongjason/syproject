@@ -4,7 +4,7 @@
             <div class="collect-wrap_btnflex">
                 <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
                <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                <span v-if="isDownLoad">下载启动中，请稍后</span></p>
+                <span v-if="isDownLoad">正在下载中，请稍后</span></p>
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
@@ -295,6 +295,9 @@ export default {
         z-index: 11;
        background: #fff;
        flex-direction: column;
+       p{
+           margin-bottom: 10px;
+       }
         span{
               color: #ff7a45;
               font-size: 14px;
@@ -321,10 +324,11 @@ export default {
 .collect-boxflex {
     display: flex;
     flex-direction: row;
+    padding: 30px 0 0 0;
 }
 .collect-boxtxt {
     h3 {
-        padding: 30px 0 0 0;
+
         font-size: 16px;
         margin: 0;
     }
