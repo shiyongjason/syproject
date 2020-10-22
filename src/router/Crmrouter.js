@@ -77,6 +77,17 @@ export default [
                 component: () => import('@/views/crm/creditmanage/creditmanlist')
             },
             {
+                path: 'creditDetail',
+                name: 'creditDetail',
+                meta: {
+                    title: '授信材料上传',
+                    tagName: '授信材料上传',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditmanage/creditDetail')
+            },
+            {
                 path: 'datatemp',
                 name: 'datatemp',
                 meta: {
