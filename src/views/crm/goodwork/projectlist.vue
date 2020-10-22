@@ -118,7 +118,7 @@
 
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.1">
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.1">
                 <!--
                     Versions: V3.*.1
                     Time: 2020/10/22
@@ -133,7 +133,8 @@
                 <template slot="action" slot-scope="scope">
                     <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回-->
                     <h-button table @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=2&&scope.data.row.docAfterStatus!=3">提交资料</h-button>
-                    <h-button table @click="onLookproject(scope.data.row)" v-if="scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3&&hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onCheckoutProject(scope.data.row)" v-if="scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3">查看资料</h-button>
+                    <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
                     <h-button table @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
                     <h-button table v-if="scope.data.row.pushRecord" @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
                 </template>
@@ -511,6 +512,9 @@ export default {
             }
             await this.findProjectLoan(params)
             this.loanData = this.projectLoan ? this.projectLoan : ''
+        },
+        onCheckoutProject (row) {
+            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
         },
         onLookproject (val) {
             this.drawer = true
