@@ -254,7 +254,7 @@ export default {
         async onShowcollect () {
             // 获取经销商信息
             const { data } = await getProjectLevels(this.colForm.projectId)
-            console.log('data: ', data);
+            console.log('data: ', data)
             this.projectLevels = data
             this.collectVisible = true
             this.collectTitle = '材料审核'

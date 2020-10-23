@@ -518,7 +518,7 @@ export default {
             this.loanData = this.projectLoan ? this.projectLoan : ''
         },
         onLookproject (val) {
-            console.log('val: ', val.status);
+            console.log('val: ', val.status)
             this.drawer = true
             this.projectstatus = val.status
             this.$refs.drawercom.onFindProjectCom(val.id)
