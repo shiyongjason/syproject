@@ -217,7 +217,7 @@
                         <el-form-item label="认证方式：" :label-width="formLabelWidth">
                             <!-- 1：e签宝-企业四要素/e签宝-个人二要素 2：中金-开户 -->
                             {{
-                                bossDetail.authenticationType==1?'e签宝-企业四要素/e签宝-个人二要素':bossDetail.isAuthentication==2?"中金-个人开户/中金-企业开户":'-'
+                                bossDetail.authenticationType==1?'e签宝':bossDetail.isAuthentication==2?"中金":'-'
                             }}
                         </el-form-item>
                         <el-form-item label="认证时间：" :label-width="formLabelWidth">
