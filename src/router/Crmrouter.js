@@ -88,6 +88,17 @@ export default [
                 component: () => import('@/views/crm/creditmanage/creditDetail')
             },
             {
+                path: 'creditApprove',
+                name: 'creditApprove',
+                meta: {
+                    title: '授信材料',
+                    tagName: '授信材料',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditmanage/creditApprove')
+            },
+            {
                 path: 'datatemp',
                 name: 'datatemp',
                 meta: {

@@ -1,17 +1,14 @@
 <template>
     <div class="page-body" v-if="detail">
         <div class="page-body-cont">
-            <div class="errormessage">
-                <el-alert center title="资料待补充" v-if="$route.query.docAfterStatus==4" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
-                <el-alert v-if="$route.query.docAfterStatus==2" center title="资料审核中" effect="dark" style="background: #FF7A45;height:40px" :closable='false' />
-            </div>
-            <div v-for="(item,index) in detail.projectDocList" :key="index">
-                <div class="firstclass">{{item.firstCatagoryName}}</div>
+
+            <div v-for="(item,index) in detail" :key="index">
+                <div class="firstclass">{{item.firstCatagoryName}} <h-button  table @click="onLookRefuse">打回记录</h-button></div>
                 <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
-                        <span class="secondclass-reason" v-if="jtem.refuse" @click="onLookRefuse(jtem.templateId)">待补充，点击查看原因</span>
+                        <span class="secondclass-reason" v-if="jtem.refuse" >待补充</span>
                     </div>
                     <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                     <div class="secondclass-documents">
@@ -23,8 +20,8 @@
                         </div>
                         <!--  -->
                         <p class="secondclass-documents_title">规定格式：{{jtem.formatName||"-"}}</p>
-                        <template v-if="jtem.riskCheckProjectDocPos&&jtem.riskCheckProjectDocPos.length>=0">
-                            <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.riskCheckProjectDocPos" :key="kndex">
+                        <template v-if="jtem.creditDocuments&&jtem.creditDocuments.length>=0">
+                            <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.creditDocuments" :key="kndex">
                                 <p>
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
@@ -46,7 +43,7 @@
                         <p v-else>-</p>
                     </div>
                     <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
-                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=15 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=15 v-model="jtem.creditDocuments" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
                         </hosjoyUpload>
                     </div>
@@ -88,10 +85,9 @@ import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
-import { saveDoc, submitDoc } from './api/index'
+import { submitDoc, getCreditdocument, submitcreditDoc } from './api/index'
 import moment from 'moment'
 const _reqRiskCheckProjectDoc = {
-    bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
     projectId: '', // 工程项目id
     riskCheckProjectDocPoList: [],
     submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
@@ -117,7 +113,8 @@ export default {
             },
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],
-            refuseInfos: []
+            refuseInfos: [],
+            creditFrom: {}
         }
     },
     computed: {
@@ -126,13 +123,12 @@ export default {
         }),
         ...mapGetters({
             listDetail: 'projectInformation/listDetail',
-            refuseInfo: 'projectInformation/refuseInfo'
+            creditRecords: 'creditManage/creditRecords'
         })
     },
     methods: {
         ...mapActions({
-            findInformationEditDetail: 'projectInformation/findInformationEditDetail',
-            findRefuseinfo: 'projectInformation/findRefuseinfo'
+            findCreditRecords: 'creditManage/findCreditRecords'
         }),
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
@@ -149,11 +145,12 @@ export default {
             return moment(val).format('YYYY-MM-DD HH:mm:ss')
         },
         handleSuccessCb (row) {
-            row.riskCheckProjectDocPos.map(item => {
+            console.log(row)
+            row.creditDocuments.map(item => {
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
-            console.log('this.detail', this.detail)
+            console.log('this.detail11111', this.detail)
         },
         onDelete (item, index) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
@@ -161,7 +158,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                item.riskCheckProjectDocPos.splice(index, 1)
+                item.creditDocuments.splice(index, 1)
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -192,22 +189,21 @@ export default {
         },
         async getDetail () {
             let query = {
-                bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
-                projectId: this.$route.query.projectId,
-                status: this.$route.query.status// 工程状态
+                type: 2, // 1:BOSS端查看详情或查看资料 2：小程序端查看详情或BOSS上传资料
+                companyId: this.$route.query.companyId
             }
-            await this.findInformationEditDetail(query)
-            this.detail = this.listDetail
-            this.detail.projectDocList.map(item => {
+            const { data } = await getCreditdocument(query)
+            this.detail = data
+            this.detail.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
-                    if (!jtem.riskCheckProjectDocPos) {
-                        jtem.riskCheckProjectDocPos = []
+                    if (!jtem.creditDocuments) {
+                        jtem.creditDocuments = []
                     }
                 })
             })
             console.log('this.detail: ', this.detail)
             // 筛选出需要必填
-            this.detail.projectDocList.map(item => {
+            this.detail.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
                     if (jtem.mondatoryFlag == 1) {
                         this.mondatoryFlagRes.push(jtem)
@@ -218,13 +214,13 @@ export default {
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus = '') {
-            this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList = []
+            const creditDocumentList = []
             console.log('this.detail', this.detail)
-            this.detail.projectDocList.map(item => {
+            this.detail.map(item => {
                 if (item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.length > 0) {
                     item.respRiskCheckDocTemplateList.map(jtem => {
-                        jtem && jtem.riskCheckProjectDocPos && jtem.riskCheckProjectDocPos.length > 0 && jtem.riskCheckProjectDocPos.map(ktem => {
-                            this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.push({
+                        jtem && jtem.creditDocuments && jtem.creditDocuments.length > 0 && jtem.creditDocuments.map(ktem => {
+                            creditDocumentList.push({
                                 templateId: ktem.templateId,
                                 fileName: ktem.fileName,
                                 fileUrl: ktem.fileUrl,
@@ -235,13 +231,15 @@ export default {
                     })
                 }
             })
-            this.reqRiskCheckProjectDoc.projectId = this.$route.query.projectId
-            this.reqRiskCheckProjectDoc.submitStatus = submitStatus// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
+            this.creditFrom = {
+                companyId: this.$route.query.companyId,
+                creditDocumentList: creditDocumentList
+            }
         },
         checkForm (cb) {
             let res = ''
             for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
-                const arr = this.reqRiskCheckProjectDoc.riskCheckProjectDocPoList.filter(jtem => {
+                const arr = this.creditFrom.creditDocumentList.filter(jtem => {
                     return jtem.templateId == this.mondatoryFlagRes[i].templateId
                 })
                 if (arr.length == 0) {
@@ -253,18 +251,22 @@ export default {
         },
         async onSave () {
             this.dealReqRiskCheckProjectDoc()
-            await saveDoc(this.reqRiskCheckProjectDoc)
+            // this.reqRiskCheckProjectDoc.templateId = submitStatus// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
+            await submitcreditDoc(this.creditFrom)
             this.$message.success('保存成功')
-            this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
+            // this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
             this.$router.go(-1)
         },
         async onSubmit () {
-            this.dealReqRiskCheckProjectDoc(1)
+            this.dealReqRiskCheckProjectDoc()
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
-                await submitDoc(this.reqRiskCheckProjectDoc)
+                this.dealReqRiskCheckProjectDoc()
+                // this.reqRiskCheckProjectDoc.templateId = submitStatus// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
+                await submitcreditDoc(this.creditFrom)
+                await submitDoc({ companyId: this.$route.query.companyId, submitStatus: 1 })
                 this.$message.success('提交成功')
                 this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
                 this.$router.go(-1)
@@ -272,13 +274,12 @@ export default {
         },
         async onLookRefuse (val) {
             this.dialogVisible = true
-            await this.findRefuseinfo({ projectId: this.reqRiskCheckProjectDoc.projectId, templateId: val })
-            this.refuseInfos = this.refuseInfo
+            await this.findCreditRecords(this.$route.query.companyId)
+            this.refuseInfos = this.creditRecords
         }
     },
     mounted () {
         this.uploadParameters.updateUid = this.userInfo.employeeName
-        this.reqRiskCheckProjectDoc.projectId = this.$route.query.projectId
         this.getDetail()
     }
 }
