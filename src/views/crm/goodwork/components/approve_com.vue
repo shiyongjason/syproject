@@ -1,13 +1,13 @@
 <template>
     <div class="collect-wrap">
         <div class="collect-wrap_btnflex">
-            <div v-if="activeName=='3'">
-                <!-- <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                <span v-if="isDownLoad" class="collect-wrap_span">正在下载中，请稍后</span> -->
+            <div v-if="activeName=='3'&&hosAuthCheck(Auths.CRM_LX_DOWN)">
+                <h-button table @click="onDownzip" v-if="!isDownLoad" >一键下载</h-button>
+                <span v-if="isDownLoad" class="collect-wrap_span">正在下载中，请稍后</span>
             </div>
-            <div v-if="activeName=='4'">
-                <!-- <h-button table @click="onDownzip" v-if="!isDownLoads">一键下载</h-button>
-                <span v-if="isDownLoads" class="collect-wrap_span">正在下载中，请稍后</span> -->
+            <div v-if="activeName=='4'&&hosAuthCheck(Auths.CRM_ZS_DOWN)">
+                <h-button table @click="onDownzip" v-if="!isDownLoads">一键下载</h-button>
+                <span v-if="isDownLoads" class="collect-wrap_span">正在下载中，请稍后</span>
             </div>
         </div>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
@@ -76,6 +76,7 @@
     </div>
 </template>
 <script>
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
@@ -102,7 +103,7 @@ export default {
     },
     data () {
         return {
-
+            Auths,
             moment,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',

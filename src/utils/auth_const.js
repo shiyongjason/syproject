@@ -213,3 +213,8 @@ export const SPRINT_INDEX_IMPORT = 110009
 export const PERFORMANCE_INDEX_IMPORT = 110010
 // 资金计划审批导入
 export const PLAN_APPROVAL_IMPORT = 110011
+
+// 资料收集下载
+export const CRM_ZL_DOWN = 109124
+export const CRM_LX_DOWN = 109125
+export const CRM_ZS_DOWN = 109126

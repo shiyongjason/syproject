@@ -2,9 +2,15 @@
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
-                <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
-               <!-- <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                <span v-if="isDownLoad">正在下载中，请稍后</span></p> -->
+                <p>
+                    <h-button table @click="onGetrefuse">打回记录</h-button>
+                </p>
+                <template v-if="hosAuthCheck(Auths.CRM_ZL_DOWN)">
+                    <p>
+                        <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                        <span v-if="isDownLoad">正在下载中，请稍后</span>
+                    </p>
+                </template>
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
@@ -98,6 +104,7 @@
     </div>
 </template>
 <script>
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { refuseDoc, submitProjectdoc, checkTemplatedoc } from '../api/index'
@@ -122,6 +129,7 @@ export default {
     },
     data () {
         return {
+            Auths,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
@@ -279,33 +287,33 @@ export default {
 /deep/.el-form {
     padding: 0;
 }
-/deep/.el-form-item__content{
+/deep/.el-form-item__content {
     line-height: 24px;
 }
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
     &_btnflex {
-         margin:  0 10px;
+        margin: 0 10px;
         display: flex;
         justify-content: flex-end;
         position: fixed;
         top: 130px;
         right: 0;
         z-index: 11;
-       background: #fff;
-       flex-direction: column;
-       p{
-           margin-bottom: 10px;
-       }
-        span{
-              color: #ff7a45;
-              font-size: 14px;
-              margin-left: 10px;
+        background: #fff;
+        flex-direction: column;
+        p {
+            margin-bottom: 10px;
+        }
+        span {
+            color: #ff7a45;
+            font-size: 14px;
+            margin-left: 10px;
         }
     }
 }
-.collect-wrapbox{
+.collect-wrapbox {
     margin-top: 80px;
 }
 .collect-title {
@@ -328,7 +336,6 @@ export default {
 }
 .collect-boxtxt {
     h3 {
-
         font-size: 16px;
         margin: 0;
     }
@@ -338,10 +345,10 @@ export default {
         padding: 0 2 0 0px;
         font-style: normal;
     }
-    p{
+    p {
         font-size: 14px;
         margin: 0;
-        padding: 16px 0 0  0;
+        padding: 16px 0 0 0;
         line-height: auto;
     }
 }
