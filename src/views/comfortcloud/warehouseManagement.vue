@@ -13,10 +13,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">出库时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startOutboundTime" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                    <el-date-picker v-model="queryParams.endOutboundTime" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
@@ -59,6 +59,9 @@
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                 </template>
+                <template slot="outboundType" slot-scope="scope" >
+                    <p v-bind:class="{ 'red-content' : scope.data.row.outboundType === '出库类型错误' }">{{ scope.data.row.outboundType }}</p>
+                </template>
             </basicTable>
         </div>
     </div>
@@ -88,6 +91,7 @@ export default {
                 { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
                 { label: '设备类型', prop: 'deviceType' },
                 { label: '设备ID', prop: 'iotId' },
+                { label: '出库类型', prop: 'outboundType' },
                 { label: '经销商', prop: 'dealer' },
                 { label: '经销商电话', prop: 'dealerPhone' }
             ],
@@ -304,5 +308,8 @@ export default {
 }
 .basic-table {
     margin: 10px 0;
+}
+.red-content {
+    color: red;
 }
 </style>
