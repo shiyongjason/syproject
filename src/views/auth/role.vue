@@ -409,7 +409,7 @@ export default {
             }
         },
         onShowFieldConfig (val, item) {
-            console.log(val, item)
+            // console.log(val, item)
             // 当选择全部的时候，设置所有的配置都是选中状态
             if (val == 0) {
                 item.authResourceList && item.authResourceList.filter(item => {
@@ -430,11 +430,14 @@ export default {
             } else if (item.authType == 2 && !item.employeeSubsections) {
                 this.checkedkeys = []
             }
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.$refs.treetable.setCheckedKeys(this.checkedkeys)
-                }, 100)
-            })
+            if (this.$refs.treetable) {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.$refs.treetable.setCheckedKeys(this.checkedkeys)
+                    }, 100)
+                })
+            }
+
             this.layerType = item.authType
             // 设置页面敏感信息的高亮是在全部还是配置上
             item.status = val

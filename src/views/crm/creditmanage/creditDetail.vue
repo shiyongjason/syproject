@@ -8,7 +8,7 @@
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
-                        <span class="secondclass-reason" v-if="jtem.refuse" >待补充</span>
+                        <span class="secondclass-reason" v-if="jtem.refuse" >已打回，待分部补充</span>
                     </div>
                     <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                     <div class="secondclass-documents">

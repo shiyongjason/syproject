@@ -313,6 +313,7 @@ export default {
             if (tab.index == 1) this.onShowCreditdocument()
         },
         async onShowDrawerinfn (val) {
+            console.log(val)
             this.activeName = '1'
             this.companyId = val.companyId
             this.companyName = val.companyName
@@ -426,15 +427,15 @@ export default {
             }
         },
         async onSubmitDoc (val) {
-            this.submitForm()
-            await saveCreditDocument({ companyId: this.companyId, submitStatus: val })
+            console.log(this.ruleForm)
+            await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
             this.$message({
                 message: `审核通过`,
                 type: 'success'
             })
             this.drawer = false
             this.$emit('backEvent')
-
+            this.dialogVisible = false
             // this.saveCreditDocument()
         },
         handleClose () {
@@ -445,6 +446,7 @@ export default {
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
         async onEditVip (val) {
+            this.onlyType = 1
             if (val) {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
@@ -466,13 +468,10 @@ export default {
                         await postCreditDetail(this.ruleForm)
                         this.dialogVisible = false
                         this.isloading = false
-                        if (this.onlyType == 1) {
-                            this.$message({
-                                message: `信用设置成功`,
-                                type: 'success'
-                            })
-                        }
-
+                        this.$message({
+                            message: `信用设置成功`,
+                            type: 'success'
+                        })
                         await this.findCreditPage({ companyId: this.companyId })
                         this.tableData = this.creditPage.companyCreditList
                         this.$emit('backEvent')
@@ -586,7 +585,7 @@ export default {
     margin-left: 0;
 }
 .drawer-wrap {
-    padding: 0 10px 100px 10px;
+    padding: 60px 10px 100px 10px;
     margin-left: 15px;
     &_title {
         background: #efeeee;

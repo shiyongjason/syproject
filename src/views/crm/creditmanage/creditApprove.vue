@@ -135,6 +135,7 @@ export default {
             font-weight: normal;
             color: #504f4f;
             align-items: center;
+            margin-bottom: 10px;
             p {
                 flex: 1;
             }
