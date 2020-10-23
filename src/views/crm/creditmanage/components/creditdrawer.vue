@@ -34,9 +34,9 @@
                         <p>
                             <h-button table @click="onClickRecord">打回记录</h-button>
                         </p>
-                        <p>
-                            <!-- <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                            <span v-if="isDownLoad">正在下载中，请稍后</span> -->
+                        <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
+                            <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                            <span v-if="isDownLoad">正在下载中，请稍后</span>
                         </p>
                     </div>
                     <div class="collect-main" v-for="item in approveForm" :key="item.firstCatagoryId">
