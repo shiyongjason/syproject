@@ -2,8 +2,10 @@
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
-                <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
-               <!-- <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                <p>
+                    <h-button table @click="onGetrefuse">打回记录</h-button>
+                </p>
+                <!-- <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
                 <span v-if="isDownLoad">正在下载中，请稍后</span></p> -->
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
@@ -43,9 +45,10 @@
                                 </div>
 
                             </div>
-                              <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
-                                    <el-button type="primary">上 传</el-button>
-                                </hosjoyUpload>
+                            <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
+                                style="margin:10px 0 0 5px">
+                                <el-button type="primary">上 传</el-button>
+                            </hosjoyUpload>
                         </div>
 
                     </el-form-item>
@@ -85,9 +88,57 @@
         </el-dialog>
         <el-dialog :title="collectTitle" :visible.sync="collectVisible" width="30%" :before-close="onCloseCol" :modal=false :close-on-click-modal=false>
             <el-form ref="approveForm" :model="coldataForm" :rules="collectRules" label-width="100px" style="margin-top:20px">
+                <el-form-item label="审核结果：" prop="submitStatus">
+                    <el-radio-group v-model="coldataForm.submitStatus">
+                        <el-radio :label=2>通过</el-radio>
+                        <el-radio :label=3>不通过</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="审核意见：" prop="remark">
                     <el-input type="textarea" v-model.trim="coldataForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
                 </el-form-item>
+                <template v-if="coldataForm.submitStatus == 2">
+                    <div class="subTitle">项目评级</div>
+                    <div class="horizontalLayout">
+                        <el-form-item label="项目级别：">
+                            <el-select v-model="projectRating.levels" placeholder="请选择项目级别">
+                                <el-option label="A+" value="A+"></el-option>
+                                <el-option label="A" value="A"></el-option>
+                                <el-option label="B+" value="B+"></el-option>
+                                <el-option label="B" value="B"></el-option>
+                                <el-option label="C+" value="C+"></el-option>
+                                <el-option label="C" value="C"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <div class="special">
+                            <el-form-item label="项目服务费：">
+                                <el-input-number v-model="projectRating.serviceCharge" controls-position="right" :min="-10" :max="10" :precision=1></el-input-number>
+                            </el-form-item>
+                        </div>
+                    </div>
+                </template>
+                <div class="subTitle">经销商评级
+                    <span v-if="projectLevels.expired">（评级已过期）</span>
+                    <span v-else-if="!projectLevels.companyCreditLevel">（待评级）</span>
+                    <span v-else>
+                        （信用有效期：
+                        {{ projectLevels.startTime ? moment(projectLevels.startTime).format('YYYY-MM-DD') : '-'}}
+                        至
+                        {{ projectLevels.endTime ? moment(projectLevels.endTime).format('YYYY-MM-DD') : '-'}}
+                        ）
+                    </span>
+                </div>
+                <div class="horizontalLayout">
+                    <el-form-item label="经销商级别：">
+                        <el-input placeholder="请输入内容" :value="projectLevels.companyCreditLevel || '-'" :disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="企业服务费：">
+                        <el-input placeholder="请输入内容" :value="projectLevels.companyServiceCharge || ''" :disabled="true"></el-input>
+                    </el-form-item>
+                    <el-form-item label="资料状态：">
+                        <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyServiceCharge)" :disabled="true"></el-input>
+                    </el-form-item>
+                </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="onCloseCol">取消</h-button>
@@ -99,7 +150,7 @@
 <script>
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { refuseDoc, submitProjectdoc, checkTemplatedoc } from '../api/index'
+import { refuseDoc, submitProjectdoc, checkTemplatedoc, getProjectLevels, setProjectLevels } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { handleImgDownload } from '../../projectInformation/utils'
 import { interfaceUrl } from '@/api/config'
@@ -121,6 +172,8 @@ export default {
     },
     data () {
         return {
+            // 经销商信息
+            projectLevels: {},
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
@@ -151,10 +204,19 @@ export default {
             collectRules: {
                 remark: [
                     { required: true, message: '请输入意见', trigger: 'blur' }
+                ],
+                submitStatus: [
+                    { required: true, message: '请选择审核结果', trigger: 'blur' }
                 ]
             },
             coldataForm: {
-                remark: ''
+                remark: '',
+                submitStatus: ''
+            },
+            // 项目评级
+            projectRating: {
+                serviceCharge: '0.0',
+                levels: ''
             },
             isDownLoad: false
         }
@@ -174,8 +236,26 @@ export default {
         ...mapActions({
             findRefuseData: 'crmmanage/findRefuseData'
         }),
-        onShowcollect () {
-            console.log(12)
+        getcompanyServiceCharge (val) {
+            if (val == 1) {
+                return '待提交'
+            }
+            if (val == 2) {
+                return '已提交'
+            }
+            if (val == 3) {
+                return '已通过'
+            }
+            if (val == 4) {
+                return '已打回'
+            }
+            return '-'
+        },
+        async onShowcollect () {
+            // 获取经销商信息
+            const { data } = await getProjectLevels(this.colForm.projectId)
+            console.log('data: ', data);
+            this.projectLevels = data
             this.collectVisible = true
             this.collectTitle = '材料审核'
         },
@@ -219,7 +299,7 @@ export default {
                 }
             })
         },
-        onUpdatecolApprove () {
+        async onUpdatecolApprove () {
             const projectDocList = this.colForm.projectDocList
             let riskCheckProjectDocPoList = []
             const params = {}
@@ -228,14 +308,22 @@ export default {
                     if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
                 })
             })
-            params.submitStatus = 2
             params.bizType = 1
             params.projectId = this.colForm.projectId
             params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+            params.submitStatus = this.coldataForm.submitStatus
             params.remark = this.coldataForm.remark
+            const setParams = {
+                ...this.projectRating,
+                id: this.colForm.projectId,
+                updateBy: this.userInfo.employeeName
+            }
             this.$refs.approveForm.validate(async (valid) => {
                 if (valid) {
                     try {
+                        // 设置项目评级
+                        await setProjectLevels(setParams)
+                        // 审核
                         await submitProjectdoc(params)
                         this.$message({
                             message: `材料审核成功`,
@@ -278,33 +366,33 @@ export default {
 /deep/.el-form {
     padding: 0;
 }
-/deep/.el-form-item__content{
-    line-height: 24px;
+/deep/.el-form-item__content {
+    line-height: 40px;
 }
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
     &_btnflex {
-         margin:  0 10px;
+        margin: 0 10px;
         display: flex;
         justify-content: flex-end;
         position: fixed;
         top: 130px;
         right: 0;
         z-index: 11;
-       background: #fff;
-       flex-direction: column;
-       p{
-           margin-bottom: 10px;
-       }
-        span{
-              color: #ff7a45;
-              font-size: 14px;
-              margin-left: 10px;
+        background: #fff;
+        flex-direction: column;
+        p {
+            margin-bottom: 10px;
+        }
+        span {
+            color: #ff7a45;
+            font-size: 14px;
+            margin-left: 10px;
         }
     }
 }
-.collect-wrapbox{
+.collect-wrapbox {
     margin-top: 80px;
 }
 .collect-title {
@@ -327,7 +415,6 @@ export default {
 }
 .collect-boxtxt {
     h3 {
-
         font-size: 16px;
         margin: 0;
     }
@@ -337,10 +424,10 @@ export default {
         padding: 0 2 0 0px;
         font-style: normal;
     }
-    p{
+    p {
         font-size: 14px;
         margin: 0;
-        padding: 16px 0 0  0;
+        padding: 16px 0 0 0;
         line-height: auto;
     }
 }
@@ -438,6 +525,24 @@ export default {
     padding: 5px;
     p {
         line-height: 30px;
+    }
+}
+/deep/ .special .el-input {
+    width: 180px;
+    margin-left: 0 !important;
+}
+.subTitle {
+    margin: 20px 0;
+    font-weight: 700;
+    font-size: 15px;
+}
+.horizontalLayout {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    .el-form-item {
+        width: 50%;
     }
 }
 </style>

@@ -34,3 +34,7 @@ export const saveProjectdoc = (params) => axios.post(`/fms/api/risk-check/save/p
 export const signAudit = (params) => axios.post(`/memeber/openapi/project/sign-audit`, params)
 
 export const checkTemplatedoc = (params) => axios.post(`/fms/api/risk-check/project/template-doc`, params)
+// 查询项目评级和对应经销商评级
+export const getProjectLevels = (projectId) => axios.get(`/memeber/openapi/project/levels/${projectId}`)
+// 设置项目等级&项目服务费
+export const setProjectLevels = (params) => axios.put(`/memeber/openapi/project/levels`, params)

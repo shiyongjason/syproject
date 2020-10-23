@@ -217,3 +217,6 @@ export const SPRINT_INDEX_IMPORT = 110009
 export const PERFORMANCE_INDEX_IMPORT = 110010
 // 资金计划审批导入
 export const PLAN_APPROVAL_IMPORT = 110011
+// 好橙工
+export const CRM_SUBMIT_INFO = 110101
+export const CRM_CHECKOUT_INFO = 110102
