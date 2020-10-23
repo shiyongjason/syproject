@@ -99,7 +99,7 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
                     <h-button table @click="onEditproject(scope.data.row)">上传资料</h-button>
-                    <h-button table @click="onDrawerinfo(scope.data.row)">查看资料</h-button>
+                    <h-button table @click="onLookproject(scope.data.row)">查看资料</h-button>
                 </template>
             </basicTable>
         </div>
@@ -268,11 +268,10 @@ export default {
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
         },
         onLookproject (row) {
-            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: row.projectId, status: row.status, docAfterStatus: row.docAfterStatus } })
+            this.$router.push({ path: '/goodwork/creditApprove', query: { companyId: row.companyId } })
         },
         onEditproject (row) {
-            console.log(row)
-            this.$router.push({ path: '/goodwork/creditDetail', query: { projectId: row.projectId, status: row.status, docAfterStatus: row.docAfterStatus } })
+            this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: row.companyId } })
         }
     }
 }

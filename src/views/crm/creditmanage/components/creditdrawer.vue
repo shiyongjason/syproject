@@ -79,7 +79,7 @@
                 <div class="drawer-button">
                     <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</h-button>
                     <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
-                    <h-button type="primary" @click="onOnlyCredit">审核通过</h-button>
+                    <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                     <h-button @click="handleClose">取消</h-button>
                 </div>
             </div>
@@ -166,7 +166,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
@@ -382,15 +382,7 @@ export default {
             }
             return res
         },
-        onOnlyCredit () {
-            // 新增 审核通过
-            this.onlyType = 1
-            this.dialogVisible = true
-            this.$nextTick(() => {
-                this.$refs.ruleForm.clearValidate()
-            })
-        },
-        async onSubmitDoc (val) {
+        async  onOnlyCredit () {
             this.creditDocumentList = []
             this.approveForm.length > 0 && this.approveForm.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -409,16 +401,28 @@ export default {
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
-                console.log(this.creditDocumentList)
-                this.submitForm()
-                await saveCreditDocument({ companyId: this.companyId, submitStatus: val })
-                this.$message({
-                    message: `审核通过`,
-                    type: 'success'
+            // 新增 审核通过
+                this.onlyType = 2
+                const { data } = await getComcredit(this.companyId)
+                this.ruleForm = { ...data }
+                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                this.ruleForm.newendTime = this.ruleForm.endTime
+                this.newRuleForm = { ...this.ruleForm }
+                this.dialogVisible = true
+                this.$nextTick(() => {
+                    this.$refs.ruleForm.clearValidate()
                 })
-                this.drawer = false
-                this.$emit('backEvent')
             }
+        },
+        async onSubmitDoc (val) {
+            this.submitForm()
+            await saveCreditDocument({ companyId: this.companyId, submitStatus: val })
+            this.$message({
+                message: `审核通过`,
+                type: 'success'
+            })
+            this.drawer = false
+            this.$emit('backEvent')
 
             // this.saveCreditDocument()
         },
@@ -451,10 +455,13 @@ export default {
                         await postCreditDetail(this.ruleForm)
                         this.dialogVisible = false
                         this.isloading = false
-                        this.$message({
-                            message: `信用设置成功`,
-                            type: 'success'
-                        })
+                        if (this.onlyType == 1) {
+                            this.$message({
+                                message: `信用设置成功`,
+                                type: 'success'
+                            })
+                        }
+
                         await this.findCreditPage({ companyId: this.companyId })
                         this.tableData = this.creditPage.companyCreditList
                         this.$emit('backEvent')
