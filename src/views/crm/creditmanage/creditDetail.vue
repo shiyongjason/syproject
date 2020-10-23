@@ -1,17 +1,14 @@
 <template>
     <div class="page-body" v-if="detail">
         <div class="page-body-cont">
-            <div class="errormessage">
-                <el-alert center title="资料待补充" v-if="$route.query.docAfterStatus==4" effect="dark" style="background: #ff0000;height:40px" :closable='false' />
-                <el-alert v-if="$route.query.docAfterStatus==2" center title="资料审核中" effect="dark" style="background: #FF7A45;height:40px" :closable='false' />
-            </div>
+
             <div v-for="(item,index) in detail" :key="index">
-                <div class="firstclass">{{item.firstCatagoryName}}</div>
+                <div class="firstclass">{{item.firstCatagoryName}} <h-button  table @click="onLookRefuse">打回记录</h-button></div>
                 <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
-                        <span class="secondclass-reason" v-if="jtem.refuse" @click="onLookRefuse(jtem.templateId)">待补充，点击查看原因</span>
+                        <span class="secondclass-reason" v-if="jtem.refuse" >待补充</span>
                     </div>
                     <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                     <div class="secondclass-documents">
@@ -126,12 +123,12 @@ export default {
         }),
         ...mapGetters({
             listDetail: 'projectInformation/listDetail',
-            refuseInfo: 'projectInformation/refuseInfo'
+            creditRecords: 'creditManage/creditRecords'
         })
     },
     methods: {
         ...mapActions({
-            findRefuseinfo: 'projectInformation/findRefuseinfo'
+            findCreditRecords: 'creditManage/findCreditRecords'
         }),
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
@@ -277,8 +274,8 @@ export default {
         },
         async onLookRefuse (val) {
             this.dialogVisible = true
-            await this.findRefuseinfo({ projectId: this.reqRiskCheckProjectDoc.projectId, templateId: val })
-            this.refuseInfos = this.refuseInfo
+            await this.findCreditRecords(this.$route.query.companyId)
+            this.refuseInfos = this.creditRecords
         }
     },
     mounted () {

@@ -1,6 +1,6 @@
 <template>
-<div class="page-body">
-    <div class="page-body-cont" >
+    <div class="page-body">
+        <div class="page-body-cont">
             <div v-for="(item,index) in detail" :key="index">
                 <div class="firstclass">{{item.firstCatagoryName}}</div>
                 <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
@@ -20,32 +20,30 @@
                         <p class="secondclass-documents_title">规定格式：{{jtem.formatName||"-"}}</p>
                         <template v-if="jtem.creditDocuments">
                             <div class="secondclass-documents_case_documents" v-for="(ktem,kndex) in jtem.creditDocuments" :key="kndex">
-                                <p>
-                                    <span class="posrtv">
-                                        <template v-if="ktem&&ktem.fileUrl">
-                                            <i class="el-icon-document"></i>
-                                            <a :href="ktem.fileUrl" target="_blank">
-                                                <font>{{ktem.fileName}}</font>
-                                            </a>
-                                        </template>
-                                    </span>
-                                </p>
-                                <p style="flex:0.5">{{formatMoment(ktem.updateTime)}}</p>
-                                <p>
+                                <div class="posrtv">
+                                    <template v-if="ktem&&ktem.fileUrl">
+                                        <i class="el-icon-document"></i>
+                                        <a :href="ktem.fileUrl" target="_blank">
+                                            <font>{{ktem.fileName}}</font>
+                                        </a>
+                                    </template>
+                                </div>
+                                <div>{{formatMoment(ktem.updateTime)}}</div>
+                                <div>
                                     <!-- <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font> -->
                                     <a class="fileItemDownLoad" :href="ktem.fileUrl+'?response-content-type=application/octet-stream'" :download="ktem.fileName"
                                         v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1">
                                         下载
                                     </a>
                                     <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
-                                </p>
+                                </div>
                             </div>
                         </template>
                         <p v-else>-</p>
                     </div>
                 </div>
+            </div>
         </div>
- </div>
     </div>
 </template>
 
@@ -136,9 +134,11 @@ export default {
             display: flex;
             font-weight: normal;
             color: #504f4f;
+            align-items: center;
             p {
                 flex: 1;
             }
+            width: 70%;
         }
     }
     &-documents_upload {
@@ -157,18 +157,37 @@ export default {
         float: left;
         height: 13px;
         cursor: pointer;
-        margin-left: 10px;
-        margin-bottom: 5px;
+        margin-left: 15px;
     }
     .posrtv {
         position: relative;
         color: #ff7a45;
+        display: flex;
+        align-items: center;
+        flex: 1;
+        overflow: hidden;
         a {
             color: #ff7a45;
             margin-left: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+            display: flex;
         }
         font {
             font-size: 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+            white-space: nowrap;
+            display: flex;
         }
     }
 }

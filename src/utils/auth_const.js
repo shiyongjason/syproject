@@ -200,6 +200,10 @@ export const CRM_MEATE_SUBMIT = 109308 //  好橙工资料保存
 // 好橙工 推荐奖励发放
 export const CRM_AWARD_SEND = 109309 //  推荐奖励发放
 
+// 好橙工信用 上传 查看
+export const CRM_CREDIT_ZL = 109401
+export const CRM_CREDIT_LOOK = 109402
+
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
 export const PLATFORM_OVERDUE_SUM_EXPORT = 110004
