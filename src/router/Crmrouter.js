@@ -82,7 +82,7 @@ export default [
                 meta: {
                     title: '授信材料上传',
                     tagName: '授信材料上传',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/crm/creditmanage/creditDetail')
