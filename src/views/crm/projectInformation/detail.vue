@@ -7,7 +7,7 @@
             </div>
             <div v-for="(item,index) in detail.projectDocList" :key="index">
                 <div class="firstclass">{{item.firstCatagoryName}}</div>
-                <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
+                <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex" :id="`second_${jtem.templateId}`">
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
@@ -52,6 +52,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
@@ -139,7 +140,6 @@ export default {
                 const res = item.riskCheckDocTemplateSamplePos.filter(item => {
                     return item.fileUrl
                 })
-                console.log(res)
                 return res.length > 0 && [res[index].fileUrl]
             }
             return []
@@ -153,7 +153,6 @@ export default {
                 item.templateId = row.templateId
                 item.createTime = item.createTime || moment().format('YYYY-MM-DD HH:mm:ss')
             })
-            console.log('this.detail', this.detail)
         },
         onDelete (item, index) {
             this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
@@ -205,7 +204,7 @@ export default {
                     }
                 })
             })
-            console.log('this.detail: ', this.detail)
+
             // 筛选出需要必填
             this.detail.projectDocList.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -215,6 +214,7 @@ export default {
                 })
             })
             this.tempDetail = JSON.parse(JSON.stringify(this.detail))
+            console.log('this.mondatoryFlagRes: ', this.mondatoryFlagRes)
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus = '') {
@@ -263,6 +263,11 @@ export default {
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+                console.log(document.getElementById(`second_${res.templateId}`))
+                document.getElementById(`second_${res.templateId}`).scrollIntoView({
+                    behavior: 'smooth', // 平滑过渡
+                    block: 'center' // 上边框与视窗顶部平齐。默认值
+                })
             } else {
                 await submitDoc(this.reqRiskCheckProjectDoc)
                 this.$message.success('提交成功')
