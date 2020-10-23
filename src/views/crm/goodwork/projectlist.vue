@@ -132,6 +132,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回-->
+                    <!-- toDo 权限配置 -->
                     <h-button table @click="onEditproject(scope.data.row)" v-if="scope.data.row.docAfterStatus!=2&&scope.data.row.docAfterStatus!=3">提交资料</h-button>
                     <h-button table @click="onCheckoutProject(scope.data.row)" v-if="scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3">查看资料</h-button>
                     <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
@@ -363,6 +364,9 @@ export default {
         onEditproject (row) {
             this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
         },
+        onCheckoutProject (row) {
+            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
+        },
         getProjectDateForList (type, pDocCount, tempCount) {
             // 资料审核状态type 1：待提交 2：已提交 3：审核通过 4：审核驳回
             let content = null
@@ -513,10 +517,8 @@ export default {
             await this.findProjectLoan(params)
             this.loanData = this.projectLoan ? this.projectLoan : ''
         },
-        onCheckoutProject (row) {
-            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
-        },
         onLookproject (val) {
+            console.log('val: ', val.status);
             this.drawer = true
             this.projectstatus = val.status
             this.$refs.drawercom.onFindProjectCom(val.id)
