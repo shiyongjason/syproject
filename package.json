@@ -33,8 +33,8 @@
     "tree": "^0.1.3",
     "tree-table-vue": "^1.1.0",
     "v-viewer": "^1.5.1",
-    "vue": "^2.6.6",
-    "vue-router": "^3.0.1",
+    "vue": "^2.6.12",
+    "vue-router": "^3.4.3",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

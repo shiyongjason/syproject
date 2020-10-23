@@ -70,14 +70,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-
                         <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
                         <h-button @click="onRest()">
                             重置
                         </h-button>
-
                 </div>
             </div>
 
