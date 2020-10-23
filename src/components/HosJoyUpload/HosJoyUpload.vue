@@ -175,7 +175,7 @@ export default {
         },
         onExceed (files, fileList) {
             console.log(files, fileList)
-            this.$message.error(`一次性上传数量超出限制！最大允许上传个数：${this.limit}`)
+            this.$message.error(`最大允许上传个数：${this.limit}`)
         },
         handleCheckedSize (files, fileList) {
             this.isBeyond = true

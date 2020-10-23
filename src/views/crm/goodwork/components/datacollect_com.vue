@@ -1,7 +1,11 @@
 <template>
     <div class="collect-wrap">
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
-            <h-button table @click="onGetrefuse">打回记录</h-button>
+            <div class="collect-wrap_btnflex">
+                <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
+               <!-- <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                <span v-if="isDownLoad">正在下载中，请稍后</span></p> -->
+            </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
                 <template v-for="obj in item.respRiskCheckDocTemplateList">
@@ -151,7 +155,8 @@ export default {
             },
             coldataForm: {
                 remark: ''
-            }
+            },
+            isDownLoad: false
         }
     },
     components: {
@@ -173,6 +178,10 @@ export default {
             console.log(12)
             this.collectVisible = true
             this.collectTitle = '材料审核'
+        },
+        onDownzip () {
+            this.isDownLoad = true
+            this.$emit('onBackDownzip')
         },
         onCallback () {
             const newTempid = []
@@ -269,15 +278,39 @@ export default {
 /deep/.el-form {
     padding: 0;
 }
+/deep/.el-form-item__content{
+    line-height: 24px;
+}
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
+    &_btnflex {
+         margin:  0 10px;
+        display: flex;
+        justify-content: flex-end;
+        position: fixed;
+        top: 130px;
+        right: 0;
+        z-index: 11;
+       background: #fff;
+       flex-direction: column;
+       p{
+           margin-bottom: 10px;
+       }
+        span{
+              color: #ff7a45;
+              font-size: 14px;
+              margin-left: 10px;
+        }
+    }
+}
+.collect-wrapbox{
+    margin-top: 80px;
 }
 .collect-title {
     font-size: 20px;
-    line-height: 45px;
     border-bottom: 1px solid #e5e5e5;
-    margin-top: 10px;
+    padding: 20px 0;
     font-weight: bold;
 }
 .collect-box {
@@ -290,13 +323,25 @@ export default {
 .collect-boxflex {
     display: flex;
     flex-direction: row;
+    padding: 30px 0 0 0;
 }
 .collect-boxtxt {
+    h3 {
+
+        font-size: 16px;
+        margin: 0;
+    }
     i {
         color: #ff0000;
         vertical-align: middle;
         padding: 0 2 0 0px;
         font-style: normal;
+    }
+    p{
+        font-size: 14px;
+        margin: 0;
+        padding: 16px 0 0  0;
+        line-height: auto;
     }
 }
 .collect-call {
@@ -311,6 +356,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 16px 0 0 0;
     div {
         &:first-child {
             display: flex;
@@ -335,7 +381,6 @@ export default {
             white-space: nowrap;
         }
         &:nth-child(3) {
-            flex: 2;
             word-break: keep-all;
         }
     }
@@ -388,6 +433,7 @@ export default {
 .project-record {
     margin-top: 15px;
 }
+
 /deep/.el-card__body {
     padding: 5px;
     p {

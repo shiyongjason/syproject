@@ -8,7 +8,22 @@
                 <div class="query-col-title">代理商名称：</div>
                 <div class="query-col-input">
                     <el-input type="text"
-                              v-model="queryParams.companyName" maxlength="50" placeholder="输入代理商名称" clearable></el-input>
+                              v-model="queryParams.companyName" maxlength="50" placeholder="输入代理商名称"
+                              clearable></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">城市：</div>
+                <div class="query-cont-col-area">
+                    <el-select  v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
+                        <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
+                        </el-option>
+                    </el-select>
+                    <span class="ml10 mr10">-</span>
+                    <el-select v-model="queryParams.cityId" placeholder="市" :clearable=true>
+                        <el-option v-for="item in getCity" :key="item.id" :label="item.name" :value="item.cityId">
+                        </el-option>
+                    </el-select>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -20,7 +35,8 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange'
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList"
+                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange'
                         isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
                     {{scope.data.row.level === 1 ? '一级': '二级'}}
@@ -33,6 +49,7 @@
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
+import { getChiness } from '../../hmall/membership/api/index'
 
 export default {
     name: 'merchantSearch',
@@ -40,9 +57,13 @@ export default {
         return {
             queryParams: {
                 companyName: '',
+                provinceId: '',
+                cityId: '',
                 pageNumber: 1,
                 pageSize: 10
             },
+            provinceList: [],
+            formLabelWidth: '140px',
             tableLabel: [
                 { label: '代理时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '省', prop: 'provinceName' },
@@ -51,17 +72,27 @@ export default {
                 { label: '代理商等级', prop: 'level' },
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
+                { label: '代理商联系地址', prop: 'contactAddress' },
                 { label: '代理品类', prop: 'categoryName' }]
         }
     },
     mounted () {
         this.queryList(this.queryParams)
+        this.getAreacode()
     },
     computed: {
         ...mapGetters({
             cloudMerchantList: 'cloudMerchantList',
             cloudMerchantListPagination: 'cloudMerchantListPagination'
-        })
+        }),
+        getCity () {
+            const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
+            if (province.length > 0) {
+                return province[0].cities
+            }
+            return []
+        }
+
     },
     methods: {
         ...mapActions({
@@ -82,6 +113,20 @@ export default {
         },
         queryList: function (params) {
             this.findCloudMerchantList(params)
+        },
+        async getAreacode () {
+            const { data } = await getChiness()
+            this.provinceList = data
+            console.log('sheng' + this.provinceList)
+        },
+        onProvince (key) {
+            this.queryParams.provinceId = key
+            this.queryParams.cityId = ''
+            console.log('sheng' + key)
+        },
+        onCity (key) {
+            this.queryParams.cityId = key
+            console.log(key)
         }
     }
 
@@ -93,4 +138,11 @@ export default {
         font-size: 16px;
         padding-bottom: 10px;
     }
+    .query-cont-col-area {
+        position: relative;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-right: 24px;}
 </style>

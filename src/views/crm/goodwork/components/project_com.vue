@@ -321,6 +321,9 @@ export default {
 .project-form {
     padding: 10px 10px 150px 10px;
 }
+.drawer-wrap{
+    margin-top: 50px;
+}
 
 .drawer-footer {
     position: absolute;
