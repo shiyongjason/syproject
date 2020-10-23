@@ -44,15 +44,6 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="家庭信息 " :visible.sync="dialogVisible" width="40%">
-            <basicTable :tableLabel="homeLabel" :tableData="homeData" :isShowIndex='true'>
-
-            </basicTable>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 <script>
@@ -81,6 +72,7 @@ export default {
                 { label: '会员昵称', prop: 'nickName' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '注册来源', prop: 'source' },
+                { label: '推荐人会员编号', prop: 'inviteUuid' },
                 { label: '邀请会员数量', prop: 'registerCount' },
                 { label: '邀请成交订单数', prop: 'orderCount' },
                 { label: '邀请成交金额', prop: 'payAmountTotal' },
@@ -134,9 +126,9 @@ export default {
             await this.findMerchantMemberTotalsituation()
             this.tableData = this.merchantmemberData.records
             this.pagination = {
-                pageNumber: this.merchantmemberData.pageNumber,
-                pageSize: this.merchantmemberData.pageSize,
-                total: this.merchantmemberData.totalElements
+                pageNumber: this.merchantmemberData.pages,
+                pageSize: this.merchantmemberData.size,
+                total: this.merchantmemberData.total
             }
         },
         onSearch () {
@@ -144,7 +136,7 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortcloud/merchant/merchantMemberInvitation', query: { phone: val.phone } })
+            this.$router.push({ path: '/comfortcloud/merchant/merchantMemberInvitation', query: { inviteUuid: val.inviteUuid } })
         }
     }
 }

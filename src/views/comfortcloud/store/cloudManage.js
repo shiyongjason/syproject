@@ -323,19 +323,19 @@ const actions = {
     },
     async findMerchantMembersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMembersituation(params)
-        commit(types.MERCHANT_MEMBERS_DATA, data.data)
+        commit(types.MERCHANT_MEMBERS_DATA, data)
     },
     async findMerchantMemberInvitationRegistersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationRegistersituation(params)
-        commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA, data.data)
+        commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA, data)
     },
     async findMerchantMemberInvitationOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOrdersituation(params)
-        commit(types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA, data.data)
+        commit(types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA, data)
     },
     async findMerchantMemberTotalsituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberTotalsituation(params)
-        commit(types.MERCHANT_MEMBERS_TOTAL_DATA, data.data)
+        commit(types.MERCHANT_MEMBERS_TOTAL_DATA, data)
     },
     async findIotMemberDetail ({ commit }, params) {
         const { data } = await Api.getMemberDetail(params)

@@ -21,7 +21,7 @@
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
                         <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true'
-                                    :pagination="pagination"
+                                    :pagination="paginationRegister"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
                     </div>
@@ -30,15 +30,13 @@
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
                         <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true'
-                                    :pagination="pagination"
+                                    :pagination="paginationDone"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
-                                <p @click="onEditMoney(scope.data.row.rewardAmount)" class="colred">
-                                    {{scope.data.row.homeCount}}</p>
+                                <p @click="onEditMoney(scope.data.row)" class="colred"></p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-                                <p @click="onEditMonth(scope.data.row.rewardMonth)" class="colred">
-                                    {{scope.data.row.homeCount}}</p>
+                                <p @click="onEditMonth(scope.data.row)" class="colred"></p>
                             </template>
                             <template slot="source" slot-scope="scope">
                                 {{scope.data.row.source===1?'注册':'推荐'}}
@@ -81,10 +79,11 @@
             title="奖励金额编辑"
             :visible.sync="editMoneyDialogVisible"
             width="30%">
-            <span>奖励金额</span>
+            <span>奖励金额:</span>
+            <el-input v-model="inputMoney" placeholder="请输入金额"></el-input>
             <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="updateInvitationData('money')">确 定</el-button>
   </span>
         </el-dialog>
         <el-dialog
@@ -92,9 +91,10 @@
             :visible.sync="editMonthDialogVisible"
             width="30%">
             <span>奖励归属月份</span>
+            <el-input v-model="inputMonth" placeholder="请输入月份"></el-input>
             <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+    <el-button type="primary" @click="updateInvitationData('month')">确 定</el-button>
   </span>
         </el-dialog>
     </div>
@@ -102,7 +102,7 @@
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { downloadQuestionTemp, editActdetail } from '../api'
+import { downloadQuestionTemp } from '../api'
 import { iotUrl } from '@/api/config'
 
 export default {
@@ -112,12 +112,27 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: this.$route.query.phone
+                uuid: this.$route.query.inviteUuid
             },
             searchParams: {},
+            editMoneyParams: {
+                rewardAmount: this.inputMoney,
+                phone: ''
+            },
+            editMonthParams: {
+                rewardMonth: this.inputMonth,
+                phone: ''
+            },
             tableRegisterData: [],
             tableDoneData: [],
-            pagination: {
+            inputMoney: '',
+            inputMonth: '',
+            paginationDone: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            paginationRegister: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
@@ -152,7 +167,7 @@ export default {
             fileList: [],
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/mall/wx/order/import`,
+                action: `${iotUrl}/mall/wx/order/boss/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: { // todo I'm need a config file
@@ -211,10 +226,15 @@ export default {
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
-            this.pagination = {
-                pageNumber: this.merchantmemberInvitationRegisterData.pageNumber,
-                pageSize: this.merchantmemberInvitationRegisterData.pageSize,
-                total: this.merchantmemberInvitationRegisterData.totalElements
+            this.paginationRegister = {
+                pageNumber: this.merchantmemberInvitationRegisterData.pages,
+                pageSize: this.merchantmemberInvitationRegisterData.size,
+                total: this.merchantmemberInvitationRegisterData.total
+            }
+            this.paginationDone = {
+                pageNumber: this.merchantmemberInvitationOrderData.pages,
+                pageSize: this.merchantmemberInvitationOrderData.size,
+                total: this.merchantmemberInvitationOrderData.total
             }
         },
         onSearch () {
@@ -233,9 +253,13 @@ export default {
         },
         onEditMoney (val) {
             this.editMoneyDialogVisible = true
+            this.inputMoney = val.rewardAmount
+            this.editMoneyParams.phone = val.phone
         },
         onEditMonth (val) {
             this.editMonthDialogVisible = true
+            this.inputMonth = val.rewardMonth
+            this.editMoneyParams.phone = val.phone
         },
         handleClick (tab, event) {
             this.tabIndex = tab.index
@@ -250,6 +274,8 @@ export default {
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
                 try {
                     await this.$refs.upload.submit()
+                    this.uploadShow = false
+                    this.onQuery()
                 } catch (e) {
                 }
             } else {
@@ -334,15 +360,7 @@ export default {
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
         },
-        async updateCloudActive (row) {
-            const params = { ...row }
-            params.showedTemp ? params.showed = 0 : params.showed = 1
-            try {
-                await editActdetail(params)
-                this.onQuery()
-                this.$message.success('操作成功')
-            } catch (e) {
-            }
+        updateInvitationData (val) {
         }
     }
 }
