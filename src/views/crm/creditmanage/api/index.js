@@ -21,3 +21,13 @@ export const refuseCredit = (params) => axios.post(`/memeber/api/credit-document
 
 // 上传授信
 export const uploadCredit = (params) => axios.post(`/memeber/api/credit-document/upload-file`, params)
+
+// 资料提交
+export const submitDoc = (params) => axios.post(`/memeber/api/credit-document/submit-document`, params)
+// 保存授信材料
+export const submitcreditDoc = (params) => axios.post(`/memeber/api/credit-document/save/credit-documents`, params)
+// 授信资料详情
+export const getCreditdocument = (params) => axios.get(`/memeber/api/credit-document/${params.companyId}/${params.type}/detail`, params)
+
+// 根据ID 查询信用
+export const getComcredit = (params) => axios.get(`/memeber/company/credit/companys/${params}`)

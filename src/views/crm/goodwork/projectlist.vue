@@ -103,41 +103,27 @@
                 </div>
                 <div class="query-cont__col">
 
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
-                        <h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
-                            导出
-                        </h-button>
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
+                    <h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
+                        导出
+                    </h-button>
 
                 </div>
             </div>
 
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
-            <!-- <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :multiSelection.sync="multiSelection" :isMultiple="false" :isAction="true" :actionMinWidth=300 ::rowKey="rowKey"
-                :isShowIndex='true'>
-
-                <template slot="predictLoanAmount" slot-scope="scope">
-                    {{scope.data.row.predictLoanAmount?fundMoneys(scope.data.row.predictLoanAmount):0}}
-                </template>
-                <template slot="type" slot-scope="scope">
-                    {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
-                </template>
-                <template slot="progress" slot-scope="scope">
-                    {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:''}}
-                </template>
-                <template slot="action" slot-scope="scope">
-                    <el-button type="success" size="mini" plain @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(crm_goodwork_detail)">查看详情</el-button>
-                    <el-button type="warning" size="mini" plain @click="onLookrecord(scope.data.row,1)">审批记录</el-button>
-                    <el-button v-if="scope.data.row.pushRecord" type="info" size="mini" plain @click="onLookrecord(scope.data.row,2)">打卡记录</el-button>
-                </template>
-            </basicTable> -->
-            <!-- table -->
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='300' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' localName="V3.*">
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.1">
+                <!--
+                    Versions: V3.*.1
+                    Time: 2020/10/22
+                    Iteration: 好橙工会员中心十月优化版本
+                -->
                 <template slot="type" slot-scope="scope">
                     {{scope.data.row.type&&typeList[scope.data.row.type-1]['value']}}
                 </template>
@@ -145,6 +131,10 @@
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
                 </template>
                 <template slot="action" slot-scope="scope">
+                    <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回-->
+                    <!-- toDo 权限配置 -->
+                    <h-button table @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_SUBMIT_INFO)&&(scope.data.row.docAfterStatus!=2||scope.data.row.docAfterStatus!=3)&&(scope.data.row.status!=2||scope.data.row.status!=5||scope.data.row.status!=10)">提交资料</h-button>
+                    <h-button table @click="onCheckoutProject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CHECKOUT_INFO)&&(scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3)">查看资料</h-button>
                     <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
                     <h-button table @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
                     <h-button table v-if="scope.data.row.pushRecord" @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
@@ -293,7 +283,16 @@ export default {
                     showOverflowTooltip: true
                 },
                 { label: '项目提交时间', prop: 'submitTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
-                { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true }
+                { label: '更新时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', showOverflowTooltip: true },
+                {
+                    label: '项目资料',
+                    prop: 'docAfterStatus',
+                    width: '150',
+                    render: (h, scope) => {
+                        return <span>{this.getProjectDateForList(scope.row.docAfterStatus, scope.row.projectDocCount || 0, scope.row.templateCount || 0)}</span>
+                    },
+                    showOverflowTooltip: true
+                }
             ],
             rowKey: '',
             multiSelection: [],
@@ -361,8 +360,32 @@ export default {
             findCrmdeplist: 'crmmanage/findCrmdeplist',
             findProjectrecord: 'crmmanage/findProjectrecord',
             findPunchlist: 'crmmanage/findPunchlist'
-
         }),
+        onEditproject (row) {
+            this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
+        },
+        onCheckoutProject (row) {
+            this.$router.push({ path: '/goodwork/approvalDetails', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
+        },
+        getProjectDateForList (type, pDocCount, tempCount) {
+            // 资料审核状态type 1：待提交 2：已提交 3：审核通过 4：审核驳回
+            let content = null
+            switch (type) {
+                case 1:
+                    content = `待提交(${pDocCount}/${tempCount})`
+                    break
+                case 2:
+                    content = '已提交'
+                    break
+                case 3:
+                    content = '已通过'
+                    break
+                case 4:
+                    content = '已打回'
+                    break
+            }
+            return content
+        },
         getAttachment (item) {
             if (item) {
                 let arr = JSON.parse(item)
@@ -478,7 +501,7 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val
         },
-        async  searchList () {
+        async searchList () {
             this.queryParams.statusList = this.status.toString()
             this.queryParams.typeList = this.typeArr.toString()
             this.queryParams.deviceCategoryList = this.deviceCategoryChange.toString()
@@ -495,6 +518,7 @@ export default {
             this.loanData = this.projectLoan ? this.projectLoan : ''
         },
         onLookproject (val) {
+            console.log('val: ', val.status)
             this.drawer = true
             this.projectstatus = val.status
             this.$refs.drawercom.onFindProjectCom(val.id)
@@ -600,11 +624,11 @@ export default {
 /deep/.query-cont__col .query-col__input .el-input {
     width: 150px;
 }
-/deep/.el-table__row >span {
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
+/deep/.el-table__row > span {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>

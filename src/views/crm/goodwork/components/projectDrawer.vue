@@ -2,17 +2,17 @@
     <div class="project-wrap">
 
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
-            <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+            <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <template v-for="item in tabs">
                     <template v-if='isShowTab(item.key,status)'>
                         <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
                     </template>
                 </template>
             </el-tabs>
-            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
-            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='2'"></datacolCom>
-            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='3'"></approveCom>
-            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='4'"></approveCom>
+            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
+            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'"></datacolCom>
+            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'"></approveCom>
+            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'"></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
@@ -143,8 +143,8 @@ export default {
             loading: false,
             tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
             activeName: '1',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核通过' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核通过' }], // 这个地方最好机动 不然不好控制权限
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
+                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -185,7 +185,8 @@ export default {
                 remark: [
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ]
-            }
+            },
+            bizType: ''
 
         }
     },
@@ -265,6 +266,7 @@ export default {
         },
         async onFindRiskproject (val) {
             // 材料收集tab
+            this.bizType = val
             await this.findRiskprojectdata({ bizType: val, projectId: this.projectId, status: this.form.status })
             this.colForm = { ...this.collectdata }
             this.colForm.projectDocList.map(item => {
@@ -292,6 +294,18 @@ export default {
             // 打回补充
             this.$refs.datacolCom.onCallback()
         },
+        validFormInfo (list) {
+            const respTemp = this.colForm.projectDocList[0].respRiskCheckDocTemplateList
+            console.log(list, respTemp)
+            let res = ''
+            for (let i = 0; i < respTemp.length; i++) {
+                if (respTemp[i].mondatoryFlag == 1 && respTemp[i].riskCheckProjectDocPos.length == 0) {
+                    res = respTemp[i]
+                    break
+                }
+            }
+            return res
+        },
         async onAuditstatus (val) {
             let status = Object.keys(val)[0]
             let statusTxt = ''
@@ -311,8 +325,27 @@ export default {
                 this.$refs.datacolCom.onShowcollect()
                 return
             } else if (status == 4) {
+                const projectDocList = this.colForm.projectDocList
+                let riskCheckProjectDocPoList = []
+                let newriskCheckProjectDocPoList = []
+                projectDocList && projectDocList.map(val => {
+                    val.respRiskCheckDocTemplateList.map(obj => {
+                        newriskCheckProjectDocPoList = newriskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
+                        if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
+                    })
+                })
+                const params = {}
+                params.bizType = this.status == 4 ? '2' : '3'
+                params.projectId = this.colForm.projectId
+                params.riskCheckProjectDocPoList = newriskCheckProjectDocPoList
+                let res = this.validFormInfo(riskCheckProjectDocPoList)
+                if (res) {
+                    this.$message.error(`二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+                    this.$emit('onBackLoad', false)
+                } else {
+                    this.$refs.approveCom.onShowApprove(status)
+                }
                 // status = !!status // H5端待立项 显示重置按钮和立项  这里需要弹窗  通过 不通过
-                this.$refs.approveCom.onShowApprove(status)
                 return
             } else if (status == 5) {
                 // status = !!status //  合作关闭显示 重置
@@ -443,6 +476,9 @@ export default {
         onCompsback () {
             this.$emit('backEvent')
         },
+        onDownZip () {
+            window.location.href = interfaceUrl + `memeber/openapi/project/docs-download/${this.projectId}/${this.status}/${this.bizType}`
+        },
         onBackLoad (val) {
             this.loading = val
         }
@@ -484,5 +520,11 @@ export default {
 }
 .dialogattachment {
     max-height: 300px;
+}
+.fiextab {
+    position: fixed;
+    background: #ffffff;
+    width: 100%;
+    z-index: 11;
 }
 </style>

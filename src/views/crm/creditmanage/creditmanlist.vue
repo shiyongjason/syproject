@@ -70,19 +70,18 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
-
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
                 </div>
             </div>
 
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" actionWidth='300' :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"
+            :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
@@ -97,6 +96,8 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onEditproject(scope.data.row)" v-if="(scope.data.row.documentStatus==4||!scope.data.row.documentStatus)&&hosAuthCheck(auths.CRM_CREDIT_ZL)">上传资料</h-button>
+                    <h-button table @click="onLookproject(scope.data.row)" v-if="(scope.data.row.documentStatus==2||scope.data.row.documentStatus==3)&&hosAuthCheck(auths.CRM_CREDIT_LOOK)">查看资料</h-button>
                 </template>
             </basicTable>
         </div>
@@ -263,6 +264,12 @@ export default {
         },
         onLinkCom (val) {
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
+        },
+        onLookproject (row) {
+            this.$router.push({ path: '/goodwork/creditApprove', query: { companyId: row.companyId } })
+        },
+        onEditproject (row) {
+            this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: row.companyId } })
         }
     }
 }

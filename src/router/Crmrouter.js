@@ -77,6 +77,28 @@ export default [
                 component: () => import('@/views/crm/creditmanage/creditmanlist')
             },
             {
+                path: 'creditDetail',
+                name: 'creditDetail',
+                meta: {
+                    title: '授信材料上传',
+                    tagName: '授信材料上传',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditmanage/creditDetail')
+            },
+            {
+                path: 'creditApprove',
+                name: 'creditApprove',
+                meta: {
+                    title: '授信材料',
+                    tagName: '授信材料',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditmanage/creditApprove')
+            },
+            {
                 path: 'datatemp',
                 name: 'datatemp',
                 meta: {
@@ -98,18 +120,19 @@ export default [
                     showMenuAs: '/goodwork/datatemp'
                 },
                 component: () => import('@/views/crm/riskManage/templateDetail.vue')
-            }, {
-                path: 'projectInformationList',
-                name: 'projectInformationList',
-                meta: {
-                    title: '好橙工项目资料',
-                    tagName: '好橙工项目资料',
-                    isMenu: true,
-                    icon: ''
-
-                },
-                component: () => import('@/views/crm/projectInformation/list.vue')
             },
+            // {
+            //     path: 'projectInformationList',
+            //     name: 'projectInformationList',
+            //     meta: {
+            //         title: '好橙工项目资料',
+            //         tagName: '好橙工项目资料',
+            //         isMenu: true,
+            //         icon: ''
+
+            //     },
+            //     component: () => import('@/views/crm/projectInformation/list.vue')
+            // },
             {
                 path: 'informationDetail',
                 name: 'informationDetail',
@@ -118,24 +141,24 @@ export default [
                     tagName: '好橙工项目资料详情',
                     isMenu: false,
                     icon: '',
-                    showMenuAs: '/goodwork/projectInformationList'
+                    showMenuAs: '/goodwork/projectlist'
 
                 },
                 component: () => import('@/views/crm/projectInformation/detail.vue')
             },
-            {
-                path: 'approvalDetails',
-                name: 'approvalDetails',
-                meta: {
-                    title: '好橙工项目资料详情',
-                    tagName: '好橙工项目资料详情',
-                    isMenu: false,
-                    icon: '',
-                    showMenuAs: '/goodwork/projectInformationList'
+            // {
+            //     path: 'approvalDetails',
+            //     name: 'approvalDetails',
+            //     meta: {
+            //         title: '好橙工项目资料详情',
+            //         tagName: '好橙工项目资料详情',
+            //         isMenu: false,
+            //         icon: '',
+            //         showMenuAs: '/goodwork/projectInformationList'
 
-                },
-                component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
-            },
+            //     },
+            //     component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
+            // },
             {
                 path: 'wechatList',
                 name: 'wechatList',

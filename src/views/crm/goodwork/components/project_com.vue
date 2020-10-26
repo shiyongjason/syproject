@@ -5,6 +5,24 @@
             <el-form-item label="经销商：">
                 {{projectForm.companyName}} <h-button table @click="onLinkBus(projectForm)">查看详情</h-button>
             </el-form-item>
+            <div class="el-form-item">
+                <el-col :span="11">
+                    <el-form-item label="项目等级：">
+                        <el-select v-model="projectForm.levels" placeholder="请选择" disabled>
+                            <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="11">
+                    <el-form-item label="项目服务费：">
+                        <el-input v-model="projectForm.serviceCharge" placeholder="" disabled></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="2">
+                    <h-button table @click="onEditCridtle(projectForm)">编辑</h-button>
+                </el-col>
+            </div>
             <el-form-item label="分部：">
                 <el-select v-model="projectForm.pkDeptDoc" placeholder="请选择" :clearable=true>
                     <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
@@ -108,14 +126,31 @@
                 </hosjoyUpload>
             </el-form-item>
         </el-form>
+        <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="()=>{dialogVisible = false}" :modal=false>
+            <el-form :model="levelsForm" :rules="levelsRule" ref="levelsForm" label-width="150px" class="demo-ruleForm ">
+                <el-form-item label="项目等级：" prop="levels">
+                    <el-select v-model="levelsForm.levels" placeholder="请选择">
+                        <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                 <el-form-item label="项目服务费：" prop="serviceCharge">
+                     <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onSaveCreditLevel">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
-import { putProjectDetail } from './../api/index'
-import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE } from '../../const'
+import { putProjectDetail, saveCreditLevel } from './../api/index'
+import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, CREDITLEVEL } from '../../const'
 export default {
     name: 'projectcom',
     props: {
@@ -129,6 +164,7 @@ export default {
     },
     data () {
         return {
+            droplist: CREDITLEVEL,
             loading: false,
             statusTxt: '',
             dialogVisible: false,
@@ -208,6 +244,21 @@ export default {
                         }
                     }
                 ]
+
+            },
+            levelsForm: {
+                id: '',
+                levels: '',
+                serviceCharge: '',
+                updateBy: ''
+            },
+            levelsRule: {
+                levels: [
+                    { required: true, message: '请选择项目等级', trigger: 'change' }
+                ],
+                serviceCharge: [
+                    { required: true, message: '请输入项目服务费', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -266,6 +317,30 @@ export default {
                 return true
             }
         },
+        onEditCridtle (val) {
+            this.dialogVisible = true
+            this.levelsForm.levels = val.levels
+            this.levelsForm.serviceCharge = val.serviceCharge
+            this.levelsForm.id = val.id
+            this.levelsForm.updateBy = this.userInfo.employeeName
+        },
+        handleClose () {
+
+        },
+        onSaveCreditLevel () {
+            this.$refs.levelsForm.validate(async (valid) => {
+                if (valid) {
+                    await saveCreditLevel(this.levelsForm)
+                    this.$message({
+                        message: '修改成功',
+                        type: 'success'
+                    })
+                    this.dialogVisible = false
+                } else {
+
+                }
+            })
+        },
         // cancelForm () {
         //     if (JSON.stringify(this.projectForm) != JSON.stringify(this.copyForm)) {
         //         this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
@@ -320,6 +395,9 @@ export default {
 }
 .project-form {
     padding: 10px 10px 150px 10px;
+}
+.drawer-wrap {
+    margin-top: 50px;
 }
 
 .drawer-footer {
