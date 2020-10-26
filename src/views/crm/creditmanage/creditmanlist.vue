@@ -127,6 +127,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import creditdrawer from './components/creditdrawer'
 import { CREDITLEVEL, MATELIST } from '../const'
 import * as auths from '@/utils/auth_const'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'creditManage',
     data () {
@@ -269,8 +270,18 @@ export default {
             this.$router.push({ path: '/goodwork/creditApprove', query: { companyId: row.companyId } })
         },
         onEditproject (row) {
-            this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: row.companyId } })
+            this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: row.companyId, documentStatus: row.documentStatus } })
         }
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('creditManage')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'creditDetail' || to.name != 'creditApprove') {
+            clearCache('creditManage')
+        }
+        next()
     }
 }
 </script>

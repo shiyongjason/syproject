@@ -52,7 +52,7 @@ import { handleImgDownload } from './utils'
 import moment from 'moment'
 import { getCreditdocument } from './api'
 export default {
-    name: 'tabChecklist',
+    name: 'creditApprove',
     data () {
         return {
             handleImgDownload,
