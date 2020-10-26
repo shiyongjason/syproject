@@ -168,7 +168,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
@@ -524,10 +524,12 @@ export default {
                 this.$refs.refuseForm.clearValidate()
             })
         },
-        onDownzip () {
+        async onDownzip () {
             this.isDownLoad = true
-            console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
-            window.location.href = interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`
+            // console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
+            const { data } = await downLoadZip({ companyId: this.companyId, activeName: this.activeName })
+            console.log(data)
+            window.location.href = data
         }
     }
 }
