@@ -21,3 +21,5 @@ export const refuseCredit = (params) => axios.post(`/memeber/api/credit-document
 
 // 上传授信
 export const uploadCredit = (params) => axios.post(`/memeber/api/credit-document/upload-file`, params)
+
+export const downLoadZip = (params) => axios.get(`memeber/api/credit-document/download/${params.companyId}/${params.activeName}/detail`)
