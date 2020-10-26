@@ -5,7 +5,7 @@
                 <p>
                     <h-button table @click="onGetrefuse">打回记录</h-button>
                 </p>
-                <template v-if="hosAuthCheck(Auths.CRM_ZL_DOWN)">
+                <template >
                     <p>
                         <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
                         <span v-if="isDownLoad">正在下载中，请稍后</span>
