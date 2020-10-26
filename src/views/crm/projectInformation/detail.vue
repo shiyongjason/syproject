@@ -251,17 +251,19 @@ export default {
             }
             return res
         },
-        async onSave () {
+        async onSave (state) {
             this.dealReqRiskCheckProjectDoc()
             await saveDoc(this.reqRiskCheckProjectDoc)
-            this.$message.success('保存成功')
             this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
-            this.$router.go(-1)
+            if (state) {
+                this.$message.success('保存成功')
+                this.$router.go(-1)
+            }
         },
         async onSubmit () {
             this.dealReqRiskCheckProjectDoc(1)
             // 提交前先保存----需求要这样做
-            await saveDoc(this.reqRiskCheckProjectDoc)
+            await this.onSave(1)
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
