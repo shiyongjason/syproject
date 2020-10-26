@@ -133,8 +133,8 @@
                 <template slot="action" slot-scope="scope">
                     <!--资料状态 1：待提交 2：已提交 3：审核通过 4：审核驳回-->
                     <!-- toDo 权限配置 -->
-                    <h-button table @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_SUBMIT_INFO)&&scope.data.row.docAfterStatus!=2&&scope.data.row.docAfterStatus!=3">提交资料</h-button>
-                    <h-button table @click="onCheckoutProject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CHECKOUT_INFO)&&scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3">查看资料</h-button>
+                    <h-button table @click="onEditproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_SUBMIT_INFO)&&(scope.data.row.docAfterStatus!=2||scope.data.row.docAfterStatus!=3)&&(scope.data.row.status!=2||scope.data.row.status!=5||scope.data.row.status!=10)">提交资料</h-button>
+                    <h-button table @click="onCheckoutProject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CHECKOUT_INFO)&&(scope.data.row.docAfterStatus==2||scope.data.row.docAfterStatus==3)">查看资料</h-button>
                     <h-button table @click="onLookproject(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_GOODWORK_DETAIL)">查看详情</h-button>
                     <h-button table @click="onLookrecord(scope.data.row,1)">审批记录</h-button>
                     <h-button table v-if="scope.data.row.pushRecord" @click="onLookrecord(scope.data.row,2)">打卡记录</h-button>
