@@ -126,8 +126,8 @@
                 </hosjoyUpload>
             </el-form-item>
         </el-form>
-        <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="handleClose" :modal=false>
-            <el-form :model="levelsForm" :rules="levelsRule" ref="levelsForm" label-width="150px" class="demo-ruleForm el-dialog__form">
+        <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="()=>{dialogVisible = false}" :modal=false>
+            <el-form :model="levelsForm" :rules="levelsRule" ref="levelsForm" label-width="150px" class="demo-ruleForm ">
                 <el-form-item label="项目等级：" prop="levels">
                     <el-select v-model="levelsForm.levels" placeholder="请选择">
                         <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
@@ -135,7 +135,7 @@
                     </el-select>
                 </el-form-item>
                  <el-form-item label="项目服务费：" prop="serviceCharge">
-                    <el-input v-model="levelsForm.serviceCharge" ></el-input>
+                     <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -331,6 +331,13 @@ export default {
             this.$refs.levelsForm.validate(async (valid) => {
                 if (valid) {
                     await saveCreditLevel(this.levelsForm)
+                    this.$message({
+                        message: '修改成功',
+                        type: 'success'
+                    })
+                    this.dialogVisible = false
+                } else {
+
                 }
             })
         },
