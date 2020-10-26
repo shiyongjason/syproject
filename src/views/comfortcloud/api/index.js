@@ -53,6 +53,16 @@ export function getMerchantMemberInvitationOrdersituation (params) {
 export function getMerchantMemberTotalsituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/count`, { params })
 }
+// 邀请详情订单修改
+export function updateInvitationDetail (params) {
+    return axios.put(iotUrl + `/mall/wx/order/boss`, params)
+}
+
+// 邀请订单删除
+export function delInvitationOrder (params) {
+    console.log(params)
+    return axios.delete(iotUrl + `/mall/wx/order/boss`, { params })
+}
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
 }

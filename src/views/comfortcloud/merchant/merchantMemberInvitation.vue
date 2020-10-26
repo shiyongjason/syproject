@@ -4,15 +4,14 @@
             <span>会员信息</span>
         </div>
         <div class="page-body-cont-top ">
-            <img style="height: 4rem "
-                 src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1603281446769&di=2a9ec143434c37042a670e8faa29fdd8&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Fc995d143ad4bd113f78ddcbe51afa40f4afb05fd.jpg">
+            <img style="height: 4rem " :src="this.$route.query.avatarUrl" >
             <div class="top-box">
-                <span>舒适云小助手  </span>
-                <span>手机号 ：18205951900  </span>
+                <span>{{this.$route.query.nickName}}  </span>
+                <span>手机号 ：{{this.$route.query.phone}}  </span>
             </div>
             <div class="top-box-right" >
-                <span>注册时间： 2020-10-14 21:15  </span>
-                <span>注册来源： 自主注册</span>
+                <span>注册时间： {{new Date(this.$route.query.createTime).toLocaleString()}}  </span>
+                <span style="margin-left: 1rem">注册来源： {{this.$route.query.source===1?'  注册':'  推荐'}}</span>
             </div>
         </div>
         <div class="page-body-cont query-cont">
@@ -33,10 +32,10 @@
                                     :pagination="paginationDone"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
-                                <p @click="onEditMoney(scope.data.row)" class="colred"></p>
+                                <p @click="onEditMoney(scope.data.row)" class="colred">{{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-                                <p @click="onEditMonth(scope.data.row)" class="colred"></p>
+                                <p @click="onEditMonth(scope.data.row)" class="colred">{{scope.data.row.rewardMonth}}</p>
                             </template>
                             <template slot="source" slot-scope="scope">
                                 {{scope.data.row.source===1?'注册':'推荐'}}
@@ -75,34 +74,12 @@
                 </div>
             </el-dialog>
         </el-dialog>
-        <el-dialog
-            title="奖励金额编辑"
-            :visible.sync="editMoneyDialogVisible"
-            width="30%">
-            <span>奖励金额:</span>
-            <el-input v-model="inputMoney" placeholder="请输入金额"></el-input>
-            <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="updateInvitationData('money')">确 定</el-button>
-  </span>
-        </el-dialog>
-        <el-dialog
-            title="奖励归属月份编辑"
-            :visible.sync="editMonthDialogVisible"
-            width="30%">
-            <span>奖励归属月份</span>
-            <el-input v-model="inputMonth" placeholder="请输入月份"></el-input>
-            <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="updateInvitationData('month')">确 定</el-button>
-  </span>
-        </el-dialog>
     </div>
 </template>
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { downloadQuestionTemp } from '../api'
+import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
 
 export default {
@@ -115,14 +92,6 @@ export default {
                 uuid: this.$route.query.inviteUuid
             },
             searchParams: {},
-            editMoneyParams: {
-                rewardAmount: this.inputMoney,
-                phone: ''
-            },
-            editMonthParams: {
-                rewardMonth: this.inputMonth,
-                phone: ''
-            },
             tableRegisterData: [],
             tableDoneData: [],
             inputMoney: '',
@@ -213,7 +182,6 @@ export default {
         }
     },
     mounted () {
-        // this.tableData = [{ productN: '123' }]
         this.onSearch()
     },
     methods: {
@@ -250,16 +218,44 @@ export default {
             this.onQuery()
         },
         onDelete (val) {
+            this.$confirm('是否删除此条记录？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await delInvitationOrder({ id: val.id, operateUserName: this.$route.query.nickName })
+                this.$message({
+                    message: '删除成功！',
+                    type: 'success'
+                })
+                this.onQuery()
+            })
         },
         onEditMoney (val) {
-            this.editMoneyDialogVisible = true
-            this.inputMoney = val.rewardAmount
-            this.editMoneyParams.phone = val.phone
+            this.$prompt('奖励金额', '奖励金额编辑', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputPattern: /^[0-9]*$/,
+                inputErrorMessage: '金额格式不正确',
+                inputValue: val.rewardAmount
+            }).then(({ value }) => {
+                this.updataInvitation({ id: val.id, rewardAmount: value, operateUserName: this.$route.query.nickName })
+            }).catch(() => {
+            })
         },
         onEditMonth (val) {
-            this.editMonthDialogVisible = true
-            this.inputMonth = val.rewardMonth
-            this.editMoneyParams.phone = val.phone
+            this.$prompt('奖励月份', '奖励月份编辑', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                inputValue: val.rewardMonth
+            }).then(({ value }) => {
+                this.updataInvitation({ id: val.id, rewardMonth: value, operateUserName: this.$route.query.nickName })
+            }).catch(() => {
+            })
+        },
+        async updataInvitation (val) {
+            await updateInvitationDetail(val)
+            this.onQuery()
         },
         handleClick (tab, event) {
             this.tabIndex = tab.index
@@ -359,9 +355,8 @@ export default {
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
-        },
-        updateInvitationData (val) {
         }
+
     }
 }
 </script>

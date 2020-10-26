@@ -136,7 +136,7 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortcloud/merchant/merchantMemberInvitation', query: { inviteUuid: val.inviteUuid } })
+            this.$router.push({ path: '/comfortcloud/merchant/merchantMemberInvitation', query: val })
         }
     }
 }
