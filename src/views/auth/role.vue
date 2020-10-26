@@ -177,10 +177,9 @@ export default {
         this.tableList = []
         this.jobNumber = this.$route.query.jobNumber
         const { data } = await findMenuList(this.jobNumber)
-        var shy = JSON.parse(JSON.stringify(data))
-        this.handleData(shy)
-        // console.log(shy)
-        this.tableList = this.handlerTableList(shy, 0)
+        var copyData = JSON.parse(JSON.stringify(data))
+        this.handleData(copyData)
+        this.tableList = this.handlerTableList(copyData, 0)
         // console.log(this.tableList)
         this.newTableList = JSON.parse(JSON.stringify(this.tableList))
         const { data: roleInfo } = await getRoleInfo(this.jobNumber)
@@ -206,7 +205,6 @@ export default {
                     }
                 })
                 const employeeSubsections = { authCode: this.currentEmployeeSubsectionsAuthCode, subsectionCodes: subArr }
-                console.log(employeeSubsections)
                 this.newItem.employeeSubsections = employeeSubsections
                 this.$refs.treetable.setCheckedKeys([])
             }
@@ -388,7 +386,6 @@ export default {
             if (params.authCodes.length < 1) {
                 this.$message({ message: '请勾选数据范围配置', type: 'warning' })
             }
-            console.log(params)
             await saveAuthRole(params)
             this.$message({ message: '权限保存成功', type: 'success' })
             this.$router.push({ path: '/auth/organization' })
@@ -409,7 +406,6 @@ export default {
             }
         },
         onShowFieldConfig (val, item) {
-            // console.log(val, item)
             // 当选择全部的时候，设置所有的配置都是选中状态
             if (val == 0) {
                 item.authResourceList && item.authResourceList.filter(item => {
@@ -419,11 +415,8 @@ export default {
             if (val == 1) {
                 this.currentEmployeeSubsectionsAuthCode = item.authCode
             }
-            console.log(this.checkedkeys)
             // 用于在取消的时候，返回原来的选中状态
             if (item.authType == 2 && item.employeeSubsections) {
-                console.log(item.employeeSubsections)
-                console.log(2, JSON.stringify(item.employeeSubsections))
                 if (JSON.stringify(item.employeeSubsections) != '{}') {
                     this.checkedkeys = item.employeeSubsections && JSON.parse(JSON.stringify(item.employeeSubsections.subsectionCodes))
                 }

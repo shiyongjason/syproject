@@ -238,7 +238,7 @@ export default {
         }),
         getcompanyServiceCharge (val) {
             if (val == 1) {
-                return '待提交'
+                return '未提交'
             }
             if (val == 2) {
                 return '已提交'
@@ -258,6 +258,9 @@ export default {
             this.projectLevels = data
             this.collectVisible = true
             this.collectTitle = '材料审核'
+            this.projectRating.levels = data.levels
+            this.projectRating.serviceCharge = data.serviceCharge
+            // console.log(this.projectRating)
         },
         onDownzip () {
             this.isDownLoad = true

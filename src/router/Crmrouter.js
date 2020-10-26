@@ -129,7 +129,6 @@ export default [
             //         tagName: '好橙工项目资料',
             //         isMenu: true,
             //         icon: ''
-
             //     },
             //     component: () => import('@/views/crm/projectInformation/list.vue')
             // },
@@ -146,19 +145,19 @@ export default [
                 },
                 component: () => import('@/views/crm/projectInformation/detail.vue')
             },
-            // {
-            //     path: 'approvalDetails',
-            //     name: 'approvalDetails',
-            //     meta: {
-            //         title: '好橙工项目资料详情',
-            //         tagName: '好橙工项目资料详情',
-            //         isMenu: false,
-            //         icon: '',
-            //         showMenuAs: '/goodwork/projectInformationList'
+            {
+                path: 'approvalDetails',
+                name: 'approvalDetails',
+                meta: {
+                    title: '好橙工项目资料详情',
+                    tagName: '好橙工项目资料详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/projectInformationList'
 
-            //     },
-            //     component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
-            // },
+                },
+                component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
+            },
             {
                 path: 'wechatList',
                 name: 'wechatList',
@@ -168,7 +167,6 @@ export default [
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/wechatList'
-
                 },
                 component: () => import('@/views/crm/wechatcustomer/list.vue')
             },
