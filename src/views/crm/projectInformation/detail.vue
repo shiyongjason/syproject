@@ -255,16 +255,16 @@ export default {
             this.dealReqRiskCheckProjectDoc()
             await saveDoc(this.reqRiskCheckProjectDoc)
             this.reqRiskCheckProjectDoc = JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc))
-            if (state) {
-                this.$message.success('保存成功')
-                this.$router.go(-1)
-            }
+            this.$message.success('保存成功')
+            this.$router.go(-1)
         },
         async onSubmit () {
             this.dealReqRiskCheckProjectDoc(1)
             // 提交前先保存----需求要这样做
-            await this.onSave(1)
+            this.dealReqRiskCheckProjectDoc()
+            await saveDoc(this.reqRiskCheckProjectDoc)
             let res = this.checkForm()
+            console.log('res: ', res);
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
                 console.log(document.getElementById(`second_${res.templateId}`))
@@ -273,6 +273,7 @@ export default {
                     block: 'center' // 上边框与视窗顶部平齐。默认值
                 })
             } else {
+                this.reqRiskCheckProjectDoc.submitStatus = 1
                 const { data } = await getProjectLevels(this.reqRiskCheckProjectDoc.projectId)
                 // 提交前先判断企业是否授信，未授信不能上传项目资料
                 if (data.companyDocumentStatus == 2 || data.companyDocumentStatus == 3) {
@@ -303,8 +304,9 @@ export default {
                     status: this.$route.query.status,
                     docAfterStatus: this.$route.query.docAfterStatus
                 }
+                console.log(this)
                 // 跳转上传企业授信资料
-                this.$router.push({ path: '/goodwork/creditDetail', query: params })
+                this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: this.detail.companyId } })
             }).catch(() => {
                 // do nothing
             })

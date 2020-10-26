@@ -49,7 +49,6 @@ export default {
     name: 'equipmentError',
     data () {
         return {
-            shy: '',
             queryParams: {
                 startTime: '',
                 endTime: '',

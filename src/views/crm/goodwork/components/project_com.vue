@@ -335,6 +335,8 @@ export default {
                         message: '修改成功',
                         type: 'success'
                     })
+                    this.projectForm.levels = this.levelsForm.levels
+                    this.projectForm.serviceCharge = this.levelsForm.serviceCharge
                     this.dialogVisible = false
                 } else {
 
