@@ -211,7 +211,7 @@ export default {
             },
             coldataForm: {
                 remark: '',
-                submitStatus: ''
+                submitStatus: 2
             },
             // 项目评级
             projectRating: {
@@ -316,16 +316,18 @@ export default {
             params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
             params.submitStatus = this.coldataForm.submitStatus
             params.remark = this.coldataForm.remark
-            const setParams = {
-                ...this.projectRating,
-                id: this.colForm.projectId,
-                updateBy: this.userInfo.employeeName
-            }
             this.$refs.approveForm.validate(async (valid) => {
                 if (valid) {
                     try {
-                        // 设置项目评级
-                        await setProjectLevels(setParams)
+                        if (!this.projectRating.levels === !this.projectRating.serviceCharge) {
+                            const setParams = {
+                                ...this.projectRating,
+                                id: this.colForm.projectId,
+                                updateBy: this.userInfo.employeeName
+                            }
+                            // 设置项目评级
+                            await setProjectLevels(setParams)
+                        }
                         // 审核
                         await submitProjectdoc(params)
                         this.$message({
