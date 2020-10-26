@@ -299,11 +299,6 @@ export default {
                 confirmButtonText: '去提交企业授信资料',
                 cancelButtonText: '我知道了'
             }).then(action => {
-                const params = {
-                    projectId: this.$route.query.projectId,
-                    status: this.$route.query.status,
-                    docAfterStatus: this.$route.query.docAfterStatus
-                }
                 console.log(this)
                 // 跳转上传企业授信资料
                 this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: this.detail.companyId } })
