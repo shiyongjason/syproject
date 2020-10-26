@@ -427,15 +427,30 @@ export default {
             }
         },
         async onSubmitDoc (val) {
-            console.log(this.ruleForm)
-            await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
-            this.$message({
-                message: `审核通过`,
-                type: 'success'
+            this.isloading = true
+            this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
+            this.$refs.ruleForm.validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
+                        this.$message({
+                            message: `企业资料审核通过`,
+                            type: 'success'
+                        })
+                        this.drawer = false
+                        this.$emit('backEvent')
+                        this.dialogVisible = false
+                        await this.findCreditPage({ companyId: this.companyId })
+                        this.tableData = this.creditPage.companyCreditList
+                        this.$emit('backEvent')
+                    } catch (error) {
+                        this.isloading = false
+                    }
+                } else {
+                    this.isloading = false
+                }
             })
-            this.drawer = false
-            this.$emit('backEvent')
-            this.dialogVisible = false
+
             // this.saveCreditDocument()
         },
         handleClose () {
