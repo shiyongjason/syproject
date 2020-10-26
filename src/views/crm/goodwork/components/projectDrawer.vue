@@ -103,7 +103,7 @@ import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
-import { updateAudit, saveStatus, signAudit } from '../api/index'
+import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
@@ -476,8 +476,10 @@ export default {
         onCompsback () {
             this.$emit('backEvent')
         },
-        onDownZip () {
-            window.location.href = interfaceUrl + `memeber/openapi/project/docs-download/${this.projectId}/${this.status}/${this.bizType}`
+        async onDownZip () {
+            const { data } = await downLoadZip({ projectId: this.projectId, status: this.status, bizType: this.bizType })
+            console.log(data)
+            window.location.href = data
         },
         onBackLoad (val) {
             this.loading = val
