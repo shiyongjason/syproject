@@ -12,6 +12,7 @@
             <div class="top-box-right" >
                 <span>注册时间： {{new Date(this.$route.query.createTime).toLocaleString()}}  </span>
                 <span style="margin-left: 1rem">注册来源： {{this.$route.query.source===1?'  注册':'  推荐'}}</span>
+                <span style="margin-left: 1rem">会员编号： {{this.$route.query.source}}</span>
             </div>
         </div>
         <div class="page-body-cont query-cont">

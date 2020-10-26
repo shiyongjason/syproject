@@ -61,7 +61,7 @@ export function updateInvitationDetail (params) {
 // 邀请订单删除
 export function delInvitationOrder (params) {
     console.log(params)
-    return axios.delete(iotUrl + `/mall/wx/order/boss`, { params })
+    return axios.delete(iotUrl + `/mall/wx/order/boss/` + params.id, { params })
 }
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
