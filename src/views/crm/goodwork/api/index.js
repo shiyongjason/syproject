@@ -34,3 +34,7 @@ export const saveProjectdoc = (params) => axios.post(`/fms/api/risk-check/save/p
 export const signAudit = (params) => axios.post(`/memeber/openapi/project/sign-audit`, params)
 
 export const checkTemplatedoc = (params) => axios.post(`/fms/api/risk-check/project/template-doc`, params)
+
+// 设置 服务费 项目等级
+
+export const saveCreditLevel = (params) => axios.put(`/memeber/openapi/project/levels`, params)
