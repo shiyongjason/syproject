@@ -317,7 +317,6 @@ export default {
             params.submitStatus = this.coldataForm.submitStatus
             params.remark = this.coldataForm.remark
             this.$refs.approveForm.validate(async (valid) => {
-                console.log('this.projectRating: ', this.projectRating);
                 if (valid) {
                     try {
                         if (!this.projectRating.levels === !this.projectRating.serviceCharge) {
