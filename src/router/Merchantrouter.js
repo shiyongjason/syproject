@@ -71,7 +71,7 @@ export default [
                 ]
             },
             {
-                path: 'merchant',
+                path: 'merchantVIP',
                 meta: {
                     title: '会员管理',
                     isMenu: true,
