@@ -8,19 +8,18 @@
             <div class="el-form-item">
                 <el-col :span="11">
                     <el-form-item label="项目等级：">
-                        <el-select v-model="projectForm.levels" placeholder="请选择" disabled>
-                            <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
-                            </el-option>
-                        </el-select>
+                        <el-input :value="projectForm.levels || '-'" placeholder="" disabled></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="11">
                     <el-form-item label="项目服务费：">
-                        <el-input v-model="projectForm.serviceCharge" placeholder="" disabled></el-input>
+                        <el-input :value="projectForm.serviceCharge || '-'" placeholder="" disabled></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="2">
-                    <h-button table @click="onEditCridtle(projectForm)">编辑</h-button>
+                    <div style="line-height:40px;margin-left: 5px">
+                        <h-button table @click="onEditCridtle(projectForm)">编辑</h-button>
+                    </div>
                 </el-col>
             </div>
             <el-form-item label="分部：">
