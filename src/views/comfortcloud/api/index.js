@@ -37,6 +37,32 @@ export function findRoomDetail (homeId) {
 export function getMembersituation (params) {
     return axios.get(iotUrl + `/uc/user-manage/general-situation`, { params })
 }
+// 经销商会员列表分页查询
+export function getMerchantMembersituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/boss/manage`, { params })
+}
+// 经销商会员邀请注册列表分页查询
+export function getMerchantMemberInvitationRegistersituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/boss/registered/` + params.uuid, { params })
+}
+// 经销商会员邀请成交列表分页查询
+export function getMerchantMemberInvitationOrdersituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/boss/order/` + params.uuid, { params })
+}
+// 经销商会员总数查询
+export function getMerchantMemberTotalsituation (params) {
+    return axios.get(iotUrl + `/mall/wx/user/boss/count`, { params })
+}
+// 邀请详情订单修改
+export function updateInvitationDetail (params) {
+    return axios.put(iotUrl + `/mall/wx/order/boss`, params)
+}
+
+// 邀请订单删除
+export function delInvitationOrder (params) {
+    console.log(params)
+    return axios.delete(iotUrl + `/mall/wx/order/boss/` + params.id, { params })
+}
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
 }
@@ -101,7 +127,7 @@ export function downloadQuestionTemp () {
             reader.readAsDataURL(response.data)
             reader.onload = function (e) {
                 const a = document.createElement('a')
-                a.download = '帮助中心模板.xlsx'
+                a.download = '订单明细模板.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()

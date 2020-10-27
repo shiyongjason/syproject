@@ -13,13 +13,27 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">支付时间：</div>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="queryParams.payStartDate"
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期"
+                                v-model="queryParams.payStartDate"
                                 :picker-options="pickerOptionsStart" clearable :editable="false">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="queryParams.payEndDate"
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期"
+                                v-model="queryParams.payEndDate"
                                 :picker-options="pickerOptionsEnd" clearable :editable="false">
                 </el-date-picker>
+            </div>
+            <div class="query-cont-col">
+                <div class="flex-wrap-title">订单状态：</div>
+                <div class="flex-wrap-cont">
+                    <el-select v-model="queryParams.status" style="width: 100%">
+                        <el-option label="全部" value=""></el-option>
+                        <el-option label="已支付" value="10"></el-option>
+                        <el-option label="未支付" value="0"></el-option>
+                        <el-option label="已取消" value="15"></el-option>
+                        <el-option label="已退款" value="30"></el-option>
+                    </el-select>
+                </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
@@ -30,13 +44,20 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList" :pagination="cloudMerchantOrderListPagination" @onCurrentChange='onCurrentChange'
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList"
+                        :pagination="cloudMerchantOrderListPagination" @onCurrentChange='onCurrentChange'
                         isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
                     {{ scope.data.row.level === 1 ? '一级': '二级' }}
                 </template>
+                <template slot="contactUser" slot-scope="scope">
+                    <p>{{scope.data.row.contactUser}}</p>
+                </template>
                 <template slot="payAmount" slot-scope="scope">
                     {{ scope.data.row.payAmount ? scope.data.row.payAmount + '元' : '-' }}
+                </template>
+                <template slot="status" slot-scope="scope">
+                    {{payStatus(scope.data.row.status)}}
                 </template>
             </basicTable>
         </div>
@@ -53,12 +74,14 @@ export default {
         return {
             queryParams: {
                 payNo: '',
+                status: '',
                 payStartDate: '',
                 payEndDate: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             tableLabel: [
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'successTime', formatters: 'dateTime' },
                 { label: '订单号', prop: 'payNo' },
                 { label: '微信支付订单号', prop: 'wxPayNo' },
@@ -69,7 +92,8 @@ export default {
                 { label: '联系地址', prop: 'contactAddress' },
                 { label: '代理级别', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
-                { label: '付款金额', prop: 'payAmount' }]
+                { label: '订单金额', prop: 'payAmount' },
+                { label: '订单状态', prop: 'status' }]
         }
     },
     mounted () {
@@ -123,6 +147,21 @@ export default {
         },
         queryList: function (params) {
             this.findCloudMerchantOrderList(params)
+        },
+        payStatus: function (status) {
+            if (status === 0) {
+                // 已支付
+                return '未支付'
+            } else if (status === 10) {
+                // 未支付
+                return '已支付'
+            } else if (status === 15) {
+                // 已取消
+                return '已取消'
+            } else if (status === 30) {
+                // 已退款
+                return '已退款'
+            }
         }
     }
 }
@@ -133,6 +172,7 @@ export default {
         font-size: 16px;
         padding-bottom: 10px;
     }
+
     .address {
         overflow: hidden;
         text-overflow: ellipsis;

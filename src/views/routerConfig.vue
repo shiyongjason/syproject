@@ -159,6 +159,7 @@
 import { getAuth, addAuth, addAuthType, addAuthResource, editAuthResource, editAuth, clearCache, deleteAuth } from './auth/api'
 import { routerMapping } from '../router'
 export default {
+    name: 'routerConfig',
     data () {
         return {
             options: [],

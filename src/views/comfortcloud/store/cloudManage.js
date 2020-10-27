@@ -5,6 +5,10 @@ import * as Api from '@/views/comfortcloud/api'
 
 const state = {
     iotmemberData: {},
+    iotmerchantmemberData: {},
+    iotmerchantmemberTotalData: {},
+    iotmerchantmemberInvitationRegisterData: {},
+    iotmerchantmemberInvitationOrderData: {},
     iotmemberDetail: {},
     familyData: {},
     cloudActivitydetail: {},
@@ -63,6 +67,10 @@ const state = {
 
 const getters = {
     iotmemberData: state => state.iotmemberData,
+    iotmerchantmemberData: state => state.iotmerchantmemberData,
+    iotmerchantmemberTotalData: state => state.iotmerchantmemberTotalData,
+    iotmerchantmemberInvitationOrderData: state => state.iotmerchantmemberInvitationOrderData,
+    iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
     cloudActivitydetail: state => state.cloudActivitydetail,
@@ -132,6 +140,18 @@ const getters = {
 const mutations = {
     [types.MEMBERS_DATA] (state, payload) {
         state.iotmemberData = payload
+    },
+    [types.MERCHANT_MEMBERS_DATA] (state, payload) {
+        state.iotmerchantmemberData = payload
+    },
+    [types.MERCHANT_MEMBERS_TOTAL_DATA] (state, payload) {
+        state.iotmerchantmemberTotalData = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA] (state, payload) {
+        state.iotmerchantmemberInvitationOrderData = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA] (state, payload) {
+        state.iotmerchantmemberInvitationRegisterData = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
         state.iotmemberDetail = payload
@@ -302,6 +322,22 @@ const actions = {
     async findMembersituation ({ commit }, params) {
         const { data } = await Api.getMembersituation(params)
         commit(types.MEMBERS_DATA, data.data)
+    },
+    async findMerchantMembersituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMembersituation(params)
+        commit(types.MERCHANT_MEMBERS_DATA, data)
+    },
+    async findMerchantMemberInvitationRegistersituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationRegistersituation(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA, data)
+    },
+    async findMerchantMemberInvitationOrdersituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationOrdersituation(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA, data)
+    },
+    async findMerchantMemberTotalsituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberTotalsituation(params)
+        commit(types.MERCHANT_MEMBERS_TOTAL_DATA, data)
     },
     async findIotMemberDetail ({ commit }, params) {
         const { data } = await Api.getMemberDetail(params)
