@@ -38,7 +38,7 @@
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
 <!--                                <p @click="onEditMonth(scope.data.row)" class="colred">{{scope.data.row.rewardMonth}}</p>-->
-                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth()">
+                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth(scope.data.row)">
                                     <el-option
                                         v-for=" item in monthOptions"
                                         :key="item.value"
@@ -301,19 +301,8 @@ export default {
             }).catch(() => {
             })
         },
-        onEditMonth (val, value) {
-            // // this.inputMonth = val.rewardMonth
-            // this.$prompt('奖励月份', '奖励月份编辑', {
-            //     confirmButtonText: '确定',
-            //     cancelButtonText: '取消',
-            //     inputValue: val.rewardMonth
-            // }).then(({ value }) => {
-            //
-            // }).catch(() => {
-            // })
-            console.log(val)
-            console.log(value)
-            // this.updataInvitation({ id: val.id, rewardMonth: value, operateUserName: this.$route.query.nickName })
+        onEditMonth (val) {
+            this.updataInvitation({ id: val.id, rewardMonth: val.rewardMonth, operateUserName: this.$route.query.nickName })
         },
         async updataInvitation (val) {
             await updateInvitationDetail(val)
