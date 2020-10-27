@@ -45,7 +45,7 @@
                         </p>
                         <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
                         <!-- <p> -->
-                            <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                            <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                             <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
                             <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
                             <span v-if="showPacking!=null&&!showPacking">打包完成</span>
@@ -328,6 +328,7 @@ export default {
         },
         async onShowCreditdocument () {
             this.isDownLoad = false
+            this.showPacking = null
             await this.findCreditDocument(this.companyId)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
@@ -656,6 +657,7 @@ export default {
     margin-left: 15px;
     &_btnflex {
         width: 140px;
+        text-align: right;
         margin: 0 10px;
         display: flex;
         justify-content: flex-end;

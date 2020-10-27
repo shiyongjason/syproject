@@ -11,13 +11,13 @@
         </div>
         <div class="collect-wrap_btnflex">
             <div v-if="activeName=='3'&&hosAuthCheck(Auths.CRM_LX_DOWN)">
-                <h-button table @click="onDownzip" v-if="!isDownLoad" >一键下载</h-button>
+                <h-button table @click="onDownzip" v-if="showPacking==null" >一键下载</h-button>
                 <!-- <span v-if="isDownLoad" class="collect-wrap_span">正在下载中，请稍后</span> -->
                 <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
                 <span v-if="showPacking!=null&&!showPacking">打包完成</span>
             </div>
             <div v-if="activeName=='4'&&hosAuthCheck(Auths.CRM_ZS_DOWN)">
-                <h-button table @click="onDownzip" v-if="!isDownLoads">一键下载</h-button>
+                <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                 <!-- <span v-if="isDownLoads" class="collect-wrap_span">正在下载中，请稍后</span> -->
                 <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
                 <span v-if="showPacking!=null&&!showPacking">打包完成</span>
@@ -292,6 +292,7 @@ export default {
     margin-left: 15px;
     &_btnflex {
         width: 140px;
+        text-align: right;
         margin: 0 10px;
         display: flex;
         justify-content: flex-end;

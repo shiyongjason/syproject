@@ -16,7 +16,7 @@
                 </p>
                 <template v-if="hosAuthCheck(Auths.CRM_ZL_DOWN)">
                     <p>
-                        <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
+                        <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                         <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
                         <span v-if="showPacking!=null&&!showPacking">打包完成</span>
                     </p>
@@ -334,6 +334,7 @@ export default {
     margin-left: 15px;
     &_btnflex {
         width: 140px;
+        text-align: right;
         margin: 0 10px;
         display: flex;
         justify-content: flex-end;
