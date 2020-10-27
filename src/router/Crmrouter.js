@@ -154,7 +154,6 @@ export default [
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/projectInformationList'
-
                 },
                 component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
             },
