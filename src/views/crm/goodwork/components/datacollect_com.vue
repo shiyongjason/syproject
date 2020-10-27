@@ -129,15 +129,21 @@
                     </span>
                 </div>
                 <div class="horizontalLayout">
-                    <el-form-item label="经销商级别：">
-                        <el-input placeholder="请输入内容" :value="projectLevels.companyCreditLevel || '-'" :disabled="true"></el-input>
-                    </el-form-item>
-                    <el-form-item label="企业服务费：">
-                        <el-input placeholder="请输入内容" :value="projectLevels.companyServiceCharge || ''" :disabled="true"></el-input>
-                    </el-form-item>
-                    <el-form-item label="资料状态：">
-                        <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyDocumentStatus)" :disabled="true"></el-input>
-                    </el-form-item>
+                    <!-- 评级过期不显示 -->
+                    <template v-if="projectLevels.expired"></template>
+                    <template v-else>
+                        <template v-if="projectLevels.companyCreditLevel">
+                            <el-form-item label="经销商级别：">
+                                <el-input placeholder="请输入内容" :value="projectLevels.companyCreditLevel || '-'" :disabled="true"></el-input>
+                            </el-form-item>
+                            <el-form-item label="企业服务费：">
+                                <el-input placeholder="请输入内容" :value="projectLevels.companyServiceCharge || ''" :disabled="true"></el-input>
+                            </el-form-item>
+                        </template>
+                        <el-form-item label="资料状态：">
+                            <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyDocumentStatus)" :disabled="true"></el-input>
+                        </el-form-item>
+                    </template>
                 </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -237,7 +243,7 @@ export default {
             findRefuseData: 'crmmanage/findRefuseData'
         }),
         getcompanyServiceCharge (val) {
-            if (val == 1) {
+            if (val == 1 || !val) {
                 return '未提交'
             }
             if (val == 2) {
