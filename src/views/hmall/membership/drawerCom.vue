@@ -106,7 +106,10 @@
                         <h-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                     </div>
                 </div>
-                <div class="" v-if="activeName=='second'">
+                <div class="" v-if="activeName=='second'&&!bossDetail.isAuthentication">
+                    暂无认证信息
+                </div>
+                <div class="" v-if="activeName=='second'&&bossDetail.isAuthentication">
                     <el-form :model="bossDetail">
                         <el-form-item label="企业名称：" :label-width="formLabelWidth">
                            {{bossDetail.companyName||'-'}}

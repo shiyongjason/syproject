@@ -111,7 +111,7 @@
                 </template>
 
                 <template slot="openStatus" slot-scope="scope">
-                    <font :style="{color:openStatus.get(scope.data.row.openStatus).color}">{{openStatus.get(scope.data.row.openStatus).txt}}</font>
+                    <font :style="{color:openStatus.get(scope.data.row.openStatus)?openStatus.get(scope.data.row.openStatus).color:''}">{{openStatus.get(scope.data.row.openStatus)?openStatus.get(scope.data.row.openStatus).txt:'-'}}</font>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
