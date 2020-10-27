@@ -245,6 +245,9 @@ export default {
             this.$refs['signOrLoanDialog'].clearValidate()
         },
         handleClick (tab, event) {
+            this.showPacking = null
+            this.isDownLoad = false
+            this.isDownLoads = false
             if (tab.index > 0) this.onFindRiskproject(tab.index)
         },
         isShowTab (key, status) {
@@ -473,6 +476,8 @@ export default {
         },
         handleClose () {
             this.showPacking = null
+            this.isDownLoad = false
+            this.isDownLoads = false
             this.$emit('backEvent')
         },
         onCompsback () {
