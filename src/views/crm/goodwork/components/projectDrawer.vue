@@ -10,9 +10,9 @@
                 </template>
             </el-tabs>
             <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
-            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'"></datacolCom>
-            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'"></approveCom>
-            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'"></approveCom>
+            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
+            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
+            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
@@ -124,6 +124,7 @@ export default {
     },
     data () {
         return {
+            showPacking: null,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
@@ -471,14 +472,17 @@ export default {
             }
         },
         handleClose () {
+            this.showPacking = null
             this.$emit('backEvent')
         },
         onCompsback () {
             this.$emit('backEvent')
         },
         async onDownZip () {
+            this.showPacking = true
             const { data } = await downLoadZip({ projectId: this.projectId, status: this.status, bizType: this.bizType })
             console.log(data)
+            this.showPacking = false
             window.location.href = data
         },
         onBackLoad (val) {

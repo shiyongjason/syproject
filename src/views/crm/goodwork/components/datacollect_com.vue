@@ -1,5 +1,14 @@
 <template>
     <div class="collect-wrap">
+        <div class="fullbg" v-if="showPacking">
+            <div class="fullbg-img">
+                <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                <p>
+                    <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                    <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                </p>
+            </div>
+        </div>
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
                 <p>
@@ -8,7 +17,8 @@
                 <template v-if="hosAuthCheck(Auths.CRM_ZL_DOWN)">
                     <p>
                         <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                        <span v-if="isDownLoad">正在下载中，请稍后</span>
+                        <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                        <span v-if="showPacking!=null&&!showPacking">打包完成</span>
                     </p>
                 </template>
             </div>
@@ -125,6 +135,9 @@ export default {
         status: {
             type: Number,
             default: 0
+        },
+        showPacking: {
+            default: null
         }
     },
     data () {
@@ -284,6 +297,32 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.fullbg{
+    background-color: #211f1f;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    .fullbg-img{
+        width: 377px;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        p{
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 /deep/.el-form {
     padding: 0;
 }
@@ -294,6 +333,7 @@ export default {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
     &_btnflex {
+        width: 140px;
         margin: 0 10px;
         display: flex;
         justify-content: flex-end;
