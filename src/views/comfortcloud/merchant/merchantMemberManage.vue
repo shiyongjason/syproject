@@ -37,7 +37,7 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="source" slot-scope="scope">
-                    {{scope.data.row.source===1?'注册':'推荐'}}
+                    {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">邀请详情</el-button>
@@ -68,7 +68,7 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '会员账号', prop: 'nick', width: '120px' },
+                { label: '会员账号', prop: 'uuid' },
                 { label: '会员昵称', prop: 'nickName' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '注册来源', prop: 'source' },
@@ -136,7 +136,7 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortcloud/merchant/merchantMemberInvitation', query: val })
+            this.$router.push({ path: '/comfortCloudMerchant/merchant/merchantMemberInvitation', query: val })
         }
     }
 }

@@ -3,7 +3,7 @@ import InterlayerContainer from '@/views/layout/InterlayerContainer.vue'
 
 export default [
     {
-        path: '/comfortCloud',
+        path: '/comfortCloudMerchant',
         meta: {
             title: '经销商后台',
             isMenu: true,
@@ -12,7 +12,7 @@ export default [
         component: Layout,
         children: [
             {
-                path: 'merchant',
+                path: 'merchantManage',
                 meta: {
                     title: '经销商管理',
                     isMenu: true,

@@ -11,7 +11,7 @@
             </div>
             <div class="top-box-right" >
                 <span>注册时间： {{new Date(this.$route.query.createTime).toLocaleString()}}  </span>
-                <span style="margin-left: 1rem">注册来源： {{this.$route.query.source===1?'  注册':'  推荐'}}</span>
+                <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
                 <span style="margin-left: 1rem">会员编号： {{this.$route.query.source}}</span>
             </div>
         </div>
@@ -75,6 +75,14 @@
                 </div>
             </el-dialog>
         </el-dialog>
+<!--        <el-select v-model="inputMonth" placeholder="请选择" >-->
+<!--            <el-option-->
+<!--                v-for=" item in monthOptions"-->
+<!--                :key="item.value"-->
+<!--                :label="item.label"-->
+<!--                :value="item.value">-->
+<!--            </el-option>-->
+<!--        </el-select>-->
     </div>
 </template>
 <script>
@@ -90,7 +98,7 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                uuid: this.$route.query.inviteUuid
+                uuid: this.$route.query.uuid
             },
             searchParams: {},
             tableRegisterData: [],
@@ -148,7 +156,44 @@ export default {
                 data: {
                     operateUserName: ''
                 }
-            }
+            },
+            monthOptions: [{
+                value: '1月',
+                label: '1月'
+            }, {
+                value: '2月',
+                label: '2月'
+            }, {
+                value: '3月',
+                label: '3月'
+            }, {
+                value: '4月',
+                label: '4月'
+            }, {
+                value: '5月',
+                label: '5月'
+            }, {
+                value: '6月',
+                label: '6月'
+            }, {
+                value: '7月',
+                label: '7月'
+            }, {
+                value: '8月',
+                label: '8月'
+            }, {
+                value: '9月',
+                label: '9月'
+            }, {
+                value: '10月',
+                label: '10月'
+            }, {
+                value: '11月',
+                label: '11月'
+            }, {
+                value: '12月',
+                label: '12月'
+            }]
         }
     },
     computed: {
@@ -245,6 +290,7 @@ export default {
             })
         },
         onEditMonth (val) {
+            // this.inputMonth = val.rewardMonth
             this.$prompt('奖励月份', '奖励月份编辑', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -407,7 +453,7 @@ export default {
     }
     .top-box-right {
         width: auto;
-        margin-left: 1rem;
+        margin-left: 3rem;
         display: flex;
         flex-direction: row;
         justify-content:flex-end;
