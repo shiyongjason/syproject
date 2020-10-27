@@ -33,10 +33,19 @@
                                     :pagination="paginationDone"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
+
                                 <p @click="onEditMoney(scope.data.row)" class="colred">{{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-                                <p @click="onEditMonth(scope.data.row)" class="colred">{{scope.data.row.rewardMonth}}</p>
+<!--                                <p @click="onEditMonth(scope.data.row)" class="colred">{{scope.data.row.rewardMonth}}</p>-->
+                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth()">
+                                    <el-option
+                                        v-for=" item in monthOptions"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                    </el-option>
+                                </el-select>
                             </template>
                             <template slot="source" slot-scope="scope">
                                 {{scope.data.row.source===1?'注册':'推荐'}}
@@ -64,7 +73,10 @@
                 <p slot="tip" class="el-upload__tip">2.批量导入的知识库仅支持文字描述，不支持图片和视频等格式</p>
                 <p slot="tip" class="el-upload__tip">3.请按照知识库模板内容导入问题和答案，否则可能会出现导入异常</p>
             </el-upload>
-            <el-button type="primary" @click="onDownload" class="download-template">下载订单明细模板</el-button>
+            <div class="downloadExcel">
+                <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载订单明细模板</a>
+            </div>
+<!--            <el-button type="primary" @click="onDownload" class="download-template">下载订单明细模板</el-button>-->
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
@@ -289,16 +301,19 @@ export default {
             }).catch(() => {
             })
         },
-        onEditMonth (val) {
-            // this.inputMonth = val.rewardMonth
-            this.$prompt('奖励月份', '奖励月份编辑', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                inputValue: val.rewardMonth
-            }).then(({ value }) => {
-                this.updataInvitation({ id: val.id, rewardMonth: value, operateUserName: this.$route.query.nickName })
-            }).catch(() => {
-            })
+        onEditMonth (val, value) {
+            // // this.inputMonth = val.rewardMonth
+            // this.$prompt('奖励月份', '奖励月份编辑', {
+            //     confirmButtonText: '确定',
+            //     cancelButtonText: '取消',
+            //     inputValue: val.rewardMonth
+            // }).then(({ value }) => {
+            //
+            // }).catch(() => {
+            // })
+            console.log(val)
+            console.log(value)
+            // this.updataInvitation({ id: val.id, rewardMonth: value, operateUserName: this.$route.query.nickName })
         },
         async updataInvitation (val) {
             await updateInvitationDetail(val)
