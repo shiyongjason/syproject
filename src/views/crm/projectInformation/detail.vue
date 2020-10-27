@@ -264,7 +264,7 @@ export default {
             this.dealReqRiskCheckProjectDoc()
             await saveDoc(this.reqRiskCheckProjectDoc)
             let res = this.checkForm()
-            console.log('res: ', res);
+            console.log('res: ', res)
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
                 console.log(document.getElementById(`second_${res.templateId}`))

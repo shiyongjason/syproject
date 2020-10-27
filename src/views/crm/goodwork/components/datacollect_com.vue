@@ -136,7 +136,7 @@
                         <el-input placeholder="请输入内容" :value="projectLevels.companyServiceCharge || ''" :disabled="true"></el-input>
                     </el-form-item>
                     <el-form-item label="资料状态：">
-                        <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyServiceCharge)" :disabled="true"></el-input>
+                        <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyDocumentStatus)" :disabled="true"></el-input>
                     </el-form-item>
                 </div>
             </el-form>

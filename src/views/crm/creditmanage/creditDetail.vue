@@ -1,14 +1,14 @@
 <template>
     <div class="page-body" v-if="detail">
         <div class="page-body-cont">
-
+            <h-button table @click="onLookRefuse" v-if="$route.query.documentStatus==4">打回记录</h-button>
             <div v-for="(item,index) in detail" :key="index">
-                <div class="firstclass">{{item.firstCatagoryName}} <h-button  table @click="onLookRefuse">打回记录</h-button></div>
+                <div class="firstclass">{{item.firstCatagoryName}} </div>
                 <div class="secondclass" v-for="(jtem,jndex) in item.respRiskCheckDocTemplateList" :key="jndex">
                     <div class="secondclass-title">
                         <span class="secondclass-start" v-if="jtem.mondatoryFlag==1">*</span>
                         <font class="secondclass-title_font">{{jtem.secondCatagoryName}}</font>
-                        <span class="secondclass-reason" v-if="jtem.refuse" >已打回，待分部补充</span>
+                        <span class="secondclass-reason" v-if="jtem.refuse">已打回，待分部补充</span>
                     </div>
                     <p class="secondclass-remark">备注：{{jtem.remark||'-'}}</p>
                     <div class="secondclass-documents">
@@ -52,10 +52,10 @@
             <!-- bottom button -->
             <div class="bottom-button">
                 <p>
-                    <h-button  style="width:130px;" @click="onBack">返回</h-button>
+                    <h-button style="width:130px;" @click="onBack">返回</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <h-button  type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
+                    <h-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
                     <h-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</h-button>
@@ -73,8 +73,8 @@
                 </p>
             </div>
             <span slot="footer" class="dialog-footer">
-                <h-button  @click="dialogVisible = false">取 消</h-button>
-                <h-button  type="primary" @click="dialogVisible = false">确 定</h-button>
+                <h-button @click="dialogVisible = false">取 消</h-button>
+                <h-button type="primary" @click="dialogVisible = false">确 定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -93,7 +93,7 @@ const _reqRiskCheckProjectDoc = {
     submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
 }
 export default {
-    name: 'detail',
+    name: 'creditDetail',
     components: {
         hosjoyUpload: () => import('@/components/HosJoyUpload/HosJoyUpload')
     },
