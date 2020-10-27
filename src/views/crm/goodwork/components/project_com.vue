@@ -134,6 +134,7 @@
                     </el-select>
                 </el-form-item>
                  <el-form-item label="项目服务费：" prop="serviceCharge">
+                      <!-- <el-input v-model="levelsForm.serviceCharge" maxlength="10" v-isNum:2="levelsForm.serviceCharge"></el-input> -->
                      <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number>
                 </el-form-item>
             </el-form>

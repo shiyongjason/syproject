@@ -1,4 +1,4 @@
-import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX } from './format'
+import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX, inputMIN } from './format'
 /*
     自定义指令中传递的三个参数:el: 指令所绑定的元素，可以用来直接操作DOM。binding:  一个对象，包含指令的很多信息。vnode: Vue编译生成的虚拟节点。
     自定义指令有五个生命周期（也叫钩子函数），分别是 bind,inserted,update,componentUpdated,unbind
@@ -95,7 +95,22 @@ export default {
                 })
             }
         })
-
+        /**
+         * @description 限制输入最小值
+         * @param number 输入最最小值
+         * @example  <el-input v-model="form.a" v-inputMIN="-10"></el-input>
+         * @example  v-isNum:0 v-inputMIN='-10'  大于-10，0位小数，可结合使用。
+         */
+        Vue.directive('inputMIN', {
+            bind (el, binding, vnode) {
+                const element = el.getElementsByTagName('input')[0]
+                element.addEventListener('keyup', () => {
+                    element.value = inputMIN(element.value, binding.value)
+                    if (isNaN(element.value)) element.value = ''
+                    vnode.data.model && vnode.data.model.callback(element.value)
+                })
+            }
+        })
         Vue.directive('watermark', (el, binding) => {
             function addWaterMarker (str, parentNode) {
                 let can = document.createElement('canvas')

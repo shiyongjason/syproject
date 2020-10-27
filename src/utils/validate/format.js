@@ -57,11 +57,17 @@ function inputMAX (str, limit) {
     if (+str > limit) return limit
     return str
 }
+// 限制输入最大值
+function inputMIN (str, limit) {
+    if (+str < limit) return limit
+    return str
+}
 
 export {
     isNum,
     isNegative,
     isNotInputTxt,
     isPositiveInt,
-    inputMAX
+    inputMAX,
+    inputMIN
 }
