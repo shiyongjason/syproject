@@ -241,7 +241,7 @@ export default {
                             if (isNaN(abs)) {
                                 callback(new Error('请输入数字值'))
                             } else if (!reg.test(abs)) {
-                                callback(new Error('请输入数字'))
+                                callback(new Error('请输入有1位小数的数字'))
                             } else if (abs > 10) {
                                 callback(new Error('请输入-10到10的数字'))
                             } else {
