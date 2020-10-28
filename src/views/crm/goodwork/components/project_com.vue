@@ -134,7 +134,7 @@
                     </el-select>
                 </el-form-item>
                  <el-form-item label="项目服务费：" prop="serviceCharge">
-                      <el-input v-model.number="levelsForm.serviceCharge"></el-input>
+                      <el-input v-model="levelsForm.serviceCharge"></el-input>
                      <!-- <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number> -->
                 </el-form-item>
             </el-form>
@@ -260,14 +260,16 @@ export default {
                     { required: true, message: '服务费必填' },
                     {
                         validator: (r, v, callback) => {
-                            if (!Number.isInteger(v)) {
+                            const reg = /^\d+(\.\d{1})?$/
+                            const abs = Math.abs(v)
+                            if (isNaN(abs)) {
                                 callback(new Error('请输入数字值'))
+                            } else if (!reg.test(abs)) {
+                                callback(new Error('请输入有1位小数的数字'))
+                            } else if (abs > 10) {
+                                callback(new Error('请输入-10到10的数字'))
                             } else {
-                                if (Number(v) < -10 || Number(v) > 10) {
-                                    callback(new Error('服务费必须-10到10之间'))
-                                } else {
-                                    callback()
-                                }
+                                callback()
                             }
                         }
                     }
