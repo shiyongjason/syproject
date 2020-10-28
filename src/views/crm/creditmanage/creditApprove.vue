@@ -43,7 +43,13 @@
                     </div>
                 </div>
             </div>
+              <div class="bottom-button">
+                <p>
+                    <h-button style="width:130px;" @click="onBack">返回</h-button>
+                </p>
+            </div>
         </div>
+
     </div>
 </template>
 
@@ -72,6 +78,9 @@ export default {
                 return [res[index].fileUrl]
             }
             return []
+        },
+        onBack () {
+            this.$router.go(-1)
         }
     },
     async mounted () {
