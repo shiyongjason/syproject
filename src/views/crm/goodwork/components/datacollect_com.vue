@@ -238,7 +238,7 @@ export default {
                         validator: (r, v, callback) => {
                             const reg = /^\d+(\.\d{1})?$/
                             const abs = Math.abs(v)
-                            if (abs === NaN) {
+                            if (isNaN(abs)) {
                                 callback(new Error('请输入数字值'))
                             } else if (!reg.test(abs)) {
                                 callback(new Error('请输入数字'))
@@ -621,5 +621,5 @@ export default {
 }
 /deep/ .is-error {
     width: 100% !important;
-} 
+}
 </style>
