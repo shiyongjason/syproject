@@ -565,6 +565,7 @@ export default {
             this.refuseForm.templateIds = newTempid.toString()
             if (newTempid.length > 0) {
                 this.reasonVisible = true
+                this.refuseForm.remark = ''
             } else {
                 this.$message.warning('请选择打回的选项')
             }
