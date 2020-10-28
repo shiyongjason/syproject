@@ -220,3 +220,9 @@ export const PLAN_APPROVAL_IMPORT = 110011
 // 好橙工
 export const CRM_SUBMIT_INFO = 110101
 export const CRM_CHECKOUT_INFO = 110102
+
+// 资料收集下载
+export const CRM_ZL_DOWN = 109124
+export const CRM_LX_DOWN = 109125
+export const CRM_ZS_DOWN = 109126
+export const CRM_XY_DOWN = 109310

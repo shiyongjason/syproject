@@ -41,3 +41,4 @@ export const saveCreditLevel = (params) => axios.put(`/memeber/openapi/project/l
 export const getProjectLevels = (projectId) => axios.get(`/memeber/openapi/project/levels/${projectId}`)
 // 设置项目等级&项目服务费
 export const setProjectLevels = (params) => axios.put(`/memeber/openapi/project/levels`, params)
+export const downLoadZip = (params) => axios.get(`memeber/openapi/project/docs-download/${params.projectId}/${params.status}/${params.bizType}`)
