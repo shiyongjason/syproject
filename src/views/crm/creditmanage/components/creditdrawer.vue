@@ -44,7 +44,7 @@
                             <h-button table @click="onClickRecord">打回记录</h-button>
                         </p>
                         <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
-                        <!-- <p> -->
+                            <!-- <p> -->
                             <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                             <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
                             <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
@@ -77,7 +77,7 @@
                                             </template>
                                         </span>
                                     </p>
-                                    <p>{{moment(jtem.updateTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                                    <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                     <p>
                                         <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
                                         <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
@@ -187,7 +187,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, getCreditSTatus } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
@@ -336,6 +336,9 @@ export default {
             this.drawer = true
         },
         async onShowCreditdocument () {
+            // 先查询授信资料状态
+            // const { data } = await getCreditSTatus(this.companyId)
+            // console.log(data)
             this.isDownLoad = false
             this.showPacking = null
             await this.findCreditDocument(this.companyId)
@@ -408,7 +411,7 @@ export default {
             }
             return res
         },
-        async  onOnlyCredit () {
+        async onOnlyCredit () {
             this.creditDocumentList = []
             this.approveForm.length > 0 && this.approveForm.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -427,7 +430,7 @@ export default {
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
-            // 新增 审核通过
+                // 新增 审核通过
                 this.onlyType = 2
                 const { data } = await getComcredit(this.companyId)
                 this.ruleForm = { ...data }
@@ -609,7 +612,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.fullbg{
+.fullbg {
     background-color: #211f1f;
     width: 100%;
     height: 100%;
@@ -618,14 +621,14 @@ export default {
     position: fixed;
     top: 0;
     z-index: 9999;
-    .fullbg-img{
+    .fullbg-img {
         width: 377px;
         position: absolute;
         text-align: center;
         top: 50%;
         left: 50%;
         transform: translateX(-50%);
-        p{
+        p {
             color: #fff;
             font-size: 18px;
             text-align: center;
