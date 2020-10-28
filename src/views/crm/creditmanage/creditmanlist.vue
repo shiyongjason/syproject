@@ -279,6 +279,8 @@ export default {
     },
     beforeRouteLeave (to, from, next) {
         if (to.name != 'creditDetail' || to.name != 'creditApprove') {
+
+        } else {
             clearCache('creditManage')
         }
         next()
