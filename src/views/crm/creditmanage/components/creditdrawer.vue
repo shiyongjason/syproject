@@ -471,6 +471,7 @@ export default {
                                 message: `企业资料评级授信成功`,
                                 type: 'success'
                             })
+                            this.isloading = false
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
