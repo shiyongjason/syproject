@@ -57,7 +57,7 @@
                         <template v-for="obj in item.respRiskCheckDocTemplateList">
                             <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                                 <div class="collect-boxflex">
-                                    <div v-if="documentStatus!=3">
+                                    <div v-if="documentStatus!=3&&documentStatus!=4">
                                         <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
                                     </div>
                                     <div class="collect-boxtxt">
@@ -98,7 +98,7 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</h-button>
+                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
                     <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
                     <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                     <h-button @click="handleClose">取消</h-button>
