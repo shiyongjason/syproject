@@ -37,7 +37,6 @@
                                 <p @click="onEditMoney(scope.data.row)" class="colred">{{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-<!--                                <p @click="onEditMonth(scope.data.row)" class="colred">{{scope.data.row.rewardMonth}}</p>-->
                                 <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth(scope.data.row)">
                                     <el-option
                                         v-for=" item in monthOptions"
@@ -46,9 +45,6 @@
                                         :value="item.value">
                                     </el-option>
                                 </el-select>
-                            </template>
-                            <template slot="source" slot-scope="scope">
-                                {{scope.data.row.source===1?'注册':'推荐'}}
                             </template>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
@@ -70,13 +66,11 @@
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                <p slot="tip" class="el-upload__tip">2.批量导入的知识库仅支持文字描述，不支持图片和视频等格式</p>
-                <p slot="tip" class="el-upload__tip">3.请按照知识库模板内容导入问题和答案，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">2.请按照设备出入库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
                 <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载订单明细模板</a>
             </div>
-<!--            <el-button type="primary" @click="onDownload" class="download-template">下载订单明细模板</el-button>-->
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
@@ -87,22 +81,13 @@
                 </div>
             </el-dialog>
         </el-dialog>
-<!--        <el-select v-model="inputMonth" placeholder="请选择" >-->
-<!--            <el-option-->
-<!--                v-for=" item in monthOptions"-->
-<!--                :key="item.value"-->
-<!--                :label="item.label"-->
-<!--                :value="item.value">-->
-<!--            </el-option>-->
-<!--        </el-select>-->
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
-
+import axios from 'axios'
 export default {
     name: 'merchantMemberInvitation',
     data () {
@@ -128,13 +113,13 @@ export default {
                 total: 0
             },
             tableRegisterLabel: [
-                { label: '邀请人手机号', prop: 'phone' },
-                { label: '被邀请人昵称', prop: 'nick', width: '120px' },
-                { label: '被邀请人手机号', prop: 'invitePhone' },
+                { label: '邀请人手机号', prop: 'invitePhone' },
+                { label: '被邀请人昵称', prop: 'nickName', width: '120px' },
+                { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
             tableDoneLabel: [
-                { label: '导入时间', prop: 'orderTime', formatters: 'dateTime' },
+                { label: '导入时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '订单来源', prop: 'source' },
                 { label: '订单编号', prop: 'orderId' },
                 { label: '收货人', prop: 'consignee' },
@@ -223,7 +208,6 @@ export default {
                     if (endDateVal) {
                         return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -234,7 +218,6 @@ export default {
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
@@ -253,15 +236,58 @@ export default {
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
-                pageNumber: this.merchantmemberInvitationRegisterData.pages,
+                pageNumber: this.merchantmemberInvitationRegisterData.current,
                 pageSize: this.merchantmemberInvitationRegisterData.size,
                 total: this.merchantmemberInvitationRegisterData.total
             }
             this.paginationDone = {
-                pageNumber: this.merchantmemberInvitationOrderData.pages,
+                pageNumber: this.merchantmemberInvitationOrderData.current,
                 pageSize: this.merchantmemberInvitationOrderData.size,
                 total: this.merchantmemberInvitationOrderData.total
             }
+        },
+        uploadFile (param) {
+            console.log('response')
+            // 上传新文件时，将进度条值置为零
+            this.progressFlag = true
+            const formdata = new FormData()
+            formdata.append('documentType', this.filterForm.documentType)
+            formdata.append('upload', param.fileList)
+            formdata.append('operateUserName', this.userInfo.employeeName)
+            axios({
+                url: `${iotUrl}/mall/wx/order/boss/import`,
+                method: 'post',
+                data: formdata,
+                headers: { 'Content-Type': 'multipart/form-data',
+                    refreshToken: sessionStorage.getItem('refreshToken'),
+                    token: `Bearer ` + sessionStorage.getItem('token'),
+                    AccessKeyId: '5ksbfewexbfc' }
+            }).then(response => {
+                console.log(response)
+                if (response.data.rel) {
+                    this.$message({
+                        message: '文件上传成功',
+                        type: 'success'
+                    })
+                    this.logData.upUploadStatus = 1 // 是否上传成功 1 成功 0失败
+                } else {
+                    this.logData.upUploadStatus = 0
+                }
+                this.logData.upRegion = this.filterForm.regTargetArea // areacode
+                this.logData.upFileUrl = response.data.filePath // 上传文件存储路径
+                this.logData.upQueryType = this.filterForm.documentType // 档案类型id
+                this.logData.upUploadFileSize = response.data.fileSize // 文件大小
+                this.logData.upUploadFileName = response.data.fileName // 文件名
+                param.onSuccess() // 上传成功的文件会显示绿色的对勾
+            }).catch(response => {
+                console.log(response)
+                this.$message({
+                    message: '文件上传失败',
+                    type: 'warning'
+                })
+            }).then(error => {
+                console.log(error)
+            })
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -293,7 +319,7 @@ export default {
             this.$prompt('奖励金额', '奖励金额编辑', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                inputPattern: /^[0-9]*$/,
+                inputPattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
                 inputErrorMessage: '金额格式不正确',
                 inputValue: val.rewardAmount
             }).then(({ value }) => {
@@ -321,8 +347,6 @@ export default {
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
                 try {
                     await this.$refs.upload.submit()
-                    this.uploadShow = false
-                    this.onQuery()
                 } catch (e) {
                 }
             } else {
@@ -363,22 +387,24 @@ export default {
             }
             return isCsv && isLt10M
         },
-        uploadError () {
+        uploadError (response) {
+            const res = response
+            console.log(JSON.parse(res.message).detail)
             this.$refs.upload.clearFiles()
-            this.$message.error('文件上传失败，请重试！')
+            this.$message.error(JSON.parse(res.message).detail)
             this.loading = false
         },
         uploadSuccess (response) {
             this.$refs.upload.clearFiles()
+            this.onQuery(this.searchParams)
+            // if (response == null) {
+            this.errorData = response.data
+            this.uploadShow = false
+            this.$message.success('文件上传成功')
             this.loading = false
-            if (response.code === 200) {
-                this.errorData = response.data
-                this.errorShow = true
-                this.uploadShow = false
-                this.onQuery(this.searchParams)
-            } else {
-                this.$message.error(response.message)
-            }
+            // } else {
+            //     this.$message.error(response.message)
+            // }
         },
         onCloseDialog () {
             if (this.hasFile()) {
