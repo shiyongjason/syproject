@@ -273,6 +273,9 @@ export default {
             this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: row.companyId, documentStatus: row.documentStatus } })
         }
     },
+    activated () {
+        this.searchList()
+    },
     beforeRouteEnter (to, from, next) {
         newCache('creditManage')
         next()
