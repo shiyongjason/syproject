@@ -257,7 +257,7 @@ export default {
                     { required: true, message: '请选择项目等级', trigger: 'change' }
                 ],
                 serviceCharge: [
-                    { required: true, message: '服务费必填' },
+                    { required: true, message: '请输入项目服务费' },
                     {
                         validator: (r, v, callback) => {
                             const reg = /^\d+(\.\d{1})?$/
