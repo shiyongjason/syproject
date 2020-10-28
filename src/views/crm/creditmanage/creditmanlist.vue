@@ -92,7 +92,7 @@
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                 </template>
                 <template slot="documentStatus" slot-scope="scope">
-                    {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-1].value:'-'}}
+                    {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-1].value:'待提交'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
