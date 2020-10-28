@@ -34,3 +34,5 @@ export const saveProjectdoc = (params) => axios.post(`/fms/api/risk-check/save/p
 export const signAudit = (params) => axios.post(`/memeber/openapi/project/sign-audit`, params)
 
 export const checkTemplatedoc = (params) => axios.post(`/fms/api/risk-check/project/template-doc`, params)
+
+export const downLoadZip = (params) => axios.get(`memeber/openapi/project/docs-download/${params.projectId}/${params.status}/${params.bizType}`)

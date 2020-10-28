@@ -1,10 +1,26 @@
 <template>
     <div class="collect-wrap">
+        <div class="fullbg" v-if="showPacking">
+            <div class="fullbg-img">
+                <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                <p>
+                    <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                    <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                </p>
+            </div>
+        </div>
         <el-form :model="colForm" :rules="colFormrules" ref="colForm" label-width="" class="demo-ruleForm">
             <div class="collect-wrap_btnflex">
-                <p><h-button table @click="onGetrefuse">打回记录</h-button></p>
-               <!-- <p><h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                <span v-if="isDownLoad">正在下载中，请稍后</span></p> -->
+                <p>
+                    <h-button table @click="onGetrefuse">打回记录</h-button>
+                </p>
+                <template v-if="hosAuthCheck(Auths.CRM_ZL_DOWN)">
+                    <p>
+                        <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
+                        <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                        <span v-if="showPacking!=null&&!showPacking">打包完成</span>
+                    </p>
+                </template>
             </div>
             <div class="collect-wrapbox" v-for="item in colForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
@@ -98,6 +114,7 @@
     </div>
 </template>
 <script>
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { refuseDoc, submitProjectdoc, checkTemplatedoc } from '../api/index'
@@ -118,10 +135,14 @@ export default {
         status: {
             type: Number,
             default: 0
+        },
+        showPacking: {
+            default: null
         }
     },
     data () {
         return {
+            Auths,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
@@ -276,36 +297,64 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.fullbg{
+    background-color: #211f1f;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    .fullbg-img{
+        width: 377px;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        p{
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 /deep/.el-form {
     padding: 0;
 }
-/deep/.el-form-item__content{
+/deep/.el-form-item__content {
     line-height: 24px;
 }
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
     &_btnflex {
-         margin:  0 10px;
+        width: 140px;
+        text-align: right;
+        margin: 0 10px;
         display: flex;
         justify-content: flex-end;
         position: fixed;
         top: 130px;
         right: 0;
         z-index: 11;
-       background: #fff;
-       flex-direction: column;
-       p{
-           margin-bottom: 10px;
-       }
-        span{
-              color: #ff7a45;
-              font-size: 14px;
-              margin-left: 10px;
+        background: #fff;
+        flex-direction: column;
+        p {
+            margin-bottom: 10px;
+        }
+        span {
+            color: #ff7a45;
+            font-size: 14px;
+            margin-left: 10px;
         }
     }
 }
-.collect-wrapbox{
+.collect-wrapbox {
     margin-top: 80px;
 }
 .collect-title {
@@ -328,7 +377,6 @@ export default {
 }
 .collect-boxtxt {
     h3 {
-
         font-size: 16px;
         margin: 0;
     }
@@ -338,10 +386,10 @@ export default {
         padding: 0 2 0 0px;
         font-style: normal;
     }
-    p{
+    p {
         font-size: 14px;
         margin: 0;
-        padding: 16px 0 0  0;
+        padding: 16px 0 0 0;
         line-height: auto;
     }
 }

@@ -10,9 +10,9 @@
                 </template>
             </el-tabs>
             <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
-            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'"></datacolCom>
-            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'"></approveCom>
-            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'"></approveCom>
+            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
+            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
+            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
@@ -103,7 +103,7 @@ import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
-import { updateAudit, saveStatus, signAudit } from '../api/index'
+import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
@@ -124,6 +124,7 @@ export default {
     },
     data () {
         return {
+            showPacking: null,
             action: interfaceUrl + 'tms/files/upload',
             uploadParameters: {
                 updateUid: '',
@@ -244,6 +245,9 @@ export default {
             this.$refs['signOrLoanDialog'].clearValidate()
         },
         handleClick (tab, event) {
+            this.showPacking = null
+            this.isDownLoad = false
+            this.isDownLoads = false
             if (tab.index > 0) this.onFindRiskproject(tab.index)
         },
         isShowTab (key, status) {
@@ -471,13 +475,20 @@ export default {
             }
         },
         handleClose () {
+            this.showPacking = null
+            this.isDownLoad = false
+            this.isDownLoads = false
             this.$emit('backEvent')
         },
         onCompsback () {
             this.$emit('backEvent')
         },
-        onDownZip () {
-            window.location.href = interfaceUrl + `memeber/openapi/project/docs-download/${this.projectId}/${this.status}/${this.bizType}`
+        async onDownZip () {
+            this.showPacking = true
+            const { data } = await downLoadZip({ projectId: this.projectId, status: this.status, bizType: this.bizType })
+            console.log(data)
+            this.showPacking = false
+            window.location.href = data
         },
         onBackLoad (val) {
             this.loading = val
