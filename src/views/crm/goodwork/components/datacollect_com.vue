@@ -361,8 +361,8 @@ export default {
                     try {
                         if (!this.coldataForm.levels === !this.coldataForm.serviceCharge) {
                             const setParams = {
-                                serviceCharge: this.serviceCharge,
-                                levels: this.levels,
+                                serviceCharge: this.coldataForm.serviceCharge,
+                                levels: this.coldataForm.levels,
                                 id: this.colForm.projectId,
                                 updateBy: this.userInfo.employeeName
                             }

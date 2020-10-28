@@ -187,7 +187,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip, getCreditSTatus } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
@@ -336,9 +336,6 @@ export default {
             this.drawer = true
         },
         async onShowCreditdocument () {
-            // 先查询授信资料状态
-            // const { data } = await getCreditSTatus(this.companyId)
-            // console.log(data)
             this.isDownLoad = false
             this.showPacking = null
             await this.findCreditDocument(this.companyId)
@@ -471,6 +468,7 @@ export default {
                                 message: `企业资料评级授信成功`,
                                 type: 'success'
                             })
+                            this.isloading = false
                             this.drawer = false
                             this.$emit('backEvent')
                             this.dialogVisible = false
