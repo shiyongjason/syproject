@@ -85,7 +85,7 @@ import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
-import { submitDoc, getCreditdocument, submitcreditDoc } from './api/index'
+import { submitDoc, getCreditdocumentType, submitcreditDoc } from './api/index'
 import moment from 'moment'
 const _reqRiskCheckProjectDoc = {
     projectId: '', // 工程项目id
@@ -192,7 +192,7 @@ export default {
                 type: 2, // 1:BOSS端查看详情或查看资料 2：小程序端查看详情或BOSS上传资料
                 companyId: this.$route.query.companyId
             }
-            const { data } = await getCreditdocument(query)
+            const { data } = await getCreditdocumentType(query)
             this.detail = data
             this.detail.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {

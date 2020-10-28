@@ -56,7 +56,7 @@
 <script>
 import { handleImgDownload } from './utils'
 import moment from 'moment'
-import { getCreditdocument } from './api'
+import { getCreditdocumentType } from './api'
 export default {
     name: 'creditApprove',
     data () {
@@ -88,7 +88,7 @@ export default {
             type: 1, // 1:BOSS端查看详情或查看资料 2：小程序端查看详情或BOSS上传资料
             companyId: this.$route.query.companyId
         }
-        const { data } = await getCreditdocument(query)
+        const { data } = await getCreditdocumentType(query)
         this.detail = data
     }
 }
