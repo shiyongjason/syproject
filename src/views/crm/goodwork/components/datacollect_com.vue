@@ -101,7 +101,7 @@
                     <div class="subTitle">项目评级</div>
                     <div class="horizontalLayout">
                         <el-form-item label="项目级别：">
-                            <el-select v-model="projectRating.levels" placeholder="请选择项目级别">
+                            <el-select v-model="coldataForm.levels" placeholder="请选择项目级别">
                                 <el-option label="A+" value="A+"></el-option>
                                 <el-option label="A" value="A"></el-option>
                                 <el-option label="B+" value="B+"></el-option>
@@ -111,8 +111,8 @@
                             </el-select>
                         </el-form-item>
                         <div class="special">
-                            <el-form-item label="项目服务费：">
-                                <el-input-number v-model="projectRating.serviceCharge" controls-position="right" :min="-10" :max="10" :precision=1></el-input-number>
+                            <el-form-item label="项目服务费：" prop="serviceCharge">
+                                <el-input v-model="coldataForm.serviceCharge"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -213,15 +213,31 @@ export default {
                 ],
                 submitStatus: [
                     { required: true, message: '请选择审核结果', trigger: 'blur' }
+                ],
+                serviceCharge: [
+                    {
+                        validator: (r, v, callback) => {
+                            const reg = /^\d+(\.\d{1})?$/
+                            const abs = Math.abs(v)
+                            if (abs === NaN) {
+                                callback(new Error('请输入数字值'))
+                            } else if (!reg.test(abs)) {
+                                callback(new Error('请输入数字'))
+                            } else if (abs > 10) {
+                                callback(new Error('请输入-10到10的数字'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             coldataForm: {
                 remark: '',
-                submitStatus: 2
-            },
-            // 项目评级
-            projectRating: {
-                serviceCharge: '0.0',
+                submitStatus: 2,
+                // 项目评级
+                serviceCharge: '',
                 levels: ''
             },
             isDownLoad: false
@@ -264,9 +280,8 @@ export default {
             this.projectLevels = data
             this.collectVisible = true
             this.collectTitle = '材料审核'
-            this.projectRating.levels = data.levels
-            this.projectRating.serviceCharge = data.serviceCharge
-            // console.log(this.projectRating)
+            this.coldataForm.levels = data.levels
+            this.coldataForm.serviceCharge = data.serviceCharge
         },
         onDownzip () {
             this.isDownLoad = true
@@ -325,9 +340,10 @@ export default {
             this.$refs.approveForm.validate(async (valid) => {
                 if (valid) {
                     try {
-                        if (!this.projectRating.levels === !this.projectRating.serviceCharge) {
+                        if (!this.coldataForm.levels === !this.coldataForm.serviceCharge) {
                             const setParams = {
-                                ...this.projectRating,
+                                serviceCharge: this.serviceCharge,
+                                levels: this.levels,
                                 id: this.colForm.projectId,
                                 updateBy: this.userInfo.employeeName
                             }
@@ -556,4 +572,7 @@ export default {
         width: 50%;
     }
 }
+/deep/ .is-error {
+    width: 100% !important;
+} 
 </style>
