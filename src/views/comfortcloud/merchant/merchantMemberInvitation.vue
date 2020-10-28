@@ -47,9 +47,6 @@
                                     </el-option>
                                 </el-select>
                             </template>
-                            <template slot="source" slot-scope="scope">
-                                {{scope.data.row.source===1?'注册':'推荐'}}
-                            </template>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                             </template>
@@ -70,13 +67,11 @@
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                <p slot="tip" class="el-upload__tip">2.批量导入的知识库仅支持文字描述，不支持图片和视频等格式</p>
-                <p slot="tip" class="el-upload__tip">3.请按照知识库模板内容导入问题和答案，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">2.请按照设备出入库模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
                 <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载订单明细模板</a>
             </div>
-<!--            <el-button type="primary" @click="onDownload" class="download-template">下载订单明细模板</el-button>-->
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
@@ -87,18 +82,9 @@
                 </div>
             </el-dialog>
         </el-dialog>
-<!--        <el-select v-model="inputMonth" placeholder="请选择" >-->
-<!--            <el-option-->
-<!--                v-for=" item in monthOptions"-->
-<!--                :key="item.value"-->
-<!--                :label="item.label"-->
-<!--                :value="item.value">-->
-<!--            </el-option>-->
-<!--        </el-select>-->
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
@@ -128,13 +114,13 @@ export default {
                 total: 0
             },
             tableRegisterLabel: [
-                { label: '邀请人手机号', prop: 'phone' },
+                { label: '邀请人手机号', prop: 'invitePhone' },
                 { label: '被邀请人昵称', prop: 'nick', width: '120px' },
-                { label: '被邀请人手机号', prop: 'invitePhone' },
+                { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
             tableDoneLabel: [
-                { label: '导入时间', prop: 'orderTime', formatters: 'dateTime' },
+                { label: '导入时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '订单来源', prop: 'source' },
                 { label: '订单编号', prop: 'orderId' },
                 { label: '收货人', prop: 'consignee' },
@@ -293,7 +279,7 @@ export default {
             this.$prompt('奖励金额', '奖励金额编辑', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
-                inputPattern: /^[0-9]*$/,
+                inputPattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
                 inputErrorMessage: '金额格式不正确',
                 inputValue: val.rewardAmount
             }).then(({ value }) => {
@@ -321,8 +307,6 @@ export default {
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
                 try {
                     await this.$refs.upload.submit()
-                    this.uploadShow = false
-                    this.onQuery()
                 } catch (e) {
                 }
             } else {
@@ -365,20 +349,22 @@ export default {
         },
         uploadError () {
             this.$refs.upload.clearFiles()
-            this.$message.error('文件上传失败，请重试！')
+            this.$message.error('文件上传失败')
             this.loading = false
         },
         uploadSuccess (response) {
+            console.log(response)
             this.$refs.upload.clearFiles()
+            this.$message.success('文件上传成功')
             this.loading = false
-            if (response.code === 200) {
-                this.errorData = response.data
-                this.errorShow = true
-                this.uploadShow = false
-                this.onQuery(this.searchParams)
-            } else {
-                this.$message.error(response.message)
-            }
+            this.onQuery(this.searchParams)
+            // // if (response.code === 200) {
+            // this.errorData = response.data
+            // this.errorShow = true
+            // this.uploadShow = false
+            // // } else {
+            // //     this.$message.error(response.message)
+            // // }
         },
         onCloseDialog () {
             if (this.hasFile()) {

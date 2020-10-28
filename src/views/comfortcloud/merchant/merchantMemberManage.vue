@@ -20,10 +20,10 @@
             <div class="query-cont-col">
                 <div class="query-col-title">注册时间： </div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startRegisterTime" type="date" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endRegisterTime" type="date" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                    <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                     </el-date-picker>
                 </div>
             </div>
@@ -68,7 +68,7 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '会员账号', prop: 'uuid' },
+                { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '注册来源', prop: 'source' },
@@ -92,7 +92,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.queryParams.endTime
+                    let endDateVal = this.queryParams.endRegisterTime
                     if (endDateVal) {
                         return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
@@ -103,7 +103,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.startTime
+                    let beginDateVal = this.queryParams.startRegisterTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
