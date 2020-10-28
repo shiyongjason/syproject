@@ -3,7 +3,7 @@
         <div class="page-body-cont ">
             <span>会员管理 </span>
         </div>
-        <div class="page-body-cont">
+        <div class="page-body-cont " style="background-color: #ff7a4599" >
             <span class="topTitle">已筛选 {{merchantmemberData.total}} 项</span>
             <span class="topTitle">累计注册: {{merchantmemberTotalData.registerCount}}个</span>
             <span class="topTitle">累计成交订单: {{merchantmemberTotalData.orderCount}}单</span>
@@ -119,6 +119,7 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMembersituation: 'findMerchantMembersituation',
+            iotmerchantmemberDataPagination: 'iotmerchantmemberDataPagination',
             findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation'
         }),
         async onQuery () {
@@ -126,7 +127,7 @@ export default {
             await this.findMerchantMemberTotalsituation()
             this.tableData = this.merchantmemberData.records
             this.pagination = {
-                pageNumber: this.merchantmemberData.pages,
+                pageNumber: this.merchantmemberData.current,
                 pageSize: this.merchantmemberData.size,
                 total: this.merchantmemberData.total
             }
@@ -137,6 +138,14 @@ export default {
         },
         onEdit (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
+        },
+        onCurrentChange (val) {
+            this.searchParams.pageNumber = val.pageNumber
+            this.onQuery(this.searchParams)
+        },
+        onSizeChange (val) {
+            this.searchParams.pageSize = val
+            this.onQuery(this.searchParams)
         }
     }
 }
@@ -159,8 +168,12 @@ export default {
 }
 .topTitle{
     margin-left: 2rem;
+    font-weight:bold;
 }
 .colred {
+    color: #ff7a45;
+    cursor: pointer;
+}.topColred {
     color: #ff7a45;
     cursor: pointer;
 }

@@ -37,7 +37,6 @@
                                 <p @click="onEditMoney(scope.data.row)" class="colred">{{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-<!--                                <p @click="onEditMonth(scope.data.row)" class="colred">{{scope.data.row.rewardMonth}}</p>-->
                                 <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth(scope.data.row)">
                                     <el-option
                                         v-for=" item in monthOptions"
@@ -88,7 +87,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
-
+import axios from 'axios'
 export default {
     name: 'merchantMemberInvitation',
     data () {
@@ -115,7 +114,7 @@ export default {
             },
             tableRegisterLabel: [
                 { label: '邀请人手机号', prop: 'invitePhone' },
-                { label: '被邀请人昵称', prop: 'nick', width: '120px' },
+                { label: '被邀请人昵称', prop: 'nickName', width: '120px' },
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
@@ -209,7 +208,6 @@ export default {
                     if (endDateVal) {
                         return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
@@ -220,7 +218,6 @@ export default {
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
@@ -239,15 +236,58 @@ export default {
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
-                pageNumber: this.merchantmemberInvitationRegisterData.pages,
+                pageNumber: this.merchantmemberInvitationRegisterData.current,
                 pageSize: this.merchantmemberInvitationRegisterData.size,
                 total: this.merchantmemberInvitationRegisterData.total
             }
             this.paginationDone = {
-                pageNumber: this.merchantmemberInvitationOrderData.pages,
+                pageNumber: this.merchantmemberInvitationOrderData.current,
                 pageSize: this.merchantmemberInvitationOrderData.size,
                 total: this.merchantmemberInvitationOrderData.total
             }
+        },
+        uploadFile (param) {
+            console.log('response')
+            // 上传新文件时，将进度条值置为零
+            this.progressFlag = true
+            const formdata = new FormData()
+            formdata.append('documentType', this.filterForm.documentType)
+            formdata.append('upload', param.fileList)
+            formdata.append('operateUserName', this.userInfo.employeeName)
+            axios({
+                url: `${iotUrl}/mall/wx/order/boss/import`,
+                method: 'post',
+                data: formdata,
+                headers: { 'Content-Type': 'multipart/form-data',
+                    refreshToken: sessionStorage.getItem('refreshToken'),
+                    token: `Bearer ` + sessionStorage.getItem('token'),
+                    AccessKeyId: '5ksbfewexbfc' }
+            }).then(response => {
+                console.log(response)
+                if (response.data.rel) {
+                    this.$message({
+                        message: '文件上传成功',
+                        type: 'success'
+                    })
+                    this.logData.upUploadStatus = 1 // 是否上传成功 1 成功 0失败
+                } else {
+                    this.logData.upUploadStatus = 0
+                }
+                this.logData.upRegion = this.filterForm.regTargetArea // areacode
+                this.logData.upFileUrl = response.data.filePath // 上传文件存储路径
+                this.logData.upQueryType = this.filterForm.documentType // 档案类型id
+                this.logData.upUploadFileSize = response.data.fileSize // 文件大小
+                this.logData.upUploadFileName = response.data.fileName // 文件名
+                param.onSuccess() // 上传成功的文件会显示绿色的对勾
+            }).catch(response => {
+                console.log(response)
+                this.$message({
+                    message: '文件上传失败',
+                    type: 'warning'
+                })
+            }).then(error => {
+                console.log(error)
+            })
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -347,24 +387,24 @@ export default {
             }
             return isCsv && isLt10M
         },
-        uploadError () {
+        uploadError (response) {
+            const res = response
+            console.log(JSON.parse(res.message).detail)
             this.$refs.upload.clearFiles()
-            this.$message.error('文件上传失败')
+            this.$message.error(JSON.parse(res.message).detail)
             this.loading = false
         },
         uploadSuccess (response) {
-            console.log(response)
             this.$refs.upload.clearFiles()
+            this.onQuery(this.searchParams)
+            // if (response == null) {
+            this.errorData = response.data
+            this.uploadShow = false
             this.$message.success('文件上传成功')
             this.loading = false
-            this.onQuery(this.searchParams)
-            // // if (response.code === 200) {
-            // this.errorData = response.data
-            // this.errorShow = true
-            // this.uploadShow = false
-            // // } else {
-            // //     this.$message.error(response.message)
-            // // }
+            // } else {
+            //     this.$message.error(response.message)
+            // }
         },
         onCloseDialog () {
             if (this.hasFile()) {

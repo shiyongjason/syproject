@@ -6,9 +6,12 @@ import * as Api from '@/views/comfortcloud/api'
 const state = {
     iotmemberData: {},
     iotmerchantmemberData: {},
+    iotmerchantmemberDataPagination: {},
     iotmerchantmemberTotalData: {},
     iotmerchantmemberInvitationRegisterData: {},
+    iotmerchantmemberInvitationRegisterDataPagination: {},
     iotmerchantmemberInvitationOrderData: {},
+    iotmerchantmemberInvitationOrderDataPagination: {},
     iotmemberDetail: {},
     familyData: {},
     cloudActivitydetail: {},
@@ -134,7 +137,10 @@ const getters = {
     cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
     cloudMerchantAdDetail: state => state.cloudMerchantAdDetail,
     cloudMerchantOrderList: state => state.cloudMerchantOrderList,
-    cloudMerchantOrderListPagination: state => state.cloudMerchantOrderListPagination
+    cloudMerchantOrderListPagination: state => state.cloudMerchantOrderListPagination,
+    iotmerchantmemberDataPagination: state => state.iotmerchantmemberDataPagination,
+    iotmerchantmemberInvitationRegisterDataPagination: state => state.iotmerchantmemberInvitationRegisterDataPagination,
+    iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination
 }
 
 const mutations = {
@@ -143,6 +149,9 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_DATA] (state, payload) {
         state.iotmerchantmemberData = payload
+    },
+    [types.MERCHANT_MEMBERS_DATA_LIST_PAGINATION] (state, payload) {
+        state.iotmerchantmemberDataPagination = payload
     },
     [types.MERCHANT_MEMBERS_TOTAL_DATA] (state, payload) {
         state.iotmerchantmemberTotalData = payload
@@ -326,14 +335,29 @@ const actions = {
     async findMerchantMembersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMembersituation(params)
         commit(types.MERCHANT_MEMBERS_DATA, data)
+        commit(types.MERCHANT_MEMBERS_DATA_LIST_PAGINATION, {
+            pageNumber: data.pages,
+            pageSize: data.size,
+            total: data.total
+        })
     },
     async findMerchantMemberInvitationRegistersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationRegistersituation(params)
         commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA, data)
+        commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA_LIST_PAGINATION, {
+            pageNumber: data.pages,
+            pageSize: data.size,
+            total: data.total
+        })
     },
     async findMerchantMemberInvitationOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOrdersituation(params)
         commit(types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA, data)
+        commit(types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA_LIST_PAGINATION, {
+            pageNumber: data.pages,
+            pageSize: data.size,
+            total: data.total
+        })
     },
     async findMerchantMemberTotalsituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberTotalsituation(params)
