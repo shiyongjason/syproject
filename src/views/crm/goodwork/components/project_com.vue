@@ -125,7 +125,7 @@
                 </hosjoyUpload>
             </el-form-item>
         </el-form>
-        <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="()=>{dialogVisible = false}" :modal=false>
+        <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="()=>{dialogVisible = false}" :close-on-click-modal=false :modal=false>
             <el-form :model="levelsForm" :rules="levelsRule" ref="levelsForm" label-width="150px" class="demo-ruleForm ">
                 <el-form-item label="项目等级：" prop="levels">
                     <el-select v-model="levelsForm.levels" placeholder="请选择">
@@ -134,7 +134,8 @@
                     </el-select>
                 </el-form-item>
                  <el-form-item label="项目服务费：" prop="serviceCharge">
-                     <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number>
+                      <el-input v-model.number="levelsForm.serviceCharge"></el-input>
+                     <!-- <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number> -->
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -256,7 +257,20 @@ export default {
                     { required: true, message: '请选择项目等级', trigger: 'change' }
                 ],
                 serviceCharge: [
-                    { required: true, message: '请输入项目服务费', trigger: 'blur' }
+                    { required: true, message: '服务费必填' },
+                    {
+                        validator: (r, v, callback) => {
+                            if (!Number.isInteger(v)) {
+                                callback(new Error('请输入数字值'))
+                            } else {
+                                if (Number(v) < -10 || Number(v) > 10) {
+                                    callback(new Error('服务费必须-10到10之间'))
+                                } else {
+                                    callback()
+                                }
+                            }
+                        }
+                    }
                 ]
             }
         }

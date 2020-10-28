@@ -31,3 +31,4 @@ export const getCreditdocument = (params) => axios.get(`/memeber/api/credit-docu
 
 // 根据ID 查询信用
 export const getComcredit = (params) => axios.get(`/memeber/company/credit/companys/${params}`)
+export const downLoadZip = (params) => axios.get(`memeber/api/credit-document/download/${params.companyId}/${params.activeName}/detail`)

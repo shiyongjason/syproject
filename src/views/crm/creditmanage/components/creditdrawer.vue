@@ -5,6 +5,15 @@
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
                 <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>1)"></el-tab-pane>
             </el-tabs>
+            <div class="fullbg" v-if="showPacking">
+                <div class="fullbg-img">
+                    <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                    <p>
+                        <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                        <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                    </p>
+                </div>
+            </div>
             <div class="drawer-wrap" v-if="activeName=='1'">
                 <div class="drawer-wrap_title">{{companyName}}</div>
                 <div class="drawer-wrap_btn">
@@ -34,9 +43,12 @@
                         <p>
                             <h-button table @click="onClickRecord">打回记录</h-button>
                         </p>
-                        <p>
-                            <!-- <h-button table @click="onDownzip" v-if="!isDownLoad">一键下载</h-button>
-                            <span v-if="isDownLoad">正在下载中，请稍后</span> -->
+                        <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
+                        <!-- <p> -->
+                            <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
+                            <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
+                            <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                            <span v-if="showPacking!=null&&!showPacking">打包完成</span>
                         </p>
                     </div>
                     <div class="collect-main" v-for="item in approveForm" :key="item.firstCatagoryId">
@@ -175,7 +187,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
@@ -183,6 +195,7 @@ export default {
     name: 'creditdrawer',
     data () {
         return {
+            showPacking: null,
             auths,
             handleImgDownload,
             moment,
@@ -324,6 +337,7 @@ export default {
         },
         async onShowCreditdocument () {
             this.isDownLoad = false
+            this.showPacking = null
             await this.findCreditDocument(this.companyId)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
@@ -429,32 +443,51 @@ export default {
         async onSubmitDoc (val) {
             this.isloading = true
             this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
-            this.$refs.ruleForm.validate(async (valid) => {
-                if (valid) {
-                    try {
-                        await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
-                        this.$message({
-                            message: `企业资料审核通过`,
-                            type: 'success'
-                        })
-                        this.drawer = false
-                        this.$emit('backEvent')
-                        this.dialogVisible = false
-                        await this.findCreditPage({ companyId: this.companyId })
-                        this.tableData = this.creditPage.companyCreditList
-                        this.$emit('backEvent')
-                    } catch (error) {
-                        this.isloading = false
-                    }
-                } else {
+            if (val == 2) {
+                try {
+                    await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
+                    this.$message({
+                        message: `企业资料审核通过`,
+                        type: 'success'
+                    })
+                    this.drawer = false
+                    this.$emit('backEvent')
+                    this.dialogVisible = false
+                    await this.findCreditPage({ companyId: this.companyId })
+                    this.tableData = this.creditPage.companyCreditList
+                    this.$emit('backEvent')
+                } catch (error) {
                     this.isloading = false
                 }
-            })
+            } else {
+                this.$refs.ruleForm.validate(async (valid) => {
+                    if (valid) {
+                        try {
+                            await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
+                            this.$message({
+                                message: `企业资料评级授信成功`,
+                                type: 'success'
+                            })
+                            this.drawer = false
+                            this.$emit('backEvent')
+                            this.dialogVisible = false
+                            await this.findCreditPage({ companyId: this.companyId })
+                            this.tableData = this.creditPage.companyCreditList
+                            this.$emit('backEvent')
+                        } catch (error) {
+                            this.isloading = false
+                        }
+                    } else {
+                        this.isloading = false
+                    }
+                })
+            }
 
             // this.saveCreditDocument()
         },
         handleClose () {
             this.drawer = false
+            this.showPacking = null
         },
         datePickerChange (val) {
             this.newendTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
@@ -562,16 +595,46 @@ export default {
                 this.$refs.refuseForm.clearValidate()
             })
         },
-        onDownzip () {
+        async onDownzip () {
             this.isDownLoad = true
-            console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
-            window.location.href = interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`
+            this.showPacking = true
+            // console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
+            const { data } = await downLoadZip({ companyId: this.companyId, activeName: this.activeName })
+            console.log(data)
+            this.showPacking = false
+            window.location.href = data
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+.fullbg{
+    background-color: #211f1f;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    .fullbg-img{
+        width: 377px;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        p{
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 .colred {
     color: #ff7a45;
 }
@@ -649,6 +712,8 @@ export default {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
     &_btnflex {
+        width: 140px;
+        text-align: right;
         margin: 0 10px;
         display: flex;
         justify-content: flex-end;
