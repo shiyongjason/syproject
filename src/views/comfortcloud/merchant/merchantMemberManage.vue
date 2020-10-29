@@ -1,42 +1,38 @@
 <template>
-    <div class="tags-wrapper page-body amountImport">
+    <div class="page-body B2b">
         <div class="page-body-cont ">
-            <span>会员管理 </span>
-        </div>
-        <div class="page-body-cont " >
-            <el-tag size="medium" class="eltagtop" >已筛选 {{merchantmemberData.total}} 项,
-                累计注册: {{merchantmemberTotalData.registerCount}}个,
-                累计成交订单: {{merchantmemberTotalData.orderCount}}单,
-                累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元,
-                累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元
+            <div class="query-cont__row">
+                <div class="query-cont-col">
+                    <div class="query-col-title">会员账号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.phone" placeholder="请输入手机号" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">注册时间： </div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
+                    </div>
+                </div>
+            </div>
+            <el-tag size="medium" class="eltagtop">
+                  已筛选 {{merchantmemberData.total}} 项；
+                  累计注册: {{merchantmemberTotalData.registerCount}}个；
+                  累计成交订单: {{merchantmemberTotalData.orderCount}}单；
+                  累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
+                  累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
             </el-tag>
-        </div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">会员账号：</div>
-                <div class="query-col-input">
-                    <el-input v-model="queryParams.phone" placeholder="请输入手机号" maxlength="50"></el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">注册时间： </div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
-                    </el-date-picker>
-                    <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
-                </div>
-            </div>
-        </div>
-        <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+        <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="source" slot-scope="scope">
                     {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
                 </template>
@@ -44,7 +40,7 @@
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">邀请详情</el-button>
                 </template>
             </basicTable>
-        </div>
+            </div>
     </div>
 </template>
 <script>
