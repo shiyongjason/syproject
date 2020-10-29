@@ -66,7 +66,7 @@
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                <p slot="tip" class="el-upload__tip">2.请按照订单明细模板内容导入故障数据，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">2.请按照订单明细模板内容导入数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
                 <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载订单明细模板</a>

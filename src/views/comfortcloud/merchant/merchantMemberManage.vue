@@ -3,12 +3,13 @@
         <div class="page-body-cont ">
             <span>会员管理 </span>
         </div>
-        <div class="page-body-cont " style="background-color: #ff7a4599" >
-            <span class="topTitle">已筛选 {{merchantmemberData.total}} 项</span>
-            <span class="topTitle">累计注册: {{merchantmemberTotalData.registerCount}}个</span>
-            <span class="topTitle">累计成交订单: {{merchantmemberTotalData.orderCount}}单</span>
-            <span class="topTitle">累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元</span>
-            <span class="topTitle">累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元</span>
+        <div class="page-body-cont " >
+            <el-tag size="medium" class="eltagtop" >已筛选 {{merchantmemberData.total}} 项,
+                累计注册: {{merchantmemberTotalData.registerCount}}个,
+                累计成交订单: {{merchantmemberTotalData.orderCount}}单,
+                累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元,
+                累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元
+            </el-tag>
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">

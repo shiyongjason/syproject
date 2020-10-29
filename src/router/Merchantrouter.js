@@ -7,7 +7,7 @@ export default [
         meta: {
             title: '经销商后台',
             isMenu: true,
-            icon: 'hosjoy_shushiyun'
+            icon: 'shushiyun_merchant1'
         },
         component: Layout,
         children: [
