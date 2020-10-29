@@ -66,7 +66,7 @@
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                <p slot="tip" class="el-upload__tip">2.请按照设备出入库模板内容导入故障数据，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">2.请按照订单明细模板内容导入故障数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
                 <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载订单明细模板</a>
@@ -114,7 +114,7 @@ export default {
             },
             tableRegisterLabel: [
                 { label: '邀请人手机号', prop: 'invitePhone' },
-                { label: '被邀请人昵称', prop: 'nickName', width: '120px' },
+                { label: '被邀请人昵称', prop: 'nickName', width: '220px' },
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
@@ -323,6 +323,13 @@ export default {
                 inputErrorMessage: '金额格式不正确',
                 inputValue: val.rewardAmount
             }).then(({ value }) => {
+                if (value.length > 6) {
+                    this.$message({
+                        message: '奖励金额不符',
+                        type: 'error'
+                    })
+                    return
+                }
                 this.updataInvitation({ id: val.id, rewardAmount: value, operateUserName: this.$route.query.nickName })
             }).catch(() => {
             })
