@@ -98,8 +98,8 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
-                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
+                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
                     <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                     <h-button @click="handleClose">取消</h-button>
                 </div>
