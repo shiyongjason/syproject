@@ -3,7 +3,7 @@
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
-                <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>1)"></el-tab-pane>
+                <el-tab-pane label="授信资料清单" name="2" ></el-tab-pane>
             </el-tabs>
             <div class="fullbg" v-if="showPacking">
                 <div class="fullbg-img">
