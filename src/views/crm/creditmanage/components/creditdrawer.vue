@@ -409,36 +409,37 @@ export default {
             return res
         },
         async onOnlyCredit () {
-            this.creditDocumentList = []
-            this.approveForm.length > 0 && this.approveForm.map(item => {
-                item.respRiskCheckDocTemplateList.map(jtem => {
-                    jtem && jtem.creditDocuments && jtem.creditDocuments.length > 0 && jtem.creditDocuments.map(ktem => {
-                        this.creditDocumentList.push({
-                            templateId: ktem.templateId,
-                            fileName: ktem.fileName,
-                            fileUrl: ktem.fileUrl,
-                            createTime: ktem.createTime ? ktem.createTime : null,
-                            createBy: ktem.createBy ? ktem.createBy : this.userInfo.employeeName
-                        })
-                    })
-                })
+            // this.creditDocumentList = []
+            // this.approveForm.length > 0 && this.approveForm.map(item => {
+            //     item.respRiskCheckDocTemplateList.map(jtem => {
+            //         jtem && jtem.creditDocuments && jtem.creditDocuments.length > 0 && jtem.creditDocuments.map(ktem => {
+            //             this.creditDocumentList.push({
+            //                 templateId: ktem.templateId,
+            //                 fileName: ktem.fileName,
+            //                 fileUrl: ktem.fileUrl,
+            //                 createTime: ktem.createTime ? ktem.createTime : null,
+            //                 createBy: ktem.createBy ? ktem.createBy : this.userInfo.employeeName
+            //             })
+            //         })
+            //     })
+            // })
+            // let res = this.checkForm()
+            // if (res) {
+            //     this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
+            // } else {
+
+            // }
+            // 新增 审核通过
+            this.onlyType = 2
+            const { data } = await getComcredit(this.companyId)
+            this.ruleForm = { ...data }
+            this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+            this.ruleForm.newendTime = this.ruleForm.endTime
+            this.newRuleForm = { ...this.ruleForm }
+            this.dialogVisible = true
+            this.$nextTick(() => {
+                this.$refs.ruleForm.clearValidate()
             })
-            let res = this.checkForm()
-            if (res) {
-                this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
-            } else {
-                // 新增 审核通过
-                this.onlyType = 2
-                const { data } = await getComcredit(this.companyId)
-                this.ruleForm = { ...data }
-                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
-                this.ruleForm.newendTime = this.ruleForm.endTime
-                this.newRuleForm = { ...this.ruleForm }
-                this.dialogVisible = true
-                this.$nextTick(() => {
-                    this.$refs.ruleForm.clearValidate()
-                })
-            }
         },
         async onSubmitDoc (val) {
             this.isloading = true
