@@ -74,7 +74,7 @@ export default {
     name: 'HosJoyUpload',
     props: {
         value: Array, // 双向绑定的list
-        limit: { type: Number, default: 1000 }, // 最大允许上传个数
+        limit: { type: Number, default: 1000 }, // 最大允许上传个数，勿用
         disabled: { type: Boolean, default: false }, // 是否禁用
         multiple: { type: Boolean, default: true }, // 是否支持多图上传
         uploadParameters: { type: Object, default () { return {} } }, // 上传时附带的额外参数同el-upload 的 data
