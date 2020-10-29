@@ -55,10 +55,10 @@
                     <h-button style="width:130px;" @click="onBack">返回</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <h-button type="primary" style="width:130px" @click="onSave" v-if="hosAuthCheck(auths.CRM_MEATE_SAVE)">保存</h-button>
+                    <h-button type="primary" style="width:130px" @click="onSave" >保存</h-button>
                 </p>
                 <p v-if="$route.query.docAfterStatus!=2">
-                    <h-button type="primary" style="width:130px" @click="onSubmit" v-if="hosAuthCheck(auths.CRM_MEATE_SUBMIT)">提交</h-button>
+                    <h-button type="primary" style="width:130px" @click="onSubmit">提交</h-button>
                 </p>
             </div>
         </div>
