@@ -338,6 +338,7 @@ export default {
         async onShowCreditdocument () {
             this.isDownLoad = false
             this.showPacking = null
+            this.mondatoryFlagRes = []
             await this.findCreditDocument(this.companyId)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
@@ -396,11 +397,13 @@ export default {
             })
         },
         checkForm (cb) {
+            console.log('creditDocumentList', this.creditDocumentList)
             let res = ''
             for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
                 const arr = this.creditDocumentList.filter(jtem => {
                     return jtem.templateId == this.mondatoryFlagRes[i].templateId
                 })
+                console.log(arr)
                 if (arr.length == 0) {
                     res = this.mondatoryFlagRes[i]
                     break
@@ -423,6 +426,7 @@ export default {
                     })
                 })
             })
+            console.log(this.creditDocumentList, this.mondatoryFlagRes)
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
