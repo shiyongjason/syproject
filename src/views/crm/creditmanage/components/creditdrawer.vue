@@ -3,7 +3,7 @@
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
-                <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>1)"></el-tab-pane>
+                <el-tab-pane label="授信资料清单" name="2" ></el-tab-pane>
             </el-tabs>
             <div class="fullbg" v-if="showPacking">
                 <div class="fullbg-img">
@@ -98,8 +98,8 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
-                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
+                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
                     <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                     <h-button @click="handleClose">取消</h-button>
                 </div>
@@ -338,6 +338,7 @@ export default {
         async onShowCreditdocument () {
             this.isDownLoad = false
             this.showPacking = null
+            this.mondatoryFlagRes = []
             await this.findCreditDocument(this.companyId)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
@@ -396,11 +397,13 @@ export default {
             })
         },
         checkForm (cb) {
+            console.log('creditDocumentList', this.creditDocumentList)
             let res = ''
             for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
                 const arr = this.creditDocumentList.filter(jtem => {
                     return jtem.templateId == this.mondatoryFlagRes[i].templateId
                 })
+                console.log(arr)
                 if (arr.length == 0) {
                     res = this.mondatoryFlagRes[i]
                     break
@@ -423,6 +426,7 @@ export default {
                     })
                 })
             })
+            console.log(this.creditDocumentList, this.mondatoryFlagRes)
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
