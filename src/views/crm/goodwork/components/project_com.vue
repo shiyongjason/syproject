@@ -6,21 +6,19 @@
                 {{projectForm.companyName}} <h-button table @click="onLinkBus(projectForm)">查看详情</h-button>
             </el-form-item>
             <div class="el-form-item">
-                <el-col :span="11">
+                <el-col :span="8">
                     <el-form-item label="项目等级：">
-                        <el-input :value="projectForm.levels || '-'" placeholder="" disabled></el-input>
+                        {{projectForm.levels || '-'}}
                     </el-form-item>
                 </el-col>
-                <el-col :span="11">
+                <el-col :span="8">
                     <el-form-item label="项目服务费：">
-                        <el-input :value="projectForm.serviceCharge || '-'" placeholder="" disabled></el-input>
+                        {{projectForm.serviceCharge || '-'}}
                     </el-form-item>
                 </el-col>
-                <el-col :span="2">
-                    <div style="line-height:40px;margin-left: 5px">
-                        <h-button table @click="onEditCridtle(projectForm)">编辑</h-button>
-                    </div>
-                </el-col>
+                <span class="posiStyle">
+                    <h-button class="btn" table @click="onEditCridtle(projectForm)">编辑</h-button>
+                </span>
             </div>
             <el-form-item label="分部：">
                 <el-select v-model="projectForm.pkDeptDoc" placeholder="请选择" :clearable=true>
@@ -133,9 +131,8 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="项目服务费：" prop="serviceCharge">
-                      <el-input v-model="levelsForm.serviceCharge"></el-input>
-                     <!-- <el-input-number v-model="levelsForm.serviceCharge" controls-position="right" @change="handleChange" :min="-10" :max="10" :precision=1></el-input-number> -->
+                <el-form-item label="项目服务费：" prop="serviceCharge">
+                    <el-input v-model="levelsForm.serviceCharge"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -453,5 +450,15 @@ export default {
 }
 /deep/ .el-radio {
     margin-bottom: 10px;
+}
+.el-form-item {
+    position: relative;
+}
+.posiStyle {
+    position: absolute;
+    height: 40px;
+    line-height: 40px;
+    top: 0;
+    right: 15%;
 }
 </style>
