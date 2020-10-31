@@ -33,3 +33,5 @@ export const submitDoc = (params) => axios.post(`/fms/api/risk-check/submit/proj
 export const getRefuseInfo = (params) => axios.get(`/fms/api/doc-template/project/refuse/${params.projectId}/${params.templateId}`)
 
 export const getRiskcheckloan = (params) => axios.get(`/fms/api/risk-check/loan`, { params })
+// 查询项目评级和对应经销商评级
+export const getProjectLevels = (projectId) => axios.get(`/memeber/openapi/project/levels/${projectId}`)

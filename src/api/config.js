@@ -28,6 +28,7 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
+        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
