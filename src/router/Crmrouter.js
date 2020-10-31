@@ -174,6 +174,32 @@ export default [
 
                 },
                 component: () => import('@/views/crm/awardManage/awardManage.vue')
+            },
+            {
+                path: 'contracttemp',
+                name: 'contracttemp',
+                meta: {
+                    title: '合同管理',
+                    tagName: '合同管理',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractlist'
+
+                },
+                component: () => import('@/views/crm/contractTemp/contractlist.vue')
+            },
+            {
+                path: 'contractdetail',
+                name: 'contractdetail',
+                meta: {
+                    title: '合同编辑',
+                    tagName: '合同编辑',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractdetail'
+
+                },
+                component: () => import('@/views/crm/contractTemp/contractdetail.vue')
             }
         ]
     }
