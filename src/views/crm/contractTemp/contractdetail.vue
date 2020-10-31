@@ -3,6 +3,20 @@
         <div class="page-body-cont">
             <div class="contract-temp">
                 <div class="contract-temp_name">合同模板</div>
+              <div id="diff">
+        </div>
+                <div id="oldT">
+                    <html>
+                        <body>
+                    <p>人应该趁着年轻去流浪，只要记得回家的路。。。。123</p>
+                    <div>2233</div>
+                        </body>
+                    </html>
+                </div>
+                <div id="newT">
+                    <p> 人应该趁着年轻去流浪，只要记得回家的路。。。。</p>
+                    <div>2233</div>
+                </div>
 
                 <div class="contract-temp_flex"> 活动名称 <el-input v-model="keyName"></el-input>
                     <el-button type="primary" @click="onInsertInfo">插入 </el-button>
@@ -17,13 +31,13 @@
                 <el-button type="primary" @click="onPreview">预览</el-button>
             </div>
         </div>
-                {{content}}
+        {{content}}
         <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="活动名称1" >
+                <el-form-item label="甲方">
                     <el-input v-model="ruleForm.val"></el-input>
                 </el-form-item>
-                 <el-form-item label="活动名称2" >
+                <el-form-item label="乙方">
                     <el-input v-model="ruleForm.name"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="onContract">生成合同</el-button>
@@ -39,6 +53,7 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
+import './htmldiff'
 export default {
     name: 'contractdetail',
     data () {
@@ -81,6 +96,24 @@ export default {
             ]
         }
     },
+    mounted () {
+        var diffBtn = document.getElementById('diffBtn')
+        var diff = document.getElementById('diff')
+        var oldT = document.getElementById('oldT').innerHTML
+        var newT = document.getElementById('newT').innerHTML
+        if (typeof Worker === 'undefined') {
+            diff.innerHTML = getHTMLDiff(oldT, newT)
+        } else {
+            var worker = new Worker('htmldiff.js')
+            worker.postMessage({
+                'newVersion': newT,
+                'oldVersion': oldT
+            })
+            worker.onmessage = function (evt) {
+                diff.innerHTML = evt.data
+            }
+        }
+    },
     computed: {
         /* TODO 富文本编辑器 */
         uploadImgServer () {
@@ -96,6 +129,21 @@ export default {
         }
     },
     methods: {
+        initUI (value, orig2) {
+            if (value == null) return
+            let target = document.getElementById('view')
+            target.innerHTML = ''
+            CodeMirror.MergeView(target, {
+                value: value, // 上次内容
+                origLeft: null,
+                orig: orig2, // 本次内容
+                lineNumbers: true, // 显示行号
+                mode: 'text/html',
+                highlightDifferences: true,
+                connect: 'align',
+                readOnly: true // 只读 不可修改
+            })
+        },
         onInsertInfo (val) {
             this.$refs.RichEditor.insertHtml(this.keyName)
         },
@@ -121,10 +169,10 @@ export default {
         }
     }
 }
-/deep/.w-e-text-container{
+/deep/.w-e-text-container {
     z-index: 100 !important;
 }
-/deep/.w-e-toolbar .w-e-menu{
+/deep/.w-e-toolbar .w-e-menu {
     z-index: 100 !important;
 }
 </style>
