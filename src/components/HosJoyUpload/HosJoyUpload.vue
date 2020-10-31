@@ -201,7 +201,7 @@ export default {
                 if (item === `.${this.getFileType(file.name)}`) flag = true
             })
             if (!flag) {
-                this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
+                this.$message.error(`上传错误，暂不支持该文件格式上传`)
                 return false
             }
             if (this.isBeyond) {
