@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="contract-temp">
                 <div class="contract-temp_name">合同模板</div>
-              <div id="diff">
+              <div id="diff" v-html="diffHtml" v-if="diffHtml">
         </div>
                 <div id="oldT">
                     <html>
@@ -53,11 +53,12 @@
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import './htmldiff'
+import fuck from './htmldiff.js'
 export default {
     name: 'contractdetail',
     data () {
         return {
+            diffHtml: '',
             content: '<p>甲方：{val} 乙方：{name}</p>',
             newContent: '',
             keyName: '',
@@ -97,22 +98,24 @@ export default {
         }
     },
     mounted () {
-        var diffBtn = document.getElementById('diffBtn')
+        // var diffBtn = document.getElementById('diffBtn')
         var diff = document.getElementById('diff')
         var oldT = document.getElementById('oldT').innerHTML
         var newT = document.getElementById('newT').innerHTML
-        if (typeof Worker === 'undefined') {
-            diff.innerHTML = getHTMLDiff(oldT, newT)
-        } else {
-            var worker = new Worker('htmldiff.js')
-            worker.postMessage({
-                'newVersion': newT,
-                'oldVersion': oldT
-            })
-            worker.onmessage = function (evt) {
-                diff.innerHTML = evt.data
+        fuck({ newVersion: newT, oldVersion: oldT }, res => {
+            if (res) {
+                this.diffHtml = res
             }
-        }
+        })
+        // var worker = new Worker(fuck())
+        // worker.postMessage({
+        //     'newVersion': newT,
+        //     'oldVersion': oldT
+        // })
+        // worker.onmessage = function (evt) {
+        //     diff.innerHTML = evt.data
+        // }
+        // console.log(worker)
     },
     computed: {
         /* TODO 富文本编辑器 */
