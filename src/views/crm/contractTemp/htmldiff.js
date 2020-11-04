@@ -7,8 +7,7 @@
  * 注3：效率真低啊..........╮(╯▽╰)╭
  * @author zhoujq | http://weibo.com/buxiaodewa
  */
-function fuck (obj, callback) {
-    console.log('obj: ', obj)
+function fuckDiff (obj, callback) {
     var root = self
     /**
      * 匹配描述块，一个用来表示相同内容块在新旧文档内位置的描述对象
@@ -74,7 +73,7 @@ function fuck (obj, callback) {
             this.indexNewWords()
             this.operations = this.getOperations()
             this.performOperation()
-            return '<br/>[耗时：' + (new Date() - sd) + '毫秒]' + this.content.join('')
+            return this.content.join('')
         },
 
         performOperation: function () {
@@ -314,4 +313,4 @@ function fuck (obj, callback) {
     //     return new DiffBuilder(this.oldVersion, this.newVersion).build()
     // }
 }
-export default fuck
+export default fuckDiff

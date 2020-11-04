@@ -3,23 +3,11 @@
         <div class="page-body-cont">
             <div class="contract-temp">
                 <div class="contract-temp_name">合同模板</div>
-              <div id="diff" v-html="diffHtml" v-if="diffHtml">
-        </div>
-                <div id="oldT">
-                    <html>
-                        <body>
-                    <p>人应该趁着年轻去流浪，只要记得回家的路。。。。123</p>
-                    <div>2233</div>
-                        </body>
-                    </html>
-                </div>
-                <div id="newT">
-                    <p> 人应该趁着年轻去流浪，只要记得回家的路。。。。</p>
-                    <div>2233</div>
-                </div>
 
                 <div class="contract-temp_flex"> 活动名称 <el-input v-model="keyName"></el-input>
                     <el-button type="primary" @click="onInsertInfo">插入 </el-button>
+                    <el-button type="primary" @click="onClickDialog">对比 </el-button>
+
                 </div>
 
                 <div>
@@ -33,29 +21,19 @@
         </div>
         {{content}}
         <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
-            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="甲方">
-                    <el-input v-model="ruleForm.val"></el-input>
-                </el-form-item>
-                <el-form-item label="乙方">
-                    <el-input v-model="ruleForm.name"></el-input>
-                </el-form-item>
-                <el-button type="primary" @click="onContract">生成合同</el-button>
-            </el-form>
-
             <div class="contract-html" v-html="newContent">
-
             </div>
         </el-drawer>
-
+        <diffDialog ref="diffDialog"></diffDialog>
     </div>
 
 </template>
 <script>
 import { interfaceUrl } from '@/api/config'
-import fuck from './htmldiff.js'
+import diffDialog from './components/diffDialog'
 export default {
     name: 'contractdetail',
+    components: { diffDialog },
     data () {
         return {
             diffHtml: '',
@@ -98,15 +76,7 @@ export default {
         }
     },
     mounted () {
-        // var diffBtn = document.getElementById('diffBtn')
-        var diff = document.getElementById('diff')
-        var oldT = document.getElementById('oldT').innerHTML
-        var newT = document.getElementById('newT').innerHTML
-        fuck({ newVersion: newT, oldVersion: oldT }, res => {
-            if (res) {
-                this.diffHtml = res
-            }
-        })
+
         // var worker = new Worker(fuck())
         // worker.postMessage({
         //     'newVersion': newT,
@@ -132,21 +102,6 @@ export default {
         }
     },
     methods: {
-        initUI (value, orig2) {
-            if (value == null) return
-            let target = document.getElementById('view')
-            target.innerHTML = ''
-            CodeMirror.MergeView(target, {
-                value: value, // 上次内容
-                origLeft: null,
-                orig: orig2, // 本次内容
-                lineNumbers: true, // 显示行号
-                mode: 'text/html',
-                highlightDifferences: true,
-                connect: 'align',
-                readOnly: true // 只读 不可修改
-            })
-        },
         onInsertInfo (val) {
             this.$refs.RichEditor.insertHtml(this.keyName)
         },
@@ -159,6 +114,9 @@ export default {
                 console.log(val, this.ruleForm)
                 this.newContent = this.newContent.replace(`{${val.value}}`, this.ruleForm[`${val.value}`])
             })
+        },
+        onClickDialog () {
+            this.$refs.diffDialog.onShowDiff()
         }
     }
 }
