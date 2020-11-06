@@ -209,17 +209,29 @@ export default [
                 component: () => import('@/views/crm/contractTemp/contractlist.vue')
             },
             {
-                path: 'contractdetail',
-                name: 'contractdetail',
+                path: 'contractTemp',
+                name: 'contractTemp',
                 meta: {
                     title: '合同编辑',
                     tagName: '合同编辑',
-                    isMenu: true,
+                    isMenu: false,
                     icon: '',
-                    showMenuAs: '/goodwork/contractdetail'
+                    showMenuAs: '/goodwork/contractTemp'
 
                 },
-                component: () => import('@/views/crm/contractTemp/contractdetail.vue')
+                component: () => import('@/views/crm/contractTemp/contractTemp.vue')
+            }, {
+                path: 'contractDetail',
+                name: 'contractDetail',
+                meta: {
+                    title: '合同详情',
+                    tagName: '合同详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractDetail'
+
+                },
+                component: () => import('@/views/crm/contractTemp/contractDetail.vue')
             },
             {
                 path: 'contractSigningManagement',
