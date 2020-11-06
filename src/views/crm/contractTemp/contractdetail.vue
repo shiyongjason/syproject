@@ -83,6 +83,126 @@
 export default {
     data () {
         return {
+            diffHtml: '',
+            // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
+            content: '<p>甲方：</p> <p>乙方：</p>',
+            newContent: '',
+            keyValue: '',
+            _keyValue: '',
+            drawer: false,
+            ruleForm: {
+                name: '',
+                val: ''
+            },
+            rules: {},
+            options: [{
+                value: 'val',
+                label: '甲方'
+            }, {
+                value: 'name',
+                label: '乙方乙方乙方乙方乙方'
+            }],
+            menus: [
+                'head', // 标题
+                'bold', // 粗体
+                'fontSize', // 字号
+                'fontName', // 字体
+                'italic', // 斜体
+                'underline', // 下划线
+                'strikeThrough', // 删除线
+                'foreColor', // 文字颜色
+                'backColor', // 背景颜色
+                'link', // 插入链接
+                'list', // 列表
+                'justify', // 对齐方式
+                'quote', // 引用
+                'emoticon', // 表情
+                'image', // 插入图片
+                'table', // 表格
+                'undo', // 撤销
+                'redo' // 重复
+            ],
+            form: {
+
+            },
+            dialogVisible: false,
+            tableLabel: [
+                { label: '企业名称', prop: 'companyName', width: '200' },
+                { label: '管理员账号', prop: 'userAccount', width: '120' }
+            ],
+            tableData: []
+        }
+    },
+    mounted () {
+        this.$nextTick(() => {
+        })
+        // var worker = new Worker(fuck())
+        // worker.postMessage({
+        //     'newVersion': newT,
+        //     'oldVersion': oldT
+        // })
+        // worker.onmessage = function (evt) {
+        //     diff.innerHTML = evt.data
+        // }
+        // console.log(worker)
+    },
+    computed: {
+        /* TODO 富文本编辑器 */
+        uploadImgServer () {
+            return interfaceUrl + 'tms/files/upload-list'
+        },
+        uploadImgParams () {
+            return {
+                updateUid: ''
+            }
+        },
+        uploadImgName () {
+            return 'multiFile'
+        }
+    },
+    methods: {
+        onInsertInfo (val) {
+            let inputWidth = this.keyValue.label.length * 14
+            const _temp = `<input class="${this.keyValue.value}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
+            this.$refs.RichEditor.insertHtml(_temp)
+            // document.getElementsByClassName('newinput')[1].click
+            console.log(document.getElementsByClassName(`${this.keyValue.value}`))
+            document.getElementsByClassName(`${this.keyValue.value}`)[0].onclick = () => {
+                console.log('我测试一下')
+                this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                this.dialogVisible = true
+            }
+        },
+        handleClose () {
+
+        },
+        onEditcon () {
+            document.getElementsByClassName(`${this._keyValue.value}`)[0].outerHTML = ''
+            this.$nextTick(() => {
+                let inputWidth = this.keyValue.label.length * 14
+                const _temp = `<input class="inputCont ${this.keyValue.value}" style="width:${inputWidth}px;"  value=${this.keyValue.label} readonly></input>`
+                this.$refs.RichEditor.insertHtml(_temp)
+                this.dialogVisible = false
+                document.getElementsByClassName(`${this.keyValue.value}`)[0].onclick = () => {
+                    this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                    this.dialogVisible = true
+                }
+            })
+        },
+        onPreview () {
+            this.drawer = true
+        },
+        onContract () {
+            this.newContent = JSON.parse(JSON.stringify(this.content))
+            this.options.map(val => {
+                console.log(val, this.ruleForm)
+                this.newContent = this.newContent.replace(`{${val.value}}`, this.ruleForm[`${val.value}`])
+            })
+        },
+        onClickDialog () {
+            this.$refs.diffDialog.onShowDiff()
+        },
+        onFindRef () {
 
         }
     }

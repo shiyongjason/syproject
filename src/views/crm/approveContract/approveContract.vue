@@ -7,7 +7,7 @@
             <div class="approvalcontract-layout">
                 <div class="approvalcontract-layout-left">
                     <h1>字段/自定义合同条款修订</h1>
-                    <div class="setarea">
+                    <div class="setarea" v-if="currentKey">
                         <p class="setarea-key">{{currentKey.keyTxt}}：</p>
                         <p><el-input v-model="currentKey.val" @input='(val)=>onInputChange(val,currentKey.key)' placeholder="请输入内容"></el-input></p>
                     </div>
@@ -56,13 +56,20 @@ export default {
             intDom.setAttribute('value', val)
             let inputWidth = val.length * 14
             intDom.style.width = `${inputWidth}px`
-            // console.log(this.vHtml)
+            // 通过dom生成最新的html
             console.log('approvalcontract-content', document.getElementsByClassName('approvalcontract-content')[0].outerHTML)
         }
     },
     beforeMount () {
-        this.vHtml = '<p><span style="font-size: medium;">甲方：<input class="inputCont key1" value="甲方经销商" readonly="" style="width: 70px;"></span></p> <p><span style="font-size: medium;">乙方：<input class="inputCont key2" value="乙方经销商" readonly="" style="width: 70px;"></span></p><p><span style="font-size: medium;">&nbsp; &nbsp;&nbsp;<span style="color: rgb(51, 51, 51); font-family: PingFangSC-Regular, &quot;PingFang SC&quot;;">为使公司车辆管理统一合理化，合理有效的使用各种车辆，最大限度的节约成本，更有效的控制车辆使用，最真实的反映车辆的实际情况，尽可能的发挥最大经济效益以及对公司所有车辆的保养和维修进行控制，以确保车辆安全、良好的运行状况以及保养和维修的及时、经济、可靠，特制定本制度。</span></span><br></p>'
+        this.vHtml = '<p><span style="font-size: medium;">甲方：<input class="key1" value="甲方经销商" readonly style="width: 70px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"></span></p> <p><span style="font-size: medium;">乙方：<input class="key2" value="乙方经销商" readonly style="width: 70px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"></span></p><p><span style="font-size: medium;">&nbsp; &nbsp;&nbsp;&nbsp;<span style="color: rgb(51, 51, 51); font-family: PingFangSC-Regular, &quot;PingFang SC&quot;;">为使公司车辆管理统一合理化，合理有效的使用各种车辆，最大限度的节约成本，更有效的控制车辆使用，最真实的反映车辆的实际情况，尽可能的发挥最大经济效益以及对公司所有车辆的保养和维修进行控制，以确保车辆安全、良好的运行状况以及保养和维修的及时、经济、可靠，特制定本制度。</span></span><br></p>'
         this.$nextTick(() => {
+            // 查找合同里面第一个input字段，用于左侧修改
+            let firstKsy = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('input')[0].className
+            if (firstKsy) {
+                const obj = this.keyValue.filter(item => item.key === firstKsy)
+                this.currentKey = obj[0]
+            }
+            // 给合同模板赋值、绑定点击事件
             this.keyValue.map(item => {
                 let inputWidth = item.val.length * 14
                 let intDom = document.getElementsByClassName(item.key)[0]
@@ -119,23 +126,6 @@ export default {
             }
             box-sizing: border-box;
             padding:20px
-        }
-    }
-    /deep/.inputCont {
-        color: #ff7a45;
-        display: inline-block;
-        height: 22px;
-        min-width: 20px;
-        border: none;
-        text-align: left;
-        margin-right: 3px;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-    .approvalcontract-content {
-        /deep/ p {
-            line-height: 1.5;
-            margin: 10px 0;
         }
     }
     .setarea-key{
