@@ -50,7 +50,7 @@
         </div>
         <!---->
         <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :direction="direction" :before-close="handleClose">
-            <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
+            <hosJoyTable localName="V4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
                 @pagination="searchList" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onShowVer()">查看</h-button>
