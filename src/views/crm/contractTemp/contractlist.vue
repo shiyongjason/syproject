@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <h-button type="primary">
+                <h-button type="primary" @click="onEditContract">
                     新增合同模板
                 </h-button>
             </div>
@@ -38,7 +38,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 项</el-tag>
             </div>
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
-                @pagination="searchList" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+                actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template slot="action" slot-scope="scope">
                     <h-button table>复制</h-button>
                     <h-button table>预览</h-button>
@@ -49,12 +49,11 @@
             </hosJoyTable>
         </div>
         <!---->
-        <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :direction="direction" :before-close="handleClose">
-            <hosJoyTable localName="V4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
-                @pagination="searchList" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+        <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%"  :before-close="handleClose">
+            <hosJoyTable localName="V4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe  :column="tableLabel" :data="tableData"
+                isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onShowVer()">查看</h-button>
-                    <h-button table @click="onShowVer()">预览</h-button>
                 </template>
             </hosJoyTable>
         </el-drawer>
@@ -70,8 +69,8 @@ export default {
                 companyName: ''
             },
             tableLabel: [
-                { label: '企业名称', prop: 'companyName', width: '200' },
-                { label: '管理员账号', prop: 'userAccount', width: '120' }
+                { label: '企业名称', prop: 'companyName' },
+                { label: '管理员账号', prop: 'userAccount' }
             ],
             tableData: [{ companyName: '勇哥', userAccount: '123' }, { companyName: '勇哥', userAccount: '123' }],
             paginationInfo: {},
@@ -89,6 +88,12 @@ export default {
         },
         onShowVer () {
             this.ver_drawer = true
+        },
+        onEditContract () {
+            this.$router.push({ path: '/goodwork/contractdetail' })
+        },
+        handleClose () {
+
         }
     }
 }

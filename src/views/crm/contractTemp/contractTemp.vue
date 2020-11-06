@@ -24,7 +24,6 @@
                     <div class="contract-temp_rich">
                         <RichEditor ref="RichEditor" v-model="content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                     </div>
-                    {{content}}
                     <div class="contract-temp_txt">
                         <el-form ref="form" :model="form" label-width="200px">
                             <el-form-item label="请选择需要插入的字段：">
@@ -158,7 +157,8 @@ export default {
                 { label: '企业名称', prop: 'companyName', width: '200' },
                 { label: '管理员账号', prop: 'userAccount', width: '120' }
             ],
-            tableData: []
+            tableData: [],
+            radio: ''
         }
     },
     mounted () {
@@ -191,7 +191,8 @@ export default {
     methods: {
         onInsertInfo (val) {
             let inputWidth = this.keyValue.label.length * 14
-            const _temp = `<input class="${this.keyValue.value}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
+            const _temp = `<input class="${this.keyValue.value}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;
+    margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementsByClassName('newinput')[1].click
             console.log(document.getElementsByClassName(`${this.keyValue.value}`))
