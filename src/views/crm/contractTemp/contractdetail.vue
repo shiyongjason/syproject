@@ -46,7 +46,7 @@
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     签署方
-                    <h-button type="primary">添加签署方</h-button>
+                    <h-button type="primary" @click="onClick_Dialog()">添加签署方</h-button>
                 </div>
                 <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template slot="action" slot-scope="scope">
@@ -55,11 +55,32 @@
                     </template>
                 </hosJoyTable>
             </div>
-            <div class="">
-                <el-button type="primary">保存</el-button>
-                <el-button type="primary" @click="onPreview">预览</el-button>
+            <div class="page-body-cont">
+                <div class="contract-temp_head">
+                    平台签署方
+                    <h-button type="primary">设置</h-button>
+                </div>
+                <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onShowVer()">查看</h-button>
+                        <h-button table @click="onShowVer()">预览</h-button>
+                    </template>
+                </hosJoyTable>
             </div>
-
+            <div class="page-body-cont">
+                <div class="contract-temp_head">
+                    平台签署方
+                </div>
+                <template>
+                    <el-radio v-model="radio" label="1">备选项</el-radio>
+                    <el-radio v-model="radio" label="2">备选项</el-radio>
+                </template>
+            </div>
+            <div class="page-body-cont">
+                <el-button type="default">取消</el-button>
+                <el-button type="primary">保存模板</el-button>
+                <el-button type="primary" @click="onPreview">保存并启用模版</el-button>
+            </div>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
             <div class="contract-html" v-html="newContent">
@@ -76,17 +97,17 @@
             </span>
         </el-dialog>
         <diffDialog ref="diffDialog"></diffDialog>
-
+        <contractDialog ref="contractDialog"></contractDialog>
     </div>
-
 </template>
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { interfaceUrl } from '@/api/config'
 import diffDialog from './components/diffDialog'
+import contractDialog from './components/contractDialog'
 export default {
     name: 'contractdetail',
-    components: { diffDialog, hosJoyTable },
+    components: { diffDialog, hosJoyTable, contractDialog },
     data () {
         return {
             diffHtml: '',
@@ -169,7 +190,8 @@ export default {
     methods: {
         onInsertInfo (val) {
             let inputWidth = this.keyValue.label.length * 14
-            const _temp = `<input class="inputCont ${this.keyValue.value}"  style="width:${inputWidth}px;"  value=${this.keyValue.label} readonly></input>`
+            const _temp = `<input class="${this.keyValue.value}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;
+    margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementsByClassName('newinput')[1].click
             console.log(document.getElementsByClassName(`${this.keyValue.value}`))
@@ -209,14 +231,10 @@ export default {
             this.$refs.diffDialog.onShowDiff()
         },
         onFindRef () {
-            this.$nextTick(() => {
-                console.log(this.$refs.hosjoyTable)
-                console.log(document.getElementsByClassName('newinput')[0].value = 'xxxx')
-                document.getElementsByClassName('newinput')[1].onclick = function () {
-                    alert(1)
-                }
-                console.log(document.getElementsByClassName('newinput')[1].click)
-            })
+
+        },
+        onClick_Dialog (val) {
+            this.$refs.contractDialog.onShowDialog(val)
         }
     }
 }
@@ -248,7 +266,7 @@ export default {
     }
 }
 .page-body-cont {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 /deep/.w-e-text-container {
     z-index: 100 !important;
