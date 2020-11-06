@@ -24,6 +24,7 @@
                     <div class="contract-temp_rich">
                         <RichEditor ref="RichEditor" v-model="content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                     </div>
+                    {{content}}
                     <div class="contract-temp_txt">
                         <el-form ref="form" :model="form" label-width="200px">
                             <el-form-item label="请选择需要插入的字段：">
@@ -269,9 +270,6 @@ export default {
     margin-bottom: 10px;
 }
 /deep/.w-e-text-container {
-    z-index: 100 !important;
-}
-/deep/.w-e-toolbar .w-e-menu {
     z-index: 100 !important;
 }
 /deep/.inputCont {
