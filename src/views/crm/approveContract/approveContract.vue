@@ -108,7 +108,7 @@ export default {
         padding-bottom: 10px;
     }
     .approvalcontract-content-layout{
-        height:calc(100vh - 325px);
+        height:calc(100vh - 305px);
          overflow-y:scroll;
          min-width: 600px;
     }
@@ -158,7 +158,7 @@ export default {
             height:100%;
             h1{
                 font-size: 20px;
-                margin-bottom: 20px;
+                margin-bottom: 10px;
             }
             box-sizing: border-box;
             padding:15px 20px 0;
@@ -166,7 +166,7 @@ export default {
     }
     .setarea-key{
         font-size: 16px;
-        margin:20px 0 10px
+        margin:10px 0 10px
     }
     .approvalcontract-btn{
         position: absolute;
