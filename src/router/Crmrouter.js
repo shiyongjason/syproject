@@ -196,8 +196,8 @@ export default [
                 component: () => import('@/views/crm/awardManage/awardManage.vue')
             },
             {
-                path: 'contracttemp',
-                name: 'contracttemp',
+                path: 'contractlist',
+                name: 'contractlist',
                 meta: {
                     title: '合同管理',
                     tagName: '合同管理',
