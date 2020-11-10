@@ -27,6 +27,7 @@ import vipManage from '@/views/crm/vipmanage/store/vipManage'
 import creditManage from '@/views/crm/creditmanage/store/creditManage'
 import vipApply from '@/views/crm/vipapplication/store/vipApplication'
 import wxMember from '@/views/crm/wechatcustomer/store/wxMember'
+import contractTemp from '@/views/crm/contractTemp/store/index'
 
 Vue.use(Vuex)
 
@@ -76,7 +77,8 @@ const store = new Vuex.Store({
         vipManage,
         vipApply,
         creditManage,
-        wxMember
+        wxMember,
+        contractTemp
     }
 })
 export default store

@@ -80,7 +80,10 @@
         </div>
 </template>
 <script>
+import { mapGetters, mapActions } from 'vuex'
+import { interfaceUrl } from '@/api/config'
 export default {
+    name: 'contractdetail',
     data () {
         return {
             diffHtml: '',
@@ -158,9 +161,15 @@ export default {
         },
         uploadImgName () {
             return 'multiFile'
-        }
+        },
+        ...mapGetters({
+            contractTempdetail: 'contractTemp/contractTempdetail'
+        })
     },
     methods: {
+        ...mapActions({
+            getContratDetail: 'contractTemp/getContratDetail'
+        }),
         onInsertInfo (val) {
             let inputWidth = this.keyValue.label.length * 14
             const _temp = `<input class="${this.keyValue.value}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
@@ -209,4 +218,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/.page-body-cont{
+    margin-bottom: 10px;
+}
 </style>

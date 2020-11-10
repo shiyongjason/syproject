@@ -61,12 +61,16 @@
 </template>
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import { mapActions, mapGetters } from 'vuex'
 export default {
+    name: 'contractlist',
     components: { hosJoyTable },
     data () {
         return {
             queryParams: {
-                companyName: ''
+                companyName: '',
+                pageNumber: 1,
+                pageSize: 10
             },
             tableLabel: [
                 { label: '企业名称', prop: 'companyName' },
@@ -77,7 +81,20 @@ export default {
             ver_drawer: false
         }
     },
+
+    computed: {
+        ...mapGetters({
+            contractTempdata: state => state.contractTemp.contractTempdata
+        })
+    },
     methods: {
+        ...mapActions({
+            getContractTmep: 'contractTemp/getContractTmep'
+        }),
+        async searchList () {
+            await this.getContractTmep()
+            console.log(this.contractTempdata)
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.searchList()
@@ -90,11 +107,14 @@ export default {
             this.ver_drawer = true
         },
         onEditContract () {
-            this.$router.push({ path: '/goodwork/contractdetail' })
+            this.$router.push({ path: '/goodwork/contractTemp' })
         },
         handleClose () {
-
+            this.ver_drawer = false
         }
+    },
+    mounted () {
+        this.searchList()
     }
 }
 </script>
