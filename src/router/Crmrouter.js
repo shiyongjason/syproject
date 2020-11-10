@@ -254,6 +254,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/approveContract/approveContract.vue')
+            },
+            {
+                path: 'caCertiManage',
+                name: 'caCertiManage',
+                meta: {
+                    title: 'CA认证管理',
+                    tagName: 'CA认证管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/caCertiManage/index.vue')
             }
         ]
     }
