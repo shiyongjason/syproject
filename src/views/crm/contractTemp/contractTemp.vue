@@ -6,14 +6,14 @@
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_name">合同模版设置</div>
-                <el-form ref="form" :model="form" label-width="">
+                <el-form ref="contractForm" :model="form" label-width="">
                     <el-form-item label="模版名称：">
-                        <el-input v-model="form.name"></el-input>
+                        <el-input v-model="contractForm.templateName"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
-                        <el-select v-model="form.region" placeholder="请选择活动区域">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam">
+                            <el-option v-for="item in contract_list" :key="item.id" :label="item.name" :value="item.id">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
@@ -22,24 +22,25 @@
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                     </div>
                     <div class="contract-temp_txt">
-                        <el-form ref="form" :model="form" label-width="200px">
+                        <el-form label-width="200px">
                             <el-form-item label="请选择需要插入的字段：">
-                                <el-select v-model="keyValue" placeholder="请选择">
-                                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item">
+                                <el-select v-model="keyValue" value-key='id' placeholder="请选择">
+                                    <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                                     </el-option>
                                 </el-select>
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="自定义合同条款：">
-                                <el-button type="primary" @click="onFindRef">插入当前位置</el-button>
+                                <el-button type="primary" @click="onClickCur(1)">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="平台签署区：">
-                                <el-button type="primary">插入当前位置</el-button>
+                                <el-button type="primary" @click="onClickCur(2)">插入当前位置</el-button>
                             </el-form-item>
                         </el-form>
+
                     </div>
                 </div>
             </div>
@@ -72,13 +73,13 @@
                     平台签署方
                 </div>
                 <template>
-                    <el-radio v-model="radio" label="1">备选项</el-radio>
-                    <el-radio v-model="radio" label="2">备选项</el-radio>
+                    <el-radio v-model="radio" label="1">电子签</el-radio>
+                    <el-radio v-model="radio" label="2">线下签</el-radio>
                 </template>
             </div>
             <div class="page-body-cont">
                 <el-button type="default">取消</el-button>
-                <el-button type="primary">保存模板</el-button>
+                <el-button type="primary" @click="onSaveTemp">保存模板</el-button>
                 <el-button type="primary" @click="onPreview">保存并启用模版</el-button>
             </div>
         </div>
@@ -88,7 +89,7 @@
         </el-drawer>
         <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose">
             <el-select v-model="keyValue" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item">
+                <el-option v-for="item in options" :key="item.paramKey" :label="item.paramName" :value="item">
                 </el-option>
             </el-select>
             <span slot="footer" class="dialog-footer">
@@ -101,10 +102,12 @@
     </div>
 </template>
 <script>
+import { mapGetters, mapActions, mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { interfaceUrl } from '@/api/config'
 import diffDialog from './components/diffDialog'
 import contractDialog from './components/contractDialog'
+import { addContractTemp } from './api/index'
 export default {
     name: 'contractdetail',
     components: { diffDialog, hosJoyTable, contractDialog },
@@ -112,23 +115,26 @@ export default {
         return {
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
-            content: '<p>甲方：</p> <p>乙方：</p>',
+            content: '',
             newContent: '',
-            keyValue: '',
-            _keyValue: '',
+            keyValue: {},
+            _keyValue: {},
             drawer: false,
-            ruleForm: {
-                name: '',
-                val: ''
+            contractForm: {
+                id: '',
+                typeId: '',
+                templateNo: '',
+                templateName: '',
+                status: '', // 状态
+                content: '',
+                param: [],
+                signerSetting: [], // 签署方设置
+                operatorBy: '',
+                operatorAccount: ''
             },
             rules: {},
-            options: [{
-                value: 'val',
-                label: '甲方'
-            }, {
-                value: 'name',
-                label: '乙方乙方乙方乙方乙方'
-            }],
+            contract_list: [],
+            options: [],
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -162,19 +168,16 @@ export default {
         }
     },
     mounted () {
-        this.$nextTick(() => {
-        })
-        // var worker = new Worker(fuck())
-        // worker.postMessage({
-        //     'newVersion': newT,
-        //     'oldVersion': oldT
-        // })
-        // worker.onmessage = function (evt) {
-        //     diff.innerHTML = evt.data
-        // }
-        // console.log(worker)
+        this.onFindtempType()
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            tempType: 'contractTemp/tempType',
+            tempParams: 'contractTemp/tempParams'
+        }),
         /* TODO 富文本编辑器 */
         uploadImgServer () {
             return interfaceUrl + 'tms/files/upload-list'
@@ -189,14 +192,36 @@ export default {
         }
     },
     methods: {
-        onInsertInfo (val) {
-            let inputWidth = this.keyValue.label.length * 14
-            const _temp = `<input class="${this.keyValue.value}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;
-    margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
+        ...mapActions({
+            getContratType: 'contractTemp/getContratType',
+            getAllparams: 'contractTemp/getAllparams'
+        }),
+        async onFindtempType () {
+            await this.getContratType()
+            this.contract_list = this.tempType
+        },
+        async onChangeparam (val) {
+            console.log(val)
+            await this.getAllparams(val)
+            console.log(this.tempParams)
+            this.options = this.tempParams
+        },
+        onInsertInfo () {
+            console.log(this.keyValue)
+            if (!this.keyValue) {
+                this.$message({
+                    message: '请选择所需插入的合同字段',
+                    type: 'warning'
+                })
+                return
+            }
+            let inputWidth = this.keyValue.paramName.length * 14
+            const _temp = `<input class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;
+    margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.paramName} readonly></input>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementsByClassName('newinput')[1].click
-            console.log(document.getElementsByClassName(`${this.keyValue.value}`))
-            document.getElementsByClassName(`${this.keyValue.value}`)[0].onclick = () => {
+
+            document.getElementsByClassName(`${this.keyValue.paramKey}`)[0].onclick = () => {
                 console.log('我测试一下')
                 this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
                 this.dialogVisible = true
@@ -209,7 +234,7 @@ export default {
             document.getElementsByClassName(`${this._keyValue.value}`)[0].outerHTML = ''
             this.$nextTick(() => {
                 let inputWidth = this.keyValue.label.length * 14
-                const _temp = `<input class="inputCont ${this.keyValue.value}" style="width:${inputWidth}px;"  value=${this.keyValue.label} readonly></input>`
+                const _temp = `<input class="${this.keyValue.value}" style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
                 this.$refs.RichEditor.insertHtml(_temp)
                 this.dialogVisible = false
                 document.getElementsByClassName(`${this.keyValue.value}`)[0].onclick = () => {
@@ -231,11 +256,38 @@ export default {
         onClickDialog () {
             this.$refs.diffDialog.onShowDiff()
         },
-        onFindRef () {
-
+        onFindInputDom () {
+            console.log(document.getElementById('editor').getElementsByTagName('input')[0].className)
+        },
+        onClickCur (val) {
+            let _temp = ''
+            if (val == 1) {
+                _temp = `<input class="" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                value="自定义合同条款" readonly></input>`
+            } else {
+                _temp = `<input class="" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                value="平台签署" readonly></input>`
+            }
+            this.$refs.RichEditor.insertHtml(_temp)
         },
         onClick_Dialog (val) {
+            // 校验 input dom
+            this.onFindInputDom()
             this.$refs.contractDialog.onShowDialog(val)
+        },
+        onSaveTemp (val) {
+            const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
+            const reqParam = []
+            inputArr.map(val => {
+                reqParam.push({
+                    id: val.dataset.appId,
+                    paramKey: val.className
+                })
+            })
+            this.contractForm.operatorBy = this.userInfo.employeeName
+            this.contractForm.reqParam = reqParam
+            console.log(this.contractForm)
+            addContractTemp(this.contractForm)
         }
     }
 }
@@ -292,5 +344,11 @@ export default {
     border-radius: 5px;
     padding: 0.2rem 0.5rem;
     white-space: nowrap;
+}
+/deep/.el-select-dropdown {
+    z-index: 20000 !important;
+}
+/deep/.w-e-menu {
+    z-index: 500 !important;
 }
 </style>

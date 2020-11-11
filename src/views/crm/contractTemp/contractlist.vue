@@ -68,15 +68,23 @@ export default {
     data () {
         return {
             queryParams: {
-                companyName: '',
+                templateName: '',
+                typeId: '',
+                status: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             tableLabel: [
-                { label: '企业名称', prop: 'companyName' },
-                { label: '管理员账号', prop: 'userAccount' }
+                { label: '合同模板编号', prop: 'templateNo' },
+                { label: '合同模版名称', prop: 'templateName' },
+                { label: '合同类型', prop: 'typeName' },
+                { label: '状态', prop: 'status' },
+                { label: '启用/禁用时间', prop: 'enableTime' },
+                { label: '最近维护时间', prop: 'userAccount' },
+                { label: '最近维护人', prop: 'operatorBy' }
+
             ],
-            tableData: [{ companyName: '勇哥', userAccount: '123' }, { companyName: '勇哥', userAccount: '123' }],
+            tableData: [{ templateNo: '勇哥', templateName: '123' }, { templateNo: '勇哥', templateName: '123' }],
             paginationInfo: {},
             ver_drawer: false
         }
