@@ -8,32 +8,41 @@
                         <el-input v-model="queryParams.name" placeholder="请输入姓名" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col">
+                <div class="query-cont__col" v-show="activeName == 'personage'">
                     <div class="query-col__label">是否实名：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.realName" placeholder="请选择" :clearable=true>
-                            <el-option label="是" :value="0"></el-option>
-                            <el-option label="否" :value="1"></el-option>
+                        <el-select v-model="queryParams.isReal" placeholder="请选择" :clearable=true>
+                            <el-option label="是" :value="1"></el-option>
+                            <el-option label="否" :value="0"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col" v-show="activeName == 'enterprise'">
+                    <div class="query-col__label">验证方式：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.realType" placeholder="请选择" :clearable=true>
+                            <el-option label="对公打款" :value="2"></el-option>
+                            <el-option label="企业支付宝" :value="3"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.cStartTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <el-date-picker v-model="queryParams.createStartTime" default-time="00:00:00" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.cEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin">
+                        <el-date-picker v-model="queryParams.createEndTime" default-time="23:59:59" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">实名时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.rStartTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <el-date-picker v-model="queryParams.realStartTime" default-time="00:00:00" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.rEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin">
+                        <el-date-picker v-model="queryParams.realEndTime" default-time="23:59:59" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin">
                         </el-date-picker>
                     </div>
                 </div>
@@ -57,12 +66,20 @@
                 </el-tag>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
-                <template slot="companyName" slot-scope="scope">
-                    <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
+                <template slot="status" slot-scope="scope">
+                    <span>{{scope.data.row.status == 3? '是' : '否'}}</span>
+                </template>
+                <template slot="realType" slot-scope="scope">
+                    <span v-if="scope.data.row.status == 1">人脸识别</span>
+                    <span v-if="scope.data.row.status == 2">对公打款</span>
+                    <span v-if="scope.data.row.status == 3">企业支付宝</span>
+                </template>
+                <!-- 企业CA -->
+                <template slot="managerType" slot-scope="scope">
+                    <span>{{scope.data.row.managerType == 1 ? '经办人' : ''}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)">查看印章</h-button>
-                    <h-button table @click="onLogOut(scope.data.row)" v-show="activeName === 'enterprise'">注销</h-button>
                 </template>
             </basicTable>
             <el-drawer title="查看信息" :visible.sync="drawer" direction="rtl" :before-close="handleClose">
@@ -79,6 +96,7 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex'
 import { tableLabel_person, tableLabel_enterprise } from './const'
 export default {
     name: 'caCertiManage',
@@ -88,32 +106,31 @@ export default {
             copyParms: {},
             queryParams: {
                 name: '',
-                realName: '',
-                cStartTime: '',
-                cEndTime: '',
-                rStartTime: '',
-                rEndTime: '',
+                isReal: '', // 个人-实名认证
+                realType: '', // 企业-验证方式
+                createStartTime: '',
+                createEndTime: '',
+                realStartTime: '',
+                realEndTime: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             searchParams: {},
             tableLabel: tableLabel_person,
-            tableData: [],
-            paginationInfo: {
-                pageNumber: 10,
-                pageSize: 10,
-                total: 100
-            },
             drawer: false
         }
     },
     computed: {
+        ...mapState({
+            tableData: state => state.caCertiManage.tableData,
+            paginationInfo: state => state.caCertiManage.paginationInfo
+        }),
         pickerOptionsMax () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.cEndTime
+                    let beginDateVal = this.queryParams.createEndTime
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
+                        return time.getTime() > new Date(new Date(beginDateVal).toLocaleDateString()).getTime()
                     }
                 }
             }
@@ -121,9 +138,10 @@ export default {
         pickerOptionsMin () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.cEndTime
+                    let beginDateVal = this.queryParams.createStartTime
                     if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
+                        //  - 8.64e7
+                        return time.getTime() < new Date(new Date(beginDateVal).toLocaleDateString()).getTime()
                     }
                 }
             }
@@ -134,28 +152,42 @@ export default {
         this.copyParms = { ...this.queryParams }
     },
     methods: {
-        onSearch () {
-            this.searchParams = { ...this.queryParams }
-            this.onQuery()
+        ...mapActions({
+            getPersonalCAList: 'caCertiManage/getPersonalCAList',
+            getCompanyCAList: 'caCertiManage/getCompanyCAList'
+        }),
+        compare (startTime, endTime) {
+            console.log('startTime, endTime: ', startTime, endTime);
+            const start = new Date(startTime).getTime()
+            const end = new Date(endTime).getTime()
+            if (start && end && start > end) {
+                this.$message.error('开始时间不能大于结束时间')
+                return false
+            }
+            return true
         },
-        onQuery () {
+        onSearch () {
+            var result = this.compare(this.queryParams.createStartTime, this.queryParams.createEndTime) && this.compare(this.queryParams.realStartTime, this.queryParams.realEndTime)
+            if (result) {
+                this.searchParams = { ...this.queryParams }
+                this.onQuery()
+            }
+        },
+        async onQuery () {
             console.log(this.searchParams)
             // 调查询接口
+            console.log(this.getPersonalCAList)
             if (this.activeName === 'personage') {
+                await this.getPersonalCAList(this.searchParams)
                 this.tableLabel = tableLabel_person
-                this.tableData = [{
-                    name: '个人'
-                }] // 个人
             }
             if (this.activeName === 'enterprise') {
+                await this.getCompanyCAList(this.searchParams)
                 this.tableLabel = tableLabel_enterprise
-                this.tableData = [{
-                    name: '企业'
-                }] // 企业
             }
         },
-        handleClick () {
-            console.log('handleClick')
+        async handleClick () {
+            await this.onRest()
             this.onQuery()
         },
         onRest () {
