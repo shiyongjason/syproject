@@ -86,7 +86,7 @@ export default {
         },
         onCreate: function () {
             this.$router.push({
-                path: '/comfortCloud/merchant/merchantAdEdit'
+                path: '/comfortCloudMerchant/merchantManage/merchantAdEdit'
             })
         },
         onShowPreview: function (val) {
@@ -107,7 +107,7 @@ export default {
         },
         goEdit (id) {
             this.$router.push({
-                path: '/comfortCloud/merchant/merchantAdEdit',
+                path: '/comfortCloudMerchant/merchantManage/merchantAdEdit',
                 query: {
                     id: id
                 }

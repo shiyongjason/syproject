@@ -195,7 +195,7 @@ export default {
                             this.$message.success('广告保存成功')
                         }
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/merchant/merchantAd')
+                        this.$router.push('/comfortCloudMerchant/merchantManage/merchantAd')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
