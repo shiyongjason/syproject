@@ -50,7 +50,7 @@
                     <h-button type="primary" @click="onSearch()">
                         查询
                     </h-button>
-                    <h-button @click="onRest()">
+                    <h-button @click="onReset()">
                         重置
                     </h-button>
                 </div>
@@ -65,7 +65,7 @@
                     <span class="sub-eltag">已筛选 5 项</span>
                 </el-tag>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="status" slot-scope="scope">
                     <span>{{scope.data.row.status == 3? '是' : '否'}}</span>
                 </template>
@@ -97,7 +97,8 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-import { tableLabel_person, tableLabel_enterprise } from './const'
+import { tableLabelPerson, tableLabelEnterprise } from './const'
+import { getCAImageBysealId } from './api'
 export default {
     name: 'caCertiManage',
     data () {
@@ -116,7 +117,7 @@ export default {
                 pageSize: 10
             },
             searchParams: {},
-            tableLabel: tableLabel_person,
+            tableLabel: tableLabelPerson,
             drawer: false
         }
     },
@@ -157,7 +158,6 @@ export default {
             getCompanyCAList: 'caCertiManage/getCompanyCAList'
         }),
         compare (startTime, endTime) {
-            console.log('startTime, endTime: ', startTime, endTime);
             const start = new Date(startTime).getTime()
             const end = new Date(endTime).getTime()
             if (start && end && start > end) {
@@ -174,38 +174,41 @@ export default {
             }
         },
         async onQuery () {
-            console.log(this.searchParams)
+            // console.log(this.searchParams)
             // 调查询接口
-            console.log(this.getPersonalCAList)
             if (this.activeName === 'personage') {
                 await this.getPersonalCAList(this.searchParams)
-                this.tableLabel = tableLabel_person
+                this.tableLabel = tableLabelPerson
             }
             if (this.activeName === 'enterprise') {
                 await this.getCompanyCAList(this.searchParams)
-                this.tableLabel = tableLabel_enterprise
+                this.tableLabel = tableLabelEnterprise
             }
         },
         async handleClick () {
-            await this.onRest()
+            await this.onReset()
             this.onQuery()
         },
-        onRest () {
+        onReset () {
             this.queryParams = { ...this.copyParms }
             this.onSearch()
         },
-        handleSizeChange (val) {
+        onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery()
         },
-        handleCurrentChange (val) {
+        onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery()
         },
-        onLogOut (row) {
+        async onDrawerinfo (row) {
             console.log('row: ', row)
-        },
-        onDrawerinfo () {
+            const params = {
+                sealId: row.sealId,
+                caId: row.id,
+                caType: 1
+            }
+            await getCAImageBysealId(params)
             this.drawer = true
         },
         handleClose () {
