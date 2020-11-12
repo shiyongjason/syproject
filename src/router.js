@@ -16,6 +16,7 @@ import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
 import Merchantrouter from "./router/Merchantrouter";
+import OssFileUtils from "@/utils/OssFileUtils";
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function(location) {
@@ -360,6 +361,13 @@ router.beforeEach(async (to, from, next) => {
     sessionStorage.setItem('authCode', authhasCode.length > 0 ? JSON.stringify(authhasCode[0].authCode) : '')
     // sessionStorage.setItem('authCodeArr',JSON.stringify(data))
     next()
+})
+router.afterEach((to, from) => {
+    let isFirst = store.state.isFirst
+    if(!isFirst){
+        console.log('------unload')
+        OssFileUtils.Event.unload()
+    }
 })
 export default router
 export {
