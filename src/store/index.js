@@ -21,6 +21,7 @@ import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import crmRecommeder from '@/views/crm/recommender/store/index'
 import crmAwardManage from '@/views/crm/awardManage/store/index'
+import caCertiManage from '@/views/crm/caCertiManage/store/index'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
 import vipManage from '@/views/crm/vipmanage/store/vipManage'
@@ -72,6 +73,7 @@ const store = new Vuex.Store({
         crmstatic,
         crmRecommeder,
         crmAwardManage,
+        caCertiManage,
         projectInformation,
         riskManage,
         vipManage,
