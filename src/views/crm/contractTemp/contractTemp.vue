@@ -6,7 +6,7 @@
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_name">合同模版设置</div>
-                <el-form ref="contractForm" :model="form" label-width="">
+                <el-form ref="contractForm" :model="contractForm" label-width="">
                     <el-form-item label="模版名称：">
                         <el-input v-model="contractForm.templateName"></el-input>
                     </el-form-item>
@@ -47,40 +47,44 @@
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     签署方
-                    <h-button type="primary" @click="onClick_Dialog()">添加签署方</h-button>
+                    <h-button type="primary" @click="onClick_Dialog(2)">添加签署方</h-button>
                 </div>
-                <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onShowVer()">查看</h-button>
-                        <h-button table @click="onShowVer()">预览</h-button>
+                        <h-button table @click="onEditP(scope.data.row,1)">编辑</h-button>
+                        <h-button table @click="onDelete()">删除</h-button>
+                    </template>
+                </hosJoyTable>
+
+                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onEditP(scope.data.row,2)">编辑</h-button>
+                        <h-button table @click="onDelete()">删除</h-button>
                     </template>
                 </hosJoyTable>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     平台签署方
-                    <h-button type="primary">设置</h-button>
+                    <h-button type="primary" @click="onClick_Dialog(1)">设置</h-button>
                 </div>
-                <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
-                    <template slot="action" slot-scope="scope">
-                        <h-button table @click="onShowVer()">查看</h-button>
-                        <h-button table @click="onShowVer()">预览</h-button>
-                    </template>
+                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
+
                 </hosJoyTable>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
-                    平台签署方
+                    推荐签署方式
                 </div>
                 <template>
-                    <el-radio v-model="radio" label="1">电子签</el-radio>
-                    <el-radio v-model="radio" label="2">线下签</el-radio>
+                    <el-radio v-model="contractForm.recommendSigner" label="1">电子签</el-radio>
+                    <el-radio v-model="contractForm.recommendSigner" label="2">线下签</el-radio>
                 </template>
             </div>
             <div class="page-body-cont">
                 <el-button type="default">取消</el-button>
-                <el-button type="primary" @click="onSaveTemp">保存模板</el-button>
-                <el-button type="primary" @click="onPreview">保存并启用模版</el-button>
+                <el-button type="primary" @click="onSaveTemp(0)">保存模板</el-button>
+                <el-button type="primary" @click="onSaveTemp(1)">保存并启用模版</el-button>
             </div>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
@@ -88,8 +92,8 @@
             </div>
         </el-drawer>
         <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose">
-            <el-select v-model="keyValue" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.paramKey" :label="item.paramName" :value="item">
+            <el-select v-model="keyValue" value-key='id' placeholder="请选择">
+                <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                 </el-option>
             </el-select>
             <span slot="footer" class="dialog-footer">
@@ -98,7 +102,7 @@
             </span>
         </el-dialog>
         <diffDialog ref="diffDialog"></diffDialog>
-        <contractDialog ref="contractDialog"></contractDialog>
+        <contractDialog ref="contractDialog" @backEvent=backToTable></contractDialog>
     </div>
 </template>
 <script>
@@ -107,12 +111,13 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { interfaceUrl } from '@/api/config'
 import diffDialog from './components/diffDialog'
 import contractDialog from './components/contractDialog'
-import { addContractTemp } from './api/index'
+import { addContractTemp, putContractTemp } from './api/index'
 export default {
-    name: 'contractdetail',
+    name: 'contractTemp',
     components: { diffDialog, hosJoyTable, contractDialog },
     data () {
         return {
+            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '法定代表人章' }, { key: 3, value: '手绘章' }, { key: 4, value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
             content: '',
@@ -127,10 +132,12 @@ export default {
                 templateName: '',
                 status: '', // 状态
                 content: '',
-                param: [],
+                reqParam: [],
                 signerSetting: [], // 签署方设置
                 operatorBy: '',
-                operatorAccount: ''
+                operatorAccount: '',
+                recommendSigner: '1'
+
             },
             rules: {},
             contract_list: [],
@@ -159,16 +166,43 @@ export default {
 
             },
             dialogVisible: false,
-            tableLabel: [
-                { label: '企业名称', prop: 'companyName', width: '200' },
-                { label: '管理员账号', prop: 'userAccount', width: '120' }
+            busLabel: [
+                { label: '签署方', prop: 'signerName' },
+                { label: '签署方类型', prop: 'signerType' },
+                { label: '合同企业', prop: 'paramGroupName' },
+                { label: '经办人', prop: 'agent' },
+                { label: '签署要求',
+                    prop: 'signerDemand',
+                    render: (h, scope) => {
+                        return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                    } }
             ],
-            tableData: [],
-            radio: ''
+            busData: [],
+            perLabel: [
+                { label: '签署方', prop: 'signerName' },
+                { label: '签署方类型', prop: 'signerType' },
+                { label: '合同个人', prop: 'paramGroupName' },
+                { label: '签署要求', prop: 'signerDemand' }
+            ],
+            perData: [],
+            platLabel: [
+                { label: '签署方', prop: 'signerName' },
+                { label: '签署方类型', prop: 'signerType' },
+                { label: '签署企业', prop: 'paramGroupName' },
+                { label: '签署要求', prop: 'signerDemand' }
+            ],
+            platData: [],
+            radio: '',
+            bakParams: [],
+            newParams: [],
+            num: Date.now()// 最好是个随机的
         }
     },
-    mounted () {
-        this.onFindtempType()
+    async  mounted () {
+        await this.onFindtempType()
+        if (this.$route.query.id) {
+            this.findTempDetail(this.$route.query.id)
+        }
     },
     computed: {
         ...mapState({
@@ -176,7 +210,8 @@ export default {
         }),
         ...mapGetters({
             tempType: 'contractTemp/tempType',
-            tempParams: 'contractTemp/tempParams'
+            tempParams: 'contractTemp/tempParams',
+            contractTempdetail: 'contractTemp/contractTempdetail'
         }),
         /* TODO 富文本编辑器 */
         uploadImgServer () {
@@ -194,19 +229,43 @@ export default {
     methods: {
         ...mapActions({
             getContratType: 'contractTemp/getContratType',
-            getAllparams: 'contractTemp/getAllparams'
+            getAllparams: 'contractTemp/getAllparams',
+            getContratDetail: 'contractTemp/getContratDetail'
+            // findCApage: 'contractTemp/findCApage'
         }),
+        findUnique (inputArr) {
+            let result = []
+            let obj = {}
+            for (var i = 0; i < inputArr.length; i++) {
+                if (!obj[inputArr[i].id]) {
+                    result.push(inputArr[i])
+                    obj[inputArr[i].id] = true
+                }
+            }
+            return result
+        },
+        findChinese (val) {
+            console.log(val)
+            const a = val.split(',')
+            console.log(new Map(this.statusArr))
+            const cArr = []
+            a.forEach(item => {
+                cArr.push(this.statusArr[item])
+            })
+            console.log(cArr)
+        },
         async onFindtempType () {
             await this.getContratType()
             this.contract_list = this.tempType
         },
         async onChangeparam (val) {
-            console.log(val)
             await this.getAllparams(val)
             console.log(this.tempParams)
             this.options = this.tempParams
         },
+
         onInsertInfo () {
+            ++this.num
             console.log(this.keyValue)
             if (!this.keyValue) {
                 this.$message({
@@ -216,12 +275,12 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<input class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;
-    margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.paramName} readonly></input>`
+            const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  value=${this.keyValue.paramName} readonly></input>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementsByClassName('newinput')[1].click
-
-            document.getElementsByClassName(`${this.keyValue.paramKey}`)[0].onclick = () => {
+            // 这里每次执行插入 把 合同约定的字段插入进去
+            this.bakParams.push(this.keyValue)
+            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = () => {
                 console.log('我测试一下')
                 this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
                 this.dialogVisible = true
@@ -231,16 +290,20 @@ export default {
 
         },
         onEditcon () {
-            document.getElementsByClassName(`${this._keyValue.value}`)[0].outerHTML = ''
+            ++this.num
+            document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
             this.$nextTick(() => {
-                let inputWidth = this.keyValue.label.length * 14
-                const _temp = `<input class="${this.keyValue.value}" style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  value=${this.keyValue.label} readonly></input>`
+                let inputWidth = this.keyValue.paramName.length * 14
+                const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;" 
+                 value=${this.keyValue.paramName} readonly></input>`
                 this.$refs.RichEditor.insertHtml(_temp)
                 this.dialogVisible = false
-                document.getElementsByClassName(`${this.keyValue.value}`)[0].onclick = () => {
+                document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = () => {
                     this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
                     this.dialogVisible = true
                 }
+                // 继续插入合同字段  后面  编辑器里面的字段和 所有插入的字段做交集的 如果编辑器里面有多个相同字段  交集的话也不会清除掉
+                this.bakParams.push(this.keyValue)
             })
         },
         onPreview () {
@@ -249,15 +312,24 @@ export default {
         onContract () {
             this.newContent = JSON.parse(JSON.stringify(this.content))
             this.options.map(val => {
-                console.log(val, this.ruleForm)
-                this.newContent = this.newContent.replace(`{${val.value}}`, this.ruleForm[`${val.value}`])
+                this.newContent = this.newContent.replace(`{${val.value}}`, this.contractForm[`${val.value}`])
             })
         },
         onClickDialog () {
             this.$refs.diffDialog.onShowDiff()
         },
         onFindInputDom () {
-            console.log(document.getElementById('editor').getElementsByTagName('input')[0].className)
+            // 把所有的富文本里面的 input 查出来
+            const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
+            const reqParam = []
+            inputArr.length > 0 && inputArr.map(val => {
+                reqParam.push({
+                    id: val.dataset.appId,
+                    paramKey: val.className
+                })
+            })
+            // 返回 去重后 唯一ID的合同字段
+            return this.findUnique(reqParam)
         },
         onClickCur (val) {
             let _temp = ''
@@ -271,23 +343,112 @@ export default {
             this.$refs.RichEditor.insertHtml(_temp)
         },
         onClick_Dialog (val) {
+            this.newParams = []
             // 校验 input dom
-            this.onFindInputDom()
-            this.$refs.contractDialog.onShowDialog(val)
+            const paramsArr = this.onFindInputDom()
+            const bakParamsArr = this.findUnique(this.bakParams)
+            // 取交集 为了 在文本编辑器里面删除了哪些字段 和 入库的字段做唯一对应
+            paramsArr && paramsArr.map((val) => {
+                bakParamsArr.map(item => {
+                    if (val.id == item.id) {
+                        this.newParams.push(item)
+                    }
+                })
+            })
+            this.$refs.contractDialog.onShowDialog(val, this.newParams)
+        },
+        backToTable (val, singerType) {
+            if (singerType == 2) {
+                this.perData = val
+            } else if (singerType == 1) {
+                this.busData = val
+            } else {
+                this.platData = val
+                console.log(this.platData)
+            }
+        },
+        // 表格编辑
+        onEditP (data, type) {
+            this.$refs.contractDialog.onShowDialog(type, this.newParams, data)
         },
         onSaveTemp (val) {
             const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
             const reqParam = []
-            inputArr.map(val => {
-                reqParam.push({
-                    id: val.dataset.appId,
-                    paramKey: val.className
-                })
+            inputArr.length > 0 && inputArr.map(val => {
+                if (val.dataset.appId) {
+                    reqParam.push({
+                        id: val.dataset.appId,
+                        paramKey: val.className
+                    })
+                }
             })
             this.contractForm.operatorBy = this.userInfo.employeeName
-            this.contractForm.reqParam = reqParam
-            console.log(this.contractForm)
-            addContractTemp(this.contractForm)
+            this.contractForm.operatorAccount = this.userInfo.phoneNumber
+            this.contractForm.reqParam = this.findUnique(reqParam)
+            this.contractForm.status = val
+            // 必填项校验
+            if (!this.contractForm.templateName) {
+                this.$message({
+                    message: '请填写模版名称',
+                    type: 'warning'
+                })
+                return
+            }
+            if (!this.contractForm.typeId) {
+                this.$message({
+                    message: '请填写模版名称',
+                    type: 'warning'
+                })
+                return
+            }
+            this.contractForm.signerSetting = [...this.busData, ...this.perData, ...this.platData]
+            if (false) {
+                try {
+                    console.log(this.contractForm)
+                    addContractTemp(this.contractForm)
+                } catch (error) {
+
+                }
+            } else {
+                putContractTemp(this.contractForm)
+            }
+        },
+
+        async findTempDetail (val) {
+            await this.getContratDetail(val)
+            console.log(this.contractTempdetail)
+            // 编辑时候 把 插入的合同字段 重新复制一份 bakParams
+            this.bakParams = this.contractTempdetail.param
+            this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
+            // 签署方 type=2
+            let singerArr = []
+
+            singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2)
+            this.busData = singerArr.filter(val => val.signerType == 1)
+            this.perData = singerArr.filter(val => val.signerType == 2)
+
+            console.log(singerArr, this.busData, this.perData)
+            this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
+            // 获取合同类型约定字段
+            this.onChangeparam(this.contractForm.typeId)
+            // 绑定click
+            this.$nextTick(() => {
+                const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
+                console.log(1, document.getElementById('editor').getElementsByTagName('input'), inputArr)
+                inputArr.length > 0 && inputArr.map(val => {
+                    if (val.dataset.appId) {
+                        document.getElementById(val.id).onclick = () => {
+                            let keyValue = {
+                                paramKey: val.className,
+                                paramName: val.value
+                            }
+                            console.log(keyValue)
+                            this._keyValue = JSON.parse(JSON.stringify(keyValue))
+                            this.dialogVisible = true
+                        }
+                    }
+                })
+            })
         }
     }
 }
@@ -324,7 +485,7 @@ export default {
 /deep/.w-e-text-container {
     z-index: 100 !important;
 }
-/deep/.inputCont {
+/deep/#editor input {
     color: #ff7a45;
     display: inline-block;
     height: 22px;
