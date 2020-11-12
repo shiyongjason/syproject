@@ -5,26 +5,34 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">模板名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                        <el-select v-model="queryParams.status" placeholder="请选择活动区域">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="禁用" value="0"></el-option>
+                            <el-option label="启用" value="1"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">签约方式：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                        <el-select v-model="queryParams.typeId" placeholder="请选择活动区域">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="电子签" value="0"></el-option>
+                            <el-option label="线下签" value="1"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary">
+                    <h-button type="primary" @click="searchList(1)">
                         查询
                     </h-button>
-                    <h-button>
+                    <h-button @click="onRest">
                         重置
                     </h-button>
                 </div>
@@ -35,23 +43,23 @@
                 </h-button>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 项</el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
-            <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total"
-                actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='260' isAction
+                :isActionFixed='tableData&&tableData.length>0'>
+
                 <template slot="action" slot-scope="scope">
                     <h-button table>复制</h-button>
-                    <h-button table>预览</h-button>
-                    <h-button table>编辑</h-button>
-                    <h-button table>禁用</h-button>
+                    <h-button table @click="onEdit(scope.data.row)">编辑</h-button>
+                    <h-button table v-if="scope.data.row.status==1" @click="onEnable(scope.data.row)">禁用</h-button>
+                    <h-button table v-if="scope.data.row.status==0" @click="onEnable(scope.data.row)">启用</h-button>
                     <h-button table @click="onShowVer()">版本记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <!---->
-        <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%"  :before-close="handleClose">
-            <hosJoyTable localName="V4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe  :column="tableLabel" :data="tableData"
-                isAction :isActionFixed='tableData&&tableData.length>0'>
+        <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :before-close="handleClose">
+            <hosJoyTable localName="V4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" isAction :isActionFixed='tableData&&tableData.length>0'>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onShowVer()">查看</h-button>
                 </template>
@@ -62,6 +70,9 @@
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapActions, mapGetters } from 'vuex'
+import { enableTemp, disableTemp } from './api'
+import { clearCache, newCache } from '@/utils/index'
+
 export default {
     name: 'contractlist',
     components: { hosJoyTable },
@@ -74,17 +85,24 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            copy_queryParams: {},
             tableLabel: [
                 { label: '合同模板编号', prop: 'templateNo' },
                 { label: '合同模版名称', prop: 'templateName' },
                 { label: '合同类型', prop: 'typeName' },
-                { label: '状态', prop: 'status' },
-                { label: '启用/禁用时间', prop: 'enableTime' },
-                { label: '最近维护时间', prop: 'userAccount' },
-                { label: '最近维护人', prop: 'operatorBy' }
+                { label: '状态', prop: 'status', dicData: [{ value: 0, label: '禁用' }, { value: 1, label: '启用' }] },
+                { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+                { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+                {
+                    label: '最近维护人',
+                    prop: 'updateBy',
+                    render: (h, scope) => {
+                        return <span>{scope.row.updateBy} ({scope.row.updateAccount})</span>
+                    }
+                }
 
             ],
-            tableData: [{ templateNo: '勇哥', templateName: '123' }, { templateNo: '勇哥', templateName: '123' }],
+            tableData: [],
             paginationInfo: {},
             ver_drawer: false
         }
@@ -92,16 +110,27 @@ export default {
 
     computed: {
         ...mapGetters({
-            contractTempdata: state => state.contractTemp.contractTempdata
+            contractTempdata: 'contractTemp/contractTempdata'
         })
     },
     methods: {
         ...mapActions({
             getContractTmep: 'contractTemp/getContractTmep'
         }),
-        async searchList () {
-            await this.getContractTmep()
+        onRest () {
+            this.queryParams = JSON.parse(JSON.stringify(this.copy_queryParams))
+            this.searchList(1)
+        },
+        async searchList (val) {
+            if (val) this.queryParams.pageNumber = val
+            await this.getContractTmep(this.queryParams)
             console.log(this.contractTempdata)
+            this.tableData = this.contractTempdata.records
+            this.paginationInfo = {
+                pageNumber: this.contractTempdata.current,
+                pageSize: this.contractTempdata.size,
+                total: this.contractTempdata.total
+            }
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -119,10 +148,58 @@ export default {
         },
         handleClose () {
             this.ver_drawer = false
+        },
+        async onEnable (val) {
+            if (val.status == 0) {
+                await enableTemp(val.id)
+                this.$message({
+                    message: '启用成功',
+                    type: 'success'
+                })
+            } else {
+                await disableTemp(val.id)
+                this.$message({
+                    message: '禁用成功',
+                    type: 'success'
+                })
+            }
+            this.searchList()
+        },
+        onEdit (val) {
+            if (val.status == 1) {
+                this.$confirm('启用状态的模版不可编辑，如您需要编辑此模版，请先禁用此模版', '提示', {
+                    confirmButtonText: '禁用并编辑',
+                    cancelButtonText: '暂不编辑',
+                    type: 'warning'
+                }).then(async () => {
+                    await disableTemp(val.id)
+                    this.$router.push({ path: '/goodwork/contractTemp', query: { id: val.id } })
+                }).catch(() => {
+
+                })
+            } else {
+                this.$router.push({ path: '/goodwork/contractTemp', query: { id: val.id } })
+            }
         }
     },
     mounted () {
+        this.copy_queryParams = JSON.parse(JSON.stringify(this.queryParams))
         this.searchList()
+    },
+    activated () {
+        this.searchList()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('contractlist')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'contractDetail' || to.name != 'contractTemp') {
+
+        } else {
+            clearCache('contractlist')
+        }
+        next()
     }
 }
 </script>
