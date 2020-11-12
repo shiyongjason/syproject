@@ -62,7 +62,7 @@
             <div class="clueTips">
                 <el-tag size="medium" class="eltagtop">
                     <i class="el-icon-warning"></i>
-                    <span class="sub-eltag">已筛选 5 项</span>
+                    <span class="sub-eltag">已筛选 {{paginationInfo.total}} 项</span>
                 </el-tag>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
@@ -85,7 +85,10 @@
             <el-drawer title="查看信息" :visible.sync="drawer" direction="rtl" :before-close="handleClose">
                 <div class="drawer-content">
                     <p>印章</p>
-                    <img src="https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/images/20200311/5c506b71-d665-4c61-948d-3cfd3cce4140.png" alt="">
+                    <!-- <img src="https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/images/20200311/5c506b71-d665-4c61-948d-3cfd3cce4140.png" alt=""> -->
+                    <a :href="imgUrl">
+                        <img :src="imgUrl" alt="">
+                    </a>
                 </div>
                 <div class="drawer-footer">
                     <h-button @click="drawer = false">好的</h-button>
@@ -118,7 +121,8 @@ export default {
             },
             searchParams: {},
             tableLabel: tableLabelPerson,
-            drawer: false
+            drawer: false,
+            imgUrl: ''
         }
     },
     computed: {
@@ -203,12 +207,19 @@ export default {
         },
         async onDrawerinfo (row) {
             console.log('row: ', row)
-            const params = {
-                sealId: row.sealId,
-                caId: row.id,
-                caType: 1
+            let caId, caType;
+            // 个人 accountId
+            if (this.activeName == 'personage') {
+                caId = row.accountId
+                caType = 1
             }
-            await getCAImageBysealId(params)
+            // 企业 orgId
+            if (this.activeName == 'enterprise') {
+                caId = row.orgId
+                caType = 2
+            }
+            const { data } = await getCAImageBysealId({ sealId: row.sealId, caId, caType })
+            this.imgUrl = data
             this.drawer = true
         },
         handleClose () {
@@ -243,6 +254,9 @@ export default {
 }
 .drawer-content {
     padding: 0 24px;
+    img {
+        width: 300px;
+    }
 }
 .drawer-footer {
     position: absolute;
