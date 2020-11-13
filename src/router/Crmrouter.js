@@ -245,13 +245,26 @@ export default [
                 component: () => import('@/views/crm/contractSigningManagement/contractSigningManagement.vue')
             },
             {
+                path: 'contractSigningManagementDetail',
+                name: 'contractSigningManagementDetail',
+                meta: {
+                    title: '合同签署管理详情',
+                    tagName: '合同详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractSigningManagement'
+                },
+                component: () => import('@/views/crm/contractSigningManagementDetail/contractSigningManagementDetail.vue')
+            },
+            {
                 path: 'approveContract',
                 name: 'approveContract',
                 meta: {
-                    title: '分财审核合同',
-                    tagName: '分财审核合同',
-                    isMenu: true,
-                    icon: ''
+                    title: '审核合同',
+                    tagName: '审核合同',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractSigningManagement'
                 },
                 component: () => import('@/views/crm/approveContract/approveContract.vue')
             },
