@@ -38,30 +38,32 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <h-button type="primary" @click="onEditContract">
+                <h-button type="primary" @click="onAddContract">
                     新增合同模板
                 </h-button>
             </div>
             <div class="query-cont__row">
                 <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='260' isAction
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData"  @pagination="searchList"
+             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='260' isAction
                 :isActionFixed='tableData&&tableData.length>0'>
 
                 <template slot="action" slot-scope="scope">
-                    <h-button table>复制</h-button>
+                    <h-button table @click="onCopy(scope.data.row)">复制</h-button>
                     <h-button table @click="onEdit(scope.data.row)">编辑</h-button>
                     <h-button table v-if="scope.data.row.status==1" @click="onEnable(scope.data.row)">禁用</h-button>
                     <h-button table v-if="scope.data.row.status==0" @click="onEnable(scope.data.row)">启用</h-button>
-                    <h-button table @click="onShowVer()">版本记录</h-button>
+                    <h-button table @click="onShowVer(scope.data.row.id)">版本记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <!---->
         <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :before-close="handleClose">
-            <hosJoyTable localName="V4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe :column="tableLabel" :data="tableData" isAction :isActionFixed='tableData&&tableData.length>0'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data"
+             :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total" isAction >
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onShowVer()">查看</h-button>
+                    <h-button table @click="onShowTempdetail(scope.data.row.id)">查看</h-button>
                 </template>
             </hosJoyTable>
         </el-drawer>
@@ -85,6 +87,11 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            drawerParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                templateId: ''
+            },
             copy_queryParams: {},
             tableLabel: [
                 { label: '合同模板编号', prop: 'templateNo' },
@@ -103,26 +110,40 @@ export default {
 
             ],
             tableData: [],
+            verLabel: [
+                { label: '版本号', prop: 'versionNo' },
+                { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+                { label: '创建人',
+                    prop: 'createBy',
+                    render: (h, scope) => {
+                        return <span>{scope.row.createBy} ({scope.row.createAccount})</span>
+                    } }
+            ],
+            ver_Data: [],
             paginationInfo: {},
+            verpaginationInfo: {},
             ver_drawer: false
         }
     },
 
     computed: {
         ...mapGetters({
-            contractTempdata: 'contractTemp/contractTempdata'
+            contractTempdata: 'contractTemp/contractTempdata',
+            verData: 'contractTemp/verData'
         })
     },
     methods: {
         ...mapActions({
-            getContractTmep: 'contractTemp/getContractTmep'
+            getContractTmep: 'contractTemp/getContractTmep',
+            findVerdata: 'contractTemp/findVerdata'
         }),
         onRest () {
             this.queryParams = JSON.parse(JSON.stringify(this.copy_queryParams))
             this.searchList(1)
         },
         async searchList (val) {
-            if (val) this.queryParams.pageNumber = val
+            console.log(val)
+            if (val == 1) { this.queryParams.pageNumber = val }
             await this.getContractTmep(this.queryParams)
             console.log(this.contractTempdata)
             this.tableData = this.contractTempdata.records
@@ -132,19 +153,25 @@ export default {
                 total: this.contractTempdata.total
             }
         },
-        handleSizeChange (val) {
-            this.queryParams.pageSize = val
-            this.searchList()
-        },
-        handleCurrentChange (val) {
-            this.queryParams.pageNumber = val.pageNumber
-            this.searchList()
-        },
-        onShowVer () {
+        async  onShowVer (val) {
+            this.drawerParams.templateId = val
+            await this.findVerdata(this.drawerParams)
+            this.ver_Data = this.verData.records
+            console.log(this.verData)
+            this.verpaginationInfo = {
+                pageNumber: this.verData.current,
+                pageSize: this.verData.size,
+                total: this.verData.total
+            }
             this.ver_drawer = true
         },
-        onEditContract () {
+        onAddContract () {
             this.$router.push({ path: '/goodwork/contractTemp' })
+        },
+
+        onShowTempdetail (id) {
+            this.ver_drawer = false
+            this.$router.push({ path: '/goodwork/contractDetail', query: { id: id } })
         },
         handleClose () {
             this.ver_drawer = false
@@ -164,6 +191,9 @@ export default {
                 })
             }
             this.searchList()
+        },
+        onCopy (val) {
+            this.$router.push({ path: '/goodwork/contractTemp', query: { id: val.id, type: 'copy' } })
         },
         onEdit (val) {
             if (val.status == 1) {
@@ -206,5 +236,8 @@ export default {
 <style scoped lang="scss">
 .tag_top {
     margin: 10px 0;
+}
+/deep/.el-drawer__body{
+    padding: 0 10px;
 }
 </style>

@@ -6,14 +6,14 @@
                     <el-input v-model="signerTempForm.signerName" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="signerType">
-                    <el-radio-group v-model="signerTempForm.signerType">
-                        <el-radio label="1">企业</el-radio>
-                        <el-radio label="2">个人</el-radio>
+                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit >
+                        <el-radio :label=1 >企业</el-radio>
+                        <el-radio :label=2 >个人</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="请选择合同企业：" prop="paramGroupId">
-                    <el-select v-model="signerTempForm.paramGroup" value-key='id' placeholder="请选择合同企业">
-                        <el-option v-for="item in singerOps" :key="item.paramKey" :label="item.paramName" :value="item">
+                <el-form-item label="请选择合同企业：" prop="paramId">
+                    <el-select v-model="signerTempForm.paramId"  placeholder="请选择合同企业" @change="changeId">
+                        <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -41,9 +41,9 @@
                 <el-form-item label="签署方类型：" prop="">
                     企业
                 </el-form-item>
-                <el-form-item label="平台企业：" prop="paramGroupId">
-                    <el-select v-model="signerTempForm.paramGroup" value-key='id' placeholder="请选择平台企业">
-                        <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item">
+                <el-form-item label="平台企业：" prop="caId">
+                    <el-select v-model="signerTempForm.caId"  placeholder="请选择平台企业" @change="changeCa">
+                        <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.accountCaId">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -57,7 +57,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="tract_visible = false">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onSaveSinger">确定保存</el-button>
             </span>
         </el-dialog>
@@ -78,20 +78,25 @@ export default {
             singer_platArr: [],
             signerTempForm: {
                 signerName: '',
-                signerType: '1',
-                paramGroupId: '',
-                paramGroup: {},
+                signerType: 1,
+                paramId: '',
+                caId: '',
+                paramGroupName: '',
+                // paramGroup: {},
                 signerDemand: '',
                 _signerDemand: []
             },
             copy_signerTempForm: {
                 signerName: '',
-                signerType: '1',
-                paramGroupId: '',
-                paramGroup: {},
+                signerType: 1,
+                paramId: '',
+                caId: '',
+                paramGroupName: '',
+                // paramGroup: {},
                 signerDemand: '',
                 _signerDemand: []
             },
+            vaild_form: {},
             signerTempFormrules: {
                 signerName: [
                     { required: true, message: '签署方名称', trigger: 'blur' }
@@ -99,8 +104,11 @@ export default {
                 signerType: [
                     { required: true, message: '签署方类型', trigger: 'change' }
                 ],
-                paramGroupId: [
+                paramId: [
                     { required: true, message: '选择合同企业', trigger: 'change' }
+                ],
+                caId: [
+                    { required: true, message: '选择平台企业', trigger: 'change' }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -110,23 +118,25 @@ export default {
                 ]
 
             },
-            rules: {}
+            rules: {},
+            isEdit: false
 
         }
     },
     watch: {
-        'signerTempForm.paramGroup' (value) {
-            console.log(value)
-            if (value) {
-                this.$nextTick(() => {
-                    if (this.contractType == 2) {
-                        this.$refs.signerTempR.clearValidate('paramGroupId')
-                    } else {
-                        this.$refs.signerTempS.clearValidate('paramGroupId')
-                    }
-                })
-            }
-        }
+        // 'signerTempForm.paramGroup' (value) {
+        //     console.log(value)
+        //     if (value) {
+        //         this.$nextTick(() => {
+        //             if (this.contractType == 2) {
+        //                 this.$refs.signerTempR.clearValidate('paramGroupId')
+        //             } else {
+        //                 this.$refs.signerTempS.clearValidate('paramGroupId')
+        //             }
+        //         })
+        //     }
+        // }
+
     },
     computed: {
         ...mapGetters({
@@ -138,54 +148,86 @@ export default {
             findCApage: 'contractTemp/findCApage'
         }),
         onShowDialog (val, arr, form) {
+            console.log('--=', val, arr, form)
             // 类型
             this.signerTempForm = deepCopy(this.copy_signerTempForm)
-            this.$nextTick(() => {
-                if (val == 2) {
-                    this.$refs.signerTempR.resetFields()
-                } else {
-                    this.$refs.signerTempS.resetFields()
-                    this.onFindCApage()
-                }
-            })
+
+            // if (val == 2) {
+            //     this.$refs.signerTempR.resetFields()
+            // } else {
+            //     this.$refs.signerTempS.clearValidate()
+            //     this.onFindCApage()
+            // }
+
+            this.onFindCApage()
             this.tract_visible = true
             this.contractType = val
-            this.singerOps = arr
+            this.singerOps = arr && arr.filter(val => val.groupName)
             if (form) {
-                this.signerTempForm = { ...form }
+                // 复制一份 做取消校验
+                this.isEdit = true
+                console.log('====', this.isEdit)
+                this.vaild_form = deepCopy(form)
+                this.signerTempForm = { ...this.signerTempForm, ...form }
+                this.signerTempForm._signerDemand = this.signerTempForm.signerDemand.split(',')
             }
         },
         handleClose () {
+            if (JSON.stringify(this.vaild_form) != JSON.stringify(this.signerTempForm)) {
+                this.$confirm('取消则不会保存当前修改', '提示', {
+                    confirmButtonText: '确认取消',
+                    cancelButtonText: '我再想想',
+                    type: 'warning'
+                }).then(() => {
+                    this.tract_visible = false
+                }).catch(() => {
 
+                })
+            } else {
+                this.tract_visible = false
+            }
         },
         async onFindCApage () {
             await this.findCApage({ pageNumber: 0, pageSize: -1, orgType: 1 })
             this.caOptions = this.caPage.records
         },
+        changeId (val) {
+            this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
+            // var aa = []
+            // aa = this.singerOps.filter(item => item.id == val)
+            console.log(val, this.signerTempForm.paramGroupName)
+        },
+        changeCa (val) {
+            this.signerTempForm.paramGroupName = this.caOptions.filter(item => item.accountCaId == val)[0].companyName
+        },
         onSaveSinger () {
+            this.singer_busArr = []
             if (this.contractType == 2) {
-                this.signerTempForm.signerDemand = this.signerTempForm._signerDemand
+                this.signerTempForm.signerDemand = [...this.signerTempForm._signerDemand]
                 this.signerTempForm.signerDemand = this.signerTempForm.signerDemand.toString()
-                this.signerTempForm.paramGroupId = this.signerTempForm.paramGroup.groupId
+                // this.signerTempForm.paramGroupId = this.signerTempForm.paramGroup.groupId
                 let objParam = {
                     type: 2, // 签署方==2
                     signerType: this.signerTempForm.signerType, // 签署方类型：1企业，2个人
                     signerName: this.signerTempForm.signerName,
-                    paramGroupId: this.signerTempForm.paramGroup.groupId,
-                    paramGroupName: this.signerTempForm.paramGroup.groupName,
+                    paramId: this.signerTempForm.paramId,
+                    paramGroupName: this.signerTempForm.paramGroupName,
                     agent: '发起人指定',
                     signerDemand: this.signerTempForm.signerDemand
                 }
                 this.$refs.signerTempR.validate(valid => {
                     if (valid) {
                         try {
-                            this.tract_visible = false
                             if (this.signerTempForm.signerType == 1) {
                                 this.singer_busArr.push(objParam)
+                                console.log('企业', this.singer_busArr)
                                 this.$emit('backEvent', this.singer_busArr, 1)
+                                this.tract_visible = false
                             } else {
                                 this.singer_perArr.push(objParam)
+
                                 this.$emit('backEvent', this.singer_perArr, 2)
+                                this.tract_visible = false
                             }
                         } catch (error) {
 
@@ -195,23 +237,34 @@ export default {
                     }
                 })
             } else {
-                this.signerTempForm.signerDemand = this.signerTempForm._signerDemand
+                this.singer_platArr = []
+                this.signerTempForm.signerDemand = [...this.signerTempForm._signerDemand]
                 this.signerTempForm.signerDemand = this.signerTempForm.signerDemand.toString()
-                this.signerTempForm.paramGroupId = this.signerTempForm.paramGroup.groupId
+                // this.signerTempForm.paramGroupId = this.signerTempForm.paramGroup.groupId
                 let objParam = {
                     type: 1, // 平台==1
                     signerType: 1, // 签署方类型：1企业
                     signerName: '平台方',
-                    paramGroupId: this.signerTempForm.paramGroup.id,
-                    paramGroupName: this.signerTempForm.paramGroup.companyName,
+                    caId: this.signerTempForm.caId,
+                    paramGroupName: this.signerTempForm.paramGroupName,
                     // agent: '发起人指定',
                     signerDemand: this.signerTempForm.signerDemand
                 }
-                this.singer_platArr.push(objParam)
-                console.log(111, objParam)
-                this.$emit('backEvent', this.singer_platArr, 3)
+                this.$refs.signerTempS.validate(valid => {
+                    if (valid) {
+                        try {
+                            this.singer_platArr.push(objParam)
+                            console.log(111, objParam)
+                            this.$emit('backEvent', this.singer_platArr, 3)
+                            this.tract_visible = false
+                        } catch (error) {
+
+                        }
+                    } else {
+
+                    }
+                })
             }
-            this.tract_visible = false
         }
     }
 }

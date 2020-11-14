@@ -24,3 +24,8 @@ export const disableTemp = (params) => axios.patch(`/project/api/contract-templa
 
 // CA 企业
 export const orgCApage = (params) => axios.get(`/project/api/ca/org/page`, { params })
+
+// 版本记录
+export const findver = (params) => axios.get(`/project/api/contract-template/versions`, { params })
+
+export const findVerDetail = (params) => axios.get(`/project/api/contract-template/versions/${params}`)

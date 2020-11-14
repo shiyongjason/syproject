@@ -2,7 +2,9 @@
     <div class="page-body B2b">
         <div class="contract-temp  page-component__scroll">
             <div class="page-body-cont">
-                <div class="contract-temp_title">新增合同模版</div>
+                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type" >新增合同模版</div>
+                <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模版</div>
+                <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模版</div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_name">合同模版设置</div>
@@ -51,15 +53,16 @@
                 </div>
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditP(scope.data.row,1)">编辑</h-button>
-                        <h-button table @click="onDelete()">删除</h-button>
+
+                        <h-button table @click="onEditP(scope,2)">编辑</h-button>
+                        <h-button table @click="onDelete(scope,1)">删除</h-button>
                     </template>
                 </hosJoyTable>
 
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditP(scope.data.row,2)">编辑</h-button>
-                        <h-button table @click="onDelete()">删除</h-button>
+                        <h-button table @click="onEditP(scope,2)">编辑</h-button>
+                        <h-button table @click="onDelete(index,2)">删除</h-button>
                     </template>
                 </hosJoyTable>
             </div>
@@ -77,12 +80,12 @@
                     推荐签署方式
                 </div>
                 <template>
-                    <el-radio v-model="contractForm.recommendSigner" label="1">电子签</el-radio>
-                    <el-radio v-model="contractForm.recommendSigner" label="2">线下签</el-radio>
+                    <el-radio v-model="contractForm.recommendSigner" :label=1>电子签</el-radio>
+                    <el-radio v-model="contractForm.recommendSigner" :label=2>线下签</el-radio>
                 </template>
             </div>
             <div class="page-body-cont">
-                <el-button type="default">取消</el-button>
+                <el-button type="default" @click="onCancelTemp">取消</el-button>
                 <el-button type="primary" @click="onSaveTemp(0)">保存模板</el-button>
                 <el-button type="primary" @click="onSaveTemp(1)">保存并启用模版</el-button>
             </div>
@@ -136,9 +139,10 @@ export default {
                 signerSetting: [], // 签署方设置
                 operatorBy: '',
                 operatorAccount: '',
-                recommendSigner: '1'
+                recommendSigner: 1
 
             },
+            valid_form: {},
             rules: {},
             contract_list: [],
             options: [],
@@ -168,41 +172,57 @@ export default {
             dialogVisible: false,
             busLabel: [
                 { label: '签署方', prop: 'signerName' },
-                { label: '签署方类型', prop: 'signerType' },
+                { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '合同企业', prop: 'paramGroupName' },
                 { label: '经办人', prop: 'agent' },
-                { label: '签署要求',
+                {
+                    label: '签署要求',
                     prop: 'signerDemand',
                     render: (h, scope) => {
                         return <span>{this.findChinese(scope.row.signerDemand)}</span>
-                    } }
+                    }
+                }
             ],
             busData: [],
             perLabel: [
                 { label: '签署方', prop: 'signerName' },
-                { label: '签署方类型', prop: 'signerType' },
+                { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '合同个人', prop: 'paramGroupName' },
-                { label: '签署要求', prop: 'signerDemand' }
+                {
+                    label: '签署要求',
+                    prop: 'signerDemand',
+                    render: (h, scope) => {
+                        return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                    }
+                }
             ],
             perData: [],
             platLabel: [
                 { label: '签署方', prop: 'signerName' },
-                { label: '签署方类型', prop: 'signerType' },
+                { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '签署企业', prop: 'paramGroupName' },
-                { label: '签署要求', prop: 'signerDemand' }
+                {
+                    label: '签署要求',
+                    prop: 'signerDemand',
+                    render: (h, scope) => {
+                        return <span>{this.findChinese(scope.row.signerDemand)}</span>
+                    }
+                }
             ],
             platData: [],
             radio: '',
             bakParams: [],
             newParams: [],
-            num: Date.now()// 最好是个随机的
+            num: Date.now(), // 最好是个随机的
+            edit_index: ''
         }
     },
-    async  mounted () {
+    async mounted () {
         await this.onFindtempType()
         if (this.$route.query.id) {
             this.findTempDetail(this.$route.query.id)
         }
+        this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
     },
     computed: {
         ...mapState({
@@ -245,14 +265,12 @@ export default {
             return result
         },
         findChinese (val) {
-            console.log(val)
             const a = val.split(',')
-            console.log(new Map(this.statusArr))
             const cArr = []
             a.forEach(item => {
-                cArr.push(this.statusArr[item])
+                cArr.push(this.statusArr[item - 1].value)
             })
-            console.log(cArr)
+            return cArr.toString()
         },
         async onFindtempType () {
             await this.getContratType()
@@ -263,7 +281,6 @@ export default {
             console.log(this.tempParams)
             this.options = this.tempParams
         },
-
         onInsertInfo () {
             ++this.num
             console.log(this.keyValue)
@@ -286,9 +303,7 @@ export default {
                 this.dialogVisible = true
             }
         },
-        handleClose () {
 
-        },
         onEditcon () {
             ++this.num
             document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
@@ -309,12 +324,15 @@ export default {
         onPreview () {
             this.drawer = true
         },
-        onContract () {
-            this.newContent = JSON.parse(JSON.stringify(this.content))
-            this.options.map(val => {
-                this.newContent = this.newContent.replace(`{${val.value}}`, this.contractForm[`${val.value}`])
-            })
+        handleClose () {
+
         },
+        // onContract () {
+        //     this.newContent = JSON.parse(JSON.stringify(this.content))
+        //     this.options.map(val => {
+        //         this.newContent = this.newContent.replace(`{${val.value}}`, this.contractForm[`${val.value}`])
+        //     })
+        // },
         onClickDialog () {
             this.$refs.diffDialog.onShowDiff()
         },
@@ -342,7 +360,7 @@ export default {
             }
             this.$refs.RichEditor.insertHtml(_temp)
         },
-        onClick_Dialog (val) {
+        onAllParams () {
             this.newParams = []
             // 校验 input dom
             const paramsArr = this.onFindInputDom()
@@ -355,23 +373,67 @@ export default {
                     }
                 })
             })
+        },
+        async onClick_Dialog (val) {
+            // 保留编辑位置清除 不影响新增
+            this.edit_index = -1
+            await this.onAllParams()
             this.$refs.contractDialog.onShowDialog(val, this.newParams)
         },
-        backToTable (val, singerType) {
-            if (singerType == 2) {
-                this.perData = val
-            } else if (singerType == 1) {
-                this.busData = val
+        backToTable (val, Type) {
+            console.log('===', val, Type)
+            if (Type == 2) {
+                if (this.edit_index > -1) {
+                    this.perData.splice(this.edit_index, 1, val[0])
+                    console.log('触发这里', this.perData)
+                } else {
+                    this.perData = this.perData.concat(val)
+                }
+            } else if (Type == 1) {
+                if (this.edit_index > -1) {
+                    this.busData.splice(this.edit_index, 1, val[0])
+                    console.log('触发这里1', this.busData)
+                } else {
+                    this.busData = this.busData.concat(val)
+                }
             } else {
-                this.platData = val
-                console.log(this.platData)
+                this.platData = this.platData.concat(val)
             }
         },
         // 表格编辑
-        onEditP (data, type) {
-            this.$refs.contractDialog.onShowDialog(type, this.newParams, data)
+        async onEditP (val, type) {
+            // 获取下拉数据
+            await this.onAllParams()
+            console.log(type, this.newParams, val.data)
+            this.edit_index = val.data.$index
+            console.log('edit_index', this.edit_index)
+            this.$refs.contractDialog.onShowDialog(type, this.newParams, val.data.row)
         },
-        onSaveTemp (val) {
+        // 删除
+        onDelete (val, type) {
+            console.log(val.data.$index)
+            if (type == 1) {
+                this.busData.splice(val.data.$index, 1)
+            } else {
+                this.perData.splice(val.data.$index, 1)
+            }
+        },
+        onCancelTemp () {
+            if (JSON.stringify(this.valid_form) == JSON.stringify(this.contractForm)) {
+                history.go(-1)
+            } else {
+                this.$confirm('取消则不会保存当前修改', '提示', {
+                    confirmButtonText: '确认取消',
+                    cancelButtonText: '我再想想',
+                    type: 'warning'
+                }).then(() => {
+                    history.go(-1)
+                }).catch(() => {
+
+                })
+            }
+        },
+        async onSaveTemp (val) {
             const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
             const reqParam = []
             inputArr.length > 0 && inputArr.map(val => {
@@ -401,25 +463,80 @@ export default {
                 })
                 return
             }
+            if (val == 1) {
+                if (this.contractForm.reqParam.length == 0) {
+                    this.$message({
+                        message: '请至少添加一个合同字段',
+                        type: 'warning'
+                    })
+                    return
+                }
+                if (this.busData.length == 0 || this.perData.length == 0) {
+                    this.$message({
+                        message: '请至少添加一个签署方',
+                        type: 'warning'
+                    })
+                    return
+                }
+                if (this.platData.length == 0) {
+                    this.$message({
+                        message: '请设置平台签署区',
+                        type: 'warning'
+                    })
+                    return
+                }
+            }
+
             this.contractForm.signerSetting = [...this.busData, ...this.perData, ...this.platData]
-            if (false) {
+            console.log(this.contractForm)
+            if (!this.$route.query.id) {
                 try {
-                    console.log(this.contractForm)
-                    addContractTemp(this.contractForm)
+                    await addContractTemp(this.contractForm)
+                    this.$message({
+                        message: '新增合同模板成功',
+                        type: 'success'
+                    })
+                    this.$router.push({ path: '/goodwork/contractlist' })
                 } catch (error) {
 
                 }
             } else {
-                putContractTemp(this.contractForm)
+                if (this.$route.query.type == 'copy') {
+                    // 复制
+                    this.contractForm.templateNo = ''
+                    this.contractForm.id = ''
+                    try {
+                        await addContractTemp(this.contractForm)
+                        this.$message({
+                            message: '复制合同模板成功',
+                            type: 'success'
+                        })
+                        this.$router.push({ path: '/goodwork/contractlist' })
+                    } catch (error) {
+
+                    }
+                } else {
+                    try {
+                        await putContractTemp(this.contractForm)
+                        this.$message({
+                            message: '修改合同模板成功',
+                            type: 'success'
+                        })
+                        this.$router.push({ path: '/goodwork/contractlist' })
+                    } catch (error) {
+
+                    }
+                }
             }
         },
 
         async findTempDetail (val) {
             await this.getContratDetail(val)
-            console.log(this.contractTempdetail)
             // 编辑时候 把 插入的合同字段 重新复制一份 bakParams
             this.bakParams = this.contractTempdetail.param
             this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
+            // 复制一份
+            this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
             // 签署方 type=2
             let singerArr = []
 
@@ -427,14 +544,12 @@ export default {
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
 
-            console.log(singerArr, this.busData, this.perData)
             this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
             // 获取合同类型约定字段
             this.onChangeparam(this.contractForm.typeId)
             // 绑定click
             this.$nextTick(() => {
                 const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
-                console.log(1, document.getElementById('editor').getElementsByTagName('input'), inputArr)
                 inputArr.length > 0 && inputArr.map(val => {
                     if (val.dataset.appId) {
                         document.getElementById(val.id).onclick = () => {
@@ -511,5 +626,8 @@ export default {
 }
 /deep/.w-e-menu {
     z-index: 500 !important;
+}
+/deep/.hosjoy-table  {
+    background: #e5e5e5 !important;
 }
 </style>

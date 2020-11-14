@@ -6,7 +6,9 @@ const state = {
     contractTempdetail: {},
     tempType: [],
     tempParams: [],
-    caPage: {}
+    caPage: {},
+    verData: {},
+    verTempDetail: {}
 }
 
 const getters = {
@@ -14,8 +16,9 @@ const getters = {
     contractTempdetail: state => state.contractTempdetail,
     tempType: state => state.tempType,
     tempParams: state => state.tempParams,
-    caPage: state => state.caPage
-
+    caPage: state => state.caPage,
+    verData: state => state.verData,
+    verTempDetail: state => state.verTempDetail
 }
 
 const mutations = {
@@ -33,6 +36,12 @@ const mutations = {
     },
     [types.CONTRACT_TEMP_CA] (state, payload) {
         state.caPage = payload
+    },
+    [types.CONTRACT_TEMP_VER] (state, payload) {
+        state.verData = payload
+    },
+    [types.CONTRACT_TEMP_VER_DETAIL] (state, payload) {
+        state.verTempDetail = payload
     }
 }
 // getRecommenderRewardTotal
@@ -56,6 +65,14 @@ const actions = {
     async findCApage ({ commit }, params) {
         const { data } = await Api.orgCApage(params)
         commit(types.CONTRACT_TEMP_CA, data)
+    },
+    async findVerdata ({ commit }, params) {
+        const { data } = await Api.findver(params)
+        commit(types.CONTRACT_TEMP_VER, data)
+    },
+    async findVerdetail ({ commit }, params) {
+        const { data } = await Api.findVerDetail(params)
+        commit(types.CONTRACT_TEMP_VER_DETAIL, data)
     }
 }
 export default {
