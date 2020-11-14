@@ -198,11 +198,11 @@ export default {
             this.smartData = this.cloudNetworkReport
             this.drawLine(this.smartData, line)
             this.drawbar(this.smartData, bar)
-            this.$emit('queryTotalNetworkCount', {
-                startDate: this.smartparams.startDate,
-                endDate: this.smartparams.endDate,
-                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
-            })
+            // this.$emit('queryTotalNetworkCount', {
+            //     startDate: this.smartparams.startDate,
+            //     endDate: this.smartparams.endDate,
+            //     type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
+            // })
         },
         drawLine (data, id) {
             // 绘制图表
