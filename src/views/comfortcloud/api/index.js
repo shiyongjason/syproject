@@ -256,6 +256,9 @@ export function getCloudHistoryReport (params) {
 export function getCloudRuntimeReport (params) {
     return axios.get(iotUrl + `/api/device/statistics/run-time/history/report`, { params })
 }
+export function getCloudNetworkReport (params) {
+    return axios.get(iotUrl + `/api/device/network/boss/history/report`, { params })
+}
 export function getCloudDeviceCount (params) {
     return axios.get(iotUrl + `/api/device/statistics/count`, { params })
 }
@@ -267,6 +270,12 @@ export function getCloudHomeDetailList (params) {
 }
 export function getCloudHomeDetailSearchDict (params) {
     return axios.get(iotUrl + `/api/device/statistics/species`, { params })
+}
+export function getCloudNetworkDetailList (params) {
+    return axios.get(iotUrl + `/api/device/network/boss/details`, { params })
+}
+export function getCloudNetworkModeTypeList (params) {
+    return axios.get(iotUrl + `/api/device/network/species`, { params })
 }
 // 家庭明细分页查询
 export function getCloudHomeComfortReportList (params) {

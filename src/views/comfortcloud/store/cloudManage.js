@@ -29,12 +29,16 @@ const state = {
     cloudSmartPlayPostDetail: {},
     cloudHistoryReport: {},
     cloudRuntimeReport: {},
+    cloudNetworkReport: {},
     cloudDeviceCount: {},
     cloudDeviceDetailList: [],
     cloudDeviceDetailPagination: {},
     cloudHomeDetailList: [],
     cloudHomeDetailPagination: {},
     cloudHomeDetailDict: [],
+    cloudNetworkDetailList: [],
+    cloudNetworkDetailPagination: {},
+    cloudNetworkModeTypeList: [],
     comfortableSceneList: [],
     comfortableSceneListPagination: {},
     getCloudHomeComfortStatisticsList: [],
@@ -91,11 +95,16 @@ const getters = {
     cloudSendMessagePostDetail: state => state.cloudSendMessagePostDetail,
     cloudHistoryReport: state => state.cloudHistoryReport,
     cloudRuntimeReport: state => state.cloudRuntimeReport,
+    cloudNetworkReport: state => state.cloudNetworkReport,
     cloudDeviceCount: state => state.cloudDeviceCount,
     cloudDeviceDetailList: state => state.cloudDeviceDetailList,
     cloudDeviceDetailPagination: state => state.cloudDeviceDetailPagination,
     cloudHomeDetailList: state => state.cloudHomeDetailList,
     cloudHomeDetailPagination: state => state.cloudHomeDetailPagination,
+    cloudHomeDetailDict: state => state.cloudHomeDetailDict,
+    cloudNetworkDetailList: state => state.cloudNetworkDetailList,
+    cloudNetworkDetailPagination: state => state.cloudNetworkDetailPagination,
+    cloudNetworkModeTypeList: state => state.cloudNetworkModeTypeList,
     cloudHomeOpDetailList: state => state.cloudHomeOpDetailList,
     cloudHomeOpDetailPagination: state => state.cloudHomeOpDetailPagination,
     cloudHomeCoDetailList: state => state.cloudHomeCoDetailList,
@@ -104,7 +113,6 @@ const getters = {
     cloudHomeApDetailPagination: state => state.cloudHomeApDetailPagination,
     cloudHomeRtDetailList: state => state.cloudHomeRtDetailList,
     cloudHomeRtDetailPagination: state => state.cloudHomeRtDetailPagination,
-    cloudHomeDetailDict: state => state.cloudHomeDetailDict,
     cloudAlarmChart: state => state.cloudAlarmChart,
     cloudSendMessageDetailChart: state => state.cloudSendMessageDetailChart,
     cloudUserFeedbackList: state => state.cloudUserFeedbackList,
@@ -213,6 +221,9 @@ const mutations = {
     [cloud.CLOUD_RUNTIME_REPORT] (state, payload) {
         state.cloudRuntimeReport = payload
     },
+    [cloud.CLOUD_NETWORK_REPORT] (state, payload) {
+        state.cloudNetworkReport = payload
+    },
     [cloud.CLOUD_DEVICE_COUNT] (state, payload) {
         state.cloudDeviceCount = payload
     },
@@ -230,6 +241,15 @@ const mutations = {
     },
     [cloud.CLOUD_HOME_DETAIL_SEARCH_DICT] (state, payload) {
         state.cloudHomeDetailDict = payload
+    },
+    [cloud.CLOUD_NETWORK_DETAIL_LIST] (state, payload) {
+        state.cloudNetworkDetailList = payload
+    },
+    [cloud.CLOUD_NETWORK_DETAIL_PAGINATION] (state, payload) {
+        state.cloudNetworkDetailPagination = payload
+    },
+    [cloud.CLOUD_NETWORK_MODE_TYPE_LIST] (state, payload) {
+        state.cloudNetworkModeTypeList = payload
     },
     [cloud.CLOUD_HOME_COMFORT_SCENE] (state, payload) {
         state.comfortableSceneList = payload
@@ -436,6 +456,10 @@ const actions = {
         const { data } = await Api.getCloudRuntimeReport(params)
         commit(cloud.CLOUD_RUNTIME_REPORT, data.data)
     },
+    async findNetworkReport ({ commit }, params) {
+        const { data } = await Api.getCloudNetworkReport(params)
+        commit(cloud.CLOUD_NETWORK_REPORT, data.data)
+    },
     async findCloudDeviceCount ({ commit }, params) {
         const { data } = await Api.getCloudDeviceCount(params)
         commit(cloud.CLOUD_DEVICE_COUNT, data.data)
@@ -461,6 +485,19 @@ const actions = {
     async findCloudHomeDetailSearchDict ({ commit }, params) {
         const { data } = await Api.getCloudHomeDetailSearchDict(params)
         commit(cloud.CLOUD_HOME_DETAIL_SEARCH_DICT, data.data)
+    },
+    async findCloudNetworkDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudNetworkDetailList(params)
+        commit(cloud.CLOUD_NETWORK_DETAIL_LIST, data.data.content)
+        commit(cloud.CLOUD_NETWORK_DETAIL_PAGINATION, {
+            pageNumber: data.data.number + 1,
+            pageSize: data.data.size,
+            total: data.data.totalElements
+        })
+    },
+    async findCloudNetworkModeTypeList ({ commit }, params) {
+        const { data } = await Api.getCloudNetworkModeTypeList(params)
+        commit(cloud.CLOUD_NETWORK_MODE_TYPE_LIST, data.data)
     },
     async findComfortableSceneList ({ commit }, params) {
         const { data } = await Api.getCloudHomeComfortReportList(params)
