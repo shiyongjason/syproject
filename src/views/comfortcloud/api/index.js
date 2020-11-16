@@ -451,6 +451,11 @@ export function getCloudMerchantList (params) {
     return axios.get(iotUrl + '/api/boss/agent-sign/page', { params })
 }
 
+// 获取招商代理订单详情
+export function getCloudMerchantAgentDetail (params) {
+    return axios.get(iotUrl + '/api/boss/agent-sign/' + params.id)
+}
+
 // 获取招商广告列表
 export function getCloudMerchantAdList (params) {
     return axios.get(iotUrl + '/api/merchants-advertising/page', { params })

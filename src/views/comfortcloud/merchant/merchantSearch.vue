@@ -42,11 +42,22 @@
                     {{scope.data.row.level === 1 ? '一级': '二级'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <p @click="onShowPreview(scope.data.row)" class="colred title">查看权益</p>
-                    <p @click="onShowPreview(scope.data.row)" class="colred title">提货进度</p>
+                    <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="代理权益详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible" width="50%">
+            <h3 class="right-title">代理订单</h3>
+            <div class="right-items">
+                <p>代理订单号：{{cloudMerchantAgentDetail.agentCode}}</p>
+                <p>代理押金：{{cloudMerchantAgentDetail.payAmount}}元</p>
+                <p>代理品类：{{cloudMerchantAgentDetail.categoryName}}</p>
+                <p>代理区域：{{cloudMerchantAgentDetail.agentArea}}</p>
+                <p>代理权益有效期：{{agentValidTimeDesc}}</p>
+            </div>
+            <h3 class="right-title">代理权益</h3>
+            <div class="right-items" v-html="cloudMerchantAgentDetail.agentContent"></div>
+        </el-dialog>
     </div>
 </template>
 
@@ -77,7 +88,8 @@ export default {
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
                 { label: '代理商联系地址', prop: 'contactAddress' },
-                { label: '代理品类', prop: 'categoryName' }]
+                { label: '代理品类', prop: 'categoryName' }],
+            rightsDialogVisible: false
         }
     },
     mounted () {
@@ -87,7 +99,8 @@ export default {
     computed: {
         ...mapGetters({
             cloudMerchantList: 'cloudMerchantList',
-            cloudMerchantListPagination: 'cloudMerchantListPagination'
+            cloudMerchantListPagination: 'cloudMerchantListPagination',
+            cloudMerchantAgentDetail: 'cloudMerchantAgentDetail'
         }),
         getCity () {
             const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
@@ -95,12 +108,26 @@ export default {
                 return province[0].cities
             }
             return []
+        },
+        agentValidTimeDesc () {
+            if (this.cloudMerchantAgentDetail == null || this.cloudMerchantAgentDetail.payTime == null) {
+                return '--'
+            }
+
+            const date = new Date(this.cloudMerchantAgentDetail.payTime)
+
+            let nextDate = new Date(date)
+            nextDate.setFullYear(nextDate.getFullYear() + 1)
+            nextDate.setDate(nextDate.getDate() - 1)
+
+            return '自' + this.dateToString(date) + '至' + this.dateToString(nextDate) + '失效'
         }
 
     },
     methods: {
         ...mapActions({
-            findCloudMerchantList: 'findCloudMerchantList'
+            findCloudMerchantList: 'findCloudMerchantList',
+            getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail'
         }),
 
         onSearch: function () {
@@ -132,6 +159,17 @@ export default {
             this.queryParams.cityId = key
             console.log(key)
         },
+        async onShowRights (val) {
+            await this.getCloudMerchantAgentDetail({ id: val.id })
+            this.rightsDialogVisible = true
+        },
+        dateToString (date) {
+            const year = date.getFullYear()
+            const month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)
+            const day = (date.getDate()) < 10 ? '0' + (date.getDate()) : date.getDate()
+
+            return year + '年' + month + '月' + day + '日'
+        }
 
     }
 
@@ -158,5 +196,14 @@ export default {
     .title {
         overflow: hidden;
         text-overflow:ellipsis;
+    }
+
+    .right-title {
+        margin: 20px 0 10px 0;
+    }
+
+    .right-items  {
+        margin: 10px 0 30px 0;
+        line-height: 25px;
     }
 </style>

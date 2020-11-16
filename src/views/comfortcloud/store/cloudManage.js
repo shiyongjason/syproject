@@ -65,6 +65,7 @@ const state = {
     serviceManageHistoryList: [],
     cloudMerchantList: [],
     cloudMerchantListPagination: {},
+    cloudMerchantAgentDetail: {},
     cloudMerchantAdList: [],
     cloudMerchantAdListPagination: {},
     cloudMerchantAdDetail: {},
@@ -141,6 +142,7 @@ const getters = {
     serviceManageHistoryList: state => state.serviceManageHistoryList,
     cloudMerchantList: state => state.cloudMerchantList,
     cloudMerchantListPagination: state => state.cloudMerchantListPagination,
+    cloudMerchantAgentDetail: state => state.cloudMerchantAgentDetail,
     cloudMerchantAdList: state => state.cloudMerchantAdList,
     cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
     cloudMerchantAdDetail: state => state.cloudMerchantAdDetail,
@@ -329,6 +331,9 @@ const mutations = {
     },
     [cloud.CLOUD_MERCHANT_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantListPagination = payload
+    },
+    [cloud.CLOUD_MERCHANT_AGENT_DETAIL] (state, payload) {
+        state.cloudMerchantAgentDetail = payload
     },
     [cloud.GET_CLOUD_MERCHANT_AD_LIST]  (state, payload) {
         state.cloudMerchantAdList = payload
@@ -611,6 +616,10 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async getCloudMerchantAgentDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAgentDetail(params)
+        commit(cloud.CLOUD_MERCHANT_AGENT_DETAIL, data.data)
     },
     async findCloudMerchantAdList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAdList(params)
