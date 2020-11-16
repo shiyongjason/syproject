@@ -21,6 +21,25 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                <div class="query-col-title">经销商：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="输入经销商名称"></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">经销商电话：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.dealerPhone" maxlength="20" placeholder="输入经销商名称"></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title search-title">出库类型：</div>
+                <el-select v-model="queryParams.outboundType" clearable>
+                    <el-option label="样品" value="样品"></el-option>
+                    <el-option label="合同履约提货" value="合同履约提货"></el-option>
+                </el-select>
+            </div>
+            <div class="query-cont-col">
                 <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
                 <el-button type="primary" class="ml20" @click="onOpenModel">导入数据</el-button>
                 <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
@@ -62,6 +81,9 @@
                 <template slot="outboundType" slot-scope="scope" >
                     <p v-bind:class="{ 'red-content' : scope.data.row.outboundType === '出库类型错误' }">{{ scope.data.row.outboundType }}</p>
                 </template>
+                <template slot="deviceStatus" slot-scope="scope">
+                    <p>{{ scope.data.row.deviceStatus === 1 ? '在线' : '离线' }}</p>
+                </template>
             </basicTable>
         </div>
     </div>
@@ -80,7 +102,10 @@ export default {
                 startOutboundTime: '',
                 endOutboundTime: '',
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 10,
+                outboundType: '',
+                dealer: '',
+                dealerPhone: ''
             },
             searchParams: {},
             tableData: [],
@@ -93,7 +118,8 @@ export default {
                 { label: '设备ID', prop: 'iotId' },
                 { label: '出库类型', prop: 'outboundType' },
                 { label: '经销商', prop: 'dealer' },
-                { label: '经销商电话', prop: 'dealerPhone' }
+                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '设备状态', prop: 'deviceStatus' }
             ],
             uploadShow: false,
             errorShow: false,
@@ -311,5 +337,9 @@ export default {
 }
 .red-content {
     color: red;
+}
+
+.search-title {
+    white-space: nowrap;
 }
 </style>
