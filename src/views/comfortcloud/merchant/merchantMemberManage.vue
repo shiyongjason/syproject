@@ -69,6 +69,7 @@ export default {
                 { label: '会员昵称', prop: 'nickName' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '注册来源', prop: 'source' },
+                { label: '推荐人会员账号', prop: 'inviteUuid' },
                 { label: '推荐人会员编号', prop: 'inviteUuid' },
                 { label: '邀请会员数量', prop: 'registerCount' },
                 { label: '邀请成交订单数', prop: 'orderCount' },

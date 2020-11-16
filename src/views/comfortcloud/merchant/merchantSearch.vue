@@ -37,9 +37,13 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList"
                         :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange'
-                        isShowIndex @onSizeChange='onSizeChange'>
+                        isShowIndex @onSizeChange='onSizeChange' :isAction="true" >
                 <template slot="level" slot-scope="scope">
                     {{scope.data.row.level === 1 ? '一级': '二级'}}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <p @click="onShowPreview(scope.data.row)" class="colred title">查看权益</p>
+                    <p @click="onShowPreview(scope.data.row)" class="colred title">提货进度</p>
                 </template>
             </basicTable>
         </div>
@@ -127,7 +131,8 @@ export default {
         onCity (key) {
             this.queryParams.cityId = key
             console.log(key)
-        }
+        },
+
     }
 
 }
@@ -145,4 +150,13 @@ export default {
         justify-content: flex-start;
         align-items: center;
         margin-right: 24px;}
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+
+    .title {
+        overflow: hidden;
+        text-overflow:ellipsis;
+    }
 </style>
