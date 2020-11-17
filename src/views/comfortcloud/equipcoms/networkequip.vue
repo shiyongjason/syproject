@@ -24,7 +24,7 @@
             <el-tabs v-model="homeParams.modeType" @tab-click="handleClick">
                 <el-tab-pane :key="item.name" v-for="item in cloudNetworkModeTypeList" :label="item.name" :name="item.type" class="echart-wrap">
                     <div class="chart-flex2" :id="item.type + 'Line'" style="height:500px"></div>
-                    <div class="chart-flex1" :id="item.type + 'Bar'" style="height:500px"></div>
+                    <div v-if="item.type === 'all'" class="chart-flex1" :id="item.type + 'Bar'" style="height:500px"></div>
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -207,7 +207,7 @@ export default {
         drawLine (data, id) {
             // 绘制图表
             var charts = {
-                unit: '单位/小时',
+                unit: '单位/次',
                 names: [],
                 lineX: [],
                 value: []
@@ -326,7 +326,7 @@ export default {
                     }
                 },
                 xAxis: {
-                    name: '单位/小时',
+                    name: '单位/次',
                     type: 'value',
                     // max: 100,
                     splitNumber: 5,
