@@ -243,7 +243,7 @@ export default {
                         bind: {
                             value: this.currentKey.paramValue,
                             placeholder: '请输入内容',
-                            disabled: this.currentKey.modify == 0,
+                            disabled: !this.currentKey.modify,
                             [this.currentKey.unit ? 'style' : null]: { width: '250px' }
                         },
                         on: {
