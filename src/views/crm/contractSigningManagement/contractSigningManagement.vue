@@ -50,10 +50,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">发起时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" :editable="false"  v-model="queryParams.createStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('queryParams','createStartTime')">
+                        <el-date-picker type="datetime" :editable="false"  v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" :editable="false"  v-model="queryParams.createEndTime"  value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('queryParams','createEndTime')">
+                        <el-date-picker type="datetime" :editable="false"  v-model="queryParams.createEndTime"  value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('createStartTime')">
                         </el-date-picker>
                     </div>
                 </div>
@@ -62,10 +62,10 @@
                <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="date" :editable="false"  v-model="queryParams.updateStartTime" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart('queryParams','updateStartTime')">
+                        <el-date-picker type="datetime" :editable="false"  v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker type="date" :editable="false"  v-model="queryParams.updateEndTime"  value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd('queryParams','updateEndTime')">
+                        <el-date-picker type="datetime" :editable="false"  v-model="queryParams.updateEndTime"  value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('updateStartTime')">
                         </el-date-picker>
                     </div>
                 </div>
@@ -79,9 +79,9 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                    <el-badge :value="12" class="item"><h-button type="primary">待分财修订</h-button></el-badge>
-                    <el-badge :value="12" class="item" style="margin:0 30px"><h-button type="">待分财修订</h-button></el-badge>
-                    <el-badge :value="12" class="item"><h-button type="">待分财修订</h-button></el-badge>
+                    <el-badge :value="12" class="item"><div class="table-tab">待分财修订</div></el-badge>
+                    <el-badge :value="12" class="item" style="margin:0 30px"><div class="table-tab">待风控修订</div></el-badge>
+                    <el-badge :value="12" class="item"><div class="table-tab">待法务修订</div></el-badge>
             </div>
             <div class="query-cont__row">
                 <el-tag size="medium" class="tag_top">已筛选 {{total}} 项</el-tag>
@@ -173,22 +173,22 @@ export default {
         searchList () {
             this.getList()
         },
-        pickerOptionsStart (key, jey) {
+        pickerOptionsStart (date) {
             return {
-                disabledDate: time => {
-                    let createEndTimeVal = this[key][jey]
-                    if (createEndTimeVal) {
-                        return time.getTime() > new Date(createEndTimeVal).getTime()
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams[date]
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
                     }
                 }
             }
         },
-        pickerOptionsEnd (key, jey) {
+        pickerOptionsEnd (date) {
             return {
-                disabledDate: time => {
-                    let beginDateVal = this[key][jey]
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams[date]
                     if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
             }
@@ -228,18 +228,18 @@ export default {
             const { data } = await contractSigningList(this.queryParams)
             if (data) {
                 this.tableData = data.records
-                this.total = data.total
+                this.page.total = data.total
             }
         },
         approveContract (item) {
-            this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id } })
+            this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
         }
     },
     async mounted () {
         // tableData
         this.getList()
-        // await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
-        // this.branchArr = this.crmdepList
+        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+        this.branchArr = this.crmdepList
     },
     beforeRouteEnter (to, from, next) {
         newCache('contractSigningManagement')
@@ -258,5 +258,14 @@ export default {
 <style scoped lang="scss">
 .tag_top {
     margin: 10px 0;
+}
+.table-tab{
+    background: #f2f2f2;
+    color: #FF6600;
+    width: 110px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 6px;
 }
 </style>
