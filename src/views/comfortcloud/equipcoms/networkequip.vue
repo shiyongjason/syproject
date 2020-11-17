@@ -207,7 +207,7 @@ export default {
         drawLine (data, id) {
             // 绘制图表
             var charts = {
-                unit: '单位/次',
+                unit: this.homeParams.modeType === 'all' ? '单位/百分比' : '单位/次',
                 names: [],
                 lineX: [],
                 value: []
