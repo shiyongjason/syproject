@@ -29,7 +29,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">经销商电话：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.dealerPhone" maxlength="20" placeholder="输入经销商名称"></el-input>
+                    <el-input type="text" v-model="queryParams.dealerPhone" maxlength="20" placeholder="输入经销商电话"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
