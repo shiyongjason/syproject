@@ -2,7 +2,7 @@
     <div class="page-body B2b">
         <div class="contract-temp  page-component__scroll">
             <div class="page-body-cont">
-                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type" >新增合同模版</div>
+                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type">新增合同模版</div>
                 <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模版</div>
                 <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模版</div>
             </div>
@@ -31,6 +31,8 @@
                             <el-form-item label="请选择需要插入的字段：">
                                 <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                                     <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
+                                        <span style="float: left">{{ item.paramName }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.required?'必填':'' }}</span>
                                     </el-option>
                                 </el-select>
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
@@ -120,7 +122,7 @@ export default {
     components: { diffDialog, hosJoyTable, contractDialog },
     data () {
         return {
-            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '法定代表人章' }, { key: 3, value: '手绘章' }, { key: 4, value: '模板章' }],
+            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
             content: '',
@@ -355,8 +357,8 @@ export default {
                 _temp = `<input class="" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
-                _temp = `<input class="" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input>`
+                _temp = `<input id="palt_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                value="平台签署" readonly></input><i style="overflow:visible">palt_sign</i>`
             }
             this.$refs.RichEditor.insertHtml(_temp)
         },
@@ -627,7 +629,7 @@ export default {
 /deep/.w-e-menu {
     z-index: 500 !important;
 }
-/deep/.hosjoy-table  {
+/deep/.hosjoy-table {
     background: #e5e5e5 !important;
 }
 </style>

@@ -69,7 +69,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
-            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '法定代表人章' }, { key: 3, value: '手绘章' }, { key: 4, value: '模板章' }],
+            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
             content: '',
