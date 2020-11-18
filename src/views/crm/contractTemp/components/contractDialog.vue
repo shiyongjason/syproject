@@ -28,8 +28,8 @@
                     </template>
                     <template v-else>
                         <el-checkbox-group v-model="signerTempForm._signerDemand">
-                            <el-checkbox label="3" name="type">手绘章</el-checkbox>
-                            <el-checkbox label="4" name="type">模板章</el-checkbox>
+                            <el-checkbox label="2" name="type">手绘章</el-checkbox>
+                            <el-checkbox label="3" name="type">模板章</el-checkbox>
                         </el-checkbox-group>
                     </template>
                 </el-form-item>
@@ -50,9 +50,9 @@
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
                         <el-checkbox label="1" name="type">企业章</el-checkbox>
-                        <el-checkbox label="2" name="type">法定代表人章</el-checkbox>
-                        <el-checkbox label="3" name="type">手绘章</el-checkbox>
-                        <el-checkbox label="4" name="type">模板章</el-checkbox>
+                        <!-- <el-checkbox label="2" name="type">法定代表人章</el-checkbox> -->
+                        <el-checkbox label="2" name="type">手绘章</el-checkbox>
+                        <el-checkbox label="3" name="type">模板章</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
             </el-form>

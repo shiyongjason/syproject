@@ -99,6 +99,8 @@
         <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose">
             <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
+                    <span style="float: left">{{ item.paramName }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.required?'必填':'' }}</span>
                 </el-option>
             </el-select>
             <span slot="footer" class="dialog-footer">
@@ -267,6 +269,7 @@ export default {
             return result
         },
         findChinese (val) {
+            console.log(val)
             const a = val.split(',')
             const cArr = []
             a.forEach(item => {
