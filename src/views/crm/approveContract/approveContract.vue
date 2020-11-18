@@ -549,8 +549,9 @@ export default {
     },
     async beforeMount () {
         // 判断是否是法务
-        // const { data } = await contractKeyValue(10003)
-        const { data } = await contractKeyValue(this.$route.query.contractTypeId)
+
+        // const { data } = await contractKeyValue(this.$route.query.contractTypeId)
+        const { data } = await contractKeyValue(1328669161399275521)
         this.contractKeyValueList = data
         console.log('this.contractKeyValueList: ', this.contractKeyValueList)
         // const { data } = await contractKeyValue(10001)
