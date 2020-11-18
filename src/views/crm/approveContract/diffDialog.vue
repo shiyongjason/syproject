@@ -3,19 +3,19 @@
         <el-dialog title="合同对比" :visible.sync="diff_visible" width="80%" :before-close="handleClose">
             <div class="diff_wrap">
                 <div class="diff_wrap-left">
-                    <p>上一版</p>
+                    <p style="color:#169bd5">上一版：</p>
                     <div id="oldT" v-if="lastContent" v-html="lastContent">
 
                     </div>
                 </div>
                 <div class="diff_wrap-right">
-                    <p>新版</p>
+                    <p style="color:#169bd5">新版：</p>
                     <div id="newT" v-if="currentContent" v-html="currentContent">
 
                     </div>
                 </div>
                 <div class="diff_wrap-right">
-                    <p>对比</p>
+                    <p style="color:#169bd5">对比：</p>
                     <div id="diff" v-html="diffHtml" v-if="diffHtml">
                     </div>
                 </div>
@@ -56,11 +56,11 @@ export default {
             this.$nextTick(() => {
                 let currentContentInput = document.getElementById('newT').getElementsByTagName('input')
                 Array.from(currentContentInput).map((item, index) => {
-                    item.outerHTML = `<div class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</div>`
+                    item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
                 })
                 let lastContentInput = document.getElementById('oldT').getElementsByTagName('input')
                 Array.from(lastContentInput).map((item, index) => {
-                    item.outerHTML = `<div class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</div>`
+                    item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
                 })
                 // 对比
                 let oldT = document.getElementById('oldT').innerHTML
@@ -111,6 +111,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .diff_wrap {
+    max-height: 600px;
+    overflow-y: scroll;
     display: flex;
     justify-content: space-between;
     &-left {

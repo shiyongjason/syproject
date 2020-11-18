@@ -40,7 +40,7 @@
                                 </el-form-item>
                             </el-form>
                         </p>
-                        <h-button style="margin-top:10px" @click="onSaveContent" type="primary">保存</h-button>
+                        <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
                     </div>
                     <div class="tips">
                         <div><b>注意事项：</b></div>
@@ -57,12 +57,13 @@
                         <div class="approvalcontract-content-hidden" style="display:none" v-html='contractContentInputHidden'></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <RichEditor ref="RichEditor" v-model="contractContentInputHidden" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                            <RichEditor ref="RichEditor" v-model="contractContentInputHidden" :menus="menus" :uploadImgServer="uploadImgServer" :height='getHeight()' :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                         </div>
                     </div>
                     <div class="approvalcontract-btn">
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
+                        <h-button type="primary" @click="onSaveContent(3)">保存条款</h-button>
                         <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
                     </div>
                 </div>
@@ -201,6 +202,10 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        getHeight () {
+            let h = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
+            return h || 500
+        },
         onxxxx (num) {
             if (!num) {
                 this.currentKey.paramValue = ''
@@ -243,7 +248,8 @@ export default {
                                     placeholder: '请输入内容',
                                     disabled: !this.currentKey.modify,
                                     style: { width: '250px' },
-                                    innerHtml: this.currentKey.unit
+                                    innerHtml: this.currentKey.unit,
+                                    maxlength: this.currentKey.maxLength || ''
                                 },
                                 on: {
                                     input: (val) => { this.currentKey.paramValue = val.trim() }
@@ -254,6 +260,7 @@ export default {
                                     value: this.currentKey.paramValue,
                                     placeholder: '请输入内容',
                                     disabled: !this.currentKey.modify,
+                                    maxlength: this.currentKey.maxLength || '',
                                     [this.currentKey.unit ? 'style' : null]: { width: '250px' }
                                 },
                                 on: {
@@ -385,8 +392,9 @@ export default {
                     message: `原因不能为空`,
                     type: 'error'
                 })
+            } else {
+                this.onApprove()
             }
-            this.onApprove()
         },
         async onApprove () {
             const query = {
@@ -409,7 +417,7 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
-        onSaveContent () {
+        onSaveContent (operatorType = '') {
             const { paramName, paramKey, paramValue, required } = this.currentKey
             if (required && (paramValue === '' || paramValue === null)) {
                 this.$message({
@@ -417,70 +425,52 @@ export default {
                     type: 'error'
                 })
             }
-            this.$refs.ruleForm.validate(async (valid) => {
-                console.log('valid: ', valid)
-                if (valid) {
-                    /* 修改模板： */
-                    // div版合同
-                    let ryanList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
-                    Array.from(ryanList).map(jtem => {
-                        jtem.innerHTML = paramValue
-                    })
-                    // input版合同
-                    let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
-                    let richEditorDom = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
-                    Array.from(richEditorDom).map(jtem => {
-                        jtem.value = paramValue
-                        jtem.className = paramKey
-                        jtem.setAttribute('value', paramValue)
-                        let inputWidth = paramValue.length * 14
-                        jtem.style.width = `${inputWidth}px`
-                    })
-                    let inputDomList = ''
-                    if (this.detailRes.contractStatus == 6) {
-                        inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByTagName('input')
-                    } else {
-                        inputDomList = document.getElementsByClassName('approvalcontract-content-hidden')[0].getElementsByTagName('input')
-                    }
+            // 最后要拿到input的合同
+            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
+            let tempArr = []
 
-                    let tempObj = {}
-                    Array.from(inputDomList).map((item, index) => {
-                        if (!(item.className in tempObj)) {
-                            tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
-                        }
-                    })
-                    console.log('tempObj: ', tempObj)
-                    let tempArr = []
-                    for (const key in tempObj) {
-                        tempArr.push(tempObj[key][0])
-                    }
-                    tempArr.map(item => {
-                        if (item.paramKey === paramKey) {
-                            item.paramValue = paramValue
+            this.$refs.ruleForm.validate(async (valid) => {
+                if (valid) {
+                    if (!operatorType) {
+                        /* 修改模板： */
+                        // div版合同
+                        let ryanList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
+                        Array.from(ryanList).map(jtem => {
+                            jtem.innerHTML = paramValue
+                        })
+                        // input版合同
+                        let richEditorDom = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
+                        Array.from(richEditorDom).map(jtem => {
+                            jtem.value = paramValue
+                            jtem.className = paramKey
+                            jtem.setAttribute('value', paramValue)
+                            let inputWidth = paramValue.length * 14
+                            jtem.style.width = `${inputWidth}px`
+                        })
+                        let inputDomList = ''
+                        if (this.detailRes.contractStatus == 6) {
+                            inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByTagName('input')
                         } else {
-                            item.paramValue = Array.from(inputDomList).filter(jtem => jtem.className === item.paramKey)[0].value
+                            inputDomList = document.getElementsByClassName('approvalcontract-content-hidden')[0].getElementsByTagName('input')
                         }
-                    })
-                    console.log('tempArr: ', tempArr)
-                    // 修改了字段
-                    /* if (paramKey != this.currentKeyOriginal.paramKey) {
-                        this.contractFieldsList.map(item => {
-                            // 修改初始对象
-                            if (item.paramKey === this.currentKeyOriginal.paramKey) {
-                                for (const key in item) {
-                                    item[key] = this.currentKey[key]
-                                }
+
+                        let tempObj = {}
+                        Array.from(inputDomList).map((item, index) => {
+                            if (!(item.className in tempObj)) {
+                                tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
                             }
                         })
-                    } else {
-                        // 修改键值对
-                        this.contractFieldsList.map(item => {
+                        for (const key in tempObj) {
+                            tempArr.push(tempObj[key][0])
+                        }
+                        tempArr.map(item => {
                             if (item.paramKey === paramKey) {
                                 item.paramValue = paramValue
+                            } else {
+                                item.paramValue = Array.from(inputDomList).filter(jtem => jtem.className === item.paramKey)[0].value
                             }
                         })
-                    } */
-
+                    }
                     // 通过dom生成最新的html
                     this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
@@ -491,31 +481,17 @@ export default {
                         this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue // 编辑前内容
                     }
                     this.fieldContent = paramValue
-                    console.log(
-                        {
-                            'contractId': this.$route.query.id,
-                            // 合同审批角色 1：分财 2：风控 3：法务
-                            'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                            'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                            'fieldName': this.fieldName, // 编辑字段
-                            'fieldOriginalContent': this.fieldOriginalContent || '', // 编辑前内容
-                            'fieldContent': this.fieldContent, // 编辑内容
-                            'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
-                            'createBy': this.userInfo.employeeName,
-                            'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-                        }
-                    )
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
                         'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                        'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                        'fieldName': this.fieldName, // 编辑字段
-                        'fieldOriginalContent': this.fieldOriginalContent || '', // 编辑前内容
-                        'fieldContent': this.fieldContent, // 编辑内容
+                        'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                        'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
+                        'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
+                        'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
                     })
                     this.init()
                 }
@@ -557,7 +533,7 @@ export default {
                         }
                         this.currentKeyOriginal = JSON.parse(JSON.stringify(this.currentKey))
                         Array.from(inputDomList).map((item, index) => {
-                            item.outerHTML = `<div class="${item.className}" contenteditable="false" style="display:inline;color:rgb(255, 122, 69);cursor: pointer;">${item.value}</div>`
+                            item.outerHTML = `<span class="${item.className}" contenteditable="false" style="display:inline;color:rgb(255, 122, 69);cursor: pointer;">${item.value}</span>`
                             // ${item.unit || ''
                             // 赋值初始值
                             let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
