@@ -6,7 +6,7 @@
                     <el-input v-model="signerTempForm.signerName" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="signerType">
-                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit >
+                    <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
                         <el-radio :label=1 >企业</el-radio>
                         <el-radio :label=2 >个人</el-radio>
                     </el-radio-group>
@@ -119,7 +119,8 @@ export default {
 
             },
             rules: {},
-            isEdit: false
+            isEdit: false,
+            contart_arr: []
 
         }
     },
@@ -151,18 +152,17 @@ export default {
             console.log('--=', val, arr, form)
             // 类型
             this.signerTempForm = deepCopy(this.copy_signerTempForm)
-
             // if (val == 2) {
             //     this.$refs.signerTempR.resetFields()
             // } else {
             //     this.$refs.signerTempS.clearValidate()
             //     this.onFindCApage()
             // }
-
             this.onFindCApage()
             this.tract_visible = true
             this.contractType = val
-            this.singerOps = arr && arr.filter(val => val.groupName)
+            this.contart_arr = arr
+
             if (form) {
                 // 复制一份 做取消校验
                 this.isEdit = true
@@ -170,6 +170,11 @@ export default {
                 this.vaild_form = deepCopy(form)
                 this.signerTempForm = { ...this.signerTempForm, ...form }
                 this.signerTempForm._signerDemand = this.signerTempForm.signerDemand.split(',')
+                // 如果是企业类型 默认 下拉里面 singerType==1
+                this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
+            } else {
+                // // 如果是企业类型 默认 下拉里面 singerType==1
+                this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }
         },
         handleClose () {
@@ -191,6 +196,11 @@ export default {
             await this.findCApage({ pageNumber: 0, pageSize: -1, orgType: 1 })
             this.caOptions = this.caPage.records
         },
+        changeRadio (val) {
+            this.singerOps = this.contart_arr.filter(item => {
+                return item.signerType == val
+            })
+        },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
             // var aa = []
@@ -202,7 +212,9 @@ export default {
         },
         onSaveSinger () {
             this.singer_busArr = []
+            this.singer_perArr = []
             if (this.contractType == 2) {
+                console.log('+++', this.signerTempForm._signerDemand)
                 this.signerTempForm.signerDemand = [...this.signerTempForm._signerDemand]
                 this.signerTempForm.signerDemand = this.signerTempForm.signerDemand.toString()
                 // this.signerTempForm.paramGroupId = this.signerTempForm.paramGroup.groupId
@@ -220,12 +232,10 @@ export default {
                         try {
                             if (this.signerTempForm.signerType == 1) {
                                 this.singer_busArr.push(objParam)
-                                console.log('企业', this.singer_busArr)
                                 this.$emit('backEvent', this.singer_busArr, 1)
                                 this.tract_visible = false
                             } else {
                                 this.singer_perArr.push(objParam)
-
                                 this.$emit('backEvent', this.singer_perArr, 2)
                                 this.tract_visible = false
                             }

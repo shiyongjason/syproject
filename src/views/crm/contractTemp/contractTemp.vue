@@ -32,7 +32,7 @@
                                 <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                                     <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                                         <span style="float: left">{{ item.paramName }}</span>
-                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.required?'必填':'' }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                                     </el-option>
                                 </el-select>
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
@@ -64,7 +64,7 @@
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onEditP(scope,2)">编辑</h-button>
-                        <h-button table @click="onDelete(index,2)">删除</h-button>
+                        <h-button table @click="onDelete(scope,2)">删除</h-button>
                     </template>
                 </hosJoyTable>
             </div>
@@ -100,7 +100,7 @@
             <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                     <span style="float: left">{{ item.paramName }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.required?'必填':'' }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                 </el-option>
             </el-select>
             <span slot="footer" class="dialog-footer">
@@ -130,6 +130,7 @@ export default {
             content: '',
             newContent: '',
             keyValue: {},
+            // eslint-disable-next-line
             _keyValue: {},
             drawer: false,
             contractForm: {
@@ -383,20 +384,23 @@ export default {
             // 保留编辑位置清除 不影响新增
             this.edit_index = -1
             await this.onAllParams()
+            this.newParams = this.newParams.filter(val => val.groupName)
             this.$refs.contractDialog.onShowDialog(val, this.newParams)
         },
         backToTable (val, Type) {
             console.log('===', val, Type)
             if (Type == 2) {
                 if (this.edit_index > -1) {
-                    this.perData.splice(this.edit_index, 1, val[0])
+                    // this.perData.splice(this.edit_index, 1, val[0])
+                    this.$set(this.perData, this.edit_index, val[0])
                     console.log('触发这里', this.perData)
                 } else {
                     this.perData = this.perData.concat(val)
                 }
             } else if (Type == 1) {
                 if (this.edit_index > -1) {
-                    this.busData.splice(this.edit_index, 1, val[0])
+                    // this.busData.splice(this.edit_index, 1, val[0])
+                    this.$set(this.busData, this.edit_index, val[0])
                     console.log('触发这里1', this.busData)
                 } else {
                     this.busData = this.busData.concat(val)
@@ -409,13 +413,13 @@ export default {
         async onEditP (val, type) {
             // 获取下拉数据
             await this.onAllParams()
-            console.log(type, this.newParams, val.data)
             this.edit_index = val.data.$index
             console.log('edit_index', this.edit_index)
             this.$refs.contractDialog.onShowDialog(type, this.newParams, val.data.row)
         },
         // 删除
         onDelete (val, type) {
+            console.log(val)
             console.log(val.data.$index)
             if (type == 1) {
                 this.busData.splice(val.data.$index, 1)
