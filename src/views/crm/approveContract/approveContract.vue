@@ -52,11 +52,11 @@
                     <h1>合同预览</h1>
                     <div class="approvalcontract-content-layout">
                         <!-- 分财、风控预览——纯html -->
-                        <div class="approvalcontract-content" v-html='contractContentDiv' v-show="detailRes.contractStatus != 2"></div>
+                        <div class="approvalcontract-content" v-html='contractContentDiv' v-show="detailRes.contractStatus != 6"></div>
                         <!-- style="display:none" -->
                         <div class="approvalcontract-content-hidden" style="display:none" v-html='contractContentInputHidden'></div>
                         <!-- 法务预览html——编辑器 -->
-                        <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 2">
+                        <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
                             <RichEditor ref="RichEditor" v-model="contractContentInputHidden" :menus="menus" :uploadImgServer="uploadImgServer" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
                         </div>
                     </div>
@@ -243,7 +243,7 @@ export default {
                         bind: {
                             value: this.currentKey.paramValue,
                             placeholder: '请输入内容',
-                            disabled: this.currentKey.modify == 0,
+                            disabled: !this.currentKey.modify,
                             [this.currentKey.unit ? 'style' : null]: { width: '250px' }
                         },
                         on: {
@@ -502,7 +502,7 @@ export default {
                 this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
                 this.$nextTick(() => {
                     // 法务审核初始化
-                    if (this.detailRes.contractStatus == 2) {
+                    if (this.detailRes.contractStatus == 6) {
                         let inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('input')
                         this.firstKsy = inputDomList[0].className
                         this.currentKey = this.contractFieldsList.filter(item => item.paramKey === this.firstKsy)[0]
