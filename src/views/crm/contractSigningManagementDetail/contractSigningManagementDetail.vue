@@ -4,7 +4,7 @@
             <div class="ctilte"><span>合同详情</span>
                 <h-button type="primary" class="btn-right">下载合同</h-button>
             </div>
-            <div v-html=vHtml v-if="vHtml">
+            <div v-html=vHtml v-if="vHtml" class='approvalcontract-content-layout'>
             </div>
         </div>
         <!---->
@@ -21,14 +21,25 @@ export default {
         }
     },
     methods: {
+        init () {
+            this.$nextTick(() => {
+                let inputDomList = document.getElementsByClassName('approvalcontract-content-layout')[0].getElementsByTagName('input')
+                console.log('inputDomList: ', inputDomList)
+                Array.from(inputDomList).map((item, index) => {
+                    item.outerHTML = `<div class="${item.className}" contenteditable="false" style="display:inline;">${item.value}</div>`
+                })
+            })
+        }
     },
     async mounted () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.vHtml = data.contractContent
+        this.init()
     },
     async activated () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.vHtml = data.contractContent
+        this.init()
     }
 }
 </script>
