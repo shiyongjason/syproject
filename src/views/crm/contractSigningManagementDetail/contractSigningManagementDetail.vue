@@ -6,6 +6,7 @@
             </div>
             <div v-html=vHtml v-if="vHtml" class='approvalcontract-content-layout'>
             </div>
+            <div v-else>暂无数据</div>
         </div>
         <!---->
 

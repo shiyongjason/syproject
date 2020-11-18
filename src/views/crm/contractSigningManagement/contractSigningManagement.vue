@@ -235,6 +235,11 @@ export default {
             this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
         }
     },
+    async activated () {
+        this.getList()
+        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+        this.branchArr = this.crmdepList
+    },
     async mounted () {
         // tableData
         this.getList()
