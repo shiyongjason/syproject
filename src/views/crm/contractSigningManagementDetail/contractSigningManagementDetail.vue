@@ -34,12 +34,16 @@ export default {
     async mounted () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.vHtml = data.contractContent
-        this.init()
+        if (this.vHtml) {
+            this.init()
+        }
     },
     async activated () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.vHtml = data.contractContent
-        this.init()
+        if (this.vHtml) {
+            this.init()
+        }
     }
 }
 </script>
