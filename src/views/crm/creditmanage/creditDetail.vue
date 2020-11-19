@@ -15,7 +15,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image v-if="example.fileUrl" style="width: 100px; height: 100px" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
+                                <el-image v-if="example.fileUrl" style="width: 100px; height: 100px" :src.sync="DefaultImage" v-oss-sts-element-image="{item: example, key: 'fileUrl'}" :preview-src-list="srcList(jtem,exampleIndex)" />
                             </div>
                         </div>
                         <!--  -->
@@ -26,7 +26,7 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="ktem.fileUrl" target="_blank">
+                                            <a  class="oss-sts-download" v-oss-sts-a-download="ktem.fileUrl" key="1" target="_blank">
                                                 <font>{{ktem.fileName}}</font>
                                             </a>
                                         </template>
@@ -35,17 +35,17 @@
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}" v-if="$route.query.docAfterStatus!=2">删除</font>
-                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
-                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1"  v-oss-sts-a-download="ktem.fileUrl">下载</font>
+                                    <font v-else><a class='fileItemDownLoad oss-sts-download' v-oss-sts-a-download="ktem.fileUrl" target='_blank'>下载</a></font>
                                 </p>
                             </div>
                         </template>
                         <p v-else>-</p>
                     </div>
                     <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
-                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.creditDocuments" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                        <OssFileHosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.creditDocuments" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
-                        </hosjoyUpload>
+                        </OssFileHosjoyUpload>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,10 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
 import { submitDoc, getCreditdocumentType, submitcreditDoc } from './api/index'
+import DefaultImage from '@/assets/images/img_403@2x.png'
+
 import moment from 'moment'
+import OssFileUtils from '@/utils/OssFileUtils'
 const _reqRiskCheckProjectDoc = {
     projectId: '', // 工程项目id
     riskCheckProjectDocPoList: [],
@@ -95,7 +98,7 @@ const _reqRiskCheckProjectDoc = {
 export default {
     name: 'creditDetail',
     components: {
-        hosjoyUpload: () => import('@/components/HosJoyUpload/HosJoyUpload')
+        OssFileHosjoyUpload: () => import('@/components/OssFileHosjoyUpload/OssFileHosjoyUpload')
     },
     data () {
         return {
@@ -114,7 +117,8 @@ export default {
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],
             refuseInfos: [],
-            creditFrom: {}
+            creditFrom: {},
+            DefaultImage: DefaultImage
         }
     },
     computed: {
@@ -132,8 +136,12 @@ export default {
         }),
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
-                const res = item.riskCheckDocTemplateSamplePos.filter(item => {
-                    return item.fileUrl
+                const res = item.riskCheckDocTemplateSamplePos.filter((item, index) => {
+                    const key = encodeURI(new URL(item.fileUrl).pathname).replace(/\W/g, '') + index
+                    OssFileUtils.Event.listen(async function (item) {
+                        item.fileUrl = await OssFileUtils.getUrl(item.fileUrl)
+                    }, key, item)
+                    return item
                 })
                 console.log(res)
                 return res.length > 0 && [res[index].fileUrl]
@@ -395,5 +403,8 @@ export default {
     p {
         line-height: 2;
     }
+}
+.oss-sts-download {
+    cursor: pointer;
 }
 </style>

@@ -14,7 +14,6 @@
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
                                 <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src.sync="DefaultImage" v-oss-sts-element-image="{item: example, key: 'fileUrl'}" :preview-src-list="srcList(jtem,exampleIndex)" />
-<!--                                <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src="example | ossFileUtils('fileUrl')" :preview-src-list="srcList(jtem,exampleIndex)" />-->
                             </div>
                         </div>
                         <!--  -->
@@ -24,7 +23,7 @@
                                 <div class="posrtv">
                                     <template v-if="ktem&&ktem.fileUrl">
                                         <i class="el-icon-document"></i>
-                                        <a href="" v-oss-sts-a-download="ktem.fileUrl" target="_blank">
+                                        <a href="" class="oss-sts-download" v-oss-sts-a-download="ktem.fileUrl" target="_blank" :un-repeat-key="1">
                                             <font>{{ktem.fileName}}</font>
                                         </a>
                                     </template>
@@ -32,11 +31,11 @@
                                 <div>{{formatMoment(ktem.createTime)}}</div>
                                 <div>
                                     <!-- <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font> -->
-                                    <a class="fileItemDownLoad" :download="ktem.fileName" v-oss-sts-a-download="ktem.fileUrl"
+                                    <a class="fileItemDownLoad oss-sts-download" :download="ktem.fileName" v-oss-sts-a-download="ktem.fileUrl" :un-repeat-key="2"
                                         v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1">
                                         下载
                                     </a>
-                                    <font v-else><a class='fileItemDownLoad' v-oss-sts-a-download="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <font v-else><a class='fileItemDownLoad oss-sts-download' v-oss-sts-a-download="ktem.fileUrl" :un-repeat-key="1" target='_blank'>下载</a></font>
                                 </div>
                             </div>
                         </template>
@@ -59,7 +58,7 @@ import { handleImgDownload } from './utils'
 import moment from 'moment'
 import { getCreditdocumentType } from './api'
 import OssFileUtils from '@/utils/OssFileUtils'
-import DefaultImage from '../../../assets/images/goodwork-default-user.png'
+import DefaultImage from '@/assets/images/img_403@2x.png'
 export default {
     name: 'creditApprove',
     data () {
@@ -76,7 +75,7 @@ export default {
         },
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
-                const res = item.riskCheckDocTemplateSamplePos.map(item => {
+                const res = item.riskCheckDocTemplateSamplePos.map((item) => {
                     OssFileUtils.Event.listen(async function (item) {
                         item.fileUrl = await OssFileUtils.getUrl(item.fileUrl)
                     }, item)
@@ -233,5 +232,8 @@ export default {
     p {
         line-height: 2;
     }
+}
+.oss-sts-download {
+    cursor: pointer;
 }
 </style>

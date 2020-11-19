@@ -27,7 +27,7 @@
                         <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
+                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET) || true">设置信用评级</h-button>
                     </template>
                 </basicTable>
                 <p>
@@ -71,7 +71,7 @@
                                         <span class="posrtv">
                                             <template v-if="jtem&&jtem.fileUrl">
                                                 <i class="el-icon-document"></i>
-                                                <a :href="jtem.fileUrl" target="_blank">
+                                                <a  v-oss-sts-a-download="jtem.fileUrl" class="oss-sts-download" :un-repeat-key="1" target="_blank">
                                                     <font>{{jtem.fileName}}</font>
                                                 </a>
                                             </template>
@@ -81,16 +81,16 @@
                                     <p>
                                         <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
                                         <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
-                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"
+                                        <a class="fileItemDownLoad oss-sts-download" v-oss-sts-a-download="jtem.fileUrl" :un-repeat-key="2" :download="jtem.fileName"
                                             v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">
                                             下载
                                         </a>
-                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
+                                        <font v-else><a class='fileItemDownLoad oss-sts-download' v-oss-sts-a-download="jtem.fileUrl" target='_blank'>下载</a></font>
                                     </p>
                                 </div>
-                                <hosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
+                                <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                     <el-button type="primary">上 传</el-button>
-                                </hosjoyUpload>
+                                </OssFileHosjoyUpload>
                             </el-form-item>
                         </template>
                     </div>
@@ -133,8 +133,8 @@
                     <el-input type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
                 <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <hosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
-                    </hosjoyUpload>
+                    <HosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
+                    </HosjoyUpload>
                     2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式
                 </el-form-item>
             </el-form>
@@ -184,7 +184,8 @@
 </template>
 <script>
 import moment from 'moment'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
+import HosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
@@ -275,7 +276,8 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload,
+        HosjoyUpload
     },
     watch: {
         'form.projectUpload' (val) {
@@ -838,5 +840,8 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
+}
+.oss-sts-download {
+    cursor: pointer;
 }
 </style>

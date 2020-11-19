@@ -365,8 +365,7 @@ router.beforeEach(async (to, from, next) => {
 router.afterEach((to, from) => {
     let isFirst = store.state.isFirst
     if(!isFirst){
-        console.log('------unload')
-        OssFileUtils.Event.unload()
+        OssFileUtils.Event.clear()
     }
 })
 export default router
