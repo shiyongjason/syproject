@@ -197,7 +197,9 @@ export default {
             await this.findNetworkReport(this.smartparams)
             this.smartData = this.cloudNetworkReport
             this.drawLine(this.smartData, line)
-            this.drawbar(this.smartData, bar)
+            if (this.homeParams.modeType === 'all') {
+                this.drawbar(this.smartData, bar)
+            }
             // this.$emit('queryTotalNetworkCount', {
             //     startDate: this.smartparams.startDate,
             //     endDate: this.smartparams.endDate,
@@ -260,7 +262,14 @@ export default {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'cross'
-                    }
+                    },
+                    formatter: this.homeParams.modeType === 'all' ? (params) => {
+                        let str = params[0].name + '<br/>'
+                        for (x in params) {
+                            str = str + params[x].seriesName + ': ' + params[x].data + '% <br/>'
+                        }
+                        return str
+                    } : null
                 },
                 legend: {
                     data: charts.names,
