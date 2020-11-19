@@ -105,7 +105,8 @@ export const CREDITLEVEL = [
     { key: 3, value: 'B+' },
     { key: 4, value: 'B' },
     { key: 5, value: 'C+' },
-    { key: 6, value: 'C' }
+    { key: 6, value: 'C' },
+    { key: 7, value: 'D' }
 ]
 
 // 资料状态
