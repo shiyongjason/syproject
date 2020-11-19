@@ -358,7 +358,7 @@ export default {
             ++this.num
             let _temp = ''
             if (val == 1) {
-                _temp = `<input class="contract_sign_${this.num}" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                _temp = `<input class="contract_sign_${this.num}"  style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
                 if (document.getElementById('platform_sign')) {
@@ -432,8 +432,6 @@ export default {
         },
         // 删除
         onDelete (val, type) {
-            console.log(val)
-            console.log(val.data.$index)
             if (type == 1) {
                 this.busData.splice(val.data.$index, 1)
             } else {
@@ -458,6 +456,7 @@ export default {
         async onSaveTemp (val) {
             const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
             const reqParam = []
+            const signParam = []
             inputArr.length > 0 && inputArr.map(val => {
                 if (val.dataset.appId) {
                     reqParam.push({
@@ -465,10 +464,18 @@ export default {
                         paramKey: val.className
                     })
                 }
+                if (val.className.indexOf('contract_sign_') != -1) {
+                    signParam.push({
+                        id: '',
+                        paramKey: val.className
+                    })
+                }
             })
+
+            // return
             this.contractForm.operatorBy = this.userInfo.employeeName
             this.contractForm.operatorAccount = this.userInfo.phoneNumber
-            this.contractForm.reqParam = this.findUnique(reqParam)
+            this.contractForm.reqParam = [...this.findUnique(reqParam), ...signParam]
             this.contractForm.status = val
             // 必填项校验
             if (!this.contractForm.templateName) {
@@ -562,7 +569,7 @@ export default {
         async findTempDetail (val) {
             await this.getContratDetail(val)
             // 编辑时候 把 插入的合同字段 重新复制一份 bakParams
-            this.bakParams = this.contractTempdetail.param
+            this.bakParams = this.contractTempdetail.param.map(val => !val.id)
             this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
             // 复制一份
             this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
