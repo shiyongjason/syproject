@@ -13,7 +13,7 @@
                         <el-input v-model="contractForm.templateName"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
-                        <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam">
+                        <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam" :disabled='!!contractForm.typeId'>
                             <el-option v-for="item in contract_list" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>
@@ -270,7 +270,7 @@ export default {
             return result
         },
         findChinese (val) {
-            console.log(val)
+            // console.log(val)
             const a = val.split(',')
             const cArr = []
             a.forEach(item => {
@@ -339,12 +339,11 @@ export default {
         //         this.newContent = this.newContent.replace(`{${val.value}}`, this.contractForm[`${val.value}`])
         //     })
         // },
-        onClickDialog () {
-            this.$refs.diffDialog.onShowDiff()
-        },
+
         onFindInputDom () {
             // 把所有的富文本里面的 input 查出来
             const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
+            console.log('inputArr', inputArr)
             const reqParam = []
             inputArr.length > 0 && inputArr.map(val => {
                 reqParam.push({
@@ -356,14 +355,24 @@ export default {
             return this.findUnique(reqParam)
         },
         onClickCur (val) {
+            ++this.num
             let _temp = ''
             if (val == 1) {
-                _temp = `<input class="" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                _temp = `<input class="contract_sign_${this.num}" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
-                _temp = `<input id="palt_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input><i style="overflow:visible">palt_sign</i>`
+                if (document.getElementById('platform_sign')) {
+                    this.$message({
+                        message: '只能插入一处平台签署区',
+                        type: 'warning'
+                    })
+                    return
+                }
+                _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                value="平台签署" readonly></input><i style="font-style:normal;display:none">platform_sign</i>`
             }
+            // console.log(document.getElementById('platform_sign'))
+
             this.$refs.RichEditor.insertHtml(_temp)
         },
         onAllParams () {
@@ -371,19 +380,23 @@ export default {
             // 校验 input dom
             const paramsArr = this.onFindInputDom()
             const bakParamsArr = this.findUnique(this.bakParams)
+            console.log('交集', paramsArr, bakParamsArr)
             // 取交集 为了 在文本编辑器里面删除了哪些字段 和 入库的字段做唯一对应
             paramsArr && paramsArr.map((val) => {
                 bakParamsArr.map(item => {
                     if (val.id == item.id) {
+                        console.log(1, item)
                         this.newParams.push(item)
                     }
                 })
             })
+            console.log('this.newParams', this.newParams)
         },
         async onClick_Dialog (val) {
             // 保留编辑位置清除 不影响新增
             this.edit_index = -1
             await this.onAllParams()
+            console.log('this.newParams2', this.newParams)
             this.newParams = this.newParams.filter(val => val.groupName)
             this.$refs.contractDialog.onShowDialog(val, this.newParams)
         },
@@ -472,6 +485,13 @@ export default {
                 })
                 return
             }
+            if (!document.getElementById('platform_sign')) {
+                this.$message({
+                    message: '请插入一处平台签署区',
+                    type: 'warning'
+                })
+                return
+            }
             if (val == 1) {
                 if (this.contractForm.reqParam.length == 0) {
                     this.$message({
@@ -480,7 +500,7 @@ export default {
                     })
                     return
                 }
-                if (this.busData.length == 0 || this.perData.length == 0) {
+                if (this.busData.length == 0 && this.perData.length == 0) {
                     this.$message({
                         message: '请至少添加一个签署方',
                         type: 'warning'
@@ -546,14 +566,19 @@ export default {
             this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
             // 复制一份
             this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
+            // 复制模板
             // 签署方 type=2
             let singerArr = []
-
-            singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2)
+            if (this.$route.query.type == 'copy') {
+                this.contractTempdetail.signerSetting = []
+            } else {
+                singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2)
+            }
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
 
             this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
+
             // 获取合同类型约定字段
             this.onChangeparam(this.contractForm.typeId)
             // 绑定click
