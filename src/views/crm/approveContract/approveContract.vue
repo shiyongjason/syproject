@@ -1,6 +1,9 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont approvalcontract">
+            <!-- <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+            <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+        </component> -->
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 6 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
@@ -31,7 +34,7 @@
                         </el-form> -->
                         <!-- else -->
                         <p class="setarea-key">{{currentKey.paramName}}：</p>
-                        <p>
+                        <p style="display: flex;justify-content: space-between;align-items: center;">
                             <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                                 <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                     <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
@@ -39,6 +42,11 @@
                                     </component>
                                 </el-form-item>
                             </el-form>
+                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" multiple :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
+                                <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
+                            </hosjoyUpload>
                         </p>
                         <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
                     </div>
@@ -63,7 +71,7 @@
                     <div class="approvalcontract-btn">
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
-                        <h-button type="primary" @click="onSaveContent(3)">保存条款</h-button>
+                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
                     </div>
                 </div>
@@ -121,15 +129,22 @@ import diffDialog from './diffDialog'
 import selectCom from './components/select'
 import formatInput from './components/formatInput'
 import inputAutocomplete from './components/inputAutocomplete'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
 import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi } from './api/index'
 import { interfaceUrl } from '@/api/config'
 
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, formatInput, inputAutocomplete },
+    components: { diffDialog, selectCom, formatInput, inputAutocomplete, hosjoyUpload },
     data () {
         return {
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
+            action: interfaceUrl + 'tms/files/upload',
+            imgArr: [],
             drawerVisible: false,
             originalContentFieldsList: '',
             contractFieldsList: '',
@@ -216,7 +231,6 @@ export default {
             this.currentKey.paramValue = num
         },
         checkField (rule, value, callback) {
-            console.log('checkField')
             if (this.currentKey.required && this.currentKey.paramValue == '') {
                 callback(new Error(`${this.currentKey.paramName}不能为空`))
                 return
@@ -347,6 +361,35 @@ export default {
                             input: (val) => { console.log(val) }
                         }
                     }
+                },
+                9: {
+                    elImage: {
+                        bind: {
+                            style: 'width: 120px; height: 120px; border-radius: 7px;border: 1px solid #d9d9d9',
+                            src: this.currentKey.paramValue,
+                            previewSrcList: [this.currentKey.paramValue]
+                        },
+                        on: {
+                            input: (val) => { console.log(val) }
+                        }
+                    }
+                    // hosjoyUpload: {
+                    //     bind: {
+                    //         value: this.currentKey.paramValue,
+                    //         accep: '.jpeg,.jpg,.png',
+                    //         fileSize: 20,
+                    //         fileNum: 1,
+                    //         action: interfaceUrl + 'tms/files/upload',
+                    //         uploadParameters: {
+                    //             updateUid: '',
+                    //             reservedName: false
+                    //         }
+                    //     },
+                    //     on: {
+                    //         successArg: (val) => { console.log(val) },
+                    //         input: (val) => { console.log('删完最新值', val) }
+                    //     }
+                    // }
                 }
 
             }
@@ -417,6 +460,47 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
+        successArg (val) {
+        },
+        async setImg () {
+            let temp = [this.imgArr[this.imgArr.length - 1]]
+            let doms = document.getElementsByClassName(`${this.currentKey.paramKey}_${this.currentKey.imgIndex}`)
+            this.currentKey.paramValue = temp[0].fileUrl
+            // 同步修改div和input合同
+            Array.from(doms).map(img => {
+                img.setAttribute('src', temp[0].fileUrl)
+            })
+            let fieldOriginalContent = ''
+            // 修改键值对
+            let contractFieldsList = JSON.parse(this.detailRes.contractFieldsList)
+            contractFieldsList.map(item => {
+                if (item.paramKey === this.currentKey.paramKey) {
+                    fieldOriginalContent = item.paramValue[this.currentKey.imgIndex].fileUrl
+                    item.paramValue[this.currentKey.imgIndex] = {
+                        fileName: temp[0].fileName,
+                        fileUrl: temp[0].fileUrl,
+                        url: temp[0].fileUrl,
+                        size: ''
+                    }
+                }
+            })
+            console.log(contractFieldsList)
+            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
+            let contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
+            await saveContent({
+                'contractId': this.$route.query.id,
+                // 合同审批角色 1：分财 2：风控 3：法务
+                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                'fieldName': this.currentKey.paramKey, // 编辑字段
+                'fieldOriginalContent': fieldOriginalContent, // 编辑前内容
+                'fieldContent': temp[0].fileUrl, // 编辑内容
+                'contractContent': contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
+                'createBy': this.userInfo.employeeName,
+                'contractFieldsList': JSON.stringify(contractFieldsList) // 合同字段键值对
+            })
+            this.init()
+        },
         onSaveContent (operatorType = '') {
             const { paramName, paramKey, paramValue, required } = this.currentKey
             if (required && (paramValue === '' || paramValue === null)) {
@@ -424,6 +508,12 @@ export default {
                     message: `${paramName}不能为空`,
                     type: 'error'
                 })
+                return
+            }
+            if (this.currentKey.inputStyle == 9) {
+                // 修改图片
+                this.setImg()
+                return
             }
             // 最后要拿到input的合同
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
@@ -501,6 +591,7 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             if (res) {
                 this.detailRes = res.data
+                console.log('this.detailRes: ', this.detailRes)
                 this.contractContentDiv = res.data.contractContent // Div版的合同
                 this.contractContentInputHidden = res.data.contractContent // input版的合同
                 this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
@@ -542,10 +633,24 @@ export default {
                             Array.from(doms).map(jtem => {
                                 jtem.onclick = () => {
                                     this.currentKey = { ...fields }
+                                    console.log('this.currentKey: ', this.currentKey)
                                     this.currentKeyOriginal = { ...fields }
                                     this.$refs['ruleForm'].resetFields()
                                 }
                             })
+                        })
+                        let imgDom = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('img')
+                        imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
+                            item.onclick = (event) => {
+                                this.currentKey = {
+                                    required: true,
+                                    inputStyle: 9,
+                                    paramKey: event.target.dataset.key,
+                                    paramValue: event.target.currentSrc,
+                                    paramName: event.target.dataset.name,
+                                    imgIndex: event.target.dataset.index
+                                }
+                            }
                         })
                     }
                 })
@@ -626,6 +731,30 @@ export default {
                 /deep/.el-slider__marks-text {
                     width: 38px;
                 }
+                /deep/.el-upload {
+                    width: 100%;
+                }
+                /deep/.el-upload-dragger:hover {
+                    border: 1px dashed #ff7a45 !important;
+                }
+                /deep/.el-upload-dragger {
+                    width: 100%;
+                    height: 126px;
+                    text-align: center !important;
+                    border: 1px dashed #d9d9d9 !important;
+                    border-radius: 6px !important;
+                    box-sizing: border-box !important;
+                    padding: 12px !important;
+                    .el-icon-upload {
+                        margin: 15px 0 5px;
+                    }
+                    .el-icon-upload {
+                        font-size: 50px;
+                    }
+                    .el-upload__text {
+                        font-size: 13px;
+                    }
+                }
             }
             .tips {
                 font-size: 16px;
@@ -641,7 +770,7 @@ export default {
             }
         }
         &-right {
-            position: relative;
+            // position: relative;
             width: 65%;
             float: right;
             // overflow-y: scroll;
