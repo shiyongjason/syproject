@@ -164,6 +164,7 @@ export default {
         }
         return result
     },
+    // eslint-disable-next-line
     hostReg: /^((http:\/\/)|(https:\/\/))?([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/)/g,
     Event
 }
