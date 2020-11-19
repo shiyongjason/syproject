@@ -1,5 +1,6 @@
 import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX } from './format'
 import OssFileUtils from '@/utils/OssFileUtils'
+import { ossAliyun } from '@/api/config'
 /*
     自定义指令中传递的三个参数:el: 指令所绑定的元素，可以用来直接操作DOM。binding:  一个对象，包含指令的很多信息。vnode: Vue编译生成的虚拟节点。
     自定义指令有五个生命周期（也叫钩子函数），分别是 bind,inserted,update,componentUpdated,unbind
@@ -166,7 +167,14 @@ export default {
         Vue.directive('ossStsADownload', {
             bind: function (el, binding, vNode) {
                 OssFileUtils.Event.listen(async function (el) {
-                    el.href = await OssFileUtils.getUrl(binding.value)
+                    const hasTarget = el.getAttribute('target')
+                    let href = await OssFileUtils.getUrl(binding.value)
+                    if (hasTarget === '_blank') {
+                        href = ossAliyun + href.replace(OssFileUtils.hostReg, '')
+                        el.href = href
+                    } else {
+                        el.href = href
+                    }
                 }, el)
             }
         })

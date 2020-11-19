@@ -12,6 +12,7 @@ let iotUrl = ''
 let iotZsUrl = ''
 let ossBucket = ''
 let ossRegion = ''
+let ossAliyun = ''
 var env = process.env.NODE_ENV === 'development'
     ? 'development' : (process.env.VUE_APP_TITLE === 'dev'
         ? 'dev' : process.env.VUE_APP_TITLE === 'test'
@@ -32,6 +33,7 @@ switch (env) {
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ossBucket = 'hosjoy-private-test'
         ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -45,6 +47,7 @@ switch (env) {
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ossBucket = 'hosjoy-private-test'
         ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'test':
         interfaceUrl = 'https://hbp-test.hosjoy.com/'
@@ -58,6 +61,7 @@ switch (env) {
         ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
         ossBucket = 'hosjoy-private-test'
         ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'newtest':
         interfaceUrl = 'https://hbp-test245.hosjoy.com/'
@@ -71,6 +75,7 @@ switch (env) {
         ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
         ossBucket = 'hosjoy-private-test'
         ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
@@ -84,6 +89,7 @@ switch (env) {
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ossBucket = 'hosjoy-private'
         ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun.hosjoy.com/'
         break
     case 'production':
         // TODO: 给产品调用
@@ -98,6 +104,7 @@ switch (env) {
         iotZsUrl = 'https://iot-proxy.hosjoy.com'
         ossBucket = 'hosjoy-private'
         ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun.hosjoy.com/'
         break
 }
 export {
@@ -111,5 +118,6 @@ export {
     iotUrl,
     iotZsUrl,
     ossBucket,
-    ossRegion
+    ossRegion,
+    ossAliyun
 }
