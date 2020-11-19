@@ -79,13 +79,13 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-badge :value="12" class="item">
+                <el-badge :value="financeManagerWaitingNum" class="item">
                     <div class="table-tab">待分财修订</div>
                 </el-badge>
-                <el-badge :value="12" class="item" style="margin:0 30px">
+                <el-badge :value="riskManagerWaitingNum" class="item" style="margin:0 30px">
                     <div class="table-tab">待风控修订</div>
                 </el-badge>
-                <el-badge :value="12" class="item">
+                <el-badge :value="lawManagerWaitingNum" class="item">
                     <div class="table-tab">待法务修订</div>
                 </el-badge>
             </div>
@@ -108,7 +108,7 @@
 </template>
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { contractSigningList, contractTypes } from './api/index'
+import { contractSigningList, contractTypes, contractStatic } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 const _queryParams = {
@@ -132,6 +132,9 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            financeManagerWaitingNum: '',
+            lawManagerWaitingNum: '',
+            riskManagerWaitingNum: '',
             branchArr: [],
             contractTypes: [],
             contractStatus: [{ value: '', label: '全部' }, { value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }],
@@ -141,12 +144,19 @@ export default {
             },
             queryParams: JSON.parse(JSON.stringify(_queryParams)),
             tableLabel: [
-                { label: '合同编号', prop: 'contractNo', width: '120' },
+                { label: '合同编号', prop: 'contractNo', width: '150' },
                 { label: '合同名称', prop: 'contractName', width: '260' },
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
-                { label: '合同模版编号', prop: 'contractTemplateVersionId', width: '180' },
-                { label: '合同模版版本', prop: 'versionNo', width: '80' },
+                {
+                    label: '合同模版编号',
+                    prop: 'contractTemplateVersionId',
+                    width: '180',
+                    render: (h, scope) => {
+                        return <span>{scope.row.contractTemplateVersionId == 0 ? '-' : scope.row.contractTemplateVersionId }</span>
+                    }
+                },
+                { label: '合同模版版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }] },
                 { label: '发起人', prop: 'createBy', width: '120' },
@@ -237,6 +247,7 @@ export default {
                 this.tableData = data.records
                 this.page.total = data.total
             }
+            this.getContractStatic()
         },
         approveContract (item) {
             this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
@@ -248,6 +259,12 @@ export default {
                 id: '',
                 name: '全部'
             })
+        },
+        async getContractStatic () {
+            const { data } = await contractStatic()
+            this.financeManagerWaitingNum = data.financeManagerWaitingNum
+            this.lawManagerWaitingNum = data.lawManagerWaitingNum
+            this.riskManagerWaitingNum = data.riskManagerWaitingNum
         }
     },
     async activated () {
