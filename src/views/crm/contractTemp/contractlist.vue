@@ -47,7 +47,7 @@
             </div>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData"  @pagination="searchList"
              :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='260' isAction
-                :isActionFixed='tableData&&tableData.length>0'>
+                :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onCopy(scope.data.row)">复制</h-button>
@@ -98,8 +98,8 @@ export default {
                 { label: '合同模版名称', prop: 'templateName' },
                 { label: '合同类型', prop: 'typeName' },
                 { label: '状态', prop: 'status', dicData: [{ value: 0, label: '禁用' }, { value: 1, label: '启用' }] },
-                { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-                { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+                { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
+                { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
                 {
                     label: '最近维护人',
                     prop: 'updateBy',
@@ -142,10 +142,8 @@ export default {
             this.searchList(1)
         },
         async searchList (val) {
-            console.log(val)
             if (val == 1) { this.queryParams.pageNumber = val }
             await this.getContractTmep(this.queryParams)
-            console.log(this.contractTempdata)
             this.tableData = this.contractTempdata.records
             this.paginationInfo = {
                 pageNumber: this.contractTempdata.current,
@@ -157,7 +155,6 @@ export default {
             this.drawerParams.templateId = val
             await this.findVerdata(this.drawerParams)
             this.ver_Data = this.verData.records
-            console.log(this.verData)
             this.verpaginationInfo = {
                 pageNumber: this.verData.current,
                 pageSize: this.verData.size,
@@ -168,7 +165,16 @@ export default {
         onAddContract () {
             this.$router.push({ path: '/goodwork/contractTemp' })
         },
-
+        sortChange (e) {
+            if (e.order) {
+                this.queryParams['sort.direction'] = e.order === 'descending' ? 'DESC' : 'ASC'
+                this.queryParams['sort.property'] = e.prop
+            } else {
+                delete this.queryParams['sort.direction']
+                delete this.queryParams['sort.property']
+            }
+            this.searchList()
+        },
         onShowTempdetail (id) {
             this.ver_drawer = false
             this.$router.push({ path: '/goodwork/contractDetail', query: { id: id } })
@@ -178,17 +184,34 @@ export default {
         },
         async onEnable (val) {
             if (val.status == 0) {
-                await enableTemp(val.id)
-                this.$message({
-                    message: '启用成功',
-                    type: 'success'
-                })
+                try {
+                    await enableTemp(val.id)
+                    this.$message({
+                        message: '启用成功',
+                        type: 'success'
+                    })
+                } catch (error) {
+                    this.$confirm('不符合启用条件，请先编辑合同模版', '提示', {
+                        confirmButtonText: '去编辑',
+                        cancelButtonText: '暂不启用',
+                        type: 'warning'
+                    }).then(async () => {
+                        await disableTemp(val.id)
+                        this.$router.push({ path: '/goodwork/contractTemp', query: { id: val.id } })
+                    }).catch(() => {
+
+                    })
+                }
             } else {
-                await disableTemp(val.id)
-                this.$message({
-                    message: '禁用成功',
-                    type: 'success'
-                })
+                try {
+                    await disableTemp(val.id)
+                    this.$message({
+                        message: '禁用成功',
+                        type: 'success'
+                    })
+                } catch (error) {
+
+                }
             }
             this.searchList()
         },

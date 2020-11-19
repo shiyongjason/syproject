@@ -43,7 +43,7 @@
                 </el-form-item>
                 <el-form-item label="平台企业：" prop="caId">
                     <el-select v-model="signerTempForm.caId"  placeholder="请选择平台企业" @change="changeCa">
-                        <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.accountCaId">
+                        <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -162,7 +162,7 @@ export default {
             this.tract_visible = true
             this.contractType = val
             this.contart_arr = arr
-
+            this.isEdit = false
             if (form) {
                 // 复制一份 做取消校验
                 this.isEdit = true
@@ -208,7 +208,7 @@ export default {
             console.log(val, this.signerTempForm.paramGroupName)
         },
         changeCa (val) {
-            this.signerTempForm.paramGroupName = this.caOptions.filter(item => item.accountCaId == val)[0].companyName
+            this.signerTempForm.paramGroupName = this.caOptions.filter(item => item.id == val)[0].companyName
         },
         onSaveSinger () {
             this.singer_busArr = []
