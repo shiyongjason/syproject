@@ -355,9 +355,10 @@ export default {
             return this.findUnique(reqParam)
         },
         onClickCur (val) {
+            ++this.num
             let _temp = ''
             if (val == 1) {
-                _temp = `<input id="contract_sign" class="contract_sign" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                _temp = `<input class="contract_sign_${this.num}" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
                 if (document.getElementById('platform_sign')) {
