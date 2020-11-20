@@ -3,38 +3,32 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">模板名称：</div>
+                    <div class="query-col__label">模板编号/名称：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">合同类型：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.typeId" placeholder="请选择合同类型">
+                            <el-option v-for="item in tempTypeOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.status" placeholder="请选择活动区域">
+                        <el-select v-model="queryParams.status" placeholder="请选择状态">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="禁用" value="0"></el-option>
-                            <el-option label="启用" value="1"></el-option>
+                            <el-option label="已启用" value="1"></el-option>
+                            <el-option label="已禁用" value="0"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">签约方式：</div>
-                    <div class="query-col__input">
-                        <el-select v-model="queryParams.typeId" placeholder="请选择活动区域">
-                            <el-option label="全部" value=""></el-option>
-                            <el-option label="电子签" value="0"></el-option>
-                            <el-option label="线下签" value="1"></el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont__col">
-                    <h-button type="primary" @click="searchList(1)">
-                        查询
-                    </h-button>
-                    <h-button @click="onRest">
-                        重置
-                    </h-button>
+                    <h-button type="primary" @click="searchList(1)">查询</h-button>
+                    <h-button @click="onRest">重置</h-button>
                 </div>
             </div>
             <div class="query-cont__row">
@@ -97,7 +91,7 @@ export default {
                 { label: '合同模板编号', prop: 'templateNo' },
                 { label: '合同模版名称', prop: 'templateName' },
                 { label: '合同类型', prop: 'typeName' },
-                { label: '状态', prop: 'status', dicData: [{ value: 0, label: '禁用' }, { value: 1, label: '启用' }] },
+                { label: '状态', prop: 'status', dicData: [{ value: 0, label: '已禁用' }, { value: 1, label: '已启用' }] },
                 { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
                 { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
                 {
@@ -127,13 +121,20 @@ export default {
     },
 
     computed: {
+        tempTypeOptions () {
+            let result = this.tempType || []
+            result.unshift({ id: '', name: '全部' })
+            return result
+        },
         ...mapGetters({
+            tempType: 'contractTemp/tempType',
             contractTempdata: 'contractTemp/contractTempdata',
             verData: 'contractTemp/verData'
         })
     },
     methods: {
         ...mapActions({
+            getContratType: 'contractTemp/getContratType',
             getContractTmep: 'contractTemp/getContractTmep',
             findVerdata: 'contractTemp/findVerdata'
         }),
@@ -237,6 +238,7 @@ export default {
     },
     mounted () {
         this.copy_queryParams = JSON.parse(JSON.stringify(this.queryParams))
+        this.getContratType()
         this.searchList()
     },
     activated () {
