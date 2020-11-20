@@ -347,14 +347,16 @@ export default {
                 6: {
                     elSlider: {
                         bind: {
-                            value: 1,
+                            value: this.currentKey.paramValue,
                             step: 1,
                             max: 6,
                             min: 1,
-                            marks: { 1: '1个月', 2: '2个月', 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' }
+                            marks: { 1: '1个月', 2: '2个月', 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' },
+                            style: { marginBottom: '30px' }
                         },
                         on: {
-                            change: (val) => { this.currentKey.paramValue = val }
+                            input: (val) => { console.log('val: ', val); this.currentKey.paramValue = val }
+
                         }
                     }
                 },
@@ -368,7 +370,7 @@ export default {
                             style: { width: '250px' }
                         },
                         on: {
-                            input: (val) => { console.log(val) }
+                            input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
                 },
@@ -587,7 +589,6 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             if (res) {
                 this.detailRes = res.data
-                console.log('this.detailRes: ', this.detailRes)
                 this.contractContentDiv = res.data.contractContent // Div版的合同
                 this.contractContentInputHidden = res.data.contractContent // input版的合同
                 this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
@@ -596,6 +597,7 @@ export default {
                     // 法务审核初始化
                     if (this.detailRes.contractStatus == 6) {
                         let inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('input')
+                        if (inputDomList.length == 0) return
                         this.firstKsy = inputDomList[0].className
                         if (!this.currentKey) {
                             // 保存后不会更新左侧字段
@@ -613,7 +615,6 @@ export default {
                         let imgDom = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
                             item.onclick = (event) => {
-                                console.log(event)
                                 this.currentKey = {
                                     required: true,
                                     inputStyle: 9,
@@ -627,6 +628,7 @@ export default {
                     } else {
                         // 分财、风控审核初始化
                         let inputDomList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('input')
+                        if (inputDomList.length == 0) return
                         this.firstKsy = inputDomList[0].className
                         if (!this.currentKey) {
                             // 保存后不会更新左侧字段
