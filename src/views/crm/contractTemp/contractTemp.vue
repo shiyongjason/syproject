@@ -96,7 +96,7 @@
             <div class="contract-html" v-html="newContent">
             </div>
         </el-drawer>
-        <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose">
+        <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose" :close-on-click-modal = false>
             <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                     <span style="float: left">{{ item.paramName }}</span>
@@ -484,8 +484,6 @@ export default {
                     })
                 }
             })
-            console.log(this.$refs.RichEditor)
-
             this.contractForm.content = document.getElementsByClassName('w-e-text')[0].innerHTML
             this.contractForm.operatorBy = this.userInfo.employeeName
             this.contractForm.operatorAccount = this.userInfo.phoneNumber
@@ -497,12 +495,14 @@ export default {
                     message: '请填写模版名称',
                     type: 'warning'
                 })
+                return
             }
             if (!this.contractForm.typeId) {
                 this.$message({
                     message: '请填写模版名称',
                     type: 'warning'
                 })
+                return
             }
 
             if (val == 1) {
@@ -511,24 +511,28 @@ export default {
                         message: '请至少添加一个合同字段',
                         type: 'warning'
                     })
+                    return
                 }
                 if (!document.getElementById('platform_sign')) {
                     this.$message({
                         message: '请插入一处平台签署区',
                         type: 'warning'
                     })
+                    return
                 }
                 if (this.busData.length == 0 && this.perData.length == 0) {
                     this.$message({
                         message: '请至少添加一个签署方',
                         type: 'warning'
                     })
+                    return
                 }
                 if (this.platData.length == 0) {
                     this.$message({
                         message: '请设置平台签署区',
                         type: 'warning'
                     })
+                    return
                 }
             }
 

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose">
-            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2">
+        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal = false>
+            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2" >
                 <el-form-item label="签署方名称：" prop="signerName">
                     <el-input v-model="signerTempForm.signerName" maxlength="50"></el-input>
                 </el-form-item>
@@ -34,7 +34,7 @@
                     </template>
                 </el-form-item>
             </el-form>
-            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1">
+            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1" >
                 <el-form-item label="签署方名称：" prop="">
                     平台
                 </el-form-item>
@@ -203,6 +203,7 @@ export default {
             this.singerOps = this.contart_arr.filter(item => {
                 return item.signerType == val
             })
+            this.signerTempForm.paramId = ''
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
