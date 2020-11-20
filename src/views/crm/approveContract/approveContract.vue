@@ -35,14 +35,15 @@
                         <!-- else -->
                         <p class="setarea-key">{{currentKey.paramName}}：</p>
                         <p style="display: flex;justify-content: space-between;align-items: center;">
-                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'">
                                 <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                     <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
                                         <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
                                     </component>
                                 </el-form-item>
                             </el-form>
-                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" multiple :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
+                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" multiple :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png'
+                                :uploadParameters='uploadParameters' @successArg='successArg'>
                                 <i class="el-icon-upload"></i>
                                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
                                 <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
@@ -102,7 +103,16 @@
                         <span class="name">{{item.operator}} </span>
                         <span>{{item.operationName}}</span>
                         <template v-if="item.operationName == '编辑了'">
-                            <span class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+                                <font>{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                从<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
+                                </font>
+                                变为<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </font>
+                            </span>
+                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
                         </template>
                         <template v-else-if="item.operationName == '修订了'">
                             <font style="margin: 0 4px;">合同</font>
@@ -313,7 +323,7 @@ export default {
                             value: this.currentKey.paramValue,
                             placeholder: '请输入内容',
                             type: 'textarea',
-                            autosize: { minRows: 3, maxRows: 5 },
+                            autosize: { minRows: 5, maxRows: 6 },
                             maxlength: '200',
                             showWordLimit: true
                         },
@@ -337,14 +347,16 @@ export default {
                 6: {
                     elSlider: {
                         bind: {
-                            value: 1,
+                            value: this.currentKey.paramValue,
                             step: 1,
                             max: 6,
                             min: 1,
-                            marks: { 1: '1个月', 2: '2个月', 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' }
+                            marks: { 1: '1个月', 2: '2个月', 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' },
+                            style: { marginBottom: '30px' }
                         },
                         on: {
-                            change: (val) => { this.currentKey.paramValue = val }
+                            input: (val) => { console.log('val: ', val); this.currentKey.paramValue = val }
+
                         }
                     }
                 },
@@ -358,7 +370,7 @@ export default {
                             style: { width: '250px' }
                         },
                         on: {
-                            input: (val) => { console.log(val) }
+                            input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
                 },
@@ -373,23 +385,6 @@ export default {
                             input: (val) => { console.log(val) }
                         }
                     }
-                    // hosjoyUpload: {
-                    //     bind: {
-                    //         value: this.currentKey.paramValue,
-                    //         accep: '.jpeg,.jpg,.png',
-                    //         fileSize: 20,
-                    //         fileNum: 1,
-                    //         action: interfaceUrl + 'tms/files/upload',
-                    //         uploadParameters: {
-                    //             updateUid: '',
-                    //             reservedName: false
-                    //         }
-                    //     },
-                    //     on: {
-                    //         successArg: (val) => { console.log(val) },
-                    //         input: (val) => { console.log('删完最新值', val) }
-                    //     }
-                    // }
                 }
 
             }
@@ -484,7 +479,6 @@ export default {
                     }
                 }
             })
-            console.log(contractFieldsList)
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
             let contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
             await saveContent({
@@ -543,22 +537,26 @@ export default {
                         } else {
                             inputDomList = document.getElementsByClassName('approvalcontract-content-hidden')[0].getElementsByTagName('input')
                         }
-
+                        // 页面合同上的所有键值对
                         let tempObj = {}
                         Array.from(inputDomList).map((item, index) => {
-                            if (!(item.className in tempObj)) {
-                                tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
+                            // 签署字段不存在className
+                            if (!(item.className in tempObj) && item.className !== '') {
+                                // 拿this.contractKeyValueList这个取筛是因为之前以为是可以改字段的。
+                                // tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
+                                tempObj[item.className] = JSON.parse(this.detailRes.contractFieldsList).filter(jtem => jtem.paramKey === item.className)
                             }
                         })
                         for (const key in tempObj) {
                             tempArr.push(tempObj[key][0])
                         }
                         tempArr.map(item => {
+                            // 修改对应的键值对里的值
                             if (item.paramKey === paramKey) {
                                 item.paramValue = paramValue
-                            } else {
+                            }/*  else {
                                 item.paramValue = Array.from(inputDomList).filter(jtem => jtem.className === item.paramKey)[0].value
-                            }
+                            } */
                         })
                     }
                     // 通过dom生成最新的html
@@ -591,7 +589,6 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             if (res) {
                 this.detailRes = res.data
-                console.log('this.detailRes: ', this.detailRes)
                 this.contractContentDiv = res.data.contractContent // Div版的合同
                 this.contractContentInputHidden = res.data.contractContent // input版的合同
                 this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
@@ -600,6 +597,7 @@ export default {
                     // 法务审核初始化
                     if (this.detailRes.contractStatus == 6) {
                         let inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('input')
+                        if (inputDomList.length == 0) return
                         this.firstKsy = inputDomList[0].className
                         if (!this.currentKey) {
                             // 保存后不会更新左侧字段
@@ -614,9 +612,23 @@ export default {
                                 this.$refs['ruleForm'].resetFields()
                             }
                         })
+                        let imgDom = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('img')
+                        imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
+                            item.onclick = (event) => {
+                                this.currentKey = {
+                                    required: true,
+                                    inputStyle: 9,
+                                    paramKey: event.target.dataset.key,
+                                    paramValue: event.target.currentSrc,
+                                    paramName: event.target.dataset.name,
+                                    imgIndex: event.target.dataset.index
+                                }
+                            }
+                        })
                     } else {
                         // 分财、风控审核初始化
                         let inputDomList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('input')
+                        if (inputDomList.length == 0) return
                         this.firstKsy = inputDomList[0].className
                         if (!this.currentKey) {
                             // 保存后不会更新左侧字段
@@ -624,8 +636,7 @@ export default {
                         }
                         this.currentKeyOriginal = JSON.parse(JSON.stringify(this.currentKey))
                         Array.from(inputDomList).map((item, index) => {
-                            item.outerHTML = `<span class="${item.className}" contenteditable="false" style="display:inline;color:rgb(255, 122, 69);cursor: pointer;">${item.value}</span>`
-                            // ${item.unit || ''
+                            item.outerHTML = `<span class="${item.className}" contenteditable="false" style="word-break: break-all;display:inline;color:rgb(255, 122, 69);cursor: pointer;">${item.value}</span>`
                             // 赋值初始值
                             let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
                             // 给div绑定事件
@@ -818,7 +829,7 @@ export default {
     /deep/.history-css {
         padding: 0 20px;
         box-sizing: border-box;
-        height: calc(100vh - 150px);
+        height: calc(100vh - 190px);
         overflow-y: scroll;
         .history-css-flex {
             display: flex;
@@ -827,6 +838,8 @@ export default {
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;
+                word-break: break-all;
+                max-width: 300px;
                 // word-break: break-all;
                 .name {
                     color: #169bd5;

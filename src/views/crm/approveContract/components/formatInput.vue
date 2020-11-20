@@ -21,7 +21,6 @@ export default {
                 return this.value
             },
             set (val) {
-                console.log(val)
                 this.$emit('input', val)
             }
         },

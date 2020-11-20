@@ -27,7 +27,7 @@ export default {
                 let inputDomList = document.getElementsByClassName('approvalcontract-content-layout')[0].getElementsByTagName('input')
                 console.log('inputDomList: ', inputDomList)
                 Array.from(inputDomList).map((item, index) => {
-                    item.outerHTML = `<span class="${item.className}" contenteditable="false" style="display:inline;">${item.value}</span>`
+                    item.outerHTML = `<span class="${item.className}" contenteditable="false" style="display:inline;word-break: break-all;">${item.value}</span>`
                 })
             })
         }
