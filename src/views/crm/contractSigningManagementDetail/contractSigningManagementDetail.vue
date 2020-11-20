@@ -1,12 +1,19 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
+            <!-- contractSignType: 2线下  1线上 -->
             <div class="ctilte"><span>合同详情</span>
-                <h-button type="primary" class="btn-right">下载合同</h-button>
+                <h-button type="primary" class="btn-right" v-if="res.contractStatus=='12'">下载合同</h-button>
             </div>
             <div v-html=vHtml v-if="vHtml" class='approvalcontract-content-layout'>
             </div>
             <div v-else>暂无数据</div>
+            <div class="contract-fujian" v-if="res.attachementList&&res.attachementList.length>0&&res.contractSignType==2">
+                <font>上传的合同附件：</font>
+                <div>
+                    <p v-for="(item,index) in res.attachementList" :key="index"><a :href="item.picUrl" target="_blank">{{item.picName}}</a></p>
+                </div>
+            </div>
         </div>
         <!---->
 
@@ -18,7 +25,8 @@ export default {
     name: 'SigningManagementDetail',
     data () {
         return {
-            vHtml: ''
+            vHtml: '',
+            res: ''
         }
     },
     methods: {
@@ -34,6 +42,7 @@ export default {
     },
     async mounted () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
+        this.res = data
         this.vHtml = data.contractContent
         if (this.vHtml) {
             this.init()
@@ -41,6 +50,7 @@ export default {
     },
     async activated () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
+        this.res = data
         this.vHtml = data.contractContent
         if (this.vHtml) {
             this.init()
@@ -73,5 +83,15 @@ export default {
     border: none;
     text-align: center;
     margin-right: 3px;
+}
+.contract-fujian{
+    margin-top: 20px;
+    display: flex;
+    p{
+        margin-bottom: 5px;
+        a{
+            color: #ff7a45;
+        }
+    }
 }
 </style>
