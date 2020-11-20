@@ -53,29 +53,32 @@
                     签署方
                     <h-button type="primary" @click="onClick_Dialog(2)">添加签署方</h-button>
                 </div>
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
-                    <template slot="action" slot-scope="scope">
-
-                        <h-button table @click="onEditP(scope,2)">编辑</h-button>
-                        <h-button table @click="onDelete(scope,1)">删除</h-button>
-                    </template>
-                </hosJoyTable>
-
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
-                    <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditP(scope,2)">编辑</h-button>
-                        <h-button table @click="onDelete(scope,2)">删除</h-button>
-                    </template>
-                </hosJoyTable>
+                <div v-if="busData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table @click="onEditP(scope,2)">编辑</h-button>
+                            <h-button table @click="onDelete(scope,1)">删除</h-button>
+                        </template>
+                    </hosJoyTable>
+                </div>
+                <div v-if="perData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table @click="onEditP(scope,2)">编辑</h-button>
+                            <h-button table @click="onDelete(scope,2)">删除</h-button>
+                        </template>
+                    </hosJoyTable>
+                </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     平台签署方
                     <h-button type="primary" @click="onClick_Dialog(1)">设置</h-button>
                 </div>
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
-
-                </hosJoyTable>
+                <div v-if="platData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
+                    </hosJoyTable>
+                </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
@@ -96,8 +99,8 @@
             <div class="contract-html" v-html="newContent">
             </div>
         </el-drawer>
-        <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose" :close-on-click-modal = false>
-            <el-select v-model="keyValue" value-key='id' placeholder="请选择">
+        <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose" :close-on-click-modal=false>
+            <el-select v-model="keyValue" value-key='id' placeholder="请选择" style="margin-top:10px">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                     <span style="float: left">{{ item.paramName }}</span>
                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
