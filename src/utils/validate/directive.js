@@ -1,4 +1,4 @@
-import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX } from './format'
+import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX, isAllNum } from './format'
 /*
     自定义指令中传递的三个参数:el: 指令所绑定的元素，可以用来直接操作DOM。binding:  一个对象，包含指令的很多信息。vnode: Vue编译生成的虚拟节点。
     自定义指令有五个生命周期（也叫钩子函数），分别是 bind,inserted,update,componentUpdated,unbind
@@ -10,6 +10,20 @@ import { isNum, isNotInputTxt, isNegative, isPositiveInt, inputMAX } from './for
  */
 export default {
     install (Vue) {
+        /**
+         * @description 只能输入数字,可限制后几位（小数）
+        * @example  <el-input v-model="form.a" v-isAllNum: 0></el-input> 只允许输入数字 01231423432
+        */
+        Vue.directive('isAllNum', {
+            bind (el, binding, vnode) {
+                const element = el.getElementsByTagName('input')[0]
+                element.addEventListener('keyup', () => {
+                    element.value = isAllNum(element.value, binding.arg)
+                    if (isNaN(element.value)) element.value = ''
+                    vnode.data.model && vnode.data.model.callback(element.value)
+                })
+            }
+        })
         /**
          * @description 只能输入数字,可限制后几位（小数）
          * @param 0 1 2...

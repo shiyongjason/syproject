@@ -59,12 +59,10 @@
                 <el-button v-show="activeName === 'enterprise'" class="orangeBtn" @click="onupdate(scope.data.row,'edit')">修改信息</el-button>
             </template>
         </basicTable>
-        <!-- 弹窗调整 -->
-        <!-- <CaDialog :dialog="dialog" :customerForm='customerForm' @onCancel="dialog = false" /> -->
-        <!-- <CAstamp :dialog="dialogPicture" :uploadImg="uploadImg" @onCancel="dialogPicture = false" @onSearch='onSearch' /> -->
+        <CaDialog :dialog="dialog" :customerForm='customerForm' @onCancel="dialog = false" />
+        <CAstamp :dialog="dialogPicture" :uploadImg="uploadImg" @onCancel="dialogPicture = false" @onSearch='onSearch' />
         <CAlogOut :dialog="dialogVisible" :activeName='activeName' :CAlogOutData='CAlogOutData' @onCancel="dialogVisible = false" @onSearch='onSearch' />
-        <!-- <CaeditDialog ref="CaeditDialog" :dialog="editdialog" :customerForm='customerForm' @onCancel="editdialog = false" @onSearcqyery="onQuery" /> -->
-        <Drawer v-if="dialog" :drawer="dialog" :customerForm='customerForm' @onCancel="dialog = false"/>
+        <CaeditDialog ref="CaeditDialog" :dialog="editdialog" :customerForm='customerForm' @onCancel="editdialog = false" @onSearcqyery="onQuery" />
     </div>
 </template>
 
@@ -74,12 +72,11 @@ import CaDialog from './dialog/CAdialog'
 import CaeditDialog from './dialog/CAeditdialog'
 import CAstamp from './dialog/CAstamp'
 import CAlogOut from './dialog/CAlogOut'
-import Drawer from './drawer.vue'
 import { tableLabelCompany, tableLabelPerson } from '../../const.js'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     name: 'CAattestation',
-    components: { CaDialog, CaeditDialog, CAstamp, CAlogOut, Drawer },
+    components: { CaDialog, CaeditDialog, CAstamp, CAlogOut },
     computed: {
         ...mapState({
             pagination: state => state.jinyunplatform.pagination
@@ -209,7 +206,6 @@ export default {
                 this.$set(this.customerForm, 'legalPhone', data.legalPhone)
                 this.$refs.CaeditDialog.onRrestFrom()
             } else {
-                console.log('dialog触发')
                 this.dialog = true
             }
         },
