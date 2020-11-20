@@ -200,11 +200,12 @@ export default {
             if (this.homeParams.modeType === 'all') {
                 this.drawbar(this.smartData, bar)
             }
-            // this.$emit('queryTotalNetworkCount', {
-            //     startDate: this.smartparams.startDate,
-            //     endDate: this.smartparams.endDate,
-            //     type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
-            // })
+            this.$emit('queryTotalNetworkCount', {
+                startDate: this.smartparams.startDate,
+                endDate: this.smartparams.endDate,
+                type: '',
+                networkType: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
+            })
         },
         drawLine (data, id) {
             // 绘制图表

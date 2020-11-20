@@ -223,7 +223,9 @@ export default {
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
+                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType,
+                networkType: ''
+
             })
         },
         drawLine (data, id) {
