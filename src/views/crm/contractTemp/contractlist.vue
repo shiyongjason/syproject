@@ -12,7 +12,7 @@
                     <div class="query-col__label">合同类型：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.typeId" placeholder="请选择合同类型">
-                            <el-option v-for="item in tempTypeOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                            <el-option v-for="(item, index) in tempTypeOptions" :key="index" :label="item.name" :value="item.id"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
         </div>
         <!---->
         <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :before-close="handleClose">
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data"
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data" @pagination="versionList"
              :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total" isAction >
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onShowTempdetail(scope.data.row.id)">查看</h-button>
@@ -152,8 +152,7 @@ export default {
                 total: this.contractTempdata.total
             }
         },
-        async  onShowVer (val) {
-            this.drawerParams.templateId = val
+        async versionList () {
             await this.findVerdata(this.drawerParams)
             this.ver_Data = this.verData.records
             this.verpaginationInfo = {
@@ -161,6 +160,10 @@ export default {
                 pageSize: this.verData.size,
                 total: this.verData.total
             }
+        },
+        async onShowVer (val) {
+            this.drawerParams.templateId = val
+            await this.versionList()
             this.ver_drawer = true
         },
         onAddContract () {
