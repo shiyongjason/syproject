@@ -10,7 +10,7 @@
                 <div class="contract-temp_name">合同模版设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
                     <el-form-item label="模版名称：">
-                        <el-input v-model="contractForm.templateName"></el-input>
+                        <el-input v-model="contractForm.templateName" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
                         <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam" :disabled='!!contractForm.typeId'>
@@ -53,29 +53,32 @@
                     签署方
                     <h-button type="primary" @click="onClick_Dialog(2)">添加签署方</h-button>
                 </div>
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
-                    <template slot="action" slot-scope="scope">
-
-                        <h-button table @click="onEditP(scope,2)">编辑</h-button>
-                        <h-button table @click="onDelete(scope,1)">删除</h-button>
-                    </template>
-                </hosJoyTable>
-
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
-                    <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditP(scope,2)">编辑</h-button>
-                        <h-button table @click="onDelete(scope,2)">删除</h-button>
-                    </template>
-                </hosJoyTable>
+                <div v-if="busData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table @click="onEditP(scope,2)">编辑</h-button>
+                            <h-button table @click="onDelete(scope,1)">删除</h-button>
+                        </template>
+                    </hosJoyTable>
+                </div>
+                <div v-if="perData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table @click="onEditP(scope,2)">编辑</h-button>
+                            <h-button table @click="onDelete(scope,2)">删除</h-button>
+                        </template>
+                    </hosJoyTable>
+                </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     平台签署方
                     <h-button type="primary" @click="onClick_Dialog(1)">设置</h-button>
                 </div>
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
-
-                </hosJoyTable>
+                <div v-if="platData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
+                    </hosJoyTable>
+                </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
@@ -96,8 +99,8 @@
             <div class="contract-html" v-html="newContent">
             </div>
         </el-drawer>
-        <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose">
-            <el-select v-model="keyValue" value-key='id' placeholder="请选择">
+        <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose" :close-on-click-modal=false>
+            <el-select v-model="keyValue" value-key='id' placeholder="请选择" style="margin-top:10px">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                     <span style="float: left">{{ item.paramName }}</span>
                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
@@ -303,24 +306,36 @@ export default {
             // document.getElementsByClassName('newinput')[1].click
             // 这里每次执行插入 把 合同约定的字段插入进去
             this.bakParams.push(this.keyValue)
-            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = () => {
-                console.log('我测试一下')
-                this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
+                console.log('我测试一下', `${this.keyValue.paramKey}_${this.num}`)
+                // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                this._keyValue = e.target.id
                 this.dialogVisible = true
             }
         },
 
         onEditcon () {
             ++this.num
-            document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
+            // document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
+            // document.getElementById(this._keyValue).outerHTML = ''
             this.$nextTick(() => {
                 let inputWidth = this.keyValue.paramName.length * 14
-                const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;" 
-                 value=${this.keyValue.paramName} readonly></input>`
-                this.$refs.RichEditor.insertHtml(_temp)
+                document.getElementById(this._keyValue).setAttribute('class', `${this.keyValue.paramKey}`)
+                document.getElementById(this._keyValue).setAttribute('data-app-id', `${this.keyValue.id}`)
+                document.getElementById(this._keyValue).style.width = inputWidth + 'px'
+                document.getElementById(this._keyValue).value = this.keyValue.paramName
+                document.getElementById(this._keyValue).setAttribute('value', this.keyValue.paramName)
+
+                document.getElementById(this._keyValue).setAttribute('id', `${this.keyValue.paramKey}_${this.num}`)
+
+                // const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;"
+                //  value=${this.keyValue.paramName} readonly></input>`
+                // this.$refs.RichEditor.insertHtml(_temp)
                 this.dialogVisible = false
-                document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = () => {
-                    this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
+                    // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                    console.log('我测试一下1', e.target)
+                    this._keyValue = e.target.id
                     this.dialogVisible = true
                 }
                 // 继续插入合同字段  后面  编辑器里面的字段和 所有插入的字段做交集的 如果编辑器里面有多个相同字段  交集的话也不会清除掉
@@ -331,7 +346,7 @@ export default {
             this.drawer = true
         },
         handleClose () {
-
+            this.dialogVisible = false
         },
         // onContract () {
         //     this.newContent = JSON.parse(JSON.stringify(this.content))
@@ -358,7 +373,7 @@ export default {
             ++this.num
             let _temp = ''
             if (val == 1) {
-                _temp = `<input class="contract_sign_${this.num}" style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                _temp = `<input class="contract_sign_${this.num}"  style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
                 if (document.getElementById('platform_sign')) {
@@ -419,7 +434,8 @@ export default {
                     this.busData = this.busData.concat(val)
                 }
             } else {
-                this.platData = this.platData.concat(val)
+                // this.platData = this.platData.concat(val)
+                this.$set(this.platData, 0, val[0])
             }
         },
         // 表格编辑
@@ -432,8 +448,6 @@ export default {
         },
         // 删除
         onDelete (val, type) {
-            console.log(val)
-            console.log(val.data.$index)
             if (type == 1) {
                 this.busData.splice(val.data.$index, 1)
             } else {
@@ -458,6 +472,7 @@ export default {
         async onSaveTemp (val) {
             const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
             const reqParam = []
+            const signParam = []
             inputArr.length > 0 && inputArr.map(val => {
                 if (val.dataset.appId) {
                     reqParam.push({
@@ -465,10 +480,17 @@ export default {
                         paramKey: val.className
                     })
                 }
+                if (val.className.indexOf('contract_sign_') != -1) {
+                    signParam.push({
+                        id: '',
+                        paramKey: val.className
+                    })
+                }
             })
+            this.contractForm.content = document.getElementsByClassName('w-e-text')[0].innerHTML
             this.contractForm.operatorBy = this.userInfo.employeeName
             this.contractForm.operatorAccount = this.userInfo.phoneNumber
-            this.contractForm.reqParam = this.findUnique(reqParam)
+            this.contractForm.reqParam = [...this.findUnique(reqParam), ...signParam]
             this.contractForm.status = val
             // 必填项校验
             if (!this.contractForm.templateName) {
@@ -485,17 +507,18 @@ export default {
                 })
                 return
             }
-            if (!document.getElementById('platform_sign')) {
-                this.$message({
-                    message: '请插入一处平台签署区',
-                    type: 'warning'
-                })
-                return
-            }
+
             if (val == 1) {
                 if (this.contractForm.reqParam.length == 0) {
                     this.$message({
                         message: '请至少添加一个合同字段',
+                        type: 'warning'
+                    })
+                    return
+                }
+                if (!document.getElementById('platform_sign')) {
+                    this.$message({
+                        message: '请插入一处平台签署区',
                         type: 'warning'
                     })
                     return
@@ -562,7 +585,7 @@ export default {
         async findTempDetail (val) {
             await this.getContratDetail(val)
             // 编辑时候 把 插入的合同字段 重新复制一份 bakParams
-            this.bakParams = this.contractTempdetail.param
+            this.bakParams = this.contractTempdetail.param.filter(val => val.id)
             this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
             // 复制一份
             this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
@@ -591,8 +614,9 @@ export default {
                                 paramKey: val.className,
                                 paramName: val.value
                             }
-                            console.log(keyValue)
-                            this._keyValue = JSON.parse(JSON.stringify(keyValue))
+                            console.log(val.id)
+                            // this._keyValue = JSON.parse(JSON.stringify(keyValue))
+                            this._keyValue = val.id
                             this.dialogVisible = true
                         }
                     }

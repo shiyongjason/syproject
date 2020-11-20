@@ -1,7 +1,7 @@
 <template>
     <div>
-        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose">
-            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2">
+        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal = false>
+            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2" >
                 <el-form-item label="签署方名称：" prop="signerName">
                     <el-input v-model="signerTempForm.signerName" maxlength="50"></el-input>
                 </el-form-item>
@@ -17,7 +17,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="经办人：">
+                <el-form-item label="经办人：" v-if="signerTempForm.signerType==1">
                     经办人由发起人指定
                 </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
@@ -34,7 +34,7 @@
                     </template>
                 </el-form-item>
             </el-form>
-            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1">
+            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1" >
                 <el-form-item label="签署方名称：" prop="">
                     平台
                 </el-form-item>
@@ -51,8 +51,8 @@
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
                         <el-checkbox label="1" name="type">企业章</el-checkbox>
                         <!-- <el-checkbox label="2" name="type">法定代表人章</el-checkbox> -->
-                        <el-checkbox label="2" name="type">手绘章</el-checkbox>
-                        <el-checkbox label="3" name="type">模板章</el-checkbox>
+                        <!-- <el-checkbox label="2" name="type">手绘章</el-checkbox>
+                        <el-checkbox label="3" name="type">模板章</el-checkbox> -->
                     </el-checkbox-group>
                 </el-form-item>
             </el-form>
@@ -149,24 +149,26 @@ export default {
             findCApage: 'contractTemp/findCApage'
         }),
         onShowDialog (val, arr, form) {
+            this.tract_visible = true
             console.log('--=', val, arr, form)
             // 类型
             this.signerTempForm = deepCopy(this.copy_signerTempForm)
-            // if (val == 2) {
-            //     this.$refs.signerTempR.resetFields()
-            // } else {
-            //     this.$refs.signerTempS.clearValidate()
-            //     this.onFindCApage()
-            // }
+
+            this.$nextTick(() => {
+                if (val == 2) {
+                    this.$refs.signerTempR.clearValidate()
+                } else {
+                    this.$refs.signerTempS.clearValidate()
+                }
+            })
+
             this.onFindCApage()
-            this.tract_visible = true
             this.contractType = val
             this.contart_arr = arr
             this.isEdit = false
             if (form) {
                 // 复制一份 做取消校验
                 this.isEdit = true
-                console.log('====', this.isEdit)
                 this.vaild_form = deepCopy(form)
                 this.signerTempForm = { ...this.signerTempForm, ...form }
                 this.signerTempForm._signerDemand = this.signerTempForm.signerDemand.split(',')
@@ -177,6 +179,7 @@ export default {
                 this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }
         },
+
         handleClose () {
             if (JSON.stringify(this.vaild_form) != JSON.stringify(this.signerTempForm)) {
                 this.$confirm('取消则不会保存当前修改', '提示', {
@@ -200,6 +203,7 @@ export default {
             this.singerOps = this.contart_arr.filter(item => {
                 return item.signerType == val
             })
+            this.signerTempForm.paramId = ''
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
