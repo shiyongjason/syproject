@@ -397,6 +397,20 @@ export default {
             })
             this.currentContent = data.contractContent
             this.lastContent = data.lastContractContent
+            if (this.currentContent === null) {
+                this.$message({
+                    message: `获取新版合同失败`,
+                    type: 'error'
+                })
+                return
+            }
+            if (this.lastContent === null) {
+                this.$message({
+                    message: `获取上一版合同失败`,
+                    type: 'error'
+                })
+                return
+            }
             this.$nextTick(() => {
                 this.$refs.diffDialog.onShowDiff()
             })
@@ -511,50 +525,49 @@ export default {
 
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
-                    if (!operatorType) {
-                        /* 修改模板： */
-                        // div版合同
-                        let ryanList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
-                        Array.from(ryanList).map(jtem => {
-                            jtem.innerHTML = paramValue
-                        })
-                        // input版合同
-                        let richEditorDom = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
-                        Array.from(richEditorDom).map(jtem => {
-                            jtem.value = paramValue
-                            jtem.className = paramKey
-                            jtem.setAttribute('value', paramValue)
-                            let inputWidth = paramValue.length * 14
-                            jtem.style.width = `${inputWidth}px`
-                        })
-                        let inputDomList = ''
-                        if (this.detailRes.contractStatus == 6) {
-                            inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByTagName('input')
-                        } else {
-                            inputDomList = document.getElementsByClassName('approvalcontract-content-hidden')[0].getElementsByTagName('input')
+                    // if (!operatorType) {}
+                    /* 修改模板： */
+                    // div版合同
+                    let ryanList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
+                    Array.from(ryanList).map(jtem => {
+                        jtem.innerHTML = paramValue
+                    })
+                    // input版合同
+                    let richEditorDom = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
+                    Array.from(richEditorDom).map(jtem => {
+                        jtem.value = paramValue
+                        jtem.className = paramKey
+                        jtem.setAttribute('value', paramValue)
+                        let inputWidth = paramValue.length * 14
+                        jtem.style.width = `${inputWidth}px`
+                    })
+                    let inputDomList = ''
+                    if (this.detailRes.contractStatus == 6) {
+                        inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByTagName('input')
+                    } else {
+                        inputDomList = document.getElementsByClassName('approvalcontract-content-hidden')[0].getElementsByTagName('input')
+                    }
+                    // 页面合同上的所有键值对
+                    let tempObj = {}
+                    Array.from(inputDomList).map((item, index) => {
+                        // 签署字段不存在className
+                        if (!(item.className in tempObj) && item.className !== '') {
+                            // 拿this.contractKeyValueList这个取筛是因为之前以为是可以改字段的。
+                            // tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
+                            tempObj[item.className] = JSON.parse(this.detailRes.contractFieldsList).filter(jtem => jtem.paramKey === item.className)
                         }
-                        // 页面合同上的所有键值对
-                        let tempObj = {}
-                        Array.from(inputDomList).map((item, index) => {
-                            // 签署字段不存在className
-                            if (!(item.className in tempObj) && item.className !== '') {
-                                // 拿this.contractKeyValueList这个取筛是因为之前以为是可以改字段的。
-                                // tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
-                                tempObj[item.className] = JSON.parse(this.detailRes.contractFieldsList).filter(jtem => jtem.paramKey === item.className)
-                            }
-                        })
-                        for (const key in tempObj) {
-                            tempArr.push(tempObj[key][0])
-                        }
-                        tempArr.map(item => {
-                            // 修改对应的键值对里的值
-                            if (item.paramKey === paramKey) {
-                                item.paramValue = paramValue
-                            }/*  else {
+                    })
+                    for (const key in tempObj) {
+                        tempArr.push(tempObj[key][0])
+                    }
+                    tempArr.map(item => {
+                        // 修改对应的键值对里的值
+                        if (item.paramKey === paramKey) {
+                            item.paramValue = paramValue
+                        }/*  else {
                                 item.paramValue = Array.from(inputDomList).filter(jtem => jtem.className === item.paramKey)[0].value
                             } */
-                        })
-                    }
+                    })
                     // 通过dom生成最新的html
                     this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
@@ -602,10 +615,12 @@ export default {
                         this.currentKeyOriginal = JSON.parse(JSON.stringify(this.currentKey))
                         Array.from(inputDomList).map((item, index) => {
                             let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
-                            item.onclick = () => {
-                                this.currentKey = { ...fields }
-                                this.currentKeyOriginal = { ...fields }
-                                this.$refs['ruleForm'].resetFields()
+                            if (item.className) {
+                                item.onclick = () => {
+                                    this.currentKey = { ...fields }
+                                    this.currentKeyOriginal = { ...fields }
+                                    this.$refs['ruleForm'].resetFields()
+                                }
                             }
                         })
                         let imgDom = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('img')

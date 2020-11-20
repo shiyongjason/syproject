@@ -7,13 +7,13 @@
         <el-input v-if='innerHtml&&innerHtml!="元"' v-model.trim="inputModelComputed" v-isNum:2 v-bind="$attrs" @blur="onBlur">
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
+        <!-- 金额 -->
         <el-input v-if='innerHtml=="元"' :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
             <template slot="append" >元</template>
         </el-input>
         <!-- 只能数字,账号 -->
         <el-input v-if='!innerHtml' v-model.trim="inputModelComputed" v-isAllNum:0 v-bind="$attrs"></el-input>
     </div>
-
 </template>
 
 <script>

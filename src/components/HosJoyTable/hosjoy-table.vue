@@ -134,9 +134,7 @@ export default {
             selectedColumn: [],
             columnRender: [],
             emptyTxtLeft: '',
-            getColumn: [],
-            pageSizeTemp: 10,
-            pageNumberTemp: 1
+            getColumn: []
         }
     },
     created () {
@@ -292,17 +290,15 @@ export default {
                 pageNumber: this.currentPage,
                 pageSize: val
             })
-            this.pageNumberTemp = this.currentPage
         },
         async handleCurrentChange (val) {
             await this.$emit('pagination', {
                 pageNumber: val,
                 pageSize: this.pageNum
             })
-            this.pageSizeTemp = this.pageNum
         },
         indexMethod (index) {
-            return this.pageSizeTemp * (this.pageNumberTemp - 1) + index + 1
+            return this.pageNum * (this.currentPage - 1) + index + 1
         },
         clearSelection () {
             this.$refs.hosjoyTable.clearSelection()
