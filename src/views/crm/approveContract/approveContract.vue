@@ -231,15 +231,6 @@ export default {
             let h = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
             return h || 500
         },
-        onxxxx (num) {
-            if (!num) {
-                this.currentKey.paramValue = ''
-                return
-            }
-            num = num.toString()
-            num = num.replace(/,/gi, '')
-            this.currentKey.paramValue = num
-        },
         checkField (rule, value, callback) {
             if (this.currentKey.required && this.currentKey.paramValue == '') {
                 callback(new Error(`${this.currentKey.paramName}不能为空`))
@@ -259,7 +250,6 @@ export default {
             }
         },
         chooseInput (item) {
-            console.log('item: ', item)
             if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
                 return true
             }
@@ -267,7 +257,6 @@ export default {
         },
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
-            console.log('xx,', this.currentKey.paramKey)
             const comObj = {
                 1: {
                     [this.chooseInput(this.currentKey) ? 'formatInput' : 'elInput']:
@@ -284,6 +273,7 @@ export default {
                                 },
                                 on: {
                                     input: (val) => { this.currentKey.paramValue = val.trim() }
+
                                 }
                             }
                             : {
@@ -291,14 +281,11 @@ export default {
                                     value: this.currentKey.paramValue,
                                     placeholder: '请输入内容',
                                     disabled: !this.currentKey.modify,
-                                    maxlength: this.currentKey.maxLength || '',
-                                    [this.currentKey.unit ? 'style' : null]: { width: '250px' }
+                                    maxlength: this.currentKey.maxLength || ''
                                 },
                                 on: {
                                     input: (val) => { this.currentKey.paramValue = val.trim() }
-                                },
-                                slot: this.currentKey.unit ? 'append' : '',
-                                innerHtml: this.currentKey.unit || ''
+                                }
                             }
                 },
                 3: {
@@ -504,6 +491,7 @@ export default {
             this.init()
         },
         onSaveContent (operatorType = '') {
+            console.log('onSaveContent')
             const { paramName, paramKey, paramValue, required } = this.currentKey
             if (required && (paramValue === '' || paramValue === null)) {
                 this.$message({
