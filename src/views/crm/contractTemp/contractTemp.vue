@@ -10,7 +10,7 @@
                 <div class="contract-temp_name">合同模版设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
                     <el-form-item label="模版名称：">
-                        <el-input v-model="contractForm.templateName"></el-input>
+                        <el-input v-model="contractForm.templateName" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
                         <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam" :disabled='!!contractForm.typeId'>
@@ -303,24 +303,36 @@ export default {
             // document.getElementsByClassName('newinput')[1].click
             // 这里每次执行插入 把 合同约定的字段插入进去
             this.bakParams.push(this.keyValue)
-            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = () => {
-                console.log('我测试一下')
-                this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
+                console.log('我测试一下', `${this.keyValue.paramKey}_${this.num}`)
+                // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                this._keyValue = e.target.id
                 this.dialogVisible = true
             }
         },
 
         onEditcon () {
             ++this.num
-            document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
+            // document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
+            // document.getElementById(this._keyValue).outerHTML = ''
             this.$nextTick(() => {
                 let inputWidth = this.keyValue.paramName.length * 14
-                const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;" 
-                 value=${this.keyValue.paramName} readonly></input>`
-                this.$refs.RichEditor.insertHtml(_temp)
+                document.getElementById(this._keyValue).setAttribute('class', `${this.keyValue.paramKey}`)
+                document.getElementById(this._keyValue).setAttribute('data-app-id', `${this.keyValue.id}`)
+                document.getElementById(this._keyValue).style.width = inputWidth + 'px'
+                document.getElementById(this._keyValue).value = this.keyValue.paramName
+                document.getElementById(this._keyValue).setAttribute('value', this.keyValue.paramName)
+
+                document.getElementById(this._keyValue).setAttribute('id', `${this.keyValue.paramKey}_${this.num}`)
+
+                // const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;"
+                //  value=${this.keyValue.paramName} readonly></input>`
+                // this.$refs.RichEditor.insertHtml(_temp)
                 this.dialogVisible = false
-                document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = () => {
-                    this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
+                    // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                    console.log('我测试一下1', e.target)
+                    this._keyValue = e.target.id
                     this.dialogVisible = true
                 }
                 // 继续插入合同字段  后面  编辑器里面的字段和 所有插入的字段做交集的 如果编辑器里面有多个相同字段  交集的话也不会清除掉
@@ -331,7 +343,7 @@ export default {
             this.drawer = true
         },
         handleClose () {
-
+            this.dialogVisible = false
         },
         // onContract () {
         //     this.newContent = JSON.parse(JSON.stringify(this.content))
@@ -419,7 +431,8 @@ export default {
                     this.busData = this.busData.concat(val)
                 }
             } else {
-                this.platData = this.platData.concat(val)
+                // this.platData = this.platData.concat(val)
+                this.$set(this.platData, 0, val[0])
             }
         },
         // 表格编辑
@@ -471,8 +484,9 @@ export default {
                     })
                 }
             })
+            console.log(this.$refs.RichEditor)
 
-            // return
+            this.contractForm.content = document.getElementsByClassName('w-e-text')[0].innerHTML
             this.contractForm.operatorBy = this.userInfo.employeeName
             this.contractForm.operatorAccount = this.userInfo.phoneNumber
             this.contractForm.reqParam = [...this.findUnique(reqParam), ...signParam]
@@ -483,43 +497,38 @@ export default {
                     message: '请填写模版名称',
                     type: 'warning'
                 })
-                return
             }
             if (!this.contractForm.typeId) {
                 this.$message({
                     message: '请填写模版名称',
                     type: 'warning'
                 })
-                return
             }
-            if (!document.getElementById('platform_sign')) {
-                this.$message({
-                    message: '请插入一处平台签署区',
-                    type: 'warning'
-                })
-                return
-            }
+
             if (val == 1) {
                 if (this.contractForm.reqParam.length == 0) {
                     this.$message({
                         message: '请至少添加一个合同字段',
                         type: 'warning'
                     })
-                    return
+                }
+                if (!document.getElementById('platform_sign')) {
+                    this.$message({
+                        message: '请插入一处平台签署区',
+                        type: 'warning'
+                    })
                 }
                 if (this.busData.length == 0 && this.perData.length == 0) {
                     this.$message({
                         message: '请至少添加一个签署方',
                         type: 'warning'
                     })
-                    return
                 }
                 if (this.platData.length == 0) {
                     this.$message({
                         message: '请设置平台签署区',
                         type: 'warning'
                     })
-                    return
                 }
             }
 
@@ -569,7 +578,7 @@ export default {
         async findTempDetail (val) {
             await this.getContratDetail(val)
             // 编辑时候 把 插入的合同字段 重新复制一份 bakParams
-            this.bakParams = this.contractTempdetail.param.map(val => !val.id)
+            this.bakParams = this.contractTempdetail.param.filter(val => val.id)
             this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
             // 复制一份
             this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
@@ -598,8 +607,9 @@ export default {
                                 paramKey: val.className,
                                 paramName: val.value
                             }
-                            console.log(keyValue)
-                            this._keyValue = JSON.parse(JSON.stringify(keyValue))
+                            console.log(val.id)
+                            // this._keyValue = JSON.parse(JSON.stringify(keyValue))
+                            this._keyValue = val.id
                             this.dialogVisible = true
                         }
                     }
