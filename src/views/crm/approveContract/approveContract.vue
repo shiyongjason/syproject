@@ -602,6 +602,7 @@ export default {
                 this.contractContentInputHidden = res.data.contractContent // input版的合同
                 this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
                 this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+                console.log('this.detailRes.contractFieldsList', JSON.parse(this.detailRes.contractFieldsList))
                 this.$nextTick(() => {
                     // 法务审核初始化
                     if (this.detailRes.contractStatus == 6) {
