@@ -111,7 +111,6 @@ export default {
             cloudNetworkReport: 'cloudNetworkReport',
             cloudNetworkDetailList: 'cloudNetworkDetailList',
             cloudNetworkDetailPagination: 'cloudNetworkDetailPagination',
-            // cloudHomeDetailDict: 'cloudHomeDetailDict',
             cloudNetworkModeTypeList: 'cloudNetworkModeTypeList'
         }),
         pickerOptionsStart () {
