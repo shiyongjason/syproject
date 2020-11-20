@@ -1,5 +1,4 @@
 <template>
-    <!--  maxlength='16' v-isNum:[isNum]-->
     <div>
         <!-- 3位数正整数 v-isPositiveInt maxlength="3"-->
         <el-input v-if="paramKey==='pay_period_supplier'" v-model.trim="inputModelComputed" v-isPositiveInt maxlength="3" v-bind="$attrs">

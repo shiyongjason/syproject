@@ -347,7 +347,7 @@ export default {
                 6: {
                     elSlider: {
                         bind: {
-                            value: this.currentKey.paramValue,
+                            value: Number(this.currentKey.paramValue),
                             step: 1,
                             max: 6,
                             min: 1,
@@ -355,7 +355,7 @@ export default {
                             style: { marginBottom: '30px' }
                         },
                         on: {
-                            input: (val) => { console.log('val: ', val); this.currentKey.paramValue = val }
+                            input: (val) => { this.currentKey.paramValue = val }
 
                         }
                     }
@@ -458,6 +458,7 @@ export default {
         successArg (val) {
         },
         async setImg () {
+            if (this.imgArr.length == 0) return
             let temp = [this.imgArr[this.imgArr.length - 1]]
             let doms = document.getElementsByClassName(`${this.currentKey.paramKey}_${this.currentKey.imgIndex}`)
             this.currentKey.paramValue = temp[0].fileUrl
