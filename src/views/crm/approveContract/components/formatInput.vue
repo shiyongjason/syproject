@@ -4,11 +4,11 @@
         <el-input v-if="paramKey==='pay_period_supplier'" v-model.trim="inputModelComputed" v-isPositiveInt maxlength="3" v-bind="$attrs">
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
-        <el-input v-if='innerHtml&&innerHtml!="元"' v-model.trim="inputModelComputed" v-isNum:2 v-bind="$attrs" @blur="onBlur">
+        <el-input v-else-if='innerHtml&&innerHtml!="元"' v-model.trim="inputModelComputed" v-isNum:2 v-bind="$attrs" @blur="onBlur">
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
         <!-- 金额 -->
-        <el-input v-if='innerHtml=="元"' :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
+        <el-input v-else-if='innerHtml=="元"' :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
             <template slot="append" >元</template>
         </el-input>
         <!-- 只能数字,账号 -->
