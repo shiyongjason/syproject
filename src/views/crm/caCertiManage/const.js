@@ -6,7 +6,7 @@ export const tableLabelPerson = [
     { label: '是否实名', prop: 'status', width: '80' }, // 1：未认证 2：已认证【未实名】 3：已实名
     { label: '实名方式', prop: 'realType', width: '120' },
     { label: '创建时间', prop: 'createTime', formatters: 'dateTimes', width: '200' },
-    { label: '实名时间', prop: 'updateTime', formatters: 'dateTimes', width: '200' }
+    { label: '实名时间', prop: 'realNameTime', formatters: 'dateTimes', width: '200' }
 ]
 
 export const tableLabelEnterprise = [
@@ -18,5 +18,5 @@ export const tableLabelEnterprise = [
     { label: '是否实名', prop: 'status', width: '80' },
     { label: '实名方式', prop: 'realType', width: '120' },
     { label: '创建时间', prop: 'createTime', formatters: 'dateTimes', width: '200' },
-    { label: '实名时间', prop: 'updateTime', formatters: 'dateTimes', width: '200' }
+    { label: '实名时间', prop: 'realNameTime', formatters: 'dateTimes', width: '200' }
 ]
