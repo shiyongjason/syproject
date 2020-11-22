@@ -44,11 +44,11 @@
                 :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onCopy(scope.data.row)">复制</h-button>
-                    <h-button table @click="onEdit(scope.data.row)">编辑</h-button>
-                    <h-button table v-if="scope.data.row.status==1" @click="onEnable(scope.data.row)">禁用</h-button>
-                    <h-button table v-if="scope.data.row.status==0" @click="onEnable(scope.data.row)">启用</h-button>
-                    <h-button table @click="onShowVer(scope.data.row.id)">版本记录</h-button>
+                    <h-button table @click="onCopy(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_COPY)">复制</h-button>
+                    <h-button table @click="onEdit(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_EDIT)">编辑</h-button>
+                    <h-button table v-if="scope.data.row.status==1&&hosAuthCheck(Auths.CRM_CONTRACT_OPER)"  @click="onEnable(scope.data.row)">禁用</h-button>
+                    <h-button table v-if="scope.data.row.status==0&&hosAuthCheck(Auths.CRM_CONTRACT_OPER)" @click="onEnable(scope.data.row)">启用</h-button>
+                    <h-button table @click="onShowVer(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_VER)">版本记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -68,12 +68,13 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapActions, mapGetters } from 'vuex'
 import { enableTemp, disableTemp } from './api'
 import { clearCache, newCache } from '@/utils/index'
-
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'contractlist',
     components: { hosJoyTable },
     data () {
         return {
+            Auths,
             queryParams: {
                 templateName: '',
                 typeId: '',

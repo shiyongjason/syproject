@@ -95,9 +95,9 @@
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
                 actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
-                    <h-button v-if="scope.data.row.contractStatus===2" table @click="approveContract(scope.data.row)">分财审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===4" table @click="approveContract(scope.data.row)">风控审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===6" table @click="approveContract(scope.data.row)">法务审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)" >分财审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                 </template>
             </hosJoyTable>
