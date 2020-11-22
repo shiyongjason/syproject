@@ -232,6 +232,7 @@ export const CRM_CONTRACT_COPY = 120001
 export const CRM_CONTRACT_EDIT = 120002
 export const CRM_CONTRACT_OPER = 120003
 export const CRM_CONTRACT_VER = 120004
+export const CRM_CONTRACT_ADD = 120005
 
 export const CRM_CONTRACT_FIN = 120011
 export const CRM_CONTRACT_RISK = 120012

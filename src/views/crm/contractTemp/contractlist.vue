@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <h-button type="primary" @click="onAddContract">
+                <h-button type="primary" @click="onAddContract" v-if="hosAuthCheck(Auths.CRM_CONTRACT_ADD)">
                     新增合同模板
                 </h-button>
             </div>
