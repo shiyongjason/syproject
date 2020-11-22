@@ -70,13 +70,14 @@
                     <span>{{scope.data.row.status == 3? '是' : '否'}}</span>
                 </template>
                 <template slot="realType" slot-scope="scope">
-                    <span v-if="scope.data.row.status == 1">人脸识别</span>
-                    <span v-if="scope.data.row.status == 2">对公打款</span>
-                    <span v-if="scope.data.row.status == 3">企业支付宝</span>
+                    <span v-if="scope.data.row.realType == 1">人脸识别</span>
+                    <span v-else-if="scope.data.row.realType == 2">对公打款</span>
+                    <span v-else-if="scope.data.row.realType == 3">企业支付宝</span>
+                    <span v-else>-</span>
                 </template>
                 <!-- 企业CA -->
                 <template slot="managerType" slot-scope="scope">
-                    <span>{{scope.data.row.managerType == 1 ? '经办人' : ''}}</span>
+                    <span>{{scope.data.row.managerType == 1 ? '经办人' : '-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onDrawerinfo(scope.data.row)">查看印章</h-button>
