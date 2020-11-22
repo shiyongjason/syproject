@@ -27,23 +27,25 @@
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     签署方
-
                 </div>
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData">
-
-                </hosJoyTable>
-
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" :data="perData">
-
-                </hosJoyTable>
+                <div v-if="busData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData">
+                    </hosJoyTable>
+                </div>
+                <div v-if="perData.length>0">
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" :data="perData">
+                    </hosJoyTable>
+                </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
                     平台签署方
                 </div>
+                <div v-if="platData.length>0">
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
 
                 </hosJoyTable>
+                     </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
