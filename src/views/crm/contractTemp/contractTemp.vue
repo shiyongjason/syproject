@@ -384,7 +384,7 @@ export default {
                     return
                 }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input><i style="font-style:normal;display:none">platform_sign</i>`
+                value="平台签署" readonly></input>platform_sign`
             }
             // console.log(document.getElementById('platform_sign'))
 
@@ -444,6 +444,7 @@ export default {
             await this.onAllParams()
             this.edit_index = val.data.$index
             console.log('edit_index', this.edit_index)
+            this.newParams = this.newParams.filter(val => val.groupName)
             this.$refs.contractDialog.onShowDialog(type, this.newParams, val.data.row)
         },
         // 删除
@@ -585,7 +586,7 @@ export default {
         async findTempDetail (val) {
             await this.getContratDetail(val)
             // 编辑时候 把 插入的合同字段 重新复制一份 bakParams
-            this.bakParams = this.contractTempdetail.param.filter(val => val.id)
+            this.bakParams = this.contractTempdetail.param && this.contractTempdetail.param.filter(val => val.id)
             this.contractForm = { ...this.contractForm, ...this.contractTempdetail }
             // 复制一份
             this.valid_form = JSON.parse(JSON.stringify(this.contractForm))

@@ -111,6 +111,8 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { contractSigningList, contractTypes, contractStatic } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
+import * as Auths from '@/utils/auth_const'
+
 const _queryParams = {
     pageSize: 10,
     pageNumber: 1,
@@ -132,6 +134,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
+            Auths,
             financeManagerWaitingNum: '',
             lawManagerWaitingNum: '',
             riskManagerWaitingNum: '',

@@ -5,7 +5,7 @@
             <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
         </component> -->
             <div class="approvalcontract-head">
-                <font>{{detailRes.contractStatus == 6 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
+                <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
             </div>
             <div class="approvalcontract-layout">

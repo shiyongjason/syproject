@@ -40,7 +40,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData"  @pagination="searchList"
-             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='260' isAction
+             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='150' isAction
                 :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
