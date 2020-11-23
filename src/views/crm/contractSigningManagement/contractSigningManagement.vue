@@ -166,7 +166,7 @@ export default {
                 { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
             ],
-            tableData: [{ contractNo: 1 }]
+            tableData: []
         }
     },
     computed: {
