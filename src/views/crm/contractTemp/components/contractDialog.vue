@@ -11,8 +11,8 @@
                         <el-radio :label=2 >个人</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="请选择合同企业：" prop="paramId">
-                    <el-select v-model="signerTempForm.paramId"  placeholder="请选择合同企业" @change="changeId">
+                <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" prop="paramId">
+                    <el-select v-model="signerTempForm.paramId"  :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" @change="changeId">
                         <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
                     </el-select>
