@@ -408,13 +408,13 @@ export default {
                 _temp = `<input class="contract_sign_${this.num}"  style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
-                if (document.getElementById('platform_sign')) {
-                    this.$message({
-                        message: '只能插入一处平台签署区',
-                        type: 'warning'
-                    })
-                    return
-                }
+                // if (document.getElementById('platform_sign')) {
+                //     this.$message({
+                //         message: '只能插入一处平台签署区',
+                //         type: 'warning'
+                //     })
+                //     return
+                // }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="平台签署" readonly></input>platform_sign`
             }
