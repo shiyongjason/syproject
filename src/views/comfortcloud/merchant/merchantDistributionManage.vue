@@ -9,13 +9,14 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间： </div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                        </el-date-picker>
+                    <div class="flex-wrap-title">审核状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.status" style="width: 100%">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="审核通过" value="0"></el-option>
+                            <el-option label="待审核" value="10"></el-option>
+                            <el-option label="审核不通过" value="15"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -24,20 +25,10 @@
                     </div>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">
-                  已筛选 {{merchantmemberData.total}} 项；
-                  累计注册: {{merchantmemberTotalData.registerCount}}个；
-                  累计成交订单: {{merchantmemberTotalData.orderCount}}单；
-                  累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
-                  累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
-            </el-tag>
             <!-- 表格使用老毕的组件 -->
         <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="source" slot-scope="scope">
-                    {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
-                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">{{scope.data.row.source==='1'?'查看奖励':'审核通过'}}</el-button>
                 </template>
             </basicTable>
             </div>
@@ -65,15 +56,12 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '会员账号', prop: 'phone' },
-                { label: '会员昵称', prop: 'nickName' },
-                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '注册来源', prop: 'source' },
-                { label: '推荐人会员编号', prop: 'inviteUuid' },
-                { label: '邀请会员数量', prop: 'registerCount' },
-                { label: '邀请成交订单数', prop: 'orderCount' },
-                { label: '邀请成交金额', prop: 'payAmountTotal' },
-                { label: '奖励金额', prop: 'rewardAmountTotal' }
+                { label: '申请时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '分销员昵称', prop: 'nickName' },
+                { label: '分销员会员账号', prop: 'phone' },
+                { label: '分销员姓名', prop: 'source' },
+                { label: '审核通过时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '状态', prop: 'inviteUuid' }
             ],
             dialogVisible: false
         }
@@ -85,29 +73,7 @@ export default {
         ...mapGetters({
             merchantmemberData: 'iotmerchantmemberData',
             merchantmemberTotalData: 'iotmerchantmemberTotalData'
-        }),
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.queryParams.endRegisterTime
-                    if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.startRegisterTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                    // return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        }
+        })
     },
     mounted () {
         // this.tableData = [{ productN: '123' }]
@@ -133,9 +99,7 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onEdit (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
-        },
+        onEdit (val) {},
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery(this.searchParams)
