@@ -42,6 +42,7 @@
                             </el-form-item>
                             <el-form-item label="平台签署区：">
                                 <el-button type="primary" @click="onClickCur(2)">插入当前位置</el-button>
+                                <span class="ml10 red-word">平台为静默签署</span>
                             </el-form-item>
                         </el-form>
 
@@ -90,7 +91,7 @@
                 </template>
             </div>
             <div class="page-body-cont">
-                <el-button type="default" @click="onCancelTemp">取消</el-button>
+                <el-button type="default" @click="onCancelTemp">取消修改</el-button>
                 <el-button type="primary" @click="onSaveTemp(0)">保存模板</el-button>
                 <el-button type="primary" @click="onSaveTemp(1)">保存并启用模版</el-button>
             </div>
