@@ -40,8 +40,7 @@
                             <el-form-item label="请选择需要插入的字段：">
                                 <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
                                     <template slot-scope="{ item }">
-                                        <!-- <span style="float: left">{{ searchColor(item.paramName) }}</span> -->
-                                        <span style="float: left" v-html="searchColor(item.paramName)"></span>
+                                        <span style="float: left">{{ item.paramName }}</span>
                                         <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                                     </template>
                                 </el-autocomplete>
@@ -274,17 +273,6 @@ export default {
             getContratDetail: 'contractTemp/getContratDetail'
             // findCApage: 'contractTemp/findCApage'
         }),
-        searchColor (value) {
-            if (this.insertVal) {
-                if (value.toLowerCase().indexOf(this.insertVal.toLowerCase()) > -1) {
-                    let res = value.split(this.insertVal.toLowerCase())[0]
-                    let rest = value.split(this.insertVal.toLowerCase())[1]
-                    return `${res}<font style='color:#ff7a45'>${this.insertVal}</font>${rest}`
-                }
-            }
-
-            return value
-        },
         querySearch (queryString, cb) {
             let restaurants = this.restaurants
             let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants

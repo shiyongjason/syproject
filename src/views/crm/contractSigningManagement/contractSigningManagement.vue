@@ -302,7 +302,7 @@ export default {
     margin: 10px 0;
 }
 .table-tab {
-    background: #f2f2f2;
+    background: #f2f2f2b8;
     color: #ff6600;
     width: 110px;
     height: 38px;
