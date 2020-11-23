@@ -70,9 +70,9 @@
                         </div>
                     </div>
                     <div class="approvalcontract-btn">
+                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
-                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
                     </div>
                 </div>
@@ -190,7 +190,7 @@ export default {
                 'list', // 列表
                 'justify', // 对齐方式
                 'quote', // 引用
-                'emoticon', // 表情
+                // 'emoticon', // 表情
                 'image', // 插入图片
                 'table', // 表格
                 'undo', // 撤销
@@ -879,5 +879,9 @@ export default {
         padding-right: 20px;
         box-sizing: border-box;
     }
+
 }
+/deep/.w-e-text input{
+        cursor: pointer;
+    }
 </style>
