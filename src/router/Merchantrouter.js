@@ -113,6 +113,17 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberManage.vue')
+                    }, {
+                        path: 'merchantDistributionManage',
+                        name: 'merchantDistributionManage',
+                        meta: {
+                            title: '分销员管理',
+                            tagName: '分销员管理',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantDistributionManage.vue')
                     },
                     {
                         path: 'merchantMemberInvitation',
