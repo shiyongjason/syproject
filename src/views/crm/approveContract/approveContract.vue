@@ -85,10 +85,10 @@
                 <span class="dialog-layout">
                     <font>*</font>{{dialog.title}}原因：
                 </span>
-                <el-input v-model="dialog.remark" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" style="width:80%"></el-input>
+                <el-input v-model="dialog.remark" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" style="width:80%" show-word-limit maxlength="500"></el-input>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialog.dialogVisible = false">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onSure">确定{{dialog.title}}</el-button>
             </span>
         </el-dialog>

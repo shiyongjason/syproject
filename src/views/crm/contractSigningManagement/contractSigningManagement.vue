@@ -99,16 +99,56 @@
                     <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
+                    <h-button v-if="scope.data.row.contractStatus>=2" table @click="getHistory(scope.data.row)">审核记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <!---->
-
+        <el-drawer class="contentdrawerbox" size="550px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
+            <div slot="title">审核记录</div>
+            <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
+            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
+            <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
+            <div class="history-css">
+                <div v-if="historyList&&historyList.length==0">暂无数据</div>
+                <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
+                    <div class="history-css-left">
+                        <span class="name">{{item.operator}} </span>
+                        <span>{{item.operationName}}</span>
+                        <template v-if="item.operationName == '编辑了'">
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+                                <font>{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                从<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
+                                </font>
+                                变为<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </font>
+                            </span>
+                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                        </template>
+                        <template v-else-if="item.operationName == '修订了'">
+                            <font style="margin: 0 4px;">合同</font>
+                            <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                        </template>
+                        <template v-else>
+                            <span class="operationcontent-css">
+                                <font>{{item.operationContent}}</font>
+                            </span>
+                        </template>
+                    </div>
+                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
+                </div>
+            </div>
+            <div class="history-bttom">
+                <h-button type="primary" @click="drawerVisible=false">好的</h-button>
+            </div>
+        </el-drawer>
     </div>
 </template>
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { contractSigningList, contractTypes, contractStatic } from './api/index'
+import { contractSigningList, contractTypes, contractStatic, getCheckHistory } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
@@ -135,6 +175,9 @@ export default {
     data () {
         return {
             Auths,
+            detailRes: {},
+            historyList: '',
+            drawerVisible: false,
             financeManagerWaitingNum: '',
             lawManagerWaitingNum: '',
             riskManagerWaitingNum: '',
@@ -153,20 +196,21 @@ export default {
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
                     label: '合同模版编号',
-                    prop: 'contractTemplateVersionId',
+                    prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
-                        return <span>{scope.row.contractTemplateVersionId == 0 ? '-' : scope.row.contractTemplateVersionId }</span>
+                        return <span>{scope.row.templateId == 0 ? '-' : scope.row.templateId }</span>
                     }
                 },
                 { label: '合同模版版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
-                { label: '状态', prop: 'contractStatus', width: '120', dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }] },
+                { label: '状态', prop: 'contractStatus', width: '120', dicData: this.dicData },
                 { label: '发起人', prop: 'createBy', width: '120' },
                 { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
             ],
-            tableData: []
+            tableData: [],
+            dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }]
         }
     },
     computed: {
@@ -183,6 +227,31 @@ export default {
             findCreditManager: 'creditManage/findCreditManager',
             findCreditPage: 'creditManage/findCreditPage'
         }),
+        getContractStatusTxt (val) {
+            let res = this.dicData.filter(item => item.value == val)
+            if (res && res.length > 0) {
+                return res[0].label
+            }
+            return ''
+        },
+        getOperationContent (item) {
+            // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
+            const obj = JSON.parse(item.operationContent)
+            return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
+        },
+        async getHistory (row) {
+            console.log('row: ', row)
+            this.detailRes.contractStatus = row.contractStatus
+            const { data } = await getCheckHistory({
+                contractId: row.id
+            })
+            console.log('data: ', data)
+            this.historyList = data.signHistory
+            this.drawerVisible = true
+
+            // this.historyList = data.signHistory
+            // console.log('res: ', res.data)
+        },
         reset () {
             this.queryParams = JSON.parse(JSON.stringify(_queryParams))
             this.getList()
@@ -264,7 +333,8 @@ export default {
             })
         },
         async getContractStatic () {
-            const { data } = await contractStatic()
+            const { pageSize, pageNumber, ...rest } = this.queryParams
+            const { data } = await contractStatic(rest)
             this.financeManagerWaitingNum = data.financeManagerWaitingNum
             this.lawManagerWaitingNum = data.lawManagerWaitingNum
             this.riskManagerWaitingNum = data.riskManagerWaitingNum
@@ -309,5 +379,54 @@ export default {
     line-height: 38px;
     text-align: center;
     border-radius: 6px;
+}
+.contentdrawerbox {
+    /deep/ .el-drawer__header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        font-size: 18px;
+    }
+    /deep/.history-css {
+        padding: 0 20px;
+        box-sizing: border-box;
+        height: calc(100vh - 190px);
+        overflow-y: scroll;
+        .history-css-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            .history-css-left {
+                font-size: 14px;
+                flex: 0 0 300px;
+                word-break: break-all;
+                max-width: 300px;
+                // word-break: break-all;
+                .name {
+                    color: #169bd5;
+                }
+            }
+            .history-css-right {
+                flex: 0 0 198px;
+                font-size: 13px;
+                color: #a7a5a5;
+                margin-left: 10px;
+                text-align: right;
+            }
+        }
+        .operationcontent-css {
+            font {
+                color: #ff7a45;
+                margin: 0 4px;
+            }
+        }
+    }
+    /deep/.history-bttom {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        text-align: right;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+
 }
 </style>
