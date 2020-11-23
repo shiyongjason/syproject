@@ -28,13 +28,23 @@
                     </div>
                     <div class="contract-temp_txt">
                         <el-form label-width="200px">
-                            <el-form-item label="请选择需要插入的字段：">
+                            <!-- <el-form-item label="请选择需要插入的字段：">
                                 <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                                     <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                                         <span style="float: left">{{ item.paramName }}</span>
                                         <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                                     </el-option>
                                 </el-select>
+                                <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
+                            </el-form-item> -->
+                            <el-form-item label="请选择需要插入的字段：">
+                                <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
+                                    <template slot-scope="{ item }">
+                                        <!-- <span style="float: left">{{ searchColor(item.paramName) }}</span> -->
+                                        <span style="float: left" v-html="searchColor(item.paramName)"></span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
+                                    </template>
+                                </el-autocomplete>
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="自定义合同条款：">
@@ -128,6 +138,8 @@ export default {
     components: { diffDialog, hosJoyTable, contractDialog },
     data () {
         return {
+            restaurants: [],
+            insertVal: '',
             statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
@@ -262,6 +274,34 @@ export default {
             getContratDetail: 'contractTemp/getContratDetail'
             // findCApage: 'contractTemp/findCApage'
         }),
+        searchColor (value) {
+            if (this.insertVal) {
+                if (value.toLowerCase().indexOf(this.insertVal.toLowerCase()) > -1) {
+                    let res = value.split(this.insertVal.toLowerCase())[0]
+                    let rest = value.split(this.insertVal.toLowerCase())[1]
+                    return `${res}<font style='color:#ff7a45'>${this.insertVal}</font>${rest}`
+                }
+            }
+
+            return value
+        },
+        querySearch (queryString, cb) {
+            let restaurants = this.restaurants
+            let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+            // 调用 callback 返回建议列表的数据
+            cb(results)
+        },
+        createFilter (queryString) {
+            return (restaurant) => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+            }
+        },
+        handleSelect (item) {
+            this.keyValue = item
+        },
+        autocompleteBlur (val) {
+            this.keyValue = this.insertVal
+        },
         findUnique (inputArr) {
             let result = []
             let obj = {}
@@ -288,13 +328,16 @@ export default {
         },
         async onChangeparam (val) {
             await this.getAllparams(val)
-            console.log(this.tempParams)
             this.options = this.tempParams
+            this.restaurants = JSON.parse(JSON.stringify(this.options))
+            this.restaurants.map(item => {
+                item.value = item.paramName
+            })
         },
         onInsertInfo () {
             ++this.num
             console.log(this.keyValue)
-            if (!this.keyValue) {
+            if (!this.keyValue || !this.keyValue.paramKey) {
                 this.$message({
                     message: '请选择所需插入的合同字段',
                     type: 'warning'
