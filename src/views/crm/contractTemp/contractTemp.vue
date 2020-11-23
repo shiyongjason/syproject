@@ -10,7 +10,7 @@
                 <div class="contract-temp_name">合同模版设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
                     <el-form-item label="模版名称：">
-                        <el-input v-model="contractForm.templateName" maxlength="50"></el-input>
+                        <el-input v-model="contractForm.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
                         <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam" :disabled='!!contractForm.typeId'>
