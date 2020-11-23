@@ -144,11 +144,13 @@
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
             </div>
         </el-drawer>
+        <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
     </div>
 </template>
 <script>
+import diffDialog from './diffDialog'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { contractSigningList, contractTypes, contractStatic, getCheckHistory } from './api/index'
+import { contractSigningList, contractTypes, contractStatic, getCheckHistory, getDiffApi } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
@@ -171,7 +173,7 @@ const _queryParams = {
 }
 export default {
     name: 'contractSigningManagement',
-    components: { hosJoyTable },
+    components: { hosJoyTable, diffDialog },
     data () {
         return {
             Auths,
@@ -210,7 +212,9 @@ export default {
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
             ],
             tableData: [],
-            dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }]
+            dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }],
+            currentContent: '',
+            lastContent: ''
         }
     },
     computed: {
@@ -227,6 +231,32 @@ export default {
             findCreditManager: 'creditManage/findCreditManager',
             findCreditPage: 'creditManage/findCreditPage'
         }),
+        async getDiff (item) {
+            const { lastContentId, currentContentId } = JSON.parse(item)
+            const { data } = await getDiffApi({
+                currentId: currentContentId,
+                lastId: lastContentId
+            })
+            this.currentContent = data.contractContent
+            this.lastContent = data.lastContractContent
+            if (this.currentContent === null) {
+                this.$message({
+                    message: `获取新版合同失败`,
+                    type: 'error'
+                })
+                return
+            }
+            if (this.lastContent === null) {
+                this.$message({
+                    message: `获取上一版合同失败`,
+                    type: 'error'
+                })
+                return
+            }
+            this.$nextTick(() => {
+                this.$refs.diffDialog.onShowDiff()
+            })
+        },
         getContractStatusTxt (val) {
             let res = this.dicData.filter(item => item.value == val)
             if (res && res.length > 0) {
