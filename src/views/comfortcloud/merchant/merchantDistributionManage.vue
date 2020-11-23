@@ -26,12 +26,24 @@
                 </div>
             </div>
             <!-- 表格使用老毕的组件 -->
-        <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">{{scope.data.row.source==='1'?'查看奖励':'审核通过'}}</el-button>
                 </template>
             </basicTable>
-            </div>
+            <el-dialog title="审核分销员" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible" width="50%">
+                <h3 class="right-title">审核分销员</h3>
+                <div class="right-items">
+                    <p>姓名：{{checkData.agentCode}}</p>
+                    <p>会员账号：{{checkData.payAmount}}</p>
+                    <p>请确认该分销员信息后进行审核。</p>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                <el-button >审核不通过</el-button>
+                <el-button type="primary">审核通过</el-button>
+            </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
@@ -63,7 +75,8 @@ export default {
                 { label: '审核通过时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'inviteUuid' }
             ],
-            dialogVisible: false
+            rightsDialogVisible: false,
+            checkData: {}
         }
     },
     computed: {
@@ -99,7 +112,14 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onEdit (val) {},
+        onEdit (val) {
+            if (val.source === '1') {
+                this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: val })
+            } else {
+                this.checkData = val
+                this.rightsDialogVisible = true
+            }
+        },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery(this.searchParams)
