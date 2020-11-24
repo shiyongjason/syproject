@@ -24,7 +24,7 @@
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"  @change="onchange"></RichEditor>
                     </div>
                     <div class="contract-temp_txt">
                         <el-form label-width="200px">
@@ -273,6 +273,9 @@ export default {
             getContratDetail: 'contractTemp/getContratDetail'
             // findCApage: 'contractTemp/findCApage'
         }),
+        onchange () {
+            this.domBindMethods()
+        },
         querySearch (queryString, cb) {
             let restaurants = this.restaurants
             let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
@@ -320,6 +323,17 @@ export default {
             this.restaurants = JSON.parse(JSON.stringify(this.options))
             this.restaurants.map(item => {
                 item.value = item.paramName
+            })
+        },
+        domBindMethods () {
+            const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
+            inputArr.length > 0 && inputArr.map(val => {
+                if (val.dataset.appId) {
+                    val.onclick = (event) => {
+                        this._keyValue = event.target.id
+                        this.dialogVisible = true
+                    }
+                }
             })
         },
         onInsertInfo () {
