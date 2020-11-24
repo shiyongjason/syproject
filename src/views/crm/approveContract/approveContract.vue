@@ -70,9 +70,9 @@
                         </div>
                     </div>
                     <div class="approvalcontract-btn">
+                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
-                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
                     </div>
                 </div>
@@ -85,10 +85,10 @@
                 <span class="dialog-layout">
                     <font>*</font>{{dialog.title}}原因：
                 </span>
-                <el-input v-model="dialog.remark" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" style="width:80%"></el-input>
+                <el-input v-model="dialog.remark" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入内容" style="width:80%" show-word-limit maxlength="500"></el-input>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialog.dialogVisible = false">取 消</el-button>
+                <el-button @click="handleClose">取 消</el-button>
                 <el-button type="primary" @click="onSure">确定{{dialog.title}}</el-button>
             </span>
         </el-dialog>
@@ -149,6 +149,7 @@ export default {
     components: { diffDialog, selectCom, formatInput, inputAutocomplete, hosjoyUpload },
     data () {
         return {
+            xx: '232323<br>   324 <br>发送到',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false
@@ -190,7 +191,7 @@ export default {
                 'list', // 列表
                 'justify', // 对齐方式
                 'quote', // 引用
-                'emoticon', // 表情
+                // 'emoticon', // 表情
                 'image', // 插入图片
                 'table', // 表格
                 'undo', // 撤销
@@ -237,7 +238,7 @@ export default {
                 return
             }
             // 匹配正则
-            if (this.currentKey.checkRule) {
+            if (this.currentKey.required && this.currentKey.checkRule) {
                 let Reg = new RegExp(this.currentKey.checkRule)
                 if (!Reg.test(this.currentKey.paramValue)) {
                     console.log('test')
@@ -319,13 +320,35 @@ export default {
                             type: 'textarea',
                             autosize: { minRows: 5, maxRows: 6 },
                             maxlength: '200',
+                            class: this.currentKey.paramKey,
                             showWordLimit: true
                         },
                         on: {
-                            input: (val) => { this.currentKey.paramValue = val.trim() }
+                            input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
                 },
+                // 4: {
+                //     div: {
+                //         bind: {
+                //             value: this.currentKey.paramValue,
+                //             contenteditable: true,
+                //             class: this.currentKey.paramKey,
+                //             style: {
+                //                 'border': '1px solid #DCDFE6',
+                //                 'border-radius': ' 4px',
+                //                 'height': '130px',
+                //                 'overflow-y': 'scroll',
+                //                 'line-height': 1.2,
+                //                 'padding': '15px',
+                //                 'box-sizing': 'border-box'
+                //             }
+                //         },
+                //         on: {
+                //             input: (val) => { this.currentKey.paramValue = val }
+                //         }
+                //     }
+                // },
                 5: {
                     inputAutocomplete: {
                         bind: {
@@ -505,24 +528,33 @@ export default {
             this.init()
         },
         onSaveContent (operatorType = '') {
-            console.log('onSaveContent')
-            const { paramName, paramKey, paramValue, required } = this.currentKey
+            // console.log('this.currentKey', this.currentKey)
+            // todo 可替换成空
+            // return
+            let { paramName, paramKey, paramValue, required } = this.currentKey
+            // if (!required && (paramValue === '' || paramValue === null)) return
             if (required && (paramValue === '' || paramValue === null)) {
                 this.$message({
                     message: `${paramName}不能为空`,
                     type: 'error'
                 })
-                return
+            }
+            // 多行文本。展示html。可空格可换行。
+            if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
+                newString = newString.replace(/_#_@/g, '<br/>')
+                newString = newString.replace(/_@/g, '<br/>')
+                newString = newString.replace(/\s/g, '&nbsp;')
+                paramValue = newString
+                // this.currentKey.paramValue = textarea.innerHTML.replace(/(.*)<div>/, '$1<div style="display: initial;">')
             }
             if (this.currentKey.inputStyle == 9) {
-                // 修改图片
+                // 修改图片，图片必填
                 this.setImg()
-                return
             }
             // 最后要拿到input的合同
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
             let tempArr = []
-
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     // if (!operatorType) {}
@@ -530,15 +562,28 @@ export default {
                     // div版合同
                     let ryanList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
                     Array.from(ryanList).map(jtem => {
-                        jtem.innerHTML = paramValue
+                        if (!paramValue && this.currentKey.emptyTxt) {
+                            jtem.innerHTML = this.currentKey.emptyTxt// 非必填，反显{#字段名#}使用
+                            console.log('dododdodododod')
+                        } else {
+                            jtem.innerHTML = paramValue
+                        }
                     })
                     // input版合同
                     let richEditorDom = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
                     Array.from(richEditorDom).map(jtem => {
-                        jtem.value = paramValue
+                        let _temp = paramValue
+                        let inputWidth = ''
+                        console.log('paramValue: ', paramValue)
+                        if (!paramValue && this.currentKey.emptyTxt) {
+                            _temp = 'null'
+                            inputWidth = 100
+                        } else {
+                            inputWidth = _temp.length * 14
+                        }
+                        jtem.value = _temp
                         jtem.className = paramKey
-                        jtem.setAttribute('value', paramValue)
-                        let inputWidth = paramValue.length * 14
+                        jtem.setAttribute('value', _temp)
                         jtem.style.width = `${inputWidth}px`
                     })
                     let inputDomList = ''
@@ -557,9 +602,11 @@ export default {
                             tempObj[item.className] = JSON.parse(this.detailRes.contractFieldsList).filter(jtem => jtem.paramKey === item.className)
                         }
                     })
+                    console.log('tempObj: ', tempObj)
                     for (const key in tempObj) {
                         tempArr.push(tempObj[key][0])
                     }
+                    console.log('tempArr: ', tempArr)
                     tempArr.map(item => {
                         // 修改对应的键值对里的值
                         if (item.paramKey === paramKey) {
@@ -578,6 +625,19 @@ export default {
                         this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue // 编辑前内容
                     }
                     this.fieldContent = paramValue
+                    console.log({
+                        'contractId': this.$route.query.id,
+                        // 合同审批角色 1：分财 2：风控 3：法务
+                        'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                        'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                        'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
+                        'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
+                        'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
+                        'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
+                        'createBy': this.userInfo.employeeName,
+                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                    })
+                    return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -604,6 +664,7 @@ export default {
                 this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
                 console.log('this.detailRes.contractFieldsList', JSON.parse(this.detailRes.contractFieldsList))
                 this.$nextTick(() => {
+                    // TODO：dataset.paramname 可不填项
                     // 法务审核初始化
                     if (this.detailRes.contractStatus == 6) {
                         let inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('input')
@@ -617,7 +678,7 @@ export default {
                         Array.from(inputDomList).map((item, index) => {
                             let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
                             if (item.className) {
-                                item.onclick = () => {
+                                item.onclick = (event) => {
                                     this.currentKey = { ...fields }
                                     this.currentKeyOriginal = { ...fields }
                                     this.$refs['ruleForm'].resetFields()
@@ -648,20 +709,29 @@ export default {
                         }
                         this.currentKeyOriginal = JSON.parse(JSON.stringify(this.currentKey))
                         Array.from(inputDomList).map((item, index) => {
-                            item.outerHTML = `<span class="${item.className}" contenteditable="false" style="word-break: break-all;display:inline;color:rgb(255, 122, 69);cursor: pointer;">${item.value}</span>`
+                            item.outerHTML = `<span class="${item.className}" contenteditable="false" style="word-break: break-all;display:inline;color:rgb(255, 122, 69);cursor: pointer;">${(item.dataset && item.dataset.paramname && item.value == 'null') ? item.dataset.paramname : item.value}</span>`
+
                             // 赋值初始值
                             let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
                             // 给div绑定事件
                             let doms = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(item.className)
                             Array.from(doms).map(jtem => {
-                                jtem.onclick = () => {
-                                    this.currentKey = { ...fields }
-                                    console.log('this.currentKey: ', this.currentKey)
-                                    this.currentKeyOriginal = { ...fields }
+                                jtem.onclick = (event) => {
+                                    this.currentKey = { ...fields, event }
+                                    if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                                        console.log('this.currentKey.paramValuexxxxxxx: ', this.currentKey.paramValue)
+                                        this.currentKey.paramValue = event.target.innerText // 多行文本反显使用
+                                    }
+                                    if (item.dataset && item.dataset.paramname) {
+                                        this.currentKey.emptyTxt = item.dataset.paramname // 非必填，反显{#字段名#}使用
+                                    }
+                                    this.currentKeyOriginal = { ...fields, event }
                                     this.$refs['ruleForm'].resetFields()
+                                    console.log('this.currentKey: ', this.currentKey)
                                 }
                             })
                         })
+                        // img
                         let imgDom = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
                             item.onclick = (event) => {
@@ -879,5 +949,9 @@ export default {
         padding-right: 20px;
         box-sizing: border-box;
     }
+
 }
+/deep/.w-e-text input{
+        cursor: pointer;
+    }
 </style>

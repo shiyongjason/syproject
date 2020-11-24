@@ -7,6 +7,7 @@
             </div>
             <div v-html=vHtml v-if="vHtml" class='approvalcontract-content-layout'>
             </div>
+            <div v-else-if="res.contractSignType==2">线下合同</div>
             <div v-else>暂无数据</div>
             <div class="contract-fujian" v-if="res.attachementList&&res.attachementList.length>0&&res.contractSignType==2">
                 <font>上传的合同附件：</font>

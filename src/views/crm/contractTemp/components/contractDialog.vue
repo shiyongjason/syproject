@@ -1,18 +1,18 @@
 <template>
-    <div>
-        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal = false>
-            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2" >
+    <div class="sign-dialog">
+        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal=false>
+            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2">
                 <el-form-item label="签署方名称：" prop="signerName">
                     <el-input v-model="signerTempForm.signerName" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="signerType">
                     <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
-                        <el-radio :label=1 >企业</el-radio>
-                        <el-radio :label=2 >个人</el-radio>
+                        <el-radio :label=1>企业</el-radio>
+                        <el-radio :label=2>个人</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="请选择合同企业：" prop="paramId">
-                    <el-select v-model="signerTempForm.paramId"  placeholder="请选择合同企业" @change="changeId">
+                <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" prop="paramId">
+                    <el-select v-model="signerTempForm.paramId"  :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" @change="changeId">
                         <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -28,13 +28,13 @@
                     </template>
                     <template v-else>
                         <el-checkbox-group v-model="signerTempForm._signerDemand">
-                            <el-checkbox label="2" name="type">手绘章</el-checkbox>
-                            <el-checkbox label="3" name="type">模板章</el-checkbox>
+                            <el-checkbox label="3" name="type">手绘章</el-checkbox>
+                            <el-checkbox label="4" name="type">模板章</el-checkbox>
                         </el-checkbox-group>
                     </template>
                 </el-form-item>
             </el-form>
-            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1" >
+            <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1">
                 <el-form-item label="签署方名称：" prop="">
                     平台
                 </el-form-item>
@@ -42,10 +42,15 @@
                     企业
                 </el-form-item>
                 <el-form-item label="平台企业：" prop="caId">
-                    <el-select v-model="signerTempForm.caId"  placeholder="请选择平台企业" @change="changeCa">
+                    <!-- <el-select v-model="signerTempForm.caId" placeholder="请选择平台企业" @change="changeCa">
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
-                    </el-select>
+                    </el-select> -->
+                    <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
+                        <template slot-scope="{ item }">
+                            <span>{{item.companyName}}</span>
+                        </template>
+                    </el-autocomplete>
                 </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
@@ -69,6 +74,8 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     data () {
         return {
+            restaurants: [],
+            insertVal: '',
             tract_visible: false,
             contractType: '',
             singerOps: [],
@@ -148,7 +155,29 @@ export default {
         ...mapActions({
             findCApage: 'contractTemp/findCApage'
         }),
-        onShowDialog (val, arr, form) {
+        autocompleteBlur () {
+            if (!this.insertVal.id) {
+                let res = this.restaurants.filter(item => item.companyName == this.insertVal)
+                this.signerTempForm.caId = res.id
+            }
+        },
+        querySearch (queryString, cb) {
+            let restaurants = this.restaurants
+            let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+            // 调用 callback 返回建议列表的数据
+            cb(results)
+        },
+        createFilter (queryString) {
+            return (restaurant) => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+            }
+        },
+        handleSelect (item) {
+            this.signerTempForm.caId = item.id
+        },
+        async onShowDialog (val, arr, form) {
+            await this.onFindCApage()
+
             this.tract_visible = true
             console.log('--=', val, arr, form)
             // 类型
@@ -162,7 +191,7 @@ export default {
                 }
             })
 
-            this.onFindCApage()
+            // this.onFindCApage()
             this.contractType = val
             this.contart_arr = arr
             this.isEdit = false
@@ -198,6 +227,10 @@ export default {
         async onFindCApage () {
             await this.findCApage({ pageNumber: 0, pageSize: -1, orgType: 1 })
             this.caOptions = this.caPage.records
+            this.restaurants = JSON.parse(JSON.stringify(this.caOptions))
+            this.restaurants.map(item => {
+                item.value = item.companyName
+            })
         },
         changeRadio (val) {
             this.singerOps = this.contart_arr.filter(item => {
@@ -284,4 +317,5 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
 </style>

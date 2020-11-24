@@ -10,7 +10,7 @@
                 <div class="contract-temp_name">合同模版设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
                     <el-form-item label="模版名称：">
-                        <el-input v-model="contractForm.templateName" maxlength="50"></el-input>
+                        <el-input v-model="contractForm.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
                         <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam" :disabled='!!contractForm.typeId'>
@@ -28,7 +28,7 @@
                     </div>
                     <div class="contract-temp_txt">
                         <el-form label-width="200px">
-                            <el-form-item label="请选择需要插入的字段：">
+                            <!-- <el-form-item label="请选择需要插入的字段：">
                                 <el-select v-model="keyValue" value-key='id' placeholder="请选择">
                                     <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                                         <span style="float: left">{{ item.paramName }}</span>
@@ -36,12 +36,22 @@
                                     </el-option>
                                 </el-select>
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
+                            </el-form-item> -->
+                            <el-form-item label="请选择需要插入的字段：">
+                                <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
+                                    <template slot-scope="{ item }">
+                                        <span style="float: left">{{ item.paramName }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
+                                    </template>
+                                </el-autocomplete>
+                                <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="自定义合同条款：">
                                 <el-button type="primary" @click="onClickCur(1)">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="平台签署区：">
                                 <el-button type="primary" @click="onClickCur(2)">插入当前位置</el-button>
+                                <span class="ml10 red-word">平台为静默签署</span>
                             </el-form-item>
                         </el-form>
 
@@ -90,7 +100,7 @@
                 </template>
             </div>
             <div class="page-body-cont">
-                <el-button type="default" @click="onCancelTemp">取消</el-button>
+                <el-button type="default" @click="onCancelTemp">取消修改</el-button>
                 <el-button type="primary" @click="onSaveTemp(0)">保存模板</el-button>
                 <el-button type="primary" @click="onSaveTemp(1)">保存并启用模版</el-button>
             </div>
@@ -127,6 +137,8 @@ export default {
     components: { diffDialog, hosJoyTable, contractDialog },
     data () {
         return {
+            restaurants: [],
+            insertVal: '',
             statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
@@ -261,6 +273,23 @@ export default {
             getContratDetail: 'contractTemp/getContratDetail'
             // findCApage: 'contractTemp/findCApage'
         }),
+        querySearch (queryString, cb) {
+            let restaurants = this.restaurants
+            let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+            // 调用 callback 返回建议列表的数据
+            cb(results)
+        },
+        createFilter (queryString) {
+            return (restaurant) => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+            }
+        },
+        handleSelect (item) {
+            this.keyValue = item
+        },
+        autocompleteBlur (val) {
+            this.keyValue = this.insertVal
+        },
         findUnique (inputArr) {
             let result = []
             let obj = {}
@@ -287,13 +316,16 @@ export default {
         },
         async onChangeparam (val) {
             await this.getAllparams(val)
-            console.log(this.tempParams)
             this.options = this.tempParams
+            this.restaurants = JSON.parse(JSON.stringify(this.options))
+            this.restaurants.map(item => {
+                item.value = item.paramName
+            })
         },
         onInsertInfo () {
             ++this.num
             console.log(this.keyValue)
-            if (!this.keyValue) {
+            if (!this.keyValue || !this.keyValue.paramKey) {
                 this.$message({
                     message: '请选择所需插入的合同字段',
                     type: 'warning'
@@ -376,13 +408,13 @@ export default {
                 _temp = `<input class="contract_sign_${this.num}"  style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="自定义合同条款" readonly></input>`
             } else {
-                if (document.getElementById('platform_sign')) {
-                    this.$message({
-                        message: '只能插入一处平台签署区',
-                        type: 'warning'
-                    })
-                    return
-                }
+                // if (document.getElementById('platform_sign')) {
+                //     this.$message({
+                //         message: '只能插入一处平台签署区',
+                //         type: 'warning'
+                //     })
+                //     return
+                // }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                 value="平台签署" readonly></input><span style="color:#fff">platform_sign</span>`
             }
