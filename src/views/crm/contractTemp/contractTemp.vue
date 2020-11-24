@@ -139,7 +139,7 @@ export default {
         return {
             restaurants: [],
             insertVal: '',
-            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
+            statusArr: [{ key: '1', value: '企业章' }, { key: '3', value: '手绘章' }, { key: '4', value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
             content: '',
@@ -306,7 +306,7 @@ export default {
             const a = val.split(',')
             const cArr = []
             a.forEach(item => {
-                cArr.push(this.statusArr[item - 1].value)
+                cArr.push(this.statusArr.filter(val => val.key == item)[0].value)
             })
             return cArr.toString()
         },
@@ -333,7 +333,7 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  value=${this.keyValue.paramName} readonly></input>`
+            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  value=${this.keyValue.paramName} readonly></input></span>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementsByClassName('newinput')[1].click
             // 这里每次执行插入 把 合同约定的字段插入进去
@@ -416,7 +416,7 @@ export default {
                 //     return
                 // }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input><span style="color:#fff">platform_sign</span>`
+                value="平台签署" readonly></input><span style="">platform_sign</span>`
             }
             // console.log(document.getElementById('platform_sign'))
 
@@ -720,5 +720,8 @@ export default {
 }
 /deep/.hosjoy-table {
     background: #e5e5e5 !important;
+}
+/deep/.w-e-text p{
+    word-break: break-all;
 }
 </style>
