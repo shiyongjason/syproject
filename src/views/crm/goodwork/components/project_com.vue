@@ -17,7 +17,7 @@
                     </el-form-item>
                 </el-col>
                 <span class="posiStyle">
-                    <h-button class="btn" table @click="onEditCridtle(projectForm)">编辑</h-button>
+                    <h-button class="btn" table @click="onEditCridtle(projectForm)" v-if="hosAuthCheck(newAuth.CRM_WORK_EDIT)">编辑</h-button>
                 </span>
             </div>
             <el-form-item label="分部：">
@@ -144,6 +144,7 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex'
+import * as newAuth from '@/utils/auth_const'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveCreditLevel } from './../api/index'
@@ -161,6 +162,7 @@ export default {
     },
     data () {
         return {
+            newAuth,
             droplist: CREDITLEVEL,
             loading: false,
             statusTxt: '',

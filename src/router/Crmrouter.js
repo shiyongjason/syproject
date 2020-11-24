@@ -199,8 +199,8 @@ export default [
                 path: 'contractlist',
                 name: 'contractlist',
                 meta: {
-                    title: '合同管理',
-                    tagName: '合同管理',
+                    title: '合同模板管理',
+                    tagName: '合同模板管理',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/contractlist'

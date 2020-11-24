@@ -263,4 +263,7 @@ export default {
 /deep/.w-e-menu {
     z-index: 500 !important;
 }
+/deep/.w-e-text p{
+    word-break: break-all;
+}
 </style>

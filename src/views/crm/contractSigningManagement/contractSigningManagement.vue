@@ -168,6 +168,8 @@ const _queryParams = {
     createBy: '',
     subsectionCode: '',
     contractNoOrName: '',
+    authCode: '',
+    jobNumber: '',
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
@@ -342,6 +344,8 @@ export default {
             this.searchList()
         },
         async getList (val = '') {
+            this.queryParams.jobNumber = this.userInfo.jobNumber
+            this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             if (val) {
                 this.queryParams.pageNumber = 1
             }

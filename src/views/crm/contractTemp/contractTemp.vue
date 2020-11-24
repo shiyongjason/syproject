@@ -24,7 +24,7 @@
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"  @change="onchange"></RichEditor>
                     </div>
                     <div class="contract-temp_txt">
                         <el-form label-width="200px">
@@ -139,7 +139,7 @@ export default {
         return {
             restaurants: [],
             insertVal: '',
-            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
+            statusArr: [{ key: '1', value: '企业章' }, { key: '3', value: '手绘章' }, { key: '4', value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
             content: '',
@@ -273,6 +273,9 @@ export default {
             getContratDetail: 'contractTemp/getContratDetail'
             // findCApage: 'contractTemp/findCApage'
         }),
+        onchange () {
+            this.domBindMethods()
+        },
         querySearch (queryString, cb) {
             let restaurants = this.restaurants
             let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
@@ -306,7 +309,7 @@ export default {
             const a = val.split(',')
             const cArr = []
             a.forEach(item => {
-                cArr.push(this.statusArr[item - 1].value)
+                cArr.push(this.statusArr.filter(val => val.key == item)[0].value)
             })
             return cArr.toString()
         },
@@ -322,6 +325,17 @@ export default {
                 item.value = item.paramName
             })
         },
+        domBindMethods () {
+            const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
+            inputArr.length > 0 && inputArr.map(val => {
+                if (val.dataset.appId) {
+                    val.onclick = (event) => {
+                        this._keyValue = event.target.id
+                        this.dialogVisible = true
+                    }
+                }
+            })
+        },
         onInsertInfo () {
             ++this.num
             console.log(this.keyValue)
@@ -333,7 +347,7 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  value=${this.keyValue.paramName} readonly></input>`
+            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  value=${this.keyValue.paramName} readonly></input></span>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementsByClassName('newinput')[1].click
             // 这里每次执行插入 把 合同约定的字段插入进去
@@ -416,7 +430,7 @@ export default {
                 //     return
                 // }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input>platform_sign`
+                value="平台签署" readonly></input><span style="">platform_sign</span>`
             }
             // console.log(document.getElementById('platform_sign'))
 
@@ -720,5 +734,8 @@ export default {
 }
 /deep/.hosjoy-table {
     background: #e5e5e5 !important;
+}
+/deep/.w-e-text p{
+    word-break: break-all;
 }
 </style>
