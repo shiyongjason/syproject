@@ -77,6 +77,28 @@ export default [
                 component: () => import('@/views/crm/creditmanage/creditmanlist')
             },
             {
+                path: 'creditDetail',
+                name: 'creditDetail',
+                meta: {
+                    title: '授信材料上传',
+                    tagName: '授信材料上传',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditmanage/creditDetail')
+            },
+            {
+                path: 'creditApprove',
+                name: 'creditApprove',
+                meta: {
+                    title: '授信材料',
+                    tagName: '授信材料',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/creditmanage/creditApprove')
+            },
+            {
                 path: 'datatemp',
                 name: 'datatemp',
                 meta: {
@@ -98,18 +120,18 @@ export default [
                     showMenuAs: '/goodwork/datatemp'
                 },
                 component: () => import('@/views/crm/riskManage/templateDetail.vue')
-            }, {
-                path: 'projectInformationList',
-                name: 'projectInformationList',
-                meta: {
-                    title: '好橙工项目资料',
-                    tagName: '好橙工项目资料',
-                    isMenu: true,
-                    icon: ''
-
-                },
-                component: () => import('@/views/crm/projectInformation/list.vue')
             },
+            // {
+            //     path: 'projectInformationList',
+            //     name: 'projectInformationList',
+            //     meta: {
+            //         title: '好橙工项目资料',
+            //         tagName: '好橙工项目资料',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/crm/projectInformation/list.vue')
+            // },
             {
                 path: 'informationDetail',
                 name: 'informationDetail',
@@ -118,7 +140,7 @@ export default [
                     tagName: '好橙工项目资料详情',
                     isMenu: false,
                     icon: '',
-                    showMenuAs: '/goodwork/projectInformationList'
+                    showMenuAs: '/goodwork/projectlist'
 
                 },
                 component: () => import('@/views/crm/projectInformation/detail.vue')
@@ -132,7 +154,6 @@ export default [
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/projectInformationList'
-
                 },
                 component: () => import('@/views/crm/projectInformation/approvalDetails.vue')
             },
@@ -145,7 +166,6 @@ export default [
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/wechatList'
-
                 },
                 component: () => import('@/views/crm/wechatcustomer/list.vue')
             },
@@ -174,6 +194,90 @@ export default [
 
                 },
                 component: () => import('@/views/crm/awardManage/awardManage.vue')
+            },
+            {
+                path: 'contractlist',
+                name: 'contractlist',
+                meta: {
+                    title: '合同模板管理',
+                    tagName: '合同模板管理',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractlist'
+
+                },
+                component: () => import('@/views/crm/contractTemp/contractlist.vue')
+            },
+            {
+                path: 'contractTemp',
+                name: 'contractTemp',
+                meta: {
+                    title: '合同编辑',
+                    tagName: '合同编辑',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractTemp'
+
+                },
+                component: () => import('@/views/crm/contractTemp/contractTemp.vue')
+            }, {
+                path: 'contractDetail',
+                name: 'contractDetail',
+                meta: {
+                    title: '合同详情',
+                    tagName: '合同详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractDetail'
+
+                },
+                component: () => import('@/views/crm/contractTemp/contractDetail.vue')
+            },
+            {
+                path: 'contractSigningManagement',
+                name: 'contractSigningManagement',
+                meta: {
+                    title: '合同签署管理',
+                    tagName: '合同签署管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/contractSigningManagement/contractSigningManagement.vue')
+            },
+            {
+                path: 'contractSigningManagementDetail',
+                name: 'contractSigningManagementDetail',
+                meta: {
+                    title: '合同签署管理详情',
+                    tagName: '合同详情',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractSigningManagement'
+                },
+                component: () => import('@/views/crm/contractSigningManagementDetail/contractSigningManagementDetail.vue')
+            },
+            {
+                path: 'approveContract',
+                name: 'approveContract',
+                meta: {
+                    title: '审核合同',
+                    tagName: '审核合同',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/contractSigningManagement'
+                },
+                component: () => import('@/views/crm/approveContract/approveContract.vue')
+            },
+            {
+                path: 'caCertiManage',
+                name: 'caCertiManage',
+                meta: {
+                    title: 'CA认证管理',
+                    tagName: 'CA认证管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/caCertiManage/index.vue')
             }
         ]
     }

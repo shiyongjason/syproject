@@ -105,11 +105,13 @@ export const CREDITLEVEL = [
     { key: 3, value: 'B+' },
     { key: 4, value: 'B' },
     { key: 5, value: 'C+' },
-    { key: 6, value: 'C' }
+    { key: 6, value: 'C' },
+    { key: 7, value: 'D' }
 ]
 
 // 资料状态
 export const MATELIST = [
+    { key: 1, value: '待提交' },
     { key: 2, value: '已提交' },
     { key: 3, value: '已通过' },
     { key: 4, value: '已打回' }

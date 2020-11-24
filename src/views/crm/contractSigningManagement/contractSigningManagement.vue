@@ -1,0 +1,468 @@
+<template>
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">合同名称/编号：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.contractNoOrName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
+                        <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable=true>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">项目：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">合同类型：</div>
+                    <div class="query-col__input">
+                        <el-select placeholder="请选择" v-model="queryParams.contractTypeIdArrays" :clearable=true>
+                            <el-option :label="item.name" :value="item.id" v-for="item in contractTypes" :key="item.id"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+            </div>
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">状态：</div>
+                    <div class="query-col__input">
+                        <el-select placeholder="请选择" v-model="queryParams.contractStatusArrays" :clearable=true>
+                            <el-option :label="item.label" :value="item.value" v-for="item in contractStatus" :key="item.label"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__label">发起人：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">发起时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.createEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('createStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+            </div>
+            <div class="query-cont__row">
+                <div class="query-cont-col">
+                    <div class="query-col-title">更新时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('updateStartTime')">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="()=>getList(1)">
+                        查询
+                    </h-button>
+                    <h-button @click="reset">
+                        重置
+                    </h-button>
+                </div>
+            </div>
+            <div class="query-cont__row">
+                <el-badge :value="financeManagerWaitingNum" class="item">
+                    <div class="table-tab">待分财修订</div>
+                </el-badge>
+                <el-badge :value="riskManagerWaitingNum" class="item" style="margin:0 30px">
+                    <div class="table-tab">待风控修订</div>
+                </el-badge>
+                <el-badge :value="lawManagerWaitingNum" class="item">
+                    <div class="table-tab">待法务修订</div>
+                </el-badge>
+            </div>
+            <div class="query-cont__row">
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
+            </div>
+            <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
+                actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                <template slot="action" slot-scope="scope">
+                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)" >分财审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
+                    <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
+                    <h-button v-if="scope.data.row.contractStatus>=2" table @click="getHistory(scope.data.row)">审核记录</h-button>
+                </template>
+            </hosJoyTable>
+        </div>
+        <!---->
+        <el-drawer class="contentdrawerbox" size="550px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
+            <div slot="title">审核记录</div>
+            <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
+            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
+            <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
+            <div class="history-css">
+                <div v-if="historyList&&historyList.length==0">暂无数据</div>
+                <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
+                    <div class="history-css-left">
+                        <span class="name">{{item.operator}} </span>
+                        <span>{{item.operationName}}</span>
+                        <template v-if="item.operationName == '编辑了'">
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                从<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
+                                </font>
+                                变为<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </font>
+                            </span>
+                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                        </template>
+                        <template v-else-if="item.operationName == '修订了'">
+                            <font style="margin: 0 4px;">合同</font>
+                            <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                        </template>
+                        <template v-else>
+                            <span class="operationcontent-css">
+                                <font>{{item.operationContent}}</font>
+                            </span>
+                        </template>
+                    </div>
+                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
+                </div>
+            </div>
+            <div class="history-bttom">
+                <h-button type="primary" @click="drawerVisible=false">好的</h-button>
+            </div>
+        </el-drawer>
+        <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
+    </div>
+</template>
+<script>
+import diffDialog from './diffDialog'
+import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import { contractSigningList, contractTypes, contractStatic, getCheckHistory, getDiffApi } from './api/index'
+import { mapActions, mapGetters, mapState } from 'vuex'
+import { clearCache, newCache } from '@/utils/index'
+import * as Auths from '@/utils/auth_const'
+
+const _queryParams = {
+    pageSize: 10,
+    pageNumber: 1,
+    contractTypeIdArrays: '',
+    contractStatusArrays: '',
+    projectName: '',
+    createStartTime: '',
+    createEndTime: '',
+    updateStartTime: '',
+    updateEndTime: '',
+    createBy: '',
+    subsectionCode: '',
+    contractNoOrName: '',
+    authCode: '',
+    jobNumber: '',
+    createTimeOrder: null, // asc 或 desc
+    updateTimeOrder: null// asc 或 desc
+}
+const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }]
+export default {
+    name: 'contractSigningManagement',
+    components: { hosJoyTable, diffDialog },
+
+    data () {
+        return {
+            Auths,
+            detailRes: {},
+            historyList: '',
+            drawerVisible: false,
+            financeManagerWaitingNum: '',
+            lawManagerWaitingNum: '',
+            riskManagerWaitingNum: '',
+            branchArr: [],
+            contractTypes: [],
+            contractStatus: [{ value: '', label: '全部' }, ..._dicData],
+            page: {
+                sizes: [10, 20, 50, 100],
+                total: 0
+            },
+            queryParams: JSON.parse(JSON.stringify(_queryParams)),
+            tableLabel: [
+                { label: '合同编号', prop: 'contractNo', width: '150' },
+                { label: '合同名称', prop: 'contractName', width: '260' },
+                { label: '所属分部', prop: 'subsectionName', width: '120' },
+                { label: '项目', prop: 'projectName', width: '120' },
+                {
+                    label: '合同模版编号',
+                    prop: 'templateId',
+                    width: '180',
+                    render: (h, scope) => {
+                        return <span>{scope.row.templateId == 0 ? '-' : scope.row.templateId }</span>
+                    }
+                },
+                { label: '合同模版版本', prop: 'versionNo', width: '120' },
+                { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
+                { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
+                { label: '发起人', prop: 'createBy', width: '120' },
+                { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+                { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
+            ],
+            tableData: [],
+            currentContent: '',
+            lastContent: ''
+        }
+    },
+    computed: {
+        ...mapState({
+            userInfo: 'userInfo'
+        }),
+        ...mapGetters({
+            crmdepList: 'crmmanage/crmdepList'
+        })
+    },
+    methods: {
+        ...mapActions({
+            findCrmdeplist: 'crmmanage/findCrmdeplist',
+            findCreditManager: 'creditManage/findCreditManager',
+            findCreditPage: 'creditManage/findCreditPage'
+        }),
+        async getDiff (item) {
+            const { lastContentId, currentContentId } = JSON.parse(item)
+            const { data } = await getDiffApi({
+                currentId: currentContentId,
+                lastId: lastContentId
+            })
+            this.currentContent = data.contractContent
+            this.lastContent = data.lastContractContent
+            if (this.currentContent === null) {
+                this.$message({
+                    message: `获取新版合同失败`,
+                    type: 'error'
+                })
+                return
+            }
+            if (this.lastContent === null) {
+                this.$message({
+                    message: `获取上一版合同失败`,
+                    type: 'error'
+                })
+                return
+            }
+            this.$nextTick(() => {
+                this.$refs.diffDialog.onShowDiff()
+            })
+        },
+        getContractStatusTxt (val) {
+            let res = this.dicData.filter(item => item.value == val)
+            if (res && res.length > 0) {
+                return res[0].label
+            }
+            return ''
+        },
+        getOperationContent (item) {
+            // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
+            const obj = JSON.parse(item.operationContent)
+            return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
+        },
+        async getHistory (row) {
+            console.log('row: ', row)
+            this.detailRes.contractStatus = row.contractStatus
+            const { data } = await getCheckHistory({
+                contractId: row.id
+            })
+            console.log('data: ', data)
+            this.historyList = data.signHistory
+            this.drawerVisible = true
+
+            // this.historyList = data.signHistory
+            // console.log('res: ', res.data)
+        },
+        reset () {
+            this.queryParams = JSON.parse(JSON.stringify(_queryParams))
+            this.getList()
+        },
+        openDetail (item) {
+            this.$router.push({ path: '/goodwork/contractSigningManagementDetail', query: { id: item.id } })
+        },
+        searchList () {
+            this.getList()
+        },
+        pickerOptionsStart (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams[date]
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd (date) {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams[date]
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.searchList()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.searchList()
+        },
+        sortChange (e) {
+            if (e.prop == 'createTime' && e.order == null) {
+                this.queryParams.createTimeOrder = null
+            } else if (e.prop == 'createTime' && e.order === 'descending') {
+                this.queryParams.createTimeOrder = 'desc'
+                this.queryParams.updateTimeOrder = null
+            } else if (e.prop == 'createTime' && e.order === 'ascending') {
+                this.queryParams.createTimeOrder = 'asc'
+                this.queryParams.updateTimeOrder = null
+            } else if (e.prop == 'updateTime' && e.order === null) {
+                this.queryParams.updateTimeOrder = null
+            } else if (e.prop == 'updateTime' && e.order === 'descending') {
+                this.queryParams.updateTimeOrder = 'desc'
+                this.queryParams.createTimeOrder = null
+            } else if (e.prop == 'updateTime' && e.order === 'ascending') {
+                this.queryParams.updateTimeOrder = 'asc'
+                this.queryParams.createTimeOrder = null
+            }
+            this.searchList()
+        },
+        async getList (val = '') {
+            this.queryParams.jobNumber = this.userInfo.jobNumber
+            this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
+            if (val) {
+                this.queryParams.pageNumber = 1
+            }
+            const { data } = await contractSigningList(this.queryParams)
+            if (data) {
+                this.tableData = data.records
+                this.page.total = data.total
+            }
+            this.getContractStatic()
+        },
+        approveContract (item) {
+            this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
+        },
+        async getcontractTypes () {
+            const { data } = await contractTypes()
+            this.contractTypes = data
+            this.contractTypes.unshift({
+                id: '',
+                name: '全部'
+            })
+        },
+        async getContractStatic () {
+            const { pageSize, pageNumber, ...rest } = this.queryParams
+            const { data } = await contractStatic(rest)
+            this.financeManagerWaitingNum = data.financeManagerWaitingNum
+            this.lawManagerWaitingNum = data.lawManagerWaitingNum
+            this.riskManagerWaitingNum = data.riskManagerWaitingNum
+        }
+    },
+    async activated () {
+        this.getList()
+        this.getcontractTypes()
+        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+        this.branchArr = this.crmdepList
+    },
+    async mounted () {
+        // tableData
+        this.getList()
+        this.getcontractTypes()
+        await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
+        this.branchArr = this.crmdepList
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('contractSigningManagement')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract') {
+            //
+        } else {
+            clearCache('contractSigningManagement')
+        }
+        next()
+    }
+}
+</script>
+<style scoped lang="scss">
+.tag_top {
+    margin: 10px 0;
+}
+.table-tab {
+    background: #f2f2f2b8;
+    color: #ff6600;
+    width: 110px;
+    height: 38px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 6px;
+}
+.contentdrawerbox {
+    /deep/ .el-drawer__header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        font-size: 18px;
+    }
+    /deep/.history-css {
+        padding: 0 20px;
+        box-sizing: border-box;
+        height: calc(100vh - 190px);
+        overflow-y: scroll;
+        .history-css-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            align-items: baseline;
+            .history-css-left {
+                font-size: 14px;
+                flex: 0 0 300px;
+                word-break: break-all;
+                max-width: 300px;
+                // word-break: break-all;
+                .name {
+                    color: #169bd5;
+                }
+            }
+            .history-css-right {
+                flex: 0 0 198px;
+                font-size: 13px;
+                color: #a7a5a5;
+                margin-left: 10px;
+                text-align: right;
+            }
+        }
+        .operationcontent-css {
+            font {
+                color: #ff7a45;
+                margin: 0 4px;
+            }
+        }
+    }
+    /deep/.history-bttom {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        text-align: right;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+
+}
+</style>

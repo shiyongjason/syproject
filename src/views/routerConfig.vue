@@ -212,7 +212,6 @@ export default {
         },
         onChangeHandle (value) {
             let obj = JSON.parse(value)
-            console.log(obj)
             this.form.authUri = obj.path
             this.form.authName = obj.meta.title
         },
@@ -230,12 +229,12 @@ export default {
         },
         async init () {
             const { data } = await getAuth()
-            var shy = JSON.parse(JSON.stringify(data))
+            var copyData = JSON.parse(JSON.stringify(data))
             this.handleRouterData(routerMapping, '')
-            this.handleData(shy, '')
-            console.log('resultData: ', shy)
-            console.log('routerMapping: ', routerMapping)
-            this.tableList = this.handlerTableList(shy, 0)
+            this.handleData(copyData, '')
+            // console.log('resultData: ', copyData)
+            // console.log('routerMapping: ', routerMapping)
+            this.tableList = this.handlerTableList(copyData, 0)
         },
         // 计算table合并行数
         computedRowspan (list, len) {
@@ -340,8 +339,6 @@ export default {
                 this.$message.warning('上级菜单不存在')
                 return
             }
-            console.log(routerMapping)
-            console.log(parent)
             if (!parent) {
                 this.options = routerMapping
                 this.findDiffent(this.options, this.tableList)
@@ -418,8 +415,6 @@ export default {
             this.dialogFirVisible = false
         },
         async onResourceSure (i) {
-            console.log(this.configObj)
-            // console.log(this.list[i])
             const params = {
                 authCode: this.configObj.authCode,
                 authTypeId: this.configObj.id,
@@ -429,7 +424,6 @@ export default {
                 sort: this.list[i].sort,
                 resourceAddress: this.list[i].resourceAddress
             }
-            console.log(params)
             if (this.list[i].id) {
                 params.id = this.list[i].id
                 await editAuthResource(params)
@@ -440,7 +434,6 @@ export default {
             this.init()
         },
         onShowFieldConfig (item) {
-            console.log(item)
             // 初始化
             this.list = [{}]
             if (item.authResourceList.length > 0) {
@@ -453,7 +446,6 @@ export default {
             this.list.push({})
         },
         async addSensitive (itemc, itemb, itema, type) {
-            console.log(itemc, itemb, itema, type)
             if (!itema.authCode) {
                 this.$message.warning('权限配置菜单不存在')
                 return
@@ -463,7 +455,6 @@ export default {
                 authCode,
                 authType: type
             }
-            console.log(params)
             await addAuthType(params)
             this.init()
         },
@@ -475,7 +466,6 @@ export default {
             this.init()
         },
         onDelete (item) {
-            console.log(item)
             this.$confirm(`此操作将永久删除 ${item.authName} 菜单以及下面挂载的子菜单, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
