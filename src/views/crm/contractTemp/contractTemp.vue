@@ -181,7 +181,7 @@ export default {
                 'justify', // 对齐方式
                 'quote', // 引用
                 'emoticon', // 表情
-                'image', // 插入图片
+                // 'image', // 插入图片
                 'table', // 表格
                 'undo', // 撤销
                 'redo' // 重复
