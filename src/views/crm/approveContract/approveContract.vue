@@ -308,12 +308,6 @@ export default {
                 callback()
             }
         },
-        // chooseInput (item) {
-        //     if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
-        //         return true
-        //     }
-        //     return false
-        // },
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
@@ -707,11 +701,6 @@ export default {
         domBindMethods () {
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$nextTick(() => {
-                // this.$refs.RichEditor.editor.config.onfocus = () => {
-                //     console.log('fuck')
-                // }
-                // console.log('this.$refs.RichEditor', this.$refs.RichEditor.editor.config.onchange)
-
                 // this.$refs.RichEditor.value  纯html
                 this.firstKsy = this.contractFieldsList[0].paramKey
                 if (!this.currentKey) {
