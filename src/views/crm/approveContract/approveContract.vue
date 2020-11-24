@@ -618,10 +618,8 @@ export default {
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
-                console.log('setImg: ')
                 return
             }
-            // 最后要拿到input的合同
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -681,10 +679,9 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput,
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     // return
-
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -695,7 +692,7 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     this.init()
                 }

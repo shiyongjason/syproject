@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <!-- contractSignType: 2线下  1线上 -->
             <div class="ctilte"><span>合同详情</span>
-                <h-button type="primary" class="btn-right" v-if="res.contractStatus=='12'">下载合同</h-button>
+                <h-button type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1"><a :href="res.contractUrl" target="_blank">下载合同</a></h-button>
             </div>
             <div v-html=vHtml v-if="vHtml" class='approvalcontract-content-layout'>
             </div>
