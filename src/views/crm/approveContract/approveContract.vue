@@ -509,24 +509,27 @@ export default {
             }
         },
         async onApprove () {
-            let dom = document.getElementById('platform_sign')
-            dom.outerHTML = `<span id="platform_sign"></span>`
+            if (this.detailRes.contractStatus == 6) {
+                let dom = document.getElementById('platform_sign')
+                dom.outerHTML = `<span id="platform_sign"></span>`
+            }
             let res = this.contractFieldsList.filter(item => item.paramKey.indexOf('contract_sign_') > -1)
-            if (res && res.length > 0) {
+            if (res && res.length > 0 && this.detailRes.contractStatus == 6) {
                 res.map(item => {
                     let TDoms = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
                     let resDom = TDoms.getElementsByClassName(item.paramKey)
-                    console.log('resDom: ', resDom)
                     if (resDom && resDom.length > 0) {
                         Array.from(resDom).map(jtem => {
-                            console.log('jtem: ', jtem)
                             jtem.outerHTML = ''
                         })
                     }
                 })
             }
             this.$nextTick(async () => {
-                let res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                let res = ''
+                if (this.detailRes.contractStatus == 6) {
+                    res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                }
                 const query = {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
