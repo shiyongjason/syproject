@@ -117,7 +117,7 @@
                         <span>{{item.operationName}}</span>
                         <template v-if="item.operationName == '编辑了'">
                             <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
-                                <font>{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
                                 从<font>
                                     <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
                                 </font>
@@ -171,9 +171,11 @@ const _queryParams = {
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
+const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }]
 export default {
     name: 'contractSigningManagement',
     components: { hosJoyTable, diffDialog },
+
     data () {
         return {
             Auths,
@@ -185,7 +187,7 @@ export default {
             riskManagerWaitingNum: '',
             branchArr: [],
             contractTypes: [],
-            contractStatus: [{ value: '', label: '全部' }, { value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }],
+            contractStatus: [{ value: '', label: '全部' }, ..._dicData],
             page: {
                 sizes: [10, 20, 50, 100],
                 total: 0
@@ -206,13 +208,12 @@ export default {
                 },
                 { label: '合同模版版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
-                { label: '状态', prop: 'contractStatus', width: '120', dicData: this.dicData },
+                { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
                 { label: '发起人', prop: 'createBy', width: '120' },
                 { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
             ],
             tableData: [],
-            dicData: [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }],
             currentContent: '',
             lastContent: ''
         }
@@ -425,6 +426,7 @@ export default {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
+            align-items: baseline;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;
