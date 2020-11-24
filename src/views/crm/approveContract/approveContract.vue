@@ -42,6 +42,7 @@
                                     </component>
                                 </el-form-item>
                             </el-form>
+
                             <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" :multiple='false' :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png'
                                 :uploadParameters='uploadParameters' @successArg='successArg'>
                                 <i class="el-icon-upload"></i>
@@ -137,7 +138,9 @@
 <script>
 import diffDialog from './diffDialog'
 import selectCom from './components/select'
-import formatInput from './components/formatInput'
+import isAllNum from './components/isAllNum'
+import isPositiveInt from './components/isPositiveInt'
+import isNum from './components/isNum'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
@@ -146,7 +149,7 @@ import { interfaceUrl } from '@/api/config'
 
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, formatInput, inputAutocomplete, hosjoyUpload },
+    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt },
     data () {
         return {
             xx: '232323<br>   324 <br>发送到',
@@ -192,7 +195,7 @@ export default {
                 'justify', // 对齐方式
                 'quote', // 引用
                 // 'emoticon', // 表情
-                'image', // 插入图片
+                // 'image', // 插入图片
                 'table', // 表格
                 'undo', // 撤销
                 'redo' // 重复
@@ -223,12 +226,48 @@ export default {
         },
         uploadImgName () {
             return 'multiFile'
+        },
+        inputStyleDom () {
+            // 支付期限
+            if (this.currentKey.paramKey == 'pay_period_supplier') {
+                return 'isPositiveInt'
+            }
+            // 纯数字
+            if (this.currentKey.paramKey == 'supplier_account_number' || this.currentKey.paramKey == 'hosjoy_account_number' || this.currentKey.paramKey == 'regulatory_account_number' || this.currentKey.paramKey == 'dealer_controller_postal_code' || this.currentKey.paramKey == 'dealer_controller_postal_code_spouse') {
+                return 'isAllNum'
+            }
+            // 元 %
+            if (this.currentKey.unit) {
+                return 'isNum'
+            }
+            return 'elInput'
         }
     },
     methods: {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        debounce (func, wait) {
+            let _this = this
+            return function () {
+                let now = new Date()
+                if (now - _this.lastTime - wait > 0) {
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                } else {
+                    if (_this.timeout) {
+                        clearTimeout(_this.timeout)
+                        _this.timeout = null
+                    }
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                }
+
+                _this.lastTime = now
+            }
+        },
         onShowUpdata () {
             if (this.detailRes.contractStatus == 6) {
                 this.$nextTick(() => {
@@ -244,7 +283,7 @@ export default {
             }
         },
         onchange () {
-            this.onShowUpdata()
+            this.debounce(this.onShowUpdata, 200)()
             this.domBindMethods()
         },
         getHeight () {
@@ -269,18 +308,18 @@ export default {
                 callback()
             }
         },
-        chooseInput (item) {
-            if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
-                return true
-            }
-            return false
-        },
+        // chooseInput (item) {
+        //     if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
+        //         return true
+        //     }
+        //     return false
+        // },
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
                 1: {
-                    [this.chooseInput(this.currentKey) ? 'formatInput' : 'elInput']:
-                        this.chooseInput(this.currentKey)
+                    [this.inputStyleDom]:
+                        this.inputStyleDom !== 'elInput'
                             ? {
                                 bind: {
                                     paramKey: this.currentKey.paramKey,
@@ -293,7 +332,6 @@ export default {
                                 },
                                 on: {
                                     input: (val) => { this.currentKey.paramValue = val.trim() }
-
                                 }
                             }
                             : {
@@ -477,21 +515,41 @@ export default {
             }
         },
         async onApprove () {
-            const query = {
-                contractId: this.$route.query.id,
-                approver: this.userInfo.employeeName,
-                // 合同审批角色 1：分财 2：风控 3：法务
-                approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                approvalStatus: this.dialog.status,
-                approvalRemark: this.dialog.remark
+            let dom = document.getElementById('platform_sign')
+            dom.outerHTML = `<span id="platform_sign"></span>`
+            let res = this.contractFieldsList.filter(item => item.paramKey.indexOf('contract_sign_') > -1)
+            if (res && res.length > 0) {
+                res.map(item => {
+                    let TDoms = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                    let resDom = TDoms.getElementsByClassName(item.paramKey)
+                    console.log('resDom: ', resDom)
+                    if (resDom && resDom.length > 0) {
+                        Array.from(resDom).map(jtem => {
+                            console.log('jtem: ', jtem)
+                            jtem.outerHTML = ''
+                        })
+                    }
+                })
             }
-            await approvalContent(query)
-            this.$message({
-                message: `提交成功`,
-                type: 'success'
+            this.$nextTick(async () => {
+                let res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                const query = {
+                    contractId: this.$route.query.id,
+                    approver: this.userInfo.employeeName,
+                    // 合同审批角色 1：分财 2：风控 3：法务
+                    approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    approvalStatus: this.dialog.status,
+                    approvalRemark: this.dialog.remark,
+                    contractContent: this.detailRes.contractStatus == 6 ? res.innerHTML : ''
+                }
+                await approvalContent(query)
+                this.$message({
+                    message: `提交成功`,
+                    type: 'success'
+                })
+                this.handleClose()
+                this.goBack()
             })
-            this.handleClose()
-            this.goBack()
         },
         goBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -594,7 +652,7 @@ export default {
                             item.paramValue = paramValue
                         }
                     })
-                    if (this.detailRes.contractStatus == 6) {
+                    if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.$refs.RichEditor.value
                         if (this.detailRes.contractContent !== curHTML) {
                             this.$message({

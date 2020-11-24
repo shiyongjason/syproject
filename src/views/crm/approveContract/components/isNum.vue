@@ -1,19 +1,9 @@
 <template>
     <div>
-        <!-- 3位数正整数 v-isPositiveInt maxlength="3"-->
-        <el-input v-if="paramKey==='pay_period_supplier'" v-model.trim="inputModelComputed" v-isPositiveInt maxlength="3" v-bind="$attrs">
-            <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
-        </el-input>
         <!-- 金额 -->
-        <el-input v-else-if='innerHtml&&innerHtml=="元"' :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
+        <el-input  :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
             <template slot="append" >元</template>
         </el-input>
-        <!-- 其它单位 -->
-        <el-input v-else-if='innerHtml&&innerHtml!="元"' v-model.trim="inputModelComputed" v-isNum:2 v-bind="$attrs" @blur="onBlur">
-            <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
-        </el-input>
-        <!-- 只能数字,账号 -->
-        <el-input v-if='!innerHtml' v-model.trim="inputModelComputed" v-isAllNum:0 v-bind="$attrs"></el-input>
     </div>
 </template>
 
@@ -44,9 +34,11 @@ export default {
             if (val.indexOf('.') > 0) {
                 money = val.split('.')[0]
                 pointNum = val.split('.')[1]
+                console.log('money value: ', money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum)
                 return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
             } else {
                 money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                console.log('money value: ', money)
                 return money
             }
         },
@@ -61,6 +53,7 @@ export default {
             }
             num = num.toString()
             num = num.replace(/,/gi, '')
+            console.log('num: ', num)
             this.$emit('input', num)
         },
         numValidate (str, float, regular, regular2, limit = '') {
