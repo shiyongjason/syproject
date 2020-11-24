@@ -229,6 +229,27 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        debounce (func, wait) {
+            let _this = this
+            return function () {
+                let now = new Date()
+                if (now - _this.lastTime - wait > 0) {
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                } else {
+                    if (_this.timeout) {
+                        clearTimeout(_this.timeout)
+                        _this.timeout = null
+                    }
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                }
+
+                _this.lastTime = now
+            }
+        },
         onShowUpdata () {
             if (this.detailRes.contractStatus == 6) {
                 this.$nextTick(() => {
@@ -244,7 +265,7 @@ export default {
             }
         },
         onchange () {
-            this.onShowUpdata()
+            this.debounce(this.onShowUpdata, 200)()
             this.domBindMethods()
         },
         getHeight () {
@@ -292,8 +313,7 @@ export default {
                                     maxlength: this.currentKey.maxLength || ''
                                 },
                                 on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
-
+                                    input: (val) => { console.log('val: ', val); this.currentKey.paramValue = val.trim() }
                                 }
                             }
                             : {
@@ -477,21 +497,41 @@ export default {
             }
         },
         async onApprove () {
-            const query = {
-                contractId: this.$route.query.id,
-                approver: this.userInfo.employeeName,
-                // 合同审批角色 1：分财 2：风控 3：法务
-                approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                approvalStatus: this.dialog.status,
-                approvalRemark: this.dialog.remark
+            let dom = document.getElementById('platform_sign')
+            dom.outerHTML = `<span id="platform_sign"></span>`
+            let res = this.contractFieldsList.filter(item => item.paramKey.indexOf('contract_sign_') > -1)
+            if (res && res.length > 0) {
+                res.map(item => {
+                    let TDoms = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                    let resDom = TDoms.getElementsByClassName(item.paramKey)
+                    console.log('resDom: ', resDom)
+                    if (resDom && resDom.length > 0) {
+                        Array.from(resDom).map(jtem => {
+                            console.log('jtem: ', jtem)
+                            jtem.outerHTML = ''
+                        })
+                    }
+                })
             }
-            await approvalContent(query)
-            this.$message({
-                message: `提交成功`,
-                type: 'success'
+            this.$nextTick(async () => {
+                let res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                const query = {
+                    contractId: this.$route.query.id,
+                    approver: this.userInfo.employeeName,
+                    // 合同审批角色 1：分财 2：风控 3：法务
+                    approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    approvalStatus: this.dialog.status,
+                    approvalRemark: this.dialog.remark,
+                    contractContent: this.detailRes.contractStatus == 6 ? res.innerHTML : ''
+                }
+                await approvalContent(query)
+                this.$message({
+                    message: `提交成功`,
+                    type: 'success'
+                })
+                this.handleClose()
+                this.goBack()
             })
-            this.handleClose()
-            this.goBack()
         },
         goBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -594,7 +634,7 @@ export default {
                             item.paramValue = paramValue
                         }
                     })
-                    if (this.detailRes.contractStatus == 6) {
+                    if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.$refs.RichEditor.value
                         if (this.detailRes.contractContent !== curHTML) {
                             this.$message({

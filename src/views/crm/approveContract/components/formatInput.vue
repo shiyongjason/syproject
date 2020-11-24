@@ -14,6 +14,7 @@
         </el-input>
         <!-- 只能数字,账号 -->
         <el-input v-if='!innerHtml' v-model.trim="inputModelComputed" v-isAllNum:0 v-bind="$attrs"></el-input>
+        <div>{{money(value)}}</div>
     </div>
 </template>
 
@@ -44,9 +45,11 @@ export default {
             if (val.indexOf('.') > 0) {
                 money = val.split('.')[0]
                 pointNum = val.split('.')[1]
+                console.log('money value: ', money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum)
                 return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
             } else {
                 money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                console.log('money value: ', money)
                 return money
             }
         },
@@ -61,6 +64,7 @@ export default {
             }
             num = num.toString()
             num = num.replace(/,/gi, '')
+            console.log('num: ', num)
             this.$emit('input', num)
         },
         numValidate (str, float, regular, regular2, limit = '') {
