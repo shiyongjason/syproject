@@ -189,6 +189,7 @@ export default {
             riskManagerWaitingNum: '',
             branchArr: [],
             contractTypes: [],
+            dicData: JSON.parse(JSON.stringify(_dicData)),
             contractStatus: [{ value: '', label: '全部' }, ..._dicData],
             page: {
                 sizes: [10, 20, 50, 100],
@@ -273,14 +274,13 @@ export default {
             return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
         },
         async getHistory (row) {
-            console.log('row: ', row)
             this.detailRes.contractStatus = row.contractStatus
             const { data } = await getCheckHistory({
                 contractId: row.id
             })
-            console.log('data: ', data)
             this.historyList = data.signHistory
             this.drawerVisible = true
+            console.log('this.drawerVisible: ', this.drawerVisible)
 
             // this.historyList = data.signHistory
             // console.log('res: ', res.data)
