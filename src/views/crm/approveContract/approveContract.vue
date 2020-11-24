@@ -69,8 +69,8 @@
                             <RichEditor ref="RichEditor" v-model="contractContentDiv" :menus="menus" :uploadImgServer="uploadImgServer" :height='getHeight()' :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange"></RichEditor>
                         </div>
                     </div>
+                    <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6&&showUpdataBtn">更新条款</h-button>
                     <div class="approvalcontract-btn">
-                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
                         <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
@@ -204,7 +204,8 @@ export default {
                 formValidator: [
                     { validator: this.checkField, trigger: 'blur' }
                 ]
-            }
+            },
+            showUpdataBtn: false
 
         }
     },
@@ -228,7 +229,22 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        onShowUpdata () {
+            if (this.detailRes.contractStatus == 6) {
+                this.$nextTick(() => {
+                    let curHTML = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].innerHTML
+                    if (this.detailRes.contractContent !== curHTML) {
+                        this.showUpdataBtn = true
+                    } else {
+                        this.showUpdataBtn = false
+                    }
+                })
+            } else {
+                this.showUpdataBtn = false
+            }
+        },
         onchange () {
+            this.onShowUpdata()
             this.domBindMethods()
         },
         getHeight () {
@@ -432,6 +448,16 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
+            if (this.detailRes.contractStatus == 6) {
+                let curHTML = this.$refs.RichEditor.value
+                if (this.detailRes.contractContent !== curHTML) {
+                    this.$message({
+                        message: `内容修改还没保存`,
+                        type: 'error'
+                    })
+                    return
+                }
+            }
             this.dialog.dialogVisible = true
             this.dialog.title = title
             this.dialog.status = status
@@ -471,8 +497,8 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
+
         successArg (val) {
-            console.log('val: ', val)
             this.currentKey.paramValue = val.fileUrl
         },
         async setImg () {
@@ -544,14 +570,9 @@ export default {
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
-                    // div版合同,修改页面上的值
-                    let ryanList = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKey.paramKey)
-                    Array.from(ryanList).map(jtem => {
-                        jtem.innerHTML = paramValue
-                    })
+                    //
                     let tempObj = {}
                     let tempArr = []
-                    //
                     this.contractFieldsList.map(item => {
                         let DomList = document.getElementsByClassName(domName)[0].getElementsByClassName(item.paramKey)
                         // 筛选出页面上的键值对，可能会被删除
@@ -573,10 +594,25 @@ export default {
                             item.paramValue = paramValue
                         }
                     })
+                    if (this.detailRes.contractStatus == 6) {
+                        let curHTML = this.$refs.RichEditor.value
+                        if (this.detailRes.contractContent !== curHTML) {
+                            this.$message({
+                                message: `合同内容发送修改请先保存更新`,
+                                type: 'error'
+                            })
+                            return
+                        }
+                    }
+                    // div版合同,修改页面上的值
+                    let ryanList = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKey.paramKey)
+                    Array.from(ryanList).map(jtem => {
+                        jtem.innerHTML = paramValue
+                    })
+
                     // 通过dom生成最新的html
                     this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
-
                     // 编辑前内容
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
@@ -611,7 +647,6 @@ export default {
             })
         },
         domBindMethods () {
-            console.log('domBindMethods')
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$nextTick(() => {
                 // this.$refs.RichEditor.editor.config.onfocus = () => {
@@ -688,7 +723,6 @@ export default {
             // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
             const obj = JSON.parse(item.operationContent)
             if (obj.fieldContent === '') {
-                console.log('22222222')
                 return `<font>${obj.fieldDesc}</font>删除了<font>${obj.fieldOriginalContent}</font>内容变为空`
             }
             return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
