@@ -115,9 +115,7 @@
 
                 </div>
             </div>
-<h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
-                        导出
-                    </h-button>
+
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
                 actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.1">
