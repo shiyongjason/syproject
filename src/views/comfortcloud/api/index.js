@@ -469,5 +469,35 @@ export function getCloudMerchantOrderList (params) {
 
 // 获取招商代理品类列表
 export function getCloudMerchantCategory () {
-    return axios.get(iotUrl + '/api/agent-category/list')
+    return axios.get(iotUrl + '/mall/agent-category/list')
+}
+
+// 商品列表
+export function getCloudMerchantShopList (params) {
+    return axios.get(iotUrl + '/mall/boss/product', { params })
+}
+
+// 新增小程序商品列表
+export function createShop (params) {
+    return axios.post(iotUrl + `/mall/boss/product`, params)
+}
+
+// 更新小程序商品列表
+export function updateShop (params) {
+    return axios.put(iotUrl + `/mall/boss/product?${qs.stringify(params)}`)
+}
+
+// 获取小程序商品品类
+export function getCloudMerchantShopCategoryList () {
+    return axios.get(iotUrl + '/mall/boss/category/all')
+}
+
+// 获取小程序商品品类
+export function getCloudMerchantShopCategoryTypeList (params) {
+    return axios.get(iotUrl + '/mall/boss/specification/of-category', { params })
+}
+
+// 获取小程序商品详情
+export function getCloudMerchantShopDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/product/detail', { params })
 }

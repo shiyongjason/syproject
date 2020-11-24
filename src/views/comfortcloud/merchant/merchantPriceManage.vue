@@ -13,77 +13,126 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList" :pagination="cloudMerchantOrderListPagination" :isAction="true" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange'>
-                <template slot="level" slot-scope="scope">
-                    {{ scope.data.row.level === 1 ? '一级': '二级' }}
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantShopList" :pagination="cloudMerchantShopListPagination" :isAction="true" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange'>
+                <template slot="status" slot-scope="scope">
+                    {{ shopStatus(scope.data.row.status) }}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">上架</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">{{btnStatus(scope.data.row.status)}}</el-button>
                 </template>
             </basicTable>
         </div>
 
-        <el-dialog width="1000px" title="新增商品" :visible.sync="dialogShopEdit" :close-on-click-modal="false">
-            <el-form :model="form" :rules="rules" ref="form" :label-width="formLabelWidth">
-                <el-form-item>
-                    归属品类：
-                    <el-select v-model="queryParams.categoryId">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="全部" value=""></el-option>
-
-                        <!-- <el-option :label="item.dataValue" :value="item.dataKey" v-for="item in cloudDict" :key="item.dataKey"></el-option> -->
-                    </el-select>
-                    商品型号：
-                    <el-select v-model="queryParams.categoryId">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="全部" value=""></el-option>
-
-                        <!-- <el-option :label="item.dataValue" :value="item.dataKey" v-for="item in cloudDict" :key="item.dataKey"></el-option> -->
-                    </el-select>
+        <el-dialog width="1200px" title="新增商品" :visible.sync="dialogShopEdit" :close-on-click-modal="false">
+            <el-form :model="form" :rules="rules" ref="form" label-width="130px">
+                <el-form-item label="归属品类：">
+                    <el-col :span="6">
+                        <el-form-item prop="categoryId">
+                            <el-select v-model="form.categoryId" @change="selectChanged">
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="9">
+                        <el-form-item label="商品型号：" prop="specificationId">
+                            <el-select v-model="form.specificationId">
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in cloudMerchantShopCategoryTypeList" :key="item.specificationId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="9">
+                        <el-form-item label="商品名称：" prop="productName">
+                            <el-input style="width: 200px" placeholder="请输入商品名称" v-model="form.productName"></el-input>
+                        </el-form-item>
+                    </el-col>
                 </el-form-item>
-                <el-form-item label="商品名称：">
-                    <el-input maxlength="10" style="width: 300px" placeholder="请输入商品名称"></el-input>
-                </el-form-item>
-                <el-form-item label="商品图片：">
-                    <SingleUpload :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
+                <el-form-item label="商品列表图：">
+                    <SingleUpload :upload="uploadInfo" :imageUrl="productIconUrl" ref="uploadImg" @back-event="productIcon" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
                         建议尺寸：172*1728图片，1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
-                <el-form-item>
-                    <h3>价格设置：</h3>
-                    零售价
-                    <el-input maxlength="10" style="width: 100px" placeholder="填写价格"></el-input> 元
+                <el-form-item label="商品主图：">
+                    <SingleUpload :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
+                    <div class="upload-tips">
+                        建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
+                    </div>
                 </el-form-item>
-                <el-form-item>
-                    销售价：
-                    <el-input v-model.number='num' maxlength="10" style="width: 100px" placeholder="填写价格"></el-input> 元
-                    商品ID：
-                    <el-input maxlength="10" style="width: 250px" placeholder="输入和微信小店一致的商品ID"></el-input>
-                    商品链接：
-                    <el-input maxlength="10" style="width: 250px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                <el-form-item label="商品详情：">
+                    <SingleUpload :upload="uploadInfo" :imageUrl="productDetailImgUrl" ref="uploadImg" @back-event="productDetailImg" :imgW="80" :imgH="80" />
+                    <div class="upload-tips">
+                        建议尺寸：宽度不低于750px，图片大小2M以内，支持jpeg,png和jpg格式
+                    </div>
                 </el-form-item>
-                <el-form-item>
-                    二级经销商价格：
-                    <el-input v-model.number='num' maxlength="10" style="width: 100px" placeholder="填写价格"></el-input> 元
-                    商品ID：
-                    <el-input maxlength="10" style="width: 250px" placeholder="输入和微信小店一致的商品ID"></el-input>
-                    商品链接：
-                    <el-input maxlength="10" style="width: 250px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                <h3>价格设置：</h3>
+                <el-form-item label="零售价：">
+                    <el-col>
+                        <el-form-item prop="retailPrice">
+                            <el-input v-model="form.retailPrice" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                        </el-form-item>
+                    </el-col>
                 </el-form-item>
-                <el-form-item>
-                    一级经销商价格：
-                    <el-input maxlength="10" style="width: 100px" placeholder="填写价格"></el-input> 元
-                    商品ID：
-                    <el-input maxlength="10" style="width: 250px" placeholder="输入和微信小店一致的商品ID"></el-input>
-                    商品链接：
-                    <el-input maxlength="10" style="width: 250px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                <el-form-item label="销售价：">
+                    <el-col :span="4">
+                        <el-form-item>
+                            <el-input v-model="priceParam.price" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                        <el-form-item label="商品ID：">
+                            <el-input v-model="priceParam.wxProductId" style="width: 230px" placeholder="输入和微信小店一致的商品ID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="商品链接：">
+                            <el-input v-model="priceParam.wxProductUrl" style="width: 230px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                        </el-form-item>
+                    </el-col>
+
                 </el-form-item>
-                <el-form-item label="佣金设置：">
-                    <el-input maxlength="10" style="width: 100px" placeholder="填写佣金比例"></el-input>%
+                <el-form-item label="二级经销商价格：">
+
+                    <el-col :span="4">
+                        <el-form-item>
+                            <el-input v-model="priceParamOne.price" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                        <el-form-item label="商品ID：">
+                            <el-input v-model="priceParamOne.wxProductId" style="width: 230px" placeholder="输入和微信小店一致的商品ID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="商品链接：">
+                            <el-input v-model="priceParamOne.wxProductUrl" style="width: 230px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="一级经销商价格：">
+                    <el-col :span="4">
+                        <el-form-item>
+                            <el-input v-model="priceParamTwo.price" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="10">
+                        <el-form-item label="商品ID：">
+                            <el-input v-model="priceParamTwo.wxProductId" style="width: 230px" placeholder="输入和微信小店一致的商品ID"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="10">
+                        <el-form-item label="商品链接：">
+                            <el-input v-model="priceParamTwo.wxProductUrl" style="width: 230px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="佣金设置：" prop="commissionRate">
+                    <el-input v-model="form.commissionRate" maxlength="10" style="width: 100px" placeholder="填写佣金比例">10</el-input> %
                 </el-form-item>
                 <!-- <el-form-item label="零售价">
 
@@ -119,72 +168,164 @@
 
 <script>
 
-import { mapGetters, mapActions } from 'vuex'
+import { interfaceUrl } from '@/api/config'
+import { mapGetters, mapActions, mapState } from 'vuex'
+import { createShop, updateShop, getCloudMerchantShopDetail } from '../api/index'
 
 export default {
     name: 'merchantPriceManage',
     data () {
         return {
             queryParams: {
-                payNo: '',
-                status: '',
-                payStartDate: '',
-                payEndDate: '',
                 pageNumber: 1,
                 pageSize: 10
             },
+            priceParam: {
+                id: '',
+                userType: 1,
+                wxProductId: '',
+                wxProductUrl: '',
+                price: ''
+            },
+            priceParamOne: {
+                id: '',
+                userType: 10,
+                wxProductId: '',
+                wxProductUrl: '',
+                price: ''
+            },
+            priceParamTwo: {
+                id: '',
+                userType: 20,
+                wxProductId: '',
+                wxProductUrl: '',
+                price: ''
+            },
+            form: {
+                categoryId: '',
+                categoryName: '',
+                id: '',
+                specificationId: '',
+                specificationName: '',
+                productName: '',
+                productIcon: '',
+                productImg: '',
+                productDetailImg: '',
+                retailPrice: '',
+                commissionRate: '',
+                priceList: [],
+                operator: ''
+            },
             tableLabel: [
-                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '订单号', prop: 'payNo' },
-                { label: '省', prop: 'provinceName' },
-                { label: '市', prop: 'cityName' },
-                { label: '联系地址', prop: 'contactAddress' },
-                { label: '代理级别', prop: 'level' },
-                { label: '代理品类', prop: 'categoryName' },
-                { label: '订单状态', prop: 'status' }],
-            dialogShopEdit: false
+                { label: '品类', prop: 'categoryName' },
+                { label: '商品型号', prop: 'specificationName' },
+                { label: '商品名称', prop: 'productName' },
+                { label: '会员销售价', prop: 'memberSalePrice' },
+                { label: '一级代理商价格', prop: 'oneLevelAgentPrice' },
+                { label: '二级代理商价格', prop: 'twoLevelAgentPrice' },
+                { label: '佣金比例', prop: 'commissionRate' },
+                { label: '建议零售价', prop: 'retailPrice' },
+                { label: '状态', prop: 'status' }],
+            dialogShopEdit: false,
+            isSaving: false,
+            status: 'add', // add 新增 modify 更新
+            rules: {
+                productName: [
+                    { required: true, whitespace: true, message: '请输入品牌中文名称', trigger: 'blur' }
+                ],
+                agentUrl: [
+                    { required: true, message: '请上传品牌logo' }
+                ]
+            }
         }
     },
     mounted () {
         this.queryList(this.queryParams)
+        this.queryCetagory()
     },
     computed: {
         ...mapGetters({
-            cloudMerchantOrderList: 'cloudMerchantOrderList',
-            cloudMerchantOrderListPagination: 'cloudMerchantOrderListPagination'
+            cloudMerchantShopList: 'cloudMerchantShopList',
+            cloudMerchantShopListPagination: 'cloudMerchantShopListPagination',
+            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
+            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
-        pickerOptionsStart () {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
+        uploadInfo () {
             return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.payEndDate
-                    if (beginDateVal) {
-                        return (time.getTime() > new Date(beginDateVal).getTime()) || (time.getTime() > Date.now())
-                    }
-                    return time.getTime() > Date.now()
-                }
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                accept: 'image/jpeg, image/jpg, image/png'
             }
         },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.queryParams.payStartDate
-                    if (beginDateVal) {
-                        return (
-                            (time.getTime() < new Date(beginDateVal).getTime()) || (time.getTime() > Date.now())
-                        )
-                    }
-                    return time.getTime() > Date.now()
-                }
-            }
+        productIconUrl () {
+            return this.form.productIcon
+        },
+        productImgUrl () {
+            return this.form.productImg
+        },
+        productDetailImgUrl () {
+            return this.form.productDetailImg
         }
     },
     methods: {
         ...mapActions({
-            findCloudMerchantOrderList: 'findCloudMerchantOrderList'
+            findCloudMerchantShopList: 'findCloudMerchantShopList', // 商品列表
+            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
+            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
         addShop: function () {
             // 新增商品
+            this.status = 'add'
             this.dialogShopEdit = true
+            this.$refs.form.clearValidate()
+        },
+        onEdit (shop) {
+            this.findShopDetailAsync(shop.id)
+        },
+        selectChanged (value) {
+            console.log(value)
+            this.findCloudMerchantShopCategoryTypeList(value)
+        },
+        submitForm (formName) {
+            if (this.isSaving) {
+                return
+            }
+            this.isSaving = true
+            this.$refs[formName].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await this.saveShop()
+                        this.isSaving = false
+                    } catch (e) {
+                        this.isSaving = false
+                    }
+                } else {
+                    this.isSaving = false
+                }
+            })
+        },
+        async saveShop () {
+            this.form.priceList = [this.priceParam, this.priceParamOne, this.priceParamTwo]
+            let { ...params } = this.form
+            params.operator = this.userInfo.employeeName
+            console.log(params)
+            if (this.status === 'add') {
+                await createShop(params)
+            } else if (this.status === 'modify') {
+                params.id = this.modifyId
+                await updateShop(params)
+            }
+            this.dialogShopEdit = false
+            this.$message({
+                message: this.status === 'add' ? '品牌添加成功！' : '品牌修改成功！',
+                type: 'success'
+            })
+            this.onQuery()
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -195,22 +336,59 @@ export default {
             this.queryList(this.queryParams)
         },
         queryList: function (params) {
-            this.findCloudMerchantOrderList(params)
+            this.findCloudMerchantShopList(params)
         },
-        payStatus: function (status) {
-            if (status === 0) {
-                // 已支付
-                return '未支付'
-            } else if (status === 10) {
-                // 未支付
-                return '已支付'
-            } else if (status === 15) {
-                // 已取消
-                return '已取消'
+        queryCetagory: function (params) {
+            this.findCloudMerchantShopCategoryList(params)
+        },
+        shopStatus: function (status) {
+            if (status === 10) {
+                return '待上架'
+            } else if (status === 20) {
+                return '销售中'
             } else if (status === 30) {
-                // 已退款
-                return '已退款'
+                return '已下架'
             }
+        },
+        btnStatus: function (status) {
+            if (status === 20) {
+                return '下架'
+            } else {
+                return '上架'
+            }
+        },
+        // 图片上传成功回调
+        productIcon (val) {
+            this.form.productIcon = val.imageUrl
+        },
+        productImg (val) {
+            this.form.productImg = val.imageUrl
+        },
+        productDetailImg (val) {
+            this.form.productDetailImg = val.imageUrl
+        },
+        async findShopDetailAsync (modifyId) {
+            const { data } = await getCloudMerchantShopDetail({ productId: modifyId })
+            this.form = {
+                categoryId: data.categoryId,
+                categoryName: data.categoryName,
+                id: data.id,
+                specificationId: data.specificationId,
+                specificationName: data.specificationName,
+                productName: data.productName,
+                productIcon: data.productIcon,
+                productImg: data.productImg,
+                productDetailImg: data.productDetailImg,
+                retailPrice: data.retailPrice,
+                commissionRate: data.commissionRate,
+                priceList: data.priceList,
+                operator: data.operator
+            }
+            this.status = 'modify'
+            this.dialogShopEdit = true
+            // this.$nextTick(() => {
+            //     this.$refs.form.clearValidate()
+            // })
         }
     }
 }
@@ -222,7 +400,7 @@ export default {
     color: #999;
     display: flex;
     align-items: center;
-    height: 100px;
+    height: 80px;
     padding-left: 10px;
 }
 .spanflex {
