@@ -4,7 +4,7 @@
         </div>
         <div class="smart-time">
             <div>
-                <h3>总运行时长: {{totalTime ? totalTime : '0'}} 小时</h3>
+                <h3>总配网失败率: {{totalNetworkCount | percentageShow}} </h3>
             </div>
             <div class="echart-time">
                 <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="smartparams.startDate"
@@ -14,7 +14,7 @@
                 <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="smartparams.endDate"
                                 :picker-options="pickerOptionsEnd" :clearable="false" :editable="false">
                 </el-date-picker>
-                <el-button type="primary" class="ml20" @click="onFindRuntimeR(smartparams.modeType + 'Line',
+                <el-button type="primary" class="ml20" @click="onFindNetworkStat(smartparams.modeType + 'Line',
                 smartparams.modeType + 'Bar')">
                     查询
                 </el-button>
@@ -22,14 +22,14 @@
         </div>
         <div class="tab-container">
             <el-tabs v-model="homeParams.modeType" @tab-click="handleClick">
-                <el-tab-pane :key="item.name" v-for="item in cloudHomeModeTypeList" :label="item.name" :name="item.type" class="echart-wrap">
+                <el-tab-pane :key="item.name" v-for="item in cloudNetworkModeTypeList" :label="item.name" :name="item.type" class="echart-wrap">
                     <div class="chart-flex2" :id="item.type + 'Line'" style="height:500px"></div>
-                    <div class="chart-flex1" :id="item.type + 'Bar'" style="height:500px"></div>
+                    <div v-if="item.type === 'all'" class="chart-flex1" :id="item.type + 'Bar'" style="height:500px"></div>
                 </el-tab-pane>
             </el-tabs>
         </div>
         <div class="page-body-cont query-cont">
-            <h3 class="home-detail-title">家庭设备明细</h3>
+            <h3 class="home-detail-title">配网失败明细</h3>
             <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-title">手机号：</div>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间：</div>
+                    <div class="query-col-title">配网时间：</div>
                     <div class="query-col-input">
                         <el-date-picker type="date" clearable v-model="homeParams.startDate"
                                         value-format="yyyy-MM-dd" placeholder="开始日期"
@@ -51,15 +51,15 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col" v-if="homeParams.modeType === 'all'">
-                    <div class="query-col-title">设备种类：</div>
-                    <div class="query-col-input">
-                        <el-select v-model="homeParams.type" clearable>
-                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict"
-                                       :key="item.type"></el-option>
-                        </el-select>
-                    </div>
-                </div>
+<!--                <div class="query-cont-col" v-if="homeParams.modeType === 'all'">-->
+<!--                    <div class="query-col-title">设备种类：</div>-->
+<!--                    <div class="query-col-input">-->
+<!--                        <el-select v-model="homeParams.type" clearable>-->
+<!--                            <el-option :label="item.name" :value="item.type" v-for="item in cloudHomeDetailDict"-->
+<!--                                       :key="item.type"></el-option>-->
+<!--                        </el-select>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="query-cont-col">
                     <el-button type="primary" @click="onQuery">
                         查询
@@ -68,11 +68,14 @@
             </div>
         </div>
         <div class="page-body-cont">
-<!--            @onSortChange="onSortChange"-->
-            <basicTable :tableLabel="tableLabelSwitch" :tableData="cloudHomeDetailList"
-                        :pagination="cloudHomeDetailPagination"
+            <!--            @onSortChange="onSortChange"-->
+            <basicTable :tableLabel="tableLabelSwitch" :tableData="cloudNetworkDetailList"
+                        :pagination="cloudNetworkDetailPagination"
                         isShowIndex @onCurrentChange='onCurrentChange'
                         @onSizeChange='onSizeChange'>
+                <template slot="source" slot-scope="scope">
+                    {{scope.data.row.source === 1 ? 'iOS' : 'Android'}}
+                </template>
             </basicTable>
         </div>
     </div>
@@ -81,14 +84,11 @@
 import echarts from 'echarts'
 import moment from 'moment'
 import { mapActions, mapGetters } from 'vuex'
-import * as Const from './const'
 
 export default {
-    props: ['totalTime'],
+    props: ['totalNetworkCount'],
     data () {
         return {
-            activeName: 'first',
-            tabindex: 0,
             smartparams: {
                 startDate: moment().subtract(7, 'days').format('YYYY-MM-DD'),
                 endDate: moment().format('YYYY-MM-DD'),
@@ -108,11 +108,10 @@ export default {
     },
     computed: {
         ...mapGetters({
-            cloudRuntimeReport: 'cloudRuntimeReport',
-            cloudHomeDetailList: 'cloudHomeDetailList',
-            cloudHomeDetailPagination: 'cloudHomeDetailPagination',
-            cloudHomeDetailDict: 'cloudHomeDetailDict',
-            cloudHomeModeTypeList: 'cloudHomeModeTypeList'
+            cloudNetworkReport: 'cloudNetworkReport',
+            cloudNetworkDetailList: 'cloudNetworkDetailList',
+            cloudNetworkDetailPagination: 'cloudNetworkDetailPagination',
+            cloudNetworkModeTypeList: 'cloudNetworkModeTypeList'
         }),
         pickerOptionsStart () {
             return {
@@ -155,57 +154,35 @@ export default {
             }
         },
         tableLabelSwitch () {
-            let temp
-            switch (this.homeParams.modeType) {
-                case 'all':
-                    temp = Const.totalTableLabel
-                    break
-                case 'Op':
-                case 'Co':
-                case 'Zco':
-                case 'Lco':
-                    temp = Const.OpTableLabel
-                    break
-                case 'Ap':
-                case 'Th':
-                    temp = Const.ApTableLabel
-                    break
-                case 'Lth':
-                case 'Lwh':
-                case 'Lhs':
-                    temp = Const.lthTableLabel
-                    break
-                case 'Rt':
-                    temp = Const.rtTableLabel
-                    break
-                case 'Lct':
-                    temp = Const.lctTableLabel
-                    break
-            }
-            return temp
+            return [
+                { label: '配网失败时间', prop: 'createTime' },
+                { label: '设备类型', prop: 'deviceName' },
+                { label: '手机平台', prop: 'source' },
+                { label: '管理员手机号', prop: 'phone' }
+            ]
         }
     },
     mounted () {
-        this.onFindRuntimeR('allLine', 'allBar')
-        this.findCloudHomeDetailList(this.homeParams)
-        this.findCloudHomeDetailSearchDict()
-        this.getCloudHomeModeTypeList()
+        this.onFindNetworkStat('allLine', 'allBar')
+        this.findCloudNetworkDetailList(this.homeParams)
+        // this.findCloudHomeDetailSearchDict()
+        this.findCloudNetworkModeTypeList()
     },
     methods: {
         ...mapActions({
-            findRuntimeReport: 'findRuntimeReport',
-            findCloudHomeDetailList: 'findCloudHomeDetailList',
-            findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict',
-            getCloudHomeModeTypeList: 'getCloudHomeModeTypeList'
+            findNetworkReport: 'findNetworkReport',
+            findCloudNetworkDetailList: 'findCloudNetworkDetailList',
+            // findCloudHomeDetailSearchDict: 'findCloudHomeDetailSearchDict',
+            findCloudNetworkModeTypeList: 'findCloudNetworkModeTypeList'
         }),
         onSortChange (val) {
             if (val.order) {
                 this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
-                this.findCloudHomeDetailList(this.homeParams)
+                this.findCloudNetworkDetailList(this.homeParams)
             }
         },
         onQuery () {
-            this.findCloudHomeDetailList(this.homeParams)
+            this.findCloudNetworkDetailList(this.homeParams)
         },
         onCurrentChange (val) {
             this.homeParams.pageNumber = val.pageNumber
@@ -215,23 +192,24 @@ export default {
             this.homeParams.pageSize = val
             this.onQuery()
         },
-        async onFindRuntimeR (line, bar) {
-            await this.findRuntimeReport(this.smartparams)
-            this.smartData = this.cloudRuntimeReport
+        async onFindNetworkStat (line, bar) {
+            await this.findNetworkReport(this.smartparams)
+            this.smartData = this.cloudNetworkReport
             this.drawLine(this.smartData, line)
-            this.drawbar(this.smartData, bar)
-            this.$emit('queryTotalTime', {
+            if (this.homeParams.modeType === 'all') {
+                this.drawbar(this.smartData, bar)
+            }
+            this.$emit('queryTotalNetworkCount', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
-                type: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType,
-                networkType: ''
-
+                type: '',
+                networkType: this.homeParams.modeType === 'all' ? '' : this.homeParams.modeType
             })
         },
         drawLine (data, id) {
             // 绘制图表
             var charts = {
-                unit: '单位/小时',
+                unit: this.homeParams.modeType === 'all' ? '单位/百分比' : '单位/次',
                 names: [],
                 lineX: [],
                 value: []
@@ -284,7 +262,14 @@ export default {
                     trigger: 'axis',
                     axisPointer: {
                         type: 'cross'
-                    }
+                    },
+                    formatter: this.homeParams.modeType === 'all' ? (params) => {
+                        let str = params[0].name + '<br/>'
+                        for (x in params) {
+                            str = str + params[x].seriesName + ': ' + params[x].data + '% <br/>'
+                        }
+                        return str
+                    } : null
                 },
                 legend: {
                     data: charts.names,
@@ -350,7 +335,7 @@ export default {
                     }
                 },
                 xAxis: {
-                    name: '单位/小时',
+                    name: '单位/次',
                     type: 'value',
                     // max: 100,
                     splitNumber: 5,
@@ -379,7 +364,7 @@ export default {
         },
         handleClick () {
             this.smartparams.modeType = this.homeParams.modeType
-            this.onFindRuntimeR(this.smartparams.modeType + 'Line',
+            this.onFindNetworkStat(this.smartparams.modeType + 'Line',
                 this.smartparams.modeType + 'Bar')
             Object.assign(this.homeParams, {
                 pageSize: 10,
@@ -390,7 +375,7 @@ export default {
                 endDate: '',
                 modeType: this.homeParams.modeType
             })
-            this.findCloudHomeDetailList(this.homeParams)
+            this.findCloudNetworkDetailList(this.homeParams)
             this.$emit('queryTotalTime', {
                 startDate: this.smartparams.startDate,
                 endDate: this.smartparams.endDate,
