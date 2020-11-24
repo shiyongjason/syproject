@@ -47,7 +47,6 @@ export default {
                 return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '.' + pointNum
             } else {
                 money = val.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-                console.log(money)
                 return money
             }
         },
