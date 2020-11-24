@@ -1,20 +1,9 @@
 <template>
     <div>
-        <!-- 3位数正整数 v-isPositiveInt maxlength="3"-->
-        <el-input v-if="paramKey==='pay_period_supplier'" v-model.trim="inputModelComputed" v-isPositiveInt maxlength="3" v-bind="$attrs">
-            <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
-        </el-input>
         <!-- 金额 -->
-        <el-input v-else-if='innerHtml&&innerHtml=="元"' :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
+        <el-input  :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
             <template slot="append" >元</template>
         </el-input>
-        <!-- 其它单位 -->
-        <el-input v-else-if='innerHtml&&innerHtml!="元"' v-model.trim="inputModelComputed" v-isNum:2 v-bind="$attrs" @blur="onBlur">
-            <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
-        </el-input>
-        <!-- 只能数字,账号 -->
-        <el-input v-if='!innerHtml' v-model.trim="inputModelComputed" v-isAllNum:0 v-bind="$attrs"></el-input>
-        <div>{{money(value)}}</div>
     </div>
 </template>
 

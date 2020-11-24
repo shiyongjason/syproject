@@ -42,6 +42,7 @@
                                     </component>
                                 </el-form-item>
                             </el-form>
+
                             <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" :multiple='false' :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png'
                                 :uploadParameters='uploadParameters' @successArg='successArg'>
                                 <i class="el-icon-upload"></i>
@@ -137,7 +138,9 @@
 <script>
 import diffDialog from './diffDialog'
 import selectCom from './components/select'
-import formatInput from './components/formatInput'
+import isAllNum from './components/isAllNum'
+import isPositiveInt from './components/isPositiveInt'
+import isNum from './components/isNum'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
@@ -146,7 +149,7 @@ import { interfaceUrl } from '@/api/config'
 
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, formatInput, inputAutocomplete, hosjoyUpload },
+    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt },
     data () {
         return {
             xx: '232323<br>   324 <br>发送到',
@@ -192,7 +195,7 @@ export default {
                 'justify', // 对齐方式
                 'quote', // 引用
                 // 'emoticon', // 表情
-                'image', // 插入图片
+                // 'image', // 插入图片
                 'table', // 表格
                 'undo', // 撤销
                 'redo' // 重复
@@ -223,6 +226,21 @@ export default {
         },
         uploadImgName () {
             return 'multiFile'
+        },
+        inputStyleDom () {
+            // 支付期限
+            if (this.currentKey.paramKey == 'pay_period_supplier') {
+                return 'isPositiveInt'
+            }
+            // 纯数字
+            if (this.currentKey.paramKey == 'supplier_account_number' || this.currentKey.paramKey == 'hosjoy_account_number' || this.currentKey.paramKey == 'regulatory_account_number' || this.currentKey.paramKey == 'dealer_controller_postal_code' || this.currentKey.paramKey == 'dealer_controller_postal_code_spouse') {
+                return 'isAllNum'
+            }
+            // 元 %
+            if (this.currentKey.unit) {
+                return 'isNum'
+            }
+            return 'elInput'
         }
     },
     methods: {
@@ -290,18 +308,18 @@ export default {
                 callback()
             }
         },
-        chooseInput (item) {
-            if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
-                return true
-            }
-            return false
-        },
+        // chooseInput (item) {
+        //     if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
+        //         return true
+        //     }
+        //     return false
+        // },
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
                 1: {
-                    [this.chooseInput(this.currentKey) ? 'formatInput' : 'elInput']:
-                        this.chooseInput(this.currentKey)
+                    [this.inputStyleDom]:
+                        this.inputStyleDom !== 'elInput'
                             ? {
                                 bind: {
                                     paramKey: this.currentKey.paramKey,
@@ -313,7 +331,7 @@ export default {
                                     maxlength: this.currentKey.maxLength || ''
                                 },
                                 on: {
-                                    input: (val) => { console.log('val: ', val); this.currentKey.paramValue = val.trim() }
+                                    input: (val) => { this.currentKey.paramValue = val.trim() }
                                 }
                             }
                             : {
