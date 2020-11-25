@@ -834,7 +834,7 @@ export default {
         min-width: 600px;
     }
     .approvalcontract-layout {
-        height: calc(100vh - 210px);
+        height: calc(100vh - 230px);
         position: relative;
         overflow: hidden;
         &-left {
