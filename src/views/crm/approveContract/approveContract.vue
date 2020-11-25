@@ -308,12 +308,6 @@ export default {
                 callback()
             }
         },
-        // chooseInput (item) {
-        //     if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
-        //         return true
-        //     }
-        //     return false
-        // },
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
@@ -515,24 +509,27 @@ export default {
             }
         },
         async onApprove () {
-            let dom = document.getElementById('platform_sign')
-            dom.outerHTML = `<span id="platform_sign"></span>`
+            if (this.detailRes.contractStatus == 6) {
+                let dom = document.getElementById('platform_sign')
+                dom.outerHTML = `<span id="platform_sign"></span>`
+            }
             let res = this.contractFieldsList.filter(item => item.paramKey.indexOf('contract_sign_') > -1)
-            if (res && res.length > 0) {
+            if (res && res.length > 0 && this.detailRes.contractStatus == 6) {
                 res.map(item => {
                     let TDoms = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
                     let resDom = TDoms.getElementsByClassName(item.paramKey)
-                    console.log('resDom: ', resDom)
                     if (resDom && resDom.length > 0) {
                         Array.from(resDom).map(jtem => {
-                            console.log('jtem: ', jtem)
                             jtem.outerHTML = ''
                         })
                     }
                 })
             }
             this.$nextTick(async () => {
-                let res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                let res = ''
+                if (this.detailRes.contractStatus == 6) {
+                    res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                }
                 const query = {
                     contractId: this.$route.query.id,
                     approver: this.userInfo.employeeName,
@@ -621,10 +618,8 @@ export default {
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
-                console.log('setImg: ')
                 return
             }
-            // 最后要拿到input的合同
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -684,10 +679,9 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput,
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     // return
-
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -698,7 +692,7 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     this.init()
                 }
@@ -707,11 +701,6 @@ export default {
         domBindMethods () {
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$nextTick(() => {
-                // this.$refs.RichEditor.editor.config.onfocus = () => {
-                //     console.log('fuck')
-                // }
-                // console.log('this.$refs.RichEditor', this.$refs.RichEditor.editor.config.onchange)
-
                 // this.$refs.RichEditor.value  纯html
                 this.firstKsy = this.contractFieldsList[0].paramKey
                 if (!this.currentKey) {
@@ -755,6 +744,8 @@ export default {
                                     if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
                                         this.currentKey.paramValue = event.target.innerText
                                     }
+                                    // this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
+                                    // console.log(document.queryCommandValue('ForeColor'))
                                 }
                                 jtem.onselectstart = () => {
                                     return false
@@ -786,11 +777,18 @@ export default {
             return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
         },
         KeyDown () {
+            // 13回车
+            if (event.keyCode == 13) {
+                event.preventDefault()
+                setTimeout(() => {
+                    this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
+                }, 0)
+            }
+
             if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
                 event.returnValue = false
             }
         }
-
     },
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
