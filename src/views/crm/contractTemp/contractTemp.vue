@@ -430,7 +430,7 @@ export default {
                 //     return
                 // }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input><span style="">platform_sign</span>`
+                value="平台签署" readonly></input><span style="color:#fff">platform_sign</span>`
             }
             // console.log(document.getElementById('platform_sign'))
 

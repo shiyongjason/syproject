@@ -618,10 +618,8 @@ export default {
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
-                console.log('setImg: ')
                 return
             }
-            // 最后要拿到input的合同
             let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -681,10 +679,9 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput,
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     // return
-
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -695,7 +692,7 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     this.init()
                 }
@@ -747,6 +744,8 @@ export default {
                                     if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
                                         this.currentKey.paramValue = event.target.innerText
                                     }
+                                    // this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
+                                    // console.log(document.queryCommandValue('ForeColor'))
                                 }
                                 jtem.onselectstart = () => {
                                     return false
@@ -778,11 +777,18 @@ export default {
             return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
         },
         KeyDown () {
+            // 13回车
+            if (event.keyCode == 13) {
+                event.preventDefault()
+                setTimeout(() => {
+                    this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
+                }, 0)
+            }
+
             if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
                 event.returnValue = false
             }
         }
-
     },
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
@@ -817,7 +823,7 @@ export default {
         min-width: 600px;
     }
     .approvalcontract-layout {
-        height: calc(100vh - 210px);
+        height: calc(100vh - 230px);
         position: relative;
         overflow: hidden;
         &-left {
