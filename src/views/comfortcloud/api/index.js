@@ -484,7 +484,7 @@ export function createShop (params) {
 
 // 更新小程序商品列表
 export function updateShop (params) {
-    return axios.put(iotUrl + `/mall/boss/product?${qs.stringify(params)}`)
+    return axios.put(iotUrl + `/mall/boss/product`, params)
 }
 
 // 获取小程序商品品类
@@ -500,4 +500,9 @@ export function getCloudMerchantShopCategoryTypeList (params) {
 // 获取小程序商品详情
 export function getCloudMerchantShopDetail (params) {
     return axios.get(iotUrl + '/mall/boss/product/detail', { params })
+}
+
+// 商品上下架
+export function updateStatusShop (params) {
+    return axios.put(iotUrl + `/mall/boss/product/status`, params)
 }
