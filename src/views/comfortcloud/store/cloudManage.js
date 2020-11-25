@@ -7,8 +7,11 @@ const state = {
     iotmemberData: {},
     iotmerchantmemberData: {},
     iotmerchantmemberDataPagination: {},
+    iotmerchantDistributorPagination: {},
+    iotmerchantDistributorData: {},
     iotmerchantmemberTotalData: {},
     iotmerchantmemberInvitationRegisterData: {},
+    iotmerchantmemberInvitationChangeData: {},
     iotmerchantmemberInvitationRegisterDataPagination: {},
     iotmerchantmemberInvitationOrderData: {},
     iotmerchantmemberInvitationOrderDataPagination: {},
@@ -76,8 +79,10 @@ const getters = {
     iotmemberData: state => state.iotmemberData,
     iotmerchantmemberData: state => state.iotmerchantmemberData,
     iotmerchantmemberTotalData: state => state.iotmerchantmemberTotalData,
+    iotmerchantDistributorData: state => state.iotmerchantDistributorData,
     iotmerchantmemberInvitationOrderData: state => state.iotmerchantmemberInvitationOrderData,
     iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
+    iotmerchantmemberInvitationChangeData: state => state.iotmerchantmemberInvitationChangeData,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
     cloudActivitydetail: state => state.cloudActivitydetail,
@@ -147,6 +152,7 @@ const getters = {
     cloudMerchantShopCategoryList: state => state.cloudMerchantShopCategoryList,
     cloudMerchantShopCategoryTypeList: state => state.cloudMerchantShopCategoryTypeList,
     iotmerchantmemberDataPagination: state => state.iotmerchantmemberDataPagination,
+    iotmerchantDistributorPagination: state => state.iotmerchantDistributorPagination,
     iotmerchantmemberInvitationRegisterDataPagination: state => state.iotmerchantmemberInvitationRegisterDataPagination,
     iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination
 }
@@ -164,11 +170,17 @@ const mutations = {
     [types.MERCHANT_MEMBERS_TOTAL_DATA] (state, payload) {
         state.iotmerchantmemberTotalData = payload
     },
+    [types.MEMBERS_DISTRIBUTOR] (state, payload) {
+        state.iotmerchantDistributorData = payload
+    },
     [types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA] (state, payload) {
         state.iotmerchantmemberInvitationOrderData = payload
     },
     [types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA] (state, payload) {
         state.iotmerchantmemberInvitationRegisterData = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA] (state, payload) {
+        state.iotmerchantmemberInvitationChangeData = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
         state.iotmemberDetail = payload
@@ -352,6 +364,10 @@ const actions = {
         const { data } = await Api.getMembersituation(params)
         commit(types.MEMBERS_DATA, data.data)
     },
+    async findMemberDistributor ({ commit }, params) {
+        const { data } = await Api.getMerchantMembersDistributor(params)
+        commit(types.MEMBERS_DISTRIBUTOR, data)
+    },
     async findMerchantMembersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMembersituation(params)
         commit(types.MERCHANT_MEMBERS_DATA, data)
@@ -365,6 +381,15 @@ const actions = {
         const { data } = await Api.getMerchantMemberInvitationRegistersituation(params)
         commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA, data)
         commit(types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA_LIST_PAGINATION, {
+            pageNumber: data.pages,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findMerchantMemberInvitationChangesituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationChangesituation(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA, data)
+        commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA_LIST_PAGINATION, {
             pageNumber: data.pages,
             pageSize: data.size,
             total: data.total

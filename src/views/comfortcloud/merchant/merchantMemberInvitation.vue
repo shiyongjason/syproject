@@ -135,7 +135,7 @@ export default {
             ],
             tableChangeList: [
                 { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '变更内容', prop: 'invitePhone' }],
+                { label: '变更内容', prop: 'changeContent' }],
             tableDoneLabel: [
                 { label: '导入时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '订单来源', prop: 'source' },
@@ -218,7 +218,7 @@ export default {
         ...mapGetters({
             merchantmemberInvitationRegisterData: 'iotmerchantmemberInvitationRegisterData',
             merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
-            merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationRegisterData'
+            merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData'
         }),
         pickerOptionsStart () {
             return {
@@ -253,7 +253,7 @@ export default {
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
-            await this.findMerchantMemberInvitationChangesituation(this.searchParams)
+            await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.tableChangeData = this.merchantmemberInvitationChangeData.records
             this.tableDoneData = this.merchantmemberInvitationOrderData.records

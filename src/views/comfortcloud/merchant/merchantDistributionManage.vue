@@ -13,9 +13,9 @@
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.status" style="width: 100%">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="审核通过" value="0"></el-option>
-                            <el-option label="待审核" value="10"></el-option>
-                            <el-option label="审核不通过" value="15"></el-option>
+                            <el-option label="审核通过" value="1"></el-option>
+                            <el-option label="待审核" value="0"></el-option>
+                            <el-option label="审核不通过" value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -26,21 +26,29 @@
                 </div>
             </div>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
+                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
+                        :isAction="true">
+                <template slot="status" slot-scope="scope">
+                    {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'--'}}
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">{{scope.data.row.source==='1'?'查看奖励':'审核通过'}}</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">
+                        {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'--'}}
+                    </el-button>
                 </template>
             </basicTable>
-            <el-dialog title="审核分销员" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible" width="50%">
+            <el-dialog title="审核分销员" :modal-append-to-body=false :append-to-body=false
+                       :visible.sync="rightsDialogVisible" width="30%">
                 <h3 class="right-title">审核分销员</h3>
                 <div class="right-items">
-                    <p>姓名：{{checkData.agentCode}}</p>
-                    <p>会员账号：{{checkData.payAmount}}</p>
+                    <p>姓名：{{checkData.nickName}}</p>
+                    <p>会员账号：{{checkData.phone}}</p>
                     <p>请确认该分销员信息后进行审核。</p>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button >审核不通过</el-button>
-                <el-button type="primary">审核通过</el-button>
+                <el-button @click="onChangeCheckStatus(2)" >审核不通过</el-button>
+                <el-button type="primary" @click="onChangeCheckStatus(1)">审核通过</el-button>
             </span>
             </el-dialog>
         </div>
@@ -49,6 +57,8 @@
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { updateDistribution } from '../api'
+
 export default {
     name: 'comfortcloudMembermanage',
     data () {
@@ -57,8 +67,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: '',
-                endRegisterTime: '',
-                startRegisterTime: ''
+                status: ''
             },
             searchParams: {},
             tableData: [],
@@ -71,9 +80,9 @@ export default {
                 { label: '申请时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '分销员昵称', prop: 'nickName' },
                 { label: '分销员会员账号', prop: 'phone' },
-                { label: '分销员姓名', prop: 'source' },
-                { label: '审核通过时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '状态', prop: 'inviteUuid' }
+                { label: '分销员姓名', prop: 'name' },
+                { label: '审核通过时间', prop: 'updateTime', formatters: 'dateTime' },
+                { label: '状态', prop: 'status' }
             ],
             rightsDialogVisible: false,
             checkData: {}
@@ -84,28 +93,25 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            merchantmemberData: 'iotmerchantmemberData',
-            merchantmemberTotalData: 'iotmerchantmemberTotalData'
+            merchantDistributorData: 'iotmerchantDistributorData'
         })
     },
     mounted () {
-        // this.tableData = [{ productN: '123' }]
         this.onSearch()
     },
     methods: {
         ...mapActions({
-            findMerchantMembersituation: 'findMerchantMembersituation',
-            iotmerchantmemberDataPagination: 'iotmerchantmemberDataPagination',
-            findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation'
+            findMemberDistributor: 'findMemberDistributor',
+            iotmerchantDistributorPagination: 'iotmerchantDistributorPagination'
         }),
         async onQuery () {
-            await this.findMerchantMembersituation(this.searchParams)
-            await this.findMerchantMemberTotalsituation()
-            this.tableData = this.merchantmemberData.records
+            await this.findMemberDistributor(this.searchParams)
+            console.log(this.merchantDistributorData)
+            this.tableData = this.merchantDistributorData.records
             this.pagination = {
-                pageNumber: this.merchantmemberData.current,
-                pageSize: this.merchantmemberData.size,
-                total: this.merchantmemberData.total
+                pageNumber: this.merchantDistributorData.current,
+                pageSize: this.merchantDistributorData.size,
+                total: this.merchantDistributorData.total
             }
         },
         onSearch () {
@@ -113,12 +119,17 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            if (val.source === '1') {
+            if (val.status === 1) {
                 this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: val })
-            } else {
+            } else if (val.status === 0) {
                 this.checkData = val
                 this.rightsDialogVisible = true
             }
+        },
+        async onChangeCheckStatus (val) {
+            await updateDistribution({ id: this.checkData.id, status: val, phone: this.checkData.phone })
+            this.rightsDialogVisible = false
+            this.onQuery()
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -133,32 +144,40 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.spanflex {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
-    span {
-        flex: 1;
-        &:first-child {
-            font-size: 16px;
-        }
-        &:last-child {
-            text-align: right;
+    .spanflex {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+
+        span {
+            flex: 1;
+
+            &:first-child {
+                font-size: 16px;
+            }
+
+            &:last-child {
+                text-align: right;
+            }
         }
     }
-}
-.topTitle{
-    margin-right: 2rem;
-    font-weight:bold;
-}
-.colred {
-    color: #ff7a45;
-    cursor: pointer;
-}.topColred {
-    color: #ff7a45;
-    cursor: pointer;
-}
-/deep/.el-dialog__body {
-    padding-top: 10px;
-}
+
+    .topTitle {
+        margin-right: 2rem;
+        font-weight: bold;
+    }
+
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+
+    .topColred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+
+    /deep/ .el-dialog__body {
+        padding-top: 10px;
+    }
 </style>

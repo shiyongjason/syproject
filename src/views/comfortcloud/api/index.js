@@ -41,9 +41,17 @@ export function getMembersituation (params) {
 export function getMerchantMembersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/manage`, { params })
 }
+// 经销商分销员列表
+export function getMerchantMembersDistributor (params) {
+    return axios.get(iotUrl + `/mall/boss/distributor`, { params })
+}
 // 经销商会员邀请注册列表分页查询
 export function getMerchantMemberInvitationRegistersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/registered/` + params.uuid, { params })
+}
+// 经销商会员邀请注册列表分页查询
+export function getMerchantMemberInvitationChangesituation (params) {
+    return axios.get(iotUrl + `/mall/boss/user/` + params)
 }
 // 经销商会员邀请成交列表分页查询
 export function getMerchantMemberInvitationOrdersituation (params) {
@@ -56,6 +64,10 @@ export function getMerchantMemberTotalsituation (params) {
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
     return axios.put(iotUrl + `/mall/wx/order/boss`, params)
+}
+// 分销员审核订单修改
+export function updateDistribution (params) {
+    return axios.post(iotUrl + `/mall/boss/distributor`, params)
 }
 
 // 邀请订单删除
