@@ -13,7 +13,7 @@
                         <el-input v-model="contractForm.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
-                        <el-select v-model="contractForm.typeId" placeholder="请选择合同类型" @change="onChangeparam" :disabled='!!contractForm.typeId'>
+                        <el-select v-model="contractForm.typeId" placeholder="请选择" @change="onChangeparam" :disabled='!!contractForm.typeId'>
                             <el-option v-for="item in contract_list" :key="item.id" :label="item.name" :value="item.id">
                             </el-option>
                         </el-select>

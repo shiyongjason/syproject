@@ -158,6 +158,7 @@ export default {
         autocompleteBlur () {
             if (!this.insertVal.id) {
                 let res = this.restaurants.filter(item => item.companyName == this.insertVal)
+                console.log('res', res)
                 this.signerTempForm.caId = res.id
             }
         },
@@ -174,6 +175,7 @@ export default {
         },
         handleSelect (item) {
             this.signerTempForm.caId = item.id
+            this.signerTempForm.paramGroupName = item.companyName
         },
         async onShowDialog (val, arr, form) {
             await this.onFindCApage()
