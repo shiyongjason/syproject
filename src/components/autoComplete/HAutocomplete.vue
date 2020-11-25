@@ -43,6 +43,10 @@ export default {
         maxlength: {
             type: Number,
             default: 15
+        },
+        isSettimeout: {
+            type: Boolean,
+            default: true
         }
     },
     data () {
@@ -97,11 +101,17 @@ export default {
         handleSelect (item) {
             this.selectItem.selectName = item.value
             this.selectItem.selectCode = item.selectCode
-            setTimeout(() => {
+            if (this.isSettimeout) {
+                setTimeout(() => {
+                    this.$emit('back-event', {
+                        value: item
+                    })
+                }, 500)
+            } else {
                 this.$emit('back-event', {
                     value: item
                 })
-            }, 500)
+            }
         },
         blurInput (item) {
             if (!this.canDoBlurMethos) {
