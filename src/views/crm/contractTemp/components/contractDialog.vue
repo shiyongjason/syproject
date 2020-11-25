@@ -206,6 +206,7 @@ export default {
                 // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {
+                this.vaild_form = deepCopy(this.copy_signerTempForm)
                 // // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }
