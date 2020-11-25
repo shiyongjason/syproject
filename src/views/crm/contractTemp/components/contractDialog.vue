@@ -3,7 +3,7 @@
         <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal=false>
             <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2">
                 <el-form-item label="签署方名称：" prop="signerName">
-                    <el-input v-model="signerTempForm.signerName" maxlength="50"></el-input>
+                    <el-input v-model="signerTempForm.signerName" placeholder="请输入" maxlength="50"></el-input>
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="signerType">
                     <el-radio-group v-model="signerTempForm.signerType" :disabled=isEdit @change="changeRadio">
@@ -206,6 +206,7 @@ export default {
                 // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {
+                this.vaild_form = deepCopy(this.copy_signerTempForm)
                 // // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }

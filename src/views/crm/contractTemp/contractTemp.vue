@@ -24,7 +24,7 @@
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"  @change="onchange"></RichEditor>
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange"></RichEditor>
                     </div>
                     <div class="contract-temp_txt">
                         <el-form label-width="200px">
@@ -38,12 +38,19 @@
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item> -->
                             <el-form-item label="请选择需要插入的字段：">
-                                <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
+                                <!-- <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
                                     <template slot-scope="{ item }">
                                         <span style="float: left">{{ item.paramName }}</span>
                                         <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                                     </template>
-                                </el-autocomplete>
+                                </el-autocomplete> -->
+
+                                <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparam" :selectObj="targetObj" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                                    <template slot-scope="scope">
+                                        <span style="float: left">{{ scope.data.paramName }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ scope.data.select?'必选':'' }}</span>
+                                    </template>
+                                </HAutocomplete>
                                 <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="自定义合同条款：">
@@ -116,6 +123,12 @@
                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                 </el-option>
             </el-select>
+            <!-- <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparams" :selectObj="targetObj" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                <template slot-scope="scope">
+                    <span style="float: left">{{ scope.data.paramName }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ scope.data.select?'必选':'' }}</span>
+                </template>
+            </HAutocomplete> -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="onEditcon">确 定</el-button>
@@ -132,12 +145,19 @@ import { interfaceUrl } from '@/api/config'
 import diffDialog from './components/diffDialog'
 import contractDialog from './components/contractDialog'
 import { addContractTemp, putContractTemp } from './api/index'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+
 export default {
     name: 'contractTemp',
-    components: { diffDialog, hosJoyTable, contractDialog },
+    components: { diffDialog, hosJoyTable, contractDialog, HAutocomplete },
     data () {
         return {
             restaurants: [],
+            removeValue: true,
+            targetObj: {
+                selectName: '',
+                selectCode: ''
+            },
             insertVal: '',
             statusArr: [{ key: '1', value: '企业章' }, { key: '3', value: '手绘章' }, { key: '4', value: '模板章' }],
             diffHtml: '',
@@ -276,22 +296,31 @@ export default {
         onchange () {
             this.domBindMethods()
         },
-        querySearch (queryString, cb) {
-            let restaurants = this.restaurants
-            let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-            // 调用 callback 返回建议列表的数据
-            cb(results)
+        // querySearch (queryString, cb) {
+        //     let restaurants = this.restaurants
+        //     let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+        //     // 调用 callback 返回建议列表的数据
+        //     cb(results)
+        // },
+        // createFilter (queryString) {
+        //     return (restaurant) => {
+        //         return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+        //     }
+        // },
+        // handleSelect (item) {
+        //     this.keyValue = item
+        // },
+        // autocompleteBlur (val) {
+        //     console.log('val', val)
+        //     this.keyValue = this.insertVal
+        // },
+        backFindparam (val) {
+            console.log('val', val)
+            this.keyValue = val.value
         },
-        createFilter (queryString) {
-            return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
-            }
-        },
-        handleSelect (item) {
-            this.keyValue = item
-        },
-        autocompleteBlur (val) {
-            this.keyValue = this.insertVal
+        backFindparams (val) {
+            console.log('val', val)
+            // this.keyValue = val.value
         },
         findUnique (inputArr) {
             let result = []
@@ -320,9 +349,11 @@ export default {
         async onChangeparam (val) {
             await this.getAllparams(val)
             this.options = this.tempParams
+            // 重组数据
             this.restaurants = JSON.parse(JSON.stringify(this.options))
             this.restaurants.map(item => {
                 item.value = item.paramName
+                item.selectCode = item.paramKey
             })
         },
         domBindMethods () {
@@ -347,8 +378,10 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  value=${this.keyValue.paramName} readonly></input></span>`
+            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  readonly></input></span>`
             this.$refs.RichEditor.insertHtml(_temp)
+            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).value = this.keyValue.paramName
+
             // document.getElementsByClassName('newinput')[1].click
             // 这里每次执行插入 把 合同约定的字段插入进去
             this.bakParams.push(this.keyValue)
@@ -430,7 +463,7 @@ export default {
                 //     return
                 // }
                 _temp = `<input id="platform_sign" style="width:60px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="平台签署" readonly></input><span style="color:#fff">platform_sign</span>`
+                value="平台签署" readonly></input><span style="color:#fff;overflow: visible;">platform_sign</span>`
             }
             // console.log(document.getElementById('platform_sign'))
 
@@ -735,7 +768,7 @@ export default {
 /deep/.hosjoy-table {
     background: #e5e5e5 !important;
 }
-/deep/.w-e-text p{
+/deep/.w-e-text p {
     word-break: break-all;
 }
 </style>
