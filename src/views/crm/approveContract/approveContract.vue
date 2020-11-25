@@ -647,7 +647,7 @@ export default {
                             item.paramValue = paramValue
                         }
                     })
-                    if (this.detailRes.contractStatus == 6 && !operatorType) {
+                    /* if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.$refs.RichEditor.value
                         if (this.detailRes.contractContent !== curHTML) {
                             this.$message({
@@ -656,7 +656,7 @@ export default {
                             })
                             return
                         }
-                    }
+                    } */
                     // div版合同,修改页面上的值
                     let ryanList = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKey.paramKey)
                     Array.from(ryanList).map(jtem => {
@@ -747,6 +747,7 @@ export default {
                                     // this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
                                     // console.log(document.queryCommandValue('ForeColor'))
                                 }
+
                                 jtem.onselectstart = () => {
                                     return false
                                 }
@@ -754,9 +755,9 @@ export default {
                         }
                     }
                 })
-                if (this.detailRes.contractStatus == 6) {
+                /* if (this.detailRes.contractStatus == 6) {
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].addEventListener('keydown', this.KeyDown, false)
-                }
+                } */
             })
         },
         async init () {
@@ -777,6 +778,16 @@ export default {
             return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
         },
         KeyDown () {
+            // 8删除
+            let dom = this.$refs.RichEditor.editor.selection.getSelectionContainerElem()
+            console.log(dom[0])
+            if (event.keyCode == 8 && dom && dom[0] && dom[0].dataset && (dom[0].dataset.paramname || dom[0].dataset.paramname == '')) {
+                this.$message({
+                    message: `字段禁止删除`,
+                    type: 'error'
+                })
+                event.preventDefault()
+            }
             // 13回车
             if (event.keyCode == 13) {
                 event.preventDefault()
@@ -784,11 +795,11 @@ export default {
                     this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
                 }, 0)
             }
-
-            if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
-                event.returnValue = false
-            }
+            // if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
+            //     event.returnValue = false
+            // }
         }
+
     },
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
@@ -796,9 +807,9 @@ export default {
         this.init()
     },
     destroyed () {
-        if (this.detailRes.contractStatus == 6) {
+        /* if (this.detailRes.contractStatus == 6) {
             document.removeEventListener('keydown', this.KeyDown, false)
-        }
+        } */
     }
 }
 </script>

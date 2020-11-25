@@ -123,7 +123,7 @@ export default {
 
     computed: {
         tempTypeOptions () {
-            let result = this.tempType || []
+            let result = JSON.parse(JSON.stringify(this.tempType)) || []
             result.unshift({ id: '', name: '全部' })
             return result
         },

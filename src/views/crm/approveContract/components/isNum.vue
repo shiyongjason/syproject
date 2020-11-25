@@ -1,8 +1,8 @@
 <template>
     <div>
-        <!-- 金额 -->
+        <!-- 金额 %-->
         <el-input  :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
-            <template slot="append" >元</template>
+            <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
     </div>
 </template>
