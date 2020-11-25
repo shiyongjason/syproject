@@ -54,14 +54,14 @@ export default {
             this.diff_visible = true
             // var diffBtn = document.getElementById('diffBtn')
             this.$nextTick(() => {
-                let currentContentInput = document.getElementById('newT').getElementsByTagName('input')
-                Array.from(currentContentInput).map((item, index) => {
-                    item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
-                })
-                let lastContentInput = document.getElementById('oldT').getElementsByTagName('input')
-                Array.from(lastContentInput).map((item, index) => {
-                    item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
-                })
+                // let currentContentInput = document.getElementById('newT').getElementsByTagName('input')
+                // Array.from(currentContentInput).map((item, index) => {
+                //     item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
+                // })
+                // let lastContentInput = document.getElementById('oldT').getElementsByTagName('input')
+                // Array.from(lastContentInput).map((item, index) => {
+                //     item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
+                // })
                 // 对比
                 let oldT = document.getElementById('oldT').innerHTML
                 let newT = document.getElementById('newT').innerHTML
