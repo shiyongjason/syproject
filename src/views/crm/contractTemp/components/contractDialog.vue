@@ -304,7 +304,6 @@ export default {
                     if (valid) {
                         try {
                             this.singer_platArr.push(objParam)
-                            console.log(111, objParam)
                             this.$emit('backEvent', this.singer_platArr, 3)
                             this.tract_visible = false
                         } catch (error) {

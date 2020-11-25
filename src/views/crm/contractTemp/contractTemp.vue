@@ -6,10 +6,10 @@
                 <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模版</div>
                 <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模版</div>
             </div>
-            <div class="page-body-cont">
+            <div class="page-body-cont ">
                 <div class="contract-temp_name">合同模版设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
-                    <el-form-item label="模版名称：">
+                    <el-form-item label="模版名称：" class="contract-temp_set">
                         <el-input v-model="contractForm.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
@@ -51,7 +51,10 @@
                                         <span style="float: right; color: #8492a6; font-size: 13px">{{ scope.data.select?'必选':'' }}</span>
                                     </template>
                                 </HAutocomplete>
-                                <el-button type="primary" style="margin-left:20px" @click="onInsertInfo">插入当前位置</el-button>
+
+                            </el-form-item>
+                            <el-form-item label="">
+                                <el-button type="primary" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="自定义合同条款：">
                                 <el-button type="primary" @click="onClickCur(1)">插入当前位置</el-button>
@@ -117,18 +120,20 @@
             </div>
         </el-drawer>
         <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose" :close-on-click-modal=false>
-            <el-select v-model="keyValue" value-key='id' placeholder="请选择" style="margin-top:10px">
+            <!-- <el-select v-model="keyValue" value-key='id' placeholder="请选择" style="margin-top:10px">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
                     <span style="float: left">{{ item.paramName }}</span>
                     <span style="float: right; color: #8492a6; font-size: 13px">{{ item.select?'必选':'' }}</span>
                 </el-option>
-            </el-select>
-            <!-- <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparams" :selectObj="targetObj" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
-                <template slot-scope="scope">
-                    <span style="float: left">{{ scope.data.paramName }}</span>
-                    <span style="float: right; color: #8492a6; font-size: 13px">{{ scope.data.select?'必选':'' }}</span>
-                </template>
-            </HAutocomplete> -->
+            </el-select> -->
+            <div style="margin-top:10px">
+                <HAutocomplete :placeholder="'请选择'" :maxlength=60 @back-event="backFindparams" :selectObj="targetObjs" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                    <template slot-scope="scope">
+                        <span style="float: left">{{ scope.data.paramName }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ scope.data.select?'必选':'' }}</span>
+                    </template>
+                </HAutocomplete>
+            </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="onEditcon">确 定</el-button>
@@ -155,6 +160,10 @@ export default {
             restaurants: [],
             removeValue: true,
             targetObj: {
+                selectName: '',
+                selectCode: ''
+            },
+            targetObjs: {
                 selectName: '',
                 selectCode: ''
             },
@@ -320,7 +329,7 @@ export default {
         },
         backFindparams (val) {
             console.log('val', val)
-            // this.keyValue = val.value
+            this.keyValue = val.value
         },
         findUnique (inputArr) {
             let result = []
@@ -419,6 +428,11 @@ export default {
                 }
                 // 继续插入合同字段  后面  编辑器里面的字段和 所有插入的字段做交集的 如果编辑器里面有多个相同字段  交集的话也不会清除掉
                 this.bakParams.push(this.keyValue)
+                //
+                this.targetObjs = {
+                    selectName: '',
+                    selectCode: ''
+                }
             })
         },
         onPreview () {
@@ -426,6 +440,10 @@ export default {
         },
         handleClose () {
             this.dialogVisible = false
+            this.targetObjs = {
+                selectName: '',
+                selectCode: ''
+            }
         },
         // onContract () {
         //     this.newContent = JSON.parse(JSON.stringify(this.content))
@@ -690,11 +708,6 @@ export default {
                 inputArr.length > 0 && inputArr.map(val => {
                     if (val.dataset.appId) {
                         document.getElementById(val.id).onclick = () => {
-                            let keyValue = {
-                                paramKey: val.className,
-                                paramName: val.value
-                            }
-                            console.log(val.id)
                             // this._keyValue = JSON.parse(JSON.stringify(keyValue))
                             this._keyValue = val.id
                             this.dialogVisible = true
@@ -770,5 +783,8 @@ export default {
 }
 /deep/.w-e-text p {
     word-break: break-all;
+}
+/deep/.contract-temp_set .el-input {
+    width: 400px;
 }
 </style>
