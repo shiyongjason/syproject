@@ -6,6 +6,13 @@
   "description": "好享家后台图标管理",
   "glyphs": [
     {
+      "icon_id": "17920432",
+      "name": "shushiyun_merchant",
+      "font_class": "shushiyun_merchant1",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
       "icon_id": "14167769",
       "name": "hosjoy_hzh",
       "font_class": "hosjoy_hzh",

@@ -102,9 +102,63 @@
         </el-dialog>
         <el-dialog :title="collectTitle" :visible.sync="collectVisible" width="30%" :before-close="onCloseCol" :modal=false :close-on-click-modal=false>
             <el-form ref="approveForm" :model="coldataForm" :rules="collectRules" label-width="100px" style="margin-top:20px">
+                <el-form-item label="审核结果：" prop="submitStatus">
+                    <el-radio-group v-model="coldataForm.submitStatus">
+                        <el-radio :label=2>通过</el-radio>
+                        <el-radio :label=3>不通过</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="审核意见：" prop="remark">
                     <el-input type="textarea" v-model.trim="coldataForm.remark" maxlength="500" :rows="5" show-word-limit></el-input>
                 </el-form-item>
+                <template v-if="coldataForm.submitStatus == 2">
+                    <div class="subTitle">项目评级</div>
+                    <div class="horizontalLayout">
+                        <el-form-item label="项目级别：">
+                            <el-select v-model="coldataForm.levels" placeholder="请选择项目级别">
+                                <el-option label="A+" value="A+"></el-option>
+                                <el-option label="A" value="A"></el-option>
+                                <el-option label="B+" value="B+"></el-option>
+                                <el-option label="B" value="B"></el-option>
+                                <el-option label="C+" value="C+"></el-option>
+                                <el-option label="C" value="C"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <div class="special">
+                            <el-form-item label="项目服务费：" prop="serviceCharge">
+                                <el-input v-model="coldataForm.serviceCharge"></el-input>
+                            </el-form-item>
+                        </div>
+                    </div>
+                </template>
+                <div class="subTitle">经销商评级
+                    <span v-if="projectLevels.expired">（评级已过期）</span>
+                    <span v-else-if="!projectLevels.companyCreditLevel">（待评级）</span>
+                    <span v-else>
+                        （信用有效期：
+                        {{ projectLevels.startTime ? moment(projectLevels.startTime).format('YYYY-MM-DD') : '-'}}
+                        至
+                        {{ projectLevels.endTime ? moment(projectLevels.endTime).format('YYYY-MM-DD') : '-'}}
+                        ）
+                    </span>
+                </div>
+                <div class="horizontalLayout">
+                    <!-- 评级过期不显示 -->
+                    <template v-if="projectLevels.expired"></template>
+                    <template v-else>
+                        <template v-if="projectLevels.companyCreditLevel">
+                            <el-form-item label="经销商级别：">
+                                <el-input placeholder="请输入内容" :value="projectLevels.companyCreditLevel || '-'" :disabled="true"></el-input>
+                            </el-form-item>
+                            <el-form-item label="企业服务费：">
+                                <el-input placeholder="请输入内容" :value="projectLevels.companyServiceCharge || ''" :disabled="true"></el-input>
+                            </el-form-item>
+                        </template>
+                        <el-form-item label="资料状态：">
+                            <el-input placeholder="请输入内容" :value="getcompanyServiceCharge(projectLevels.companyDocumentStatus)" :disabled="true"></el-input>
+                        </el-form-item>
+                    </template>
+                </div>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="onCloseCol">取消</h-button>
@@ -117,7 +171,7 @@
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { refuseDoc, submitProjectdoc, checkTemplatedoc } from '../api/index'
+import { refuseDoc, submitProjectdoc, checkTemplatedoc, getProjectLevels, setProjectLevels } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { handleImgDownload } from '../../projectInformation/utils'
 import { interfaceUrl } from '@/api/config'
@@ -142,6 +196,8 @@ export default {
     },
     data () {
         return {
+            // 经销商信息
+            projectLevels: {},
             Auths,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
@@ -173,10 +229,35 @@ export default {
             collectRules: {
                 remark: [
                     { required: true, message: '请输入意见', trigger: 'blur' }
+                ],
+                submitStatus: [
+                    { required: true, message: '请选择审核结果', trigger: 'blur' }
+                ],
+                serviceCharge: [
+                    {
+                        validator: (r, v, callback) => {
+                            const reg = /^\d+(\.\d{1})?$/
+                            const abs = Math.abs(v)
+                            if (isNaN(abs)) {
+                                callback(new Error('请输入数字值'))
+                            } else if (!reg.test(abs)) {
+                                callback(new Error('请输入有1位小数的数字'))
+                            } else if (abs > 10) {
+                                callback(new Error('请输入-10到10的数字'))
+                            } else {
+                                callback()
+                            }
+                        },
+                        trigger: 'blur'
+                    }
                 ]
             },
             coldataForm: {
-                remark: ''
+                remark: '',
+                submitStatus: 2,
+                // 项目评级
+                serviceCharge: '',
+                levels: ''
             },
             isDownLoad: false
         }
@@ -196,10 +277,30 @@ export default {
         ...mapActions({
             findRefuseData: 'crmmanage/findRefuseData'
         }),
-        onShowcollect () {
-            console.log(12)
+        getcompanyServiceCharge (val) {
+            if (val == 1 || !val) {
+                return '未提交'
+            }
+            if (val == 2) {
+                return '已提交'
+            }
+            if (val == 3) {
+                return '已通过'
+            }
+            if (val == 4) {
+                return '已打回'
+            }
+            return '-'
+        },
+        async onShowcollect () {
+            // 获取经销商信息
+            const { data } = await getProjectLevels(this.colForm.projectId)
+            console.log('data: ', data)
+            this.projectLevels = data
             this.collectVisible = true
             this.collectTitle = '材料审核'
+            this.coldataForm.levels = data.levels
+            this.coldataForm.serviceCharge = data.serviceCharge
         },
         onDownzip () {
             this.isDownLoad = true
@@ -241,7 +342,7 @@ export default {
                 }
             })
         },
-        onUpdatecolApprove () {
+        async onUpdatecolApprove () {
             const projectDocList = this.colForm.projectDocList
             let riskCheckProjectDocPoList = []
             const params = {}
@@ -250,14 +351,25 @@ export default {
                     if (obj.mondatoryFlag) { riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos) }
                 })
             })
-            params.submitStatus = 2
             params.bizType = 1
             params.projectId = this.colForm.projectId
             params.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+            params.submitStatus = this.coldataForm.submitStatus
             params.remark = this.coldataForm.remark
             this.$refs.approveForm.validate(async (valid) => {
                 if (valid) {
                     try {
+                        if (!this.coldataForm.levels === !this.coldataForm.serviceCharge) {
+                            const setParams = {
+                                serviceCharge: this.coldataForm.serviceCharge,
+                                levels: this.coldataForm.levels,
+                                id: this.colForm.projectId,
+                                updateBy: this.userInfo.employeeName
+                            }
+                            // 设置项目评级
+                            await setProjectLevels(setParams)
+                        }
+                        // 审核
                         await submitProjectdoc(params)
                         this.$message({
                             message: `材料审核成功`,
@@ -488,5 +600,26 @@ export default {
     p {
         line-height: 30px;
     }
+}
+/deep/ .special .el-input {
+    width: 180px;
+    margin-left: 0 !important;
+}
+.subTitle {
+    margin: 20px 0;
+    font-weight: 700;
+    font-size: 15px;
+}
+.horizontalLayout {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    .el-form-item {
+        width: 50%;
+    }
+}
+/deep/ .is-error {
+    width: 100% !important;
 }
 </style>

@@ -195,10 +195,14 @@ export const CRM_ADD_DETAIL = 109303 // 新增
 export const CRM_EDIT_DETAIL = 109304 // 修改
 export const CRM_CREDIT_DETAIL = 109305 // 查看信用
 export const CRM_CREDIT_SET = 109306 //  设置信用
-export const CRM_MEATE_SAVE = 109307 //  好橙工资料保存
-export const CRM_MEATE_SUBMIT = 109308 //  好橙工资料保存
+export const CRM_MEATE_SAVE = 109311 //  好橙工资料保存
+export const CRM_MEATE_SUBMIT = 109312 //  好橙工资料提交
 // 好橙工 推荐奖励发放
 export const CRM_AWARD_SEND = 109309 //  推荐奖励发放
+
+// 好橙工信用 上传 查看
+export const CRM_CREDIT_ZL = 109401
+export const CRM_CREDIT_LOOK = 109402
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
@@ -213,6 +217,10 @@ export const SPRINT_INDEX_IMPORT = 110009
 export const PERFORMANCE_INDEX_IMPORT = 110010
 // 资金计划审批导入
 export const PLAN_APPROVAL_IMPORT = 110011
+// 好橙工
+export const CRM_SUBMIT_INFO = 110101
+export const CRM_CHECKOUT_INFO = 110102
+export const CRM_WORK_EDIT = 110103
 
 // 资料收集下载
 export const CRM_ZL_DOWN = 109124
