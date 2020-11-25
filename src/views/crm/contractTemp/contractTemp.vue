@@ -549,7 +549,7 @@ export default {
             }
             if (!this.contractForm.typeId) {
                 this.$message({
-                    message: '请填写模版名称',
+                    message: '请选择合同类型',
                     type: 'warning'
                 })
                 return
