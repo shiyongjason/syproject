@@ -453,10 +453,10 @@ export default {
         },
         getUserTabAuth () {
             let menuList = JSON.parse(sessionStorage.getItem('menuList'))
-            let shy = menuList.filter(i => {
+            let data = menuList.filter(i => {
                 return i.path == '/funds'
             })[0].children
-            this.router = shy.filter(i => {
+            this.router = data.filter(i => {
                 return i.path == 'fundsDataAnalysis'
             })[0].children
             this.stairTab()

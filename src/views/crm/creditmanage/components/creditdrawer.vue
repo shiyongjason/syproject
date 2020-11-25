@@ -3,7 +3,7 @@
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
-                <el-tab-pane label="授信资料清单" name="2" v-if="(documentStatus>1)"></el-tab-pane>
+                <el-tab-pane label="授信资料清单" name="2" ></el-tab-pane>
             </el-tabs>
             <div class="fullbg" v-if="showPacking">
                 <div class="fullbg-img">
@@ -44,7 +44,7 @@
                             <h-button table @click="onClickRecord">打回记录</h-button>
                         </p>
                         <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
-                        <!-- <p> -->
+                            <!-- <p> -->
                             <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
                             <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
                             <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
@@ -57,7 +57,7 @@
                         <template v-for="obj in item.respRiskCheckDocTemplateList">
                             <el-form-item label="" prop="type" :key="'item'+obj.templateId">
                                 <div class="collect-boxflex">
-                                    <div v-if="documentStatus!=3">
+                                    <div v-if="documentStatus!=3&&documentStatus!=4">
                                         <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
                                     </div>
                                     <div class="collect-boxtxt">
@@ -98,8 +98,9 @@
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
-                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=3)">打回补充</h-button>
-                    <h-button type="primary" @click="onSubmitDoc" v-if="activeName==2&&(documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
+                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                    <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
                     <h-button @click="handleClose">取消</h-button>
                 </div>
             </div>
@@ -138,8 +139,14 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <h-button @click="onCloseDrawer">取消</h-button>
-                <h-button type='primary' @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</h-button>
+                <template v-if="onlyType==1">
+                    <h-button @click="onCloseDrawer">取消</h-button>
+                    <h-button type='primary' @click="submitForm()" :loading=isloading>{{isloading?'保存中...':'确定'}}</h-button>
+                </template>
+                <template v-else>
+                    <h-button @click="onSubmitDoc(2)">仅审核通过，暂不评级</h-button>
+                    <h-button type='primary' @click="onSubmitDoc(3)" :loading=isloading>{{isloading?'保存中...':'审核通过并提交评级'}}</h-button>
+                </template>
             </span>
         </el-dialog>
         <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
@@ -180,7 +187,7 @@ import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
-import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, downLoadZip } from '../api'
+import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
 import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
@@ -263,6 +270,7 @@ export default {
                     { required: true, message: '请输入打回原因', trigger: 'blur' }
                 ]
             },
+            onlyType: 1,
             isDownLoad: false
         }
     },
@@ -318,6 +326,7 @@ export default {
             if (tab.index == 1) this.onShowCreditdocument()
         },
         async onShowDrawerinfn (val) {
+            console.log(val)
             this.activeName = '1'
             this.companyId = val.companyId
             this.companyName = val.companyName
@@ -329,6 +338,7 @@ export default {
         async onShowCreditdocument () {
             this.isDownLoad = false
             this.showPacking = null
+            this.mondatoryFlagRes = []
             await this.findCreditDocument(this.companyId)
             this.approveForm = this.creditDocument
             this.approveForm.map(item => {
@@ -387,11 +397,13 @@ export default {
             })
         },
         checkForm (cb) {
+            console.log('creditDocumentList', this.creditDocumentList)
             let res = ''
             for (let i = 0; i < this.mondatoryFlagRes.length; i++) {
                 const arr = this.creditDocumentList.filter(jtem => {
                     return jtem.templateId == this.mondatoryFlagRes[i].templateId
                 })
+                console.log(arr)
                 if (arr.length == 0) {
                     res = this.mondatoryFlagRes[i]
                     break
@@ -399,7 +411,7 @@ export default {
             }
             return res
         },
-        async onSubmitDoc () {
+        async onOnlyCredit () {
             this.creditDocumentList = []
             this.approveForm.length > 0 && this.approveForm.map(item => {
                 item.respRiskCheckDocTemplateList.map(jtem => {
@@ -414,18 +426,66 @@ export default {
                     })
                 })
             })
+            console.log(this.creditDocumentList, this.mondatoryFlagRes)
             let res = this.checkForm()
             if (res) {
                 this.$message.error(`一级类目：${res.firstCatagoryName}，二级类目：${res.secondCatagoryName}，${res.formatName}必填！`)
             } else {
-                console.log(this.creditDocumentList)
-                await saveCreditDocument({ companyId: this.companyId, submitStatus: 2 })
-                this.$message({
-                    message: `审核通过`,
-                    type: 'success'
+                // 新增 审核通过
+                this.onlyType = 2
+                const { data } = await getComcredit(this.companyId)
+                this.ruleForm = { ...data }
+                this.ruleForm.projectUpload = this.ruleForm.attachments ? JSON.parse(this.ruleForm.attachments) : []
+                this.ruleForm.newendTime = this.ruleForm.endTime
+                this.newRuleForm = { ...this.ruleForm }
+                this.dialogVisible = true
+                this.$nextTick(() => {
+                    this.$refs.ruleForm.clearValidate()
                 })
-                this.drawer = false
-                this.$emit('backEvent')
+            }
+        },
+        async onSubmitDoc (val) {
+            this.isloading = true
+            this.ruleForm.attachments = JSON.stringify(this.ruleForm.projectUpload)
+            if (val == 2) {
+                try {
+                    await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
+                    this.$message({
+                        message: `企业资料审核通过`,
+                        type: 'success'
+                    })
+                    this.drawer = false
+                    this.$emit('backEvent')
+                    this.dialogVisible = false
+                    await this.findCreditPage({ companyId: this.companyId })
+                    this.tableData = this.creditPage.companyCreditList
+                    this.$emit('backEvent')
+                } catch (error) {
+                    this.isloading = false
+                }
+            } else {
+                this.$refs.ruleForm.validate(async (valid) => {
+                    if (valid) {
+                        try {
+                            await saveCreditDocument({ companyId: this.companyId, reqCompanyCreditDetail: { ...this.ruleForm }, submitStatus: val })
+                            this.$message({
+                                message: `企业资料评级授信成功`,
+                                type: 'success'
+                            })
+                            this.isloading = false
+                            this.drawer = false
+                            this.$emit('backEvent')
+                            this.dialogVisible = false
+                            await this.findCreditPage({ companyId: this.companyId })
+                            this.tableData = this.creditPage.companyCreditList
+                            this.$emit('backEvent')
+                        } catch (error) {
+                            this.isloading = false
+                        }
+                    } else {
+                        this.isloading = false
+                    }
+                })
             }
 
             // this.saveCreditDocument()
@@ -439,6 +499,7 @@ export default {
             this.ruleForm.endTime = moment(val).add(6, 'M').format('YYYY-MM-DD')
         },
         async onEditVip (val) {
+            this.onlyType = 1
             if (val) {
                 await this.findCreditDetail(val)
                 this.ruleForm = { ...this.creditDetail }
@@ -506,6 +567,7 @@ export default {
             this.refuseForm.templateIds = newTempid.toString()
             if (newTempid.length > 0) {
                 this.reasonVisible = true
+                this.refuseForm.remark = ''
             } else {
                 this.$message.warning('请选择打回的选项')
             }
@@ -553,7 +615,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.fullbg{
+.fullbg {
     background-color: #211f1f;
     width: 100%;
     height: 100%;
@@ -562,14 +624,14 @@ export default {
     position: fixed;
     top: 0;
     z-index: 9999;
-    .fullbg-img{
+    .fullbg-img {
         width: 377px;
         position: absolute;
         text-align: center;
         top: 50%;
         left: 50%;
         transform: translateX(-50%);
-        p{
+        p {
             color: #fff;
             font-size: 18px;
             text-align: center;
@@ -607,7 +669,7 @@ export default {
     margin-left: 0;
 }
 .drawer-wrap {
-    padding: 0 10px 100px 10px;
+    padding: 60px 10px 100px 10px;
     margin-left: 15px;
     &_title {
         background: #efeeee;
