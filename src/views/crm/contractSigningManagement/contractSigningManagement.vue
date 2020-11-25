@@ -206,7 +206,7 @@ export default {
                     prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
-                        return <span>{scope.row.templateId == 0 ? '-' : scope.row.templateId }</span>
+                        return <span>{!scope.row.templateId ? '-' : scope.row.templateId }</span>
                     }
                 },
                 { label: '合同模版版本', prop: 'versionNo', width: '120' },
