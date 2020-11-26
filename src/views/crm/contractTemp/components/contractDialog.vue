@@ -11,8 +11,8 @@
                         <el-radio :label=2>个人</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'"  prop="paramId">
-                    <el-select v-model="signerTempForm.paramId"  :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人' : '请选择合同企业'" @change="changeId">
+                <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" prop="paramId">
+                    <el-select v-model="signerTempForm.paramId" :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人' : '请选择合同企业'" @change="changeId">
                         <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -36,7 +36,7 @@
             </el-form>
             <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempS" label-width="140px" class="demo-signerTempForm" v-if="contractType==1">
                 <el-form-item label="签署方名称：" prop="">
-                    平台
+                    平台方
                 </el-form-item>
                 <el-form-item label="签署方类型：" prop="">
                     企业
@@ -46,11 +46,14 @@
                         <el-option v-for="item in caOptions" :key="item.id" :label="item.companyName" :value="item.id">
                         </el-option>
                     </el-select> -->
-                    <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
+                    <!-- <el-autocomplete class="inline-input" v-model="insertVal" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect" @blur="autocompleteBlur">
                         <template slot-scope="{ item }">
                             <span>{{item.companyName}}</span>
                         </template>
-                    </el-autocomplete>
+                    </el-autocomplete> -->
+
+                    <HAutocomplete ref="HAutocomplete" :placeholder="'请选择'" :maxlength=60 @back-event="backFindCA" :selectObj="paramCA" :selectArr="restaurants" v-if="restaurants" :remove-value='removeValue' :isSettimeout=false>
+                    </HAutocomplete>
                 </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <el-checkbox-group v-model="signerTempForm._signerDemand">
@@ -71,7 +74,9 @@
 <script>
 import { deepCopy } from '@/utils/utils'
 import { mapGetters, mapActions } from 'vuex'
+import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
+    components: { HAutocomplete },
     data () {
         return {
             restaurants: [],
@@ -124,13 +129,15 @@ export default {
                     { required: true, message: '请选择签署方类型', trigger: 'change' }
                 ],
                 paramId: [
-                    { required: true,
+                    {
+                        required: true,
                         validator: (r, v, callback) => {
                             if (this.signerTempForm.signerType == 1) {
                                 return callback(new Error('请选择合同企业'))
-                            } else {
+                            } else if (this.signerTempForm.signerType == 2) {
                                 return callback(new Error('请选择合同个人'))
                             }
+                            return callback()
                         }
                     }
                 ],
@@ -147,7 +154,12 @@ export default {
             },
             rules: {},
             isEdit: false,
-            contart_arr: []
+            contart_arr: [],
+            paramCA: {
+                selectName: '',
+                selectCode: ''
+            },
+            removeValue: false
 
         }
     },
@@ -175,43 +187,38 @@ export default {
         ...mapActions({
             findCApage: 'contractTemp/findCApage'
         }),
-        autocompleteBlur () {
-            if (!this.insertVal.id) {
-                let res = this.restaurants.filter(item => item.companyName == this.insertVal)
-                console.log('res', res)
-                this.signerTempForm.caId = res.id
-            }
-        },
-        querySearch (queryString, cb) {
-            let restaurants = this.restaurants
-            let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-            // 调用 callback 返回建议列表的数据
-            cb(results)
-        },
-        createFilter (queryString) {
-            return (restaurant) => {
-                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
-            }
-        },
-        handleSelect (item) {
-            this.signerTempForm.caId = item.id
-            this.signerTempForm.paramGroupName = item.companyName
+        // autocompleteBlur () {
+        //     if (!this.insertVal.id) {
+        //         let res = this.restaurants.filter(item => item.companyName == this.insertVal)
+        //         console.log('res', res)
+        //         this.signerTempForm.caId = res.id
+        //     }
+        // },
+        // querySearch (queryString, cb) {
+        //     let restaurants = this.restaurants
+        //     let results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+        //     // 调用 callback 返回建议列表的数据
+        //     cb(results)
+        // },
+        // createFilter (queryString) {
+        //     return (restaurant) => {
+        //         return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1)
+        //     }
+        // },
+        // handleSelect (item) {
+        //     this.signerTempForm.caId = item.id
+        //     this.signerTempForm.paramGroupName = item.companyName
+        // },
+        backFindCA (val) {
+            this.signerTempForm.caId = val.value.id
+            this.signerTempForm.paramGroupName = val.value.companyName
         },
         async onShowDialog (val, arr, form) {
             await this.onFindCApage()
-
             this.tract_visible = true
-            console.log('编辑的form', val, arr, form)
+            console.log('编辑的form', val, arr, form, this.insertVal)
             // 类型
             this.signerTempForm = deepCopy(this.copy_signerTempForm)
-
-            this.$nextTick(() => {
-                if (val == 2) {
-                    this.$refs.signerTempR.clearValidate()
-                } else {
-                    this.$refs.signerTempS.clearValidate()
-                }
-            })
 
             // this.onFindCApage()
             this.contractType = val
@@ -220,7 +227,6 @@ export default {
             if (form) {
                 // 复制一份 做取消校验
                 this.isEdit = true
-
                 this.signerTempForm = { ...this.signerTempForm, ...form }
                 this.signerTempForm._signerDemand = this.signerTempForm.signerDemand.split(',')
                 this.vaild_form = deepCopy({ ...this.signerTempForm, ...form })
@@ -228,11 +234,21 @@ export default {
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {
                 this.vaild_form = deepCopy(this.copy_signerTempForm)
+                this.signerTempForm._signerDemand = []
+
+                console.log('===', this.signerTempForm)
                 // // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }
+            this.$nextTick(async () => {
+                if (val == 2) {
+                    this.$refs.signerTempR.clearValidate()
+                } else {
+                    await this.$refs.HAutocomplete.clearInput()
+                    this.$refs.signerTempS.clearValidate()
+                }
+            })
         },
-
         handleClose () {
             if (JSON.stringify(this.vaild_form) != JSON.stringify(this.signerTempForm)) {
                 this.$confirm('取消则不会保存当前修改', '提示', {
@@ -254,6 +270,7 @@ export default {
             this.restaurants = JSON.parse(JSON.stringify(this.caOptions))
             this.restaurants.map(item => {
                 item.value = item.companyName
+                item.selectCode = item.id
             })
         },
         changeRadio (val) {
@@ -347,5 +364,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 </style>
