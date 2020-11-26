@@ -27,7 +27,16 @@ switch (env) {
         fileUploadUrl = 'https://hbp-test.hosjoy.com/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
+        // interfaceUrl = 'https://hbp-test.hosjoy.com/'
+        // ossUrl = 'https://route-test.hosjoy.com/'
+        // iframeUrl = 'https://crm-test.hosjoy.com/'
+        // jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        // B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
+        // fileUploadUrl = 'https://hbp-test.hosjoy.com/'
+        // iotUrl = 'https://testiot.hosjoy.com:2286'
+        // ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+        // iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
