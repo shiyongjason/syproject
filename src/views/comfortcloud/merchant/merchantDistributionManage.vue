@@ -13,9 +13,9 @@
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.status" style="width: 100%">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="审核通过" value="1"></el-option>
-                            <el-option label="待审核" value="0"></el-option>
-                            <el-option label="审核不通过" value="2"></el-option>
+                            <el-option label="审核通过" value=1></el-option>
+                            <el-option label="待审核" value=0></el-option>
+                            <el-option label="审核不通过" value=2></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -33,9 +33,9 @@
                     {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'--'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">
-                        {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'--'}}
-                    </el-button>
+                    <p class="colred title" @click="onEdit(scope.data.row)">
+                        {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'查看奖励':'--'}}
+                    </p>
                 </template>
             </basicTable>
             <el-dialog title="审核分销员" :modal-append-to-body=false :append-to-body=false
