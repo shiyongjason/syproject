@@ -106,16 +106,16 @@ export default {
             vaild_form: {},
             signerTempFormrules: {
                 signerName: [
-                    { required: true, message: '签署方名称', trigger: 'blur' }
+                    { required: true, message: '请输入签署方名称', trigger: 'blur' }
                 ],
                 signerType: [
-                    { required: true, message: '签署方类型', trigger: 'change' }
+                    { required: true, message: '请选择签署方类型', trigger: 'change' }
                 ],
                 paramId: [
-                    { required: true, message: '选择合同企业', trigger: 'change' }
+                    { required: true, message: '请选择合同企业', trigger: 'change' }
                 ],
                 caId: [
-                    { required: true, message: '选择平台企业', trigger: 'change' }
+                    { required: true, message: '请选择平台企业', trigger: 'change' }
                 ],
                 agent: [
                     { required: true, message: '经办人', trigger: 'blur' }
@@ -239,6 +239,10 @@ export default {
             this.singerOps = this.contart_arr.filter(item => {
                 return item.signerType == val
             })
+            // 默认个人 选中手绘章
+            if (val == 2) {
+                this.signerTempForm._signerDemand = ['3']
+            }
             this.signerTempForm.paramId = ''
         },
         changeId (val) {
