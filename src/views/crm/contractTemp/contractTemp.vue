@@ -546,11 +546,19 @@ export default {
         },
         // 删除
         onDelete (val, type) {
-            if (type == 1) {
-                this.busData.splice(val.data.$index, 1)
-            } else {
-                this.perData.splice(val.data.$index, 1)
-            }
+            this.$confirm('是否确认删除该签署方？', '提示', {
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                if (type == 1) {
+                    this.busData.splice(val.data.$index, 1)
+                } else {
+                    this.perData.splice(val.data.$index, 1)
+                }
+            }).catch(() => {
+
+            })
         },
         onCancelTemp () {
             if (JSON.stringify(this.valid_form) == JSON.stringify(this.contractForm)) {

@@ -8,7 +8,6 @@
  * @author zhoujq | http://weibo.com/buxiaodewa
  */
 function fuckDiff (obj, callback) {
-    var root = self
     /**
      * 匹配描述块，一个用来表示相同内容块在新旧文档内位置的描述对象
      * @param {Number} startInOld [相同部分在旧文档中的起始位置]
@@ -68,7 +67,7 @@ function fuckDiff (obj, callback) {
     DiffBuilder.prototype = {
 
         build: function () {
-            var sd = new Date()
+            // var sd = new Date()
             this.splitInputs2Words()
             this.indexNewWords()
             this.operations = this.getOperations()
@@ -255,7 +254,6 @@ function fuckDiff (obj, callback) {
          */
         insertTag: function (tagName, cssCls, words) {
             var nonTags
-            var that = this
             while (words.length) {
                 // 获取words内“连续”的非标签字符
                 nonTags = this.extractConsecutiveWords(words, true)
