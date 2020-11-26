@@ -639,7 +639,7 @@ export default {
                 }
                 if (this.platData.length == 0) {
                     this.$message({
-                        message: '请设置平台签署区',
+                        message: '请设置平台签署方',
                         type: 'warning'
                     })
                     return
