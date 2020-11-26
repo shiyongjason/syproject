@@ -1,6 +1,6 @@
 <template>
     <div class="sign-dialog">
-        <el-dialog :title="`添加${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal=false>
+        <el-dialog :title="`${isEdit?'编辑':'添加'}${contractType==1?'平台':''}签署方`" :visible.sync="tract_visible" width="35%" :before-close="handleClose" :close-on-click-modal=false>
             <el-form :model="signerTempForm" :rules="signerTempFormrules" ref="signerTempR" label-width="140px" class="demo-signerTempForm" v-if="contractType==2">
                 <el-form-item label="签署方名称：" prop="signerName">
                     <el-input v-model="signerTempForm.signerName" placeholder="请输入" maxlength="50"></el-input>
@@ -12,7 +12,7 @@
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" prop="paramId">
-                    <el-select v-model="signerTempForm.paramId"  :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" @change="changeId">
+                    <el-select v-model="signerTempForm.paramId"  :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人' : '请选择合同企业'" @change="changeId">
                         <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
                     </el-select>
@@ -88,20 +88,32 @@ export default {
                 signerType: 1,
                 paramId: '',
                 caId: '',
+                createTime: '',
+                createBy: '',
+                agent: '',
+                id: '',
                 paramGroupName: '',
                 // paramGroup: {},
+                templateVersionId: '',
                 signerDemand: '',
-                _signerDemand: []
+                _signerDemand: [],
+                type: ''
             },
             copy_signerTempForm: {
                 signerName: '',
                 signerType: 1,
                 paramId: '',
                 caId: '',
+                createTime: '',
+                createBy: '',
+                agent: '',
+                id: '',
                 paramGroupName: '',
                 // paramGroup: {},
+                templateVersionId: '',
                 signerDemand: '',
-                _signerDemand: []
+                _signerDemand: [],
+                type: ''
             },
             vaild_form: {},
             signerTempFormrules: {
@@ -112,7 +124,15 @@ export default {
                     { required: true, message: '请选择签署方类型', trigger: 'change' }
                 ],
                 paramId: [
-                    { required: true, message: '请选择合同企业', trigger: 'change' }
+                    { required: true },
+                    {
+                        validator: (r, v, callback) => {
+                            if (true) {
+                                return callback(new Error('必填一项'))
+                            }
+                            return callback(new Error('必填一项'))
+                        }
+                    }
                 ],
                 caId: [
                     { required: true, message: '请选择平台企业', trigger: 'change' }
@@ -181,7 +201,7 @@ export default {
             await this.onFindCApage()
 
             this.tract_visible = true
-            console.log('--=', val, arr, form)
+            console.log('编辑的form', val, arr, form)
             // 类型
             this.signerTempForm = deepCopy(this.copy_signerTempForm)
 
@@ -200,9 +220,10 @@ export default {
             if (form) {
                 // 复制一份 做取消校验
                 this.isEdit = true
-                this.vaild_form = deepCopy(form)
+
                 this.signerTempForm = { ...this.signerTempForm, ...form }
                 this.signerTempForm._signerDemand = this.signerTempForm.signerDemand.split(',')
+                this.vaild_form = deepCopy({ ...this.signerTempForm, ...form })
                 // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {

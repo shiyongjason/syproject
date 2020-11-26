@@ -208,7 +208,7 @@ export default {
         },
         async onDrawerinfo (row) {
             console.log('row: ', row)
-            let caId, caType;
+            let caId, caType
             // 个人 accountId
             if (this.activeName == 'personage') {
                 caId = row.accountId
