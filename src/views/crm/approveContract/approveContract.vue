@@ -636,7 +636,6 @@ export default {
                             }
                         }
                     })
-                    console.log('tempObj: ', tempObj)
                     for (const key in tempObj) {
                         tempArr.push(tempObj[key][0])
                     }
@@ -646,7 +645,13 @@ export default {
                         if (item.paramKey === paramKey) {
                             item.paramValue = paramValue
                         }
+                        // 把非必填且没值的标记清空
+                        if (item.required === false && !item.paramValue) {
+                            let tDom = document.getElementsByClassName(domName)[0].getElementsByClassName(item.paramKey)
+                            tDom[0].innerHTML = ''
+                        }
                     })
+
                     /* if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.$refs.RichEditor.value
                         if (this.detailRes.contractContent !== curHTML) {
@@ -660,9 +665,8 @@ export default {
                     // div版合同,修改页面上的值
                     let ryanList = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKey.paramKey)
                     Array.from(ryanList).map(jtem => {
-                        jtem.innerHTML = paramValue
+                        jtem.innerText = paramValue
                     })
-
                     // 通过dom生成最新的html
                     this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
@@ -681,7 +685,6 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    // return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
