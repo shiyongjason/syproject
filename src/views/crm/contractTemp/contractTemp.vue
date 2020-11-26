@@ -420,7 +420,6 @@ export default {
                 document.getElementById(this._keyValue).style.width = inputWidth + 'px'
                 document.getElementById(this._keyValue).value = this.keyValue.paramName
                 document.getElementById(this._keyValue).setAttribute('value', this.keyValue.paramName)
-
                 document.getElementById(this._keyValue).setAttribute('id', `${this.keyValue.paramKey}_${this.num}`)
 
                 // const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;"
@@ -709,14 +708,9 @@ export default {
             // 复制模板
             // 签署方 type=2
             let singerArr = []
-            if (this.$route.query.type == 'copy') {
-                this.contractTempdetail.signerSetting = []
-            } else {
-                singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2)
-            }
+            singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2)
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
-
             this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
 
             // 获取合同类型约定字段

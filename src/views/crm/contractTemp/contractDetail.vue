@@ -71,7 +71,7 @@ export default {
     components: { hosJoyTable },
     data () {
         return {
-            statusArr: [{ key: 1, value: '企业章' }, { key: 2, value: '手绘章' }, { key: 3, value: '模板章' }],
+            statusArr: [{ key: 1, value: '企业章' }, { key: 3, value: '手绘章' }, { key: 4, value: '模板章' }],
             diffHtml: '',
             // content: '<p>甲方：<input class="inputCont newinput"  ref="newinput" value="newinput"  readonly></p> <p>乙方：</p>',
             content: '',
@@ -171,10 +171,11 @@ export default {
             // findCApage: 'contractTemp/findCApage'
         }),
         findChinese (val) {
+            // console.log(val)
             const a = val.split(',')
             const cArr = []
             a.forEach(item => {
-                cArr.push(this.statusArr[item - 1].value)
+                cArr.push(this.statusArr.filter(val => val.key == item)[0].value)
             })
             return cArr.toString()
         },
