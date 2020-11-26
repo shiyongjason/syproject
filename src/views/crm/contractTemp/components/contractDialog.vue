@@ -132,10 +132,13 @@ export default {
                     {
                         required: true,
                         validator: (r, v, callback) => {
-                            if (this.signerTempForm.signerType == 1) {
-                                return callback(new Error('请选择合同企业'))
-                            } else if (this.signerTempForm.signerType == 2) {
-                                return callback(new Error('请选择合同个人'))
+                            console.log(r, v)
+                            if (!v) {
+                                if (this.signerTempForm.signerType == 1) {
+                                    return callback(new Error('请选择合同企业'))
+                                } else if (this.signerTempForm.signerType == 2) {
+                                    return callback(new Error('请选择合同个人'))
+                                }
                             }
                             return callback()
                         }
