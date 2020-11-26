@@ -53,19 +53,19 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="商品列表图：" prop="productIcon">
-                    <SingleUpload :upload="uploadInfo" :imageUrl="productIconUrl" ref="uploadImg" @back-event="productIcon" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productIconUrl" ref="uploadImg" @back-event="productIcon" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
-                        建议尺寸：172*1728图片，1M以内，支持jpeg,png和jpg格式
+                        建议尺寸：172*172，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="productImg">
-                    <SingleUpload :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
                         建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="商品详情：" prop="productDetailImg">
-                    <SingleUpload :upload="uploadInfo" :imageUrl="productDetailImgUrl" ref="uploadImg" @back-event="productDetailImg" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='2M' :upload="uploadInfo" :imageUrl="productDetailImgUrl" ref="uploadImg" @back-event="productDetailImg" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
                         建议尺寸：宽度不低于750px，图片大小2M以内，支持jpeg,png和jpg格式
                     </div>
