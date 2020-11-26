@@ -53,6 +53,15 @@
                         <el-button type="primary" class="ml20" @click="onExport()">导入订单</el-button>
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="会员变更记录" name="2">
+                    <div class="page-body-cont">
+                        <!-- 表格使用老毕的组件 -->
+                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='true'
+                                    :pagination="paginationChange"
+                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
             </el-tabs>
         </div>
         <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px"
@@ -99,6 +108,7 @@ export default {
             },
             searchParams: {},
             tableRegisterData: [],
+            tableChangeData: [],
             tableDoneData: [],
             inputMoney: '',
             inputMonth: '',
@@ -112,12 +122,20 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            paginationChange: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
             tableRegisterLabel: [
                 { label: '邀请人手机号', prop: 'invitePhone' },
                 { label: '被邀请人昵称', prop: 'nickName', width: '220px' },
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
+            tableChangeList: [
+                { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '变更内容', prop: 'changeContent' }],
             tableDoneLabel: [
                 { label: '导入时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '订单来源', prop: 'source' },
@@ -199,7 +217,8 @@ export default {
         }),
         ...mapGetters({
             merchantmemberInvitationRegisterData: 'iotmerchantmemberInvitationRegisterData',
-            merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData'
+            merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
+            merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData'
         }),
         pickerOptionsStart () {
             return {
@@ -228,12 +247,15 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMemberInvitationRegistersituation: 'findMerchantMemberInvitationRegistersituation',
+            findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
+            await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
+            this.tableChangeData = this.merchantmemberInvitationChangeData.records
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
                 pageNumber: this.merchantmemberInvitationRegisterData.current,
@@ -244,6 +266,11 @@ export default {
                 pageNumber: this.merchantmemberInvitationOrderData.current,
                 pageSize: this.merchantmemberInvitationOrderData.size,
                 total: this.merchantmemberInvitationOrderData.total
+            }
+            this.paginationChange = {
+                pageNumber: this.merchantmemberInvitationChangeData.current,
+                pageSize: this.merchantmemberInvitationChangeData.size,
+                total: this.merchantmemberInvitationChangeData.total
             }
         },
         uploadFile (param) {

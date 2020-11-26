@@ -125,6 +125,15 @@ const momentFormat = function (value = new Date(), type = 'YYYY-MM-DD HH:mm:ss')
     }
 }
 
+const percentageShow = function (value) {
+    if (value) {
+        let str = Number(value).toFixed(2)
+        str += '%'
+        return str
+    }
+    return '--'
+}
+
 export default {
     formatterTime,
     formatterTimes,
@@ -135,5 +144,6 @@ export default {
     fundMoney,
     moneyShow,
     fundMoneyHaveSpot,
-    momentFormat
+    momentFormat,
+    percentageShow
 }

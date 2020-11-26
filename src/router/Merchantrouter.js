@@ -73,6 +73,29 @@ export default [
             {
                 path: 'merchantVIP',
                 meta: {
+                    title: '商品管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantPriceManage',
+                        name: 'merchantPriceManage',
+                        meta: {
+                            title: '价格管理',
+                            tagName: '价格管理',
+                            parentName: '商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantPriceManage.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantVIP',
+                meta: {
                     title: '会员管理',
                     isMenu: true,
                     icon: ''
@@ -90,6 +113,17 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberManage.vue')
+                    }, {
+                        path: 'merchantDistributionManage',
+                        name: 'merchantDistributionManage',
+                        meta: {
+                            title: '分销员管理',
+                            tagName: '分销员管理',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantDistributionManage.vue')
                     },
                     {
                         path: 'merchantMemberInvitation',
