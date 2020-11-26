@@ -25,6 +25,7 @@ export default {
         },
         querySearch (queryString, callback) {
             let restaurants = [
+                { 'value': '@hosjoy.com' },
                 { 'value': '@qq.com' },
                 { 'value': '@126.com' },
                 { 'value': '@163.com' },

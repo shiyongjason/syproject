@@ -324,11 +324,9 @@ export default {
         //     this.keyValue = this.insertVal
         // },
         backFindparam (val) {
-            console.log('val', val)
             this.keyValue = val.value
         },
         backFindparams (val) {
-            console.log('val', val)
             this.keyValue = val.value
         },
         findUnique (inputArr) {
@@ -370,6 +368,10 @@ export default {
             inputArr.length > 0 && inputArr.map(val => {
                 if (val.dataset.appId) {
                     val.onclick = (event) => {
+                        this.targetObjs = {
+                            selectName: event.target.value,
+                            selectCode: event.target.className
+                        }
                         this._keyValue = event.target.id
                         this.dialogVisible = true
                     }
@@ -396,8 +398,12 @@ export default {
             // 这里每次执行插入 把 合同约定的字段插入进去
             this.bakParams.push(this.keyValue)
             document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
-                console.log('我测试一下', `${this.keyValue.paramKey}_${this.num}`)
+                console.log('我测试一下', e.target)
                 // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
+                this.targetObjs = {
+                    selectName: e.target.value,
+                    selectCode: e.target.className
+                }
                 this._keyValue = e.target.id
                 this.dialogVisible = true
             }
@@ -424,6 +430,10 @@ export default {
                 document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
                     // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
                     console.log('我测试一下1', e.target)
+                    this.targetObjs = {
+                        selectName: e.target.value,
+                        selectCode: e.target.className
+                    }
                     this._keyValue = e.target.id
                     this.dialogVisible = true
                 }
@@ -717,6 +727,11 @@ export default {
                 inputArr.length > 0 && inputArr.map(val => {
                     if (val.dataset.appId) {
                         document.getElementById(val.id).onclick = () => {
+                            this.targetObjs = {
+                                selectName: val.value,
+                                selectCode: val.className
+                            }
+                            console.log(val, this.targetObjs)
                             // this._keyValue = JSON.parse(JSON.stringify(keyValue))
                             this._keyValue = val.id
                             this.dialogVisible = true
