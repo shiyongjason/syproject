@@ -11,7 +11,7 @@
                         <el-radio :label=2>个人</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'" prop="paramId">
+                <el-form-item :label="signerTempForm.signerType == '2' ? '请选择合同个人：' : '请选择合同企业：'"  prop="paramId">
                     <el-select v-model="signerTempForm.paramId"  :placeholder="signerTempForm.signerType == '2' ? '请选择合同个人' : '请选择合同企业'" @change="changeId">
                         <el-option v-for="item in singerOps" :key="item.id" :label="item.groupName" :value="item.id">
                         </el-option>
@@ -124,13 +124,13 @@ export default {
                     { required: true, message: '请选择签署方类型', trigger: 'change' }
                 ],
                 paramId: [
-                    { required: true },
-                    {
+                    { required: true,
                         validator: (r, v, callback) => {
-                            if (true) {
-                                return callback(new Error('必填一项'))
+                            if (this.signerTempForm.signerType == 1) {
+                                return callback(new Error('请选择合同企业'))
+                            } else {
+                                return callback(new Error('请选择合同个人'))
                             }
-                            return callback(new Error('必填一项'))
                         }
                     }
                 ],
@@ -263,8 +263,11 @@ export default {
             // 默认个人 选中手绘章
             if (val == 2) {
                 this.signerTempForm._signerDemand = ['3']
+            } else {
+                this.signerTempForm._signerDemand = []
             }
             this.signerTempForm.paramId = ''
+            this.$refs.signerTempR.clearValidate('paramId')
         },
         changeId (val) {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
