@@ -99,7 +99,7 @@
                     <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
-                    <h-button v-if="scope.data.row.contractStatus>=2" table @click="getHistory(scope.data.row)">审核记录</h-button>
+                    <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                 </template>
             </hosJoyTable>
         </div>

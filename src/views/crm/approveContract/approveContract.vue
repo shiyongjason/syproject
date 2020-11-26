@@ -747,10 +747,9 @@ export default {
                                     // this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
                                     // console.log(document.queryCommandValue('ForeColor'))
                                 }
-
-                                jtem.onselectstart = () => {
-                                    return false
-                                }
+                                // jtem.onselectstart = () => {
+                                //     return false
+                                // }
                             })
                         }
                     }
@@ -767,6 +766,17 @@ export default {
             // this.contractContentInputHidden = res.data.contractContent // input版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            /* if (this.detailRes.contractStatus == 6) {
+                this.$nextTick(() => {
+                    this.contractFieldsList.map(item => {
+                        let curHTML = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByClassName(item.paramKey)
+                        Array.from(curHTML).map(jtem => {
+                            // jtem.setAttribute('contenteditable', false)
+                            jtem.outerHTML = `&#8203;${jtem.outerHTML}&#8203;`
+                        })
+                    })
+                })
+            } */
             this.domBindMethods()
         },
         getOperationContent (item) {
