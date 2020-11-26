@@ -121,13 +121,23 @@ export default {
                     }
                     return flag
                 })
+                // add 列表页使用clearCache('spudetail')，先删缓存，fix点击别的列表项不请求详情接口的bug，又不影响tags切换缓存。
+
+                const c = '/'
+                const regex = new RegExp(c, 'g')
+                const result = route.fullPath.match(regex)
+                let middleComponents = ''// 二级路由name，for example:Wisdomrouter.js
+                let curRouteComponents = ''
+                curRouteComponents = route.matched[result.length - 1].components.default
+                this.tagsList.forEach(item => {
+                    if (item.componentsName && (item.componentsName == curRouteComponents.name) && this.cachedExclude.indexOf(curRouteComponents.name) > -1) {
+                        setTimeout(() => {
+                            route.path.indexOf('/b2b/') > -1 && newCache(item.componentsName)
+                        }, 1000)
+                    }
+                })
                 if (!isExist) {
                     // 目前只做最多三级目录的缓存
-                    const c = '/'
-                    const regex = new RegExp(c, 'g')
-                    const result = route.fullPath.match(regex)
-                    let middleComponents = ''// 二级路由name，for example:Wisdomrouter.js
-                    let curRouteComponents = ''
                     if (result.length === 3) { // 为了适配三级目录缓存
                         middleComponents = route.matched[result.length - 2].components.default
                         if (this.cachedInclude.indexOf(middleComponents.name) == -1) { // 不存在才添加
@@ -135,7 +145,6 @@ export default {
                             route.path.indexOf('/b2b/') > -1 && newCache(middleComponents.name) // 缓存二级路由name
                         }
                     }
-                    curRouteComponents = route.matched[result.length - 1].components.default
                     if (!curRouteComponents.name) console.error(':::请给当前组件加个组件唯一name:::')
                     this.cachedInclude.indexOf(curRouteComponents.name) == -1 && route.path.indexOf('/b2b/') > -1 && newCache(curRouteComponents.name || route.name)
                     this.tagsList.push({
