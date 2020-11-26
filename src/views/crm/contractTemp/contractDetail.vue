@@ -2,7 +2,7 @@
     <div class="page-body B2b">
         <div class="contract-temp  page-component__scroll">
             <div class="page-body-cont">
-                <div class="contract-temp_title">新增合同模版</div>
+                <div class="contract-temp_title">查看合同模版</div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_name">合同模版设置</div>

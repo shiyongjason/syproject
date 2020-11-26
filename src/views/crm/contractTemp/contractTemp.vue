@@ -387,9 +387,10 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  style="width:${inputWidth}px;"  readonly></input></span>`
+            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  
+            style="width:${inputWidth}px;"  value="${this.keyValue.paramName}" readonly></input></span>`
             this.$refs.RichEditor.insertHtml(_temp)
-            document.getElementById(`${this.keyValue.paramKey}_${this.num}`).value = this.keyValue.paramName
+            // document.getElementById(`${this.keyValue.paramKey}_${this.num}`).value = this.keyValue.paramName
 
             // document.getElementsByClassName('newinput')[1].click
             // 这里每次执行插入 把 合同约定的字段插入进去
@@ -615,13 +616,13 @@ export default {
             }
 
             if (val == 1) {
-                if (this.contractForm.reqParam.length == 0) {
-                    this.$message({
-                        message: '请至少添加一个合同字段',
-                        type: 'warning'
-                    })
-                    return
-                }
+                // if (this.contractForm.reqParam.length == 0) {
+                //     this.$message({
+                //         message: '请至少添加一个合同字段',
+                //         type: 'warning'
+                //     })
+                //     return
+                // }
                 if (!document.getElementById('platform_sign')) {
                     this.$message({
                         message: '请插入一处平台签署区',
