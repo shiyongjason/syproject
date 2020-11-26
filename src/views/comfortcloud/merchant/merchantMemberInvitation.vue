@@ -56,7 +56,7 @@
                 <el-tab-pane label="会员变更记录" name="2">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='true'
+                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false'
                                     :pagination="paginationChange"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
@@ -255,7 +255,7 @@ export default {
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
-            this.tableChangeData = this.merchantmemberInvitationChangeData.records
+            this.tableChangeData = this.merchantmemberInvitationChangeData
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
                 pageNumber: this.merchantmemberInvitationRegisterData.current,

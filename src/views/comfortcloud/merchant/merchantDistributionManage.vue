@@ -60,7 +60,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { updateDistribution } from '../api'
 
 export default {
-    name: 'comfortcloudMembermanage',
+    name: 'merchantDistributionManage',
     data () {
         return {
             queryParams: {
@@ -127,8 +127,8 @@ export default {
             }
         },
         async onChangeCheckStatus (val) {
-            await updateDistribution({ id: this.checkData.id, status: val, phone: this.checkData.phone })
             this.rightsDialogVisible = false
+            await updateDistribution({ id: this.checkData.id, status: val, phone: this.checkData.phone })
             this.onQuery()
         },
         onCurrentChange (val) {
