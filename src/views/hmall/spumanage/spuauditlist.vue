@@ -96,6 +96,8 @@ import { AUDIT_STATUS } from './const'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { B2bUrl } from '@/api/config'
+import { clearCache } from '@/utils/index'
+
 export default {
     name: 'spuauditlist',
     data () {
@@ -133,7 +135,8 @@ export default {
             rowKey: '',
             multiSelection: [],
             categoryIdArr: [],
-            removeValue: false
+            removeValue: false,
+            isPending: false
         }
     },
     computed: {
@@ -181,9 +184,10 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    // activated () {
-    //     this.searchList()
-    // },
+    activated () {
+        console.log('activated')
+        this.searchList()
+    },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
@@ -192,6 +196,9 @@ export default {
             'findAuditProducts',
             'setSpuTemplate'
         ]),
+        ...mapActions({
+            setNewTags: 'setNewTags'
+        }),
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
@@ -210,19 +217,28 @@ export default {
             this.queryParams.categoryId = val[val.length - 1]
         },
         async searchList (val) {
-            if (val) {
-                this.queryParams.pageNumber = val
+            try {
+                if (this.isPending) {
+                    return
+                }
+                this.isPending = true
+                if (val) {
+                    this.queryParams.pageNumber = val
+                }
+                const { ...params } = this.queryParams
+                if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
+                await this.findAuditProducts(params)
+                this.tableData = this.productsAuditListInfo.records
+                this.paginationInfo = {
+                    pageNumber: this.productsAuditListInfo.current,
+                    pageSize: this.productsAuditListInfo.size,
+                    total: this.productsAuditListInfo.total
+                }
+                this.removeValue = false
+                this.isPending = false
+            } catch (error) {
+                this.isPending = false
             }
-            const { ...params } = this.queryParams
-            if (params.categoryId) params.categoryId = params.categoryId[params.categoryId.length - 1]
-            await this.findAuditProducts(params)
-            this.tableData = this.productsAuditListInfo.records
-            this.paginationInfo = {
-                pageNumber: this.productsAuditListInfo.current,
-                pageSize: this.productsAuditListInfo.size,
-                total: this.productsAuditListInfo.total
-            }
-            this.removeValue = false
         },
         onExport () {
             if (this.tableData.length <= 0) {
@@ -261,9 +277,11 @@ export default {
             })
         },
         onAuditSpu (val) {
+            clearCache('spudetail')
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'audit', spuId: val.spuId } })
         },
         onShowSpu (val) {
+            clearCache('spudetail')
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'show', spuId: val.spuId } })
         },
         async onSetSpuTemplate (val) {
