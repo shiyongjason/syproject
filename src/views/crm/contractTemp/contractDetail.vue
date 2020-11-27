@@ -21,7 +21,7 @@
             <div class="page-body-cont">
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex" id="editor">
-                    <div v-html="contractForm.content"></div>
+                    <div v-html="contractForm.content" class=""></div>
                 </div>
             </div>
             <div class="page-body-cont">
@@ -42,10 +42,10 @@
                     平台签署方
                 </div>
                 <div v-if="platData.length>0">
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="platLabel" :data="platData" :isAction=false>
 
-                </hosJoyTable>
-                     </div>
+                    </hosJoyTable>
+                </div>
             </div>
             <div class="page-body-cont">
                 <div class="contract-temp_head">
@@ -234,6 +234,32 @@ export default {
 .page-body-cont {
     margin-bottom: 10px;
 }
+.contract-temp_flex {
+    div {
+        width: 90%;
+    }
+}
+/deep/#editor {
+    table {
+        border-top: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+    }
+    th {
+        border-bottom: 2px solid #ccc;
+        text-align: center;
+        background-color: #f1f1f1;
+        border-right: 1px solid #ccc;
+        padding: 3px 5px;
+        min-height: 30px;
+    }
+    td {
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        padding: 3px 5px;
+        min-height: 30px;
+    }
+}
+
 /deep/.w-e-text-container {
     z-index: 100 !important;
 }
@@ -264,7 +290,7 @@ export default {
 /deep/.w-e-menu {
     z-index: 500 !important;
 }
-/deep/.w-e-text p{
+/deep/.w-e-text p {
     word-break: break-all;
 }
 </style>
