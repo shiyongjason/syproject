@@ -198,7 +198,7 @@ export default {
             queryParams: JSON.parse(JSON.stringify(_queryParams)),
             tableLabel: [
                 { label: '合同编号', prop: 'contractNo', width: '150' },
-                { label: '合同名称', prop: 'contractName', width: '260' },
+                { label: '合同名称', prop: 'contractName', width: '280' },
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
