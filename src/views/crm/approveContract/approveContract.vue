@@ -777,9 +777,13 @@ export default {
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
         this.contractKeyValueList = data
-        this.init(() => {
-            this.domBindMethods()
-        })
+        if (this.detailRes.contractStatus != 6) {
+            this.init()
+        } else {
+            this.init(() => {
+                this.domBindMethods()
+            })
+        }
     }
 }
 </script>
