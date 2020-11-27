@@ -490,7 +490,7 @@ export default {
                 //     })
                 //     return
                 // }
-                _temp = `<span><img id='platform_sign' style='width:100px;margin:5px;display:block' src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201127/ab01c967-3172-4407-aba0-fa60351c19ab.png"></span>`
+                _temp = `<span><img class='platform_sign' style='width:100px;margin:5px;display:block' src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201127/ab01c967-3172-4407-aba0-fa60351c19ab.png"></span>`
             }
             // console.log(document.getElementById('platform_sign'))
 
