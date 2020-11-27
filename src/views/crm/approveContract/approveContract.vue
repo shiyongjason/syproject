@@ -725,6 +725,7 @@ export default {
                         let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
                         if (DomList && DomList.length > 0) {
                             Array.from(DomList).map((jtem, index) => {
+                                // 处理非必填值为空字段
                                 if (jtem.dataset && jtem.dataset.paramname && !jtem.innerText) {
                                     jtem.innerText = jtem.dataset.paramname
                                 }
@@ -740,13 +741,8 @@ export default {
                                         this.currentKey.paramValue = event.target.innerText
                                     }
                                 }
-                                // jtem.onselectstart = () => {
-                                //     return false
-                                // }
                             })
                         }
-                        // tinymce
-                        // console.log(ifrom[0].contentWindow.document.getElementById('tinymce').innerHTML)
                     }
                 })
                 // 动态设置高度
@@ -764,6 +760,9 @@ export default {
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             cb && cb()
+            if (this.detailRes.contractStatus != 6) {
+                this.domBindMethods()
+            }
         },
         getOperationContent (item) {
             // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
@@ -777,13 +776,7 @@ export default {
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
         this.contractKeyValueList = data
-        if (this.detailRes.contractStatus != 6) {
-            this.init()
-        } else {
-            this.init(() => {
-                this.domBindMethods()
-            })
-        }
+        this.init()
     }
 }
 </script>
