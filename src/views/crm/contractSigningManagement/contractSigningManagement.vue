@@ -93,7 +93,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
             </div>
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
-                actionWidth='260' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='275' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)" >分财审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
@@ -198,7 +198,7 @@ export default {
             queryParams: JSON.parse(JSON.stringify(_queryParams)),
             tableLabel: [
                 { label: '合同编号', prop: 'contractNo', width: '150' },
-                { label: '合同名称', prop: 'contractName', width: '260' },
+                { label: '合同名称', prop: 'contractName', width: '280' },
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
