@@ -58,13 +58,17 @@
                 </div>
                 <div class="approvalcontract-layout-right">
                     <h1>合同预览</h1>
+                    <div class="loader-css" v-if="detailRes.contractStatus == 6&&showLoading">
+                        <div class="loader"></div>
+                        <div class="loader-txt">合同拼命加载中...</div>
+                    </div>
                     <div class="approvalcontract-content-layout">
                         <!-- 分财、风控预览——纯html -->
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
                             <!-- <RichEditor ref="RichEditor" v-model="contractContentDiv" :menus="menus" :uploadImgServer="uploadImgServer" :height='getHeight()' :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange"></RichEditor> -->
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv"  :init="editorInit"  @onInit="editorOnInit"></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit"></editor>
                             <!-- @onKeyUp="onchange"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
@@ -154,6 +158,7 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            showLoading: true,
             editorInit: {
                 menubar: false,
                 language: 'zh_CN',
@@ -269,15 +274,16 @@ export default {
             // this.onShowUpdata()
         },
         checkField (rule, value, callback) {
+            console.log('checkField')
             if (this.currentKey.required && this.currentKey.paramValue == '') {
                 callback(new Error(`${this.currentKey.paramName}不能为空`))
                 return
             }
-            // 匹配正则
-            if (this.currentKey.required && this.currentKey.checkRule) {
+            // 匹配正则this.currentKey.required &&???
+            if (this.currentKey.checkRule && this.currentKey.paramValue) {
                 let Reg = new RegExp(this.currentKey.checkRule)
+                console.log(!Reg.test(this.currentKey.paramValue))
                 if (!Reg.test(this.currentKey.paramValue)) {
-                    console.log('test')
                     return callback(new Error(this.currentKey.checkNote || '格式不正确'))
                 } else {
                     callback()
@@ -463,10 +469,10 @@ export default {
         },
         openDialog (title, status) {
             if (this.detailRes.contractStatus == 6) {
-                let curHTML = this.$refs.RichEditor.value
+                let curHTML = this.contractDocument.innerHTML
                 if (this.detailRes.contractContent !== curHTML) {
                     this.$message({
-                        message: `内容修改还没保存`,
+                        message: `内容已经被修改还没保存`,
                         type: 'error'
                     })
                     return
@@ -602,6 +608,7 @@ export default {
             // let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
+                    console.log('进来')
                     //
                     let tempObj = {}
                     let tempArr = []
@@ -630,7 +637,6 @@ export default {
                             tDom[0].innerHTML = ''
                         }
                     })
-
                     /* if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.$refs.RichEditor.value
                         if (this.detailRes.contractContent !== curHTML) {
@@ -664,7 +670,6 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    // return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -688,7 +693,6 @@ export default {
             this.domBindMethods()
         },
         domBindMethods () {
-            console.log('domBindMethods')
             this.$nextTick(() => {
                 // this.$refs.RichEditor.value  纯html
                 this.firstKsy = this.contractFieldsList[0].paramKey
@@ -749,6 +753,7 @@ export default {
                 if (this.detailRes.contractStatus == 6) {
                     let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
+                    this.showLoading = false
                 }
             })
         },
@@ -885,6 +890,7 @@ export default {
             float: right;
             // overflow-y: scroll;
             height: 100%;
+    position: relative;
             h1 {
                 font-size: 20px;
                 margin-bottom: 10px;
@@ -975,5 +981,34 @@ export default {
     margin: unset;
     line-height: unset;
 }
+.loader-css{
+    position: absolute;
+  left: 50%;
+  top: 35%;
+  transform: translateX(-50%);
+}
+.loader {
+  border: 13px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 13px solid #3498db;
+  width: 60px;
+  height: 60px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
 
+}
+.loader-txt{
+ margin-top: 20px;
+  text-align: center;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
