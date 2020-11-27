@@ -3,9 +3,9 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">姓名：</div>
+                    <div class="query-col__label">{{activeName=='personage'?'姓名':'企业名称'}}：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.name" placeholder="请输入姓名" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.name" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col" v-show="activeName == 'personage'">
