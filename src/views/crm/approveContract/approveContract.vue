@@ -1,9 +1,7 @@
 <template>
     <div class="page-body B2b">
+        <el-image ref="zoomImage" style="width: 0px; height:0px;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
         <div class="page-body-cont approvalcontract">
-            <!-- <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-            <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-        </component> -->
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
@@ -427,12 +425,16 @@ export default {
                     elImage: {
                         bind: {
                             style: 'width: 120px; height: 120px; border-radius: 7px;border: 1px solid #d9d9d9',
-                            src: this.currentKey.paramValue,
-                            fit: 'fit',
-                            previewSrcList: [this.currentKey.paramValue]
+                            src: this.currentKey.paramValue
+                            // fit: 'fit',
+                            // previewSrcList: [this.currentKey.paramValue]
                         },
                         on: {
-                            input: (val) => { console.log(val) }
+                            input: (val) => { console.log(val) },
+                            click: (event) => {
+                                console.log(this.$refs['zoomImage'])
+                                this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
+                            }
                         }
                     }
                 }
@@ -636,7 +638,6 @@ export default {
                             }
                         }
                     })
-                    console.log('tempObj: ', tempObj)
                     for (const key in tempObj) {
                         tempArr.push(tempObj[key][0])
                     }
@@ -646,7 +647,13 @@ export default {
                         if (item.paramKey === paramKey) {
                             item.paramValue = paramValue
                         }
+                        // 把非必填且没值的标记清空
+                        if (item.required === false && !item.paramValue) {
+                            let tDom = document.getElementsByClassName(domName)[0].getElementsByClassName(item.paramKey)
+                            tDom[0].innerHTML = ''
+                        }
                     })
+
                     /* if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.$refs.RichEditor.value
                         if (this.detailRes.contractContent !== curHTML) {
@@ -660,9 +667,8 @@ export default {
                     // div版合同,修改页面上的值
                     let ryanList = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKey.paramKey)
                     Array.from(ryanList).map(jtem => {
-                        jtem.innerHTML = paramValue
+                        jtem.innerText = paramValue
                     })
-
                     // 通过dom生成最新的html
                     this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
@@ -681,7 +687,6 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    // return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
