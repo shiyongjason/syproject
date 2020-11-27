@@ -231,7 +231,8 @@ export default {
                     { validator: this.checkField, trigger: 'blur' }
                 ]
             },
-            contractDocument: ''
+            contractDocument: '',
+            contractAfterApi: ''
 
         }
     },
@@ -470,7 +471,7 @@ export default {
         openDialog (title, status) {
             if (this.detailRes.contractStatus == 6) {
                 let curHTML = this.contractDocument.innerHTML
-                if (this.detailRes.contractContent !== curHTML) {
+                if (this.contractAfterApi !== curHTML) {
                     this.$message({
                         message: `内容已经被修改还没保存`,
                         type: 'error'
@@ -498,20 +499,11 @@ export default {
         },
         async onApprove () {
             if (this.detailRes.contractStatus == 6) {
-                let dom = document.getElementById('platform_sign')
-                dom.outerHTML = `<span id="platform_sign"></span>`
+                let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
+                Array.from(signDOMS).map(item => {
+                    item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
+                })
             }
-            // let res = this.contractFieldsList.filter(item => item.paramKey.indexOf('contract_sign_') > -1)
-            // if (res && res.length > 0 && this.detailRes.contractStatus == 6) {
-            //     res.map(item => {
-            //         let resDom = this.contractDocument.getElementsByClassName(item.paramKey)
-            //         if (resDom && resDom.length > 0) {
-            //             Array.from(resDom).map(jtem => {
-            //                 jtem.outerHTML = ''
-            //             })
-            //         }
-            //     })
-            // }
             this.$nextTick(async () => {
                 const query = {
                     contractId: this.$route.query.id,
@@ -605,7 +597,6 @@ export default {
                 this.setImg()
                 return
             }
-            // let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
                     console.log('进来')
@@ -653,7 +644,6 @@ export default {
                         jtem.innerText = paramValue
                     })
                     // 通过dom生成最新的html
-                    // this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
                     // 编辑前内容
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
@@ -754,6 +744,7 @@ export default {
                     let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
                     this.showLoading = false
+                    this.contractAfterApi = this.contractDocument.innerHTML
                 }
             })
         },
