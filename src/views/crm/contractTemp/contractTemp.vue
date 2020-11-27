@@ -520,7 +520,11 @@ export default {
             await this.onAllParams()
             console.log('this.newParams2', this.newParams)
             this.newParams = this.newParams.filter(val => val.groupName)
-            this.$refs.contractDialog.onShowDialog(val, this.newParams)
+            if (val == 1 && this.platData[0]) {
+                this.$refs.contractDialog.onShowDialog(val, this.newParams, this.platData[0])
+            } else {
+                this.$refs.contractDialog.onShowDialog(val, this.newParams)
+            }
         },
         backToTable (val, Type) {
             console.log('===', val, Type)
