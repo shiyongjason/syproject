@@ -777,7 +777,9 @@ export default {
     async beforeMount () {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
         this.contractKeyValueList = data
-        this.init()
+        this.init(() => {
+            this.domBindMethods()
+        })
     }
 }
 </script>
