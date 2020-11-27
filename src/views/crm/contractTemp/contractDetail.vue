@@ -258,6 +258,9 @@ export default {
         padding: 3px 5px;
         min-height: 30px;
     }
+    img{
+        max-width: 500px;
+    }
 }
 
 /deep/.w-e-text-container {
