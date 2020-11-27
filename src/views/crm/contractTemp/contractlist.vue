@@ -196,6 +196,7 @@ export default {
                         type: 'success'
                     })
                 } catch (error) {
+                    this.$message.close()
                     this.$confirm('不符合启用条件，请先编辑合同模版', '提示', {
                         confirmButtonText: '去编辑',
                         cancelButtonText: '暂不启用',
@@ -206,6 +207,7 @@ export default {
                     }).catch(() => {
 
                     })
+                    // return
                 }
             } else {
                 try {
