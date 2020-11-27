@@ -1,7 +1,10 @@
 <template>
     <div>
         <!-- 金额 %-->
-        <el-input  :value="money(value)"  v-bind="$attrs" @input="onInput" @blur="onBlur">
+        <el-input v-if="innerHtml=='元'" :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,1000000000)}" @blur="onBlur">
+            <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
+        </el-input>
+        <el-input v-else  :value="money(value)" v-inputMAX="100"  v-bind="$attrs" @input="onInput" @blur="onBlur">
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
     </div>
@@ -42,7 +45,8 @@ export default {
                 return money
             }
         },
-        onInput (val) {
+        onInput (val, max) {
+            console.log('max: ', max)
             let num = this.isNum(val, 2)
             if (num && num.length > 0 && num == '.') {
                 num = ''
@@ -54,6 +58,15 @@ export default {
             num = num.toString()
             num = num.replace(/,/gi, '')
             console.log('num: ', num)
+            if (max) {
+                if (Number(num) > max) {
+                    this.$message({
+                        message: `金额最大不能超过${this.money(max)}`,
+                        type: 'error'
+                    })
+                    return
+                }
+            }
             this.$emit('input', num)
         },
         numValidate (str, float, regular, regular2, limit = '') {
