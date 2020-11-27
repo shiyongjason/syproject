@@ -1,9 +1,7 @@
 <template>
     <div class="page-body B2b">
+        <el-image ref="zoomImage" style="width: 0px; height:0px;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
         <div class="page-body-cont approvalcontract">
-            <!-- <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-            <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-        </component> -->
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
@@ -42,7 +40,8 @@
                                     </component>
                                 </el-form-item>
                             </el-form>
-                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" multiple :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png'
+
+                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" :multiple='false' :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png'
                                 :uploadParameters='uploadParameters' @successArg='successArg'>
                                 <i class="el-icon-upload"></i>
                                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
@@ -61,16 +60,16 @@
                     <h1>合同预览</h1>
                     <div class="approvalcontract-content-layout">
                         <!-- 分财、风控预览——纯html -->
-                        <div class="approvalcontract-content" v-html='contractContentDiv' v-show="detailRes.contractStatus != 6"></div>
+                        <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- style="display:none" -->
-                        <div class="approvalcontract-content-hidden" style="display:none" v-html='contractContentInputHidden'></div>
+                        <!-- <div class="approvalcontract-content-hidden" style="display:none" v-html='contractContentInputHidden'></div> -->
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <RichEditor ref="RichEditor" v-model="contractContentInputHidden" :menus="menus" :uploadImgServer="uploadImgServer" :height='getHeight()' :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%"></RichEditor>
+                            <RichEditor ref="RichEditor" v-model="contractContentDiv" :menus="menus" :uploadImgServer="uploadImgServer" :height='getHeight()' :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange"></RichEditor>
                         </div>
                     </div>
+                    <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6&&showUpdataBtn">更新条款</h-button>
                     <div class="approvalcontract-btn">
-                        <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
                         <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
@@ -104,13 +103,13 @@
                         <span>{{item.operationName}}</span>
                         <template v-if="item.operationName == '编辑了'">
                             <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
-                                <font>{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
                                 从<font>
                                     <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
                                 </font>
                                 变为<font>
                                     <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                    </font>
+                                </font>
                             </span>
                             <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
                         </template>
@@ -137,7 +136,9 @@
 <script>
 import diffDialog from './diffDialog'
 import selectCom from './components/select'
-import formatInput from './components/formatInput'
+import isAllNum from './components/isAllNum'
+import isPositiveInt from './components/isPositiveInt'
+import isNum from './components/isNum'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
@@ -146,7 +147,7 @@ import { interfaceUrl } from '@/api/config'
 
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, formatInput, inputAutocomplete, hosjoyUpload },
+    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt },
     data () {
         return {
             xx: '232323<br>   324 <br>发送到',
@@ -192,7 +193,7 @@ export default {
                 'justify', // 对齐方式
                 'quote', // 引用
                 // 'emoticon', // 表情
-                'image', // 插入图片
+                // 'image', // 插入图片
                 'table', // 表格
                 'undo', // 撤销
                 'redo' // 重复
@@ -204,7 +205,8 @@ export default {
                 formValidator: [
                     { validator: this.checkField, trigger: 'blur' }
                 ]
-            }
+            },
+            showUpdataBtn: false
 
         }
     },
@@ -222,12 +224,66 @@ export default {
         },
         uploadImgName () {
             return 'multiFile'
+        },
+        inputStyleDom () {
+            // 支付期限
+            if (this.currentKey.paramKey == 'pay_period_supplier') {
+                return 'isPositiveInt'
+            }
+            // 纯数字
+            if (this.currentKey.paramKey == 'supplier_account_number' || this.currentKey.paramKey == 'hosjoy_account_number' || this.currentKey.paramKey == 'regulatory_account_number' || this.currentKey.paramKey == 'dealer_controller_postal_code' || this.currentKey.paramKey == 'dealer_controller_postal_code_spouse') {
+                return 'isAllNum'
+            }
+            // 元 %
+            if (this.currentKey.unit) {
+                return 'isNum'
+            }
+            return 'elInput'
         }
     },
     methods: {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        debounce (func, wait) {
+            let _this = this
+            return function () {
+                let now = new Date()
+                if (now - _this.lastTime - wait > 0) {
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                } else {
+                    if (_this.timeout) {
+                        clearTimeout(_this.timeout)
+                        _this.timeout = null
+                    }
+                    _this.timeout = setTimeout(() => {
+                        func.apply(_this, arguments)
+                    }, wait)
+                }
+
+                _this.lastTime = now
+            }
+        },
+        onShowUpdata () {
+            if (this.detailRes.contractStatus == 6) {
+                this.$nextTick(() => {
+                    let curHTML = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].innerHTML
+                    if (this.detailRes.contractContent !== curHTML) {
+                        this.showUpdataBtn = true
+                    } else {
+                        this.showUpdataBtn = false
+                    }
+                })
+            } else {
+                this.showUpdataBtn = false
+            }
+        },
+        onchange () {
+            this.debounce(this.onShowUpdata, 200)()
+            this.domBindMethods()
+        },
         getHeight () {
             let h = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
             return h || 500
@@ -250,18 +306,12 @@ export default {
                 callback()
             }
         },
-        chooseInput (item) {
-            if (item.unit || item.paramKey == 'supplier_account_number' || item.paramKey == 'hosjoy_account_number' || item.paramKey == 'regulatory_account_number' || item.paramKey == 'dealer_controller_postal_code' || item.paramKey == 'dealer_controller_postal_code_spouse' || item.paramKey == 'pay_period_supplier') {
-                return true
-            }
-            return false
-        },
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
                 1: {
-                    [this.chooseInput(this.currentKey) ? 'formatInput' : 'elInput']:
-                        this.chooseInput(this.currentKey)
+                    [this.inputStyleDom]:
+                        this.inputStyleDom !== 'elInput'
                             ? {
                                 bind: {
                                     paramKey: this.currentKey.paramKey,
@@ -274,7 +324,6 @@ export default {
                                 },
                                 on: {
                                     input: (val) => { this.currentKey.paramValue = val.trim() }
-
                                 }
                             }
                             : {
@@ -322,33 +371,13 @@ export default {
                             maxlength: '200',
                             class: this.currentKey.paramKey,
                             showWordLimit: true
+                            // disabled: !this.currentKey.modify
                         },
                         on: {
                             input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
                 },
-                // 4: {
-                //     div: {
-                //         bind: {
-                //             value: this.currentKey.paramValue,
-                //             contenteditable: true,
-                //             class: this.currentKey.paramKey,
-                //             style: {
-                //                 'border': '1px solid #DCDFE6',
-                //                 'border-radius': ' 4px',
-                //                 'height': '130px',
-                //                 'overflow-y': 'scroll',
-                //                 'line-height': 1.2,
-                //                 'padding': '15px',
-                //                 'box-sizing': 'border-box'
-                //             }
-                //         },
-                //         on: {
-                //             input: (val) => { this.currentKey.paramValue = val }
-                //         }
-                //     }
-                // },
                 5: {
                     inputAutocomplete: {
                         bind: {
@@ -382,6 +411,7 @@ export default {
                         bind: {
                             value: this.currentKey.paramValue,
                             type: 'date',
+                            disabled: !this.currentKey.modify,
                             placeholder: '选择日期',
                             valueFormat: 'yyyy-MM-dd',
                             style: { width: '250px' }
@@ -395,11 +425,16 @@ export default {
                     elImage: {
                         bind: {
                             style: 'width: 120px; height: 120px; border-radius: 7px;border: 1px solid #d9d9d9',
-                            src: this.currentKey.paramValue,
-                            previewSrcList: [this.currentKey.paramValue]
+                            src: this.currentKey.paramValue
+                            // fit: 'fit',
+                            // previewSrcList: [this.currentKey.paramValue]
                         },
                         on: {
-                            input: (val) => { console.log(val) }
+                            input: (val) => { console.log(val) },
+                            click: (event) => {
+                                console.log(this.$refs['zoomImage'])
+                                this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
+                            }
                         }
                     }
                 }
@@ -447,6 +482,16 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
+            if (this.detailRes.contractStatus == 6) {
+                let curHTML = this.$refs.RichEditor.value
+                if (this.detailRes.contractContent !== curHTML) {
+                    this.$message({
+                        message: `内容修改还没保存`,
+                        type: 'error'
+                    })
+                    return
+                }
+            }
             this.dialog.dialogVisible = true
             this.dialog.title = title
             this.dialog.status = status
@@ -466,27 +511,52 @@ export default {
             }
         },
         async onApprove () {
-            const query = {
-                contractId: this.$route.query.id,
-                approver: this.userInfo.employeeName,
-                // 合同审批角色 1：分财 2：风控 3：法务
-                approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                approvalStatus: this.dialog.status,
-                approvalRemark: this.dialog.remark
+            if (this.detailRes.contractStatus == 6) {
+                let dom = document.getElementById('platform_sign')
+                dom.outerHTML = `<span id="platform_sign"></span>`
             }
-            await approvalContent(query)
-            this.$message({
-                message: `提交成功`,
-                type: 'success'
+            let res = this.contractFieldsList.filter(item => item.paramKey.indexOf('contract_sign_') > -1)
+            if (res && res.length > 0 && this.detailRes.contractStatus == 6) {
+                res.map(item => {
+                    let TDoms = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                    let resDom = TDoms.getElementsByClassName(item.paramKey)
+                    if (resDom && resDom.length > 0) {
+                        Array.from(resDom).map(jtem => {
+                            jtem.outerHTML = ''
+                        })
+                    }
+                })
+            }
+            this.$nextTick(async () => {
+                let res = ''
+                if (this.detailRes.contractStatus == 6) {
+                    res = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0]
+                }
+                const query = {
+                    contractId: this.$route.query.id,
+                    approver: this.userInfo.employeeName,
+                    // 合同审批角色 1：分财 2：风控 3：法务
+                    approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    approvalStatus: this.dialog.status,
+                    approvalRemark: this.dialog.remark,
+                    contractContent: this.detailRes.contractStatus == 6 ? res.innerHTML : ''
+                }
+                await approvalContent(query)
+                this.$message({
+                    message: `提交成功`,
+                    type: 'success'
+                })
+                this.handleClose()
+                this.goBack()
             })
-            this.handleClose()
-            this.goBack()
         },
         goBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
+
         successArg (val) {
+            this.currentKey.paramValue = val.fileUrl
         },
         async setImg () {
             if (this.imgArr.length == 0) return
@@ -511,7 +581,7 @@ export default {
                     }
                 }
             })
-            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
+            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             let contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
             await saveContent({
                 'contractId': this.$route.query.id,
@@ -527,10 +597,9 @@ export default {
             })
             this.init()
         },
+        // operatorType 3 更新条款
         onSaveContent (operatorType = '') {
-            // console.log('this.currentKey', this.currentKey)
             // todo 可替换成空
-            // return
             let { paramName, paramKey, paramValue, required } = this.currentKey
             // if (!required && (paramValue === '' || paramValue === null)) return
             if (required && (paramValue === '' || paramValue === null)) {
@@ -551,58 +620,24 @@ export default {
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
+                return
             }
-            // 最后要拿到input的合同
-            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content-hidden'
-            let tempArr = []
+            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
-                    // if (!operatorType) {}
-                    /* 修改模板： */
-                    // div版合同
-                    let ryanList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
-                    Array.from(ryanList).map(jtem => {
-                        if (!paramValue && this.currentKey.emptyTxt) {
-                            jtem.innerHTML = this.currentKey.emptyTxt// 非必填，反显{#字段名#}使用
-                            console.log('dododdodododod')
-                        } else {
-                            jtem.innerHTML = paramValue
-                        }
-                    })
-                    // input版合同
-                    let richEditorDom = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKeyOriginal.paramKey)
-                    Array.from(richEditorDom).map(jtem => {
-                        let _temp = paramValue
-                        let inputWidth = ''
-                        console.log('paramValue: ', paramValue)
-                        if (!paramValue && this.currentKey.emptyTxt) {
-                            _temp = 'null'
-                            inputWidth = 100
-                        } else {
-                            inputWidth = _temp.length * 14
-                        }
-                        jtem.value = _temp
-                        jtem.className = paramKey
-                        jtem.setAttribute('value', _temp)
-                        jtem.style.width = `${inputWidth}px`
-                    })
-                    let inputDomList = ''
-                    if (this.detailRes.contractStatus == 6) {
-                        inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByTagName('input')
-                    } else {
-                        inputDomList = document.getElementsByClassName('approvalcontract-content-hidden')[0].getElementsByTagName('input')
-                    }
-                    // 页面合同上的所有键值对
+                    //
                     let tempObj = {}
-                    Array.from(inputDomList).map((item, index) => {
-                        // 签署字段不存在className
-                        if (!(item.className in tempObj) && item.className !== '') {
-                            // 拿this.contractKeyValueList这个取筛是因为之前以为是可以改字段的。
-                            // tempObj[item.className] = this.contractKeyValueList.filter(jtem => jtem.paramKey === item.className)
-                            tempObj[item.className] = JSON.parse(this.detailRes.contractFieldsList).filter(jtem => jtem.paramKey === item.className)
+                    let tempArr = []
+                    this.contractFieldsList.map(item => {
+                        let DomList = document.getElementsByClassName(domName)[0].getElementsByClassName(item.paramKey)
+                        // 筛选出页面上的键值对，可能会被删除
+                        if (DomList && DomList.length > 0) {
+                            // 页面合同上的所有键值对、签署字段不存在className
+                            if (!(item.paramKey in tempObj) && item.paramKey !== '') {
+                                tempObj[item.paramKey] = JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === item.paramKey)
+                            }
                         }
                     })
-                    console.log('tempObj: ', tempObj)
                     for (const key in tempObj) {
                         tempArr.push(tempObj[key][0])
                     }
@@ -611,19 +646,34 @@ export default {
                         // 修改对应的键值对里的值
                         if (item.paramKey === paramKey) {
                             item.paramValue = paramValue
-                        }/*  else {
-                                item.paramValue = Array.from(inputDomList).filter(jtem => jtem.className === item.paramKey)[0].value
-                            } */
+                        }
+                        // 把非必填且没值的标记清空
+                        if (item.required === false && !item.paramValue) {
+                            let tDom = document.getElementsByClassName(domName)[0].getElementsByClassName(item.paramKey)
+                            tDom[0].innerHTML = ''
+                        }
+                    })
+
+                    /* if (this.detailRes.contractStatus == 6 && !operatorType) {
+                        let curHTML = this.$refs.RichEditor.value
+                        if (this.detailRes.contractContent !== curHTML) {
+                            this.$message({
+                                message: `合同内容发送修改请先保存更新`,
+                                type: 'error'
+                            })
+                            return
+                        }
+                    } */
+                    // div版合同,修改页面上的值
+                    let ryanList = document.getElementsByClassName(domName)[0].getElementsByClassName(this.currentKey.paramKey)
+                    Array.from(ryanList).map(jtem => {
+                        jtem.innerText = paramValue
                     })
                     // 通过dom生成最新的html
                     this.contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
                     this.fieldName = paramKey // 编辑字段
-                    let temp = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)
-                    if (temp.length == 0) {
-                        this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === this.currentKeyOriginal.paramKey)[0].paramValue// 编辑前内容, 修改了字段
-                    } else {
-                        this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue // 编辑前内容
-                    }
+                    // 编辑前内容
+                    this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
                     console.log({
                         'contractId': this.$route.query.id,
@@ -633,11 +683,10 @@ export default {
                         'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
                         'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                        'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
+                        'contractContent': this.contractContentInput,
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -648,44 +697,25 @@ export default {
                         'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
                         'contractContent': this.contractContentInput, // 拿input版的合同去提交。法务审核的时候需要用到。
                         'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': operatorType ? this.detailRes.contractFieldsList : JSON.stringify(tempArr) // 合同字段键值对
+                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
                     this.init()
                 }
             })
         },
-        async init () {
-            const res = await getContractsContent({ contractId: this.$route.query.id })
-            if (res) {
-                this.detailRes = res.data
-                this.contractContentDiv = res.data.contractContent // Div版的合同
-                this.contractContentInputHidden = res.data.contractContent // input版的合同
-                this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
-                this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
-                console.log('this.detailRes.contractFieldsList', JSON.parse(this.detailRes.contractFieldsList))
-                this.$nextTick(() => {
-                    // TODO：dataset.paramname 可不填项
-                    // 法务审核初始化
-                    if (this.detailRes.contractStatus == 6) {
-                        let inputDomList = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('input')
-                        if (inputDomList.length == 0) return
-                        this.firstKsy = inputDomList[0].className
-                        if (!this.currentKey) {
-                            // 保存后不会更新左侧字段
-                            this.currentKey = this.contractFieldsList.filter(item => item.paramKey === this.firstKsy)[0]
-                        }
-                        this.currentKeyOriginal = JSON.parse(JSON.stringify(this.currentKey))
-                        Array.from(inputDomList).map((item, index) => {
-                            let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
-                            if (item.className) {
-                                item.onclick = (event) => {
-                                    this.currentKey = { ...fields }
-                                    this.currentKeyOriginal = { ...fields }
-                                    this.$refs['ruleForm'].resetFields()
-                                }
-                            }
-                        })
-                        let imgDom = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByTagName('img')
+        domBindMethods () {
+            let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
+            this.$nextTick(() => {
+                // this.$refs.RichEditor.value  纯html
+                this.firstKsy = this.contractFieldsList[0].paramKey
+                if (!this.currentKey) {
+                    // 保存后不会更新左侧字段
+                    this.currentKey = this.contractFieldsList.filter(item => item.paramKey === this.firstKsy)[0]
+                }
+                // 拿键值对遍历
+                this.contractFieldsList.map(item => {
+                    if (item.inputStyle && item.inputStyle == 9) {
+                        let imgDom = document.getElementsByClassName(domName)[0].getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
                             item.onclick = (event) => {
                                 this.currentKey = {
@@ -696,63 +726,93 @@ export default {
                                     paramName: event.target.dataset.name,
                                     imgIndex: event.target.dataset.index
                                 }
+                                console.log('imgclick this.currentKey', this.currentKey)
                             }
                         })
                     } else {
-                        // 分财、风控审核初始化
-                        let inputDomList = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('input')
-                        if (inputDomList.length == 0) return
-                        this.firstKsy = inputDomList[0].className
-                        if (!this.currentKey) {
-                            // 保存后不会更新左侧字段
-                            this.currentKey = this.contractFieldsList.filter(item => item.paramKey === this.firstKsy)[0]
-                        }
-                        this.currentKeyOriginal = JSON.parse(JSON.stringify(this.currentKey))
-                        Array.from(inputDomList).map((item, index) => {
-                            item.outerHTML = `<span class="${item.className}" contenteditable="false" style="word-break: break-all;display:inline;color:rgb(255, 122, 69);cursor: pointer;">${(item.dataset && item.dataset.paramname && item.value == 'null') ? item.dataset.paramname : item.value}</span>`
-
-                            // 赋值初始值
-                            let fields = this.originalContentFieldsList.filter(jtem => jtem.paramKey === item.className)[0]
-                            // 给div绑定事件
-                            let doms = document.getElementsByClassName('approvalcontract-content')[0].getElementsByClassName(item.className)
-                            Array.from(doms).map(jtem => {
+                        // 通过键值对里的key查找对应的dom
+                        let DomList = document.getElementsByClassName(domName)[0].getElementsByClassName(item.paramKey)
+                        if (DomList && DomList.length > 0) {
+                            Array.from(DomList).map((jtem, index) => {
+                                if (jtem.dataset && jtem.dataset.paramname && !jtem.innerText) {
+                                    jtem.innerText = jtem.dataset.paramname
+                                }
+                                // console.log('jtem: ', jtem.tagName)
+                                let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
+                                // 遍历dom添加点击事件
                                 jtem.onclick = (event) => {
                                     this.currentKey = { ...fields, event }
-                                    if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
-                                        console.log('this.currentKey.paramValuexxxxxxx: ', this.currentKey.paramValue)
-                                        this.currentKey.paramValue = event.target.innerText // 多行文本反显使用
-                                    }
-                                    if (item.dataset && item.dataset.paramname) {
-                                        this.currentKey.emptyTxt = item.dataset.paramname // 非必填，反显{#字段名#}使用
-                                    }
-                                    this.currentKeyOriginal = { ...fields, event }
+                                    console.log('this.currentKeyxxx: ', this.currentKey)
+                                    // this.currentKeyOriginal = { ...fields }
                                     this.$refs['ruleForm'].resetFields()
-                                    console.log('this.currentKey: ', this.currentKey)
+                                    // 多行文本反显使用
+                                    if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                                        this.currentKey.paramValue = event.target.innerText
+                                    }
+                                    // this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
+                                    // console.log(document.queryCommandValue('ForeColor'))
                                 }
+                                // jtem.onselectstart = () => {
+                                //     return false
+                                // }
                             })
-                        })
-                        // img
-                        let imgDom = document.getElementsByClassName('approvalcontract-content')[0].getElementsByTagName('img')
-                        imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
-                            item.onclick = (event) => {
-                                this.currentKey = {
-                                    required: true,
-                                    inputStyle: 9,
-                                    paramKey: event.target.dataset.key,
-                                    paramValue: event.target.currentSrc,
-                                    paramName: event.target.dataset.name,
-                                    imgIndex: event.target.dataset.index
-                                }
-                            }
-                        })
+                        }
                     }
                 })
-            }
+                /* if (this.detailRes.contractStatus == 6) {
+                    document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].addEventListener('keydown', this.KeyDown, false)
+                } */
+            })
+        },
+        async init () {
+            const res = await getContractsContent({ contractId: this.$route.query.id })
+            this.detailRes = res.data
+            this.contractContentDiv = res.data.contractContent // Div版的合同
+            // this.contractContentInputHidden = res.data.contractContent // input版的合同
+            this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
+            this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            /* if (this.detailRes.contractStatus == 6) {
+                this.$nextTick(() => {
+                    this.contractFieldsList.map(item => {
+                        let curHTML = document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('w-e-text')[0].getElementsByClassName(item.paramKey)
+                        Array.from(curHTML).map(jtem => {
+                            // jtem.setAttribute('contenteditable', false)
+                            jtem.outerHTML = `&#8203;${jtem.outerHTML}&#8203;`
+                        })
+                    })
+                })
+            } */
+            this.domBindMethods()
         },
         getOperationContent (item) {
             // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
             const obj = JSON.parse(item.operationContent)
+            if (obj.fieldContent === '') {
+                return `<font>${obj.fieldDesc}</font>删除了<font>${obj.fieldOriginalContent}</font>内容变为空`
+            }
             return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
+        },
+        KeyDown () {
+            // 8删除
+            let dom = this.$refs.RichEditor.editor.selection.getSelectionContainerElem()
+            console.log(dom[0])
+            if (event.keyCode == 8 && dom && dom[0] && dom[0].dataset && (dom[0].dataset.paramname || dom[0].dataset.paramname == '')) {
+                this.$message({
+                    message: `字段禁止删除`,
+                    type: 'error'
+                })
+                event.preventDefault()
+            }
+            // 13回车
+            if (event.keyCode == 13) {
+                event.preventDefault()
+                setTimeout(() => {
+                    this.$refs.RichEditor.editor.cmd.do('insertHTML', '<p><br></p>')
+                }, 0)
+            }
+            // if (event.keyCode == 37 || event.keyCode == 38 || event.keyCode == 39 || event.keyCode == 40) {
+            //     event.returnValue = false
+            // }
         }
 
     },
@@ -760,6 +820,11 @@ export default {
         const { data } = await contractKeyValue(this.$route.query.contractTypeId)
         this.contractKeyValueList = data
         this.init()
+    },
+    destroyed () {
+        /* if (this.detailRes.contractStatus == 6) {
+            document.removeEventListener('keydown', this.KeyDown, false)
+        } */
     }
 }
 </script>
@@ -784,7 +849,7 @@ export default {
         min-width: 600px;
     }
     .approvalcontract-layout {
-        height: calc(100vh - 210px);
+        height: calc(100vh - 230px);
         position: relative;
         overflow: hidden;
         &-left {
@@ -917,6 +982,7 @@ export default {
             display: flex;
             justify-content: space-between;
             margin-top: 15px;
+            align-items: baseline;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;
@@ -949,9 +1015,12 @@ export default {
         padding-right: 20px;
         box-sizing: border-box;
     }
-
 }
-/deep/.w-e-text input{
-        cursor: pointer;
-    }
+/deep/.w-e-text input {
+    cursor: pointer;
+}
+/deep/.w-e-text p {
+    margin: unset;
+    line-height: unset;
+}
 </style>

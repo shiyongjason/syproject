@@ -148,6 +148,7 @@ import { contractKeyValue, getContractsContent, saveContent, approvalContent, ge
 import { interfaceUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 // api:https://www.tiny.cloud/docs/integrations/vue/
+// http://tinymce.ax-z.cn/general/basic-setup.php
 export default {
     name: 'approveContract',
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
@@ -157,10 +158,14 @@ export default {
                 menubar: false,
                 language: 'zh_CN',
                 skin_url: '/tinymce/skins/ui/oxide', // public目录下
-                // plugins: 'autoresize', // 表格 'table'
+                plugins: ['export'], // 表格 'table'
                 // 工具栏 表格 | table
-                toolbar: 'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent  | undo redo | link unlink image  | removeformat| table',
-                height: 504
+                toolbar: 'h1 h2 bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent  | undo redo | link unlink image  | removeformat| export ',
+                height: 504,
+                fontsize_formats: '11px 12px 14px 16px 18px 24px 36px 48px',
+                content_css: '/tinymce/skins/mycontent.css',
+                resize: false,
+                statusbar: false
                 // autoresize_on_init: false,
                 // branding: false,
                 // autoresize_overflow_padding: 0
@@ -262,12 +267,6 @@ export default {
         }),
         onchange () {
             // this.onShowUpdata()
-        },
-        getHeight () {
-            let h = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
-            this.domHeight = h || 500
-            console.log('this.domHeight: ', this.domHeight)
-            // return h || 500
         },
         checkField (rule, value, callback) {
             if (this.currentKey.required && this.currentKey.paramValue == '') {
@@ -571,7 +570,9 @@ export default {
                 'createBy': this.userInfo.employeeName,
                 'contractFieldsList': JSON.stringify(contractFieldsList) // 合同字段键值对
             })
-            this.init()
+            this.init(() => {
+                this.domBindMethods()
+            })
         },
         // operatorType 3 更新条款
         onSaveContent (operatorType = '') {
@@ -676,17 +677,18 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    this.init()
+                    this.init(() => {
+                        this.domBindMethods()
+                    })
                 }
             })
         },
         editorOnInit () {
             console.log('编辑器初始化完成domBindMethods')
             this.domBindMethods()
-            this.getHeight()
-            console.log(this.$refs.editor)
         },
         domBindMethods () {
+            console.log('domBindMethods')
             this.$nextTick(() => {
                 // this.$refs.RichEditor.value  纯html
                 this.firstKsy = this.contractFieldsList[0].paramKey
@@ -701,6 +703,7 @@ export default {
                 } else {
                     this.contractDocument = document.getElementsByClassName('approvalcontract-content')[0]
                 }
+                //
                 this.contractFieldsList.map(item => {
                     if (item.inputStyle && item.inputStyle == 9) {
                         let imgDom = this.contractDocument.getElementsByTagName('img')
@@ -746,15 +749,21 @@ export default {
                         // console.log(ifrom[0].contentWindow.document.getElementById('tinymce').innerHTML)
                     }
                 })
+                // 动态设置高度
+                if (this.detailRes.contractStatus == 6) {
+                    let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
+                    document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
+                }
             })
         },
-        async init () {
+        async init (cb) {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
             // this.contractContentInputHidden = res.data.contractContent // input版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            cb && cb()
         },
         getOperationContent (item) {
             // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
@@ -967,4 +976,5 @@ export default {
     margin: unset;
     line-height: unset;
 }
+
 </style>
