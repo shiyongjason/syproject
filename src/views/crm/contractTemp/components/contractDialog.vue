@@ -255,7 +255,6 @@ export default {
                             selectCode: this.signerTempForm.caId,
                             selectName: this.signerTempForm.paramGroupName
                         }
-                        console.log(123123, this.paramCA)
                     }
                 }
             })

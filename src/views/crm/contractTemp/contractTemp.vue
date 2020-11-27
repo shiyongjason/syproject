@@ -211,7 +211,7 @@ export default {
                 'quote', // 引用
                 'emoticon', // 表情
                 // 'image', // 插入图片
-                'table', // 表格
+                // 'table', // 表格
                 'undo', // 撤销
                 'redo' // 重复
             ],
@@ -575,6 +575,7 @@ export default {
             })
         },
         onCancelTemp () {
+            this.contractForm.signerSetting = [...this.busData, ...this.perData, ...this.platData]
             if (JSON.stringify(this.valid_form) == JSON.stringify(this.contractForm)) {
                 history.go(-1)
             } else {
@@ -660,7 +661,6 @@ export default {
             }
 
             this.contractForm.signerSetting = [...this.busData, ...this.perData, ...this.platData]
-            console.log(this.contractForm)
             if (!this.$route.query.id) {
                 try {
                     await addContractTemp(this.contractForm)
@@ -729,7 +729,6 @@ export default {
                                 selectName: val.value,
                                 selectCode: val.className
                             }
-                            console.log(val, this.targetObjs)
                             // this._keyValue = JSON.parse(JSON.stringify(keyValue))
                             this._keyValue = val.id
                             this.dialogVisible = true
