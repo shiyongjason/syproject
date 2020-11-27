@@ -249,6 +249,14 @@ export default {
                 } else {
                     await this.$refs.HAutocomplete.clearInput()
                     this.$refs.signerTempS.clearValidate()
+                    if (val == 1) {
+                    // 搜索下拉 回显数据
+                        this.paramCA = {
+                            selectCode: this.signerTempForm.caId,
+                            selectName: this.signerTempForm.paramGroupName
+                        }
+                        console.log(123123, this.paramCA)
+                    }
                 }
             })
         },
@@ -367,4 +375,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+ /deep/ .el-dialog .el-input{
+        width: 280px;
+    }
 </style>

@@ -67,7 +67,7 @@
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapActions, mapGetters } from 'vuex'
 import { enableTemp, disableTemp } from './api'
-import { clearCache, newCache } from '@/utils/index'
+// import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 export default {
     name: 'contractlist',
@@ -196,6 +196,7 @@ export default {
                         type: 'success'
                     })
                 } catch (error) {
+                    this.$message.close()
                     this.$confirm('不符合启用条件，请先编辑合同模版', '提示', {
                         confirmButtonText: '去编辑',
                         cancelButtonText: '暂不启用',
@@ -206,6 +207,7 @@ export default {
                     }).catch(() => {
 
                     })
+                    // return
                 }
             } else {
                 try {
@@ -247,19 +249,8 @@ export default {
     },
     activated () {
         this.searchList()
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('contractlist')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name != 'contractDetail' || to.name != 'contractTemp') {
-
-        } else {
-            clearCache('contractlist')
-        }
-        next()
     }
+
 }
 </script>
 <style scoped lang="scss">

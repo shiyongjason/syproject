@@ -1,9 +1,7 @@
 <template>
     <div class="page-body B2b">
+        <el-image ref="zoomImage" style="width: 0px; height:0px;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
         <div class="page-body-cont approvalcontract">
-            <!-- <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-            <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-        </component> -->
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
@@ -427,12 +425,16 @@ export default {
                     elImage: {
                         bind: {
                             style: 'width: 120px; height: 120px; border-radius: 7px;border: 1px solid #d9d9d9',
-                            src: this.currentKey.paramValue,
-                            fit: 'fit',
-                            previewSrcList: [this.currentKey.paramValue]
+                            src: this.currentKey.paramValue
+                            // fit: 'fit',
+                            // previewSrcList: [this.currentKey.paramValue]
                         },
                         on: {
-                            input: (val) => { console.log(val) }
+                            input: (val) => { console.log(val) },
+                            click: (event) => {
+                                console.log(this.$refs['zoomImage'])
+                                this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
+                            }
                         }
                     }
                 }
