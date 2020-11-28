@@ -219,7 +219,7 @@ export default {
                 ],
                 retailPrice: [
                     { required: true, message: '请设置零售价', trigger: 'blur' },
-                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/, }
+                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
                 'priceList[1].wxProductId': [
                     { required: true, message: '请设置商品ID', trigger: 'blur' },
@@ -227,7 +227,7 @@ export default {
                 ],
                 'priceList[1].price': [
                     { required: true, message: '请设置价格', trigger: 'blur' },
-                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/, }
+                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
                 'priceList[1].wxProductUrl': [
                     { required: true, message: '请设置商品链接', trigger: 'blur' }
@@ -238,7 +238,7 @@ export default {
                 ],
                 'priceList[2].price': [
                     { required: true, message: '请设置价格', trigger: 'blur' },
-                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/, }
+                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
                 'priceList[2].wxProductUrl': [
                     { required: true, message: '请设置商品链接', trigger: 'blur' }
@@ -249,14 +249,14 @@ export default {
                 ],
                 'priceList[0].price': [
                     { required: true, message: '请设置价格', trigger: 'blur' },
-                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/, }
+                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
                 'priceList[0].wxProductUrl': [
                     { required: true, message: '请设置商品链接', trigger: 'blur' }
                 ],
                 commissionRate: [
                     { required: true, message: '请设置佣金', trigger: 'blur' },
-                    { message: '请设置正确的佣金', trigger: 'change', pattern: /^(([1-9]\d{0,1})|0)(\.\d{0,2})?$/, }
+                    { message: '请设置正确的佣金', trigger: 'change', pattern: /^(([1-9]\d{0,1})|0)(\.\d{0,2})?$/ }
                 ],
                 productIcon: [
                     { required: true, message: '请设置商品列表图' }

@@ -32,6 +32,9 @@
                 <template slot="status" slot-scope="scope">
                     {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'审核不通过'}}
                 </template>
+                <template slot="updateTime" slot-scope="scope">
+                    {{scope.data.row.status===0?'--':scope.data.row.status===1?parseUpdateTime(scope.data.row):'--'}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <p class="colred title" @click="onEdit(scope.data.row)">
                         {{scope.data.row.status===0?'审核':scope.data.row.status===1?'查看奖励':'--'}}
@@ -39,8 +42,8 @@
                 </template>
             </basicTable>
             <el-dialog title="审核分销员" :modal-append-to-body=false :append-to-body=false
-                       :visible.sync="rightsDialogVisible" width="30%">
-                <div class="right-items">
+                       :visible.sync="rightsDialogVisible" width="30%" center>
+                <div class="right-items" >
                     <p>姓名：{{checkData.nickName}}</p>
                     <p>会员账号：{{checkData.phone}}</p>
                     <p>请确认该分销员信息后进行审核。</p>
@@ -57,6 +60,7 @@
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { updateDistribution } from '../api'
+import moment from 'moment'
 
 export default {
     name: 'merchantDistributionManage',
@@ -137,6 +141,9 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
+        },
+        parseUpdateTime (val) {
+            return moment(val.updateTime).format('YYYY-MM-DD HH:mm')
         }
     }
 }
@@ -175,7 +182,10 @@ export default {
         color: #ff7a45;
         cursor: pointer;
     }
-
+    .right-items  {
+        margin: 10px 0 30px 0;
+        line-height: 25px;
+    }
     /deep/ .el-dialog__body {
         padding-top: 10px;
     }
