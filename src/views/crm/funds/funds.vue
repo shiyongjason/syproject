@@ -71,9 +71,9 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{fundsData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane label="首付款" name="first">
+                    <el-tag size="medium" class="eltagtop">已筛选 {{fundsData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                         <template slot="no" slot-scope="scope">
                             <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
@@ -99,6 +99,7 @@
                     </basicTable>
                 </el-tab-pane>
                 <el-tab-pane label="服务费" name="second">
+                    <el-tag size="medium" class="eltagtop">已筛选 {{fundsData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                         <template slot="no" slot-scope="scope">
                             <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
@@ -124,6 +125,7 @@
                     </basicTable>
                 </el-tab-pane>
                 <el-tab-pane label="尾款" name="third">
+                    <el-tag size="medium" class="eltagtop">已筛选 {{fundsData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
                     <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                         <template slot="no" slot-scope="scope">
                             <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
@@ -160,8 +162,19 @@ export default {
     data () {
         return {
             queryParams: {},
-            activeName: '',
-            tableLabel: [],
+            activeName: 'first',
+            tableLabel: [
+                { label: '首付款流水号', prop: 'no', width: '150' },
+                { label: '所属分部', prop: 'no', width: '150' },
+                { label: '经销商', prop: 'no', width: '150' },
+                { label: '所属项目', prop: 'no', width: '150' },
+                { label: '支付单编号', prop: 'no', width: '150' },
+                { label: '金额', prop: 'no', width: '150' },
+                { label: '状态', prop: 'no', width: '150' },
+                { label: '应支付日期', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
+                { label: '支付成功时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
+                { label: '更新时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' }
+            ],
             fundsData: {}
         }
     },
