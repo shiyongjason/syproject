@@ -210,8 +210,8 @@ export default [
                 component: () => import('@/views/crm/purchaseOrder/purchaseOrder.vue')
             },
             {
-                path: 'payOrder',
-                name: 'payOrder',
+                path: 'paymentOrder',
+                name: 'paymentOrder',
                 meta: {
                     title: '支付单',
                     tagName: '支付单',
@@ -220,7 +220,7 @@ export default [
                     showMenuAs: '/goodwork/funds'
 
                 },
-                component: () => import('@/views/crm/payOrder/payOrder.vue')
+                component: () => import('@/views/crm/paymentOrder/paymentOrder.vue')
             },
             {
                 path: 'funds',
