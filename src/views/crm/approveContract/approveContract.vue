@@ -578,10 +578,10 @@ export default {
             let { paramName, paramKey, paramValue, required } = this.currentKey
             // if (!required && (paramValue === '' || paramValue === null)) return
             if (required && (paramValue === '' || paramValue === null)) {
-                this.$message({
-                    message: `${paramName}不能为空`,
-                    type: 'error'
-                })
+                // this.$message({
+                //     message: `${paramName}不能为空`,
+                //     type: 'error'
+                // })
             }
             // 多行文本。展示html。可空格可换行。
             if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
