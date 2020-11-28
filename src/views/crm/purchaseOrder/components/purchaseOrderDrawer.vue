@@ -218,6 +218,8 @@ export default {
         },
         handleChange (val) {
             console.log(val)
+        },
+        onClickRecord () {
         }
     },
     mounted () {
