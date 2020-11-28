@@ -10,7 +10,7 @@
                 </el-form-item>
                 <el-form-item label="招商品类：" prop="category">
                     <el-checkbox-group v-model="form.category">
-                        <el-checkbox v-for="item in categorys" :label="item.id" :key="item.id" name="type">{{ item.agentCategoryName }}</el-checkbox>
+                        <el-checkbox v-for="item in categorys" :label="item.categoryId" :key="item.categoryId" name="type">{{ item.categoryName }}</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
                 <div class="page-body-title">

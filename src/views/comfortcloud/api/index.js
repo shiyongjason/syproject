@@ -495,7 +495,7 @@ export function getCloudMerchantOrderList (params) {
 
 // 获取招商代理品类列表
 export function getCloudMerchantCategory () {
-    return axios.get(iotUrl + '/mall/agent-category/list')
+    return axios.get(iotUrl + '/mall/boss/category/all')
 }
 
 // 商品列表
