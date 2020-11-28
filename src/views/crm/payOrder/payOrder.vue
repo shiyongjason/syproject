@@ -17,9 +17,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">经销商：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
-                        </el-select>
+                        <el-input v-model="queryParams.userAccount" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -48,7 +46,7 @@
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -61,13 +59,13 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{payOrderData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="no" slot-scope="scope">
-                    <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
+                    <span class="colblue"> {{scope.data.row.no}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
+                    <h-button table >查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -76,6 +74,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     name: 'payOrder',
     data () {
@@ -96,15 +96,54 @@ export default {
                 { label: '申请时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '更新时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom'
                 }
-            ]
+            ],
+            payOrderData: []
         }
     },
+    computed: {
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.authenticationEndTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    let beginDateVal = this.queryParams.authenticationStartTime
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime()
+                    }
+                }
+            }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
+    },
     methods: {
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.onQuery()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.onQuery()
+        },
         onQuery () {
 
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
+        },
+        onChooseDep () {
+        },
+        restDrawer () {
+
         }
     },
     mounted () {

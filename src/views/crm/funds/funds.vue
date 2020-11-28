@@ -71,37 +71,117 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
-                <template slot="no" slot-scope="scope">
-                    <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
-                </template>
-                <template slot="userName" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
-                </template>
-                <template slot="areaname" slot-scope="scope">
-                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
-                </template>
-                <template slot="companyType" slot-scope="scope">
-                    {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
-                </template>
-                <template slot="customerType" slot-scope="scope">
-                    {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
-                </template>
-                <template slot="isAuthentication" slot-scope="scope">
-                    <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
-                </template>
-                <template slot="action" slot-scope="scope">
-                    <h-button table @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
-                </template>
-            </basicTable>
+            <el-tag size="medium" class="eltagtop">已筛选 {{fundsData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
+            <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="首付款" name="first">
+                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
+                        <template slot="no" slot-scope="scope">
+                            <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
+                        </template>
+                        <template slot="userName" slot-scope="scope">
+                            <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                        </template>
+                        <template slot="areaname" slot-scope="scope">
+                            {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                        </template>
+                        <template slot="companyType" slot-scope="scope">
+                            {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
+                        </template>
+                        <template slot="customerType" slot-scope="scope">
+                            {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                        </template>
+                        <template slot="isAuthentication" slot-scope="scope">
+                            <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
+                        </template>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table>查看详情</h-button>
+                        </template>
+                    </basicTable>
+                </el-tab-pane>
+                <el-tab-pane label="服务费" name="second">
+                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
+                        <template slot="no" slot-scope="scope">
+                            <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
+                        </template>
+                        <template slot="userName" slot-scope="scope">
+                            <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                        </template>
+                        <template slot="areaname" slot-scope="scope">
+                            {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                        </template>
+                        <template slot="companyType" slot-scope="scope">
+                            {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
+                        </template>
+                        <template slot="customerType" slot-scope="scope">
+                            {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                        </template>
+                        <template slot="isAuthentication" slot-scope="scope">
+                            <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
+                        </template>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table>查看详情</h-button>
+                        </template>
+                    </basicTable>
+                </el-tab-pane>
+                <el-tab-pane label="尾款" name="third">
+                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
+                        <template slot="no" slot-scope="scope">
+                            <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
+                        </template>
+                        <template slot="userName" slot-scope="scope">
+                            <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                        </template>
+                        <template slot="areaname" slot-scope="scope">
+                            {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                        </template>
+                        <template slot="companyType" slot-scope="scope">
+                            {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
+                        </template>
+                        <template slot="customerType" slot-scope="scope">
+                            {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                        </template>
+                        <template slot="isAuthentication" slot-scope="scope">
+                            <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
+                        </template>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table>查看详情</h-button>
+                        </template>
+                    </basicTable>
+                </el-tab-pane>
+            </el-tabs>
+
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'funds'
+    name: 'funds',
+    data () {
+        return {
+            queryParams: {},
+            activeName: '',
+            tableLabel: [],
+            fundsData: {}
+        }
+    },
+    methods: {
+        handleClick () {},
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.onQuery()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.onQuery()
+        },
+        onQuery () {
+
+        },
+        onReset () {
+            this.queryParams = { ...this.queryParamsTemp }
+        }
+    }
 }
 </script>
 
