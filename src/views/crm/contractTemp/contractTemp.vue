@@ -636,7 +636,7 @@ export default {
                 //     })
                 //     return
                 // }
-                if (!document.getElementById('platform_sign')) {
+                if (!document.getElementsByClassName('platform_sign')) {
                     this.$message({
                         message: '请插入一处平台签署区',
                         type: 'warning'
