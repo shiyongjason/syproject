@@ -69,14 +69,41 @@
                 </template>
             </div>
         </el-form>
-        <el-dialog :title="approveTitle" :visible.sync="approveVisible" width="30%" :before-close="onColseApprove" :modal=false :close-on-click-modal=false>
-            <el-form ref="approveDailg" :model="approvedialgForm" :rules="spproveRules" label-width="100px">
+        <el-dialog :title="approveTitle" :visible.sync="approveVisible" width="50%" :before-close="onColseApprove" :modal=false :close-on-click-modal=false>
+            <el-form ref="approveDailg" :model="approvedialgForm" :rules="spproveRules" label-width="180px">
                 <el-form-item :label="approveTitle+'结果：'" prop="submitStatus">
                     <el-radio-group v-model="approvedialgForm.submitStatus">
                         <el-radio :label=2>通过</el-radio>
                         <el-radio :label=3>不通过</el-radio>
                     </el-radio-group>
                 </el-form-item>
+                <template v-if="this.status == 11 && approvedialgForm.submitStatus == 2">
+                    <el-form-item label="执行费率（银行承兑）：" prop="submitStatus">
+                        <el-input>
+                             <template slot="suffix">%</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="执行费率（银行转账）：" prop="submitStatus">
+                        <el-input>
+                             <template slot="suffix">%</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="最大采购总额：" prop="submitStatus">
+                        <el-input>
+                             <template slot="suffix">元</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="预付款比例：" prop="submitStatus">
+                        <el-input>
+                             <template slot="suffix">%</template>
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="剩余货款支付周期：" prop="submitStatus">
+                        <el-input>
+                             <template slot="suffix">个月</template>
+                        </el-input>
+                    </el-form-item>
+                </template>
                 <el-form-item label="说明：" prop="remark">
                     <el-input type="textarea" placeholder="请输入说明" v-model.trim="approvedialgForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
@@ -281,12 +308,14 @@ export default {
         }
     }
 }
-/deep/.el-form {
-    padding: 0;
-}
-/deep/.el-form-item__content {
-    line-height: 24px;
-}
+// TODO: 这个导致弹出层最后一个form-item和底部之间没有空隙
+// /deep/.el-form {
+//     padding: 0;
+// }
+// TODO: 这个样式造成通过不通过按钮对齐有问题，看看删除会不会影响其他样式
+// /deep/.el-form-item__content {
+//     line-height: 24px;
+// }
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;

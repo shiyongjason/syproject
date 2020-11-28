@@ -187,6 +187,7 @@ export const CRM_GOODWORK_IMPORT = 109123
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
+export const CRM_GOODWORK_CLOSE = 109214 // 合作关闭
 
 // 好橙工 申请列表
 export const CRM_APPLY_ASSIGN = 109301 // 分配
