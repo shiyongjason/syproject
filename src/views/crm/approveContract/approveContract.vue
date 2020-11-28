@@ -702,16 +702,19 @@ export default {
                     if (item.inputStyle && item.inputStyle == 9) {
                         let imgDom = this.contractDocument.getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
-                            item.onclick = (event) => {
-                                this.currentKey = {
-                                    required: true,
-                                    inputStyle: 9,
-                                    paramKey: event.target.dataset.key,
-                                    paramValue: event.target.currentSrc,
-                                    paramName: event.target.dataset.name,
-                                    imgIndex: event.target.dataset.index
+                            if (item.className != 'platform_sign') {
+                                item.onclick = (event) => {
+                                    console.log(event)
+                                    this.currentKey = {
+                                        required: true,
+                                        inputStyle: 9,
+                                        paramKey: event.target.dataset.key,
+                                        paramValue: event.target.currentSrc,
+                                        paramName: event.target.dataset.name,
+                                        imgIndex: event.target.dataset.index
+                                    }
+                                    console.log('imgclick this.currentKey', this.currentKey)
                                 }
-                                console.log('imgclick this.currentKey', this.currentKey)
                             }
                         })
                     } else {
