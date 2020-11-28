@@ -17,8 +17,8 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onSelectDep">
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -53,8 +53,8 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onChooseDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onSelectStatus">
+                            <el-option :label="1" :value="1" v-for="item in []" :key="1"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{businessData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{purchaseOrderData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="no" slot-scope="scope">
                     <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
@@ -121,7 +121,8 @@ export default {
                 { label: '状态', prop: 'isAuthentication', width: '120' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '更新时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: 'custom' }
-            ]
+            ],
+            purchaseOrderData: []
         }
     },
     components: {
@@ -156,6 +157,10 @@ export default {
         this.queryParamsTemp = { ...this.queryParams }
     },
     methods: {
+        onSelectDep () {
+        },
+        onSelectStatus () {
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.onQuery()
