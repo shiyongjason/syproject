@@ -194,6 +194,46 @@ export default [
 
                 },
                 component: () => import('@/views/crm/awardManage/awardManage.vue')
+            },
+
+            {
+                path: 'purchaseOrder',
+                name: 'purchaseOrder',
+                meta: {
+                    title: '采购单',
+                    tagName: '采购单',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/purchaseOrder'
+
+                },
+                component: () => import('@/views/crm/purchaseOrder/purchaseOrder.vue')
+            },
+            {
+                path: 'payOrder',
+                name: 'payOrder',
+                meta: {
+                    title: '支付单',
+                    tagName: '支付单',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/payOrder/payOrder.vue')
+            },
+            {
+                path: 'funds',
+                name: 'funds',
+                meta: {
+                    title: '资金',
+                    tagName: '资金',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/funds/funds.vue')
             }
         ]
     }

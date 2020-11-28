@@ -59,10 +59,10 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="()=>searchList(1)">
+                    <h-button type="primary" @click="onQuery">
                         查询
                     </h-button>
-                    <h-button @click="onRest">
+                    <h-button @click="onReset">
                         重置
                     </h-button>
                 </div>
@@ -153,6 +153,7 @@ export default {
         })
     },
     async mounted () {
+        this.queryParamsTemp = { ...this.queryParams }
     },
     methods: {
         handleSizeChange (val) {
@@ -188,7 +189,10 @@ export default {
             this.onQuery()
         },
         jumpPurchaseOrderDetail (id) {
-            this.$router.push({ path: '/b2b/account/accountManage', query: { orderNo: id } })
+            this.$router.push({ path: '/goodwork/purchaseOrderDetail', query: { orderNo: id } })
+        },
+        onReset () {
+            this.queryParams = { ...this.queryParamsTemp }
         }
     }
 }
