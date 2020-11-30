@@ -639,17 +639,27 @@ export default {
                             return
                         }
                     } */
+
                     // div版合同,修改页面上的值
                     let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
                     Array.from(ryanList).map(jtem => {
-                        jtem.innerText = paramValue
+                        if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                            let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
+                            newString = newString.replace(/_#_@/g, '<br/>')
+                            newString = newString.replace(/_@/g, '<br/>')
+                            newString = newString.replace(/\s/g, '&nbsp;')
+                            // paramValue = newString
+                            jtem.innerHTML = newString
+                        } else {
+                            jtem.innerText = paramValue
+                        }
                     })
                     // 通过dom生成最新的html
                     this.fieldName = paramKey // 编辑字段
                     // 编辑前内容
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
-                    this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+                    // this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
                     console.log({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -662,6 +672,7 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
+                    // return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -765,13 +776,24 @@ export default {
                 this.domBindMethods()
             }
         },
+        formatTxt (txt) {
+            if (txt) {
+                let newString = txt.replace(/\n/g, '_@').replace(/\r/g, '_#')
+                newString = newString.replace(/_#_@/g, '<br/>')
+                newString = newString.replace(/_@/g, '<br/>')
+                newString = newString.replace(/\s/g, '&nbsp;')
+                return newString
+            }
+            return ''
+        },
         getOperationContent (item) {
             // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
             const obj = JSON.parse(item.operationContent)
+
             if (obj.fieldContent === '') {
-                return `<font>${obj.fieldDesc}</font>删除了<font>${obj.fieldOriginalContent}</font>内容变为空`
+                return `<font>${obj.fieldDesc}</font>删除了<font>${this.formatTxt(obj.fieldOriginalContent)}</font>内容变为空`
             }
-            return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
+            return `<font>${obj.fieldDesc}</font>从<font>${this.formatTxt(obj.fieldOriginalContent)}</font>变为<font>${this.formatTxt(obj.fieldContent)}</font>`
         }
     },
     async beforeMount () {
