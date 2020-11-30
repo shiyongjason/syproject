@@ -1,6 +1,6 @@
 <template>
     <div class="page-body B2b">
-        <el-image ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
+        <el-image fit="contain" ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
@@ -415,8 +415,8 @@ export default {
                     elImage: {
                         bind: {
                             style: 'width: 120px; height: 120px; border-radius: 7px;border: 1px solid #d9d9d9',
-                            src: this.currentKey.paramValue
-                            // fit: 'fit',
+                            src: this.currentKey.paramValue,
+                            fit: 'cover'
                             // previewSrcList: [this.currentKey.paramValue]
                         },
                         on: {
@@ -557,8 +557,6 @@ export default {
                     }
                 }
             })
-            // let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
-            // let contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -597,6 +595,7 @@ export default {
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
+                return
             }
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -639,17 +638,27 @@ export default {
                             return
                         }
                     } */
+
                     // div版合同,修改页面上的值
                     let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
                     Array.from(ryanList).map(jtem => {
-                        jtem.innerText = paramValue
+                        if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                            let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
+                            newString = newString.replace(/_#_@/g, '<br/>')
+                            newString = newString.replace(/_@/g, '<br/>')
+                            newString = newString.replace(/\s/g, '&nbsp;')
+                            // paramValue = newString
+                            jtem.innerHTML = newString
+                        } else {
+                            jtem.innerText = paramValue
+                        }
                     })
                     // 通过dom生成最新的html
                     this.fieldName = paramKey // 编辑字段
                     // 编辑前内容
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
-                    this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+                    // this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
                     console.log({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -765,13 +774,19 @@ export default {
                 this.domBindMethods()
             }
         },
-        getOperationContent (item) {
-            // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
-            const obj = JSON.parse(item.operationContent)
-            if (obj.fieldContent === '') {
-                return `<font>${obj.fieldDesc}</font>删除了<font>${obj.fieldOriginalContent}</font>内容变为空`
+        formatTxt (txt) {
+            if (txt) {
+                let newString = txt.replace(/\n/g, '_@').replace(/\r/g, '_#')
+                newString = newString.replace(/_#_@/g, '<br/>')
+                newString = newString.replace(/_@/g, '<br/>')
+                newString = newString.replace(/\s/g, '&nbsp;')
+                return newString
             }
-            return `<font>${obj.fieldDesc}</font>从<font>${obj.fieldOriginalContent}</font>变为<font>${obj.fieldContent}</font>`
+            return ''
+        },
+        getOperationContent (item) {
+            const obj = JSON.parse(item.operationContent)
+            return `<font>${obj.fieldDesc}</font>从<font>${this.formatTxt(obj.fieldOriginalContent)}</font>变为<font>${this.formatTxt(obj.fieldContent)}</font>`
         }
     },
     async beforeMount () {
