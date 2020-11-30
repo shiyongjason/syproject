@@ -1,6 +1,6 @@
 <template>
     <div class="page-body B2b">
-        <el-image ref="zoomImage" style="width: 0px; height:0px;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
+        <el-image ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
@@ -341,6 +341,9 @@ export default {
                                 if (_this.currentKey.paramKey == 'supplier_prepay_form') {
                                     return [{ value: '银行转帐', label: '银行转帐' }, { value: '银行承兑汇票', label: '银行承兑汇票' }]
                                 }
+                                if (_this.currentKey.paramKey == 'purch_order_purch_batch' || _this.currentKey.paramKey == 'purch_batch') {
+                                    return [{ value: '一次性采购', label: '一次性采购' }, { value: '分批采购', label: '分批采购' }]
+                                }
                             })(this)
                         },
                         on: {
@@ -574,28 +577,26 @@ export default {
         },
         // operatorType 3 更新条款
         onSaveContent (operatorType = '') {
-            // todo 可替换成空
             let { paramName, paramKey, paramValue, required } = this.currentKey
             // if (!required && (paramValue === '' || paramValue === null)) return
             if (required && (paramValue === '' || paramValue === null)) {
-                // this.$message({
-                //     message: `${paramName}不能为空`,
-                //     type: 'error'
-                // })
+                this.$refs['ruleForm'].resetFields()
+                this.$message({
+                    message: `${paramName}不能为空`,
+                    type: 'error'
+                })
             }
             // 多行文本。展示html。可空格可换行。
-            if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+            /* if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
                 let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
                 newString = newString.replace(/_#_@/g, '<br/>')
                 newString = newString.replace(/_@/g, '<br/>')
                 newString = newString.replace(/\s/g, '&nbsp;')
                 paramValue = newString
-                // this.currentKey.paramValue = textarea.innerHTML.replace(/(.*)<div>/, '$1<div style="display: initial;">')
-            }
+            } */
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
-                return
             }
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -648,6 +649,7 @@ export default {
                     // 编辑前内容
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
+                    this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
                     console.log({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -734,9 +736,9 @@ export default {
                                     // this.currentKeyOriginal = { ...fields }
                                     this.$refs['ruleForm'].resetFields()
                                     // 多行文本反显使用
-                                    if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
-                                        this.currentKey.paramValue = event.target.innerText
-                                    }
+                                    // if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                                    //     this.currentKey.paramValue = event.target.innerText
+                                    // }
                                 }
                             })
                         }
