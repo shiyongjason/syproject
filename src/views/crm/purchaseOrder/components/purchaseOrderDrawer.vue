@@ -1,6 +1,7 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="采购单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose" :wrapperClosable=false>
+        <el-drawer title="采购单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%'
+                   :before-close="handleClose" :wrapperClosable=false>
             <div class="info-content">
                 <div class="row-filed">
                     <p class="col-filed">
@@ -31,7 +32,7 @@
                         创建时间: 2019-06-11 16:32
                     </p>
                 </div>
-<!--                多种状态判断 -->
+                <!--                多种状态判断 -->
                 <div class="row-filed">
                     <p class="col-filed">
                         提交人：赵娟（15195954045）
@@ -40,15 +41,15 @@
                         提交时间：2019-06-11 16:32
                     </p>
                 </div>
-                 <div class="row-filed">
+                <div class="row-filed">
                     <p class="col-filed">
                         采购单金额： 12,000,000元
                     </p>
                     <p class="col-filed">
                         经销商预付款比例： 50%
                     </p>
-                     <p class="col-filed">
-                         剩余货款支付周期： 6月
+                    <p class="col-filed">
+                        剩余货款支付周期： 6月
                     </p>
                 </div>
                 <div class="row-filed">
@@ -114,54 +115,168 @@
                         更新人：赵娟（15195954045）
                     </p>
                 </div>
-<!--                多种状态判断-->
+                <!--                多种状态判断-->
                 <div class="row-filed">
                     <div class="jumbotron">
-                        <p class="jumbotron-title">订单变更：已确认！</p>
-                        <p>
-                            提交变更人：赵娟（15195954045） 提交变更时间：2019-06-11 16:32
-                        </p>
-                        <p>
-                            变更备注：江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
-                        </p>
-                        <p>
-                            确认变更人：赵娟（15195954045） 确认变更时间：2019-06-11 16:32
-                        </p>
-                        <p>
-                            <h-button table @click="onClickRecord">查看变更</h-button>
-                        </p>
+                        <div class="jumbotron-status">
+                            <img src="../../../../assets/images/good-job-status-icon.png" alt="">
+                        </div>
+                        <div>
+                            <p class="jumbotron-title">订单变更：已确认！</p>
+                            <p>
+                                提交变更人：赵娟（15195954045） 提交变更时间：2019-06-11 16:32
+                            </p>
+                            <p>
+                                变更备注：江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                            </p>
+                            <p>
+                                确认变更人：赵娟（15195954045） 确认变更时间：2019-06-11 16:32
+                            </p>
+                            <p>
+                                <h-button table @click="onClickRecord">查看变更</h-button>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="drawer-wrap">
-                <div class="drawer-wrap_btn">
-                    <div class="drawer-wrap_btn-flex">合同</div>
+            <div class="info-content">
+                <div class="info-title info-title-main-color">合同</div>
+                <div class="table-header">
+                    <div class="th">合同编号</div>
+                    <div class="th">合同名称</div>
+                    <div class="th"></div>
+                    <div class="th">合同状态</div>
+                    <div class="th">签约完成时间</div>
+                    <div class="th">发起人</div>
+                    <div class="th">操作</div>
                 </div>
                 <el-collapse v-model="activeNames" @change="handleChange">
-                    <el-collapse-item title="一致性 Consistency" name="1">
-                        <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-                        <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
+                    <el-collapse-item title="销售合同" name="1">
+                        <div class="table-body">
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                        </div>
                     </el-collapse-item>
-                    <el-collapse-item title="反馈 Feedback" name="2">
-                        <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-                        <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
+                    <el-collapse-item title="采购合同" name="2">
+                        <div class="table-body">
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                        </div>
                     </el-collapse-item>
-                    <el-collapse-item title="效率 Efficiency" name="3">
-                        <div>简化流程：设计简洁直观的操作流程；</div>
-                        <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                        <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
+                    <el-collapse-item title="担保合同" name="3">
+                        <div class="table-body">
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                        </div>
                     </el-collapse-item>
-                    <el-collapse-item title="可控 Controllability" name="4">
-                        <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
+                    <el-collapse-item title="应收账款质押合同" name="4">
+                        <div class="table-body">
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                        </div>
+                    </el-collapse-item>
+                    <el-collapse-item title="其他合同" name="5">
+                        <div class="table-body">
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                            <div class="tr">
+                                <div class="td">9999</div>
+                                <div class="td">这里是合同名称</div>
+                                <div class="td"><h-button table>生效中</h-button></div>
+                                <div class="td">签署完成</div>
+                                <div class="td">2019-06-11</div>
+                                <div class="td">赵娟</div>
+                                <div class="td"><h-button table>查看合同</h-button></div>
+                            </div>
+                        </div>
                     </el-collapse-item>
                 </el-collapse>
+                <div class="info-title info-title-main-color">支付单</div>
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true"
+                            :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
+                    <template slot="No" slot-scope="scope">
+                        <span :class="scope.data.row.No?'colgry':'colred'">{{ scope.data.row.No }}</span>
+                    </template>
+                </basicTable>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
-                <template slot="No" slot-scope="scope">
-                    <span :class="scope.data.row.No?'colgry':'colred'">{{scope.data.row.No}}</span>
-                </template>
-            </basicTable>
+            <div class="drawer-footer">
+                <div class="drawer-button">
+                    <h-button type="assist">打回补充</h-button>
+                    <h-button type="primary">审核通过</h-button>
+                    <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
+                </div>
+            </div>
         </el-drawer>
     </div>
 </template>
@@ -190,8 +305,7 @@ export default {
             ]
         }
     },
-    components: {
-    },
+    components: {},
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -220,6 +334,9 @@ export default {
             console.log(val)
         },
         onClickRecord () {
+        },
+        handleClose () {
+            this.$emit('backEvent')
         }
     },
     mounted () {
@@ -228,6 +345,186 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.info-content {
+    padding: 0 20px;
 
+    .row-filed {
+        display: flex;
+        padding: 10px;
+
+        .col-filed {
+            display: flex;
+            align-items: center;
+            padding-right: 30px;
+            font-size: 14px;
+            color: #333333;
+            font-weight: 400;
+            cursor: default;
+            line-height: 15px;
+        }
+    }
+    .info-title {
+        font-size: 15px;
+        color: #000000;
+        font-weight: 600;
+        padding-right: 20px;
+        line-height: 30px;
+    }
+
+    .info-status {
+        background: #FF7A45;
+        font-size: 12px;
+        color: #ffffff;
+        padding: 4px 14px;
+        border-radius: 4px;
+
+    }
+    .info-title-main-color {
+        color: #FF7A45;
+        line-height: 30px;
+        padding: 15px 0;
+    }
+    .jumbotron {
+        width: 100%;
+        background: #fffbe6;
+        border: 1px solid #ffe58f;
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 14px;
+        display: flex;
+        .jumbotron-status {
+            padding: 0 15px;
+        }
+        .jumbotron-status img{
+            width: 30px;
+        }
+        .jumbotron-title {
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0 10px;
+        }
+        p {
+            padding: 6px 0;
+            line-height: 16px;
+        }
+    }
+    .table-header {
+        display: flex;
+        height: 54px;
+        font-weight: 600;
+        font-size: 12px;
+        color: #000000;
+        background: #fafafa;
+        div {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+        >:nth-child(1){
+            width: 15%;
+        }
+        >:nth-child(2){
+            width: 15%;
+        }
+        >:nth-child(3){
+            width: 10%;
+        }
+        >:nth-child(4){
+            width: 10%;
+        }
+        >:nth-child(5){
+            width: 15%;
+        }
+        >:nth-child(6){
+            width: 10%;
+        }
+        >:nth-child(7){
+            width: 25%;
+        }
+    }
+    .table-body{
+        .tr{
+            display: flex;
+            padding: 10px;
+            border-bottom: 1px solid #EBEEF5;
+            div {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            >:nth-child(1){
+                width: 15%;
+            }
+            >:nth-child(2){
+                width: 15%;
+            }
+            >:nth-child(3){
+                width: 10%;
+            }
+            >:nth-child(4){
+                width: 10%;
+            }
+            >:nth-child(5){
+                width: 15%;
+            }
+            >:nth-child(6){
+                width: 10%;
+            }
+            >:nth-child(7){
+                width: 25%;
+            }
+        }
+        .tr:last-child{
+            border-bottom: none;
+        }
+    }
+}
+/deep/ .el-drawer__body {
+    overflow-y: scroll;
+}
+.drawer-content {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    form {
+        // flex: 1;
+        margin-bottom: 60px;
+        // border-bottom: 1px solid #e5e5e5;
+    }
+    .drawer-footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 12px 24px;
+        border-top: 1px solid #e5e5ea;
+        background: #fff;
+        z-index: 1000;
+        button {
+            flex: 1;
+        }
+        .drawer-button {
+            text-align: right;
+        }
+    }
+}
+/deep/.el-tabs__nav-scroll {
+    padding-left: 20px;
+}
+/deep/.el-drawer__header {
+    padding: 20px 20px;
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+/deep/.el-collapse-item__header{
+    font-weight: 600;
+    color: #000000;
+    font-size: 14px;
+}
 </style>

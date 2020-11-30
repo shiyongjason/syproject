@@ -17,8 +17,10 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onSelectDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []" :key="item.pkDeptDoc"></el-option>
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                                   @change="onSelectDep">
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []"
+                                       :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -43,17 +45,22 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime"
+                                        value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
+                                        :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime"
+                                        value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
+                                        :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true @change="onSelectStatus">
+                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                                   @change="onSelectStatus">
                             <el-option :label="1" :value="1" v-for="item in []" :key="1"></el-option>
                         </el-select>
                     </div>
@@ -67,32 +74,41 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{purchaseOrderData.total}} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
+            <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderData.total }} 项,采购单总金额：<b>88,888,888</b>元;
+            </el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
+                        @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
+                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=300
+                        :isShowIndex='true'>
                 <template slot="no" slot-scope="scope">
-                    <span class="colblue" @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{scope.data.row.no}}</span>
+                    <span class="colblue"
+                          @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{ scope.data.row.no }}</span>
                 </template>
                 <template slot="userName" slot-scope="scope">
-                    <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
+                    <span class="colblue"
+                          @click="onLinkship(scope.data.row.userName)"> {{ scope.data.row.userName || '-' }}</span>
                 </template>
                 <template slot="areaname" slot-scope="scope">
-                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName}}
+                    {{ scope.data.row.provinceName + scope.data.row.cityName + scope.data.row.countryName }}
                 </template>
                 <template slot="companyType" slot-scope="scope">
-                    {{scope.data.row.companyType==1?'体系内':scope.data.row.companyType==2?'体系外':'-'}}
+                    {{ scope.data.row.companyType == 1 ? '体系内' : scope.data.row.companyType == 2 ? '体系外' : '-' }}
                 </template>
                 <template slot="customerType" slot-scope="scope">
-                    {{scope.data.row.customerType==1?'黑名单':scope.data.row.customerType==2?'白名单':scope.data.row.customerType==3?'待审核':'-'}}
+                    {{ scope.data.row.customerType == 1 ? '黑名单' : scope.data.row.customerType == 2 ? '白名单' : scope.data.row.customerType == 3 ? '待审核' : '-' }}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
-                    <span :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{scope.data.row.isAuthentication==1?'已认证':'未认证'}}</span>
+                    <span
+                        :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{ scope.data.row.isAuthentication == 1 ? '已认证' : '未认证' }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onLookauthen(scope.data.row.companyCode)" v-if="hosAuthCheck(authen_detail)">查看详情</h-button>
+                    <h-button table>确认采购单</h-button>
+                    <h-button table>确认变更</h-button>
+                    <h-button table @click="openDetail">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
-        <purchaseOrderDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></purchaseOrderDrawer>
+        <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' ref="drawerDetail"></purchaseOrderDrawer>
     </div>
 </template>
 
@@ -108,7 +124,11 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
-            tableData: [],
+            tableData: [
+                {
+                    no: 'no'
+                }
+            ],
             paginationInfo: {},
             tableLabel: [
                 { label: '采购单编号', prop: 'no', width: '150' },
@@ -122,7 +142,8 @@ export default {
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '更新时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: 'custom' }
             ],
-            purchaseOrderData: []
+            purchaseOrderData: [],
+            drawer: false
         }
     },
     components: {
@@ -198,6 +219,12 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
+        },
+        openDetail () {
+            this.drawer = true
+        },
+        drawerBackEvent () {
+            this.drawer = false
         }
     }
 }
