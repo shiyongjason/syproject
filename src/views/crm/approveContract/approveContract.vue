@@ -557,8 +557,6 @@ export default {
                     }
                 }
             })
-            // let domName = this.detailRes.contractStatus == 6 ? 'approvalcontract-content-legal-affairs' : 'approvalcontract-content'
-            // let contractContentInput = this.detailRes.contractStatus == 6 ? document.getElementsByClassName(domName)[0].getElementsByClassName('w-e-text')[0].innerHTML : document.getElementsByClassName(domName)[0].innerHTML
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -597,6 +595,7 @@ export default {
             if (this.currentKey.inputStyle == 9) {
                 // 修改图片，图片必填
                 this.setImg()
+                return
             }
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
@@ -672,7 +671,6 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    // return
                     await saveContent({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
