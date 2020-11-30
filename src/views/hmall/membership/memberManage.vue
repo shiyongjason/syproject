@@ -21,8 +21,6 @@
                         <el-input v-model="queryParams.merchantName" placeholder="请输入商家" maxlength="50"></el-input>
                     </div>
                 </div>
-            </div>
-            <div class="query-cont-row">
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-col-title">
@@ -30,6 +28,9 @@
                         </el-cascader>
                     </div>
                 </div>
+            </div>
+            <div class="query-cont-row">
+
                 <div class="query-cont-col">
                     <div class="query-col-title">创建时间：</div>
                     <div class="query-col-input">
@@ -40,10 +41,19 @@
                         </el-date-picker>
                     </div>
                 </div>
-
+                <div class="query-cont-col">
+                    <div class="query-col-title">认证时间：</div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        </el-date-picker>
+                    </div>
+                </div>
             </div>
             <div class="query-cont-row">
-                <div class="query-cont-col">
+                 <div class="query-cont-col">
                     <div class="query-col-title">认证状态：</div>
                     <div class="query-col-input">
                         <el-select v-model="queryParams.isAuthentication">
@@ -57,13 +67,11 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">认证时间：</div>
+                    <div class="query-col-title">开户状态：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-select v-model="queryParams.openStatus">
+                            <el-option :label="item.txt" :value="item.val" v-for="(item,index) in openStatus.values()" :key=index></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -101,6 +109,10 @@
                 <template slot="isEnabled" slot-scope="scope">
                     {{scope.data.row.isEnabled==0?'禁用':'启用'}}
                 </template>
+
+                <template slot="openStatus" slot-scope="scope">
+                    <font :style="{color:openStatus.get(scope.data.row.openStatus)?openStatus.get(scope.data.row.openStatus).color:''}">{{openStatus.get(scope.data.row.openStatus)?openStatus.get(scope.data.row.openStatus).txt:'-'}}</font>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
                     <h-button table @click="onFindInfo(scope.data.row.companyCode,'member')">查看详情</h-button>
@@ -115,11 +127,20 @@ import drawerCom from './drawerCom'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { changeMemberState } from './api/index'
+const OPENSTATUS = new Map([
+    [ 0, { txt: '全部', color: '#606266', val: '' } ],
+    [ 1, { txt: '未开户', color: '#606266', val: 1 } ],
+    [ 2, { txt: '开户中', color: '#606266', val: 2 } ],
+    [ 3, { txt: '开户成功', color: '#67c23a', val: 3 } ],
+    [ 4, { txt: '开户失败', color: '#f00000', val: 4 } ]
+])
 export default {
     name: 'membershipMembermanage',
     data () {
         return {
+            openStatus: OPENSTATUS,
             queryParams: {
+                openStatus: '',
                 authenticationEndTime: '',
                 authenticationStartTime: '',
                 companyName: '',
@@ -142,6 +163,7 @@ export default {
                 { label: '所属商家', prop: 'merchantName', width: '150px' },
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
+                { label: '开户状态', prop: 'openStatus' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
                 {
                     label: '认证状态',

@@ -84,6 +84,8 @@
 import { templateDisable, templateEnable } from './api/index'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
+import { clearCache } from '@/utils/index'
+
 export default {
     name: 'spumange',
     data () {
@@ -112,7 +114,8 @@ export default {
                 { label: '状态', prop: 'isEnable' }
             ],
             rowKey: '',
-            multiSelection: []
+            multiSelection: [],
+            isPending: false
         }
     },
     computed: {
@@ -136,9 +139,9 @@ export default {
         this.searchList()
         this.copyParams = deepCopy(this.queryParams)
     },
-    // activated () {
-    //     this.searchList()
-    // },
+    activated () {
+        this.searchList()
+    },
     methods: {
         ...mapActions('category', [
             'findAllCategory'
@@ -166,15 +169,24 @@ export default {
             this.queryParams.categoryId = val[val.length - 1]
         },
         async searchList (val) {
-            if (val) {
-                this.queryParams.pageNumber = val
-            }
-            await this.findProductsTemplate(this.queryParams)
-            this.tableData = this.productsTemplateInfo.records
-            this.paginationInfo = {
-                pageNumber: this.productsTemplateInfo.current,
-                pageSize: this.productsTemplateInfo.size,
-                total: this.productsTemplateInfo.total
+            try {
+                if (this.isPending) {
+                    return
+                }
+                this.isPending = true
+                if (val) {
+                    this.queryParams.pageNumber = val
+                }
+                await this.findProductsTemplate(this.queryParams)
+                this.tableData = this.productsTemplateInfo.records
+                this.paginationInfo = {
+                    pageNumber: this.productsTemplateInfo.current,
+                    pageSize: this.productsTemplateInfo.size,
+                    total: this.productsTemplateInfo.total
+                }
+                this.isPending = false
+            } catch (error) {
+                this.isPending = false
             }
         },
         // 批量禁用，根据是否传递单独id区分批量
@@ -201,6 +213,7 @@ export default {
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'add' } })
         },
         onEditSpu (val) {
+            clearCache('spudetail')
             this.$router.push({ path: '/b2b/commodity/spudetail', query: { type: 'modify', spuTemplateId: val.id } })
         }
     }
