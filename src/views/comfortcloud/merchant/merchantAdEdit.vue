@@ -157,7 +157,7 @@ export default {
 
         async getCategory () {
             let { data } = await getCloudMerchantCategory()
-            this.categorys = data.data
+            this.categorys = data
         },
 
         async getAdDetail (id) {
