@@ -787,12 +787,7 @@ export default {
             return ''
         },
         getOperationContent (item) {
-            // fieldContent编辑内容 fieldName编辑字段 fieldOriginalContent编辑前内容
             const obj = JSON.parse(item.operationContent)
-
-            if (obj.fieldContent === '') {
-                return `<font>${obj.fieldDesc}</font>删除了<font>${this.formatTxt(obj.fieldOriginalContent)}</font>内容变为空`
-            }
             return `<font>${obj.fieldDesc}</font>从<font>${this.formatTxt(obj.fieldOriginalContent)}</font>变为<font>${this.formatTxt(obj.fieldContent)}</font>`
         }
     },
