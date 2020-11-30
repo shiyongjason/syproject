@@ -24,7 +24,8 @@
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange"></RichEditor>
+                        <RichEditor ref="RichEditor" v-model="contractForm.content"  :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
+                        </RichEditor>
                     </div>
                     <div class="contract-temp_txt">
                         <el-form label-width="200px">
@@ -269,7 +270,9 @@ export default {
     async mounted () {
         await this.onFindtempType()
         if (this.$route.query.id) {
-            this.findTempDetail(this.$route.query.id)
+            this.$nextTick(() => {
+                this.findTempDetail(this.$route.query.id)
+            })
         }
         this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
     },
@@ -304,6 +307,13 @@ export default {
         }),
         onchange () {
             this.domBindMethods()
+        },
+        onBlur () {
+            window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty()
+            console.log('===', this.$refs.RichEditor.editor)
+            // var $p = this.$refs.RichEditor.$txt.find('p').last()
+            // var p = $p.get(0)
+            // this.$refs.RichEditor.restoreSelectionByElem(p)
         },
         // querySearch (queryString, cb) {
         //     let restaurants = this.restaurants
@@ -389,8 +399,8 @@ export default {
                 return
             }
             let inputWidth = this.keyValue.paramName.length * 14
-            const _temp = `<span><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  
-            style="width:${inputWidth}px;"  value="${this.keyValue.paramName}" readonly></input></span>`
+            const _temp = `<p><input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}"  
+            style="width:${inputWidth}px;"  value="${this.keyValue.paramName}" readonly></input></p>`
             this.$refs.RichEditor.insertHtml(_temp)
             // document.getElementById(`${this.keyValue.paramKey}_${this.num}`).value = this.keyValue.paramName
 
@@ -794,6 +804,10 @@ export default {
 }
 /deep/.el-select-dropdown {
     z-index: 20000 !important;
+}
+/deep/.w-e-toolbar{
+    z-index: 500 !important;
+
 }
 /deep/.w-e-menu {
     z-index: 500 !important;
