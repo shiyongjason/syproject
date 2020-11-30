@@ -5,7 +5,7 @@
             <div class="ctilte"><span>合同详情</span>
                 <h-button type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1"><a :href="res.contractUrl" target="_blank">下载合同</a></h-button>
             </div>
-            <div v-html=vHtml v-if="vHtml" class='approvalcontract-content-layout'>
+            <div v-html="vHtml" v-if="vHtml" class='approvalcontract-content-layout'>
             </div>
             <div v-else-if="res.contractSignType==2">线下合同</div>
             <div v-else>暂无数据</div>
@@ -39,6 +39,10 @@ export default {
                     item.outerHTML = `<span class="${item.className}" contenteditable="false" style="display:inline;word-break: break-all;">${item.value}</span>`
                 })
             })
+        },
+        unescapeHTM (a) {
+            a = '' + a
+            return a.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
         }
     },
     async mounted () {
@@ -46,6 +50,7 @@ export default {
         this.res = data
         this.vHtml = data.contractContent
         if (this.vHtml) {
+            this.vHtml = this.unescapeHTM(this.vHtml)
             this.init()
         }
     },
