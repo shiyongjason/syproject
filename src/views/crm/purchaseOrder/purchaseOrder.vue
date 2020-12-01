@@ -102,19 +102,22 @@
                         :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{ scope.data.row.isAuthentication == 1 ? '已认证' : '未认证' }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table>确认采购单</h-button>
-                    <h-button table>确认变更</h-button>
+                    <h-button table @click="openDialog(dialogStatus.enter.status)">确认采购单</h-button>
+                    <h-button @click="openDialog(dialogStatus.changeEnter.status)" table>确认变更</h-button>
                     <h-button table @click="openDetail">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
         <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' ref="drawerDetail"></purchaseOrderDrawer>
+        <purchaseOrderChangeDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' ref="dialog"></purchaseOrderChangeDialog>
     </div>
 </template>
 
 <script>
 import purchaseOrderDrawer from '@/views/crm/purchaseOrder/components/purchaseOrderDrawer'
+import purchaseOrderChangeDialog from '@/views/crm/purchaseOrder/components/purchaseOrderChangeDialog'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import PurchaseOrderDialogStatus from './dialogStatus'
 
 export default {
     name: 'purchaseOrder',
@@ -143,11 +146,15 @@ export default {
                 { label: '更新时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: 'custom' }
             ],
             purchaseOrderData: [],
-            drawer: false
+            drawer: false,
+            dialogStatus: PurchaseOrderDialogStatus,
+            isOpen: false,
+            openStatus: PurchaseOrderDialogStatus.enter.status
         }
     },
     components: {
-        purchaseOrderDrawer
+        purchaseOrderDrawer,
+        purchaseOrderChangeDialog
     },
     computed: {
         pickerOptionsStart () {
@@ -225,11 +232,20 @@ export default {
         },
         drawerBackEvent () {
             this.drawer = false
+        },
+        openDialog (status) {
+            this.isOpen = true
+            this.openStatus = status
+        },
+        dialogBackEvent () {
+            this.isOpen = false
         }
     }
 }
 </script>
 
 <style scoped>
-
+.eltagtop {
+    margin-bottom: 10px;
+}
 </style>

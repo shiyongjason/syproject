@@ -217,7 +217,7 @@ export default [
                     tagName: '支付单',
                     isMenu: true,
                     icon: '',
-                    showMenuAs: '/goodwork/funds'
+                    showMenuAs: '/goodwork/paymentOrder'
 
                 },
                 component: () => import('@/views/crm/paymentOrder/paymentOrder.vue')

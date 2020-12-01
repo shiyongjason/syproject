@@ -199,5 +199,7 @@ export default {
 </script>
 
 <style scoped>
-
+.eltagtop {
+    margin-bottom: 10px;
+}
 </style>
