@@ -507,6 +507,18 @@ export default {
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
                 })
+                //
+                let res = this.contractFieldsList.filter(item => (!item.required && !item.paramValue))
+                if (res && res.length > 0) {
+                    res.map(item => {
+                        let resDom = this.contractDocument.getElementsByClassName(item.paramKey)
+                        if (resDom && resDom.length > 0) {
+                            Array.from(resDom).map(jtem => {
+                                jtem.outerHTML = ''
+                            })
+                        }
+                    })
+                }
             }
             this.$nextTick(async () => {
                 const query = {
@@ -518,6 +530,9 @@ export default {
                     approvalRemark: this.dialog.remark,
                     contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : ''
                 }
+                console.log('query: ', query)
+
+                return
                 await approvalContent(query)
                 this.$message({
                     message: `提交成功`,
