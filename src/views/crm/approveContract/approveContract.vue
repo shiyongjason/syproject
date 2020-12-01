@@ -276,7 +276,7 @@ export default {
         },
         checkField (rule, value, callback) {
             console.log('checkField')
-            if (this.currentKey.required && this.currentKey.paramValue == '') {
+            if (this.currentKey.required && !this.currentKey.paramValue) {
                 callback(new Error(`${this.currentKey.paramName}不能为空`))
                 return
             }
@@ -579,13 +579,13 @@ export default {
             console.log('operatorType: ', operatorType)
             let { paramName, paramKey, paramValue, required } = this.currentKey
             // if (!required && (paramValue === '' || paramValue === null)) return
-            if (required && (paramValue === '' || paramValue === null)) {
-                this.$refs['ruleForm'].resetFields()
-                this.$message({
-                    message: `${paramName}不能为空`,
-                    type: 'error'
-                })
-            }
+            // if (required && (paramValue === '' || paramValue === null)) {
+            //     this.$refs['ruleForm'].resetFields()
+            //     this.$message({
+            //         message: `${paramName}不能为空`,
+            //         type: 'error'
+            //     })
+            // }
             // 多行文本。展示html。可空格可换行。
             /* if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
                 let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
