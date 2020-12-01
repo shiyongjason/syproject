@@ -669,6 +669,13 @@ export default {
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
                     // this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+                    // dataset.paramname
+                    if (this.currentKey.paramname && !this.currentKey.paramValue) {
+                        let canEmptyDom = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
+                        Array.from(canEmptyDom).map(jtem => {
+                            jtem.innerHTML = this.currentKey.paramname
+                        })
+                    }
                     console.log({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -744,13 +751,13 @@ export default {
                         if (DomList && DomList.length > 0) {
                             Array.from(DomList).map((jtem, index) => {
                                 // 处理非必填值为空字段
-                                if (jtem.dataset && jtem.dataset.paramname && !jtem.innerText) {
-                                    jtem.innerText = jtem.dataset.paramname
-                                }
+                                // if (jtem.dataset && jtem.dataset.paramname && !jtem.innerText) {
+                                //     jtem.innerText = jtem.dataset.paramname
+                                // }
                                 let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
                                 // 遍历dom添加点击事件
                                 jtem.onclick = (event) => {
-                                    this.currentKey = { ...fields, event }
+                                    this.currentKey = { ...fields, event, paramname: jtem.dataset.paramname || '' }
                                     console.log('this.currentKeyxxx: ', this.currentKey)
                                     // this.currentKeyOriginal = { ...fields }
                                     this.$refs['ruleForm'].resetFields()
