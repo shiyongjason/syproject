@@ -285,7 +285,8 @@ export default {
                 let Reg = new RegExp(this.currentKey.checkRule)
                 console.log(!Reg.test(this.currentKey.paramValue))
                 if (!Reg.test(this.currentKey.paramValue)) {
-                    return callback(new Error(this.currentKey.checkNote || '格式不正确'))
+                    // return callback(new Error(this.currentKey.checkNote || '格式不正确'))
+                    return callback(new Error(`请输入正确的${this.currentKey.paramName}`))
                 } else {
                     callback()
                 }
