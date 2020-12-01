@@ -475,7 +475,7 @@ export default {
         openDialog (title, status) {
             if (this.detailRes.contractStatus == 6) {
                 let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi !== curHTML) {
+                if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
                     this.$message({
                         message: `内容已经被修改还没保存`,
                         type: 'error'
@@ -578,6 +578,13 @@ export default {
         onSaveContent (operatorType = '') {
             console.log('operatorType: ', operatorType)
             let { paramName, paramKey, paramValue, required } = this.currentKey
+            if (operatorType) {
+                let curHTML = this.contractDocument.innerHTML
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
+                    // 条款没有变化
+                    return
+                }
+            }
             // if (!required && (paramValue === '' || paramValue === null)) return
             // if (required && (paramValue === '' || paramValue === null)) {
             //     this.$refs['ruleForm'].resetFields()
@@ -904,7 +911,7 @@ export default {
             float: right;
             // overflow-y: scroll;
             height: 100%;
-    position: relative;
+            position: relative;
             h1 {
                 font-size: 20px;
                 margin-bottom: 10px;
@@ -995,34 +1002,44 @@ export default {
     margin: unset;
     line-height: unset;
 }
-.loader-css{
+.loader-css {
     position: absolute;
-  left: 50%;
-  top: 35%;
-  transform: translateX(-50%);
+    left: 50%;
+    top: 35%;
+    transform: translateX(-50%);
 }
 .loader {
-  border: 13px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 13px solid #3498db;
-  width: 60px;
-  height: 60px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-
+    border: 13px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 13px solid #3498db;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
 }
-.loader-txt{
- margin-top: 20px;
-  text-align: center;
+.loader-txt {
+    margin-top: 20px;
+    text-align: center;
 }
 
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
+::-webkit-scrollbar-thumb {
+        background-color: #d6d1d1 !important;
+    }
 </style>
