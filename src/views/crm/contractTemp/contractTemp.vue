@@ -309,8 +309,8 @@ export default {
             this.domBindMethods()
         },
         onBlur () {
-            window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty()
-            console.log('===', this.$refs.RichEditor.editor)
+            // window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty()
+            // console.log('===', this.$refs.RichEditor.editor)
             // var $p = this.$refs.RichEditor.$txt.find('p').last()
             // var p = $p.get(0)
             // this.$refs.RichEditor.restoreSelectionByElem(p)
