@@ -4,13 +4,13 @@
             <span>会员信息</span>
         </div>
         <div class="page-body-cont-top ">
-            <img style="height: 4rem " :src="this.$route.query.avatarUrl" >
+            <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)" >
             <div class="top-box">
-                <span>{{this.$route.query.nickName}}  </span>
+                <span>{{decodeURIComponent(this.$route.query.nickName)}}  </span>
                 <span>手机号 ：{{this.$route.query.phone}}  </span>
             </div>
             <div class="top-box-right" >
-                <span>注册时间： {{new Date(this.$route.query.createTime).toLocaleString()}}  </span>
+                <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}}  </span>
                 <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
                 <span style="margin-left: 1rem">会员编号： {{this.$route.query.uuid}}</span>
             </div>

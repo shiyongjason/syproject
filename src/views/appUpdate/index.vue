@@ -67,13 +67,13 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <!-- <el-form-item v-show='uploadAPK' label="上传apk：" label-width='120px'>
+                 <el-form-item  label="上传apk：" label-width='120px'>
                     <div>
                         <el-upload ref="upload" class="upload-demo" v-bind="uploadInfo" :on-remove="handleRemove" :before-upload='befUpload' :on-exceed='onExceed' :on-success='onSuccess'>
                             <el-button size="small" type="primary">点击上传</el-button>
                         </el-upload>
                     </div>
-                </el-form-item> -->
+                </el-form-item>
                 <el-form-item label="产品：" label-width='120px' prop='product'>
                     <el-select v-model="dueForm.product" clearable>
                         <el-option v-for="(item,index) in productType" :key="index" :label="item.label" :value="item.value">
