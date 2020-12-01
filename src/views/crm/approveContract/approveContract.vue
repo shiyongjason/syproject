@@ -530,9 +530,6 @@ export default {
                     approvalRemark: this.dialog.remark,
                     contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : ''
                 }
-                console.log('query: ', query)
-
-                return
                 await approvalContent(query)
                 this.$message({
                     message: `提交成功`,
@@ -591,7 +588,6 @@ export default {
         },
         // operatorType 3 更新条款
         onSaveContent (operatorType = '') {
-            console.log('operatorType: ', operatorType)
             let { paramName, paramKey, paramValue, required } = this.currentKey
             if (operatorType) {
                 let curHTML = this.contractDocument.innerHTML
@@ -624,8 +620,6 @@ export default {
             }
             this.$refs.ruleForm.validate(async (valid) => {
                 if (valid) {
-                    console.log('进来')
-                    //
                     let tempObj = {}
                     let tempArr = []
                     this.contractFieldsList.map(item => {
