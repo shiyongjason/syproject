@@ -578,6 +578,13 @@ export default {
         onSaveContent (operatorType = '') {
             console.log('operatorType: ', operatorType)
             let { paramName, paramKey, paramValue, required } = this.currentKey
+            if (operatorType) {
+                let curHTML = this.contractDocument.innerHTML
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
+                    // 条款没有变化
+                    return
+                }
+            }
             // if (!required && (paramValue === '' || paramValue === null)) return
             // if (required && (paramValue === '' || paramValue === null)) {
             //     this.$refs['ruleForm'].resetFields()
