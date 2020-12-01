@@ -576,6 +576,7 @@ export default {
         },
         // operatorType 3 更新条款
         onSaveContent (operatorType = '') {
+            console.log('operatorType: ', operatorType)
             let { paramName, paramKey, paramValue, required } = this.currentKey
             // if (!required && (paramValue === '' || paramValue === null)) return
             if (required && (paramValue === '' || paramValue === null)) {
@@ -593,8 +594,9 @@ export default {
                 newString = newString.replace(/\s/g, '&nbsp;')
                 paramValue = newString
             } */
-            if (this.currentKey.inputStyle == 9) {
+            if (this.currentKey.inputStyle == 9 && operatorType == '') {
                 // 修改图片，图片必填
+                console.log('setImg')
                 this.setImg()
                 return
             }
@@ -650,7 +652,7 @@ export default {
                             newString = newString.replace(/\s/g, '&nbsp;')
                             // paramValue = newString
                             jtem.innerHTML = newString
-                        } else {
+                        } else if (this.currentKey.inputStyle != 9) { // fix 替换图片后修改条款把图片也保存了
                             jtem.innerText = paramValue
                         }
                     })
