@@ -592,7 +592,7 @@ export default {
         },
         // operatorType 3 更新条款
         onSaveContent (operatorType = '') {
-            let { paramName, paramKey, paramValue, required } = this.currentKey
+            let { paramKey, paramValue } = this.currentKey
             if (operatorType) {
                 let curHTML = this.contractDocument.innerHTML
                 if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
