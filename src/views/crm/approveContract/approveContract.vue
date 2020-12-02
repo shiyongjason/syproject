@@ -658,6 +658,8 @@ export default {
                             }
                         })
                         if (_keyValIncontract.length != this.keyValIncontract.length) {
+                            console.log('this.keyValIncontract: ', this.keyValIncontract)
+                            console.log('_keyValIncontract: ', _keyValIncontract)
                             let _tempClassName = []
                             let _tempClassTxt = ''
                             for (var i = 0; i < this.keyValIncontract.length; i++) {
@@ -773,6 +775,7 @@ export default {
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
                     this.showLoading = false
                     this.contractAfterApi = this.contractDocument.innerHTML
+                    this.keyValIncontract = []
                     let spanList = this.contractDocument.getElementsByTagName('span')
                     Array.from(spanList).map(item => {
                         if (item.dataset && item.dataset.inputstyle) {
