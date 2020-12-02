@@ -751,6 +751,7 @@ export default {
                                         imgIndex: event.target.dataset.index
                                     }
                                     console.log('imgclick this.currentKey', this.currentKey)
+                                    this.$refs['ruleForm'].resetFields()
                                 }
                             }
                         })
