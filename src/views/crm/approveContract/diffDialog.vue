@@ -128,7 +128,9 @@ export default {
         padding:10px;
         box-sizing: border-box;
         overflow-y: scroll;
-
+    #diff {
+        font-size: 14px;
+    }
     }
 }
 </style>

@@ -118,17 +118,20 @@ export default {
     &-left {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         overflow-y: scroll;
     }
     &-right {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         overflow-y: scroll;
-
+        #diff {
+        font-size: 14px;
     }
+    }
+
 }
 </style>

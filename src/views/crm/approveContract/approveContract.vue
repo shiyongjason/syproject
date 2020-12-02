@@ -33,7 +33,7 @@
                         <!-- else -->
                         <p class="setarea-key">{{currentKey.paramName}}：</p>
                         <p style="display: flex;justify-content: space-between;align-items: center;">
-                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'">
+                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
                                 <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                     <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
                                         <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
@@ -67,8 +67,8 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit"></editor>
-                            <!-- @onKeyUp="onchange"  -->
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp"></editor>
+                            <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
                         </div>
@@ -452,6 +452,8 @@ export default {
             if (this.detailRes.contractStatus == 6) {
                 let curHTML = this.contractDocument.innerHTML
                 if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
+                    console.log('curHTML', curHTML.replace(/\ufeff/g, ''))
+                    console.log('this.contractAfterApi: ', this.contractAfterApi)
                     this.$message({
                         message: `条款已被编辑，请先保存条款`,
                         type: 'error'
@@ -615,6 +617,8 @@ export default {
                     if (this.detailRes.contractStatus == 6 && !operatorType) {
                         let curHTML = this.contractDocument.innerHTML
                         if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
+                            console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
+                            console.log('this.contractAfterApi: ', this.contractAfterApi)
                             this.$message({
                                 message: `条款已被编辑，请先保存条款`,
                                 type: 'error'
@@ -624,7 +628,7 @@ export default {
                             return
                         }
                     }
-
+                    // return
                     // div版合同,修改页面上的值
                     let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
                     Array.from(ryanList).map(jtem => {
@@ -677,7 +681,6 @@ export default {
                                 message: `合同${_tempClassTxt}字段不可删除`,
                                 type: 'error'
                             })
-                            return
                         }
                     }
                     console.log({
@@ -720,7 +723,13 @@ export default {
             console.log('编辑器初始化完成domBindMethods')
             this.domBindMethods()
         },
-        domBindMethods () {
+        onKeyUp () {
+            // keyCode 91
+            if (event.keyCode == 91) {
+                this.domBindMethods('no')
+            }
+        },
+        domBindMethods (flag = '') {
             this.$nextTick(() => {
                 this.firstKsy = this.contractFieldsList[0].paramKey
                 if (!this.currentKey) {
@@ -772,7 +781,8 @@ export default {
                     }
                 })
                 // 动态设置高度
-                if (this.detailRes.contractStatus == 6) {
+                if (this.detailRes.contractStatus == 6 && flag == '') {
+                    console.log('设置')
                     let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
                     this.showLoading = false
