@@ -681,6 +681,7 @@ export default {
                                 message: `合同${_tempClassTxt}字段不可删除`,
                                 type: 'error'
                             })
+                            return
                         }
                     }
                     console.log({
@@ -777,6 +778,8 @@ export default {
                                     this.$refs['ruleForm'].resetFields()
                                 }
                             })
+                        } else {
+                            console.log('没找到的：', item.paramName)
                         }
                     }
                 })
