@@ -697,10 +697,10 @@ const actions = {
             total: data.total
         })
     },
-    async findCloudShopListCategory ({ commit }, params) {
-        const { data } = await Api.getCloudShopListCategory(params)
-        commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data.data)
-    },
+    // async findCloudShopListCategory ({ commit }, params) {
+    //     const { data } = await Api.getCloudShopListCategory(params)
+    //     commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data.data)
+    // },
     async findCloudMerchantShopCategoryList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantShopCategoryList(params)
         commit(cloud.GET_CLOUD_MERCHANT_SHOP_CATEGORY_LIST, data)
