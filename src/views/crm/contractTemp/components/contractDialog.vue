@@ -233,6 +233,13 @@ export default {
                 this.signerTempForm = { ...this.signerTempForm, ...form }
                 this.signerTempForm._signerDemand = this.signerTempForm.signerDemand.split(',')
                 this.vaild_form = deepCopy({ ...this.signerTempForm, ...form })
+                // 校验字段是否被删除
+                if (this.signerTempForm.paramId) {
+                    const isHasID = this.contart_arr.filter(val => val.id == this.signerTempForm.paramId).length > 0
+                    if (!isHasID) {
+                        this.signerTempForm.paramId = ''
+                    }
+                }
                 // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr.filter(val => val.signerType == this.signerTempForm.signerType)
             } else {

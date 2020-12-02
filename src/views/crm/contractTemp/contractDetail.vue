@@ -235,9 +235,7 @@ export default {
     margin-bottom: 10px;
 }
 .contract-temp_flex {
-    div {
-        width: 90%;
-    }
+
 }
 /deep/#editor {
     table {
