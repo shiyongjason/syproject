@@ -775,7 +775,7 @@ export default {
                     let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
                     this.showLoading = false
-                    this.contractAfterApi = this.contractDocument.innerHTML
+                    this.contractAfterApi = this.contractDocument.innerHTML.replace(/\ufeff/g, '')
                     this.keyValIncontract = []
                     let spanList = this.contractDocument.getElementsByTagName('span')
                     Array.from(spanList).map(item => {
