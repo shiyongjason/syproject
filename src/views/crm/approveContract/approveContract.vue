@@ -692,32 +692,34 @@ export default {
                             jtem.innerHTML = this.currentKey.paramname
                         })
                     }
-                    // 校验字段是否删除
-                    let spanList = this.contractDocument.getElementsByTagName('span')
-                    let _keyValIncontract = []
-                    Array.from(spanList).map(item => {
-                        if (item.dataset && item.dataset.inputstyle) {
-                            _keyValIncontract.push(item.className)
-                        }
-                    })
-                    if (_keyValIncontract.length != this.keyValIncontract.length) {
-                        let _tempClassName = []
-                        let _tempClassTxt = ''
-                        for (var i = 0; i < this.keyValIncontract.length; i++) {
-                            if (_keyValIncontract.indexOf(this.keyValIncontract[i]) === -1) {
-                                _tempClassName.push(this.keyValIncontract[i])
+                    // 法务审核校验字段是否有删除
+                    if (this.detailRes.contractStatus == 6) {
+                        let spanList = this.contractDocument.getElementsByTagName('span')
+                        let _keyValIncontract = []
+                        Array.from(spanList).map(item => {
+                            if (item.dataset && item.dataset.inputstyle) {
+                                _keyValIncontract.push(item.className)
                             }
+                        })
+                        if (_keyValIncontract.length != this.keyValIncontract.length) {
+                            let _tempClassName = []
+                            let _tempClassTxt = ''
+                            for (var i = 0; i < this.keyValIncontract.length; i++) {
+                                if (_keyValIncontract.indexOf(this.keyValIncontract[i]) === -1) {
+                                    _tempClassName.push(this.keyValIncontract[i])
+                                }
+                            }
+                            _tempClassName.map(ktem => {
+                                let resTemp = this.contractFieldsList.filter(item => item.paramKey == ktem)
+                                _tempClassTxt = _tempClassTxt + ' ' + resTemp[0].paramName + ' '
+                                console.log('_tempClassTxt: ', _tempClassTxt)
+                            })
+                            this.$message({
+                                message: `合同${_tempClassTxt}字段不可删除`,
+                                type: 'error'
+                            })
+                            return
                         }
-                        _tempClassName.map(ktem => {
-                            let resTemp = this.contractFieldsList.filter(item => item.paramKey == ktem)
-                            _tempClassTxt = _tempClassTxt + ' ' + resTemp[0].paramName + ' '
-                            console.log('_tempClassTxt: ', _tempClassTxt)
-                        })
-                        this.$message({
-                            message: `合同${_tempClassTxt}字段不可删除`,
-                            type: 'error'
-                        })
-                        return
                     }
                     console.log({
                         'contractId': this.$route.query.id,
