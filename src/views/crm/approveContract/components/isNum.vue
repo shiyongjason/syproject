@@ -1,10 +1,13 @@
 <template>
     <div>
-        <!-- 金额 %-->
+        <!-- 元 -->
         <el-input v-if="innerHtml=='元'" :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,1000000000)}" @blur="onBlur">
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
-        <el-input v-else  :value="money(value)" v-inputMAX="100"  v-bind="$attrs" @input="onInput" @blur="onBlur">
+        <!-- %.. -->
+        <!-- <el-input v-else  :value="money(value)" v-inputMAX="100"  v-bind="$attrs" @input="onInput" @blur="onBlur"> -->
+        <el-input v-else  :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,100)}" @blur="onBlur">
+
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
     </div>
@@ -46,7 +49,6 @@ export default {
             }
         },
         onInput (val, max) {
-            console.log('max: ', max)
             let num = this.isNum(val, 2)
             if (num && num.length > 0 && num == '.') {
                 num = ''
@@ -60,11 +62,19 @@ export default {
             console.log('num: ', num)
             if (max) {
                 if (Number(num) > max) {
-                    this.$message({
-                        message: `金额最大不能超过${this.money(max)}`,
-                        type: 'error'
-                    })
-                    return
+                    if (this.innerHtml == '元') {
+                        this.$message({
+                            message: `金额最大不能超过${this.money(max)}`,
+                            type: 'error'
+                        })
+                        return
+                    } else {
+                        this.$message({
+                            message: `最大不能超过${max}`,
+                            type: 'error'
+                        })
+                        return
+                    }
                 }
             }
             this.$emit('input', num)
