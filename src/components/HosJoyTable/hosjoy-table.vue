@@ -655,18 +655,6 @@ export default {
 .hosjoy-table >>> .el-table th {
     background: #f5f7fa;
 }
-.hosjoy-table >>> .el-table__empty-block {
-    position: relative;
-}
-.hosjoy-table >>> .el-table__empty-block .el-table__empty-text {
-    position: absolute;
-    top: 0;
-}
-.hosjoy-table >>> .emptylayout {
-    position: fixed;
-    transform: translateX(-50%);
-    width: auto;
-}
 .hosjoy-table >>> .el-table--fluid-height .el-table__fixed {
     bottom: 11px!important;
 }
