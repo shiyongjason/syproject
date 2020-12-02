@@ -3,11 +3,17 @@
         <div class="page-body-cont">
             <!-- contractSignType: 2线下  1线上 -->
             <div class="ctilte"><span>合同详情</span>
-                <div type="primary" class="btn-right"
-                v-if="res.contractStatus=='12'&&res.contractSignType==1"><a :href="res.contractUrl" target="_blank">下载合同</a></div>
+                <div type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1"><a :href="res.contractUrl" target="_blank">下载合同</a></div>
             </div>
-            <div v-html="vHtml" v-if="vHtml" class='approvalcontract-content-layout-css'>
+            <div class="loader-css" v-if="showLoading&&res.contractUrl">
+                <div class="loader"></div>
+                <div class="loader-txt">页面拼命加载中...</div>
             </div>
+            <iframe id="ifra" v-if="res.contractUrl" :src='res.contractUrl' width='100%' height='1000px' frameborder="0"></iframe>
+            <div class="el-image-css" v-else-if="res.attachementList&&res.attachementList.length>0&&res.contractSignType==2">
+                <el-image  v-for="(item,index) in res.attachementList" :key="index" fit="contain" ref="zoomImage"  :src="item.picUrl" :preview-src-list="[item.picUrl]"></el-image>
+            </div>
+            <div v-html="vHtml" v-else-if="vHtml" class='approvalcontract-content-layout-css'></div>
             <div v-else-if="res.contractSignType==2">线下合同</div>
             <div v-else>暂无数据</div>
             <div class="contract-fujian" v-if="res.attachementList&&res.attachementList.length>0&&res.contractSignType==2">
@@ -18,7 +24,6 @@
             </div>
         </div>
         <!---->
-
     </div>
 </template>
 <script>
@@ -28,7 +33,8 @@ export default {
     data () {
         return {
             vHtml: '',
-            res: ''
+            res: '',
+            showLoading: false
         }
     },
     methods: {
@@ -49,10 +55,34 @@ export default {
     async mounted () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.res = data
-        this.vHtml = data.contractContent
-        if (this.vHtml) {
-            this.vHtml = this.unescapeHTM(this.vHtml)
-            this.init()
+        if (!this.res.contractUrl && (!this.res.attachementList || this.res.attachementList.length == 0)) {
+            this.vHtml = data.contractContent
+            if (this.vHtml) {
+                this.vHtml = this.unescapeHTM(this.vHtml)
+                this.init()
+            }
+        }
+        if (this.res.contractUrl) {
+            this.$nextTick(() => {
+                this.showLoading = true
+                let _this = this
+                const iframe = document.querySelector('#ifra')
+                if (iframe.attachEvent) {
+                    iframe.attachEvent('onload', function () {
+                        console.log('iframe已加载完毕')
+                        setTimeout(() => {
+                            _this.showLoading = false
+                        }, 800)
+                    })
+                } else {
+                    iframe.onload = function () {
+                        console.log('iframe已加载完毕')
+                        setTimeout(() => {
+                            _this.showLoading = false
+                        }, 800)
+                    }
+                }
+            })
         }
     }/* ,
     async activated () {
@@ -66,9 +96,46 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.approvalcontract-content-layout-css{
+.loader-css {
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    transform: translateX(-50%);
+}
+.loader {
+    border: 13px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 13px solid #3498db;
+    width: 60px;
+    height: 60px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+.loader-txt {
+    margin-top: 20px;
+    text-align: center;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+.approvalcontract-content-layout-css {
     width: 1000px;
-    margin:0 auto
+    margin: 0 auto;
 }
 .ctilte {
     text-align: center;
@@ -86,7 +153,7 @@ export default {
 
     border-radius: 10px;
     width: 150px;
-    a{
+    a {
         color: #ffffff;
     }
 }
@@ -102,14 +169,19 @@ export default {
     text-align: center;
     margin-right: 3px;
 }
-.contract-fujian{
+.contract-fujian {
     margin-top: 20px;
     display: flex;
-    p{
+    p {
         margin-bottom: 5px;
-        a{
+        a {
             color: #ff7a45;
         }
     }
+}
+.el-image-css{
+    width: 1000px;
+    margin:0 auto;
+     text-align: center;
 }
 </style>
