@@ -40,7 +40,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData"  @pagination="searchList"
-             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='190' isAction
+             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction
                 :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
@@ -55,7 +55,7 @@
         <!---->
         <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :before-close="handleClose">
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data" @pagination="versionList"
-             :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total" isAction >
+             :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total"  isAction   >
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onShowTempdetail(scope.data.row.id)">查看</h-button>
                 </template>
@@ -89,18 +89,19 @@ export default {
             },
             copy_queryParams: {},
             tableLabel: [
-                { label: '合同模板编号', prop: 'templateNo' },
-                { label: '合同模版名称', prop: 'templateName' },
-                { label: '合同类型', prop: 'typeName' },
-                { label: '状态', prop: 'status', dicData: [{ value: 0, label: '已禁用' }, { value: 1, label: '已启用' }] },
-                { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
-                { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom' },
+                { label: '合同模板编号', prop: 'templateNo', width: '100' },
+                { label: '合同模版名称', prop: 'templateName', width: '200' },
+                { label: '合同类型', prop: 'typeName', width: '100' },
+                { label: '状态', prop: 'status', dicData: [{ value: 0, label: '已禁用' }, { value: 1, label: '已启用' }], width: '80' },
+                { label: '启用/禁用时间', prop: 'enableTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },
+                { label: '最近维护时间', prop: 'updateTime', displayAs: 'YYYY-MM-DD HH:mm:ss', sortable: 'custom', width: '200' },
                 {
                     label: '最近维护人',
                     prop: 'updateBy',
                     render: (h, scope) => {
                         return <span>{scope.row.updateBy} ({scope.row.updateAccount})</span>
-                    }
+                    },
+                    width: '200'
                 }
 
             ],
