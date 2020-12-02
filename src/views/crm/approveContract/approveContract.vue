@@ -230,16 +230,17 @@ export default {
             return 'multiFile'
         },
         inputStyleDom () {
+            let { paramKey, unit } = this.currentKey
             // 支付期限
-            if (this.currentKey.paramKey == 'pay_period_supplier') {
+            if (paramKey == 'pay_period_supplier') {
                 return 'isPositiveInt'
             }
             // 纯数字
-            if (this.currentKey.paramKey == 'supplier_account_number' || this.currentKey.paramKey == 'hosjoy_account_number' || this.currentKey.paramKey == 'regulatory_account_number' || this.currentKey.paramKey == 'dealer_controller_postal_code' || this.currentKey.paramKey == 'dealer_controller_postal_code_spouse') {
+            if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse') {
                 return 'isAllNum'
             }
             // 元 %
-            if (this.currentKey.unit) {
+            if (unit) {
                 return 'isNum'
             }
             return 'elInput'
