@@ -50,19 +50,20 @@ export default {
         }
     },
     methods: {
-        onShowDiff () {
-            this.diff_visible = true
-            // var diffBtn = document.getElementById('diffBtn')
+        forMat () {
+            let spanList = document.getElementById('oldT').getElementsByTagName('span')
+            let spanList2 = document.getElementById('newT').getElementsByTagName('span')
+            Array.from(spanList).map(item => {
+                if (item.dataset && item.dataset.mceStyle) {
+                    item.removeAttribute('data-mce-style')
+                }
+            })
+            Array.from(spanList2).map(item => {
+                if (item.dataset && item.dataset.mceStyle) {
+                    item.removeAttribute('data-mce-style')
+                }
+            })
             this.$nextTick(() => {
-                // let currentContentInput = document.getElementById('newT').getElementsByTagName('input')
-                // Array.from(currentContentInput).map((item, index) => {
-                //     item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
-                // })
-                // let lastContentInput = document.getElementById('oldT').getElementsByTagName('input')
-                // Array.from(lastContentInput).map((item, index) => {
-                //     item.outerHTML = `<span class="${item.className}" style="display:inline;color:rgb(255, 122, 69);">${item.value}</span>`
-                // })
-                // 对比
                 let oldT = document.getElementById('oldT').innerHTML
                 let newT = document.getElementById('newT').innerHTML
                 fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
@@ -70,6 +71,12 @@ export default {
                         this.diffHtml = res
                     }
                 })
+            })
+        },
+        onShowDiff () {
+            this.diff_visible = true
+            this.$nextTick(() => {
+                this.forMat()
             })
         },
         handleClose () {
@@ -118,17 +125,20 @@ export default {
     &-left {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         overflow-y: scroll;
     }
     &-right {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         overflow-y: scroll;
-
+        #diff {
+        font-size: 14px;
     }
+    }
+
 }
 </style>
