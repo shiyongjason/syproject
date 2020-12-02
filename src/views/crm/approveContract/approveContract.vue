@@ -74,7 +74,7 @@
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
                         </div>
                     </div>
-                    <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6">更新条款</h-button>
+                    <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6" :class="showShake?'shake':''">更新条款</h-button>
                     <div class="approvalcontract-btn">
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
@@ -158,6 +158,7 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            showShake: false,
             showLoading: true,
             editorInit: {
                 menubar: false,
@@ -232,7 +233,8 @@ export default {
                 ]
             },
             contractDocument: '',
-            contractAfterApi: ''
+            contractAfterApi: '',
+            keyValIncontract: []
 
         }
     },
@@ -477,9 +479,11 @@ export default {
                 let curHTML = this.contractDocument.innerHTML
                 if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
                     this.$message({
-                        message: `内容已经被修改还没保存`,
+                        message: `条款已被编辑，请先保存条款`,
                         type: 'error'
                     })
+                    this.showShake = true
+                    setTimeout(() => { this.showShake = false }, 1200)
                     return
                 }
             }
@@ -641,22 +645,25 @@ export default {
                         if (item.paramKey === paramKey) {
                             item.paramValue = paramValue
                         }
-                        // 把非必填且没值的标记清空
-                        if (item.required === false && !item.paramValue) {
+                        /* // 把非必填且没值的标记清空
+                        if (item.required === false && !item.paramValue && this.detailRes.contractStatus == 6) {
                             let tDom = this.contractDocument.getElementsByClassName(item.paramKey)
                             tDom[0].innerHTML = ''
-                        }
+                        } */
                     })
-                    /* if (this.detailRes.contractStatus == 6 && !operatorType) {
-                        let curHTML = this.$refs.RichEditor.value
-                        if (this.detailRes.contractContent !== curHTML) {
+                    // 法务修改字段触发
+                    if (this.detailRes.contractStatus == 6 && !operatorType) {
+                        let curHTML = this.contractDocument.innerHTML
+                        if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
                             this.$message({
-                                message: `合同内容发送修改请先保存更新`,
+                                message: `条款已被编辑，请先保存条款`,
                                 type: 'error'
                             })
+                            this.showShake = true
+                            setTimeout(() => { this.showShake = false }, 1200)
                             return
                         }
-                    } */
+                    }
 
                     // div版合同,修改页面上的值
                     let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
@@ -685,6 +692,33 @@ export default {
                             jtem.innerHTML = this.currentKey.paramname
                         })
                     }
+                    // 校验字段是否删除
+                    let spanList = this.contractDocument.getElementsByTagName('span')
+                    let _keyValIncontract = []
+                    Array.from(spanList).map(item => {
+                        if (item.dataset && item.dataset.inputstyle) {
+                            _keyValIncontract.push(item.className)
+                        }
+                    })
+                    if (_keyValIncontract.length != this.keyValIncontract.length) {
+                        let _tempClassName = []
+                        let _tempClassTxt = ''
+                        for (var i = 0; i < this.keyValIncontract.length; i++) {
+                            if (_keyValIncontract.indexOf(this.keyValIncontract[i]) === -1) {
+                                _tempClassName.push(this.keyValIncontract[i])
+                            }
+                        }
+                        _tempClassName.map(ktem => {
+                            let resTemp = this.contractFieldsList.filter(item => item.paramKey == ktem)
+                            _tempClassTxt = _tempClassTxt + ' ' + resTemp[0].paramName + ' '
+                            console.log('_tempClassTxt: ', _tempClassTxt)
+                        })
+                        this.$message({
+                            message: `合同${_tempClassTxt}字段不可删除`,
+                            type: 'error'
+                        })
+                        return
+                    }
                     console.log({
                         'contractId': this.$route.query.id,
                         // 合同审批角色 1：分财 2：风控 3：法务
@@ -697,21 +731,27 @@ export default {
                         'createBy': this.userInfo.employeeName,
                         'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                     })
-                    await saveContent({
-                        'contractId': this.$route.query.id,
-                        // 合同审批角色 1：分财 2：风控 3：法务
-                        'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                        'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                        'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
-                        'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
-                        'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                        'contractContent': this.contractDocument.innerHTML,
-                        'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-                    })
-                    this.init(() => {
-                        this.domBindMethods()
-                    })
+                    try {
+                        await saveContent({
+                            'contractId': this.$route.query.id,
+                            // 合同审批角色 1：分财 2：风控 3：法务
+                            'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                            'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                            'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
+                            'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
+                            'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
+                            'contractContent': this.contractDocument.innerHTML,
+                            'createBy': this.userInfo.employeeName,
+                            'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                        })
+                        this.init(() => {
+                            this.domBindMethods()
+                        })
+                    } catch (error) {
+                        this.init(() => {
+                            this.domBindMethods()
+                        })
+                    }
                 }
             })
         },
@@ -785,6 +825,13 @@ export default {
                     document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
                     this.showLoading = false
                     this.contractAfterApi = this.contractDocument.innerHTML
+                    let spanList = this.contractDocument.getElementsByTagName('span')
+                    Array.from(spanList).map(item => {
+                        if (item.dataset && item.dataset.inputstyle) {
+                            this.keyValIncontract.push(item.className)
+                        }
+                    })
+                    console.log('this.keyValIncontract: ', this.keyValIncontract)
                 }
             })
         },
@@ -1058,4 +1105,54 @@ export default {
 ::-webkit-scrollbar-thumb {
         background-color: #d6d1d1 !important;
     }
+.shake {
+  animation: shake 0.8s;
+  -moz-animation: shake 0.8s; /* Firefox */
+  -webkit-animation: shake 0.8s; /* Safari and Chrome */
+  -o-animation: shake 0.8s; /* Opera */
+}
+@-webkit-keyframes shake {
+  from,
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    -webkit-transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    -webkit-transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
+  }
+}
+@keyframes shake {
+  from,
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    -webkit-transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    -webkit-transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
+  }
+}
 </style>

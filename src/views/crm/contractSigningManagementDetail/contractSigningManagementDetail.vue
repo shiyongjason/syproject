@@ -5,7 +5,7 @@
             <div class="ctilte"><span>合同详情</span>
                 <h-button type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1"><a :href="res.contractUrl" target="_blank">下载合同</a></h-button>
             </div>
-            <div v-html="vHtml" v-if="vHtml" class='approvalcontract-content-layout'>
+            <div v-html="vHtml" v-if="vHtml" class='approvalcontract-content-layout-css'>
             </div>
             <div v-else-if="res.contractSignType==2">线下合同</div>
             <div v-else>暂无数据</div>
@@ -33,7 +33,7 @@ export default {
     methods: {
         init () {
             this.$nextTick(() => {
-                let inputDomList = document.getElementsByClassName('approvalcontract-content-layout')[0].getElementsByTagName('input')
+                let inputDomList = document.getElementsByClassName('approvalcontract-content-layout-css')[0].getElementsByTagName('input')
                 console.log('inputDomList: ', inputDomList)
                 Array.from(inputDomList).map((item, index) => {
                     item.outerHTML = `<span class="${item.className}" contenteditable="false" style="display:inline;word-break: break-all;">${item.value}</span>`
@@ -53,7 +53,7 @@ export default {
             this.vHtml = this.unescapeHTM(this.vHtml)
             this.init()
         }
-    },
+    }/* ,
     async activated () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.res = data
@@ -61,10 +61,14 @@ export default {
         if (this.vHtml) {
             this.init()
         }
-    }
+    } */
 }
 </script>
 <style scoped lang="scss">
+.approvalcontract-content-layout-css{
+    width: 1000px;
+    margin:0 auto
+}
 .ctilte {
     text-align: center;
     line-height: 41px;
