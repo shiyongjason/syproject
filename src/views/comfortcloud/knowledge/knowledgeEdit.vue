@@ -169,10 +169,10 @@ export default {
                     deviceName: item.questionDescription,
                     children: item.respdeviceBOList
                 } : {
-                        ...item,
-                        deviceName: item.questionDescription,
-                        type: item.questionId
-                    }
+                    ...item,
+                    deviceName: item.questionDescription,
+                    type: item.questionId
+                }
             })
             this.options = _opts
         },
