@@ -67,7 +67,6 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <!-- <RichEditor ref="RichEditor" v-model="contractContentDiv" :menus="menus" :uploadImgServer="uploadImgServer" :height='getHeight()' :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange"></RichEditor> -->
                             <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit"></editor>
                             <!-- @onKeyUp="onchange"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
@@ -176,7 +175,6 @@ export default {
                 // branding: false,
                 // autoresize_overflow_padding: 0
             },
-            domHeight: '',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false
@@ -187,14 +185,12 @@ export default {
             originalContentFieldsList: '',
             contractFieldsList: '',
             contractKeyValueList: '',
-            vHtml: '',
             currentKey: '',
             currentKeyOriginal: '', // 更新前的字段,需求做多了，用于法务修改字段key的，可不删
             fieldName: '', // 编辑字段
             fieldOriginalContent: '', // 编辑前内容
             fieldContent: '', // 编辑内容
             contractContentDiv: '', // 合同内容
-            contractContentInputHidden: '', // 合同内容
             approvalRemark: '',
             detailRes: '',
             dialog: {
@@ -204,26 +200,6 @@ export default {
                 remark: ''
             },
             historyList: '',
-            menus: [
-                'head', // 标题
-                'bold', // 粗体
-                'fontSize', // 字号
-                'fontName', // 字体
-                'italic', // 斜体
-                'underline', // 下划线
-                'strikeThrough', // 删除线
-                'foreColor', // 文字颜色
-                'backColor', // 背景颜色
-                'link', // 插入链接
-                'list', // 列表
-                'justify', // 对齐方式
-                'quote', // 引用
-                // 'emoticon', // 表情
-                // 'image', // 插入图片
-                'table', // 表格
-                'undo', // 撤销
-                'redo' // 重复
-            ],
             currentContent: '',
             lastContent: '',
             firstKsy: '',
@@ -273,16 +249,13 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
-        onchange () {
-            // this.onShowUpdata()
-        },
         checkField (rule, value, callback) {
             console.log('checkField')
             if (this.currentKey.required && !this.currentKey.paramValue) {
                 callback(new Error(`${this.currentKey.paramName}不能为空`))
                 return
             }
-            // 匹配正则this.currentKey.required &&???
+            // 填值有正则就需要格式校验
             if (this.currentKey.checkRule && this.currentKey.paramValue) {
                 let Reg = new RegExp(this.currentKey.checkRule)
                 console.log(!Reg.test(this.currentKey.paramValue))
@@ -511,7 +484,7 @@ export default {
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
                 })
-                //
+                // 法务审核通过把非必填且没值的标记清空
                 let res = this.contractFieldsList.filter(item => (!item.required && !item.paramValue))
                 if (res && res.length > 0) {
                     res.map(item => {
@@ -556,7 +529,6 @@ export default {
             let temp = [this.imgArr[this.imgArr.length - 1]]
             let doms = this.contractDocument.getElementsByClassName(`${this.currentKey.paramKey}_${this.currentKey.imgIndex}`)
             this.currentKey.paramValue = temp[0].fileUrl
-            // 同步修改div和input合同
             Array.from(doms).map(img => {
                 img.setAttribute('src', temp[0].fileUrl)
             })
@@ -600,14 +572,6 @@ export default {
                     return
                 }
             }
-            // if (!required && (paramValue === '' || paramValue === null)) return
-            // if (required && (paramValue === '' || paramValue === null)) {
-            //     this.$refs['ruleForm'].resetFields()
-            //     this.$message({
-            //         message: `${paramName}不能为空`,
-            //         type: 'error'
-            //     })
-            // }
             // 多行文本。展示html。可空格可换行。
             /* if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
                 let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
@@ -645,11 +609,6 @@ export default {
                         if (item.paramKey === paramKey) {
                             item.paramValue = paramValue
                         }
-                        /* // 把非必填且没值的标记清空
-                        if (item.required === false && !item.paramValue && this.detailRes.contractStatus == 6) {
-                            let tDom = this.contractDocument.getElementsByClassName(item.paramKey)
-                            tDom[0].innerHTML = ''
-                        } */
                     })
                     // 法务修改字段触发
                     if (this.detailRes.contractStatus == 6 && !operatorType) {
@@ -673,7 +632,6 @@ export default {
                             newString = newString.replace(/_#_@/g, '<br/>')
                             newString = newString.replace(/_@/g, '<br/>')
                             newString = newString.replace(/\s/g, '&nbsp;')
-                            // paramValue = newString
                             jtem.innerHTML = newString
                         } else if (this.currentKey.inputStyle != 9) { // fix 替换图片后修改条款把图片也保存了
                             jtem.innerText = paramValue
@@ -684,8 +642,6 @@ export default {
                     // 编辑前内容
                     this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
                     this.fieldContent = paramValue
-                    // this.contractDocument.innerHTML = this.contractDocument.innerHTML.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
-                    // dataset.paramname
                     if (this.currentKey.paramname && !this.currentKey.paramValue) {
                         let canEmptyDom = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
                         Array.from(canEmptyDom).map(jtem => {
@@ -763,7 +719,6 @@ export default {
         },
         domBindMethods () {
             this.$nextTick(() => {
-                // this.$refs.RichEditor.value  纯html
                 this.firstKsy = this.contractFieldsList[0].paramKey
                 if (!this.currentKey) {
                     // 保存后不会更新左侧字段
@@ -801,21 +756,12 @@ export default {
                         let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
                         if (DomList && DomList.length > 0) {
                             Array.from(DomList).map((jtem, index) => {
-                                // 处理非必填值为空字段
-                                // if (jtem.dataset && jtem.dataset.paramname && !jtem.innerText) {
-                                //     jtem.innerText = jtem.dataset.paramname
-                                // }
                                 let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
                                 // 遍历dom添加点击事件
                                 jtem.onclick = (event) => {
                                     this.currentKey = { ...fields, event, paramname: jtem.dataset.paramname || '' }
                                     console.log('this.currentKeyxxx: ', this.currentKey)
-                                    // this.currentKeyOriginal = { ...fields }
                                     this.$refs['ruleForm'].resetFields()
-                                    // 多行文本反显使用
-                                    // if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
-                                    //     this.currentKey.paramValue = event.target.innerText
-                                    // }
                                 }
                             })
                         }
@@ -833,7 +779,6 @@ export default {
                             this.keyValIncontract.push(item.className)
                         }
                     })
-                    console.log('this.keyValIncontract: ', this.keyValIncontract)
                 }
             })
         },
@@ -841,7 +786,6 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
-            // this.contractContentInputHidden = res.data.contractContent // input版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             cb && cb()
