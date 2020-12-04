@@ -5,42 +5,42 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">支付单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userAccount" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.deptName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">经销商：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userAccount" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.dealerCompanyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">采购单名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.purchaseOrderName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">采购单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.purchaseOrderNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime"
+                        <el-date-picker v-model="queryParams.startApplyDate" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime"
+                        <el-date-picker v-model="queryParams.endApplyDate" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
@@ -49,7 +49,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                        <el-select v-model="queryParams.status" placeholder="请选择" :clearable=true
                                    @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []"
                                        :key="item.pkDeptDoc"></el-option>
@@ -97,16 +97,16 @@ export default {
             },
             tableData: [{ no: 1 }],
             tableLabel: [
-                { label: '支付单编号', prop: 'no', width: '150' },
-                { label: '所属分部', prop: 'no', width: '150' },
-                { label: '经销商', prop: 'no', width: '150' },
-                { label: '采购单名称', prop: 'no', width: '150' },
-                { label: '采购单编号', prop: 'no', width: '150' },
-                { label: '金额', prop: 'no', width: '150' },
-                { label: '状态', prop: 'no', width: '150' },
-                { label: '申请时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
+                { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
+                { label: '所属分部', prop: 'deptName', width: '150' },
+                { label: '经销商', prop: 'dealerCompanyName', width: '150' },
+                { label: '采购单名称', prop: 'purchaseOrderName', width: '150' },
+                { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
+                { label: '金额', prop: 'applyAmount', width: '150' },
+                { label: '状态', prop: 'status', width: '150' },
+                { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {
-                    label: '更新时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom'
+                    label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
                 }
             ],
             paginationInfo: {},

@@ -171,6 +171,7 @@
 
 <script>
 import PurchaseOrderDialogStatus from '../dialogStatus'
+import { updateStatusOkPurchaseOrder } from '@/views/crm/purchaseOrder/api'
 
 export default {
     name: 'purchaseOrderChangeDialog',
@@ -209,6 +210,9 @@ export default {
     methods: {
         onSave () {
 
+        },
+        async updateStatusOkPurchaseOrder () {
+            await updateStatusOkPurchaseOrder()
         }
     }
 }

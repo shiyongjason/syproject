@@ -1,3 +1,5 @@
 import axios from 'axios'
-
-export const getPurchaseList = (params) => axios.get('/memeber/recommender/boss', { params })
+// 采购单列表
+export const getPurchaseList = (params) => axios.get('/api/purchaseorders/page', { params })
+// 采购单详情
+export const updateStatusOkPurchaseOrder = (id) => axios.get(`/api/purchaseorders/${id}/detail`)

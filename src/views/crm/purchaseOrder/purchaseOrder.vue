@@ -5,19 +5,19 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">采购单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">采购单名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userAccount" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.poName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true
                                    @change="onSelectDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []"
                                        :key="item.pkDeptDoc"></el-option>
@@ -27,30 +27,30 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">经销商：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">项目：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">项目编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime"
+                        <el-date-picker v-model="queryParams.createTimeOrder" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime"
+                        <el-date-picker v-model="queryParams.updateTimeOrder" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
@@ -59,7 +59,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                        <el-select v-model="queryParams.statusList" placeholder="请选择" :clearable=true
                                    @change="onSelectStatus">
                             <el-option :label="1" :value="1" v-for="item in []" :key="1"></el-option>
                         </el-select>
@@ -129,21 +129,21 @@ export default {
             },
             tableData: [
                 {
-                    no: 'no'
+                    purchaseOrderNo: 'purchaseOrderNo'
                 }
             ],
             paginationInfo: {},
             tableLabel: [
-                { label: '采购单编号', prop: 'no', width: '150' },
-                { label: '采购单名称', prop: 'userAccount', width: '120' },
-                { label: '所属分部', prop: 'userName', width: '120' },
-                { label: '经销商', prop: 'subsectionName', width: '150' },
-                { label: '所属项目', prop: 'areaname', width: '150' },
-                { label: '项目编号', prop: 'companyType', width: '150' },
-                { label: '采购购单金额', prop: 'customerType', width: '100' },
-                { label: '状态', prop: 'isAuthentication', width: '120' },
-                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
-                { label: '更新时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes', sortable: 'custom' }
+                { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
+                { label: '采购单名称', prop: 'poName', width: '120' },
+                { label: '所属分部', prop: 'subsectionName', width: '120' },
+                { label: '经销商', prop: 'companyName', width: '150' },
+                { label: '所属项目', prop: 'projectName', width: '150' },
+                { label: '项目编号', prop: 'projectNo', width: '150' },
+                { label: '采购购单金额', prop: 'poAmount', width: '100' },
+                { label: '状态', prop: 'status', width: '120' },
+                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'createTime' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime' }
             ],
             purchaseOrderData: [],
             drawer: false,
@@ -200,14 +200,13 @@ export default {
         async onQuery (val) {
             if (val) this.queryParams.pageNumber = val
             const { ...params } = this.queryParams
-            await this.findBusinesspage(params)
+            await this.findPurchaseList(params)
             this.tableData = this.businessData.records
             this.paginationInfo = {
                 pageNumber: this.businessData.current,
                 pageSize: this.businessData.size,
                 total: this.businessData.total
             }
-            await this.findCrmauthenStatic(params)
         },
         onSortChange (val) {
             if (val.prop == 'createTime') {
@@ -239,7 +238,10 @@ export default {
         },
         dialogBackEvent () {
             this.isOpen = false
-        }
+        },
+        ...mapActions({
+            findPurchaseList: 'crmPurchaseOrder/findPurchaseList'
+        })
     }
 }
 </script>
