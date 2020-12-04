@@ -138,20 +138,17 @@
                         <p>
                             变更结果：
                             <el-radio-group v-model="resultRadioGroup">
-                                <el-radio :label="3">确认变更</el-radio>
-                                <el-radio :label="6">驳回</el-radio>
+                                <el-radio :label="item.key" :key="item.key"
+                                          v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
+                                </el-radio>
                             </el-radio-group>
                         </p>
                         <p>
                             免息方式：
                             <el-radio-group v-model="InterestFreeRadioGroup">
-                                <el-radio :label="3">无</el-radio>
-                                <el-radio :label="6">1个月</el-radio>
-                                <el-radio :label="9">2个月</el-radio>
-                                <el-radio :label="9">3个月</el-radio>
-                                <el-radio :label="9">4个月</el-radio>
-                                <el-radio :label="9">5个月</el-radio>
-                                <el-radio :label="9">6个月</el-radio>
+                                <el-radio :label="item.key" :key="item.key"
+                                          v-for="item in purchaseOrderDict.freeInterestType.list">{{ item.value }}
+                                </el-radio>
                             </el-radio-group>
                         </p>
                     </template>
@@ -172,6 +169,7 @@
 <script>
 import PurchaseOrderDialogStatus from '../dialogStatus'
 import { updateStatusOkPurchaseOrder } from '@/views/crm/purchaseOrder/api'
+import PurchaseOrderDict from '../purchaseOrderDict'
 
 export default {
     name: 'purchaseOrderChangeDialog',
@@ -189,7 +187,8 @@ export default {
         return {
             resultRadioGroup: [],
             InterestFreeRadioGroup: [],
-            dialogStatus: PurchaseOrderDialogStatus
+            dialogStatus: PurchaseOrderDialogStatus,
+            purchaseOrderDict: PurchaseOrderDict
         }
     },
     computed: {
@@ -235,6 +234,7 @@ export default {
             box-sizing: content-box;
             padding-right: 20px;
         }
+
         .info-title {
             font-size: 14px;
             font-weight: 600;
@@ -249,44 +249,53 @@ export default {
         li {
             padding: 6px 0;
             display: flex;
+
             .label {
                 flex: 0 0 140px;
                 text-align: right;
                 padding-right: 10px;
                 box-sizing: border-box;
             }
-            span:last-child{
+
+            span:last-child {
                 padding-right: 10px;
                 text-align: justify;
             }
         }
     }
+
     .result {
-        p{
+        p {
             line-height: 30px;
             padding: 5px 0;
         }
-        /deep/.el-radio ::after {
-            transition: none!important;
+
+        /deep/ .el-radio ::after {
+            transition: none !important;
         }
     }
+
     .project-info {
         width: 40%;
-        p{
+
+        p {
             line-height: 18px;
             padding: 5px 0;
         }
     }
-    table{
+
+    table {
         border-collapse: collapse;
         width: 100%;
         text-align: center;
-        th{
+
+        th {
             border: 1px solid #EBEEF5;
             background: #f2f2f4;
             padding: 5px;
         }
-        td{
+
+        td {
             border: 1px solid #EBEEF5;
             padding: 5px;
         }

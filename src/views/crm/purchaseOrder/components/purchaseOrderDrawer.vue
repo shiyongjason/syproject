@@ -6,57 +6,59 @@
                 <div class="info-content">
                     <div class="row-filed">
                         <p class="col-filed">
-                            经销商: 企业名称经销商企业名称
+                            经销商: {{ purchaseOrderConfirm.purchaseOrder.companyName }}
                         </p>
                         <p class="col-filed">
-                            项目编号: 企业名称经销商企业名称
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed">
-                            <span class="info-title">采购单</span><span class="info-status">待提交</span>
+                            项目编号: {{ purchaseOrderConfirm.purchaseOrder.purchaseOrderNo }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            采购单名称: 这里是采购单的名称
-                        </p>
-                        <p class="col-filed">
-                            采购单编号: 9999999999
+                            <span class="info-title">采购单</span><span class="info-status">{{ attributeComputed(PurchaseOrderDict.status.title,purchaseOrderConfirm.purchaseOrder.status) }}</span>
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            创建人: 赵娟（15195954045）
+                            采购单名称: {{ purchaseOrderConfirm.purchaseOrder.poName }}
                         </p>
                         <p class="col-filed">
-                            创建时间: 2019-06-11 16:32
+                            采购单编号: {{ purchaseOrderConfirm.purchaseOrder.purchaseOrderNo }}
+                        </p>
+                    </div>
+                    <div class="row-filed">
+                        <p class="col-filed">
+                            创建人: {{`${purchaseOrderConfirm.purchaseOrder.createBy}（${purchaseOrderConfirm.purchaseOrder.createMobile}）`}}
+                        </p>
+                        <p class="col-filed">
+                            创建时间: {{ purchaseOrderConfirm.purchaseOrder.createTime | formatDate }}
                         </p>
                     </div>
                     <!--                多种状态判断 -->
                     <div class="row-filed">
                         <p class="col-filed">
-                            提交人：赵娟（15195954045）
+                            提交人：{{`${purchaseOrderConfirm.purchaseOrder.submitBy}（${purchaseOrderConfirm.purchaseOrder.submitMobile}）`}}
                         </p>
                         <p class="col-filed">
-                            提交时间：2019-06-11 16:32
+                            提交时间：{{ purchaseOrderConfirm.purchaseOrder.submitTime | formatDate }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            采购单金额： 12,000,000元
+                            采购单金额： {{ fundMoneys(purchaseOrderConfirm.purchaseOrder.poAmount)  }}元
                         </p>
                         <p class="col-filed">
-                            经销商预付款比例： 50%
+                            经销商预付款比例： {{ purchaseOrderConfirm.poInfo.prePercent }}%
                         </p>
                         <p class="col-filed">
-                            剩余货款支付周期： 6月
+                            剩余货款支付周期： {{purchaseOrderConfirm.poInfo.restPaymentPeriod}}月
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
                             采购明细表：
-                            <img src="" alt="">
+                            <span class="img-group" v-if="purchaseOrderConfirm.poInfo.poDetail">
+                                <img :src="item.url" :key="item.url" alt="" v-for="item in purchaseOrderConfirm.poInfo.poDetail.split(',')">
+                            </span>
                         </p>
                     </div>
                     <div class="row-filed">
@@ -64,56 +66,56 @@
                             采购批次： 一次性采购
                         </p>
                         <p class="col-filed">
-                            最迟发货日期： 2020年11月25日
+                            最迟发货日期： {{ purchaseOrderConfirm.poInfo.lastestGoodsDate }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
                             收货地址：
-                            江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                            {{purchaseOrderConfirm.poInfo.goodsAddress}}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
                             监管户户名：
-                            重庆新日日顺家电有限公司宁波大榭分公司
+                            {{purchaseOrderConfirm.poInfo.regulatorAccountName}}
                         </p>
                         <p class="col-filed">
                             收款账户户名：
-                            好享家舒适智能家居股份有限公司
+                            {{purchaseOrderConfirm.poInfo.receiverAccountBank}}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
                             监管户银行账号：
-                            6227778888888888888
+                            {{purchaseOrderConfirm.poInfo.regulatorAccountNo}}
                         </p>
                         <p class="col-filed">
                             收款账户银行账号：
-                            6227778888888888888
+                            {{purchaseOrderConfirm.poInfo.receiverAccountNo}}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
                             监管户开户行：
-                            中国银行(江宁科学园支行)
+                            {{purchaseOrderConfirm.poInfo.regulatorAccountBank}}
                         </p>
                         <p class="col-filed">
                             收款账户开户行：
-                            中国银行(江宁科学园支行)
+                            {{purchaseOrderConfirm.poInfo.receiverAccountBank}}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            免息方式： 无
+                            免息方式： {{ attributeComputed(PurchaseOrderDict.freeInterestType.title,purchaseOrderConfirm.purchaseOrder.freeInterestType)}}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            更新时间：2019-06-11 16:32
+                            更新时间：{{purchaseOrderConfirm.purchaseOrder.updateTime}}
                         </p>
                         <p class="col-filed">
-                            更新人：赵娟（15195954045）
+                            更新人：{{purchaseOrderConfirm.purchaseOrder.updateBy}}（{{purchaseOrderConfirm.purchaseOrder.updateBy}}）
                         </p>
                     </div>
                     <!--                多种状态判断-->
@@ -285,13 +287,18 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-
+import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
+import filters from '@/utils/filters'
 export default {
     name: 'purchaseOrderDrawer',
     props: {
         drawer: {
             type: Boolean,
             default: false
+        },
+        orderId: {
+            type: Number,
+            required: true
         }
     },
     data () {
@@ -304,7 +311,8 @@ export default {
                 { label: '状态', prop: 'creditLevel', width: '100' },
                 { label: '申请时间', prop: 'creditLevel', width: '150', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'creditLevel', width: '150', formatters: 'dateTimes' }
-            ]
+            ],
+            PurchaseOrderDict
         }
     },
     components: {},
@@ -313,13 +321,13 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            nestDdata: 'nestDdata'
+            purchaseOrderConfirm: 'crmPurchaseOrder/purchaseOrderConfirm'
         })
     },
     methods: {
         ...mapActions({
             findNest: 'findNest',
-            findBusinessDetail: 'crmauthen/findBusinessDetail'
+            findPurchaseOrderConfirmDetail: 'crmPurchaseOrder/findPurchaseOrderConfirmDetail'
 
         }),
         onChangeCheckbox (b, key) {
@@ -339,10 +347,27 @@ export default {
         },
         handleClose () {
             this.$emit('backEvent')
+        },
+        attributeComputed (title, key) {
+            let value = ''
+            if (PurchaseOrderDict[title]) {
+                PurchaseOrderDict[title].list.forEach(val => {
+                    if (val.key === key) {
+                        value = val.value
+                    }
+                })
+            }
+            return value
+        },
+        fundMoneys (val) {
+            if (val) {
+                return filters.money(val)
+            }
+            return '-'
         }
     },
     mounted () {
-
+        this.findPurchaseOrderConfirmDetail(this.orderId)
     }
 }
 </script>
