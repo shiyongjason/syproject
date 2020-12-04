@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="button-cont">
-                <h-button @click="onAddOrEdit('add')">新增</h-button>
+                <h-button type="create" @click="onAddOrEdit('add')">新增</h-button>
             </div>
             <h-table
                 :tableLabel="tableLabel"

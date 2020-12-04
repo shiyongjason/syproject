@@ -6,10 +6,10 @@
                 <div class="query-col__lable">词名称：</div>
                 <div class="query-col__input">
                     <el-input
-                    type="text"
-                    maxlength="50"
-                    v-model="queryParams.name"
-                    placeholder="请输入SPU编码"
+                        type="text"
+                        maxlength="50"
+                        v-model="queryParams.keyword"
+                        placeholder="请输入搜索词名称"
                     >
                     </el-input>
                 </div>
@@ -20,36 +20,37 @@
                 </div>
             </div>
             <div class="button-cont">
-                <h-button @click="onAddOrEdit('add')">新增</h-button>
+                <h-button type="create" @click="onAddOrEdit('add')">新增</h-button>
             </div>
             <h-table
                 :tableLabel="tableLabel"
                 :tableData="tableData"
                 :pagination="pagination"
                 :tableAttrs="{ ...tableAttrs, isIndex: true }"
+                :multiSelection="multiSelection"
                 @onSizeChange="onSizeChange"
                 @onCurrentChange="onCurrentChange"
             >
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onAddOrEdit('edit', scope.data.row)">查看详情</h-button>
+                    <h-button table @click="onAddOrEdit('edit', scope.data.row)">编辑</h-button>
                     <h-button table @click="onDelete(scope.data.row)">删除</h-button>
                 </template>
             </h-table>
         </div>
         <el-dialog
-            :title="attributeInfo.title"
+            :title="lexiconInfo.title"
             :visible.sync="attributeVisible"
             :before-close="closeDialog"
             append-to-body
             width="500px"
         >
             <el-form
-                ref="attributeForm"
-                :model="attributeForm"
-                :rules="attributeFormRules"
+                ref="lexiconFormRef"
+                :model="lexiconForm"
+                :rules="lexiconFormRules"
                 label-width="150px">
-                <el-form-item label=" 词名称：" prop="name" class="mb-5">
-                     <el-input type="input" v-model.trim="attributeForm.k" maxlength="20"></el-input>
+                <el-form-item label=" 词名称：" prop="keyword" class="mb-5">
+                     <el-input type="input" v-model.trim="lexiconForm.keyword" maxlength="20"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
@@ -67,34 +68,35 @@ export default {
     data () {
         return {
             tableAttrs: {
-                'min-width': 200
+                'min-width': 200,
+                isMultiple: false
             },
+            multiSelection: [],
             drawer: false,
             queryParams: {
-                name: '',
+                dictType: 0,
+                keyword: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             resetParams: {},
             terminalOption: TERMINAL_TYPE,
             tableLabel: [
-                { label: '会员名称', prop: 'memberName' },
-                { label: '会员账号', prop: 'account' },
-                { label: '搜索词', prop: 'searchWord' }
+                { label: '词名称', prop: 'keyword' }
             ],
             tableData: [],
             pagination: {},
 
             attributeVisible: false,
-            attributeForm: {
-                name: ''
+            lexiconForm: {
+                keyword: ''
             },
-            attributeFormRules: {
-                name: [
-                    { required: true, whitespace: true, message: '参数名称不能为空！' }
+            lexiconFormRules: {
+                keyword: [
+                    { required: true, whitespace: true, message: '词名称不能为空！' }
                 ]
             },
-            attributeInfo: {
+            lexiconInfo: {
                 type: 'add',
                 title: '新增搜索词'
             }
@@ -105,14 +107,14 @@ export default {
             userInfo: (state) => state.userInfo.principal
         }),
         ...mapState('searchProject', {
-            searchWordData: 'searchWordData'
+            customDictData: 'customDictData'
         })
     },
     mounted () {
         this.init()
     },
     methods: {
-        ...mapActions('searchProject', ['findSearchWordList']),
+        ...mapActions('searchProject', ['findCustomDictList', 'postCustomDict', 'putCustomDict', 'deleteCustomDict']),
         init () {
             this.resetParams = { ...this.queryParams }
             this.onQuery()
@@ -135,42 +137,37 @@ export default {
             this.getSearchWordList()
         },
         async getSearchWordList () {
-            await this.findSearchWordList(this.queryParams)
-            this.tableData = this.searchWordData.records
+            await this.findCustomDictList(this.queryParams)
+            this.tableData = this.customDictData.records
             this.pagination = {
-                pageNumber: this.searchWordData.current,
-                pageSize: this.searchWordData.size,
-                total: this.searchWordData.total
+                pageNumber: this.customDictData.current,
+                pageSize: this.customDictData.size,
+                total: this.customDictData.total
             }
         },
 
         onAddOrEdit (type, item) {
             if (type === 'add') {
-                this.attributeForm = {
-                    name: ''
+                this.lexiconForm = {
+                    keyword: ''
                 }
             } else {
-                this.attributeInfo.type = 'edit'
-                this.attributeInfo.title = '编辑搜索词'
-                this.attributeForm = {
-                    name: ''
+                this.lexiconInfo.type = 'edit'
+                this.lexiconInfo.title = '编辑搜索词'
+                this.lexiconForm = {
+                    ...item
                 }
             }
             this.attributeVisible = true
         },
 
         closeDialog () {
-            this.attributeForm = {
-                name: '',
-                options: [
-                    {
-                        option: ''
-                    }
-                ]
+            this.lexiconForm = {
+                keyword: ''
             }
-            // 这边存在一个问题，直接删除不出现attributeForm会报错
+            // 这边存在一个问题，直接删除不出现lexiconForm会报错
             try {
-                this.$refs['attributeForm'].resetFields()
+                this.$refs['lexiconFormRef'].resetFields()
             } catch (error) {
 
             }
@@ -178,23 +175,47 @@ export default {
         },
 
         onSave () {
-
+            this.$refs.lexiconFormRef.validate(async (valid) => {
+                if (valid) {
+                    if (this.lexiconForm.id) {
+                        await this.putCustomDict({
+                            keyword: this.lexiconForm.keyword,
+                            customDictId: this.lexiconForm.id
+                        })
+                        this.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        })
+                    } else {
+                        await this.postCustomDict({
+                            dicType: 0,
+                            keyword: this.lexiconForm.keyword
+                        })
+                        this.$message({
+                            message: '新增成功',
+                            type: 'success'
+                        })
+                    }
+                    this.closeDialog()
+                    this.init()
+                }
+            })
         },
+
         async onDelete (item) {
             this.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                // await deleteoneticketveto(id)
-                // this.getoneticketveto()
+                await this.deleteCustomDict({
+                    customDictId: item.id
+                })
+                this.init()
                 this.$message({
                     showClose: true,
                     message: '删除成功',
-                    type: 'success',
-                    onClose: () => {
-
-                    }
+                    type: 'success'
                 })
             }).catch(() => { })
         }
