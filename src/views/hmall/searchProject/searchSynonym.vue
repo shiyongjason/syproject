@@ -63,7 +63,7 @@
                     <el-form-item
                         v-for="(item, index) in form.options"
                         :label="' = 同义词' + (index+1) + '：'"
-                        :key="item.key"
+                        :key="item.key.toString()"
                         :prop="`options[${index}].option`"
                         :rules="formRules.option"
                     >
@@ -194,11 +194,13 @@ export default {
             } else {
                 this.dialogInfo.type = 'edit'
                 this.dialogInfo.title = '参数编辑'
+
+                // 这边注意要处理一个同义词数据，展示和form的数据结构不同
                 const keywordList = item.keyword.split('=')
                 this.form = {
                     id: item.id,
                     keyword: keywordList[0],
-                    options: keywordList.filter((item1, index) => index !== 0).map(it => { return { option: it } })
+                    options: keywordList.filter((item1, index1) => index1 !== 0).map((item2, index2) => { return { option: item2, key: index2 + new Date() } }) // 循环的key值保证唯一性
                 }
             }
             this.dialogVisible = true
@@ -208,7 +210,7 @@ export default {
         addOption () {
             this.form.options.push({
                 option: '',
-                key: new Date()
+                key: new Date() // 用作循环的key值
             })
         },
 
@@ -230,11 +232,11 @@ export default {
                 ]
             }
             // 这边存在一个问题，直接删除不出现attributeForm会报错
-            try {
-                this.$refs['form'].resetFields()
-            } catch (error) {
+            // try {
+            this.$refs['form'].resetFields()
+            // } catch (error) {
 
-            }
+            // }
         },
 
         onSave () {
