@@ -6,10 +6,10 @@
                 <div class="query-col__lable">词名称：</div>
                 <div class="query-col__input">
                     <el-input
-                    type="text"
-                    maxlength="50"
-                    v-model="queryParams.name"
-                    placeholder="请输入SPU编码"
+                        type="text"
+                        maxlength="50"
+                        v-model="queryParams.keyword"
+                        placeholder="请输入搜索词名称"
                     >
                     </el-input>
                 </div>
@@ -27,51 +27,55 @@
                 :tableData="tableData"
                 :pagination="pagination"
                 :tableAttrs="{ ...tableAttrs, isIndex: true }"
+                :multiSelection="multiSelection"
                 @onSizeChange="onSizeChange"
                 @onCurrentChange="onCurrentChange"
             >
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onAddOrEdit('edit', scope.data.row)">查看详情</h-button>
+                    <h-button table @click="onAddOrEdit('edit', scope.data.row)">编辑</h-button>
                     <h-button table @click="onDelete(scope.data.row)">删除</h-button>
                 </template>
             </h-table>
         </div>
         <el-dialog
-            :title="attributeInfo.title"
-            :visible.sync="attributeVisible"
+            :title="dialogInfo.title"
+            :visible.sync="dialogVisible"
             :before-close="closeDialog"
             append-to-body
             width="500px"
         >
             <el-form
-                ref="attributeForm"
-                :model="attributeForm"
-                :rules="attributeFormRules"
+                ref="form"
+                :model="form"
+                :rules="formRules"
                 label-width="150px">
-                <el-form-item label=" 词名称：" prop="name" class="mb-5">
-                     <el-input type="input" v-model.trim="attributeForm.k" maxlength="20"></el-input>
+                <el-form-item label=" 词名称：" prop="keyword" class="mb-5">
+                     <el-input type="input" v-model.trim="form.keyword" style="width: 200px" maxlength="20" ></el-input>
+                     <span
+                        class="ml10 el-icon-circle-plus-outline form-add-remove"
+                        v-show="form.options.length < 10"
+                        @click="addOption"
+                    ></span>
                 </el-form-item>
 
                 <!-- 根据不同的选择出现不同的操作， -->
                 <div class="isCombobox-box">
                     <el-form-item
-                        v-for="(item, index) in attributeForm.options"
+                        v-for="(item, index) in form.options"
                         :label="' = 同义词' + (index+1) + '：'"
-                        :key="index"
+                        :key="item.key"
                         :prop="`options[${index}].option`"
-                        :rules="attributeFormRules.option"
+                        :rules="formRules.option"
                     >
                         <el-input v-model="item.option" style="width: 200px" maxlength="20"></el-input>
-
                         <span
                             class="ml10 el-icon-remove-outline form-add-remove"
-                            v-if="index > 0"
                             @click="removeOption(item)"
                         ></span>
                         <span
                             class="ml10 el-icon-circle-plus-outline form-add-remove"
-                            v-if="attributeForm.options.length < 10 && index + 1 === attributeForm.options.length"
-                            @click="addOption(item)"
+                            v-if="form.options.length < 10 && index + 1 === form.options.length"
+                            @click="addOption"
                         ></span>
                     </el-form-item>
                 </div>
@@ -85,8 +89,6 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { TERMINAL_TYPE } from './const/index'
-import { deepCopy } from '@/utils/utils'
 export default {
     name: 'searchSynonym',
     data () {
@@ -94,163 +96,194 @@ export default {
             tableAttrs: {
                 'min-width': 200
             },
-            drawer: false,
+            multiSelection: [],
             queryParams: {
-                name: '',
+                dictType: 1,
+                keyword: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             resetParams: {},
-            terminalOption: TERMINAL_TYPE,
             tableLabel: [
-                { label: '会员名称', prop: 'memberName' },
-                { label: '会员账号', prop: 'account' },
-                { label: '搜索词', prop: 'searchWord' }
+                { label: '同义词词名称', prop: 'keyword' }
             ],
             tableData: [],
             pagination: {},
 
-            attributeVisible: false,
-            attributeForm: {
-                name: '',
+            dialogVisible: false,
+            form: {
+                keyword: '',
                 options: [
                     {
-                        option: ''
+                        option: '',
+                        key: new Date()
                     }
                 ]
             },
-            attributeFormRules: {
-                name: [
+            formRules: {
+                keyword: [
                     { required: true, whitespace: true, message: '参数名称不能为空！' }
                 ],
                 option: [
                     { required: true, whitespace: true, message: '此项为必填项！' }
                 ]
             },
-            attributeInfo: {
+            dialogInfo: {
                 type: 'add',
                 title: '参数新增'
             }
         }
     },
     computed: {
-        ...mapState({
-            userInfo: (state) => state.userInfo.principal
-        }),
         ...mapState('searchProject', {
-            searchWordData: 'searchWordData'
+            customDictData: 'customDictData'
         })
     },
     mounted () {
         this.init()
     },
     methods: {
-        ...mapActions('searchProject', ['findSearchWordList']),
+        ...mapActions('searchProject', ['findCustomDictList', 'postCustomDict', 'putCustomDict', 'deleteCustomDict']),
         init () {
             this.resetParams = { ...this.queryParams }
             this.onQuery()
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.getSearchWordList()
+            this.getTableList()
         },
         onReset () {
             this.queryParams = { ...this.resetParams }
-            this.getSearchWordList()
+            this.getTableList()
         },
         onSeeInfo ({ searchId }) {},
         onSizeChange (value) {
             this.queryParams.pageSize = value
-            this.getSearchWordList()
+            this.getTableList()
         },
         onCurrentChange (value) {
             this.queryParams.pageNumber = value.pageNumber
-            this.getSearchWordList()
+            this.getTableList()
         },
-        async getSearchWordList () {
-            await this.findSearchWordList(this.queryParams)
-            this.tableData = this.searchWordData.records
+        async getTableList () {
+            await this.findCustomDictList(this.queryParams)
+            this.tableData = this.customDictData.records.map((item) => {
+                return {
+                    id: item.id,
+                    keyword: item.keyword.split(',').join('=')
+                }
+            })
             this.pagination = {
-                pageNumber: this.searchWordData.current,
-                pageSize: this.searchWordData.size,
-                total: this.searchWordData.total
+                pageNumber: this.customDictData.current,
+                pageSize: this.customDictData.size,
+                total: this.customDictData.total
             }
         },
 
         onAddOrEdit (type, item) {
             if (type === 'add') {
-                this.attributeForm = {
-                    name: '',
+                this.form = {
+                    keyword: '',
                     options: [
                         {
-                            option: ''
+                            option: '',
+                            key: new Date()
                         }
                     ]
                 }
             } else {
-                this.attributeInfo.type = 'edit'
-                this.attributeInfo.title = '参数编辑'
-                // this.attributeForm = deepCopy(item)
-                this.attributeForm = {
-                    name: '',
-                    options: [
-                        {
-                            option: ''
-                        }
-                    ]
+                this.dialogInfo.type = 'edit'
+                this.dialogInfo.title = '参数编辑'
+                const keywordList = item.keyword.split('=')
+                this.form = {
+                    id: item.id,
+                    keyword: keywordList[0],
+                    options: keywordList.filter((item1, index) => index !== 0).map(it => { return { option: it } })
                 }
             }
-            this.attributeVisible = true
+            this.dialogVisible = true
         },
 
         // 添加下拉框选项
-        addOption (item) {
-            this.attributeForm.options.push({
-                option: ''
+        addOption () {
+            this.form.options.push({
+                option: '',
+                key: new Date()
             })
         },
 
         // 删除下拉框选项
         removeOption (item) {
-            const index = this.attributeForm.options.indexOf(item)
-            this.attributeForm.options.splice(index, 1)
+            const index = this.form.options.indexOf(item)
+            this.form.options.splice(index, 1)
         },
+
         closeDialog () {
-            this.attributeForm = {
-                name: '',
+            this.dialogVisible = false
+            this.form = {
+                keyword: '',
                 options: [
                     {
-                        option: ''
+                        option: '',
+                        key: new Date()
                     }
                 ]
             }
             // 这边存在一个问题，直接删除不出现attributeForm会报错
             try {
-                this.$refs['attributeForm'].resetFields()
+                this.$refs['form'].resetFields()
             } catch (error) {
 
             }
-            this.attributeVisible = false
         },
 
         onSave () {
-
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    let keyword = this.form.keyword
+                    this.form.options.forEach((item) => {
+                        keyword += ',' + item.option
+                    })
+                    console.log(keyword)
+                    if (this.form.id) {
+                        await this.putCustomDict({
+                            keyword,
+                            customDictId: this.form.id
+                        })
+                        this.$message({
+                            message: '编辑成功',
+                            type: 'success'
+                        })
+                    } else {
+                        await this.postCustomDict({
+                            dicType: 1,
+                            keyword
+                        })
+                        this.$message({
+                            message: '新增成功',
+                            type: 'success'
+                        })
+                    }
+                    this.closeDialog()
+                    this.init()
+                }
+            })
         },
+
         async onDelete (item) {
             this.$confirm('确定删除?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                // await deleteoneticketveto(id)
-                // this.getoneticketveto()
+                await this.deleteCustomDict({
+                    customDictId: item.id
+                })
+                this.init()
                 this.$message({
                     showClose: true,
                     message: '删除成功',
-                    type: 'success',
-                    onClose: () => {
-
-                    }
+                    type: 'success'
                 })
             }).catch(() => { })
         }

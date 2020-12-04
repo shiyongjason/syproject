@@ -100,9 +100,6 @@ export default {
         }
     },
     computed: {
-        ...mapState({
-            userInfo: (state) => state.userInfo.principal
-        }),
         ...mapState('searchProject', {
             customDictData: 'customDictData'
         })
@@ -159,6 +156,7 @@ export default {
         },
 
         closeDialog () {
+            this.dialogVisible = false
             this.form = {
                 keyword: ''
             }
@@ -168,7 +166,6 @@ export default {
             } catch (error) {
 
             }
-            this.dialogVisible = false
         },
 
         onSave () {
