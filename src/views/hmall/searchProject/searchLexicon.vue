@@ -38,19 +38,19 @@
             </h-table>
         </div>
         <el-dialog
-            :title="lexiconInfo.title"
-            :visible.sync="attributeVisible"
+            :title="dialogInfo.title"
+            :visible.sync="dialogVisible"
             :before-close="closeDialog"
             append-to-body
             width="500px"
         >
             <el-form
-                ref="lexiconFormRef"
-                :model="lexiconForm"
-                :rules="lexiconFormRules"
+                ref="form"
+                :model="form"
+                :rules="formRules"
                 label-width="150px">
                 <el-form-item label=" 词名称：" prop="keyword" class="mb-5">
-                     <el-input type="input" v-model.trim="lexiconForm.keyword" maxlength="20"></el-input>
+                     <el-input type="input" v-model.trim="form.keyword" maxlength="20"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
@@ -62,7 +62,6 @@
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
-import { TERMINAL_TYPE } from './const/index'
 export default {
     name: 'searchLexicon',
     data () {
@@ -72,7 +71,6 @@ export default {
                 isMultiple: false
             },
             multiSelection: [],
-            drawer: false,
             queryParams: {
                 dictType: 0,
                 keyword: '',
@@ -80,23 +78,22 @@ export default {
                 pageSize: 10
             },
             resetParams: {},
-            terminalOption: TERMINAL_TYPE,
             tableLabel: [
                 { label: '词名称', prop: 'keyword' }
             ],
             tableData: [],
             pagination: {},
 
-            attributeVisible: false,
-            lexiconForm: {
+            dialogVisible: false,
+            form: {
                 keyword: ''
             },
-            lexiconFormRules: {
+            formRules: {
                 keyword: [
                     { required: true, whitespace: true, message: '词名称不能为空！' }
                 ]
             },
-            lexiconInfo: {
+            dialogInfo: {
                 type: 'add',
                 title: '新增搜索词'
             }
@@ -121,22 +118,22 @@ export default {
         },
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.getSearchWordList()
+            this.getTableList()
         },
         onReset () {
             this.queryParams = { ...this.resetParams }
-            this.getSearchWordList()
+            this.getTableList()
         },
         onSeeInfo ({ searchId }) {},
         onSizeChange (value) {
             this.queryParams.pageSize = value
-            this.getSearchWordList()
+            this.getTableList()
         },
         onCurrentChange (value) {
             this.queryParams.pageNumber = value.pageNumber
-            this.getSearchWordList()
+            this.getTableList()
         },
-        async getSearchWordList () {
+        async getTableList () {
             await this.findCustomDictList(this.queryParams)
             this.tableData = this.customDictData.records
             this.pagination = {
@@ -148,39 +145,39 @@ export default {
 
         onAddOrEdit (type, item) {
             if (type === 'add') {
-                this.lexiconForm = {
+                this.form = {
                     keyword: ''
                 }
             } else {
-                this.lexiconInfo.type = 'edit'
-                this.lexiconInfo.title = '编辑搜索词'
-                this.lexiconForm = {
+                this.dialogInfo.type = 'edit'
+                this.dialogInfo.title = '编辑搜索词'
+                this.form = {
                     ...item
                 }
             }
-            this.attributeVisible = true
+            this.dialogVisible = true
         },
 
         closeDialog () {
-            this.lexiconForm = {
+            this.form = {
                 keyword: ''
             }
             // 这边存在一个问题，直接删除不出现lexiconForm会报错
             try {
-                this.$refs['lexiconFormRef'].resetFields()
+                this.$refs['form'].resetFields()
             } catch (error) {
 
             }
-            this.attributeVisible = false
+            this.dialogVisible = false
         },
 
         onSave () {
-            this.$refs.lexiconFormRef.validate(async (valid) => {
+            this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    if (this.lexiconForm.id) {
+                    if (this.form.id) {
                         await this.putCustomDict({
-                            keyword: this.lexiconForm.keyword,
-                            customDictId: this.lexiconForm.id
+                            keyword: this.form.keyword,
+                            customDictId: this.form.id
                         })
                         this.$message({
                             message: '编辑成功',
@@ -189,7 +186,7 @@ export default {
                     } else {
                         await this.postCustomDict({
                             dicType: 0,
-                            keyword: this.lexiconForm.keyword
+                            keyword: this.form.keyword
                         })
                         this.$message({
                             message: '新增成功',
