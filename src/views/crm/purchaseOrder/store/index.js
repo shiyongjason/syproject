@@ -7,7 +7,7 @@ const state = {
         purchaseOrder: {},
         poInfo: {},
         contracts: {},
-        poChanges: {},
+        poChanges: [],
         paymentOrders: {}
     }
 }

@@ -119,8 +119,8 @@
                         </p>
                     </div>
                     <!--                多种状态判断-->
-                    <div class="row-filed">
-                        <div class="jumbotron">
+                    <div class="row-filed" v-if="purchaseOrderConfirm.poChanges">
+                        <div class="jumbotron" :key="item.id" v-for="item in purchaseOrderConfirm.poChanges">
                             <div class="jumbotron-status">
                                 <img src="../../../../assets/images/good-job-status-icon.png" alt="">
                             </div>
@@ -130,7 +130,7 @@
                                     提交变更人：赵娟（15195954045） 提交变更时间：2019-06-11 16:32
                                 </p>
                                 <p>
-                                    变更备注：江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                                    变更备注：{{ item.remark }}
                                 </p>
                                 <p>
                                     确认变更人：赵娟（15195954045） 确认变更时间：2019-06-11 16:32
@@ -420,6 +420,7 @@ export default {
         padding: 12px;
         font-size: 14px;
         display: flex;
+        margin-bottom: 20px;
         .jumbotron-status {
             padding: 0 15px;
         }
