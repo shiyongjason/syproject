@@ -41,6 +41,7 @@
             </div>
             <div class="query-cont-col">
                 <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                <el-button type="primary" class="ml20" @click="onShowRecordDialog">新增出库</el-button>
                 <el-button type="primary" class="ml20" @click="onOpenModel">导入数据</el-button>
                 <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
             </div>
@@ -86,6 +87,41 @@
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="新增出库" :modal-append-to-body=false :append-to-body=false :visible.sync="addRecordDialogVisible" width="50%">
+            <el-form class="add-record-form" ref="addRecord" :model="addRecord" :rules="rules" label-width="140px">
+                <el-form-item label="设备ID：" prop="iotId">
+                    <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="输入标题设备ID"></el-input>
+                </el-form-item>
+                <el-form-item label="出库类型：" prop="outboundType">
+                    <el-select v-model="addRecord.outboundType" clearable>
+                        <el-option label="样品" value="样品"></el-option>
+                        <el-option label="合同履约提货" value="合同履约提货"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="经销商名称：" prop="dealer">
+                    <el-select
+                        v-model="addRecord.dealer"
+                        filterable
+                        remote
+                        placeholder="输入经销商名称"
+                        @change="dealerChanged"
+                        :remote-method="dealerRequest"
+                        :loading="dealerLoading">
+                        <el-option
+                            v-for="item in dealerOptions"
+                            :key="item"
+                            :label="item"
+                            :value="item">
+                        </el-option>
+                    </el-select>
+                    <span v-if="addRecord.dealerPhone != null" style="margin-left: 30px">经销商电话：{{addRecord.dealerPhone}}</span>
+                </el-form-item>
+                <el-form-item>
+                    <el-button name="white-color" class="ml20" @click="onAddRecordCancel">取消</el-button>
+                    <el-button type="primary" @click="onAddRecord" :loading="loading">{{ loading ? '提交中 ...' : '确认出库' }}</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
@@ -139,7 +175,22 @@ export default {
                     operateUserName: ''
                 }
             },
-            loading: false
+            loading: false,
+            addRecordDialogVisible: false,
+            addRecord: {},
+            dealerLoading: false,
+            dealerOptions: [],
+            rules: {
+                iotId: [
+                    { required: true, message: '请填写设备ID', trigger: 'blur' }
+                ],
+                outboundType: [
+                    { required: true, message: '请选择出库类型', trigger: 'blur' }
+                ],
+                dealer: [
+                    { required: true, message: '请填写经销商名称', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -289,6 +340,44 @@ export default {
                 })
                 this.onQuery(this.searchParams)
             }).catch(() => { })
+        },
+        onShowRecordDialog () {
+            this.addRecord = {}
+            this.addRecordDialogVisible = true
+        },
+        onAddRecordCancel () {
+            this.addRecordDialogVisible = false
+        },
+        onAddRecord () {
+            this.$refs['addRecord'].validate((valid) => {
+                if (valid) {
+                    console.log(this.addRecord)
+                } else {
+                    return false
+                }
+            })
+        },
+        dealerRequest (query) {
+            if (query !== '') {
+                this.dealerLoading = true
+                setTimeout(() => {
+                    this.dealerLoading = false
+                    this.dealerOptions = ['经销商', '直呼转', '经销二转', '经销图', '图们二'].filter(item => {
+                        return item.toLowerCase()
+                            .indexOf(query.toLowerCase()) > -1
+                    })
+                }, 200)
+            } else {
+                this.options = []
+            }
+        },
+        dealerChanged (value) {
+            console.log('eee:')
+            if (this.addRecord.dealer == null || this.addRecord.dealer.length === 0) {
+                this.addRecord.dealerPhone = null
+            } else {
+
+            }
         }
     }
 }
@@ -341,5 +430,10 @@ export default {
 
 .search-title {
     white-space: nowrap;
+}
+
+.add-record-form {
+    margin: 30px 0;
+
 }
 </style>
