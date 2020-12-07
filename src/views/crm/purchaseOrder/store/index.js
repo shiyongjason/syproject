@@ -3,7 +3,7 @@ import * as Api from '../api'
 
 const state = {
     purchaseOrderList: [],
-    purchaseOrderConfirm: {
+    purchaseOrderDetail: {
         purchaseOrder: {},
         poInfo: {},
         contracts: [],
@@ -13,14 +13,14 @@ const state = {
 }
 const getters = {
     purchaseOrderList: state => state.purchaseOrderList,
-    purchaseOrderConfirm: state => state.purchaseOrderConfirm
+    purchaseOrderDetail: state => state.purchaseOrderDetail
 }
 const mutations = {
     [Type.PURCHASE_ORDER] (state, payload) {
         state.purchaseOrderList = payload
     },
-    [Type.PURCHASE_ORDER_CONFIRM] (state, payload) {
-        state.purchaseOrderConfirm = payload
+    [Type.PURCHASE_ORDER_DETAIL] (state, payload) {
+        state.purchaseOrderDetail = payload
     }
 }
 
@@ -29,9 +29,9 @@ const actions = {
         const { data } = await Api.getPurchaseList(params)
         commit(Type.PURCHASE_ORDER, data)
     },
-    async findPurchaseOrderConfirmDetail ({ commit }, id) {
-        const { data } = await Api.getStatusOkPurchaseOrder(id)
-        commit(Type.PURCHASE_ORDER_CONFIRM, data)
+    async findPurchaseOrderDetail ({ commit }, id) {
+        const { data } = await Api.getPurchaseOrderDetail(id)
+        commit(Type.PURCHASE_ORDER_DETAIL, data)
     }
 }
 export default {
