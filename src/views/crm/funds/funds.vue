@@ -95,31 +95,6 @@
                             <span class="colblue"
                                   @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{ scope.data.row.no }}</span>
                         </template>
-                        <template slot="userName" slot-scope="scope">
-                            <span class="colblue"
-                                  @click="onLinkship(scope.data.row.userName)"> {{
-                                    scope.data.row.userName || '-'
-                                }}</span>
-                        </template>
-                        <template slot="areaname" slot-scope="scope">
-                            {{ scope.data.row.provinceName + scope.data.row.cityName + scope.data.row.countryName }}
-                        </template>
-                        <template slot="companyType" slot-scope="scope">
-                            {{
-                                scope.data.row.companyType == 1 ? '体系内' : scope.data.row.companyType == 2 ? '体系外' : '-'
-                            }}
-                        </template>
-                        <template slot="customerType" slot-scope="scope">
-                            {{
-                                scope.data.row.customerType == 1 ? '黑名单' : scope.data.row.customerType == 2 ? '白名单' : scope.data.row.customerType == 3 ? '待审核' : '-'
-                            }}
-                        </template>
-                        <template slot="isAuthentication" slot-scope="scope">
-                            <span
-                                :class="scope.data.row.isAuthentication==1?'colgry':'colred'"> {{
-                                    scope.data.row.isAuthentication == 1 ? '已认证' : '未认证'
-                                }}</span>
-                        </template>
                         <template slot="action" slot-scope="scope">
                             <h-button table @click="onPayEnter">支付确认</h-button>
                             <h-button table @click="seePayEnter">查看凭证</h-button>
@@ -143,7 +118,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import FundsDialog from './components/fundsDialog'
 
 export default {
@@ -165,7 +140,7 @@ export default {
                 { label: '状态', prop: 'no', width: '150' },
                 { label: '应支付日期', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '支付成功时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
-                { label: '更新时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' }
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime' }
             ],
             tableData: [
                 {
@@ -217,7 +192,7 @@ export default {
             this.onQuery()
         },
         onQuery () {
-
+            this.findFundsList()
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
@@ -239,7 +214,10 @@ export default {
         },
         seePayEnter () {
             this.fundsDialogVisible = true
-        }
+        },
+        ...mapActions({
+            findFundsList: 'crmFunds/findPurchaseList'
+        })
     }
 }
 </script>
