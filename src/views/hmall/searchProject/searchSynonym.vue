@@ -69,6 +69,7 @@
                     >
                         <el-input v-model="item.option" style="width: 200px" maxlength="20"></el-input>
                         <span
+                            v-if="form.options.length > 1"
                             class="ml10 el-icon-remove-outline form-add-remove"
                             @click="removeOption(item)"
                         ></span>
