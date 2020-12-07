@@ -21,6 +21,7 @@
             </div>
             <div class="button-cont">
                 <h-button type="create" @click="onAddOrEdit('add')">新增</h-button>
+                <h-button @click="onRefresh">批量刷新</h-button>
             </div>
             <h-table
                 :tableLabel="tableLabel"
@@ -108,7 +109,7 @@ export default {
         this.init()
     },
     methods: {
-        ...mapActions('searchProject', ['findCustomDictList', 'postCustomDict', 'putCustomDict', 'deleteCustomDict']),
+        ...mapActions('searchProject', ['findCustomDictList', 'postCustomDict', 'putCustomDict', 'deleteCustomDict', 'refreshCustomDict']),
         init () {
             this.resetParams = { ...this.queryParams }
             this.onQuery()
@@ -138,6 +139,11 @@ export default {
                 pageSize: this.customDictData.size,
                 total: this.customDictData.total
             }
+        },
+
+        async onRefresh () {
+            await this.refreshCustomDict()
+            this.$message.success(`刷新成功`)
         },
 
         onAddOrEdit (type, item) {

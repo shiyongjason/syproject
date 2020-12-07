@@ -69,6 +69,9 @@ const actions = {
     },
     async deleteCustomDict ({ commit }, params) {
         await apis.deleteCustomDict(params)
+    },
+    async refreshCustomDict ({ commit }, params) {
+        await apis.refreshCustomDict(params)
     }
     /* 2020-12-04 搜索词和同义词 ending */
 }

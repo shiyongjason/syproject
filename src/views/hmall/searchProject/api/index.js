@@ -16,4 +16,5 @@ export const findCustomDictList = (params) => axios.get(`${B2bUrl}search/open-ap
 export const postCustomDict = (params) => axios.post(`${B2bUrl}search/open-api/dict/custom-dict/${params.dicType}/${params.keyword}`) // 新增词库
 export const putCustomDict = (params) => axios.put(`${B2bUrl}search/open-api/dict/custom-dict/${params.customDictId}/${params.keyword}`) // 更新词库
 export const deleteCustomDict = (params) => axios.delete(`${B2bUrl}search/open-api/dict/custom-dict/${params.customDictId}`) // 更新词库
+export const refreshCustomDict = () => axios.get(`${B2bUrl}search/open-api/index/dict-refresh/homepage`) // 词库生效
 /* 2020-12-04 搜索词和同义词 ending */
