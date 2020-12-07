@@ -460,37 +460,37 @@ export function getHomeUser (params) {
 
 // 获取招商代理商列表
 export function getCloudMerchantList (params) {
-    return axios.get(iotUrl + '/api/boss/agent-sign/page', { params })
+    return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
 }
 
 // 获取招商代理订单详情
 export function getCloudMerchantAgentDetail (params) {
-    return axios.get(iotUrl + '/api/boss/agent-sign/' + params.id)
+    return axios.get(iotUrl + '/mall/boss/agent-sign/' + params.id)
 }
 
 // 获取招商广告列表
 export function getCloudMerchantAdList (params) {
-    return axios.get(iotUrl + '/api/merchants-advertising/page', { params })
+    return axios.get(iotUrl + '/mall/boss/merchants-advertising/page', { params })
 }
 
 // 删除招商广告
 export function deleteCloudMerchantAd (params) {
-    return axios.put(iotUrl + '/api/merchants-advertising/' + params)
+    return axios.put(iotUrl + '/mall/boss/merchants-advertising/' + params)
 }
 
 // 获取招商广告详情
 export function getCloudMerchantAdDetail (params) {
-    return axios.get(iotUrl + '/api/merchants-advertising/' + params)
+    return axios.get(iotUrl + '/mall/boss/merchants-advertising/' + params)
 }
 
 // 招商广告保存
 export function saveCloudMerchantAd (params) {
-    return axios.post(iotUrl + '/api//merchants-advertising', params)
+    return axios.post(iotUrl + '/mall/boss/merchants-advertising', params)
 }
 
 // 招商订单列表
 export function getCloudMerchantOrderList (params) {
-    return axios.get(iotUrl + '/api/boss/agent-sign/order-page', { params })
+    return axios.get(iotUrl + '/mall/boss/agent-sign/order-page', { params })
 }
 
 // 获取招商代理品类列表
