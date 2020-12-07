@@ -4,4 +4,4 @@ export const getPurchaseList = (params) => axios.get('/api/purchaseorders/page',
 // 采购单详情
 export const getPurchaseOrderDetail = (id) => axios.get(`/api/purchaseorders/${id}/detail`)
 // 采购单详情
-export const getStatusOkPurchaseOrder = (id) => axios.get(`/api/purchaseorders/${id}/detail`)
+export const updateStatusOkPurchaseOrder = (id) => axios.get(`/api/purchaseorders/${id}/detail`)
