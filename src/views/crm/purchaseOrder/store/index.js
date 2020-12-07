@@ -6,7 +6,7 @@ const state = {
     purchaseOrderConfirm: {
         purchaseOrder: {},
         poInfo: {},
-        contracts: {},
+        contracts: [],
         poChanges: [],
         paymentOrders: {}
     }

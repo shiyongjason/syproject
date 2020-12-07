@@ -156,22 +156,13 @@
                     <el-collapse v-model="activeNames" @change="handleChange">
                         <el-collapse-item title="销售合同" name="1">
                             <div class="table-body">
-                                <div class="tr">
-                                    <div class="td">9999</div>
-                                    <div class="td">这里是合同名称</div>
-                                    <div class="td"><h-button table>生效中</h-button></div>
-                                    <div class="td">签署完成</div>
-                                    <div class="td">2019-06-11</div>
-                                    <div class="td">赵娟</div>
-                                    <div class="td"><h-button table>查看合同</h-button></div>
-                                </div>
-                                <div class="tr">
-                                    <div class="td">9999</div>
-                                    <div class="td">这里是合同名称</div>
-                                    <div class="td"><h-button table>生效中</h-button></div>
-                                    <div class="td">签署完成</div>
-                                    <div class="td">2019-06-11</div>
-                                    <div class="td">赵娟</div>
+                                <div class="tr" :key="item.id" v-for="item in purchaseOrderConfirm.contracts">
+                                    <div class="td">{{ item.contractNo }}</div>
+                                    <div class="td">{{ item.contractName }}</div>
+                                    <div class="td"><h-button table>{{ item.status }}</h-button></div>
+                                    <div class="td">{{ item.contractStatus }}</div>
+                                    <div class="td">{{ item.contractUpdateTime | formatDate('YYYY-MM-DD') }}</div>
+                                    <div class="td">{{ item.createBy }}</div>
                                     <div class="td"><h-button table>查看合同</h-button></div>
                                 </div>
                             </div>
