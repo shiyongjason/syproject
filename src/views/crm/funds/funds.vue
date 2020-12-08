@@ -5,19 +5,19 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">首付款流水号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.fundId" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">支付单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userAccount" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.orderId" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true
                                    @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr"
                                        :key="item.pkDeptDoc"></el-option>
@@ -27,19 +27,19 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">经销商：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">项目：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.userName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deptDoc" placeholder="请选择" :clearable=true
+                        <el-select v-model="queryParams.paymentFlagArrays" placeholder="请选择" :clearable=true
                                    @change="onChooseDep">
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr"
                                        :key="item.pkDeptDoc"></el-option>
@@ -49,12 +49,12 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">应支付日期：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime"
+                        <el-date-picker v-model="queryParams.scheduleStartTime" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime"
+                        <el-date-picker v-model="queryParams.scheduleEndTime" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
@@ -63,12 +63,12 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">支付成功时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime"
+                        <el-date-picker v-model="queryParams.paidStartTime" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime"
+                        <el-date-picker v-model="queryParams.paidEndTime" type="datetime"
                                         value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
@@ -131,14 +131,14 @@ export default {
             queryParams: {},
             activeName: 'first',
             tableLabel: [
-                { label: '首付款流水号', prop: 'no', width: '150' },
-                { label: '所属分部', prop: 'no', width: '150' },
-                { label: '经销商', prop: 'no', width: '150' },
-                { label: '所属项目', prop: 'no', width: '150' },
-                { label: '支付单编号', prop: 'no', width: '150' },
-                { label: '金额', prop: 'no', width: '150' },
-                { label: '状态', prop: 'no', width: '150' },
-                { label: '应支付日期', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
+                { label: '首付款流水号', prop: 'id', width: '150' },
+                { label: '所属分部', prop: 'subsectionName', width: '150' },
+                { label: '经销商', prop: 'companyName', width: '150' },
+                { label: '所属项目', prop: 'projectName', width: '150' },
+                { label: '支付单编号', prop: 'orderId', width: '150' },
+                { label: '金额', prop: 'paidAmount', width: '150' },
+                { label: '状态', prop: 'paymentFlag', width: '150' },
+                { label: '应支付日期', prop: 'schedulePaymentDate', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '支付成功时间', prop: 'no', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime' }
             ],
