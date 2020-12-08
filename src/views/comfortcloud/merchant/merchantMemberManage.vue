@@ -37,7 +37,7 @@
                     {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">邀请详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
             </div>
@@ -53,7 +53,7 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: '',
+                phone: this.$route.query.phone,
                 endRegisterTime: '',
                 startRegisterTime: ''
             },
