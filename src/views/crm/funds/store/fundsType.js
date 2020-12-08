@@ -1,1 +1,1 @@
-export const FUNDS_LIST = 'FUNDS_LIST'
+export const FUNDS_TABLE_DATA = 'FUNDS_TABLE_DATA'

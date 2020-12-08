@@ -3,11 +3,11 @@
         <div class="info-content">
             <div class="row-filed">
                 <span class="label">支付凭证：</span>
-                <img src="" alt="">
+                <img :src="item.fileUrl" alt="" :key="item.docId" v-for="item in imgGroup">
             </div>
-            <p class="tips">是否确认收到经销商***支付的***元服务费？</p>
+            <p class="tips" v-if="detail.companyName || detail.amount">是否确认收到{{ detail.companyName }}支付的{{detail.amount}}元服务费？</p>
         </div>
-        <span slot="footer" class="dialog-footer" v-if="dialogStatus.seePayEnter.status !== openStatus">
+        <span slot="footer" class="dialog-footer" v-if="detail.companyName || detail.amount">
                 <h-button type="assist" @click="onReceived">确认收到</h-button>
                 <h-button type="primary" @click="onUnReceived">并未收到</h-button>
             </span>
@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import DialogStatus from '../dialogStatus'
+import FundsDict from '../fundsDict'
+import { getFundsTicket, updateCancelPay, updateFinalPay, updateFirstPay, updateServicePay } from '../api'
 
 export default {
     name: 'fundsDialog',
@@ -24,46 +25,68 @@ export default {
             type: Boolean,
             default: false
         },
-        openStatus: {
-            type: Number,
-            default: 1
+        detail: {
+            type: Object,
+            required: true
+        },
+        status: {
+            type: String,
+            required: true
         }
+
     },
     data () {
         return {
-            resultRadioGroup: [],
-            InterestFreeRadioGroup: [],
-            dialogStatus: DialogStatus
+            imgGroup: []
         }
     },
     computed: {
         title () {
-            let title = ''
-            if (this.openStatus === DialogStatus.firstPayEnter.status) {
-                title = DialogStatus.firstPayEnter.title
-            }
-            if (this.openStatus === DialogStatus.servicePayEnter.status) {
-                title = DialogStatus.servicePayEnter.title
-            }
-            if (this.openStatus === DialogStatus.seePayEnter.status) {
-                title = DialogStatus.seePayEnter.title
-            }
-            if (this.openStatus === DialogStatus.endPayEnter.status) {
-                title = DialogStatus.endPayEnter.title
+            let title = '支付确认'
+
+            if (this.detail.companyName || this.detail.amount) {
+                title = '查看凭证'
             }
             return title
         }
     },
     methods: {
-        onReceived () {
+        async onReceived () {
+            if (this.status === FundsDict.repaymentTypeArrays.list[0].key) {
+                await updateFirstPay({
+                    a: 1
+                })
+            }
+            if (this.status === FundsDict.repaymentTypeArrays.list[1].key) {
+                await updateServicePay({
+                    a: 1
+                })
+            }
+            if (this.status === FundsDict.repaymentTypeArrays.list[2].key) {
+                await updateFinalPay({
+                    a: 1
+                })
+            }
             this.$emit('onClose')
         },
-        onUnReceived () {
+        async onUnReceived () {
+            await updateCancelPay({
+                paymentOrderId: 1,
+                fundId: 1,
+                status: 1,
+                attachDocList: 1,
+                updateBy: 1
+            })
             this.$emit('onClose')
         }
     },
-    mounted () {
-        // console.log(DialogStatus.firstPayEnter)
+    watch: {
+        isOpen (value) {
+            value && getFundsTicket({
+                bizId: this.detail.fundsId,
+                bizType: FundsDict.bizType.list[3].key
+            })
+        }
     }
 }
 </script>
@@ -73,10 +96,15 @@ export default {
     min-height: 150px;
 }
 .info-content{
-    height: 150px;
+    height: 130px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    padding-top: 20px;
+    .row-filed{
+        padding-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
 }
 .tips {
     color: #8d8d8d;
