@@ -1,8 +1,8 @@
-function numValidate (str, float, regular, regular2) {
+function numValidate (str, float, regular, regular2, limit = '') {
     if (!str) return
     str = str.toString()
     // 如果第一位是0，第二位不是点  01 02...
-    if (str.length > 1 && str.charAt(0) === '0' && str.charAt(1) !== '.') {
+    if (str.length > 1 && str.charAt(0) === '0' && str.charAt(1) !== '.' && !limit) {
         return ''
     }
     // float == 0仅允许输入非负整数
@@ -27,6 +27,11 @@ function isNum (str, float = 1000000000) {
     const regular = /[^0-9]*/g
     const regular2 = /[^\d^\\.]+/g
     return numValidate(str, float, regular, regular2)
+}
+function isAllNum (str, float = 1000000000) {
+    const regular = /[^0-9]*/g
+    const regular2 = /[^\d^\\.]+/g
+    return numValidate(str, float, regular, regular2, true)
 }
 function isNegative (str, float = 1000000000) {
     const regular = /[^\-?\d.]/g
@@ -63,6 +68,7 @@ export {
     isNegative,
     isNotInputTxt,
     isPositiveInt,
-    inputMAX
+    inputMAX,
+    isAllNum
 
 }
