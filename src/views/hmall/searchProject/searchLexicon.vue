@@ -51,7 +51,7 @@
                 :rules="formRules"
                 label-width="150px">
                 <el-form-item label=" 词名称：" prop="keyword" class="mb-5">
-                     <el-input type="input" v-model.trim="form.keyword" maxlength="20"></el-input>
+                    <el-input type="input" v-model.trim="form.keyword" maxlength="20"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
@@ -153,7 +153,7 @@ export default {
                 }
             } else {
                 this.dialogInfo.type = 'edit'
-                this.dialogInfo.title = '编辑搜索词'
+                this.dialogInfo.title = '修改搜索词'
                 this.form = {
                     ...item
                 }
@@ -197,7 +197,7 @@ export default {
                         })
                     }
                     this.closeDialog()
-                    this.init()
+                    this.onReset()
                 }
             })
         },
