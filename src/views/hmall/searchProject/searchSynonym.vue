@@ -51,8 +51,8 @@
                 :rules="formRules"
                 label-width="150px">
                 <el-form-item label=" 同义词1：" prop="keyword" class="mb-5">
-                     <el-input type="input" v-model.trim="form.keyword" style="width: 200px" maxlength="20" ></el-input>
-                     <span
+                    <el-input type="input" v-model.trim="form.keyword" style="width: 200px" maxlength="20" ></el-input>
+                    <span
                         class="ml10 el-icon-circle-plus-outline form-add-remove"
                         v-show="form.options.length < 9"
                         @click="addOption"

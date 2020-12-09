@@ -51,7 +51,7 @@
                 :rules="formRules"
                 label-width="150px">
                 <el-form-item label=" 词名称：" prop="keyword" class="mb-5">
-                     <el-input type="input" v-model.trim="form.keyword" maxlength="20"></el-input>
+                    <el-input type="input" v-model.trim="form.keyword" maxlength="20"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer">
