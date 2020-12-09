@@ -50,11 +50,11 @@
                 :model="form"
                 :rules="formRules"
                 label-width="150px">
-                <el-form-item label=" 词名称：" prop="keyword" class="mb-5">
+                <el-form-item label=" 同义词1：" prop="keyword" class="mb-5">
                      <el-input type="input" v-model.trim="form.keyword" style="width: 200px" maxlength="20" ></el-input>
                      <span
                         class="ml10 el-icon-circle-plus-outline form-add-remove"
-                        v-show="form.options.length < 10"
+                        v-show="form.options.length < 9"
                         @click="addOption"
                     ></span>
                 </el-form-item>
@@ -63,8 +63,8 @@
                 <div class="isCombobox-box">
                     <el-form-item
                         v-for="(item, index) in form.options"
-                        :label="' = 同义词' + (index+1) + '：'"
-                        :key="item.key.toString()"
+                        :label="' = 同义词' + (index + 2) + '：'"
+                        :key="item.key"
                         :prop="`options[${index}].option`"
                         :rules="formRules.option"
                     >
@@ -76,7 +76,7 @@
                         ></span>
                         <span
                             class="ml10 el-icon-circle-plus-outline form-add-remove"
-                            v-if="form.options.length < 10 && index + 1 === form.options.length"
+                            v-if="form.options.length < 9 && index + 1 === form.options.length"
                             @click="addOption"
                         ></span>
                     </el-form-item>
@@ -118,7 +118,7 @@ export default {
                 options: [
                     {
                         option: '',
-                        key: new Date()
+                        key: Math.random() + Math.random()
                     }
                 ]
             },
@@ -194,7 +194,7 @@ export default {
                     options: [
                         {
                             option: '',
-                            key: new Date()
+                            key: Math.random() + Math.random()
                         }
                     ]
                 }
@@ -207,7 +207,7 @@ export default {
                 this.form = {
                     id: item.id,
                     keyword: keywordList[0],
-                    options: keywordList.filter((item1, index1) => index1 !== 0).map((item2, index2) => { return { option: item2, key: index2 + new Date() } }) // 循环的key值保证唯一性
+                    options: keywordList.filter((item1, index1) => index1 !== 0).map((item2, index2) => { return { option: item2, key: index2 + Math.random() + Math.random() } }) // 循环的key值保证唯一性
                 }
             }
             this.dialogVisible = true
@@ -217,7 +217,7 @@ export default {
         addOption () {
             this.form.options.push({
                 option: '',
-                key: new Date() // 用作循环的key值
+                key: Math.random() + Math.random() // 用作循环的key值
             })
         },
 
@@ -234,7 +234,7 @@ export default {
                 options: [
                     {
                         option: '',
-                        key: new Date()
+                        key: Math.random() + Math.random()
                     }
                 ]
             }
