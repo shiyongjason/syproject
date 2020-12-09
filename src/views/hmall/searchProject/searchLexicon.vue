@@ -120,7 +120,6 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.resetParams }
-            this.pagination.pageNumber = 1
             this.getTableList()
         },
         onSeeInfo ({ searchId }) {},
@@ -140,7 +139,6 @@ export default {
                 pageSize: this.customDictData.size,
                 total: this.customDictData.total
             }
-            console.log(this.pagination)
         },
 
         async onRefresh () {
