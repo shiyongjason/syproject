@@ -4,12 +4,12 @@
             <span>会员信息</span>
         </div>
         <div class="page-body-cont-top ">
-            <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)" >
+            <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)">
             <div class="top-box">
                 <span>{{decodeURIComponent(this.$route.query.nickName)}}  </span>
                 <span>手机号 ：{{this.$route.query.phone}}  </span>
             </div>
-            <div class="top-box-right" >
+            <div class="top-box-right">
                 <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}}  </span>
                 <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
                 <span style="margin-left: 1rem">会员编号： {{this.$route.query.uuid}}</span>
@@ -34,10 +34,12 @@
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
 
-                                <p @click="onEditMoney(scope.data.row)" class="colred">{{scope.data.row.rewardAmount}}</p>
+                                <p @click="onEditMoney(scope.data.row)" class="colred">
+                                    {{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth(scope.data.row)">
+                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择"
+                                           @change="onEditMonth(scope.data.row)">
                                     <el-option
                                         v-for=" item in monthOptions"
                                         :key="item.value"
@@ -60,6 +62,49 @@
                                     :pagination="paginationChange"
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="企业信息" name="3">
+                    <div class="page-body-cont-enterprise-info">
+                        <span>公司名称： {{this.enterpriseInfoData.companyName}}  </span>
+                        <span >联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
+                        <span >联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
+                        <span >联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
+                        <span >经营类型：零售商</span>
+                        <div class="page-body-cont-top">
+                          <span>主营业务:</span>
+                            <el-tag
+                                v-for="tag in this.enterpriseInfoData.businessCommon"
+                                :key="tag.name"
+                                closable
+                                :type="tag.type">
+                                {{tag.name}}
+                            </el-tag>
+                            <el-tag
+                                v-for="tag in this.enterpriseInfoData.businessOwn"
+                                :key="tag.name"
+                                closable
+                                :type="tag.type">
+                                {{tag.name}}
+                            </el-tag>
+                        </div>
+                        <div class="page-body-cont-top">
+                          <span>主营品牌:</span>
+                            <el-tag
+                                v-for="tag in this.enterpriseInfoData.brandsCommon"
+                                :key="tag.name"
+                                closable
+                                :type="tag.type">
+                                {{tag.name}}
+                            </el-tag>
+                            <el-tag
+                                v-for="tag in this.enterpriseInfoData.brandsOwn"
+                                :key="tag.name"
+                                closable
+                                :type="tag.type">
+                                {{tag.name}}
+                            </el-tag>
+                        </div>
                     </div>
                 </el-tab-pane>
             </el-tabs>
@@ -97,6 +142,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
 import axios from 'axios'
+
 export default {
     name: 'merchantMemberInvitation',
     data () {
@@ -108,6 +154,7 @@ export default {
             },
             searchParams: {},
             tableRegisterData: [],
+            enterpriseInfoData: {},
             tableChangeData: [],
             tableDoneData: [],
             inputMoney: '',
@@ -217,6 +264,7 @@ export default {
         }),
         ...mapGetters({
             merchantmemberInvitationRegisterData: 'iotmerchantmemberInvitationRegisterData',
+            merchantmemberEnterpriseInfo: 'iotmerchantmemberEnterpriseInfo',
             merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
             merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData'
         }),
@@ -247,6 +295,7 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMemberInvitationRegistersituation: 'findMerchantMemberInvitationRegistersituation',
+            findMerchantMemberEnterpriseInfo: 'findMerchantMemberEnterpriseInfo',
             findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
         }),
@@ -254,7 +303,10 @@ export default {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
+            await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
+            this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
+            console.log(this.merchantmemberEnterpriseInfo)
             this.tableChangeData = this.merchantmemberInvitationChangeData
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
@@ -285,10 +337,12 @@ export default {
                 url: `${iotUrl}/mall/wx/order/boss/import`,
                 method: 'post',
                 data: formdata,
-                headers: { 'Content-Type': 'multipart/form-data',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                     refreshToken: sessionStorage.getItem('refreshToken'),
                     token: `Bearer ` + sessionStorage.getItem('token'),
-                    AccessKeyId: '5ksbfewexbfc' }
+                    AccessKeyId: '5ksbfewexbfc'
+                }
             }).then(response => {
                 console.log(response)
                 if (response.data.rel) {
@@ -357,12 +411,20 @@ export default {
                     })
                     return
                 }
-                this.updataInvitation({ id: val.id, rewardAmount: value, operateUserName: this.$route.query.nickName })
+                this.updataInvitation({
+                    id: val.id,
+                    rewardAmount: value,
+                    operateUserName: this.$route.query.nickName
+                })
             }).catch(() => {
             })
         },
         onEditMonth (val) {
-            this.updataInvitation({ id: val.id, rewardMonth: val.rewardMonth, operateUserName: this.$route.query.nickName })
+            this.updataInvitation({
+                id: val.id,
+                rewardMonth: val.rewardMonth,
+                operateUserName: this.$route.query.nickName
+            })
         },
         async updataInvitation (val) {
             await updateInvitationDetail(val)
@@ -515,18 +577,30 @@ export default {
         justify-content: space-between;
         background: #ffffff;
     }
+
     .top-box-right {
         width: auto;
         margin-left: 3rem;
         display: flex;
         flex-direction: row;
-        justify-content:flex-end;
+        justify-content: flex-end;
         background: #ffffff;
     }
+
     .page-body-cont-top {
         display: flex;
         justify-content: flex-start;
         flex-direction: row;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+
+    }
+
+    .page-body-cont-enterprise-info {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
         align-content: flex-start;
         padding: 20px 24px;
         background: $whiteColor;
