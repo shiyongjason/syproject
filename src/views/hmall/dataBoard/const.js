@@ -4,7 +4,7 @@ export const transactionInfoTableLabel = [
     { label: 'SPU编码', prop: 'spuCode' },
     { label: '子订单编号', prop: 'childOrderNo' },
     { label: '会员店', prop: 'memberName' },
-    { label: '会员归属', prop: 'keyManCompanyName' },
+    { label: '会员归属', prop: 'keyManName' },
     { label: '所属商家', prop: 'merchantName' },
     { label: '商品SKU名称', prop: 'skuName' },
     { label: '所属品牌', prop: 'brandName' },
