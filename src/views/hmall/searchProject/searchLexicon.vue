@@ -83,7 +83,11 @@ export default {
                 { label: '词名称', prop: 'keyword' }
             ],
             tableData: [],
-            pagination: {},
+            pagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
 
             dialogVisible: false,
             form: {
@@ -139,6 +143,7 @@ export default {
                 pageSize: this.customDictData.size,
                 total: this.customDictData.total
             }
+            console.log(this.pagination)
         },
 
         async onRefresh () {
@@ -153,7 +158,7 @@ export default {
                 }
             } else {
                 this.dialogInfo.type = 'edit'
-                this.dialogInfo.title = '编辑搜索词'
+                this.dialogInfo.title = '修改搜索词'
                 this.form = {
                     ...item
                 }

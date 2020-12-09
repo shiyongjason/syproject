@@ -132,7 +132,7 @@ export default {
             },
             dialogInfo: {
                 type: 'add',
-                title: '参数新增'
+                title: '新增搜索同义词'
             }
         }
     },
@@ -200,7 +200,7 @@ export default {
                 }
             } else {
                 this.dialogInfo.type = 'edit'
-                this.dialogInfo.title = '参数编辑'
+                this.dialogInfo.title = '修改搜索同义词'
 
                 // 这边注意要处理一个同义词数据，展示和form的数据结构不同
                 const keywordList = item.keyword.split('=')
