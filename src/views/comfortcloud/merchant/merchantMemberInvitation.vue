@@ -66,43 +66,39 @@
                 </el-tab-pane>
                 <el-tab-pane label="企业信息" name="3">
                     <div class="page-body-cont-enterprise-info">
-                        <span>公司名称： {{this.enterpriseInfoData.companyName}}  </span>
-                        <span >联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
-                        <span >联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
-                        <span >联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
-                        <span >经营类型：零售商</span>
-                        <div class="page-body-cont-top">
+                        <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
+                        <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
+                        <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
+                        <span style="margin-bottom: 20px">联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
+                        <span style="margin-bottom: 20px">经营类型：{{this.enterpriseInfoData.businessType===1? 零售商:工程商}}</span>
+                        <div class="page-body-cont-top-no-left">
                           <span>主营业务:</span>
-                            <el-tag
-                                v-for="tag in this.enterpriseInfoData.businessCommon"
-                                :key="tag.name"
-                                closable
+                            <el-tag style="margin-left: 20px"
+                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
+                                :key="tag"
                                 :type="tag.type">
-                                {{tag.name}}
+                                {{tag}}
                             </el-tag>
-                            <el-tag
-                                v-for="tag in this.enterpriseInfoData.businessOwn"
-                                :key="tag.name"
-                                closable
+                            <el-tag style="margin-left: 20px"
+                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn"
+                                :key="tag"
                                 :type="tag.type">
-                                {{tag.name}}
+                                {{tag}}
                             </el-tag>
                         </div>
-                        <div class="page-body-cont-top">
+                        <div class="page-body-cont-top-no-left">
                           <span>主营品牌:</span>
-                            <el-tag
-                                v-for="tag in this.enterpriseInfoData.brandsCommon"
-                                :key="tag.name"
-                                closable
+                            <el-tag style="margin-left: 20px"
+                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
+                                :key="tag"
                                 :type="tag.type">
-                                {{tag.name}}
+                                {{tag}}
                             </el-tag>
-                            <el-tag
-                                v-for="tag in this.enterpriseInfoData.brandsOwn"
-                                :key="tag.name"
-                                closable
+                            <el-tag style="margin-left: 20px"
+                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn"
+                                :key="tag"
                                 :type="tag.type">
-                                {{tag.name}}
+                                {{tag}}
                             </el-tag>
                         </div>
                     </div>
@@ -594,6 +590,16 @@ export default {
         align-content: flex-start;
         padding: 20px 24px;
         background: $whiteColor;
+
+    }
+    .page-body-cont-top-no-left {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+        align-items: center;
 
     }
 
