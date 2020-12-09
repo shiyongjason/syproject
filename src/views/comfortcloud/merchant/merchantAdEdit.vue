@@ -18,7 +18,7 @@
                         <el-form-item label="品类：" :prop="'categorys.' + index + '.categoryId'" :rules="rules.category">
                             <el-select v-model="categoryItem.categoryId" @change="()=> { selectChanged(index) }" >
                                 <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
+                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -74,6 +74,7 @@ export default {
                 content: ''
             },
             categoryTypes: [],
+            allCategorys: [],
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -189,13 +190,13 @@ export default {
             }
         }
     },
-    mounted () {
+    async mounted () {
+        await this.findCloudMerchantShopCategoryList()
+        this.allCategorys = this.cloudMerchantShopCategoryList
+
         if (this.$route.query.id) {
             this.getAdDetail(this.$route.query.id)
         }
-        this.getCategory()
-
-        this.findCloudMerchantShopCategoryList()
     },
     methods: {
         ...mapActions({
@@ -205,20 +206,37 @@ export default {
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
 
-        async getCategory () {
-            let { data } = await getCloudMerchantCategory()
-            this.categorys = data
-        },
-
         async getAdDetail (id) {
             await this.getCloudMerchantAdDetail(id)
+            let categorys = []
+            let categoryTypes = []
+
+            // 判断merchantsCategory是否是json
+            if (this.cloudMerchantAdDetail.merchantsCategory.indexOf('{') !== -1) {
+                let merchantsCategory = JSON.parse(this.cloudMerchantAdDetail.merchantsCategory)
+                let keys = Object.keys(merchantsCategory)
+
+                for (let i = 0; i < keys.length; i++) {
+                    let ids = merchantsCategory[keys[i]]
+                    for (let j = 0; j < ids.length; j++) {
+                        categorys.push({
+                            categoryId: parseInt(keys[i]),
+                            specificationId: parseInt(ids[j])
+                        })
+
+                        await this.findCloudMerchantShopCategoryTypeList({ categoryId: keys[i] })
+                        categoryTypes.push(this.cloudMerchantShopCategoryTypeList)
+                    }
+                }
+            }
+
             this.form = {
                 title: this.cloudMerchantAdDetail.title,
-                category: this.cloudMerchantAdDetail.merchantsCategory.split(',').map(function (value) {
-                    return parseInt(value)
-                }),
+                categorys: categorys,
                 content: this.cloudMerchantAdDetail.content
             }
+            this.categoryTypes = categoryTypes
+            console.log(this.form)
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -243,7 +261,7 @@ export default {
                         let params = {
                             title: this.form.title,
                             content: this.form.content,
-                            merchantsCategory: dic
+                            merchantsCategory: JSON.stringify(dic)
                         }
                         console.log(params)
 
