@@ -24,7 +24,7 @@
                     </el-col>
                     <el-col :span="6" style="padding-bottom: 20px;">
                         <el-form-item label="商品型号：" :prop="'categorys.' + index + '.specificationId'" :rules="rules.type">
-                            <el-select v-model="categoryItem.specificationId" >
+                            <el-select v-model="categoryItem.specificationId" @change="selectSpecificationIdChanged">
                                 <el-option label="选择" value=""></el-option>
                                 <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
                             </el-select>
@@ -102,7 +102,29 @@ export default {
                     { required: true, message: '请添加招商品类和类型' }
                 ],
                 category: [{ required: true, message: '品类不能为空', trigger: 'blur' }],
-                type: [{ required: true, message: '商品型号不能为空', trigger: 'blur' }],
+                type: [{
+                    required: true,
+                    validator: (rule, value, callback) => {
+                        if (!value) {
+                            return callback(new Error('商品类型不能为空'))
+                        }
+
+                        const index = parseInt(rule.field.split('.')[1])
+                        const categoryId = this.form.categorys[index].categoryId
+                        const specificationId = value
+
+                        for (let i = 0; i < this.form.categorys.length; i++) {
+                            if (i === index) {
+                                continue
+                            }
+                            let item = this.form.categorys[i]
+                            if (item.categoryId === categoryId && item.specificationId === specificationId) {
+                                return callback(new Error('商品类型不能重复'))
+                            }
+                        }
+                        callback()
+                    },
+                    trigger: 'change' }],
                 content: [
                     {
                         validator: (rule, value, callback) => {
@@ -271,6 +293,11 @@ export default {
             this.categoryTypes.splice(index, 1, [])
             await this.findCloudMerchantShopCategoryTypeList({ categoryId: this.form.categorys[index].categoryId })
             this.categoryTypes.splice(index, 1, this.cloudMerchantShopCategoryTypeList)
+        },
+        selectSpecificationIdChanged () {
+            for (let i = 0; i < this.form.categorys.length; i++) {
+                this.$refs['form'].validateField('categorys.' + i + '.specificationId')
+            }
         },
         onRemoveCategory (index) {
             this.form.categorys.splice(index, 1)

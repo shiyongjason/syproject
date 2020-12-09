@@ -89,6 +89,29 @@
         </div>
         <el-dialog title="新增出库" :modal-append-to-body=false :append-to-body=false :visible.sync="addRecordDialogVisible" width="50%">
             <el-form class="add-record-form" ref="addRecord" :model="addRecord" :rules="rules" label-width="140px">
+                <el-form-item label-width="0px">
+                    <el-col :span="8">
+                        <el-form-item label="归属品类：" prop="categoryId">
+                            <el-select v-model="addRecord.categoryId" @change="selectChanged">
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="商品型号：" prop="specificationId">
+                            <el-select v-model="addRecord.specificationId">
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in cloudMerchantShopCategoryTypeList" :key="item.specificationId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="设备数量：" prop="productNumber">
+                            <el-input  style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.productNumber" :disabled="true"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="设备ID：" prop="iotId">
                     <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="输入标题设备ID"></el-input>
                 </el-form-item>
