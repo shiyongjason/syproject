@@ -1,18 +1,38 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="rules" label-width="130px">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <div class="page-body-title">
                     <h3>招商广告编辑</h3>
                 </div>
                 <el-form-item label="招商广告标题：" prop="title">
                     <el-input v-model.trim="form.title" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-                <el-form-item label="招商品类：" prop="category">
-                    <el-checkbox-group v-model="form.category">
-                        <el-checkbox v-for="item in categorys" :label="item.categoryId" :key="item.categoryId" name="type">{{ item.categoryName }}</el-checkbox>
-                    </el-checkbox-group>
+
+                <el-form-item label="招商品类和型号：" prop="categorys">
+                    <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddCategory">+添加招商品类</el-button>
                 </el-form-item>
+
+                <el-row v-for="(categoryItem,index) in form.categorys" :key="index">
+                    <el-col :span="6">
+                        <el-form-item label="品类：" :prop="'categorys.' + index + '.categoryId'" :rules="rules.category">
+                            <el-select v-model="categoryItem.categoryId" @change="()=> { selectChanged(index) }" >
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6" style="padding-bottom: 20px;">
+                        <el-form-item label="商品型号：" :prop="'categorys.' + index + '.specificationId'" :rules="rules.type">
+                            <el-select v-model="categoryItem.specificationId" >
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-button type="primary" @click="()=> { onRemoveCategory(index) }">删除</el-button>
+                </el-row>
+
                 <div class="page-body-title">
                     <h3>广告内容</h3>
                 </div>
@@ -50,10 +70,10 @@ export default {
         return {
             form: {
                 title: '',
-                category: [],
+                categorys: [],
                 content: ''
             },
-            categorys: [],
+            categoryTypes: [],
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -78,9 +98,11 @@ export default {
                 title: [
                     { required: true, message: '请输入广告标题', trigger: 'blur' }
                 ],
-                category: [
-                    { required: true, message: '请选择招商品类' }
+                categorys: [
+                    { required: true, message: '请添加招商品类和类型' }
                 ],
+                category: [{ required: true, message: '品类不能为空', trigger: 'blur' }],
+                type: [{ required: true, message: '商品型号不能为空', trigger: 'blur' }],
                 content: [
                     {
                         validator: (rule, value, callback) => {
@@ -104,7 +126,9 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            cloudMerchantAdDetail: 'cloudMerchantAdDetail'
+            cloudMerchantAdDetail: 'cloudMerchantAdDetail',
+            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
+            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
         videoUpload () {
             return {
@@ -148,11 +172,15 @@ export default {
             this.getAdDetail(this.$route.query.id)
         }
         this.getCategory()
+
+        this.findCloudMerchantShopCategoryList()
     },
     methods: {
         ...mapActions({
             setNewTags: 'setNewTags',
-            getCloudMerchantAdDetail: 'getCloudMerchantAdDetail'
+            getCloudMerchantAdDetail: 'getCloudMerchantAdDetail',
+            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
+            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
 
         async getCategory () {
@@ -177,14 +205,25 @@ export default {
 
         onSaveAd () {
             this.loading = true
+            console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
+                        let dic = {}
+                        this.form.categorys.map((item) => {
+                            if (dic[item.categoryId] == null) {
+                                dic[item.categoryId] = [item.specificationId]
+                            } else {
+                                dic[item.categoryId].push(item.specificationId)
+                            }
+                        })
+
                         let params = {
                             title: this.form.title,
                             content: this.form.content,
-                            merchantsCategory: this.form.category.sort().join(',')
+                            merchantsCategory: dic
                         }
+                        console.log(params)
 
                         if (this.$route.query.id) {
                             params['id'] = this.$route.query.id
@@ -222,6 +261,20 @@ export default {
         onInsertVideo () {
             this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
             this.dialogVisible = false
+        },
+        onAddCategory () {
+            this.form.categorys.push({ categoryId: '', specificationId: '' })
+            this.categoryTypes.push([])
+        },
+        async selectChanged (index) {
+            this.form.categorys[index].specificationId = ''
+            this.categoryTypes.splice(index, 1, [])
+            await this.findCloudMerchantShopCategoryTypeList({ categoryId: this.form.categorys[index].categoryId })
+            this.categoryTypes.splice(index, 1, this.cloudMerchantShopCategoryTypeList)
+        },
+        onRemoveCategory (index) {
+            this.form.categorys.splice(index, 1)
+            this.categoryTypes.splice(index, 1)
         }
     }
 }
@@ -262,5 +315,8 @@ export default {
     }
     /deep/.editor-wrap{
         margin-bottom: 23px  !important;
+    }
+    /deep/.w-e-toolbar {
+        z-index: 99 !important;
     }
 </style>
