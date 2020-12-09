@@ -224,16 +224,13 @@ export default {
         },
         onPayEnter (row) {
             this.fundsDialogVisible = true
-            this.fundsDialogDetail = {
-                amount: row.paymentAmount,
-                companyName: row.companyName,
-                fundsId: row.id
-            }
+            this.fundsDialogDetail = row
         },
         seePayEnter (row) {
             this.fundsDialogVisible = true
             this.fundsDialogDetail = {
-                fundsId: row.orderId
+                _seeing: true,
+                fundsId: row.id
             }
         },
         fundMoneys (val) {

@@ -5,9 +5,9 @@
                 <span class="label">支付凭证：</span>
                 <img :src="item.fileUrl" alt="" :key="item.docId" v-for="item in imgGroup">
             </div>
-            <p class="tips" v-if="detail.companyName || detail.amount">是否确认收到{{ detail.companyName }}支付的{{detail.amount}}元服务费？</p>
+            <p class="tips" v-if="!detail._seeing">是否确认收到{{ detail.companyName }}支付的{{detail.amount}}元服务费？</p>
         </div>
-        <span slot="footer" class="dialog-footer" v-if="detail.companyName || detail.amount">
+        <span slot="footer" class="dialog-footer" v-if="!detail._seeing">
                 <h-button type="assist" @click="onReceived">确认收到</h-button>
                 <h-button type="primary" @click="onUnReceived">并未收到</h-button>
             </span>
@@ -17,6 +17,7 @@
 <script>
 import FundsDict from '../fundsDict'
 import { getFundsTicket, updateCancelPay, updateFinalPay, updateFirstPay, updateServicePay } from '../api'
+import { mapState } from 'vuex'
 
 export default {
     name: 'fundsDialog',
@@ -48,34 +49,34 @@ export default {
                 title = '查看凭证'
             }
             return title
-        }
+        },
+        ...mapState({
+            userInfo: state => state.userInfo
+        })
     },
     methods: {
         async onReceived () {
+            const params = {
+                paymentOrderId: this.detail.orderId,
+                fundId: this.detail.id,
+                attachDocList: [...this.imgGroup],
+                updateBy: this.userInfo.user_name
+            }
             if (this.status === FundsDict.repaymentTypeArrays.list[0].key) {
-                await updateFirstPay({
-                    a: 1
-                })
+                await updateFirstPay(params)
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[1].key) {
-                await updateServicePay({
-                    a: 1
-                })
+                await updateServicePay(params)
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[2].key) {
-                await updateFinalPay({
-                    a: 1
-                })
+                await updateFinalPay(params)
             }
             this.$emit('onClose')
         },
         async onUnReceived () {
             await updateCancelPay({
-                paymentOrderId: 1,
-                fundId: 1,
-                status: 1,
-                attachDocList: 1,
-                updateBy: 1
+                orderId: this.detail.orderId,
+                updateBy: this.userInfo.user_name
             })
             this.$emit('onClose')
         }
@@ -83,7 +84,7 @@ export default {
     watch: {
         isOpen (value) {
             value && getFundsTicket({
-                bizId: this.detail.fundsId,
+                bizId: this.detail.id,
                 bizType: FundsDict.bizType.list[3].key
             })
         }
