@@ -238,12 +238,12 @@ export default {
                     }
                 ]
             }
-            // 这边存在一个问题，直接删除不出现attributeForm会报错
-            // try {
-            this.$refs['form'].resetFields()
-            // } catch (error) {
+            // 这边存在一个问题，直接删除不出现lexiconForm会报错
+            try {
+                this.$refs['form'].resetFields()
+            } catch (error) {
 
-            // }
+            }
         },
 
         onSave () {
@@ -253,7 +253,6 @@ export default {
                     this.form.options.forEach((item) => {
                         keyword += ',' + item.option
                     })
-                    console.log(keyword)
                     if (this.form.id) {
                         await this.putCustomDict({
                             keyword,
