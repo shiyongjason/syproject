@@ -107,7 +107,7 @@ export default {
             },
             resetParams: {},
             tableLabel: [
-                { label: '同义词词名称', prop: 'keyword' }
+                { label: '同义词名称', prop: 'keyword' }
             ],
             tableData: [],
             pagination: {},
