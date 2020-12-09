@@ -83,11 +83,7 @@ export default {
                 { label: '词名称', prop: 'keyword' }
             ],
             tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
+            pagination: {},
 
             dialogVisible: false,
             form: {
@@ -124,6 +120,7 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.resetParams }
+            this.pagination.pageNumber = 1
             this.getTableList()
         },
         onSeeInfo ({ searchId }) {},
@@ -202,7 +199,7 @@ export default {
                         })
                     }
                     this.closeDialog()
-                    this.init()
+                    this.onReset()
                 }
             })
         },
