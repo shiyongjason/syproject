@@ -6,7 +6,8 @@ const state = {
     searchWordInfo: {},
     validSearchData: {},
     clickRateData: {},
-    noResultData: {}
+    noResultData: {},
+    customDictData: {}
 }
 
 const mutations = {
@@ -24,7 +25,13 @@ const mutations = {
     },
     [types.NO_RESULT_DATA] (state, payload) {
         state.noResultData = payload
+    },
+
+    /* 2020-12-04 搜索词和同义词 starting */
+    [types.CUSTOM_DICT_DATA] (state, payload) {
+        state.customDictData = payload
     }
+    /* 2020-12-04 搜索词和同义词 ending */
 }
 
 const actions = {
@@ -47,7 +54,26 @@ const actions = {
     async findNoResultList ({ commit }, params) {
         const { data } = await apis.findNoResultList(params)
         commit(types.NO_RESULT_DATA, data)
+    },
+
+    /* 2020-12-04 搜索词和同义词 starting */
+    async findCustomDictList ({ commit }, params) {
+        const { data } = await apis.findCustomDictList(params)
+        commit(types.CUSTOM_DICT_DATA, data)
+    },
+    async postCustomDict ({ commit }, params) {
+        await apis.postCustomDict(params)
+    },
+    async putCustomDict ({ commit }, params) {
+        await apis.putCustomDict(params)
+    },
+    async deleteCustomDict ({ commit }, params) {
+        await apis.deleteCustomDict(params)
+    },
+    async refreshCustomDict ({ commit }, params) {
+        await apis.refreshCustomDict(params)
     }
+    /* 2020-12-04 搜索词和同义词 ending */
 }
 
 export default {
