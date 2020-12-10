@@ -89,6 +89,7 @@
 </template>
 
 <script>
+// 打包测试
 import { brandEnable, brandDisable } from '../api/index'
 import { mapState } from 'vuex'
 export default {
