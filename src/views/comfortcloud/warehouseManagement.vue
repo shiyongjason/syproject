@@ -182,6 +182,7 @@ export default {
             },
             tableLabel: [
                 { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
+                { label: '品类', prop: 'deviceCategory' },
                 { label: '设备类型', prop: 'deviceType' },
                 { label: '设备ID', prop: 'iotId' },
                 { label: '数量', prop: 'amount' },
