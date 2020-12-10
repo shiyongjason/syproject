@@ -68,6 +68,9 @@ export function getMerchantMemberTotalsituation (params) {
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
     return axios.put(iotUrl + `/mall/wx/order/boss`, params)
+}// 修改企业信息备注
+export function updateCompanyInfo (params) {
+    return axios.post(iotUrl + `/mall/boss/company`, params)
 }
 // 分销员审核订单修改
 export function updateDistribution (params) {
