@@ -1,14 +1,14 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">活动名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">活动名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.spikeName" placeholder="请输入活动名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <div class="query-col-input">
                         <el-select v-model="queryParams.spikeTimeType">
                             <el-option label="活动开始时间" :value=1>
@@ -18,7 +18,7 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.beginTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart">
                         </el-date-picker>
@@ -27,34 +27,28 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">活动状态：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">活动状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.status">
                             <el-option v-for="item in eventsState" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page-body-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <h-button type="create" class="ml20" @click="onAddevent">
-                        新建活动
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
                     </h-button>
                 </div>
+            </div>
+            <div class="button-cont">
+                <h-button type="create" @click="onAddevent">
+                    新建活动
+                </h-button>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
                 <template slot="eventTime" slot-scope="scope">
