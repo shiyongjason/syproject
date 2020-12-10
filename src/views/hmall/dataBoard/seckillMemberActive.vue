@@ -1,68 +1,68 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">所属商家：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入所属商家">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">会员店：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.memberName" placeholder="请输入会员店">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">会员店账号：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.memberAccount" placeholder="请输入会员店账号">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">进入时间：</div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.entryStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.entryEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">离开时间：</div>
-                <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.leaveStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStartLeave">
-                    </el-date-picker>
-                    <span class="ml10 mr10">-</span>
-                    <el-date-picker v-model="queryParams.leaveEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEndLeave" default-time="23:59:59">
-                    </el-date-picker>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">SKU编码：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.skuCode" placeholder="请输入SKU编码">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">商品名称：</div>
-                <div class="query-col-input">
-                    <el-input type="text" maxlength="50" v-model="queryParams.skuName" placeholder="请输入商品名称">
-                    </el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <h-button type="primary" @click="onQuery">查询</h-button>
-                <h-button @click="onReset">重置</h-button>
-                <h-button @click="onExport">导出</h-button>
-            </div>
-        </div>
+    <div class="page-body B2b">
         <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">所属商家：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.merchantName" placeholder="请输入所属商家">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">会员店：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.memberName" placeholder="请输入会员店">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">会员店账号：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.memberAccount" placeholder="请输入会员店账号">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">进入时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.entryStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker v-model="queryParams.entryEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">离开时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.leaveStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStartLeave">
+                        </el-date-picker>
+                        <span class="ml10 mr10">-</span>
+                        <el-date-picker v-model="queryParams.leaveEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEndLeave" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">SKU编码：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.skuCode" placeholder="请输入SKU编码">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品名称：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.skuName" placeholder="请输入商品名称">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
+                </div>
+            </div>
             <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='paginationData' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="client">
                     <span>APP</span>

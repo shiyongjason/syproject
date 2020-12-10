@@ -1,10 +1,10 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="flex-wrap-title">品牌编码：</div>
-                    <div class="flex-wrap-cont">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">品牌编码：</div>
+                    <div class="query-col__input">
                         <el-input
                             type="text"
                             v-model="queryParams.code"
@@ -12,9 +12,9 @@
                             placeholder="请输入品牌编码"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="flex-wrap-title">品牌名称：</div>
-                    <div class="flex-wrap-cont">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">品牌名称：</div>
+                    <div class="query-col__input">
                         <el-input
                             type="text"
                             v-model="queryParams.name"
@@ -22,9 +22,9 @@
                             placeholder="请输入品牌名称"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="flex-wrap-title">品牌状态：</div>
-                    <div class="flex-wrap-cont">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">品牌状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.status" style="width: 100%">
                             <el-option
                                 v-for="item in brandStatusOptions"
@@ -35,9 +35,9 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="flex-wrap-title">维护人：</div>
-                    <div class="flex-wrap-cont">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">维护人：</div>
+                    <div class="query-col__input">
                         <el-input
                             type="text"
                             v-model="queryParams.operator"
@@ -45,26 +45,24 @@
                             placeholder="请输入维护人姓名"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="flex-wrap-cont">
-                        <h-button type="primary" @click="onQuery()">
-                            查询
-                        </h-button>
-                        <h-button @click="onReset()">重置</h-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onQuery()">
+                        查询
+                    </h-button>
+                    <h-button @click="onReset()">重置</h-button>
                 </div>
             </div>
+            <brandTable
+                ref="baseTable"
+                :tableData="tableData"
+                :paginationData="paginationData"
+                @updateStatus="onQuery"
+                @updateBrand="updateBrandChange"
+                @onSizeChange="onSizeChange"
+                @onCurrentChange="onCurrentChange"
+                @openMark="openMark">
+            </brandTable>
         </div>
-        <brandTable
-            ref="baseTable"
-            :tableData="tableData"
-            :paginationData="paginationData"
-            @updateStatus="onQuery"
-            @updateBrand="updateBrandChange"
-            @onSizeChange="onSizeChange"
-            @onCurrentChange="onCurrentChange"
-            @openMark="openMark">
-        </brandTable>
         <el-dialog
             width="700px"
             title="品牌编辑"
