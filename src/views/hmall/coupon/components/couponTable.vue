@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body-cont">
+    <div>
         <el-table :data="tableData"
                   border
                   style="width: 100%">
