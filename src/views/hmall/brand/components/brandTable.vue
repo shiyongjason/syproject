@@ -92,6 +92,7 @@
 import { brandEnable, brandDisable } from '../api/index'
 import { mapState } from 'vuex'
 export default {
+    // 打包测试
     name: 'productTable',
     props: {
         tableData: {
