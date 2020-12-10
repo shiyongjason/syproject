@@ -61,7 +61,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveCloudMerchantAd, getCloudMerchantCategory } from '../api'
+import { saveCloudMerchantAd } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
