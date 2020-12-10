@@ -151,6 +151,31 @@ const PurchaseOrderDict = Object.freeze({
             }
         ]
     },
+    contractType: {
+        title: '合同类型', // 10000：其他合同 10001：担保合同 10002：应收账款质押合同 10003：销售合同 10005：采购合同
+        list: [
+            {
+                key: 10000,
+                value: '其他合同'
+            },
+            {
+                key: 10001,
+                value: '担保合同'
+            },
+            {
+                key: 10002,
+                value: '应收账款质押合同'
+            },
+            {
+                key: 10003,
+                value: '销售合同'
+            },
+            {
+                key: 10005,
+                value: '采购合同'
+            }
+        ]
+    },
     changeResult: {
         title: '变更结果',
         list: [

@@ -2,7 +2,13 @@ import * as Type from './purchaseOrderType'
 import * as Api from '../api'
 
 const state = {
-    purchaseOrderList: [],
+    purchaseOrderData: {
+        records: [],
+        total: 0,
+        size: 10,
+        current: 1
+    },
+    purchaseOrderPagination: {},
     purchaseOrderDetail: {
         purchaseOrder: {},
         poInfo: {},
@@ -12,15 +18,25 @@ const state = {
     }
 }
 const getters = {
-    purchaseOrderList: state => state.purchaseOrderList,
+    purchaseOrderList: state => state.purchaseOrderData.records,
+    purchaseOrderPagination: state => {
+        return {
+            total: state.purchaseOrderData.total,
+            pageSize: state.purchaseOrderData.size,
+            pageNumber: state.purchaseOrderData.current
+        }
+    },
     purchaseOrderDetail: state => state.purchaseOrderDetail
 }
 const mutations = {
     [Type.PURCHASE_ORDER] (state, payload) {
-        state.purchaseOrderList = payload
+        state.purchaseOrderData = payload
     },
     [Type.PURCHASE_ORDER_DETAIL] (state, payload) {
         state.purchaseOrderDetail = payload
+    },
+    [Type.PURCHASE_ORDER_PAGINATION] (state, payload) {
+        state.purchaseOrderPagination = payload
     }
 }
 
