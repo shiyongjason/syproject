@@ -1,13 +1,32 @@
 <template>
     <div class="collect-wrap">
+        <div class="fullbg" v-if="showPacking">
+            <div class="fullbg-img">
+                <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                <p>
+                    <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                    <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                </p>
+            </div>
+        </div>
+        <div class="collect-wrap_btnflex">
+            <div v-if="activeName=='3'&&hosAuthCheck(Auths.CRM_LX_DOWN)">
+                <h-button table @click="onDownzip" v-if="showPacking==null" >一键下载</h-button>
+                <!-- <span v-if="isDownLoad" class="collect-wrap_span">正在下载中，请稍后</span> -->
+                <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                <span v-if="showPacking!=null&&!showPacking">打包完成</span>
+            </div>
+            <div v-if="activeName=='4'&&hosAuthCheck(Auths.CRM_ZS_DOWN)">
+                <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
+                <!-- <span v-if="isDownLoads" class="collect-wrap_span">正在下载中，请稍后</span> -->
+                <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                <span v-if="showPacking!=null&&!showPacking">打包完成</span>
+            </div>
+        </div>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
-                <el-form-item :label="approveTitle+'结果：'">
-                    {{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}
-                </el-form-item>
-                <el-form-item label="说明：">
-                    {{approveForm.remark?approveForm.remark:'-'}}
-                </el-form-item>
+                <div class="collect-Info_result">{{approveTitle+'结果：'}} <i>{{approveForm.approveResult==true?'通过':approveForm.approveResult==false?'不通过':'-'}}</i></div>
+                <p>说明： {{approveForm.remark?approveForm.remark:'-'}}</p>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{item.firstCatagoryName}}</div>
@@ -42,7 +61,7 @@
                                 <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                             </div>
                         </div>
-                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
+                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)" v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}"
                             style="margin:10px 0 0 5px">
                             <h-button>上传</h-button>
                         </hosjoyUpload>
@@ -70,6 +89,7 @@
     </div>
 </template>
 <script>
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
@@ -89,6 +109,9 @@ export default {
         status: {
             type: Number,
             default: 0
+        },
+        showPacking: {
+            default: null
         }
     },
     components: {
@@ -96,7 +119,7 @@ export default {
     },
     data () {
         return {
-
+            Auths,
             moment,
             handleImgDownload,
             action: interfaceUrl + 'tms/files/upload',
@@ -117,7 +140,9 @@ export default {
             approvedialgForm: {
                 submitStatus: '',
                 remark: ''
-            }
+            },
+            isDownLoad: false,
+            isDownLoads: false
         }
     },
     mounted () {
@@ -140,7 +165,16 @@ export default {
             }
             return res
         },
-        async  onSaveapproveOrfinal (val) {
+        onDownzip () {
+            if (this.activeName == 3) {
+                this.isDownLoad = true
+            } else {
+                this.isDownLoads = true
+            }
+
+            this.$emit('onBackDownzip')
+        },
+        async onSaveapproveOrfinal (val) {
             const projectDocList = this.approveForm.projectDocList
             console.log(projectDocList)
             let riskCheckProjectDocPoList = []
@@ -168,7 +202,7 @@ export default {
                         if (valid) {
                             try {
                                 await submitProjectdoc(params)
-                                this.$message.success(`立项提交成功`)
+                                this.$message.success(`${this.approveTitle}提交成功`)
                                 this.$emit('onCompsback')
                                 this.approveVisible = false
                                 this.$emit('onBackLoad', false)
@@ -180,7 +214,7 @@ export default {
                 } else {
                     try {
                         await saveProjectdoc(params)
-                        this.$message.success(`立项资料保存成功`)
+                        this.$message.success(`${this.approveTitle}资料保存成功`)
                         this.$emit('onCompsback')
                         this.$emit('onBackLoad', false)
                     } catch (error) {
@@ -221,18 +255,69 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.fullbg{
+    background-color: #211f1f;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    .fullbg-img{
+        width: 377px;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        p{
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 /deep/.el-form {
     padding: 0;
+}
+/deep/.el-form-item__content {
+    line-height: 24px;
 }
 .collect-wrap {
     padding: 0 10px 100px 10px;
     margin-left: 15px;
+    &_btnflex {
+        width: 140px;
+        text-align: right;
+        margin: 0 10px;
+        display: flex;
+        justify-content: flex-end;
+        position: fixed;
+        top: 130px;
+        right: 0;
+        z-index: 11;
+        background: #fff;
+        p {
+            margin-bottom: 10px;
+        }
+        span {
+            color: #ff7a45;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+    }
+}
+.demo-ruleForm {
+    margin-top: 80px;
 }
 .collect-title {
     font-size: 20px;
-    line-height: 45px;
     border-bottom: 1px solid #e5e5e5;
-    margin-top: 10px;
+    padding: 20px 0;
     font-weight: bold;
 }
 .collect-box {
@@ -242,11 +327,22 @@ export default {
     }
 }
 .collect-boxtxt {
+    h3 {
+        padding: 30px 0 0 0;
+        font-size: 16px;
+        margin: 0;
+    }
     i {
         color: #ff0000;
         vertical-align: middle;
         padding: 0 2 0 0px;
         font-style: normal;
+    }
+    p {
+        font-size: 14px;
+        margin: 0;
+        padding: 16px 0 0 0;
+        line-height: auto;
     }
 }
 .collect-call {
@@ -261,6 +357,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 16px 0 0 0;
     div {
         &:first-child {
             display: flex;
@@ -285,7 +382,6 @@ export default {
             white-space: nowrap;
         }
         &:nth-child(3) {
-            flex: 2;
             word-break: keep-all;
         }
     }
@@ -333,6 +429,21 @@ export default {
         margin-right: 10px;
         white-space: nowrap;
         display: flex;
+    }
+}
+.collect-Info {
+    margin: 16px 0 0 0;
+    &_result {
+        font-size: 17px;
+        i {
+            font-style: normal;
+            color: #ff7a45;
+        }
+    }
+    p {
+        font-size: 14px;
+        color: #666666;
+        padding-top: 16px;
     }
 }
 </style>

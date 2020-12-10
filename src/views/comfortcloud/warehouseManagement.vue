@@ -13,12 +13,31 @@
             <div class="query-cont-col">
                 <div class="query-col-title">出库时间：</div>
                 <div class="query-col-input">
-                    <el-date-picker v-model="queryParams.startOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                    <el-date-picker v-model="queryParams.startOutboundTime" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart">
                     </el-date-picker>
                     <span class="ml10">-</span>
-                    <el-date-picker v-model="queryParams.endOutboundTime" type="datetime" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                    <el-date-picker v-model="queryParams.endOutboundTime" type="date" value-format='yyyy-MM-dd HH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                     </el-date-picker>
                 </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">经销商：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="输入经销商名称"></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">经销商电话：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.dealerPhone" maxlength="20" placeholder="输入经销商电话"></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title search-title">出库类型：</div>
+                <el-select v-model="queryParams.outboundType" clearable>
+                    <el-option label="样品" value="样品"></el-option>
+                    <el-option label="合同履约提货" value="合同履约提货"></el-option>
+                </el-select>
             </div>
             <div class="query-cont-col">
                 <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
@@ -59,6 +78,12 @@
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                 </template>
+                <template slot="outboundType" slot-scope="scope" >
+                    <p v-bind:class="{ 'red-content' : scope.data.row.outboundType === '出库类型错误' }">{{ scope.data.row.outboundType }}</p>
+                </template>
+                <template slot="deviceStatus" slot-scope="scope">
+                    <p>{{ scope.data.row.deviceStatus === 1 ? '在线' : '离线' }}</p>
+                </template>
             </basicTable>
         </div>
     </div>
@@ -77,7 +102,10 @@ export default {
                 startOutboundTime: '',
                 endOutboundTime: '',
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 10,
+                outboundType: '',
+                dealer: '',
+                dealerPhone: ''
             },
             searchParams: {},
             tableData: [],
@@ -88,8 +116,10 @@ export default {
                 { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
                 { label: '设备类型', prop: 'deviceType' },
                 { label: '设备ID', prop: 'iotId' },
+                { label: '出库类型', prop: 'outboundType' },
                 { label: '经销商', prop: 'dealer' },
-                { label: '经销商电话', prop: 'dealerPhone' }
+                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '设备状态', prop: 'deviceStatus' }
             ],
             uploadShow: false,
             errorShow: false,
@@ -304,5 +334,12 @@ export default {
 }
 .basic-table {
     margin: 10px 0;
+}
+.red-content {
+    color: red;
+}
+
+.search-title {
+    white-space: nowrap;
 }
 </style>

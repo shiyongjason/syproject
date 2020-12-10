@@ -285,14 +285,14 @@ export default {
             }
             return ''
         },
-        handleSizeChange (val) {
-            this.$emit('pagination', {
+        async handleSizeChange (val) {
+            await this.$emit('pagination', {
                 pageNumber: this.currentPage,
                 pageSize: val
             })
         },
-        handleCurrentChange (val) {
-            this.$emit('pagination', {
+        async handleCurrentChange (val) {
+            await this.$emit('pagination', {
                 pageNumber: val,
                 pageSize: this.pageNum
             })
@@ -478,6 +478,44 @@ export default {
 }
 
 </script>
+<style scoped>
+.hosjoy-table >>> .el-table .cell {
+    font-size: 12px;
+}
+.hosjoy-table >>> .el-table th {
+    color: #000000;
+    font-size: 12px;
+    font-weight: 400;
+}
+.hosjoy-table >>> .el-table--border th.gutter:last-of-type {
+    /* fix element ui 表头错位（出现滚动条后错位） */
+    display: block !important;
+    width: 17px !important;
+}
+.hosjoy-table >>> .el-table .branch-total-row {
+    background: rgb(235, 241, 222);
+    font-weight: bold;
+}
+
+.hosjoy-table >>> .el-table__row--striped.branch-total-row td {
+    background: rgb(235, 241, 222);
+    font-weight: bold;
+}
+
+.hosjoy-table >>> .el-table .total-row {
+    background: rgb(253, 233, 217);
+    font-weight: bold;
+}
+.hosjoy-table >>> .el-table__fixed-right {
+    background: #f5f7fa;
+}
+.hosjoy-table >>> .el-table thead.has-gutter th {
+    background: #f5f7fa;
+}
+.hosjoy-table >>> .el-table th {
+    background: #f5f7fa;
+}
+</style>
 <style scoped lang="scss">
 .hosjoy-table {
     position: relative;
@@ -616,18 +654,6 @@ export default {
 }
 .hosjoy-table >>> .el-table th {
     background: #f5f7fa;
-}
-.hosjoy-table >>> .el-table__empty-block {
-    position: relative;
-}
-.hosjoy-table >>> .el-table__empty-block .el-table__empty-text {
-    position: absolute;
-    top: 0;
-}
-.hosjoy-table >>> .emptylayout {
-    position: fixed;
-    transform: translateX(-50%);
-    width: auto;
 }
 .hosjoy-table >>> .el-table--fluid-height .el-table__fixed {
     bottom: 11px!important;

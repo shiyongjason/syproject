@@ -74,7 +74,7 @@ export default {
     name: 'HosJoyUpload',
     props: {
         value: Array, // 双向绑定的list
-        limit: { type: Number, default: 1000 }, // 最大允许上传个数
+        limit: { type: Number, default: 1000 }, // 最大允许上传个数，勿用
         disabled: { type: Boolean, default: false }, // 是否禁用
         multiple: { type: Boolean, default: true }, // 是否支持多图上传
         uploadParameters: { type: Object, default () { return {} } }, // 上传时附带的额外参数同el-upload 的 data
@@ -130,6 +130,7 @@ export default {
             this.uploadPercent = Math.floor(event.percent)
         },
         handleSuccess (response, file, fileList) {
+            console.log('fileList: ', fileList)
             let obj = {
                 fileName: response.data.fileName,
                 fileUrl: response.data.accessUrl
@@ -174,7 +175,7 @@ export default {
         },
         onExceed (files, fileList) {
             console.log(files, fileList)
-            this.$message.error(`一次性上传数量超出限制！最大允许上传个数：${this.limit}`)
+            this.$message.error(`最大允许上传个数：${this.limit}`)
         },
         handleCheckedSize (files, fileList) {
             this.isBeyond = true
@@ -200,7 +201,7 @@ export default {
                 if (item === `.${this.getFileType(file.name)}`) flag = true
             })
             if (!flag) {
-                this.$message.error(`上传错误，暂不支持${file.name.split('.')[1]}格式上传`)
+                this.$message.error(`上传错误，暂不支持该文件格式上传`)
                 return false
             }
             if (this.isBeyond) {

@@ -37,6 +37,13 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__lable">会员归属：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.keyManName" placeholder="请输入会员归属">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col__lable">所属品牌：</div>
                     <div class="query-col__input">
                         <el-input type="text" maxlength="50" v-model="queryParams.brandName" placeholder="请输入所属品牌">
@@ -139,6 +146,7 @@ export default {
                 categoryId: '',
                 skuName: '',
                 memberName: '',
+                keyManName: '',
                 brandName: '',
                 childOrderStatus: '',
                 source: '',
@@ -208,6 +216,7 @@ export default {
                 categoryId: '',
                 skuName: '',
                 memberName: '',
+                keyManName: '',
                 brandName: '',
                 childOrderStatus: '',
                 source: '',

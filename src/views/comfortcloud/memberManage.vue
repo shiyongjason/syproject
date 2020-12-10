@@ -56,7 +56,7 @@
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
-    name: 'membermanage',
+    name: 'comfortcloudMembermanage',
     data () {
         return {
             queryParams: {

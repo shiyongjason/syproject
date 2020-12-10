@@ -99,6 +99,7 @@ import { PAY_METHOD_OPTIONS, PAY_METHOD_MAP } from '@/utils/const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
+    name: 'financeorder',
     data () {
         return {
             orderStatusOptions: ORDER_STATUS_OPTIONS,

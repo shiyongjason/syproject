@@ -1,5 +1,7 @@
 <template>
-    <el-container class="body-container" v-watermark="$store.state.userInfo.employeeName">
+    <!-- v-watermark="$store.state.userInfo.employeeName" -->
+    <el-container class="body-container">
+        <div id="watermark-dom"></div>
         <el-header class="header">
             <NavMenuHead @editPassword="editPasswordShow" />
         </el-header>
@@ -15,6 +17,14 @@
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                     <router-view></router-view>
                 </keep-alive>
+                <!-- 这边以前就没加key -->
+                <!-- !!!!!!!加了tags缓存，为了适配三级路由缓存不能加key，如果要加，搞个啥的判断下v-if,v-else，就需要的页面才用这加key!!!!!!! -->
+                <!-- <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-if="">
+                    <router-view :key=''></router-view>
+                </keep-alive>
+                <keep-alive :include="cachedInclude" :exclude="cachedExclude" v-else>
+                    <router-view></router-view>
+                </keep-alive> -->
             </el-main>
         </el-container>
         <el-dialog title="密码修改" :visible.sync="editPasswordVisible" class="recharge-password" :before-close="closePassword">
@@ -97,9 +107,74 @@ export default {
             userInfo: state => state.userInfo,
             cachedInclude: state => state.cachedInclude,
             cachedExclude: state => state.cachedExclude
-        })
+        }),
+        key () {
+            const index = this.$route.fullPath.indexOf('#')
+            if (index !== -1) {
+                return this.$route.fullPath.substring(0, index)
+            }
+            return this.$route.fullPath
+        }
     },
     methods: {
+        init () {
+            this.createWaterMarker()
+            window.onresize = () => {
+                this.createWaterMarker()
+            }
+        },
+        createWaterMarker () {
+            const canvas = document.createElement('canvas')
+            canvas.width = 150
+            canvas.height = 70
+
+            const context = canvas.getContext('2d')
+            context.font = '20px Vedana'
+            context.fillStyle = 'rgba(200, 200, 200, .3)'
+            context.textAlign = 'left'
+            context.textBaseline = 'Middle'
+            context.rotate(Math.PI / 180 * -15)
+            context.fillText(this.userInfo.employeeName, 0, canvas.height)
+
+            const el = document.getElementById('watermark-dom')
+            el.style.pointerEvents = 'none'
+            el.style.position = 'fixed'
+            el.style.top = '50px'
+            el.style.left = '0px'
+            el.style.zIndex = '98'
+            el.style.width = document.documentElement.clientWidth - 50 + 'px'
+            el.style.height = document.documentElement.clientHeight + 'px'
+            el.style.background = 'url(' + canvas.toDataURL('image/png') + ') left top repeat'
+            // function addWaterMarker (str, parentNode) {
+            //     let can = document.createElement('canvas')
+            //     can.width = 150
+            //     can.height = 70
+
+            //     let cans = can.getContext('2d')
+            //     cans.rotate(-20 * Math.PI / 180)
+            //     cans.font = '20px Vedana'
+            //     cans.fillStyle = 'rgba(200, 200, 200, .3)'
+            //     cans.textAlign = 'left'
+            //     cans.textBaseline = 'Middle'
+            //     cans.fillText(str, 0, can.height)
+
+            //     let div = document.createElement('div')
+            //     div.id = 'watermark-dom'
+            //     div.style.pointerEvents = 'none'
+            //     div.style.top = '100px'
+            //     div.style.left = '20px'
+            //     div.style.position = 'fixed'
+            //     div.style.zIndex = '1990'
+            //     // div.style.transform = 'rotate(-15deg)'
+            //     div.style.width = document.documentElement.clientWidth - 50 + 'px'
+            //     div.style.height = document.documentElement.clientHeight - 100 + 'px'
+            //     div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
+            //     parentNode.appendChild(div)
+            // }
+            // if (!document.getElementById('watermark-dom')) {
+            //     // addWaterMarker(binding.value, el)
+            // }
+        },
         closePassword () {
             this.editPasswordVisible = false
             this.$refs.editPassword.resetFields()
@@ -139,14 +214,14 @@ export default {
         }
     },
     mounted () {
-
+        this.init()
     }
-
 }
 </script>
 
 <style lang="scss" scoped>
 .tabs-container {
+    z-index: 1000;
     &__height {
         height: 50px;
     }

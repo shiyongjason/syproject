@@ -80,6 +80,7 @@ import { B2bUrl } from '@/api/config'
 import { getSmsCode, cashWithdrawal } from './api/index'
 import { VerificationCode } from '@/utils/rules.js'
 export default {
+    name: 'financewithdrawal',
     data () {
         return {
             cashWithdrawalMap: CASH_WITHDRAWAL_MAP,

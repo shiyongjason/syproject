@@ -47,11 +47,7 @@
                     <div class="query-col__lable">上架状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.isOnShelf" style="width: 100%">
-                            <el-option
-                                v-for="item in shelfStatus"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in shelfStatus" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -60,11 +56,7 @@
                     <div class="query-col__lable">是否共享：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.isShared" style="width: 100%">
-                            <el-option
-                                v-for="item in shareStatus"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
+                            <el-option v-for="item in shareStatus" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
@@ -73,7 +65,7 @@
                     <el-checkbox v-model="queryParams.isOwnOperated" true-label='true' false-label='false'>自营</el-checkbox>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button type="primary" @click="()=>onQuery(1)">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
                     <h-button @click="onExport">导出</h-button>
                 </div>
@@ -81,17 +73,7 @@
             <div class="button-cont">
                 <h-button @click="onOffShelves()">批量下架</h-button>
             </div>
-            <basicTable
-                :tableLabel="tableLabel"
-                :tableData="tableData"
-                :isPagination='true'
-                :pagination='paginationInfo'
-                @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange"
-                isAction
-                isMultiple
-                :multiSelection.sync='multiSelection'
-            >
+            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isPagination='true' :pagination='paginationInfo' @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange" isAction isMultiple :multiSelection.sync='multiSelection'>
                 <template slot="isOnShelf" slot-scope="scope">
                     {{ shelfStatusMap.get(scope.data.row.isOnShelf) }}
                 </template>
@@ -180,7 +162,10 @@ export default {
         productCategoryChange (val) {
             this.queryParams.categoryId = val[val.length - 1]
         },
-        onQuery () {
+        onQuery (val) {
+            if (val) {
+                this.queryParams.pageNumber = val
+            }
             this.search()
         },
         onReset () {

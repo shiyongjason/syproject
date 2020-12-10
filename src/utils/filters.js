@@ -1,3 +1,6 @@
+
+import moment from 'moment'
+
 // new Data()过后的时间转YYYY-MM-DD HH:mm
 const formatterTime = function (time) {
     const data = new Date(time)
@@ -107,6 +110,30 @@ const moneyShow = function (val) {
     }
 }
 
+// *
+//  * @name formatTime 时间格式化工具，二次封装moment
+//  *
+//  * @param {date} [value=new Date()] 时间格式参数
+//  * @param {string} [type='YYYY-MM-DD HH:mm'] 格式化类型
+//  *
+
+const momentFormat = function (value = new Date(), type = 'YYYY-MM-DD HH:mm:ss') {
+    if (value) {
+        return moment(value).format(type)
+    } else {
+        return '-'
+    }
+}
+
+const percentageShow = function (value) {
+    if (value) {
+        let str = Number(value).toFixed(2)
+        str += '%'
+        return str
+    }
+    return '--'
+}
+
 export default {
     formatterTime,
     formatterTimes,
@@ -116,5 +143,7 @@ export default {
     isNotBlank,
     fundMoney,
     moneyShow,
-    fundMoneyHaveSpot
+    fundMoneyHaveSpot,
+    momentFormat,
+    percentageShow
 }

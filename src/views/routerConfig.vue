@@ -91,7 +91,7 @@
             <el-form :model="form" :rules="formRules" ref="form">
                 <el-form-item v-show="title.indexOf('编辑') === -1" label="开发中..." label-width="80px">
                     <el-select v-model="value" placeholder="请选择菜单" @change="onChangeHandle">
-                        <el-option v-for="(item, index) in options" :key="index" :label="item.meta.title" :value="JSON.stringify(item)"></el-option>
+                        <el-option v-for="(item, index) in options" :key="index" :label="item.meta.title" :value="JSON.stringify(item)" :disabled="item.disabled"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="菜单名称" label-width="80px" prop="authName">
@@ -159,6 +159,7 @@
 import { getAuth, addAuth, addAuthType, addAuthResource, editAuthResource, editAuth, clearCache, deleteAuth } from './auth/api'
 import { routerMapping } from '../router'
 export default {
+    name: 'routerConfig',
     data () {
         return {
             options: [],
@@ -211,7 +212,6 @@ export default {
         },
         onChangeHandle (value) {
             let obj = JSON.parse(value)
-            console.log(obj)
             this.form.authUri = obj.path
             this.form.authName = obj.meta.title
         },
@@ -229,12 +229,12 @@ export default {
         },
         async init () {
             const { data } = await getAuth()
-            var shy = JSON.parse(JSON.stringify(data))
+            var copyData = JSON.parse(JSON.stringify(data))
             this.handleRouterData(routerMapping, '')
-            this.handleData(shy, '')
-            console.log('resultData: ', shy)
-            console.log('routerMapping: ', routerMapping)
-            this.tableList = this.handlerTableList(shy, 0)
+            this.handleData(copyData, '')
+            // console.log('resultData: ', copyData)
+            // console.log('routerMapping: ', routerMapping)
+            this.tableList = this.handlerTableList(copyData, 0)
         },
         // 计算table合并行数
         computedRowspan (list, len) {
@@ -339,12 +339,12 @@ export default {
                 this.$message.warning('上级菜单不存在')
                 return
             }
-            console.log(routerMapping)
-            console.log(parent)
             if (!parent) {
                 this.options = routerMapping
+                this.findDiffent(this.options, this.tableList)
             } else {
                 this.options = this.getChidlren(parent.uid) && this.getChidlren(parent.uid).children ? this.getChidlren(parent.uid).children : []
+                this.findDiffent(this.options, parent.childAuthList)
             }
             if (lev == 1) {
                 this.title = '添加一级菜单'
@@ -360,16 +360,16 @@ export default {
             }
             this.dialogSeedVisible = true
         },
-        // 循环判断数组a里的元素在b里面有没有，有的话就放入新建立的数组中
-        FilterData (a, b) {
-            var result = []
-            var c = b.toString()
-            for (var i = 0; i < a.length; i++) {
-                if (c.indexOf(a[i].toString()) == -1) {
-                    result.push(a[i])
+        // 根据uid循环找到本地路由与表中路由不同，限制页面选择
+        findDiffent (localRouter, originRouter) {
+            localRouter.forEach(li => {
+                const result = originRouter.findIndex(ri => li.uid === ri.uid)
+                if (result > -1) {
+                    li.disabled = true
+                } else {
+                    li.disabled = false
                 }
-            }
-            return result
+            })
         },
         getChidlren (uid) {
             var hasFound = false // 表示是否有找到uid
@@ -415,8 +415,6 @@ export default {
             this.dialogFirVisible = false
         },
         async onResourceSure (i) {
-            console.log(this.configObj)
-            // console.log(this.list[i])
             const params = {
                 authCode: this.configObj.authCode,
                 authTypeId: this.configObj.id,
@@ -426,7 +424,6 @@ export default {
                 sort: this.list[i].sort,
                 resourceAddress: this.list[i].resourceAddress
             }
-            console.log(params)
             if (this.list[i].id) {
                 params.id = this.list[i].id
                 await editAuthResource(params)
@@ -437,7 +434,6 @@ export default {
             this.init()
         },
         onShowFieldConfig (item) {
-            console.log(item)
             // 初始化
             this.list = [{}]
             if (item.authResourceList.length > 0) {
@@ -450,7 +446,6 @@ export default {
             this.list.push({})
         },
         async addSensitive (itemc, itemb, itema, type) {
-            console.log(itemc, itemb, itema, type)
             if (!itema.authCode) {
                 this.$message.warning('权限配置菜单不存在')
                 return
@@ -460,7 +455,6 @@ export default {
                 authCode,
                 authType: type
             }
-            console.log(params)
             await addAuthType(params)
             this.init()
         },
@@ -472,7 +466,6 @@ export default {
             this.init()
         },
         onDelete (item) {
-            console.log(item)
             this.$confirm(`此操作将永久删除 ${item.authName} 菜单以及下面挂载的子菜单, 是否继续?`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',

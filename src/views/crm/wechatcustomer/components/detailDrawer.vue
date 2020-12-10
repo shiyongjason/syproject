@@ -64,7 +64,7 @@
                     <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
                     <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total"
-                        @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :localName="'v3.5.0'">
+                        @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
                     </hosJoyTable>
                 </div>
                 <div class="drawer-footer">
@@ -95,21 +95,8 @@ export default {
                 sort: 'desc'
             },
             tableLabel: [
-
-            ],
-            tableDepart: [{ label: '分部', prop: 'deptName' },
-                { label: '企业微信客户数', prop: 'memberNum', sortable: 'custom' },
-                { label: '注册用户数', prop: 'registerMemberNum', sortable: 'custom' },
-                {
-                    label: '注册转化率',
-                    prop: 'conversionRate',
-                    sortable: 'custom',
-                    render: (h, scope) => {
-                        return <span>{this.getStatusList(scope.row.conversionRate, 100)}</span>
-                    }
-                }],
-            tableUser: [
-                { label: '员工', prop: 'psnname' },
+                { label: '员工', prop: 'psnname', isHidden: true, coderHidden: true },
+                { label: '分部', prop: 'deptName', isHidden: true, coderHidden: true },
                 { label: '企业微信客户数', prop: 'memberNum', sortable: 'custom' },
                 { label: '注册用户数', prop: 'registerMemberNum', sortable: 'custom' },
                 {
@@ -218,7 +205,8 @@ export default {
                 await this.findwxMemberloan(this.modelParams)
                 this.staticInfo = this.wxMemberloan
                 if (this.activeName == 'first') {
-                    this.tableLabel = this.tableDepart
+                    this.tableLabel[0].coderHidden = true
+                    this.tableLabel[1].coderHidden = false
                     await this.findDepartstatic(this.modelParams)
                     this.tableData = this.wxDepartstatic.records
                     this.paginationInfo = {
@@ -227,7 +215,8 @@ export default {
                         total: this.wxDepartstatic.total
                     }
                 } else {
-                    this.tableLabel = this.tableUser
+                    this.tableLabel[0].coderHidden = false
+                    this.tableLabel[1].coderHidden = true
                     await this.findUserstatic(this.modelParams)
                     this.tableData = this.wxUserstatic.records
                     this.paginationInfo = {

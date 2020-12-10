@@ -26,7 +26,7 @@ export default [
             {
                 path: 'equipmentOverview',
                 meta: {
-                    title: '设备概览',
+                    title: '设备管理',
                     isMenu: true,
                     icon: ''
                 },
@@ -91,6 +91,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/warehouseManagement.vue')
+                    },
+                    {
+                        path: 'deviceDetail',
+                        name: 'deviceDetail',
+                        meta: {
+                            title: '设备详情',
+                            tagName: '设备详情',
+                            parentName: '设备管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/equipcoms/deviceDetail.vue')
                     }
                 ]
             },
@@ -296,6 +308,18 @@ export default [
                         component: () => import('@/views/comfortcloud/splashScreenManagement/index.vue')
                     },
                     {
+                        path: 'adpop',
+                        name: 'adpop',
+                        meta: {
+                            title: '广告弹窗',
+                            tagName: '广告弹窗',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/adpop/index.vue')
+                    },
+                    {
                         path: 'splashScreenDetail',
                         name: 'splashScreenDetail',
                         meta: {
@@ -306,6 +330,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/splashScreenManagement/detail.vue')
+                    },
+                    {
+                        path: 'adPopDetail',
+                        name: 'adPopDetail',
+                        meta: {
+                            title: '广告弹窗信息',
+                            tagName: '广告弹窗信息',
+                            parentName: '舒适云概览',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/adpop/detail.vue')
                     },
                     {
                         path: 'serviceRecord',
@@ -332,6 +368,18 @@ export default [
                         component: () => import('@/views/comfortcloud/knowledge')
                     }
                 ]
+            },
+            {
+                path: 'serviceManage',
+                name: 'serviceManage',
+                meta: {
+                    title: '服务管理',
+                    tagName: '服务管理',
+                    parentName: '舒适云概览',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/comfortcloud/serviceManage.vue')
             }
         ]
     }

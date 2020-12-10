@@ -55,6 +55,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
+    name: 'financeserviceCharge',
     data () {
         return {
             queryParams: {

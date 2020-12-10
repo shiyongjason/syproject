@@ -117,6 +117,7 @@ import { findAllCategory } from './api/index'
 import { mapActions, mapGetters } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
+    name: 'financeproduct',
     data () {
         return {
             orderStatusOptions: ORDER_STATUS_OPTIONS,

@@ -1,55 +1,55 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
             <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">经营区域：</div>
+                    <div class="query-col__input">
                         <el-cascader placeholder="试试搜索： 南京" :options="options" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" @change="cityChange" :props="{ multiple: true ,value:'countryId',label:'name',children:'cities'}" filterable>
                         </el-cascader>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">联系人/手机号：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">联系人/手机号：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.contract" placeholder="请输入联系人/手机号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否分配：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">是否分配：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.assigned" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否接收：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">是否接收：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.received" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in droplist" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">分配员工：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">分配员工：</div>
+                    <div class="query-col__input">
                         <!-- <el-input v-model="queryParams.assignedUserId" placeholder="请输入分配员工" maxlength="50"></el-input> -->
                         <el-autocomplete v-model="stateUser" :fetch-suggestions="querySearchAsync" placeholder="请输入员工" @blur="onBlurItem" :trigger-on-focus="false" @select="handleSelect">
                             <template slot-scope="{ item }">
@@ -61,9 +61,9 @@
                         </el-autocomplete>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">申请时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">申请时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minApplyTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -71,19 +71,15 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+                <div class="query-cont__col">
                         <h-button type="primary" @click="searchList()">
                             查询
                         </h-button>
                         <h-button @click="onRest">
                             重置
                         </h-button>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">已筛选 {{vipApply.total||0}} 项</el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">

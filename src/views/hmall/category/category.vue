@@ -10,18 +10,7 @@
                     添加同类目
                 </h-button>
             </div>
-            <tree-table
-                ref="treeTable"
-                :data="data"
-                :columns="columns"
-                :selectable="false"
-                :expand-type="false"
-                :row-style="tableRowStyle"
-                children-prop="subCategoryList"
-                @cell-click="onCellSelected"
-                @expand-cell-click="onExpandCell"
-                @tree-icon-click="onExpandCell"
-                >
+            <tree-table ref="treeTable" :data="data" :columns="columns" :selectable="false" :expand-type="false" :row-style="tableRowStyle" children-prop="subCategoryList" @cell-click="onCellSelected" @expand-cell-click="onExpandCell" @tree-icon-click="onExpandCell">
                 <template slot="sort" slot-scope="scope">
                     <el-input maxlength="10" placeholder="请输入内容" v-model.number="scope.row.sort" @change="inputChange(scope.row.sort)" @focus="inputFocus(scope.row)"></el-input>
                 </template>
@@ -37,11 +26,7 @@
             </tree-table>
         </div>
         <el-dialog title="类目编辑" :visible.sync="editVisible">
-            <el-form
-                ref="form"
-                :model="form"
-                :rules="rules"
-                label-width="150px">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <div class="edit-form-item">
                     <span class="mr20">
                         <label class="item-label">类目编号：</label>{{ this.form.code ? this.form.code : '--' }}
@@ -52,20 +37,11 @@
                     <span><label class="item-label">父类目：</label>{{ this.form.parentName ? this.form.parentName : '--'  }}</span>
                 </div>
                 <el-form-item label="类目名称" prop="name" v-if="editVisible">
-                    <el-input
-                        class="form-input"
-                        v-model="form.name"
-                        placeholder="请输入类目名称"
-                        maxlength="20"></el-input>
+                    <el-input class="form-input" v-model="form.name" placeholder="请输入类目名称" maxlength="20"></el-input>
                 </el-form-item>
                 <el-form-item prop="imgUrl" label="类目logo：" v-if="form.level === 3">
                     <!--imgUrl-->
-                    <SingleUpload
-                        sizeLimit="500K"
-                        :upload="uploadInfo"
-                        :imageUrl="imageUrl"
-                        ref="uploadImg"
-                        @back-event="readUrl"/>
+                    <SingleUpload sizeLimit="500K" :upload="uploadInfo" :imageUrl="imageUrl" ref="uploadImg" @back-event="readUrl" />
                     <div class="upload-tips">
                         上传750*750，大小不超过500K，仅支持jpeg，jpg，png格式
                     </div>
@@ -76,17 +52,8 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <el-drawer
-            class="page-body-drawer"
-            title="参数详情"
-            :visible.sync="setVisible"
-            :before-close="closeDialog"
-            direction="rtl"
-            size='900px'>
-            <setParameters
-                ref="setting"
-                :categoryId="current.id"
-            />
+        <el-drawer class="page-body-drawer" title="参数详情" :visible.sync="setVisible" :before-close="closeDialog" direction="rtl" size='900px'>
+            <setParameters ref="setting" :categoryId="current.id" />
         </el-drawer>
     </div>
 </template>
@@ -390,57 +357,57 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .action {
-        padding: 4px 6px;
-        background-color: #ff9933;
-        border-radius: 5px;
-        color: #ffffff;
-        font-size: 12px;
+.action {
+    padding: 4px 6px;
+    background-color: #ff9933;
+    border-radius: 5px;
+    color: #ffffff;
+    font-size: 12px;
+}
+.disabled {
+    background-color: #ccc;
+}
+.edit-form-item {
+    line-height: 40px;
+    .item-label {
+        display: inline-block;
+        width: 150px;
+        text-align: right;
     }
-    .disabled {
-        background-color: #ccc;
-    }
-    .edit-form-item {
-        line-height: 40px;
-        .item-label {
-            display: inline-block;
-            width: 150px;
-            text-align: right;
-        }
-    }
-    .form-input {
-        width: 200px;
-    }
-    .tr-selected {
-        background-color: #ff9933;
-    }
-    /deep/ .zk-table {
-        font-size: 14px;
-    }
-    /deep/ .el-transfer__button.is-disabled {
-        border: 1px solid #dcdfe6;
-        background-color: #f5f7fa !important;
-        color: #c0c4cc;
-    }
-    .center-btn {
-        text-align: center;
-        margin-top: 10px;
-        margin-bottom: 20px;
-    }
-    span.action{
-        cursor: pointer;
-    }
-    .img-table {
-        max-width: 80px;
-        max-height: 80px;
-    }
+}
+.form-input {
+    width: 200px;
+}
+.tr-selected {
+    background-color: #ff9933;
+}
+/deep/ .zk-table {
+    font-size: 14px;
+}
+/deep/ .el-transfer__button.is-disabled {
+    border: 1px solid #dcdfe6;
+    background-color: #f5f7fa !important;
+    color: #c0c4cc;
+}
+.center-btn {
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+span.action {
+    cursor: pointer;
+}
+.img-table {
+    max-width: 80px;
+    max-height: 80px;
+}
 </style>
 <style>
-    .settingParams .el-transfer-panel{
-        width: 380px;
-    }
-    .settingParams .el-checkbox{
-        margin-right: 0;
-        display: block;
-    }
+.settingParams .el-transfer-panel {
+    width: 380px;
+}
+.settingParams .el-checkbox {
+    margin-right: 0;
+    display: block;
+}
 </style>

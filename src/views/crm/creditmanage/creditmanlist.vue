@@ -1,58 +1,58 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">企业名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
 
-                <div class="query-cont-col">
-                    <div class="query-col-title">所属分部：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">所属分部：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.pkDeptDoc" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in branchArr" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">信用评级 ：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">信用评级 ：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.creditLevel" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in droplists" :key="item.value" :label="item.label" :value="item.value">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">服务费：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">服务费：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.minServiceFee" v-isNum:1 placeholder="请输入最小服务费" maxlength="50"></el-input>
                         ~
                         <el-input v-model="queryParams.maxServiceFee" v-isNum:1 placeholder="请输入最大服务费" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">可代采购额度：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">可代采购额度：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.minPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
                         <el-input v-model="queryParams.maxPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">剩余代采购额度：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">剩余代采购额度：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.minRemainPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                         ~
                         <el-input v-model="queryParams.maxRemainPurchaseQuota" v-isNum:6 placeholder="请输入" maxlength="50"><template slot="append">万元</template></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">信用到期时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">信用到期时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -60,30 +60,28 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">资料状态：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__label">资料状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.documentStatus" placeholder="请选择" :clearable=true>
                             <el-option v-for="item in matelist" :key="item.key" :label="item.value" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
+
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" actionWidth='300' :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"
+            :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
@@ -94,10 +92,12 @@
                     <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
                 </template>
                 <template slot="documentStatus" slot-scope="scope">
-                    {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-2].value:'-'}}
+                    {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-1].value:'待提交'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onEditproject(scope.data.row)" v-if="(scope.data.row.documentStatus==4||!scope.data.row.documentStatus||scope.data.row.documentStatus==1)&&hosAuthCheck(auths.CRM_CREDIT_ZL)">上传资料</h-button>
+                    <h-button table @click="onLookproject(scope.data.row)" v-if="(scope.data.row.documentStatus==2||scope.data.row.documentStatus==3)&&hosAuthCheck(auths.CRM_CREDIT_LOOK)">查看资料</h-button>
                 </template>
             </basicTable>
         </div>
@@ -127,6 +127,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import creditdrawer from './components/creditdrawer'
 import { CREDITLEVEL, MATELIST } from '../const'
 import * as auths from '@/utils/auth_const'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'creditManage',
     data () {
@@ -264,7 +265,31 @@ export default {
         },
         onLinkCom (val) {
             this.$router.push({ path: '/goodwork/authenlist', query: { name: val.companyName } })
+        },
+        onLookproject (row) {
+            this.$router.push({ path: '/goodwork/creditApprove', query: { companyId: row.companyId } })
+        },
+        onEditproject (row) {
+            this.$router.push({ path: '/goodwork/creditDetail', query: { companyId: row.companyId, documentStatus: row.documentStatus } })
         }
+    },
+    activated () {
+        this.searchList()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('creditManage')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        console.log(to.name)
+        if (to.name != 'creditDetail') {
+
+        } else if (to.name != 'creditApprove') {
+
+        } else {
+            clearCache('creditManage')
+        }
+        next()
     }
 }
 </script>

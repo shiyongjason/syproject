@@ -19,12 +19,16 @@ import cloudmanage from '@/views/comfortcloud/store/cloudManage'
 import crmmanage from '@/views/crm/goodwork/store/crmManage'
 import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
+import crmRecommeder from '@/views/crm/recommender/store/index'
+import crmAwardManage from '@/views/crm/awardManage/store/index'
+import caCertiManage from '@/views/crm/caCertiManage/store/index'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
 import vipManage from '@/views/crm/vipmanage/store/vipManage'
 import creditManage from '@/views/crm/creditmanage/store/creditManage'
 import vipApply from '@/views/crm/vipapplication/store/vipApplication'
 import wxMember from '@/views/crm/wechatcustomer/store/wxMember'
+import contractTemp from '@/views/crm/contractTemp/store/index'
 
 Vue.use(Vuex)
 
@@ -67,12 +71,16 @@ const store = new Vuex.Store({
         fundsPlan,
         fundsOverdue,
         crmstatic,
+        crmRecommeder,
+        crmAwardManage,
+        caCertiManage,
         projectInformation,
         riskManage,
         vipManage,
         vipApply,
         creditManage,
-        wxMember
+        wxMember,
+        contractTemp
     }
 })
 export default store
