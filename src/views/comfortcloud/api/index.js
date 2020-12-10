@@ -536,3 +536,28 @@ export function getCloudMerchantShopDetail (params) {
 export function updateStatusShop (params) {
     return axios.put(iotUrl + `/mall/boss/product/status`, params)
 }
+
+// 获取出库管理设备型号
+export function getCloudOutboundDeviceList (params) {
+    return axios.get(iotUrl + '/api/outbound/device/name/' + params.categoryId)
+}
+
+// 获取出库管理 经销商列表
+export function getCloudOutboundMerchantList (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/list/' + params.name)
+}
+
+// 获取出库管理品类列表
+export function getCloudOutboundCategoryList () {
+    return axios.get(iotUrl + '/api/outbound/device/category')
+}
+
+// 新增出库
+export function addCloudOutbound (params) {
+    return axios.post(iotUrl + '/api/outbound', params)
+}
+
+// 修改出库类型
+export function changeCloudOutbound (params) {
+    return axios.put(iotUrl + '/api/outbound', params)
+}

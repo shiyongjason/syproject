@@ -78,7 +78,10 @@ const state = {
     cloudMerchantShopList: [],
     cloudMerchantShopListPagination: {},
     cloudMerchantShopCategoryList: [],
-    cloudMerchantShopCategoryTypeList: []
+    cloudMerchantShopCategoryTypeList: [],
+    cloudOutboundDeviceList: [],
+    cloudOutboundMerchantList: [],
+    cloudOutboundCategoryList: []
 }
 
 const getters = {
@@ -166,7 +169,10 @@ const getters = {
     iotmerchantmemberDataPagination: state => state.iotmerchantmemberDataPagination,
     iotmerchantDistributorPagination: state => state.iotmerchantDistributorPagination,
     iotmerchantmemberInvitationRegisterDataPagination: state => state.iotmerchantmemberInvitationRegisterDataPagination,
-    iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination
+    iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination,
+    cloudOutboundDeviceList: state => state.cloudOutboundDeviceList,
+    cloudOutboundMerchantList: state => state.cloudOutboundMerchantList,
+    cloudOutboundCategoryList: state => state.cloudOutboundCategoryList
 }
 
 const mutations = {
@@ -386,6 +392,15 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_SHOP_CATEGORY_TYPE_LIST] (state, payload) {
         state.cloudMerchantShopCategoryTypeList = payload
+    },
+    [cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST] (state, payload) {
+        state.cloudOutboundDeviceList = payload
+    },
+    [cloud.GET_CLOUD_OUTBOUND_MERCHANT_LIST] (state, payload) {
+        state.cloudOutboundMerchantList = payload
+    },
+    [cloud.GET_CLOUD_OUTBOUND_CATEGORY_LIST] (state, payload) {
+        state.cloudOutboundCategoryList = payload
     }
 }
 
@@ -717,6 +732,21 @@ const actions = {
     async findCloudMerchantShopCategoryTypeList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantShopCategoryTypeList(params)
         commit(cloud.GET_CLOUD_MERCHANT_SHOP_CATEGORY_TYPE_LIST, data)
+    },
+    async findCloudOutboundDeviceList ({ commit }, params) {
+        const { data } = await Api.getCloudOutboundDeviceList(params)
+        commit(cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST, data.data)
+    },
+    async findCloudOutboundMerchantList ({ commit }, params) {
+        const { data } = await Api.getCloudOutboundMerchantList(params)
+        commit(cloud.GET_CLOUD_OUTBOUND_MERCHANT_LIST, data)
+    },
+    async findCloudOutboundCategoryList ({ commit }, params) {
+        const { data } = await Api.getCloudOutboundCategoryList(params)
+        commit(cloud.GET_CLOUD_OUTBOUND_CATEGORY_LIST, data.data)
+    },
+    async clearCloudOutboundDeviceList ({ commit }) {
+        commit(cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST, [])
     }
 }
 export default {
