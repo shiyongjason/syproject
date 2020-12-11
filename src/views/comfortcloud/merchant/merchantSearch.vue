@@ -27,7 +27,8 @@
             <div class="query-cont-col">
                 <div class="query-col-title">代理品类：</div>
                 <div class="query-cont-col-area">
-                    <el-select @change="onProvince" placeholder="未选择" :clearable=true>
+                    <el-select v-model="queryParams.categoryId" placeholder="" :clearable=true>
+                        <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
                     </el-select>
                 </div>
             </div>
@@ -62,6 +63,7 @@
                 <p>代理订单号：{{cloudMerchantAgentDetail.agentCode}}</p>
                 <p>代理押金：{{cloudMerchantAgentDetail.payAmount}}元</p>
                 <p>代理品类：{{cloudMerchantAgentDetail.categoryName}}</p>
+                <p>代理型号：{{cloudMerchantAgentDetail.specificationName}}</p>
                 <p>代理区域：{{cloudMerchantAgentDetail.agentArea}}</p>
                 <p>代理权益有效期：{{agentValidTimeDesc}}</p>
             </div>
@@ -70,10 +72,10 @@
         </el-dialog>
 
         <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
-            <basicTable :tableLabel="progressTableLabel" :tableData="cloudMerchantList">
+            <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
-            <el-button class="orangeBtn" @click="">查询提货明细</el-button>
+            <el-button class="orangeBtn">查询提货明细</el-button>
         </el-dialog>
     </div>
 </template>
@@ -82,6 +84,7 @@
 
 import { mapGetters, mapActions } from 'vuex'
 import { getChiness } from '../../hmall/membership/api/index'
+import { getCloudMerchantAgentProgress } from '../api'
 
 export default {
     name: 'merchantSearch',
@@ -91,6 +94,7 @@ export default {
                 companyName: '',
                 provinceId: '',
                 cityId: '',
+                categoryId: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -105,22 +109,28 @@ export default {
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
                 { label: '代理商联系地址', prop: 'contactAddress' },
-                { label: '代理品类', prop: 'categoryName' }],
+                { label: '代理品类', prop: 'categoryName' },
+                { label: '代理型号', prop: 'specificationName' }],
             progressTableLabel: [
-
+                { label: '年度提货额度', prop: 'totalPickGoodsCount' },
+                { label: '已提货', prop: 'alreadyPickGoodsCount' },
+                { label: '待提货', prop: 'noPickGoodsCount' }
             ],
+            progressTable: [],
             rightsDialogVisible: false,
             progressDialogVisible: false
         }
     },
     mounted () {
         this.queryList(this.queryParams)
+        this.queryCetagory()
         this.getAreacode()
     },
     computed: {
         ...mapGetters({
             cloudMerchantList: 'cloudMerchantList',
             cloudMerchantListPagination: 'cloudMerchantListPagination',
+            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
             cloudMerchantAgentDetail: 'cloudMerchantAgentDetail'
         }),
         getCity () {
@@ -148,6 +158,7 @@ export default {
     methods: {
         ...mapActions({
             findCloudMerchantList: 'findCloudMerchantList',
+            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
             getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail'
         }),
 
@@ -165,6 +176,9 @@ export default {
         },
         queryList: function (params) {
             this.findCloudMerchantList(params)
+        },
+        queryCetagory: function (params) {
+            this.findCloudMerchantShopCategoryList(params)
         },
         async getAreacode () {
             const { data } = await getChiness()
@@ -185,7 +199,10 @@ export default {
             this.rightsDialogVisible = true
         },
         async onShowProgress (val) {
-            await this.getCloudMerchantAgentDetail({ id: val.id })
+            console.log(val)
+            const data = await getCloudMerchantAgentProgress({ id: val.id })
+            this.provinceList = [data]
+            console.log(data)
             this.progressDialogVisible = true
         },
         dateToString (date) {

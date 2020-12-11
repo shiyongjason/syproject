@@ -360,7 +360,7 @@ const mutations = {
     [cloud.CLOUD_MERCHANT_AGENT_DETAIL] (state, payload) {
         state.cloudMerchantAgentDetail = payload
     },
-    [cloud.GET_CLOUD_MERCHANT_AD_LIST]  (state, payload) {
+    [cloud.GET_CLOUD_MERCHANT_AD_LIST] (state, payload) {
         state.cloudMerchantAdList = payload
     },
     [cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION] (state, payload) {
@@ -664,16 +664,16 @@ const actions = {
     },
     async findCloudMerchantList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantList(params)
-        commit(cloud.GET_CLOUD_MERCHANT_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_LIST, data.records)
         commit(cloud.CLOUD_MERCHANT_LIST_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
         })
     },
     async getCloudMerchantAgentDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAgentDetail(params)
-        commit(cloud.CLOUD_MERCHANT_AGENT_DETAIL, data.data)
+        commit(cloud.CLOUD_MERCHANT_AGENT_DETAIL, data)
     },
     async findCloudMerchantAdList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAdList(params)
