@@ -27,7 +27,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">代理品类：</div>
                 <div class="query-cont-col-area">
-                    <el-select v-model="queryParams.categoryId" placeholder="" :clearable=true>
+                    <el-select v-model="queryParams.categoryId" placeholder="品类" :clearable=true>
                         <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
                     </el-select>
                 </div>
@@ -41,10 +41,10 @@
 
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 0 项；
-                累计代理商总数: 0个；
-                累计品类一级代理总数: 0个；
-                累计品类二级代理总数:0个；
+                已筛选 {{this.cloudMerchantListPagination.total}} 项；
+                累计代理商总数: {{this.statistics.totalCount}} 个；
+                累计品类一级代理总数: {{this.statistics.oneLevelCount}} 个；
+                累计品类二级代理总数:{{this.statistics.twoLevelCount}} 个；
             </el-tag>
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
@@ -75,7 +75,7 @@
             <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
-            <el-button class="orangeBtn">查询提货明细</el-button>
+            <el-button class="orangeBtn chckBtn" @click="this.checkShopManager">查询提货明细</el-button>
         </el-dialog>
     </div>
 </template>
@@ -84,7 +84,7 @@
 
 import { mapGetters, mapActions } from 'vuex'
 import { getChiness } from '../../hmall/membership/api/index'
-import { getCloudMerchantAgentProgress } from '../api'
+import { getCloudMerchantAgentProgress, getCloudMerchantStatistics } from '../api'
 
 export default {
     name: 'merchantSearch',
@@ -97,6 +97,11 @@ export default {
                 categoryId: '',
                 pageNumber: 1,
                 pageSize: 10
+            },
+            statistics: {
+                totalCount: 0,
+                oneLevelCount: 0,
+                twoLevelCount: 0
             },
             provinceList: [],
             formLabelWidth: '140px',
@@ -123,6 +128,7 @@ export default {
     },
     mounted () {
         this.queryList(this.queryParams)
+        this.queryStatistics(this.queryParams)
         this.queryCetagory()
         this.getAreacode()
     },
@@ -165,6 +171,7 @@ export default {
         onSearch: function () {
             this.queryParams.pageNumber = 1
             this.queryList(this.queryParams)
+            this.queryStatistics(this.queryParams)
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -199,11 +206,17 @@ export default {
             this.rightsDialogVisible = true
         },
         async onShowProgress (val) {
-            console.log(val)
             const data = await getCloudMerchantAgentProgress({ id: val.id })
-            this.provinceList = [data]
-            console.log(data)
-            this.progressDialogVisible = true
+            if (data) {
+                this.progressTable = [data.data]
+                this.progressDialogVisible = true
+            }
+        },
+        async queryStatistics (parms) {
+            const data = await getCloudMerchantStatistics(parms)
+            if (data) {
+                this.statistics = data.data
+            }
         },
         dateToString (date) {
             const year = date.getFullYear()
@@ -211,6 +224,10 @@ export default {
             const day = (date.getDate()) < 10 ? '0' + (date.getDate()) : date.getDate()
 
             return year + '年' + month + '月' + day + '日'
+        },
+
+        checkShopManager () {
+            this.$router.push('/comfortCloud/equipmentOverview/warehouseManagement')
         }
 
     }
@@ -251,5 +268,10 @@ export default {
 .right-items {
     margin: 10px 0 30px 0;
     line-height: 25px;
+}
+
+.chckBtn {
+    float: right;
+    margin: 20px;
 }
 </style>
