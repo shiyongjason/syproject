@@ -53,7 +53,7 @@
                             </div>
                         </template>
                         <template
-                            v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
+                            v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
                             <div class="row-filed">
                                 <p class="col-filed">
                                     采购单金额： {{ fundMoneys(purchaseOrderDetail.purchaseOrder.poAmount) }}元
@@ -67,14 +67,14 @@
                                     </p>
                                 </template>
                             </div>
-                            <div class="row-filed">
+                            <div class="row-filed" v-if="purchaseOrderDetail.poInfo">
                                 <p class="col-filed">
                                     采购明细表：
                                     <span class="img-group"
                                           v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
-                                <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(purchaseOrderDetail.poInfo.poDetail)">
-                            </span>
+                                        <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                             v-for="item in JSON.parse(purchaseOrderDetail.poInfo.poDetail)">
+                                    </span>
                                 </p>
                             </div>
                             <template v-if="purchaseOrderDetail.poInfo">
@@ -213,9 +213,9 @@
                         <div class="info-title info-title-main-color">支付单</div>
                         <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="true"
                                     :actionMinWidth=100 :isShowIndex='true'>
-                            <template slot="No" slot-scope="scope">
-                                <span :class="scope.data.row.No?'colgry':'colred'">{{ scope.data.row.No }}</span>
-                            </template>
+<!--                            <template slot="No" slot-scope="scope">-->
+<!--                                <span :class="scope.data.row.No?'colgry':'colred'">{{ scope.data.row.No }}</span>-->
+<!--                            </template>-->
                         </basicTable>
                     </template>
                 </div>
@@ -259,11 +259,11 @@ export default {
             activeNames: ['1', '2', '3', '4', '5'],
             tableData: [],
             tableLabel: [
-                { label: '支付单编号', prop: 'creditLevel', width: '120' },
-                { label: '金额', prop: 'creditLevel', width: '100' },
-                { label: '状态', prop: 'creditLevel', width: '100' },
+                { label: '支付单编号', prop: 'paymentOrderNo', width: '120' },
+                { label: '金额', prop: 'applyAmount', width: '100' },
+                { label: '状态', prop: 'status', width: '100' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes' },
-                { label: '更新时间', prop: 'creditLevel', width: '150', formatters: 'dateTimes' }
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
             PurchaseOrderDict
         }
@@ -279,9 +279,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            findNest: 'findNest',
             findPurchaseOrderDetail: 'crmPurchaseOrder/findPurchaseOrderDetail'
-
         }),
         purchaseOrderConfirm () {
             this.$emit('openDialog', PurchaseOrderDialogStatus.enter.status, this.row)

@@ -36,12 +36,12 @@
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.startApplyDate" type="datetime"
-                                        value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
+                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.endApplyDate" type="datetime"
-                                        value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
+                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="onQuery">
+                    <h-button type="primary" @click="findPaymentOrderList(queryParams)">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -65,8 +65,10 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{ paginationInfo.total }} 项,采购单总金额：<b>88,888,888</b>元;</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
+            <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
+                项,采购单总金额：<b>{{ fundMoneys(paymentOrderPagination.amount) }}</b>元;
+            </el-tag>
+            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
                         :isShowIndex='true'>
@@ -74,17 +76,19 @@
                     <span class="colblue"> {{ scope.data.row.no }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="openDrawer">查看详情</h-button>
+                    <h-button table @click="openDrawer(scope.data.row)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' :row="paymentOrderRow"
+                            ref="paymentOrderDrawer"></PaymentOrderDrawer>
     </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapActions, mapGetters, mapState } from 'vuex'
 import PaymentOrderDrawer from '@/views/crm/paymentOrder/components/paymentOrderDrawer'
+import filters from '@/utils/filters'
 
 export default {
     name: 'payOrder',
@@ -110,14 +114,15 @@ export default {
                 }
             ],
             paginationInfo: {},
-            drawer: false
+            drawer: false,
+            paymentOrderRow: {}
         }
     },
     computed: {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.authenticationEndTime
+                    let beginDateVal = this.queryParams.endApplyDate
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime()
                     }
@@ -127,7 +132,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.authenticationStartTime
+                    let beginDateVal = this.queryParams.startApplyDate
                     if (beginDateVal) {
                         return time.getTime() < new Date(beginDateVal).getTime()
                     }
@@ -136,19 +141,20 @@ export default {
         },
         ...mapState({
             userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            paymentOrderList: 'crmPaymentOrder/paymentOrderList',
+            paymentOrderPagination: 'crmPaymentOrder/paymentOrderPagination'
         })
     },
     methods: {
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.onQuery()
+            this.findPaymentOrderList(this.queryParams)
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.onQuery()
-        },
-        onQuery () {
-
+            this.findPaymentOrderList(this.queryParams)
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
@@ -156,26 +162,30 @@ export default {
         onChooseDep () {
         },
         onSortChange (val) {
-            if (val.prop == 'createTime') {
-                this.queryParams.customerTypeOrder = val.order == 'ascending' ? 'asc' : 'desc'
-                this.queryParams.authenticationTimeOrder = ''
-                this.queryParams.createTimeOrder = ''
-            } else if (val.prop == 'authenticationTime') {
-                this.queryParams.authenticationTimeOrder = val.order == 'ascending' ? 'asc' : 'desc'
-                this.queryParams.customerTypeOrder = ''
-                this.queryParams.createTimeOrder = ''
-            }
-            this.onQuery()
+            this.queryParams['sort.property'] = val.prop + ''
+            this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
+            this.findPaymentOrderList(this.queryParams)
         },
         paymentOrderBackEvent () {
             this.drawer = false
         },
-        openDrawer () {
+        openDrawer (row) {
             this.drawer = true
-        }
+            this.paymentOrderRow = row
+        },
+        fundMoneys (val) {
+            if (val > -1) {
+                return filters.money(val)
+            }
+            return '-'
+        },
+        ...mapActions({
+            findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList'
+        })
     },
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
+        this.findPaymentOrderList(this.queryParams)
     }
 }
 </script>

@@ -11,13 +11,13 @@
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            <span class="label">项目： </span>佳源玖龙湾商业体空调
+                            <span class="label">项目： </span>{{ paymentOrderDetail.projectInfo.projectName }}
                         </p>
                         <p class="col-filed">
-                            <span class="label">经销商：</span>扬州优创智能环境科技有限公司
+                            <span class="label">经销商：</span>{{ paymentOrderDetail.projectInfo.companyName }}
                         </p>
                         <p class="col-filed">
-                            <span class="label">所属分部：</span>南京分部
+                            <span class="label">所属分部：</span>{{ paymentOrderDetail.projectInfo.deptName }}
                         </p>
                     </div>
                     <div class="row-filed">
@@ -27,10 +27,10 @@
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-50">
-                            <span class="label">采购单金额：</span> 12,000,000元
+                            <span class="label">采购单金额：</span> {{ paymentOrderDetail.payOrderPoDetail.poAmount }}元
                         </p>
                         <p class="col-filed col-50">
-                            <span class="label">最迟发货日期：</span> 2020年11月25日
+                            <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderPoDetail.lastGoodsDate }}
                         </p>
                     </div>
                     <div class="row-filed">
@@ -153,6 +153,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { getPaymentOrderDetail } from '@/views/crm/paymentOrder/api'
 
 export default {
     name: 'paymentOrderDrawer',
@@ -160,6 +161,10 @@ export default {
         drawer: {
             type: Boolean,
             default: false
+        },
+        row: {
+            type: Object,
+            required: true
         }
     },
     data () {
@@ -172,7 +177,13 @@ export default {
                 { label: '状态', prop: 'creditLevel', width: '100' },
                 { label: '申请时间', prop: 'creditLevel', width: '150', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'creditLevel', width: '150', formatters: 'dateTimes' }
-            ]
+            ],
+            paymentOrderDetail: {
+                projectInfo: {},
+                payOrderDetail: {},
+                payOrderPoDetail: {},
+                respFundResults: []
+            }
         }
     },
     components: {},
@@ -207,6 +218,14 @@ export default {
         },
         handleClose () {
             this.$emit('backEvent')
+        }
+    },
+    watch: {
+        async drawer (val) {
+            if (val) {
+                const { data } = await getPaymentOrderDetail(this.row.id)
+                this.paymentOrderDetail = data
+            }
         }
     },
     mounted () {

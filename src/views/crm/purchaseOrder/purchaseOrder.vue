@@ -59,7 +59,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.statusList" placeholder="请选择" multiple :clearable=true
+                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true
                                    @change="onSelectStatus">
                             <el-option :label="item.value" :value="item.key"
                                        v-for="item in PurchaseOrderDict.status.list" :key="item.key"></el-option>
@@ -75,7 +75,8 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderPagination.total }} 项,采购单总金额：<b>88,888,888</b>元;
+            <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderPagination.total }}
+                项,采购单总金额：<b>{{ fundMoneys(purchaseOrderPagination.amount) }}</b>元;
             </el-tag>
             <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -102,8 +103,8 @@
                              @openDialog="openDialog" ref="drawerDetail"
                              :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus"
-                                   @backEvent='dialogBackEvent' :row="purchaseOrderRow"
-                                   ref="dialog"></purchaseOrderDialog>
+                             @backEvent='dialogBackEvent' :row="purchaseOrderRow"
+                             ref="dialog"></purchaseOrderDialog>
     </div>
 </template>
 
@@ -126,6 +127,7 @@ export default {
                 companyName: '',
                 projectName: '',
                 projectNo: '',
+                status: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -186,6 +188,7 @@ export default {
         queryParamsUseQuery () {
             return {
                 ...this.queryParams,
+                status: this.queryParams.status.join(','),
                 authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
                 jobNumber: this.userInfo.jobNumber
             }

@@ -219,7 +219,7 @@ export default {
         },
         onSortChange (val) {
             this.queryParams['sort.property'] = val.prop + ''
-            this.queryParams['sort.direction'] = val.order === 'ascending' ? 'asc' : 'desc'
+            this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
             this.findFundsList(this.queryParams)
         },
         onPayEnter (row) {

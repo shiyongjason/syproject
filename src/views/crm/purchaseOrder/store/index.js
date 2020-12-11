@@ -21,6 +21,7 @@ const getters = {
     purchaseOrderList: state => state.purchaseOrderData.records,
     purchaseOrderPagination: state => {
         return {
+            amount: state.purchaseOrderData.amount,
             total: state.purchaseOrderData.total,
             pageSize: state.purchaseOrderData.size,
             pageNumber: state.purchaseOrderData.current
@@ -43,6 +44,8 @@ const mutations = {
 const actions = {
     async findPurchaseList ({ commit }, params) {
         const { data } = await Api.getPurchaseList(params)
+        const { data: amount } = await Api.getPurchaseTotal(params)
+        data.amount = amount
         commit(Type.PURCHASE_ORDER, data)
     },
     async findPurchaseOrderDetail ({ commit }, id) {
