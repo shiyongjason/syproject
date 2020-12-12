@@ -66,6 +66,7 @@
                 <p>代理型号：{{cloudMerchantAgentDetail.specificationName}}</p>
                 <p>代理区域：{{cloudMerchantAgentDetail.agentArea}}</p>
                 <p>代理权益有效期：{{agentValidTimeDesc}}</p>
+                <p>代理合同状态：{{contractState}}</p>
             </div>
             <h3 class="right-title">代理权益</h3>
             <div class="right-items" v-html="cloudMerchantAgentDetail.agentContent"></div>
@@ -75,7 +76,7 @@
             <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
-            <el-button class="orangeBtn chckBtn" @click="this.checkShopManager">查询提货明细</el-button>
+            <el-button class="orangeBtn chckBtn" @click="checkShopManager(progressCompany)">查询提货明细</el-button>
         </el-dialog>
     </div>
 </template>
@@ -122,6 +123,7 @@ export default {
                 { label: '待提货', prop: 'noPickGoodsCount' }
             ],
             progressTable: [],
+            progressCompany: null,
             rightsDialogVisible: false,
             progressDialogVisible: false
         }
@@ -158,6 +160,14 @@ export default {
             nextDate.setDate(nextDate.getDate() - 1)
 
             return '自' + this.dateToString(date) + '至' + this.dateToString(nextDate) + '失效'
+        },
+        contractState () {
+            if (this.cloudMerchantAgentDetail == null || this.cloudMerchantAgentDetail.payTime == null) {
+                return '--'
+            }
+            let sdtime1 = new Date(this.cloudMerchantAgentDetail.payTime).getTime() / 1000
+            let sdtime2 = new Date().getTime() / 1000
+            return sdtime2 - sdtime1 > 0 ? '履约中' : '已过期'
         }
 
     },
@@ -206,6 +216,7 @@ export default {
             this.rightsDialogVisible = true
         },
         async onShowProgress (val) {
+            this.progressCompany = val
             const data = await getCloudMerchantAgentProgress({ id: val.id })
             if (data) {
                 this.progressTable = [data.data]
@@ -226,8 +237,8 @@ export default {
             return year + '年' + month + '月' + day + '日'
         },
 
-        checkShopManager () {
-            this.$router.push('/comfortCloud/equipmentOverview/warehouseManagement')
+        checkShopManager (val) {
+            this.$router.push(`/comfortCloud/equipmentOverview/warehouseManagement?dealer=${val.companyName}`)
         }
 
     }

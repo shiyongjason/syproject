@@ -80,7 +80,7 @@
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                 </template>
-                <template slot="outboundType" slot-scope="scope" >
+                <template slot="outboundType" slot-scope="scope">
                     <p v-bind:class="{ 'red-content' : scope.data.row.outboundType === '出库类型错误' }">{{ scope.data.row.outboundType }}</p>
                 </template>
                 <template slot="deviceStatus" slot-scope="scope">
@@ -109,7 +109,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="设备数量：" prop="amount">
-                    <el-input  style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
+                    <el-input style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="设备ID：" prop="iotId">
                     <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="输入标题设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
@@ -123,27 +123,14 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="经销商名称：" prop="dealer">
-                        <el-select
-                            v-model="addRecord.dealer"
-                            filterable
-                            remote
-                            allow-create
-                            placeholder="输入经销商名称"
-                            @change="dealerChanged"
-                            :remote-method="dealerRequest"
-                            :loading="dealerLoading"
-                            :disabled="isEditRecord">
-                            <el-option
-                                v-for="(item,index) in dealerOptions"
-                                :key="index"
-                                :label="item"
-                                :value="item">
-                            </el-option>
-                        </el-select>
+                            <el-select v-model="addRecord.dealer" filterable remote allow-create placeholder="输入经销商名称" @change="dealerChanged" :remote-method="dealerRequest" :loading="dealerLoading" :disabled="isEditRecord">
+                                <el-option v-for="(item,index) in dealerOptions" :key="index" :label="item" :value="item">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="2">
-                        <el-form-item label="经销商电话：" prop="dealerPhone" >
+                        <el-form-item label="经销商电话：" prop="dealerPhone">
                             <el-input v-model.trim="addRecord.dealerPhone" show-word-limit placeholder="输入经销商电话" :disabled="isEditRecord"></el-input>
                         </el-form-item>
                     </el-col>
@@ -237,39 +224,45 @@ export default {
                 dealerPhone: [
                     { required: true, message: '请填写经销商电话', trigger: 'blur' }
                 ],
-                deviceCategory: [{ validator: (rule, value, callback) => {
-                    if (this.isEditRecord) {
-                        return callback()
-                    }
-                    if (value == null || value.length === 0) {
-                        return callback(new Error('请选择品类'))
-                    }
+                deviceCategory: [{
+                    validator: (rule, value, callback) => {
+                        if (this.isEditRecord) {
+                            return callback()
+                        }
+                        if (value == null || value.length === 0) {
+                            return callback(new Error('请选择品类'))
+                        }
 
-                    callback()
-                },
-                trigger: 'blur' }],
-                deviceType: [{ validator: (rule, value, callback) => {
-                    if (this.isEditRecord) {
-                        return callback()
-                    }
-                    if (value == null || value.length === 0) {
-                        return callback(new Error('请选择设备类型'))
-                    }
+                        callback()
+                    },
+                    trigger: 'blur'
+                }],
+                deviceType: [{
+                    validator: (rule, value, callback) => {
+                        if (this.isEditRecord) {
+                            return callback()
+                        }
+                        if (value == null || value.length === 0) {
+                            return callback(new Error('请选择设备类型'))
+                        }
 
-                    callback()
-                },
-                trigger: 'blur' }],
-                amount: [{ validator: (rule, value, callback) => {
-                    if (this.isEditRecord) {
-                        return callback()
-                    }
-                    if (value == null || value.length === 0) {
-                        return callback(new Error('请填写数量'))
-                    }
+                        callback()
+                    },
+                    trigger: 'blur'
+                }],
+                amount: [{
+                    validator: (rule, value, callback) => {
+                        if (this.isEditRecord) {
+                            return callback()
+                        }
+                        if (value == null || value.length === 0) {
+                            return callback(new Error('请填写数量'))
+                        }
 
-                    callback()
-                },
-                trigger: 'blur' }]
+                        callback()
+                    },
+                    trigger: 'blur'
+                }]
             }
         }
     },
@@ -310,6 +303,13 @@ export default {
         })
     },
     mounted () {
+        // outboundType: '',
+        //     dealer: '',
+        console.log('传递的参数')
+        console.log(this.$route.query)
+        if (this.$route.query.dealer && this.$route.query.dealer !== undefined) {
+            this.queryParams.dealer = this.$route.query.dealer
+        }
         this.onSearch()
         this.findCloudOutboundCategoryList()
     },
@@ -547,7 +547,7 @@ export default {
 .download-template {
     margin-bottom: 30px;
 }
-.downloadExcel{
+.downloadExcel {
     margin-top: 10px;
 }
 .colred {
@@ -584,6 +584,5 @@ export default {
 
 .add-record-form {
     margin: 30px 0;
-
 }
 </style>
