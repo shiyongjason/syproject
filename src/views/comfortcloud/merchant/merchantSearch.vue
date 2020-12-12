@@ -27,7 +27,8 @@
             <div class="query-cont-col">
                 <div class="query-col-title">代理品类：</div>
                 <div class="query-cont-col-area">
-                    <el-select @change="onProvince" placeholder="未选择" :clearable=true>
+                    <el-select v-model="queryParams.categoryId" placeholder="品类" :clearable=true>
+                        <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
                     </el-select>
                 </div>
             </div>
@@ -40,10 +41,10 @@
 
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
-                已筛选 0 项；
-                累计代理商总数: 0个；
-                累计品类一级代理总数: 0个；
-                累计品类二级代理总数:0个；
+                已筛选 {{this.cloudMerchantListPagination.total}} 项；
+                累计代理商总数: {{this.statistics.totalCount}} 个；
+                累计品类一级代理总数: {{this.statistics.oneLevelCount}} 个；
+                累计品类二级代理总数:{{this.statistics.twoLevelCount}} 个；
             </el-tag>
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
@@ -62,6 +63,7 @@
                 <p>代理订单号：{{cloudMerchantAgentDetail.agentCode}}</p>
                 <p>代理押金：{{cloudMerchantAgentDetail.payAmount}}元</p>
                 <p>代理品类：{{cloudMerchantAgentDetail.categoryName}}</p>
+                <p>代理型号：{{cloudMerchantAgentDetail.specificationName}}</p>
                 <p>代理区域：{{cloudMerchantAgentDetail.agentArea}}</p>
                 <p>代理权益有效期：{{agentValidTimeDesc}}</p>
             </div>
@@ -70,10 +72,10 @@
         </el-dialog>
 
         <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
-            <basicTable :tableLabel="progressTableLabel" :tableData="cloudMerchantList">
+            <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
-            <el-button class="orangeBtn" @click="">查询提货明细</el-button>
+            <el-button class="orangeBtn chckBtn" @click="this.checkShopManager">查询提货明细</el-button>
         </el-dialog>
     </div>
 </template>
@@ -82,6 +84,7 @@
 
 import { mapGetters, mapActions } from 'vuex'
 import { getChiness } from '../../hmall/membership/api/index'
+import { getCloudMerchantAgentProgress, getCloudMerchantStatistics } from '../api'
 
 export default {
     name: 'merchantSearch',
@@ -91,8 +94,14 @@ export default {
                 companyName: '',
                 provinceId: '',
                 cityId: '',
+                categoryId: '',
                 pageNumber: 1,
                 pageSize: 10
+            },
+            statistics: {
+                totalCount: 0,
+                oneLevelCount: 0,
+                twoLevelCount: 0
             },
             provinceList: [],
             formLabelWidth: '140px',
@@ -105,22 +114,29 @@ export default {
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
                 { label: '代理商联系地址', prop: 'contactAddress' },
-                { label: '代理品类', prop: 'categoryName' }],
+                { label: '代理品类', prop: 'categoryName' },
+                { label: '代理型号', prop: 'specificationName' }],
             progressTableLabel: [
-
+                { label: '年度提货额度', prop: 'totalPickGoodsCount' },
+                { label: '已提货', prop: 'alreadyPickGoodsCount' },
+                { label: '待提货', prop: 'noPickGoodsCount' }
             ],
+            progressTable: [],
             rightsDialogVisible: false,
             progressDialogVisible: false
         }
     },
     mounted () {
         this.queryList(this.queryParams)
+        this.queryStatistics(this.queryParams)
+        this.queryCetagory()
         this.getAreacode()
     },
     computed: {
         ...mapGetters({
             cloudMerchantList: 'cloudMerchantList',
             cloudMerchantListPagination: 'cloudMerchantListPagination',
+            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
             cloudMerchantAgentDetail: 'cloudMerchantAgentDetail'
         }),
         getCity () {
@@ -148,12 +164,14 @@ export default {
     methods: {
         ...mapActions({
             findCloudMerchantList: 'findCloudMerchantList',
+            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
             getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail'
         }),
 
         onSearch: function () {
             this.queryParams.pageNumber = 1
             this.queryList(this.queryParams)
+            this.queryStatistics(this.queryParams)
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -165,6 +183,9 @@ export default {
         },
         queryList: function (params) {
             this.findCloudMerchantList(params)
+        },
+        queryCetagory: function (params) {
+            this.findCloudMerchantShopCategoryList(params)
         },
         async getAreacode () {
             const { data } = await getChiness()
@@ -185,8 +206,17 @@ export default {
             this.rightsDialogVisible = true
         },
         async onShowProgress (val) {
-            await this.getCloudMerchantAgentDetail({ id: val.id })
-            this.progressDialogVisible = true
+            const data = await getCloudMerchantAgentProgress({ id: val.id })
+            if (data) {
+                this.progressTable = [data.data]
+                this.progressDialogVisible = true
+            }
+        },
+        async queryStatistics (parms) {
+            const data = await getCloudMerchantStatistics(parms)
+            if (data) {
+                this.statistics = data.data
+            }
         },
         dateToString (date) {
             const year = date.getFullYear()
@@ -194,6 +224,10 @@ export default {
             const day = (date.getDate()) < 10 ? '0' + (date.getDate()) : date.getDate()
 
             return year + '年' + month + '月' + day + '日'
+        },
+
+        checkShopManager () {
+            this.$router.push('/comfortCloud/equipmentOverview/warehouseManagement')
         }
 
     }
@@ -234,5 +268,10 @@ export default {
 .right-items {
     margin: 10px 0 30px 0;
     line-height: 25px;
+}
+
+.chckBtn {
+    float: right;
+    margin: 20px;
 }
 </style>

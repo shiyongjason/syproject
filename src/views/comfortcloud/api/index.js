@@ -470,9 +470,19 @@ export function getCloudMerchantList (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
 }
 
+// 获取招商代理商统计数据
+export function getCloudMerchantStatistics (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/count', { params })
+}
+
 // 获取招商代理订单详情
 export function getCloudMerchantAgentDetail (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/' + params.id)
+}
+
+// 获取代理商提货进度
+export function getCloudMerchantAgentProgress (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/pick-goods/' + params.id)
 }
 
 // 获取招商广告列表
