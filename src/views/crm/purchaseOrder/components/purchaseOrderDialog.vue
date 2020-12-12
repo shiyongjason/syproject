@@ -134,6 +134,9 @@
                             </el-radio-group>
                         </p>
                         <p>
+                            {{purchaseOrderDict.changeResult.remark}}
+                        </p>
+                        <p>
                             免息方式：
                             <el-radio-group v-model="InterestFreeRadioGroup">
                                 <el-radio :label="item.key" :key="item.key"
@@ -222,6 +225,7 @@ export default {
                 signResult: this.resultRadioGroup,
                 updateBy: this.userinfo.employeeName,
                 updatePhone: this.userinfo.phoneNumber,
+                remark: 'remark',
                 freeInterestType: this.InterestFreeRadioGroup
             }
             if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {

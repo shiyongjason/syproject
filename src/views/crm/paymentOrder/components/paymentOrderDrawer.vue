@@ -35,64 +35,78 @@
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-50">
-                            <span class="label">采购明细表：</span><img src="" alt="">
+                            <span class="label">采购明细表：</span>
+                            <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                 v-for="item in JSON.parse(paymentOrderDetail.payOrderPoDetail.poDetail)">
                         </p>
                         <p class="col-filed col-50">
-                            <span class="label address">收货地址：</span>江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                            <span class="label address">收货地址：</span>
+                            {{ paymentOrderDetail.payOrderDetail.goodsAddress || '-' }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-25">
-                            <span class="label">采购批次：</span>一次性采购
+                            <span class="label">采购批次：</span>
+                            {{ paymentOrderDetail.payOrderDetail.poNumber }}
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">经销商预付款比例：</span> 50%
+                            <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderDetail.prePercent }}%
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">剩余货款支付周期：</span>6月
+                            <span class="label">剩余货款支付周期：</span>{{
+                                paymentOrderDetail.payOrderDetail.restPaymentPeriod
+                            }}月
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">免息方式：</span>无
+                            <span class="label">免息方式：</span>{{ paymentOrderDetail.payOrderDetail.freeInterestType }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            <span class="info-title">支付单信息</span><span class="info-status">支付单待审核</span>
+                            <span class="info-title">支付单信息</span>
+                            <span class="info-status">
+                                {{ paymentOrderDetail.payOrderDetail.status }}
+                            </span>
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-50">
-                            <span class="label">申请支付金额：</span> 12,000,000元
+                            <span class="label">申请支付金额：</span> {{ paymentOrderDetail.payOrderDetail.applyAmount }}元
                         </p>
                         <p class="col-filed col-50">
-                            <span class="label">最迟发货日期：</span> 2020年11月25日
+                            <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-50">
-                            <span class="label">上游供应商：</span>重庆新日日顺家电有限公司宁波大榭分公司
+                            <span class="label">上游供应商：</span>{{ paymentOrderDetail.payOrderDetail.supplierCompanyId }}
                         </p>
                         <p class="col-filed col-50">
-                            <span class="label address">收货地址：</span>江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                            <span class="label address">收货地址：</span>
+                            {{paymentOrderDetail.payOrderDetail.goodsAddress}}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            <span class="label">采购明细表：</span><img src="" alt="">
+                            <span class="label">采购明细表：</span>
+                            <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                 v-for="item in JSON.parse(paymentOrderDetail.payOrderDetail.poDetail)">
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
-                            <span class="label">申请时间：</span>2019-06-11 16:32
+                            <span class="label">申请时间：</span>
+                            {{ paymentOrderDetail.payOrderDetail.applyDate }}
                         </p>
                         <p class="col-filed">
-                            <span class="label">申请人：</span>赵娟（15195954045）
+                            <span class="label">申请人：</span>
+                            {{ paymentOrderDetail.payOrderDetail.createBy }}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
                         </p>
                     </div>
                     <div class="row-filed">
                         <h-button type="assist">支付单审核</h-button>
                     </div>
-<!--                    首付款待支付start-->
+                    <!--                    首付款待支付start-->
                     <div class="row-filed">
                         <p class="col-filed col-33">
                             <span class="label">审核人：</span>赵娟（15195954045）
@@ -133,15 +147,15 @@
                     </div>
                     <div class="row-filed">
                         《订单及服务费确认函》： <span class="info-status-words">未签约</span>
-<!--                        首付款待签约以后-->
+                        <!--                        首付款待签约以后-->
                         <h-button type="primary">查看合同</h-button>
-<!--                        首付款待签约以后-->
+                        <!--                        首付款待签约以后-->
                     </div>
-<!--                    首付款待支付end-->
+                    <!--                    首付款待支付end-->
                 </div>
                 <div class="drawer-footer">
                     <div class="drawer-button">
-<!--                        <h-button type="assist">支付单审核</h-button>-->
+                        <!--                        <h-button type="assist">支付单审核</h-button>-->
                         <!--                        <h-button type="primary">审核通过</h-button>-->
                         <h-button type="default" @click="handleClose">取消</h-button>
                     </div>
@@ -218,6 +232,9 @@ export default {
         },
         handleClose () {
             this.$emit('backEvent')
+        },
+        goDetail (url) {
+            window.open(url)
         }
     },
     watch: {
@@ -252,20 +269,25 @@ export default {
             cursor: default;
             line-height: 15px;
             box-sizing: border-box;
+
             .address {
                 width: 120px;
             }
         }
-        .col-50{
+
+        .col-50 {
             flex: 0 0 50%;
         }
-        .col-33{
+
+        .col-33 {
             flex: 0 0 33%;
         }
-        .col-25{
+
+        .col-25 {
             flex: 0 0 25%;
         }
     }
+
     .info-title {
         font-size: 15px;
         color: #000000;
@@ -282,22 +304,27 @@ export default {
         border-radius: 4px;
 
     }
-    .info-status-words{
+
+    .info-status-words {
         color: #FF7A45;
     }
+
     .info-title-main-color {
         color: #FF7A45;
         line-height: 30px;
         padding: 15px 0;
     }
 }
+
 /deep/ .el-drawer__body {
     overflow-y: scroll;
 }
+
 .drawer-content {
     width: 100%;
     box-sizing: border-box;
     padding-bottom: 100px;
+
     .drawer-footer {
         position: absolute;
         bottom: 0;
@@ -307,24 +334,29 @@ export default {
         border-top: 1px solid #e5e5ea;
         background: #fff;
         z-index: 1000;
+
         button {
             flex: 1;
         }
+
         .drawer-button {
             text-align: right;
         }
     }
 }
-/deep/.el-tabs__nav-scroll {
+
+/deep/ .el-tabs__nav-scroll {
     padding-left: 20px;
 }
-/deep/.el-drawer__header {
+
+/deep/ .el-drawer__header {
     padding: 20px 20px;
     border-bottom: 1px solid #e5e5e5;
     margin-bottom: 10px;
     font-size: 16px;
 }
-/deep/.el-collapse-item__header{
+
+/deep/ .el-collapse-item__header {
     font-weight: 600;
     color: #000000;
     font-size: 14px;
