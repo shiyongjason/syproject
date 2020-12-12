@@ -229,7 +229,7 @@ export default {
                         if (valid) {
                             try {
                                 await submitProjectdoc(params)
-                                this.$message.success(`立项提交成功`)
+                                this.$message.success(`${this.approveTitle}提交成功`)
                                 this.$emit('onCompsback')
                                 this.approveVisible = false
                                 this.$emit('onBackLoad', false)
@@ -241,7 +241,7 @@ export default {
                 } else {
                     try {
                         await saveProjectdoc(params)
-                        this.$message.success(`立项资料保存成功`)
+                        this.$message.success(`${this.approveTitle}资料保存成功`)
                         this.$emit('onCompsback')
                         this.$emit('onBackLoad', false)
                     } catch (error) {

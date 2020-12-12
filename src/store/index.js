@@ -21,6 +21,7 @@ import crmauthen from '@/views/crm/crmauthen/store/crmAuthen'
 import crmstatic from '@/views/crm/crmstatic/store/crmStatic'
 import crmRecommeder from '@/views/crm/recommender/store/index'
 import crmAwardManage from '@/views/crm/awardManage/store/index'
+import caCertiManage from '@/views/crm/caCertiManage/store/index'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
 import crmPurchaseOrder from '@/views/crm/purchaseOrder/store/index'
 import crmPaymentOrder from '@/views/crm/paymentOrder/store/index'
@@ -30,6 +31,7 @@ import vipManage from '@/views/crm/vipmanage/store/vipManage'
 import creditManage from '@/views/crm/creditmanage/store/creditManage'
 import vipApply from '@/views/crm/vipapplication/store/vipApplication'
 import wxMember from '@/views/crm/wechatcustomer/store/wxMember'
+import contractTemp from '@/views/crm/contractTemp/store/index'
 
 Vue.use(Vuex)
 
@@ -74,6 +76,7 @@ const store = new Vuex.Store({
         crmstatic,
         crmRecommeder,
         crmAwardManage,
+        caCertiManage,
         projectInformation,
         riskManage,
         vipManage,
@@ -82,7 +85,8 @@ const store = new Vuex.Store({
         wxMember,
         crmPurchaseOrder,
         crmPaymentOrder,
-        crmFunds
+        crmFunds,
+        contractTemp
     }
 })
 export default store

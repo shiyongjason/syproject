@@ -228,3 +228,14 @@ export const CRM_ZL_DOWN = 109124
 export const CRM_LX_DOWN = 109125
 export const CRM_ZS_DOWN = 109126
 export const CRM_XY_DOWN = 109310
+
+// 合同在线
+export const CRM_CONTRACT_COPY = 120001
+export const CRM_CONTRACT_EDIT = 120002
+export const CRM_CONTRACT_OPER = 120003
+export const CRM_CONTRACT_VER = 120004
+export const CRM_CONTRACT_ADD = 120005
+
+export const CRM_CONTRACT_FIN = 120011
+export const CRM_CONTRACT_RISK = 120012
+export const CRM_CONTRACT_LEGAL = 120013

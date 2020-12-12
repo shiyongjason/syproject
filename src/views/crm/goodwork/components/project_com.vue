@@ -118,6 +118,10 @@
                     <el-input v-model.trim="projectForm.payOtherText" maxlength="100"></el-input>
                 </el-form-item>
             </el-form-item>
+            <el-form-item label="预估签约时间：" prop="estimateSignTime">
+                <el-date-picker v-model="projectForm.estimateSignTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择预计可签约的时间">
+                </el-date-picker>
+            </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
                 <hosjoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='2' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                 </hosjoyUpload>
@@ -227,6 +231,9 @@ export default {
                 ],
                 estimatedLoanTime: [
                     { required: true, message: '请选择预估借款时间', trigger: 'change' }
+                ],
+                estimateSignTime: [
+                    { required: true, message: '请选择预计可签约的时间', trigger: 'change' }
                 ],
                 upstreamPayTypearr: [
                     { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }

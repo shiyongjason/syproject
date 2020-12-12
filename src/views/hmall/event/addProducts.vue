@@ -1,9 +1,9 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__input">
                         <el-select v-model="queryType">
                             <el-option label="SPU编号" value="1">
                             </el-option>
@@ -12,35 +12,29 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__input">
                         <el-input v-model="queryCode" placeholder="输入对应的商品编号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button class="ml20" @click="onRest()">
-                            重置
-                        </h-button>
-                        <h-button class="ml20" @click="onBack">
-                            返回
-                        </h-button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page-body-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <h-button type="primary" class="ml20" @click="onAddproduct">
-                        添加({{'已添加'+eventProducts.length}}个)
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
+                    <h-button @click="onBack">
+                        返回
                     </h-button>
                 </div>
             </div>
-            <div class="query-cont-row">已选择{{multiSelection.length}}</div>
+            <div class="button-cont">
+                <h-button type="primary" @click="onAddproduct">
+                    添加({{'已添加'+eventProducts.length}}个)
+                </h-button>
+            </div>
+            <div class="query-cont__row mb5">已选择{{multiSelection.length}}</div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :selectable="selectable" :multiSelection.sync="multiSelection" :isMultiple="true" :isAction="false" :actionMinWidth=250
                 :row-class-name="tableRowClassName" :isShowIndex='false'>
                 <template slot="retailPrice" slot-scope="scope">
