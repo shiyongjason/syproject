@@ -178,8 +178,8 @@ export default {
             let type = ''
             if (val.role === 1) {
                 type += '新人'
-            } else {
-                type += '新人'
+            } else if (val.role === 2) {
+                type += '普通用户'
             }
             if (val.distributorStatus === 1) {
                 type += '、分销员'
