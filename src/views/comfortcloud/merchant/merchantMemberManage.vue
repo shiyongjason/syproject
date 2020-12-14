@@ -59,6 +59,7 @@
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { clearCache, newCache } from '../../../utils'
 export default {
     name: 'comfortcloudMembermanage',
     data () {
@@ -127,6 +128,20 @@ export default {
     mounted () {
         // this.tableData = [{ productN: '123' }]
         this.onSearch()
+    },
+    activated () {
+        this.onQuery()
+    },
+    beforeRouteEnter (to, from, next) {
+        newCache('comfortcloudMembermanage')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        console.log(to.name)
+        if (to.name != 'merchantMemberInvitation') {
+            clearCache('comfortcloudMembermanage')
+        }
+        next()
     },
     methods: {
         ...mapActions({
