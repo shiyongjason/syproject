@@ -9,6 +9,16 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="flex-wrap-title">会员类型：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.role" style="width: 100%">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="新人" value=1></el-option>
+                            <el-option label="普通会员" value=2></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">注册时间： </div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
@@ -35,6 +45,9 @@
         <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="source" slot-scope="scope">
                     {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
+                </template>
+            <template slot="merchantType" slot-scope="scope">
+                    {{setMerchantType(scope.data.row)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
@@ -67,6 +80,7 @@ export default {
             tableLabel: [
                 { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
+                { label: '会员类型', prop: 'merchantType' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '注册来源', prop: 'source' },
                 { label: '推荐人会员账号', prop: 'invitePhone' },
@@ -144,6 +158,22 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
+        },
+        setMerchantType (val) {
+            let type = ''
+            if (val.role === 1) {
+                type += '新人'
+            } else {
+                type += '新人'
+            }
+            if (val.distributorStatus === 1) {
+                type += '、分销员'
+            }
+            if (val.agentStatus === 1) {
+                type += '、经销商'
+            }
+
+            return type
         }
     }
 }

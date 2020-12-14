@@ -137,7 +137,7 @@
                 <el-form-item label="佣金设置：" prop="commissionRate">
                     <el-input v-model="form.commissionRate" maxlength="10" style="width: 100px" placeholder="填写佣金比例">10</el-input> %
                 </el-form-item>
-                <div style="height = 20px"></div>
+                <div style="height : 20px"></div>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <h-button @click="cancelClick">取 消</h-button>

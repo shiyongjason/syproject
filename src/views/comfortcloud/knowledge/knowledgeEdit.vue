@@ -290,4 +290,7 @@ export default {
 /deep/.editor-wrap {
     margin-bottom: 23px !important;
 }
+/deep/.w-e-toolbar {
+    z-index: 99 !important;
+}
 </style>

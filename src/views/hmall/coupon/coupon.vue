@@ -1,17 +1,17 @@
 <template>
-    <div class="coupon">
-        <div class="page-body">
-            <div class="page-body-cont query-cont">
-                <div class="query-cont-col">
-                    <div class="query-col-title">优惠券名称：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">优惠券名称：</div>
+                    <div class="query-col__input">
                         <el-input type="text"
-                                  v-model="queryParams.couponName" maxlength="50" placeholder="请输入"></el-input>
+                                v-model="queryParams.couponName" maxlength="50" placeholder="请输入"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">优惠券状态：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">优惠券状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.status">
                             <el-option label="全部" value=""></el-option>
                             <!-- （boss没有1.未开始） 2.进行中 3.未审核 4.已结束 5.未通过 6.已中止-->
@@ -22,9 +22,9 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">创建时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">创建时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker
                             v-model="queryParams.startDate"
                             type="datetime"
@@ -44,9 +44,9 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">审核状态：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">审核状态：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.auditStatus">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="已审核" value="1"></el-option>
@@ -55,9 +55,9 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">优惠券类型：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">优惠券类型：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.couponType">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="满减" value="1"></el-option>
@@ -65,16 +65,16 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">平台公司名称：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">平台公司名称：</div>
+                    <div class="query-col__input">
                         <el-input type="text"
-                                  v-model="queryParams.merchantName" maxlength="50" placeholder="请输入"></el-input>
+                                v-model="queryParams.merchantName" maxlength="50" placeholder="请输入"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">是否可叠加：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">是否可叠加：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.stackable">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="是" value="true"></el-option>
@@ -82,15 +82,13 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">
-                        <h-button type="primary" @click="findCouponList">
-                            查询
-                        </h-button>
-                        <h-button @click="reset">
-                            重置
-                        </h-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="findCouponList">
+                        查询
+                    </h-button>
+                    <h-button @click="reset">
+                        重置
+                    </h-button>
                 </div>
             </div>
             <couponTable
@@ -98,7 +96,8 @@
                 :paginationData="paginationData"
                 @onQuery="findCouponList"
                 @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange"></couponTable>
+                @onCurrentChange="onCurrentChange">
+            </couponTable>
         </div>
     </div>
 </template>

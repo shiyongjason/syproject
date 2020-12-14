@@ -11,6 +11,7 @@ const state = {
     iotmerchantDistributorData: {},
     iotmerchantmemberTotalData: {},
     iotmerchantmemberInvitationRegisterData: {},
+    iotmerchantmemberEnterpriseInfo: {},
     iotmerchantmemberInvitationChangeData: {},
     iotmerchantmemberInvitationRegisterDataPagination: {},
     iotmerchantmemberInvitationOrderData: {},
@@ -77,7 +78,10 @@ const state = {
     cloudMerchantShopList: [],
     cloudMerchantShopListPagination: {},
     cloudMerchantShopCategoryList: [],
-    cloudMerchantShopCategoryTypeList: []
+    cloudMerchantShopCategoryTypeList: [],
+    cloudOutboundDeviceList: [],
+    cloudOutboundMerchantList: [],
+    cloudOutboundCategoryList: []
 }
 
 const getters = {
@@ -87,6 +91,7 @@ const getters = {
     iotmerchantDistributorData: state => state.iotmerchantDistributorData,
     iotmerchantmemberInvitationOrderData: state => state.iotmerchantmemberInvitationOrderData,
     iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
+    iotmerchantmemberEnterpriseInfo: state => state.iotmerchantmemberEnterpriseInfo,
     iotmerchantmemberInvitationChangeData: state => state.iotmerchantmemberInvitationChangeData,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
@@ -164,7 +169,10 @@ const getters = {
     iotmerchantmemberDataPagination: state => state.iotmerchantmemberDataPagination,
     iotmerchantDistributorPagination: state => state.iotmerchantDistributorPagination,
     iotmerchantmemberInvitationRegisterDataPagination: state => state.iotmerchantmemberInvitationRegisterDataPagination,
-    iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination
+    iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination,
+    cloudOutboundDeviceList: state => state.cloudOutboundDeviceList,
+    cloudOutboundMerchantList: state => state.cloudOutboundMerchantList,
+    cloudOutboundCategoryList: state => state.cloudOutboundCategoryList
 }
 
 const mutations = {
@@ -188,6 +196,9 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA] (state, payload) {
         state.iotmerchantmemberInvitationRegisterData = payload
+    },
+    [types.MERCHANT_MEMBERS_ENTERPRISE_INFO] (state, payload) {
+        state.iotmerchantmemberEnterpriseInfo = payload
     },
     [types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA] (state, payload) {
         state.iotmerchantmemberInvitationChangeData = payload
@@ -355,7 +366,7 @@ const mutations = {
     [cloud.CLOUD_MERCHANT_AGENT_DETAIL] (state, payload) {
         state.cloudMerchantAgentDetail = payload
     },
-    [cloud.GET_CLOUD_MERCHANT_AD_LIST]  (state, payload) {
+    [cloud.GET_CLOUD_MERCHANT_AD_LIST] (state, payload) {
         state.cloudMerchantAdList = payload
     },
     [cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION] (state, payload) {
@@ -381,6 +392,15 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_SHOP_CATEGORY_TYPE_LIST] (state, payload) {
         state.cloudMerchantShopCategoryTypeList = payload
+    },
+    [cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST] (state, payload) {
+        state.cloudOutboundDeviceList = payload
+    },
+    [cloud.GET_CLOUD_OUTBOUND_MERCHANT_LIST] (state, payload) {
+        state.cloudOutboundMerchantList = payload
+    },
+    [cloud.GET_CLOUD_OUTBOUND_CATEGORY_LIST] (state, payload) {
+        state.cloudOutboundCategoryList = payload
     }
 }
 
@@ -410,6 +430,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findMerchantMemberEnterpriseInfo ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberEnterpriseInfo(params)
+        commit(types.MERCHANT_MEMBERS_ENTERPRISE_INFO, data)
     },
     async findMerchantMemberInvitationChangesituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationChangesituation(params)
@@ -655,29 +679,29 @@ const actions = {
     },
     async findCloudMerchantList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantList(params)
-        commit(cloud.GET_CLOUD_MERCHANT_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_LIST, data.records)
         commit(cloud.CLOUD_MERCHANT_LIST_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
         })
     },
     async getCloudMerchantAgentDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAgentDetail(params)
-        commit(cloud.CLOUD_MERCHANT_AGENT_DETAIL, data.data)
+        commit(cloud.CLOUD_MERCHANT_AGENT_DETAIL, data)
     },
     async findCloudMerchantAdList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAdList(params)
-        commit(cloud.GET_CLOUD_MERCHANT_AD_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_LIST, data.records)
         commit(cloud.GET_CLOUD_MERCHANT_AD_LIST_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
         })
     },
     async getCloudMerchantAdDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAdDetail(params)
-        commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data.data)
+        commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data)
     },
     async findCloudMerchantOrderList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantOrderList(params)
@@ -708,6 +732,21 @@ const actions = {
     async findCloudMerchantShopCategoryTypeList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantShopCategoryTypeList(params)
         commit(cloud.GET_CLOUD_MERCHANT_SHOP_CATEGORY_TYPE_LIST, data)
+    },
+    async findCloudOutboundDeviceList ({ commit }, params) {
+        const { data } = await Api.getCloudOutboundDeviceList(params)
+        commit(cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST, data.data)
+    },
+    async findCloudOutboundMerchantList ({ commit }, params) {
+        const { data } = await Api.getCloudOutboundMerchantList(params)
+        commit(cloud.GET_CLOUD_OUTBOUND_MERCHANT_LIST, data)
+    },
+    async findCloudOutboundCategoryList ({ commit }, params) {
+        const { data } = await Api.getCloudOutboundCategoryList(params)
+        commit(cloud.GET_CLOUD_OUTBOUND_CATEGORY_LIST, data.data)
+    },
+    async clearCloudOutboundDeviceList ({ commit }) {
+        commit(cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST, [])
     }
 }
 export default {
