@@ -64,8 +64,8 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="企业信息" name="3">
-                    <div class="page-body-cont-enterprise-info">
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="3" >
+                    <div class="page-body-cont-enterprise-info" v-show="this.enterpriseInfoData.id!=null">
                         <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
                         <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
                         <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
@@ -113,6 +113,8 @@
                             </el-input>
                         </div>
                     </div>
+                        <div class="page-body-cont-enterprise-info-empty" v-show="this.enterpriseInfoData.id==null">暂无数据</div>
+
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -649,5 +651,23 @@ export default {
         background: $whiteColor;
 
     }
+    .page-body-cont-enterprise {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        background: $whiteColor;
 
+    }
+    .page-body-cont-enterprise-info-empty {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        color:#888888 ;
+        flex-direction: column;
+        align-content: center;
+        padding:40px 200px 40px 200px;
+        background: $whiteColor;
+
+    }
 </style>
