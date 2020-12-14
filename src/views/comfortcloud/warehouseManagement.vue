@@ -115,7 +115,7 @@
                     <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="输入标题设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="出库类型：" prop="outboundType">
-                    <el-select v-model="addRecord.outboundType" clearable>
+                    <el-select v-model="addRecord.outboundType">
                         <el-option label="样品" value="样品"></el-option>
                         <el-option label="合同履约提货" value="合同履约提货"></el-option>
                     </el-select>
@@ -123,10 +123,15 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="经销商名称：" prop="dealer">
-                            <el-select v-model="addRecord.dealer" filterable remote allow-create placeholder="输入经销商名称" @change="dealerChanged" :remote-method="dealerRequest" :loading="dealerLoading" :disabled="isEditRecord">
-                                <el-option v-for="(item,index) in dealerOptions" :key="index" :label="item" :value="item">
-                                </el-option>
-                            </el-select>
+                            <el-autocomplete
+                                class="inline-input"
+                                v-model="addRecord.dealer"
+                                :fetch-suggestions="dealerRequest"
+                                placeholder="请输入经销商名称"
+                                :trigger-on-focus="false"
+                                @select="dealerChanged"
+                                :disabled="isEditRecord"
+                            ></el-autocomplete>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="2">
@@ -209,8 +214,6 @@ export default {
                 dealerPhone: ''
             },
             canInputDeviceAmount: true, // 是否可以填写设备数量
-            dealerLoading: false,
-            dealerOptions: [],
             rules: {
                 iotId: [
                     { required: true, message: '请填写设备ID', trigger: 'blur' }
@@ -303,10 +306,6 @@ export default {
         })
     },
     mounted () {
-        // outboundType: '',
-        //     dealer: '',
-        console.log('传递的参数')
-        console.log(this.$route.query)
         if (this.$route.query.dealer && this.$route.query.dealer !== undefined) {
             this.queryParams.dealer = this.$route.query.dealer
         }
@@ -435,6 +434,9 @@ export default {
             this.isEditRecord = true
             this.addRecord = data
             this.addRecordDialogVisible = true
+            if (this.$refs['addRecord']) {
+                this.$refs['addRecord'].clearValidate()
+            }
         },
         onShowRecordDialog () {
             this.isEditRecord = false
@@ -449,6 +451,9 @@ export default {
             }
             this.clearCloudOutboundDeviceList()
             this.addRecordDialogVisible = true
+            if (this.$refs['addRecord']) {
+                this.$refs['addRecord'].clearValidate()
+            }
         },
         onAddRecordCancel () {
             this.addRecordDialogVisible = false
@@ -474,22 +479,21 @@ export default {
             this.addRecordDialogVisible = false
             this.onSearch()
         },
-        async dealerRequest (query) {
+        async dealerRequest (query, cb) {
             if (query.length >= 2) {
-                this.dealerLoading = true
-
                 await this.findCloudOutboundMerchantList({ name: query })
 
-                this.dealerLoading = false
-                this.dealerOptions = this.cloudOutboundMerchantList.map((e) => e.companyName)
+                const dealerOptions = this.cloudOutboundMerchantList.map((e) => { return { 'value': e.companyName } })
+                cb(dealerOptions)
             } else {
-                this.options = []
+                // eslint-disable-next-line standard/no-callback-literal
+                cb([])
             }
         },
-        dealerChanged (value) {
+        dealerChanged (val) {
             for (let i = 0; i < this.cloudOutboundMerchantList.length; i++) {
                 let company = this.cloudOutboundMerchantList[i]
-                if (company.companyName === value) {
+                if (company.companyName === val.value) {
                     this.addRecord.dealerPhone = company.contactNumber
                     return
                 }
