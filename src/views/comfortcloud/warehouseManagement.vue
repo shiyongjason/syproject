@@ -75,7 +75,7 @@
             </el-dialog>
         </el-dialog>
         <div class="page-body-cont">
-            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
+            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='90'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
