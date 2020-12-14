@@ -10,7 +10,7 @@
                 </el-form-item>
 
                 <el-form-item label="招商品类和型号：" prop="categorys">
-                    <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddCategory">+添加招商品类</el-button>
+                    <el-button type="primary" @click="onAddCategory">+添加招商品类</el-button>
                 </el-form-item>
 
                 <el-row v-for="(categoryItem,index) in form.categorys" :key="index">
