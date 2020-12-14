@@ -88,7 +88,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="isEditRecord ? '修改出库' : '新增出库'" :modal-append-to-body=false :append-to-body=false :visible.sync="addRecordDialogVisible" width="50%">
+        <el-dialog :title="isEditRecord ? '修改出库' : '新增出库'" :modal-append-to-body=false :append-to-body=false :close-on-click-modal="false" :visible.sync="addRecordDialogVisible" width="50%">
             <el-form class="add-record-form" ref="addRecord" :model="addRecord" :rules="rules" label-width="120px">
                 <el-form-item label-width="0">
                     <el-col :span="8">
@@ -518,6 +518,7 @@ export default {
                     if (device.deviceClass === 1) {
                         this.addRecord.amount = 1
                         this.canInputDeviceAmount = false
+                        this.addRecord.iotId = ''
                     } else {
                         this.canInputDeviceAmount = true
                         this.addRecord.iotId = this.randomString(16)
