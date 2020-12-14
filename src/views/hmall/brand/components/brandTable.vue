@@ -1,15 +1,14 @@
 <template>
     <div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <h-button type="create" @click="openMark('add')">
-                    新增品牌
-                </h-button>
-                <h-button @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</h-button>
-                <h-button @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</h-button>
-            </div>
+        <div class="query-cont__row"></div>
+        <div class="button-cont">
+            <h-button type="create" @click="openMark('add')">
+                新增品牌
+            </h-button>
+            <h-button @click="onUpdateBrandMultiStatus(selectId, 2)">批量生效</h-button>
+            <h-button @click="onUpdateBrandMultiStatus(selectId, 1)">批量失效</h-button>
         </div>
-        <div class="page-body-cont">
+        <div>
             <el-table :data="tableData"
                     border
                     ref="brandTable"

@@ -1,50 +1,46 @@
 <template>
     <div>
       <div class="set-drawer">
-          <div class="page-body-cont query-cont">
-              <div class="query-cont-row">
-                  <div class="query-cont-col">
-                      <h-button type="create" @click="onAdd">
-                          新增参数
-                      </h-button>
-                      <h-button @click="onDelete">
-                          批量删除
-                      </h-button>
-                  </div>
-              </div>
-          </div>
           <div class="page-body-cont">
-              <basicTable
-                  isMultiple
-                  :isAction="true"
-                  :tableData="tableData"
-                  :tableLabel="tableLabel"
-                  :isShowIndex="false"
-                  :multiSelection.sync="multiSelection"
-                  :actionMinWidth='120'
-              >
-                  <template slot="isRequired" slot-scope="scope">
-                      {{ isRequiredMap.get(scope.data.row.isRequired) || '-' }}
-                  </template>
-                  <template slot="isCombobox" slot-scope="scope">
-                      {{ typeMap.get(scope.data.row.isCombobox) || '-' }}
-                  </template>
-                  <template slot="style" slot-scope="scope">
-                      <template v-if="scope.data.row.isCombobox === 0">
-                          <el-input placeholder="请输入内容" disabled>
-                              <template v-if="scope.data.row.unit" slot="append">{{scope.data.row.unit}}</template>
-                          </el-input>
-                      </template>
-                      <template v-if="scope.data.row.isCombobox === 1">
-                          <el-select v-model="scope.data.row.style" placeholder="请选择"></el-select>
-                      </template>
-                  </template>
-                  <template slot="action" slot-scope="scope">
-                      <h-button table @click="onEdit(scope.data.row)">编辑</h-button>
-                      <h-button table @click="onDelete(scope.data.row)">删除</h-button>
-                  </template>
-              </basicTable>
+                <div class="button-cont parameter-button">
+                    <h-button type="create" @click="onAdd">
+                        新增参数
+                    </h-button>
+                    <h-button @click="onDelete">
+                        批量删除
+                    </h-button>
+                </div>
           </div>
+            <basicTable
+                isMultiple
+                :isAction="true"
+                :tableData="tableData"
+                :tableLabel="tableLabel"
+                :isShowIndex="false"
+                :multiSelection.sync="multiSelection"
+                :actionMinWidth='120'
+            >
+                <template slot="isRequired" slot-scope="scope">
+                    {{ isRequiredMap.get(scope.data.row.isRequired) || '-' }}
+                </template>
+                <template slot="isCombobox" slot-scope="scope">
+                    {{ typeMap.get(scope.data.row.isCombobox) || '-' }}
+                </template>
+                <template slot="style" slot-scope="scope">
+                    <template v-if="scope.data.row.isCombobox === 0">
+                        <el-input placeholder="请输入内容" disabled>
+                            <template v-if="scope.data.row.unit" slot="append">{{scope.data.row.unit}}</template>
+                        </el-input>
+                    </template>
+                    <template v-if="scope.data.row.isCombobox === 1">
+                        <el-select v-model="scope.data.row.style" placeholder="请选择"></el-select>
+                    </template>
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <h-button table @click="onEdit(scope.data.row)">编辑</h-button>
+                    <h-button table @click="onDelete(scope.data.row)">删除</h-button>
+                </template>
+            </basicTable>
       </div>
       <el-dialog
         :title="attributeInfo.title"
@@ -400,15 +396,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.parameter-button {
+    margin-bottom: 10px;
+}
 .form-add-remove {
     font-size: 22px;
     color: #ff9c31;
     cursor: pointer;
     line-height: 40px;
     vertical-align: top;
-}
-.set-drawer {
-    padding: 20px;
 }
 .center-btn {
     text-align: center;
