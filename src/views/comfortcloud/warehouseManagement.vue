@@ -495,6 +495,7 @@ export default {
                 let company = this.cloudOutboundMerchantList[i]
                 if (company.companyName === val.value) {
                     this.addRecord.dealerPhone = company.contactNumber
+                    this.$refs['addRecord'].clearValidate(['dealerPhone'])
                     return
                 }
             }
