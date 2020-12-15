@@ -51,6 +51,7 @@
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照设备出库模板内容导入数据，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">3.在模版中完成内容填写后，请将表格内已输入的内容复制到新的Excel中再进行导入</p>
             </el-upload>
             <el-button class="errorBtn" v-if="errorData.containsList.length > 0" @click="errorShow = true">上传失败数据</el-button>
             <div class="downloadExcel">
