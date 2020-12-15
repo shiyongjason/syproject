@@ -53,7 +53,7 @@
                 <p slot="tip" class="el-upload__tip">2.请按照设备出库模板内容导入数据，否则可能会出现导入异常</p>
                 <p slot="tip" class="el-upload__tip">3.在模版中完成内容填写后，请将表格内已输入的内容复制到新的Excel中再进行导入</p>
             </el-upload>
-            <el-button class="errorBtn" v-if="errorData.containsList.length > 0" @click="errorShow = true">上传失败数据</el-button>
+            <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
             <div class="downloadExcel">
                 <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
             </div>
@@ -61,16 +61,18 @@
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
-            <el-dialog width="800px" title="上传结果" :visible.sync="errorShow" append-to-body>
+            <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>
                 <div>
                     <span class="uploadTips">上传数据：{{errorData.count}}条</span>
                 </div>
                 <div>
                     <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>
-                    <span class="uploadTips uploadErr">上传重复：{{errorData.containsCount}}条</span>
+                </div>
+                <div>
+                    <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>
                 </div>
                 <div class="basic-table">
-                    <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="errorData.containsList" :maxHeight='350'>
+                    <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>
                     </basicTable>
                 </div>
             </el-dialog>
@@ -171,7 +173,7 @@ export default {
             searchParams: {},
             tableData: [],
             errorData: {
-                containsList: []
+                failList: []
             },
             tableLabel: [
                 { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
@@ -183,6 +185,17 @@ export default {
                 { label: '经销商', prop: 'dealer' },
                 { label: '经销商电话', prop: 'dealerPhone' },
                 { label: '设备状态', prop: 'deviceStatus' }
+            ],
+            errTableLabel: [
+                { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
+                { label: '品类', prop: 'deviceCategory' },
+                { label: '设备型号', prop: 'deviceType' },
+                { label: '设备ID', prop: 'iotId' },
+                { label: '数量', prop: 'amount' },
+                { label: '出库类型', prop: 'outboundType' },
+                { label: '经销商', prop: 'dealer' },
+                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '失败原因', prop: 'reason' }
             ],
             uploadShow: false,
             errorShow: false,
@@ -372,7 +385,7 @@ export default {
         },
         onOpenModel () {
             this.uploadShow = true
-            this.errorData.containsList = []
+            this.errorData.failList = []
         },
         onCloseDialog () {
             if (this.hasFile()) {
