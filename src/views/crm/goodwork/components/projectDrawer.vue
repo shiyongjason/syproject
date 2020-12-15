@@ -13,6 +13,7 @@
             <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+            <ProjectOrderTab  v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback></ProjectOrderTab>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
@@ -27,14 +28,14 @@
                 </div>
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                        <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'">
+                        <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核' && status !== 3">
                             <el-radio-group v-model="statusForm.result">
                                 <el-radio :label=1>通过</el-radio>
                                 <el-radio :label=0>不通过</el-radio>
                                 <el-radio :label=2>退回</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
+                        <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态' && status !== 3">
                             <el-radio-group v-model="statusForm.afterStatus">
                                 <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
                             </el-radio-group>
@@ -45,7 +46,7 @@
                     </el-form>
                     <span slot="footer" class="dialog-footer">
                         <h-button @click="dialogVisible = false">取消</h-button>
-                        <h-button type="primary" @click="onUpdateAudit">确定</h-button>
+                        <h-button type="primary" @click="onUpdateAudit">{{status === 3? '确定关闭' : '确定'}}</h-button>
                     </span>
                 </el-dialog>
             </div>
@@ -79,6 +80,7 @@
 import projectCom from './project_com'
 import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
+import ProjectOrderTab from './projectOrderTab'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
@@ -98,7 +100,7 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom, hosjoyUpload
+        projectCom, datacolCom, approveCom, hosjoyUpload, ProjectOrderTab
     },
     data () {
         return {
@@ -203,9 +205,7 @@ export default {
                 },
                 {
                     name: '合作关闭',
-                    // isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_CLOSE) && this.status == 3
-                    // TODO: 测试
-                    isShow: true
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_CLOSE) && this.status == 3
                 }
             ]
         },
@@ -335,8 +335,7 @@ export default {
             } else if (status == 3) {
                 this.dialogVisible = true
                 this.aduitTitle = '合作关闭'
-                this.statusForm = {}
-                // TODO: 这里待确认参数的意义
+                this.statusForm = { ...this.copyStatusForm }
                 this.statusForm.afterStatus = 5
                 this.statusForm.reset = false
                 this.$nextTick(() => {

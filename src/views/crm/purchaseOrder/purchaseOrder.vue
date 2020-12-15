@@ -208,8 +208,14 @@ export default {
             this.findPurchaseList(this.queryParamsUseQuery)
         },
         onSortChange (val) {
-            this.queryParams['sort.property'] = val.prop + ''
-            this.queryParams['sort.direction'] = val.order === 'ascending' ? 'asc' : 'desc'
+            if (val.order) {
+                this.queryParams['sort.property'] = val.prop + ''
+                this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
+            } else {
+                this.queryParams['sort.property'] = null
+                this.queryParams['sort.direction'] = null
+            }
+
             this.findPurchaseList(this.queryParamsUseQuery)
         },
         jumpPurchaseOrderDetail (id) {
@@ -225,6 +231,7 @@ export default {
         },
         drawerBackEvent () {
             this.drawer = false
+            this.findPurchaseList(this.queryParamsUseQuery)
         },
         openDialog (status, row) {
             this.isOpen = true
@@ -233,6 +240,7 @@ export default {
         },
         dialogBackEvent () {
             this.isOpen = false
+            this.findPurchaseList(this.queryParamsUseQuery)
         },
         fundMoneys (val) {
             if (val > -1) {

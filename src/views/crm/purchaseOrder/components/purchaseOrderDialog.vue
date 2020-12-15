@@ -1,5 +1,6 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('backEvent')" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('backEvent')"
+               :close-on-click-modal="false">
         <div class="info-content">
             <div class="row-filed">
                 <div class="col-filed left" v-if="dialogDetail.poInfo && dialogStatus.enter.status === openStatus">
@@ -7,7 +8,7 @@
                     <ul class="purchase-order-info">
                         <li>
                             <span class="label">采购单金额：</span>
-                            <span>{{fundMoneys(dialogDetail.poInfo.poAmount)}}元</span>
+                            <span>{{ fundMoneys(dialogDetail.poInfo.poAmount) }}元</span>
                         </li>
                         <li>
                             <span class="label">采购明细表：</span>
@@ -26,39 +27,39 @@
                         </li>
                         <li>
                             <span class="label">剩余货款支付周期： </span>
-                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">最迟发货日期：</span>
-                            <span>{{ dialogDetail.poInfo.lastGoodsDate || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.lastGoodsDate || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">收货地址：</span>
-                            <span>{{ dialogDetail.poInfo.goodsAddress || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.goodsAddress || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">监管账户户名： </span>
-                            <span>{{ dialogDetail.poInfo.regulatorAccountName || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.regulatorAccountName || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">监管账户银行账号：</span>
-                            <span>{{ dialogDetail.poInfo.regulatorAccountNo || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.regulatorAccountNo || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">监管账户开户行： </span>
-                            <span>{{ dialogDetail.poInfo.regulatorAccountBank || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.regulatorAccountBank || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">收款账户户名：</span>
-                            <span>{{ dialogDetail.poInfo.receiverAccountName || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.receiverAccountName || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">收款账户银行账号： </span>
-                            <span>{{ dialogDetail.poInfo.receiverAccountNo || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.receiverAccountNo || '-' }}</span>
                         </li>
                         <li>
                             <span class="label">收款账户开户行：</span>
-                            <span>{{dialogDetail.poInfo.receiverAccountBank || '-'  }}</span>
+                            <span>{{ dialogDetail.poInfo.receiverAccountBank || '-' }}</span>
                         </li>
                     </ul>
                 </div>
@@ -71,9 +72,23 @@
                             <th>变更后</th>
                         </tr>
                         <tr :key="item.id" v-for="item in dialogDetail.poChangeFields">
-                            <td>{{ item.fieldName || '-'  }}</td>
-                            <td>{{ item.originalValue || '-'  }}</td>
-                            <td>{{ item.changedValue || '-'  }}</td>
+                            <td>{{ item.fieldName || '-' }}</td>
+                            <td>
+                                <template v-if="Array.isArray(checkedIsJson(item.originalValue))">
+                                    <img :src="item.url" :key="item.url" alt="" v-for="item in checkedIsJson(item.originalValue)" class="info-img">
+                                </template>
+                                <template v-else>
+                                    {{item.originalValue}}
+                                </template>
+                            </td>
+                            <td>
+                                <template v-if="Array.isArray(checkedIsJson(item.changedValue))">
+                                    <img :src="item.url" :key="item.url" alt="" v-for="item in checkedIsJson(item.changedValue)" class="info-img">
+                                </template>
+                                <template v-else>
+                                    {{item.changedValue}}
+                                </template>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -95,8 +110,8 @@
                                 <th>合同类型</th>
                             </tr>
                             <tr :key="item.id" v-for="item in dialogDetail.contracts">
-                                <td>{{ item.contractName || '-'  }}</td>
-                                <td>{{ item.contractTypeId || '-'  }}</td>
+                                <td>{{ item.contractName || '-' }}</td>
+                                <td>{{ item.contractTypeId || '-' }}</td>
                             </tr>
                         </table>
                     </template>
@@ -124,27 +139,26 @@
                 <div class="col-filed">
                     <div class="info-title">变更结果</div>
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
-                    <template v-if="dialogStatus.watch.status !== openStatus">
-                        <p>
-                            变更结果：
+                    <el-form v-if="dialogStatus.watch.status !== openStatus" label-width="120px">
+                        <el-form-item label="变更结果：">
                             <el-radio-group v-model="resultRadioGroup">
                                 <el-radio :label="item.key" :key="item.key"
                                           v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
                                 </el-radio>
                             </el-radio-group>
-                        </p>
-                        <p>
-                            {{purchaseOrderDict.changeResult.remark}}
-                        </p>
-                        <p>
-                            免息方式：
+                        </el-form-item>
+                        <el-form-item label="驳回原因："
+                                      v-if="resultRadioGroup === purchaseOrderDict.changeResult.list[1].key">
+                            <el-input type="textarea" v-model="remark"></el-input>
+                        </el-form-item>
+                        <el-form-item label="免息方式：">
                             <el-radio-group v-model="InterestFreeRadioGroup">
                                 <el-radio :label="item.key" :key="item.key"
                                           v-for="item in purchaseOrderDict.freeInterestType.list">{{ item.value }}
                                 </el-radio>
                             </el-radio-group>
-                        </p>
-                    </template>
+                        </el-form-item>
+                    </el-form>
                     <template v-if="dialogStatus.watch.status === openStatus">
                         <p>变更结果：已驳回</p>
                         <p>驳回原因：这里显示驳回的原因</p>
@@ -161,7 +175,12 @@
 
 <script>
 import PurchaseOrderDialogStatus from '../dialogStatus'
-import { updatePurchaseOrderChangeConfirmStatus, updatePurchaseOrderConfirmStatus, getPurchaseOrderConfirmDetail, getPurchaseOrderConfirmChangeDetail } from '@/views/crm/purchaseOrder/api'
+import {
+    updatePurchaseOrderChangeConfirmStatus,
+    updatePurchaseOrderConfirmStatus,
+    getPurchaseOrderConfirmDetail,
+    getPurchaseOrderConfirmChangeDetail
+} from '@/views/crm/purchaseOrder/api'
 import PurchaseOrderDict from '../purchaseOrderDict'
 import filters from '@/utils/filters'
 import { mapState } from 'vuex'
@@ -188,7 +207,8 @@ export default {
             InterestFreeRadioGroup: [],
             dialogStatus: PurchaseOrderDialogStatus,
             purchaseOrderDict: PurchaseOrderDict,
-            dialogDetail: {}
+            dialogDetail: {},
+            remark: ''
         }
     },
     computed: {
@@ -225,16 +245,27 @@ export default {
                 signResult: this.resultRadioGroup,
                 updateBy: this.userinfo.employeeName,
                 updatePhone: this.userinfo.phoneNumber,
-                remark: 'remark',
+                remark: this.remark,
                 freeInterestType: this.InterestFreeRadioGroup
             }
+            let message = ''
             if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
                 await updatePurchaseOrderConfirmStatus(params)
+                message = '采购确认成功'
             }
             if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
                 await updatePurchaseOrderChangeConfirmStatus(params)
+                message = '采购确认变更成功'
             }
+            this.$message.success(message)
             this.$emit('backEvent')
+        },
+        checkedIsJson (string) {
+            try {
+                return JSON.parse(string)
+            } catch (e) {
+                return string
+            }
         }
     },
     watch: {
@@ -245,7 +276,7 @@ export default {
                     this.dialogDetail = data
                 }
                 if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
-                    const { data } = await getPurchaseOrderConfirmDetail(this.row.id)
+                    const { data } = await getPurchaseOrderConfirmChangeDetail(this.row.id)
                     this.dialogDetail = data
                 }
             }
@@ -337,15 +368,18 @@ export default {
             padding: 5px;
         }
     }
+
     .info-img {
         width: 80px;
         cursor: pointer;
     }
+
     .contracts-table {
-        th{
+        th {
             width: 50%;
         }
-        td{
+
+        td {
             padding: 8px;
             font-size: 12px;
         }

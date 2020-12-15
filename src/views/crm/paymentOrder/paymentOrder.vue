@@ -162,8 +162,13 @@ export default {
         onChooseDep () {
         },
         onSortChange (val) {
-            this.queryParams['sort.property'] = val.prop + ''
-            this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
+            if (val.order) {
+                this.queryParams['sort.property'] = val.prop + ''
+                this.queryParams['sort.direction'] = val.order === 'ascending' ? 'ASC' : 'DESC'
+            } else {
+                this.queryParams['sort.property'] = null
+                this.queryParams['sort.direction'] = null
+            }
             this.findPaymentOrderList(this.queryParams)
         },
         paymentOrderBackEvent () {

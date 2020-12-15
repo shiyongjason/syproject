@@ -10,6 +10,6 @@ export const getPurchaseOrderConfirmDetail = (id) => axios.get(`/project/api/pur
 // 采购单确认变更详情 / 查看变更
 export const getPurchaseOrderConfirmChangeDetail = (id) => axios.get(`/project/api/purchase-orders/boss/${id}/change-confirm-detail`)
 // 采购单变更确认
-export const updatePurchaseOrderChangeConfirmStatus = (params) => axios.put(`/project/api/api/purchase-orders/boss/change-confirm`, params)
+export const updatePurchaseOrderChangeConfirmStatus = (params) => axios.put(`/project/api/purchase-orders/boss/change-confirm`, params)
 // 采购单确认
 export const updatePurchaseOrderConfirmStatus = (params) => axios.put(`/project/api/purchase-orders/boss/confirm`, params)
