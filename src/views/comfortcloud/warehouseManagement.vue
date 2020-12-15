@@ -54,7 +54,7 @@
             </el-upload>
             <el-button class="errorBtn" v-if="errorData.containsList.length > 0" @click="errorShow = true">上传失败数据</el-button>
             <div class="downloadExcel">
-                <a href="/excelTemplate/出库管理导入模板.xlsx" download="出库管理导入模板.xls">下载出库管理导入模板</a>
+                <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
             </div>
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
@@ -75,7 +75,7 @@
             </el-dialog>
         </el-dialog>
         <div class="page-body-cont">
-            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
+            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='90'>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
@@ -88,7 +88,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog :title="isEditRecord ? '修改出库' : '新增出库'" :modal-append-to-body=false :append-to-body=false :visible.sync="addRecordDialogVisible" width="50%">
+        <el-dialog :title="isEditRecord ? '修改出库' : '新增出库'" :modal-append-to-body=false :append-to-body=false :close-on-click-modal="false" :visible.sync="addRecordDialogVisible" width="50%">
             <el-form class="add-record-form" ref="addRecord" :model="addRecord" :rules="rules" label-width="120px">
                 <el-form-item label-width="0">
                     <el-col :span="8">
@@ -112,10 +112,10 @@
                     <el-input style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="设备ID：" prop="iotId">
-                    <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="输入标题设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
+                    <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="请输入设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="出库类型：" prop="outboundType">
-                    <el-select v-model="addRecord.outboundType" clearable>
+                    <el-select v-model="addRecord.outboundType">
                         <el-option label="样品" value="样品"></el-option>
                         <el-option label="合同履约提货" value="合同履约提货"></el-option>
                     </el-select>
@@ -123,10 +123,15 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="经销商名称：" prop="dealer">
-                            <el-select v-model="addRecord.dealer" filterable remote allow-create placeholder="输入经销商名称" @change="dealerChanged" :remote-method="dealerRequest" :loading="dealerLoading" :disabled="isEditRecord">
-                                <el-option v-for="(item,index) in dealerOptions" :key="index" :label="item" :value="item">
-                                </el-option>
-                            </el-select>
+                            <el-autocomplete
+                                class="inline-input"
+                                v-model="addRecord.dealer"
+                                :fetch-suggestions="dealerRequest"
+                                placeholder="请输入经销商名称"
+                                :trigger-on-focus="false"
+                                @select="dealerChanged"
+                                :disabled="isEditRecord"
+                            ></el-autocomplete>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="2">
@@ -209,8 +214,6 @@ export default {
                 dealerPhone: ''
             },
             canInputDeviceAmount: true, // 是否可以填写设备数量
-            dealerLoading: false,
-            dealerOptions: [],
             rules: {
                 iotId: [
                     { required: true, message: '请填写设备ID', trigger: 'blur' }
@@ -303,12 +306,8 @@ export default {
         })
     },
     mounted () {
-        // outboundType: '',
-        //     dealer: '',
-        console.log('传递的参数')
-        console.log(this.$route.query)
         if (this.$route.query.dealer && this.$route.query.dealer !== undefined) {
-            this.queryParams.dealer = this.$route.query.dealer
+            this.queryParams.dealer = decodeURIComponent(this.$route.query.dealer)
         }
         this.onSearch()
         this.findCloudOutboundCategoryList()
@@ -435,6 +434,9 @@ export default {
             this.isEditRecord = true
             this.addRecord = data
             this.addRecordDialogVisible = true
+            if (this.$refs['addRecord']) {
+                this.$refs['addRecord'].clearValidate()
+            }
         },
         onShowRecordDialog () {
             this.isEditRecord = false
@@ -449,6 +451,9 @@ export default {
             }
             this.clearCloudOutboundDeviceList()
             this.addRecordDialogVisible = true
+            if (this.$refs['addRecord']) {
+                this.$refs['addRecord'].clearValidate()
+            }
         },
         onAddRecordCancel () {
             this.addRecordDialogVisible = false
@@ -474,23 +479,23 @@ export default {
             this.addRecordDialogVisible = false
             this.onSearch()
         },
-        async dealerRequest (query) {
+        async dealerRequest (query, cb) {
             if (query.length >= 2) {
-                this.dealerLoading = true
-
                 await this.findCloudOutboundMerchantList({ name: query })
 
-                this.dealerLoading = false
-                this.dealerOptions = this.cloudOutboundMerchantList.map((e) => e.companyName)
+                const dealerOptions = this.cloudOutboundMerchantList.map((e) => { return { 'value': e.companyName } })
+                cb(dealerOptions)
             } else {
-                this.options = []
+                // eslint-disable-next-line standard/no-callback-literal
+                cb([])
             }
         },
-        dealerChanged (value) {
+        dealerChanged (val) {
             for (let i = 0; i < this.cloudOutboundMerchantList.length; i++) {
                 let company = this.cloudOutboundMerchantList[i]
-                if (company.companyName === value) {
+                if (company.companyName === val.value) {
                     this.addRecord.dealerPhone = company.contactNumber
+                    this.$refs['addRecord'].clearValidate(['dealerPhone'])
                     return
                 }
             }
@@ -512,7 +517,9 @@ export default {
                 if (device.name === this.addRecord.deviceType) {
                     if (device.deviceClass === 1) {
                         this.addRecord.amount = 1
+                        this.$refs['addRecord'].clearValidate(['amount'])
                         this.canInputDeviceAmount = false
+                        this.addRecord.iotId = ''
                     } else {
                         this.canInputDeviceAmount = true
                         this.addRecord.iotId = this.randomString(16)

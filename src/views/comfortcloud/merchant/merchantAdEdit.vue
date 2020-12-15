@@ -10,7 +10,7 @@
                 </el-form-item>
 
                 <el-form-item label="招商品类和型号：" prop="categorys">
-                    <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddCategory">+添加招商品类</el-button>
+                    <el-button type="primary" @click="onAddCategory">+添加招商品类</el-button>
                 </el-form-item>
 
                 <el-row v-for="(categoryItem,index) in form.categorys" :key="index">
@@ -100,9 +100,9 @@ export default {
                     { required: true, message: '请输入广告标题', trigger: 'blur' }
                 ],
                 categorys: [
-                    { required: true, message: '请添加招商品类和类型' }
+                    { required: true, message: '请添加招商品类和类型', trigger: 'change' }
                 ],
-                category: [{ required: true, message: '品类不能为空', trigger: 'blur' }],
+                category: [{ required: true, message: '品类不能为空', trigger: 'change' }],
                 type: [{
                     required: true,
                     validator: (rule, value, callback) => {
@@ -305,6 +305,7 @@ export default {
         onAddCategory () {
             this.form.categorys.push({ categoryId: '', specificationId: '' })
             this.categoryTypes.push([])
+            this.$refs['form'].clearValidate(['categorys'])
         },
         async selectChanged (index) {
             this.form.categorys[index].specificationId = ''

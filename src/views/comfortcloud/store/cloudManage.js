@@ -705,11 +705,11 @@ const actions = {
     },
     async findCloudMerchantOrderList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantOrderList(params)
-        commit(cloud.GET_CLOUD_MERCHANT_ORDER_LIST, data.data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_ORDER_LIST, data.records)
         commit(cloud.GET_CLOUD_MERCHANT_ORDER_LIST_PAGINATION, {
-            pageNumber: data.data.current,
-            pageSize: data.data.size,
-            total: data.data.total
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
         })
     },
     async findCloudMerchantShopList ({ commit }, params) {
