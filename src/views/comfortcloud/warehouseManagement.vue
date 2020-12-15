@@ -112,7 +112,7 @@
                     <el-input style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="设备ID：" prop="iotId">
-                    <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="输入标题设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
+                    <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="请输入设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
                 </el-form-item>
                 <el-form-item label="出库类型：" prop="outboundType">
                     <el-select v-model="addRecord.outboundType">
@@ -517,6 +517,7 @@ export default {
                 if (device.name === this.addRecord.deviceType) {
                     if (device.deviceClass === 1) {
                         this.addRecord.amount = 1
+                        this.$refs['addRecord'].clearValidate(['amount'])
                         this.canInputDeviceAmount = false
                         this.addRecord.iotId = ''
                     } else {
