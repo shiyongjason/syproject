@@ -220,7 +220,7 @@ export default {
                     { required: true, message: '请填写设备ID', trigger: 'blur' }
                 ],
                 outboundType: [
-                    { required: true, message: '请选择出库类型', trigger: 'blur' }
+                    { required: true, message: '请选择出库类型', trigger: 'change' }
                 ],
                 dealer: [
                     { required: true, message: '请填写经销商名称', trigger: 'blur' }
@@ -239,7 +239,7 @@ export default {
 
                         callback()
                     },
-                    trigger: 'blur'
+                    trigger: 'change'
                 }],
                 deviceType: [{
                     validator: (rule, value, callback) => {
@@ -252,7 +252,7 @@ export default {
 
                         callback()
                     },
-                    trigger: 'blur'
+                    trigger: 'change'
                 }],
                 amount: [{
                     validator: (rule, value, callback) => {
@@ -307,8 +307,8 @@ export default {
         })
     },
     mounted () {
-        if (this.$route.query.dealer && this.$route.query.dealer !== undefined) {
-            this.queryParams.dealer = decodeURIComponent(this.$route.query.dealer)
+        if (this.$route.params.dealer && this.$route.params.dealer !== undefined) {
+            this.queryParams.dealer = decodeURIComponent(this.$route.params.dealer)
         }
         this.onSearch()
         this.findCloudOutboundCategoryList()
@@ -524,6 +524,7 @@ export default {
                     } else {
                         this.canInputDeviceAmount = true
                         this.addRecord.iotId = this.randomString(16)
+                        this.$refs['addRecord'].clearValidate(['iotId'])
                     }
                     break
                 }
