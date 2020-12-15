@@ -38,7 +38,7 @@
                             <span class="label">采购明细表：</span>
                             <template v-if="paymentOrderDetail.payOrderPoDetail && paymentOrderDetail.payOrderPoDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(paymentOrderDetail.payOrderPoDetail.poDetail)">
+                                     v-for="item in JSON.parse(paymentOrderDetail.payOrderPoDetail.poDetail)" class="info-img">
                             </template>
                         </p>
                         <p class="col-filed col-50">
@@ -73,7 +73,7 @@
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-50">
-                            <span class="label">申请支付金额：</span> {{ paymentOrderDetail.payOrderDetail.applyAmount }}元
+                            <span class="label">申请支付金额：</span> {{ paymentOrderDetail.payOrderDetail &&  paymentOrderDetail.payOrderDetail.applyAmount }}元
                         </p>
                         <p class="col-filed col-50">
                             <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate }}
@@ -108,159 +108,172 @@
                         </p>
                     </div>
                     <div class="row-filed">
-                        <h-button type="assist">支付单审核</h-button>
+                        <h-button type="assist" @click="openApproveDialog">支付单审核</h-button>
                     </div>
-                    <!--                    首付款待支付start-->
-                    <div class="row-filed">
-                        <p class="col-filed col-33">
-                            <span class="label">审核人：</span>{{ paymentOrderDetail.payOrderDetail.approvalUser }}（{{ paymentOrderDetail.payOrderDetail.approvalPhone }}）
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="label">审核时间：</span> {{ paymentOrderDetail.payOrderDetail.approvalTime }}
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="label">审核结果：</span>{{ paymentOrderDetail.payOrderDetail.approvalStatus }}
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed col-33">
-                            <span class="label">应收账款质押：</span>{{ paymentOrderDetail.payOrderDetail.accountReceivablePledgeType }}
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="label">上游支付方式：</span> {{ paymentOrderDetail.payOrderDetail.supplierPaymentType }}
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="label">上游货款方式：</span>{{ paymentOrderDetail.payOrderDetail.supplierPaymentMethod }}
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed col-50">
-                            <span class="label">经销商首付款：</span>{{ paymentOrderDetail.payOrderDetail.downPaymentAmount }}元
-                        </p>
-                        <p class="col-filed col-50">
-                            <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount }}元
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed col-50">
-                            <span class="label">预计服务费总额：</span>  {{ paymentOrderDetail.payOrderDetail.feeAmount }}元
-                        </p>
-                        <p class="col-filed col-50">
-                            <span class="label">预计每期服务费：</span> {{ paymentOrderDetail.payOrderDetail.feeAmountPer }}元
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        《订单及服务费确认函》： <span class="info-status-words">未签约</span>
-                        <!--                        首付款待签约以后-->
-                        <h-button type="primary">查看合同</h-button>
-                        <!--                        首付款待签约以后-->
-                    </div>
+                    <template v-if="PaymentOrderDict.status.list[1] === paymentOrderDetail.payOrderDetail.status">
+                        <!--                    首付款待支付start-->
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">审核人：</span>{{ paymentOrderDetail.payOrderDetail.approvalUser }}（{{ paymentOrderDetail.payOrderDetail.approvalPhone }}）
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">审核时间：</span> {{ paymentOrderDetail.payOrderDetail.approvalTime }}
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">审核结果：</span>{{ paymentOrderDetail.payOrderDetail.approvalStatus }}
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">应收账款质押：</span>{{ paymentOrderDetail.payOrderDetail.accountReceivablePledgeType }}
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">上游支付方式：</span> {{ paymentOrderDetail.payOrderDetail.supplierPaymentType }}
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">上游货款方式：</span>{{ paymentOrderDetail.payOrderDetail.supplierPaymentMethod }}
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-50">
+                                <span class="label">经销商首付款：</span>{{ paymentOrderDetail.payOrderDetail.downPaymentAmount }}元
+                            </p>
+                            <p class="col-filed col-50">
+                                <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount }}元
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-50">
+                                <span class="label">预计服务费总额：</span>  {{ paymentOrderDetail.payOrderDetail.feeAmount }}元
+                            </p>
+                            <p class="col-filed col-50">
+                                <span class="label">预计每期服务费：</span> {{ paymentOrderDetail.payOrderDetail.feeAmountPer }}元
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            《订单及服务费确认函》： <span class="info-status-words">未签约</span>
+                            <!--                        首付款待签约以后-->
+                            <h-button type="primary" v-if="PaymentOrderDict.status.list[2]  === paymentOrderDetail.payOrderDetail.status">查看合同</h-button>
+                            <!--                        首付款待签约以后-->
+                        </div>
+                    </template>
                     <!--                    首付款待支付end-->
-                    <div class="row-filed">
-                        <p class="col-filed">
-                            <span class="info-title">首付款支付计划：</span>
-                        </p>
-                    </div>
-<!--                    downpaymentFund-->
-                    <div class="row-filed" :key="item.id" v-for="item in paymentOrderDetail.respFundResults.downpaymentFund">
-                        <p class="col-filed col-25">
-                            <span class="label">首付款：</span> {{item.paymentAmount}}元
-                        </p>
-                        <p class="col-filed col-25">
-                            <span class="label">应支付时间：</span>  {{item.paidAmount}}元
-                        </p>
-                        <p class="col-filed col-25">
-                            <span class="label">支付时间：</span>  {{item.paidDate}}元
-                        </p>
-                        <p class="col-filed col-25">
-                            <template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                <h-button table>{{attributeComputed(PaymentOrderDict.paymentFlag.list,item.paymentFlag)}}</h-button>
-                            </template>
-                            <template v-else>
+                    <template v-if="PaymentOrderDict.status.list[2]  === paymentOrderDetail.payOrderDetail.status">
+                        <div class="row-filed">
+                            <p class="col-filed">
+                                <span class="info-title">首付款支付计划：</span>
+                            </p>
+                        </div>
+                        <div class="row-filed" :key="item.id" v-for="item in paymentOrderDetail.respFundResults.downpaymentFund">
+                            <p class="col-filed col-25">
+                                <span class="label">首付款：</span> {{item.paymentAmount}}元
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">应支付时间：</span>  {{item.paidAmount}}元
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">支付时间：</span>  {{item.paidDate}}元
+                            </p>
+                            <p class="col-filed col-25">
+                                <template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
+                                    <h-button table>{{attributeComputed(PaymentOrderDict.paymentFlag.list,item.paymentFlag)}}</h-button>
+                                </template>
+                                <template v-else>
                                 <span class="info-status">
                                     {{attributeComputed(PaymentOrderDict.paymentFlag.list,item.paymentFlag)}}
                                 </span>
-                            </template>
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed">
-                            <span class="info-title">服务费支付计划：</span>
-                        </p>
-                    </div>
-                    <template v-if="paymentOrderDetail.respFundResults.serviceFund">
-                        <div class="row-filed" :key="item.id" v-for="item in paymentOrderDetail.respFundResults.serviceFund">
-                            <p class="col-filed col-25">
-                                <span class="label">第一期服务费：</span> 元
+                                </template>
                             </p>
-                            <p class="col-filed col-25">
-                                <span class="label">应支付时间：</span>  元
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed">
+                                <span class="info-title">服务费支付计划：</span>
                             </p>
-                            <p class="col-filed col-25">
-                                <span class="label">支付成功时间：</span>  元
+                        </div>
+                        <template v-if="paymentOrderDetail.respFundResults.serviceFund">
+                            <div class="row-filed" :key="item.id" v-for="item in paymentOrderDetail.respFundResults.serviceFund">
+                                <p class="col-filed col-25">
+                                    <span class="label">第一期服务费：</span> 元
+                                </p>
+                                <p class="col-filed col-25">
+                                    <span class="label">应支付时间：</span>  元
+                                </p>
+                                <p class="col-filed col-25">
+                                    <span class="label">支付成功时间：</span>  元
+                                </p>
+                                <p class="col-filed col-25">
+                                    待支付
+                                </p>
+                            </div>
+                        </template>
+                        <div class="row-filed">
+                            <p class="col-filed col-50">
+                                <span class="label">当前服务费合计：</span> 20,000元
                             </p>
-                            <p class="col-filed col-25">
-                                待支付
+                            <p class="col-filed col-50">
+                                <span class="label">已成功支付：</span>  0元
                             </p>
                         </div>
                     </template>
-                    <div class="row-filed">
-                        <p class="col-filed">
-                            <span class="info-title">上游支付：</span>
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed col-33">
-                            <span class="label">应向上游支付：</span> 20,000元
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="label">已向上游支付：</span>  0元
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="info-status-words">查看上游支付明细</span>
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <h-button type="assist">上游支付</h-button>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed">
-                            <span class="info-title">到货信息：</span>
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed col-33">
-                            <span class="label">应到货金额总计：</span> 20,000元
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="label">已到货金额总计：</span>  0元
-                        </p>
-                        <p class="col-filed col-33">
-                            <span class="info-status-words">查看收货明细</span>
-                        </p>
-                    </div>
-                    <div class="row-filed">
-                        <h-button type="assist">确认收货</h-button>
-                    </div>
-                    <div class="row-filed">
-                        <p class="col-filed">
-                            <span class="info-title">尾款支付计划：</span>
-                        </p>
-                    </div>
-                    <div class="row-filed" :key="item.id" v-for="item in paymentOrderDetail.respFundResults.arrearFund">
-                        <p class="col-filed col-25">
-                            <span class="label">尾款：</span> {{ item.paymentAmount }}元
-                        </p>
-                        <p class="col-filed col-25">
-                            <span class="label">应支付时间：</span> {{item.schedulePaymentDate}} <el-input></el-input>
-                        </p>
-                        <p class="col-filed col-25">
-                            <span class="label">支付时间：</span> {{ item.paidDate | formatDate }}
-                        </p>
-                        <p class="col-filed col-25">
-                            <h-button table>待支付</h-button>
-                        </p>
-                    </div>
+                    <template v-if="PaymentOrderDict.status.list[3]  <= paymentOrderDetail.payOrderDetail.status">
+                        <div class="row-filed">
+                            <p class="col-filed">
+                                <span class="info-title">上游支付：</span>
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">应向上游支付：</span> 20,000元
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">已向上游支付：</span>  0元
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="info-status-words">查看上游支付明细</span>
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <h-button type="assist">上游支付</h-button>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed">
+                                <span class="info-title">到货信息：</span>
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">应到货金额总计：</span> 20,000元
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">已到货金额总计：</span>  0元
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="info-status-words">查看收货明细</span>
+                            </p>
+                        </div>
+                        <div class="row-filed">
+                            <h-button type="assist">确认收货</h-button>
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed">
+                                <span class="info-title">尾款支付计划：</span>
+                            </p>
+                        </div>
+                        <div class="row-filed" :key="item.id" v-for="item in paymentOrderDetail.respFundResults.arrearFund">
+                            <p class="col-filed col-25">
+                                <span class="label">尾款：</span> {{ item.paymentAmount }}元
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">应支付时间：</span> {{item.schedulePaymentDate}} <el-input></el-input>
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">支付时间：</span> {{ item.paidDate | formatDate }}
+                            </p>
+                            <p class="col-filed col-25">
+                                <h-button table>待支付</h-button>
+                            </p>
+                        </div>
+                    </template>
                 </div>
                 <div class="drawer-footer">
                     <div class="drawer-button">
@@ -356,6 +369,9 @@ export default {
                 }
             })
             return value
+        },
+        openApproveDialog () {
+            this.$emit('openApproveDialog', this.paymentOrderDetail)
         }
     },
     watch: {
@@ -391,9 +407,9 @@ export default {
             line-height: 15px;
             box-sizing: border-box;
 
-            .address {
-                width: 120px;
-            }
+            //.address {
+            //    width: 120px;
+            //}
         }
 
         .col-50 {
@@ -481,5 +497,9 @@ export default {
     font-weight: 600;
     color: #000000;
     font-size: 14px;
+}
+.info-img {
+    width: 80px;
+    cursor: pointer;
 }
 </style>

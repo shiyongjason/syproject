@@ -15,26 +15,6 @@ const PaymentOrderDict = Object.freeze({
                 value: '首付款待确认'
             },
             {
-                key: 3,
-                value: '上游支付确认中'
-            },
-            {
-                key: 4,
-                value: '上游支付中'
-            },
-            {
-                key: 5,
-                value: '待出票'
-            },
-            {
-                key: 6,
-                value: '正在出票'
-            },
-            {
-                key: 7,
-                value: '待发货'
-            },
-            {
                 key: 8,
                 value: '待收货'
             },
@@ -76,6 +56,19 @@ const PaymentOrderDict = Object.freeze({
             }, {
                 key: 4,
                 value: '已取消'
+            }
+        ]
+    },
+    applyType: {
+        title: '',
+        list: [
+            {
+                key: 0,
+                value: '待支付'
+            },
+            {
+                key: 1,
+                value: '支付待确认'
             }
         ]
     }

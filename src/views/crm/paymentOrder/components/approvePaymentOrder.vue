@@ -1,40 +1,43 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
-        <div class="info-content">
+    <el-dialog title="支付单审核" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('onClose')">
+        <div class="info-content" v-if="paymentDetail">
             <div class="row-filed">
                 <div class="col-filed">
                     <div class="info-title">上游支付申请信息</div>
                     <p>
                         <span class="label">申请支付金额：</span>
-                        12,000,000元
+                        {{ paymentDetail.payOrderDetail.applyAmount }}元
                     </p>
                     <p>
                         <span class="label">上游供应商：</span>
-                        重庆新日日顺家电有限公司
+                        {{ paymentDetail.payOrderDetail.supplierCompanyName }}
                     </p>
                     <p>
                         <span class="label">采购明细表：</span>
-                        <img src="" alt="">
+                        <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.poDetail">
+                            <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                 v-for="item in JSON.parse(paymentDetail.payOrderDetail.poDetail)" class="info-img">
+                        </template>
                     </p>
                     <p>
                         <span>最迟发货日期：</span>
-                        2020年11月25日
+                        {{ paymentDetail.payOrderDetail.lastGoodsDate }}
                     </p>
                     <p>
                         <span>收货地址：</span>
-                        江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                        {{paymentDetail.payOrderDetail.goodsAddress}}
                     </p>
                     <div class="info-title">审核信息</div>
                     <p>
                         <span>审核结果：</span>
-                        <el-radio-group v-model="reviewResultRadioGroup">
-                            <el-radio :label="3">通过</el-radio>
-                            <el-radio :label="6">不通过</el-radio>
+                        <el-radio-group v-model="formData.checkPass">
+                            <el-radio label="pass">通过</el-radio>
+                            <el-radio label="noPass">不通过</el-radio>
                         </el-radio-group>
                     </p>
                     <p>
                         <span>应收账款质押：</span>
-                        <el-radio-group v-model="reviewResultRadioGroup">
+                        <el-radio-group v-model="formData.accountReceivablePledgeType">
                             <el-radio :label="3">已质押</el-radio>
                             <el-radio :label="6">放款前质押</el-radio>
                             <el-radio :label="6">其他</el-radio>
@@ -42,21 +45,21 @@
                     </p>
                     <p>
                         <span>上游支付方式：</span>
-                        <el-radio-group v-model="reviewResultRadioGroup">
+                        <el-radio-group v-model="formData.supplierPaymentType">
                             <el-radio :label="3">银行转帐</el-radio>
                             <el-radio :label="6">银行承兑</el-radio>
                         </el-radio-group>
                     </p>
                     <p>
                         <span>上游货款方式：</span>
-                        <el-radio-group v-model="reviewResultRadioGroup">
+                        <el-radio-group v-model="formData.supplierPaymentMethod">
                             <el-radio :label="3">先款后货</el-radio>
                             <el-radio :label="6">先货后款</el-radio>
                         </el-radio-group>
                     </p>
                     <p>
                         <span>经销商首付款：</span>
-                        200,000元 <img src="" alt="">
+                        {{formData.downPaymentAmount}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="info-img-edit">
                     </p>
                     <p>
                         <span>剩余货款：</span>
@@ -75,68 +78,71 @@
                     <div class="info-title">项目信息</div>
                     <p>
                         <span>项目：</span>
-                        佳源玖龙湾商业体空调
+                        {{ paymentDetail.projectInfo.projectName }}
                     </p>
                     <p>
                         <span>经销商：</span>
-                        扬州优创智能环境科技有限公司
+                        {{ paymentDetail.projectInfo.companyName }}
                     </p>
                     <p>
                         <span>所属分部：</span>
-                        南京分部
+                        {{ paymentDetail.projectInfo.deptName }}
                     </p>
                     <p>
                         <span>执行费率：</span>
-                        6%
+                        {{paymentDetail.projectInfo.transferBankRate}}%
                     </p>
                     <p>
                         <span>银行承兑：</span>
-                        6%
+                        {{paymentDetail.projectInfo.acceptBankRate}}%
                     </p>
                     <p>
                         <span>银行转帐：</span>
-                        6%
+                        {{paymentDetail.projectInfo.transferBankRate}}%
                     </p>
                     <div class="info-title">采购单信息</div>
                     <p>
                         <span>采购单金额：</span>
-                        12,000,000元
+                        {{ paymentDetail.payOrderPoDetail.poAmount }}元
                     </p>
                     <p>
                         <span>采购明细表：</span>
-                        <img src="" alt="">
+                        <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
+                            <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                 v-for="item in JSON.parse(paymentDetail.payOrderPoDetail.poDetail)" class="info-img">
+                        </template>
                     </p>
                     <p>
                         <span>采购批次：</span>
-                        一次性采购
+                        {{ paymentDetail.payOrderPoDetail.poNumber }}
                     </p>
                     <p>
                         <span>最迟发货日期：</span>
-                        2020年11月25日
+                        {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
                     </p>
                     <p>
                         <span>收货地址：</span>
-                        江苏省南京市中山东路311-2号五星控股大厦江苏省南京市中山东路311-2号五星控股大厦
+                        {{ paymentDetail.payOrderPoDetail.goodsAddress }}
                     </p>
                     <p>
                         <span>经销商预付款比例：</span>
-                        50%
+                        {{ paymentDetail.payOrderPoDetail.prePercent }}%
                     </p>
                     <p>
                         <span>剩余货款支付周期：</span>
-                        6月
+                        {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}月
                     </p>
                     <p>
                         <span>免息方式：</span>
-                        无
+                        {{paymentDetail.payOrderPoDetail.freeInterestType}}
                     </p>
                 </div>
             </div>
         </div>
+        <p class="tips">
+            审核通过后，将会给经销商发送《订单及服务费确认函》
+        </p>
         <div slot="footer" class="dialog-footer">
-            <p class="tips">
-                审核通过后，将会给经销商发送《订单及服务费确认函》
-            </p>
             <div class="btn-group">
                 <h-button type="cancel" @click="onCancel">取消</h-button>
                 <h-button type="primary" @click="onReceived">确认审核</h-button>
@@ -146,8 +152,10 @@
 </template>
 
 <script>
+import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass } from '@/views/crm/paymentOrder/api'
+
 export default {
-    name: 'reviewPaymentOrder',
+    name: 'approvePaymentOrder',
     props: {
         isOpen: {
             type: Boolean,
@@ -156,19 +164,37 @@ export default {
         openStatus: {
             type: Number,
             default: 1
+        },
+        paymentDetail: {
+            required: false,
+            type: Object
         }
     },
     data () {
         return {
-            reviewResultRadioGroup: []
+            formData: {
+                checkPass: '',
+                approvalRemark: '',
+                accountReceivablePledgeType: '',
+                supplierPaymentType: '',
+                downPaymentAmount: '',
+                supplierPaymentMethod: ''
+            }
         }
     },
     methods: {
         onCancel () {
-
+            this.$emit('onClose')
         },
         onReceived () {
-
+            if (this.formData.checkPass === 'pass') {
+                updatePaymentOrderStatusPass()
+            } else if (this.formData.checkPass === 'noPass') {
+                updatePaymentOrderStatusNoPass()
+            }
+        },
+        goDetail (url) {
+            window.open(url)
         }
     }
 }
@@ -176,5 +202,19 @@ export default {
 
 <style scoped lang="scss">
 .info-content{
+    .row-filed {
+        display: flex;
+        .col-filed{
+            flex: 0 0 1;
+        }
+    }
+}
+.info-img {
+    width: 80px;
+    cursor: pointer;
+}
+.info-img-edit {
+    width: 30px;
+    cursor: pointer;
 }
 </style>

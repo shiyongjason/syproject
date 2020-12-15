@@ -80,19 +80,21 @@
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' :row="paymentOrderRow"
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" :row="paymentOrderRow"
                             ref="paymentOrderDrawer"></PaymentOrderDrawer>
+        <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false"></ApprovePaymentOrder>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PaymentOrderDrawer from '@/views/crm/paymentOrder/components/paymentOrderDrawer'
+import ApprovePaymentOrder from './components/approvePaymentOrder'
 import filters from '@/utils/filters'
 
 export default {
     name: 'payOrder',
-    components: { PaymentOrderDrawer },
+    components: { PaymentOrderDrawer, ApprovePaymentOrder },
     data () {
         return {
             queryParams: {
@@ -115,7 +117,9 @@ export default {
             ],
             paginationInfo: {},
             drawer: false,
-            paymentOrderRow: {}
+            paymentOrderRow: {},
+            paymentDetail: null,
+            approvePaymentVisible: false
         }
     },
     computed: {
@@ -183,6 +187,10 @@ export default {
                 return filters.money(val)
             }
             return '-'
+        },
+        openApproveDialog (row) {
+            this.paymentDetail = row
+            this.approvePaymentVisible = true
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList'
