@@ -65,41 +65,47 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="3" >
-                    <div class="page-body-cont-enterprise-info" v-show="this.enterpriseInfoData.id!=null">
+                    <div class="page-body-cont-enterprise-info" v-if="this.enterpriseInfoData.id!=null">
                         <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
                         <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
                         <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
                         <span style="margin-bottom: 20px">联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
-                        <span style="margin-bottom: 20px">经营类型：{{this.enterpriseInfoData.businessType===1? '零售商':this.enterpriseInfoData.businessType===2? '工程商':''}}</span>
+                        <span >经营类型：{{this.enterpriseInfoData.businessType===1? '零售商':this.enterpriseInfoData.businessType===2? '工程商':''}}</span>
                         <div class="page-body-cont-top-no-left">
                           <span>主营业务:</span>
-                            <el-tag style="margin-left: 20px"
-                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
-                                :key="tag"
-                                :type="tag.type">
-                                {{tag}}
-                            </el-tag>
-                            <el-tag style="margin-left: 20px"
-                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn"
-                                :key="tag"
-                                :type="tag.type">
-                                {{tag}}
-                            </el-tag>
+                            <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                            </div>
+                            <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                            </div>
                         </div>
                         <div class="page-body-cont-top-no-left">
                           <span>主营品牌:</span>
-                            <el-tag style="margin-left: 20px"
-                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
-                                :key="tag"
-                                :type="tag.type">
-                                {{tag}}
-                            </el-tag>
-                            <el-tag style="margin-left: 20px"
-                                v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn"
-                                :key="tag"
-                                :type="tag.type">
-                                {{tag}}
-                            </el-tag>
+                            <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                            </div>
                         </div>
                         <div class="page-body-cont-top-no-align-items">
                             <span>备注:</span>
@@ -164,7 +170,7 @@ export default {
             searchParams: {},
             tableRegisterData: [],
             enterpriseInfoData: {
-                respCompanyCommonTagBO: {},
+                respCompanyCommonTagBO: { businessCommon: [], businessOwn: [], brandsCommon: [], brandsOwn: [] },
                 remark: ''
             },
             tableChangeData: [],
@@ -319,8 +325,9 @@ export default {
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
-            console.log(this.enterpriseInfoData, 111)
             this.tableChangeData = this.merchantmemberInvitationChangeData
+            console.log(this.tableChangeData, 111)
+            console.log(this.tableChangeData, 111)
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
                 pageNumber: this.merchantmemberInvitationRegisterData.current,
