@@ -236,7 +236,7 @@ export default {
                 return 'isPositiveInt'
             }
             // 纯数字
-            if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse') {
+            if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse' || paramKey == 'dealer_down_pay_period' || paramKey == 'pay_shipment_batch') {
                 return 'isAllNum'
             }
             // 元 %
@@ -274,33 +274,32 @@ export default {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
                 1: {
-                    [this.inputStyleDom]:
-                        this.inputStyleDom !== 'elInput'
-                            ? {
-                                bind: {
-                                    paramKey: this.currentKey.paramKey,
-                                    value: this.currentKey.paramValue,
-                                    placeholder: '请输入内容',
-                                    disabled: !this.currentKey.modify,
-                                    style: this.currentKey.unit ? { width: '250px' } : '',
-                                    innerHtml: this.currentKey.unit || '',
-                                    maxlength: this.currentKey.maxLength || ''
-                                },
-                                on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
-                                }
+                    [this.inputStyleDom]: this.inputStyleDom !== 'elInput'
+                        ? {
+                            bind: {
+                                paramKey: this.currentKey.paramKey,
+                                value: this.currentKey.paramValue,
+                                placeholder: '请输入内容',
+                                disabled: !this.currentKey.modify,
+                                style: this.currentKey.unit ? { width: '250px' } : '',
+                                innerHtml: this.currentKey.unit || '',
+                                maxlength: this.currentKey.maxLength || ''
+                            },
+                            on: {
+                                input: (val) => { this.currentKey.paramValue = val.trim() }
                             }
-                            : {
-                                bind: {
-                                    value: this.currentKey.paramValue,
-                                    placeholder: '请输入内容',
-                                    disabled: !this.currentKey.modify,
-                                    maxlength: this.currentKey.maxLength || ''
-                                },
-                                on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
-                                }
+                        }
+                        : {
+                            bind: {
+                                value: this.currentKey.paramValue,
+                                placeholder: '请输入内容',
+                                disabled: !this.currentKey.modify,
+                                maxlength: this.currentKey.maxLength || ''
+                            },
+                            on: {
+                                input: (val) => { this.currentKey.paramValue = val.trim() }
                             }
+                        }
                 },
                 3: {
                     selectCom: {
@@ -658,7 +657,7 @@ export default {
                         let spanList = this.contractDocument.getElementsByTagName('span')
                         let _keyValIncontract = []
                         Array.from(spanList).map(item => {
-                            if (item.dataset && item.dataset.inputstyle) {
+                            if (item.dataset && item.dataset.inputstyle && item.className) {
                                 _keyValIncontract.push(item.className)
                             }
                         })
@@ -749,7 +748,8 @@ export default {
                     if (item.inputStyle && item.inputStyle == 9) {
                         let imgDom = this.contractDocument.getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
-                            if (item.className != 'platform_sign') {
+                            // 筛除盖章处和确认函的采购明细表
+                            if (item.className && item.className != 'platform_sign' && item.className != 'pay_order_purchase_details') {
                                 item.onclick = (event) => {
                                     console.log(event)
                                     this.currentKey = {
@@ -793,7 +793,7 @@ export default {
                     this.keyValIncontract = []
                     let spanList = this.contractDocument.getElementsByTagName('span')
                     Array.from(spanList).map(item => {
-                        if (item.dataset && item.dataset.inputstyle) {
+                        if (item.dataset && item.dataset.inputstyle && item.className) {
                             this.keyValIncontract.push(item.className)
                         }
                     })
