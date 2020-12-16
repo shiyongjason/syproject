@@ -58,7 +58,7 @@
                                 <el-button type="primary" @click="onInsertInfo">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="自定义合同条款：">
-                                <el-button type="primary" @click="onClickCur(1)">插入当前位置</el-button>
+                                <el-button type="primary" @click="onShowCustomTermsDefine">插入当前位置</el-button>
                             </el-form-item>
                             <el-form-item label="平台签署区：">
                                 <el-button type="primary" @click="onClickCur(2)">插入当前位置</el-button>
@@ -120,6 +120,24 @@
             <div class="contract-html" v-html="newContent">
             </div>
         </el-drawer>
+        <el-dialog title="自定义合同条款" :visible.sync="customTermsDefineVisible" width="450px" :close-on-click-modal=false>
+            <el-form :model="customTermsForm" :rules="formRules" ref="customTermsForm">
+                <el-form-item label="条款名称" label-width="80px" prop="parameterName">
+                    <el-input v-model="customTermsForm.parameterName" autocomplete="off" :maxlength="10"></el-input>
+                </el-form-item>
+                <el-form-item label="默认" label-width="80px" prop="parameterValue">
+                    <el-radio-group v-model="customTermsForm.hasDefault">
+                        <el-radio :label="1">有内容</el-radio>
+                        <el-radio :label="0">无内容</el-radio>
+                    </el-radio-group>
+                    <el-input type="textarea" v-model="customTermsForm.parameterValue" :maxlength="500" :rows="5" v-if="customTermsForm.hasDefault"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="customTermsDefineVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onClickCur(1)">确 定</el-button>
+            </span>
+        </el-dialog>
         <el-dialog title="合同填充字段" :visible.sync="dialogVisible" width="300px" :before-close="handleClose" :close-on-click-modal=false>
             <!-- <el-select v-model="keyValue" value-key='id' placeholder="请选择" style="margin-top:10px">
                 <el-option v-for="item in options" :key="item.id" :label="item.paramName" :value="item">
@@ -190,7 +208,6 @@ export default {
                 operatorBy: '',
                 operatorAccount: '',
                 recommendSigner: 1
-
             },
             valid_form: {},
             rules: {},
@@ -216,10 +233,30 @@ export default {
                 'undo', // 撤销
                 'redo' // 重复
             ],
-            form: {
-
+            customTermsForm: {
+                parameterName: '',
+                hasDefault: 1,
+                parameterValue: ''
+            },
+            formRules: {
+                parameterName: [
+                    { required: true, message: '请输入自定义条款名称', trigger: 'blur' }
+                ],
+                parameterValue: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (this.customTermsForm.hasDefault == 1 && !this.customTermsForm.parameterValue) {
+                                return callback(new Error('请输入默认内容'))
+                            }
+                            return callback()
+                        }
+                    }
+                ]
             },
             dialogVisible: false,
+            // 自定义条款自定义弹出层
+            customTermsDefineVisible: false,
             busLabel: [
                 { label: '签署方', prop: 'signerName' },
                 { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
@@ -265,6 +302,13 @@ export default {
             newParams: [],
             num: Date.now(), // 最好是个随机的
             edit_index: ''
+        }
+    },
+    watch: {
+        'customTermsForm.hasDefault' (val) {
+            if (val == 0) {
+                this.customTermsForm.parameterValue = ''
+            }
         }
     },
     async mounted () {
@@ -390,7 +434,6 @@ export default {
         },
         onInsertInfo () {
             ++this.num
-            console.log(this.keyValue)
             if (!this.keyValue || !this.keyValue.paramKey) {
                 this.$message({
                     message: '请选择所需插入的合同字段',
@@ -408,7 +451,6 @@ export default {
             // 这里每次执行插入 把 合同约定的字段插入进去
             this.bakParams.push(this.keyValue)
             document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
-                console.log('我测试一下', e.target)
                 // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
                 this.targetObjs = {
                     selectName: e.target.value,
@@ -425,12 +467,13 @@ export default {
             // document.getElementById(this._keyValue).outerHTML = ''
             this.$nextTick(() => {
                 let inputWidth = this.keyValue.paramName.length * 14
-                document.getElementById(this._keyValue).setAttribute('class', `${this.keyValue.paramKey}`)
-                document.getElementById(this._keyValue).setAttribute('data-app-id', `${this.keyValue.id}`)
-                document.getElementById(this._keyValue).style.width = inputWidth + 'px'
-                document.getElementById(this._keyValue).value = this.keyValue.paramName
-                document.getElementById(this._keyValue).setAttribute('value', this.keyValue.paramName)
-                document.getElementById(this._keyValue).setAttribute('id', `${this.keyValue.paramKey}_${this.num}`)
+                let domObj = document.getElementById(this._keyValue)
+                domObj.setAttribute('class', `${this.keyValue.paramKey}`)
+                domObj.setAttribute('data-app-id', `${this.keyValue.id}`)
+                domObj.style.width = inputWidth + 'px'
+                domObj.value = this.keyValue.paramName
+                domObj.setAttribute('value', this.keyValue.paramName)
+                domObj.setAttribute('id', `${this.keyValue.paramKey}_${this.num}`)
 
                 // const _temp = `<input id="${this.keyValue.paramKey}_${this.num}" class="${this.keyValue.paramKey}" data-app-id="${this.keyValue.id}" style="width:${inputWidth}px;"
                 //  value=${this.keyValue.paramName} readonly></input>`
@@ -438,7 +481,6 @@ export default {
                 this.dialogVisible = false
                 document.getElementById(`${this.keyValue.paramKey}_${this.num}`).onclick = (e) => {
                     // this._keyValue = JSON.parse(JSON.stringify(this.keyValue))
-                    console.log('我测试一下1', e.target)
                     this.targetObjs = {
                         selectName: e.target.value,
                         selectCode: e.target.className
@@ -475,7 +517,6 @@ export default {
         onFindInputDom () {
             // 把所有的富文本里面的 input 查出来
             const inputArr = Array.from(document.getElementById('editor').getElementsByTagName('input'))
-            console.log('inputArr', inputArr)
             const reqParam = []
             inputArr.length > 0 && inputArr.map(val => {
                 reqParam.push({
@@ -486,12 +527,43 @@ export default {
             // 返回 去重后 唯一ID的合同字段
             return this.findUnique(reqParam)
         },
+        onShowCustomTermsDefine () {
+            this.customTermsDefineVisible = true
+            this.customTermsForm.hasDefault = 1
+            this.$nextTick(() => {
+                this.$refs.customTermsForm.clearValidate()
+                this.$refs.customTermsForm.resetFields()
+            })
+        },
         onClickCur (val) {
             ++this.num
             let _temp = ''
             if (val == 1) {
-                _temp = `<input class="contract_sign_${this.num}"  style="width:97px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
-                value="自定义合同条款" readonly></input>`
+                this.$refs.customTermsForm.validate((valid) => {
+                    if (valid) {
+                        let inputWidth = this.customTermsForm.parameterName.length * 14
+                        if (this.customTermsForm.id) {
+                            const editObj = document.getElementById(this.customTermsForm.id)
+                            editObj.style.width = inputWidth + 'px'
+                            editObj.setAttribute('value', this.customTermsForm.parameterName)
+                            editObj.setAttribute('data-content', this.customTermsForm.parameterValue ? this.customTermsForm.parameterValue : '')
+                        } else {
+                            _temp = `<input id="contract_sign_${this.num}" class="contract_sign_${this.num}" style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
+                            value="${this.customTermsForm.parameterName}" data-content="${this.customTermsForm.parameterValue}" readonly></input>`
+                            this.$refs.RichEditor.insertHtml(_temp)
+                            document.getElementById(`contract_sign_${this.num}`).onclick = (e) => {
+                                this.customTermsForm = {
+                                    parameterName: e.target.value,
+                                    parameterValue: e.target.dataset.content,
+                                    hasDefault: e.target.dataset.content ? 1 : 0,
+                                    id: e.target.id
+                                }
+                                this.customTermsDefineVisible = true
+                            }
+                        }
+                        this.customTermsDefineVisible = false
+                    }
+                })
             } else {
                 // if (document.getElementById('platform_sign')) {
                 //     this.$message({
@@ -501,33 +573,28 @@ export default {
                 //     return
                 // }
                 _temp = `<span><img class='platform_sign' style='width:100px;margin:5px;' src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201127/ab01c967-3172-4407-aba0-fa60351c19ab.png"/></span>`
+                this.$refs.RichEditor.insertHtml(_temp)
             }
             // console.log(document.getElementById('platform_sign'))
-
-            this.$refs.RichEditor.insertHtml(_temp)
         },
         onAllParams () {
             this.newParams = []
             // 校验 input dom
             const paramsArr = this.onFindInputDom()
             const bakParamsArr = this.findUnique(this.bakParams)
-            console.log('交集', paramsArr, bakParamsArr)
             // 取交集 为了 在文本编辑器里面删除了哪些字段 和 入库的字段做唯一对应
             paramsArr && paramsArr.map((val) => {
                 bakParamsArr.map(item => {
                     if (val.id == item.id) {
-                        console.log(1, item)
                         this.newParams.push(item)
                     }
                 })
             })
-            console.log('this.newParams', this.newParams)
         },
         async onClick_Dialog (val) {
             // 保留编辑位置清除 不影响新增
             this.edit_index = -1
             await this.onAllParams()
-            console.log('this.newParams2', this.newParams)
             this.newParams = this.newParams.filter(val => val.groupName)
             if (val == 1 && this.platData[0]) {
                 this.$refs.contractDialog.onShowDialog(val, this.newParams, this.platData[0])
@@ -536,12 +603,10 @@ export default {
             }
         },
         backToTable (val, Type) {
-            console.log('===', val, Type)
             if (Type == 2) {
                 if (this.edit_index > -1) {
                     // this.perData.splice(this.edit_index, 1, val[0])
                     this.$set(this.perData, this.edit_index, val[0])
-                    console.log('触发这里', this.perData)
                 } else {
                     this.perData = this.perData.concat(val)
                 }
@@ -549,7 +614,6 @@ export default {
                 if (this.edit_index > -1) {
                     // this.busData.splice(this.edit_index, 1, val[0])
                     this.$set(this.busData, this.edit_index, val[0])
-                    console.log('触发这里1', this.busData)
                 } else {
                     this.busData = this.busData.concat(val)
                 }
@@ -563,7 +627,6 @@ export default {
             // 获取下拉数据
             await this.onAllParams()
             this.edit_index = val.data.$index
-            console.log('edit_index', this.edit_index)
             this.newParams = this.newParams.filter(val => val.groupName)
             this.$refs.contractDialog.onShowDialog(type, this.newParams, val.data.row)
         },
@@ -613,7 +676,9 @@ export default {
                 if (val.className.indexOf('contract_sign_') != -1) {
                     signParam.push({
                         id: '',
-                        paramKey: val.className
+                        paramKey: val.className,
+                        paramName: val.value,
+                        paramValue: val.dataset.content
                     })
                 }
             })
