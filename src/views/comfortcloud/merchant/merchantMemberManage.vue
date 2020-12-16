@@ -179,7 +179,7 @@ export default {
             if (val.role === 1) {
                 type += '新人'
             } else if (val.role === 2) {
-                type += '普通用户'
+                type += '普通会员'
             }
             if (val.distributorStatus === 1) {
                 type += '、分销员'
