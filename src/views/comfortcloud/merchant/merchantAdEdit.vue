@@ -13,25 +13,21 @@
                     <el-button type="primary" @click="onAddCategory">+添加招商品类</el-button>
                 </el-form-item>
 
-                <el-row v-for="(categoryItem,index) in form.categorys" :key="index">
-                    <el-col :span="6">
-                        <el-form-item label="品类：" :prop="'categorys.' + index + '.categoryId'" :rules="rules.category">
-                            <el-select v-model="categoryItem.categoryId" @change="()=> { selectChanged(index) }" >
-                                <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6" style="padding-bottom: 20px;">
-                        <el-form-item label="商品型号：" :prop="'categorys.' + index + '.specificationId'" :rules="rules.type">
-                            <el-select v-model="categoryItem.specificationId" @change="selectSpecificationIdChanged">
-                                <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-button type="primary" @click="()=> { onRemoveCategory(index) }">删除</el-button>
-                </el-row>
+                <div class="query-cont-row" v-for="(categoryItem,index) in form.categorys" :key="index">
+                    <el-form-item label="品类：" :prop="'categorys.' + index + '.categoryId'" :rules="rules.category">
+                        <el-select v-model="categoryItem.categoryId" @change="()=> { selectChanged(index) }" >
+                            <el-option label="选择" value=""></el-option>
+                            <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="商品型号：" :prop="'categorys.' + index + '.specificationId'" :rules="rules.type">
+                        <el-select v-model="categoryItem.specificationId" @change="selectSpecificationIdChanged">
+                            <el-option label="选择" value=""></el-option>
+                            <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveCategory(index) }">删除</el-button>
+                </div>
 
                 <div class="page-body-title">
                     <h3>广告内容</h3>
