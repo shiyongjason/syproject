@@ -16,6 +16,14 @@
                 </div>
 
                 <div class="query-cont__col">
+                    <div class="query-col__lable">企业类型：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.userType">
+                            <el-option v-for="item in userTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__lable">所属商家：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.merchantName" placeholder="请输入商家" maxlength="50"></el-input>
@@ -85,6 +93,9 @@
                 已筛选 {{memberData.total}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；
             </el-tag>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true'>
+                <template slot="userType" slot-scope="scope">
+                    {{userTypeMap.get(scope.data.row.userType) || '-'}}
+                </template>
                 <template slot="source" slot-scope="scope">
                     {{memberSource[scope.data.row.source-1]}}
                 </template>
@@ -125,16 +136,30 @@ const OPENSTATUS = new Map([
     [3, { txt: '开户成功', color: '#67c23a', val: 3 }],
     [4, { txt: '开户失败', color: '#f00000', val: 4 }]
 ])
+const USER_TYPE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '个人', value: '11' },
+    { label: '企业', value: '12' },
+    { label: '其他', value: '0' }
+]
+const USER_TYPE_MAP = new Map([
+    [11, '个人'],
+    [12, '企业'],
+    [0, '其他']
+])
 export default {
     name: 'membershipMembermanage',
     data () {
         return {
             openStatus: OPENSTATUS,
+            userTypeOptions: USER_TYPE_OPTIONS,
+            userTypeMap: USER_TYPE_MAP,
             queryParams: {
                 openStatus: '',
                 authenticationEndTime: '',
                 authenticationStartTime: '',
                 companyName: '',
+                userType: '',
                 isAuthentication: '',
                 isEnabled: '',
                 adminAccount: '',
@@ -151,6 +176,7 @@ export default {
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '180px' },
                 { label: '管理员账号', prop: 'adminAccount', width: '150px' },
+                { label: '企业类型', prop: 'userType', width: '150px' },
                 { label: '所属商家', prop: 'merchantName', width: '150px' },
                 { label: '省市区', prop: 'addressName', width: '150px' },
                 // { label: '会员来源', prop: 'source' },
