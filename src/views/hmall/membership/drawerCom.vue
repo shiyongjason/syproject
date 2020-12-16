@@ -1,7 +1,7 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
-            <div class="drawer-content">
+        <h-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' @beforeClose="handleClose">
+            <template #connect>
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
                     <el-tab-pane label="开户信息" name="second"></el-tab-pane>
@@ -281,8 +281,8 @@
                         </el-form-item>
                     </el-form>
                 </div>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
     </div>
 </template>
 <script>
