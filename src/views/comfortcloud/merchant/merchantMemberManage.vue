@@ -184,7 +184,7 @@ export default {
             if (val.distributorStatus === 1) {
                 type += '、分销员'
             }
-            if (val.agentStatus === 1) {
+            if (val.agentStatus === 10) {
                 type += '、经销商'
             }
 

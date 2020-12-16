@@ -238,7 +238,9 @@ export default {
         },
 
         checkShopManager (val) {
-            this.$router.push(`/comfortCloud/equipmentOverview/warehouseManagement?dealer=${val.companyName}`)
+            this.$router.push({
+                name: `warehouseManagement`, params: { dealer: val.companyName }
+            })
         }
 
     }
