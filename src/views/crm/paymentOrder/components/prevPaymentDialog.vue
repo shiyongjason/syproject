@@ -1,29 +1,29 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
+    <el-dialog title="上游支付" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
         <el-form label-width="150px">
             <el-form-item label="经销商：">
-                经销商的企业名称
+                {{ prevPaymentDetail.companyName }}
             </el-form-item>
             <el-form-item label="项目：">
-                这里自动带出项目名称
+                {{ prevPaymentDetail.projectName }}
             </el-form-item>
             <el-form-item label="分部：">
-                这里自动带出上游供应商的企业名称
+                {{ prevPaymentDetail.deptName }}
             </el-form-item>
             <el-form-item label="剩余应上游支付：">
-                12,000,000元
+                {{ prevPaymentDetail.surplusAmount }}元
             </el-form-item>
             <el-form-item label="上游供应商：">
-                重庆新日日顺家电有限公司
+                {{ prevPaymentDetail.supplierCompanyName }}
             </el-form-item>
             <el-form-item label="上游支付形式：">
-                银行转帐
+                {{ prevPaymentDetail.supplierPaymentType }}
             </el-form-item>
             <el-form-item label="上游货款方式：">
-                先货后款
+                {{ prevPaymentDetail.supplierPaymentMethod }}
             </el-form-item>
             <el-form-item label="收货进度：">
-                50%
+                {{prevPaymentDetail.goodsProgress}}%
             </el-form-item>
             <el-form-item label="本次支付金额：">
                 <el-input></el-input>
@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { getPrevPayDetail, updatePrevPayPass } from '@/views/crm/paymentOrder/api'
+
 export default {
     name: 'prevPaymentDialog',
     props: {
@@ -51,22 +53,29 @@ export default {
             type: Boolean,
             default: false
         },
-        openStatus: {
-            type: Number,
-            default: 1
+        id: {
+            type: Number
         }
     },
     data () {
         return {
-
+            prevPaymentDetail: {}
+        }
+    },
+    watch: {
+        async isOpen (val) {
+            if (val) {
+                const { data } = await getPrevPayDetail(id)
+                this.prevPaymentDetail = data
+            }
         }
     },
     methods: {
         onCancel () {
-
+            this.$emit('onClose')
         },
         onEnterPay () {
-
+            updatePrevPayPass()
         }
     }
 }

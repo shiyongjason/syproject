@@ -16,7 +16,14 @@
 
 <script>
 import FundsDict from '../fundsDict'
-import { getFundsTicket, updateCancelPay, updateFinalPay, updateFirstPay, updateServicePay } from '../api'
+import {
+    getFundsTicket,
+    updateFinalPay, updateFinalUnPay,
+    updateFirstPay,
+    updateFirstUnPay,
+    updateServicePay,
+    updateServiceUnPay
+} from '../api'
 import { mapState } from 'vuex'
 
 export default {
@@ -58,9 +65,7 @@ export default {
         async onReceived () {
             const params = {
                 paymentOrderId: this.detail.orderId,
-                fundId: this.detail.id,
-                attachDocList: [...this.imgGroup],
-                updateBy: this.userInfo.user_name
+                fundId: this.detail.id
             }
             if (this.status === FundsDict.repaymentTypeArrays.list[0].key) {
                 await updateFirstPay(params)
@@ -74,19 +79,31 @@ export default {
             this.$emit('onClose')
         },
         async onUnReceived () {
-            await updateCancelPay({
-                orderId: this.detail.orderId,
-                updateBy: this.userInfo.user_name
-            })
+            const params = {
+                paymentOrderId: this.detail.orderId,
+                fundId: this.detail.id
+            }
+            if (this.status === FundsDict.repaymentTypeArrays.list[0].key) {
+                await updateFirstUnPay(params)
+            }
+            if (this.status === FundsDict.repaymentTypeArrays.list[1].key) {
+                await updateServiceUnPay(params)
+            }
+            if (this.status === FundsDict.repaymentTypeArrays.list[2].key) {
+                await updateFinalUnPay(params)
+            }
             this.$emit('onClose')
         }
     },
     watch: {
         isOpen (value) {
-            value && getFundsTicket({
-                bizId: this.detail.id,
-                bizType: FundsDict.bizType.list[3].key
-            })
+            if (value) {
+                const { data } = getFundsTicket({
+                    bizId: this.detail.id,
+                    bizType: FundsDict.bizType.list[3].key
+                })
+                this.imgGroup = data
+            }
         }
     }
 }

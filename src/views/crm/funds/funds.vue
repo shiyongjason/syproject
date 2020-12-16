@@ -229,7 +229,10 @@ export default {
         },
         onPayEnter (row) {
             this.fundsDialogVisible = true
-            this.fundsDialogDetail = row
+            this.fundsDialogDetail = {
+                orderId: row.orderId,
+                id: row.id
+            }
         },
         seePayEnter (row) {
             this.fundsDialogVisible = true

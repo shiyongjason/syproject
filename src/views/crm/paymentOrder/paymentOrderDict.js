@@ -60,7 +60,7 @@ const PaymentOrderDict = Object.freeze({
         ]
     },
     applyType: {
-        title: '',
+        title: '申请类型',
         list: [
             {
                 key: 0,
@@ -69,6 +69,49 @@ const PaymentOrderDict = Object.freeze({
             {
                 key: 1,
                 value: '支付待确认'
+            }
+        ]
+    },
+    supplierPaymentMethod: {
+        title: '上游货款方式',
+        list: [
+            {
+                key: 1,
+                value: '先款后货'
+            },
+            {
+                key: 2,
+                value: '先货后款'
+            }
+        ]
+    },
+    supplierPaymentType: {
+        title: '上游支付方式',
+        list: [
+            {
+                key: 1,
+                value: '银行转帐'
+            },
+            {
+                key: 2,
+                value: '银行承兑'
+            }
+        ]
+    },
+    accountReceivablePledgeType: {
+        title: '应收账款质押',
+        list: [
+            {
+                key: 1,
+                value: '已质押'
+            },
+            {
+                key: 2,
+                value: '放款前质押'
+            },
+            {
+                key: 3,
+                value: '其他'
             }
         ]
     }

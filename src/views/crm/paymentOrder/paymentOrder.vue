@@ -49,8 +49,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.status" placeholder="请选择" :clearable=true
-                                   @change="onChooseDep">
+                        <el-select v-model="queryParams.status" placeholder="请选择" :clearable=true>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []"
                                        :key="item.pkDeptDoc"></el-option>
                         </el-select>
@@ -80,9 +79,24 @@
                 </template>
             </basicTable>
         </div>
-        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent' @openApproveDialog="openApproveDialog" :row="paymentOrderRow"
+        <PaymentOrderDrawer :drawer=drawer @backEvent='paymentOrderBackEvent'
+                            @openApproveDialog="openApproveDialog"
+                            @openPrevPayDialog="openPrevPayDialog"
+                            @openFundsDialog="openFundsDialog"
+                            @openConfirmReceiptDialog="openConfirmReceiptDialog"
+                            @openLookReceiptDetail="openLookReceiptDetail"
+                            @openLookPrevPaymentDialog="openLookPrevPaymentDialog"
+                            :row="paymentOrderRow"
                             ref="paymentOrderDrawer"></PaymentOrderDrawer>
-        <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail" @onClose="approvePaymentVisible = false"></ApprovePaymentOrder>
+        <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail"
+                             @onClose="approvePaymentVisible = false"></ApprovePaymentOrder>
+        <PrevPaymentDialog :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
+        <LookPrevPaymentDialog :id="paymentId" :is-open="lookPrevPaymentVisible"
+                               @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
+        <ConfirmReceiptDialog :is-open="confirmReceiptVisible"
+                              @onClose="confirmReceiptVisible = false"></ConfirmReceiptDialog>
+        <LookReceiptDetail :id="paymentId" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
+        <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogVisible = false"></FundsDialog>
     </div>
 </template>
 
@@ -90,11 +104,24 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PaymentOrderDrawer from '@/views/crm/paymentOrder/components/paymentOrderDrawer'
 import ApprovePaymentOrder from './components/approvePaymentOrder'
+import PrevPaymentDialog from './components/prevPaymentDialog'
+import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
+import ConfirmReceiptDialog from './components/confirmReceiptDialog'
+import LookReceiptDetail from './components/lookReceiptDetail'
+import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import filters from '@/utils/filters'
 
 export default {
     name: 'payOrder',
-    components: { PaymentOrderDrawer, ApprovePaymentOrder },
+    components: {
+        PaymentOrderDrawer,
+        ApprovePaymentOrder,
+        PrevPaymentDialog,
+        LookPrevPaymentDialog,
+        ConfirmReceiptDialog,
+        LookReceiptDetail,
+        FundsDialog
+    },
     data () {
         return {
             queryParams: {
@@ -119,7 +146,15 @@ export default {
             drawer: false,
             paymentOrderRow: {},
             paymentDetail: null,
-            approvePaymentVisible: false
+            approvePaymentVisible: false,
+            prevPaymentVisible: false,
+            lookPrevPaymentVisible: false,
+            confirmReceiptVisible: false,
+            lookReceiptVisible: false,
+            fundsDialogVisible: false,
+            paymentStatus: '',
+            paymentId: '', // 公共
+            fundsDialogDetail: {}
         }
     },
     computed: {
@@ -163,8 +198,6 @@ export default {
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
         },
-        onChooseDep () {
-        },
         onSortChange (val) {
             if (val.order) {
                 this.queryParams['sort.property'] = val.prop + ''
@@ -191,6 +224,25 @@ export default {
         openApproveDialog (row) {
             this.paymentDetail = row
             this.approvePaymentVisible = true
+        },
+        openPrevPayDialog () {
+            this.prevPaymentVisible = true
+        },
+        openFundsDialog (row, status) {
+            this.fundsDialogVisible = true
+            this.fundsDialogDetail = row
+            this.paymentStatus = status
+        },
+        openConfirmReceiptDialog () {
+            this.confirmReceiptVisible = true
+        },
+        openLookReceiptDetail (id) {
+            this.paymentId = id
+            this.lookReceiptVisible = true
+        },
+        openLookPrevPaymentDialog (id) {
+            this.paymentId = id
+            this.lookPrevPaymentVisible = true
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList'

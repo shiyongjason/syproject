@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
+    <el-dialog title="确认收货" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
         <el-form label-width="150px">
             <el-form-item label="经销商：">
                 这里自动带出的经销商的企业名称
@@ -26,7 +26,7 @@
                <el-textarea></el-textarea>
             </el-form-item>
         </el-form>
-        <span slot="footer" class="dialog-footer" v-if="dialogStatus.seePayEnter.status !== openStatus">
+        <span slot="footer" class="dialog-footer">
                 <h-button type="assist" @click="onCancel">取消</h-button>
                 <h-button type="primary" @click="onEnter">确认</h-button>
             </span>
@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import { getConfirmReceiptDetail, updateConfirmReceiptPass } from '@/views/crm/paymentOrder/api'
+
 export default {
     name: 'enterReceiptDialog',
     props: {
@@ -41,22 +43,31 @@ export default {
             type: Boolean,
             default: false
         },
-        openStatus: {
-            type: Number,
-            default: 1
+        id: {
+            type: Number
         }
     },
     data () {
         return {
-
+            enterReceiptDetail: {},
+            formData: {}
+        }
+    },
+    watch: {
+        async isOpen (val) {
+            if (val) {
+                const { data } = await getConfirmReceiptDetail(this.id)
+                this.enterReceiptDetail = data
+            }
         }
     },
     methods: {
         onCancel () {
-
+            this.$emit('onClose')
         },
-        onEnter () {
-
+        async onEnter () {
+            await updateConfirmReceiptPass(this.formData)
+            this.$emit('onClose')
         }
     }
 }

@@ -17,6 +17,7 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 
 export default {
     name: 'projectOrderTab',
+    props: ['id'],
     data () {
         return {
             queryParams: {
@@ -46,6 +47,7 @@ export default {
         queryParamsUseQuery () {
             return {
                 ...this.queryParams,
+                projectId: this.id,
                 authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
                 jobNumber: this.userInfo.jobNumber
             }

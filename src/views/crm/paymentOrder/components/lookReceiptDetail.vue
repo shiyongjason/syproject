@@ -1,35 +1,35 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
+    <el-dialog title="查看收货明细" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
             <div class="tab-pane">
                 <p>
                     <span>应到货金额总计：</span>
-                    <span class="orange-main">12,000,000元</span>
+                    <span class="orange-main">{{ receiptDetail.totalAmount }}元</span>
                 </p>
                 <p>
                     <span>已到货金额总计：</span>
-                    <span class="orange-main">12,000,000元</span>
+                    <span class="orange-main">{{ receiptDetail.goodsAmount }}元</span>
                 </p>
             </div>
             <ul>
-                <li>
+                <li :key="item.id" v-for="(item,index) in receiptDetail.respGoodsDetailList">
                     <p>
-                        <span class="icon">1</span>
+                        <span class="icon">{{index}}</span>
                         <span class="label">本次到货金额：</span>
-                        <span class="orange-main">12,000,000元</span>
-                        <span class="info">2020.11.19 15:00:00 赵娟（15195954045）</span>
+                        <span class="orange-main">{{ item.goodsAmount }}元</span>
+                        <span class="info">{{ item.createTime }} {{item.createBy}}（{{ item.createPhone }}）</span>
                     </p>
                     <p>
                         <span class="label">
                             到货验收单：
                         </span>
-                        <img src="" alt="">
+                        <img :key="subItem.fileUrl" :src="subItem.fileUrl" alt="" v-for="subItem in item.goodsVouchers">
                     </p>
                     <p>
                         <span class="label">
                             收货备注：
                         </span>
-                        这里是收货备注，这里是收货备注，这里是收货备注，这里是收货备注，这里是收货备注
+                        {{ item.goodsRemark }}
                     </p>
                 </li>
             </ul>
@@ -37,6 +37,8 @@
     </el-dialog>
 </template>
 <script>
+import { getConfirmReceiptMoreDetail } from '@/views/crm/paymentOrder/api'
+
 export default {
     name: 'lookReceiptDetail',
     props: {
@@ -44,14 +46,27 @@ export default {
             type: Boolean,
             default: false
         },
-        openStatus: {
-            type: Number,
-            default: 1
+        id: {
+        }
+    },
+    data () {
+        return {
+            receiptDetail: {}
+        }
+    },
+    watch: {
+        async isOpen (val) {
+            if (val) {
+                const { data } = await getConfirmReceiptMoreDetail(this.id)
+                this.receiptDetail = data
+            }
         }
     }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.tab-pane {
+    display: flex;
+}
 </style>
