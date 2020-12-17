@@ -255,7 +255,7 @@ export default {
                         required: true,
                         validator: (rule, value, callback) => {
                             if (this.customTermsForm.hasDefault == 1 && !this.customTermsForm.parameterValue) {
-                                return callback(new Error('请输入默认内容'))
+                                return callback(new Error('请输入预设内容'))
                             }
                             return callback()
                         }
