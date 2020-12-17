@@ -335,7 +335,7 @@ export default {
                             placeholder: '请输入内容',
                             type: 'textarea',
                             autosize: { minRows: 5, maxRows: 6 },
-                            maxlength: '200',
+                            maxlength: this.currentKey.maxLength,
                             class: this.currentKey.paramKey,
                             showWordLimit: true
                             // disabled: !this.currentKey.modify

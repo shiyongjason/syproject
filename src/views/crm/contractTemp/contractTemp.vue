@@ -133,7 +133,7 @@
                 <el-form-item label="条款名称" label-width="80px" prop="parameterName">
                     <el-input v-model="customTermsForm.parameterName" autocomplete="off" :maxlength="10"></el-input>
                 </el-form-item>
-                <el-form-item label="默认" label-width="80px" prop="parameterValue">
+                <el-form-item label="预设内容" label-width="80px" prop="parameterValue">
                     <el-radio-group v-model="customTermsForm.hasDefault">
                         <el-radio :label="1">有内容</el-radio>
                         <el-radio :label="0">无内容</el-radio>
