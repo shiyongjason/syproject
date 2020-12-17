@@ -24,6 +24,12 @@
                     <el-select v-model="signerTempForm.signatureParam" placeholder="请选择客户签署区" multiple>
                         <el-option v-for="item in customSignOptions" :key="item.value" :label="item.label" :value="item.value">
                         </el-option>
+                        <template slot="empty">
+                            <div class="select-empty">
+                                <p>无剩余可选签署区</p>
+                                <p>请新增签署区或取消已有签署区的关联关系</p>
+                            </div>
+                        </template>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
@@ -206,7 +212,7 @@ export default {
             caPage: 'contractTemp/caPage'
         }),
         customSignOptions () {
-            const result = this.customSignAll.filter(item => !this.customSignEx.includes(item) || this.signerTempForm.signatureParam.includes(item)).map(item => ({
+            const result = this.customSignAll.filter(item => !this.customSignEx.includes(item) || (this.signerTempForm.signatureParam && this.signerTempForm.signatureParam.includes(item))).map(item => ({
                 value: item,
                 label: item.substring(0, item.indexOf('_'))
             }))
@@ -400,6 +406,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.select-empty {
+    padding: 10px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}
  /deep/ .el-dialog .el-input{
     width: 280px;
 }

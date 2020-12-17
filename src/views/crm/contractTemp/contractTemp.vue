@@ -133,7 +133,7 @@
                 <el-form-item label="条款名称" label-width="80px" prop="parameterName">
                     <el-input v-model="customTermsForm.parameterName" autocomplete="off" :maxlength="10"></el-input>
                 </el-form-item>
-                <el-form-item label="默认" label-width="80px" prop="parameterValue">
+                <el-form-item label="预设内容" label-width="80px" prop="parameterValue">
                     <el-radio-group v-model="customTermsForm.hasDefault">
                         <el-radio :label="1">有内容</el-radio>
                         <el-radio :label="0">无内容</el-radio>
@@ -402,7 +402,7 @@ export default {
                     return item.signatureParam.length != 0
                 })
                 if (delSigner.length > 0) {
-                    this.$alert('由于签署区删除，' + delSigner.map(item => item.signerName).join(',') + '已经被删除', '提示', {
+                    this.$alert('由于签署区删除，签署方：' + delSigner.map(item => item.signerName).join(',') + '已经被删除', '提示', {
                         confirmButtonText: '确定'
                     })
                 }
@@ -638,7 +638,7 @@ export default {
                 // 获取最大的Number
                 const arr = Array.from(document.getElementsByClassName('custom_sign')).map(item => item.dataset.number)
                 const nextNum = arr.length > 0 ? Math.max.apply(Math, arr) - 0 + 1 : 1
-                _temp = `<span><input class='custom_sign' data-en="customSign${nextNum}" data-number='${nextNum}' style='width:100px;margin:5px;border:1px solid #f00' value="客户签署区${nextNum}"></input>`
+                _temp = `<span><input class='custom_sign' data-en="customSign${nextNum}" data-number='${nextNum}' style='width:100px;margin:5px;border:1px solid #f00' value="客户签署区${nextNum}" readonly></input>`
                 this.$refs.RichEditor.insertHtml(_temp)
             }
             // console.log(document.getElementById('platform_sign'))
