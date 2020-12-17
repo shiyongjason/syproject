@@ -606,7 +606,6 @@ export default {
             this.customTermsForm.parameterValue = ''
             this.$nextTick(() => {
                 this.$refs.customTermsForm.clearValidate()
-                this.$refs.customTermsForm.resetFields()
             })
         },
         onClickCur (val) {
