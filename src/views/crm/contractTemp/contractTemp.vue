@@ -402,7 +402,7 @@ export default {
                     return item.signatureParam.length != 0
                 })
                 if (delSigner.length > 0) {
-                    this.$alert('由于签署区删除，' + delSigner.map(item => item.signerName).join(',') + '已经被删除', '提示', {
+                    this.$alert('由于签署区删除，签署方：' + delSigner.map(item => item.signerName).join(',') + '已经被删除', '提示', {
                         confirmButtonText: '确定'
                     })
                 }

@@ -487,6 +487,11 @@ export default {
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
                 })
+                // 对客户签署区进行转化
+                let customSignDOMS = this.contractDocument.getElementsByClassName('custom_sign')
+                Array.from(customSignDOMS).map(item => {
+                    item.outerHTML = `<span class="custom_sign" style="color:#fff">${item.dataset.en}</span>`
+                })
                 // 法务审核通过把非必填且没值的标记清空
                 let res = this.contractFieldsList.filter(item => (!item.required && !item.paramValue))
                 if (res && res.length > 0) {
