@@ -1,6 +1,6 @@
 <template>
-    <el-dialog title="上游支付" :visible.sync="isOpen" width="500px" :before-close="()=> $emit('onClose')">
-        <el-form label-width="150px">
+    <el-dialog title="上游支付" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('onClose')" class="prev-payment-dialog">
+        <el-form v-model="formData" label-width="150px">
             <el-form-item label="经销商：">
                 {{ prevPaymentDetail.companyName }}
             </el-form-item>
@@ -26,14 +26,25 @@
                 {{prevPaymentDetail.goodsProgress}}%
             </el-form-item>
             <el-form-item label="本次支付金额：">
-                <el-input></el-input>
+                <el-input v-model="formData.payAmount"></el-input>
             </el-form-item>
             <el-form-item label="支付日期：">
-                <el-input></el-input>
+                <el-date-picker
+                    v-model="formData.payDate"
+                    type="date"
+                    placeholder="选择日期">
+                </el-date-picker>
             </el-form-item>
             <el-form-item label="上传上游支付凭证：">
-                <el-upload></el-upload>
-                <p>支持扩展名：jpg.png...</p>
+                <hosjoyUpload
+                              v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=100
+                              :limit=100 :action='action' :uploadParameters='uploadParameters'
+                              style="margin:10px 0 0 5px">
+                    <div class="a-line">
+                        <h-button>上传文件</h-button>
+                    </div>
+                </hosjoyUpload>
+                <p class="tips">支持扩展名：jpg.png...</p>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -45,27 +56,42 @@
 
 <script>
 import { getPrevPayDetail, updatePrevPayPass } from '@/views/crm/paymentOrder/api'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { interfaceUrl } from '@/api/config'
 
 export default {
     name: 'prevPaymentDialog',
+    components: {
+        hosjoyUpload
+    },
     props: {
         isOpen: {
             type: Boolean,
             default: false
         },
-        id: {
-            type: Number
+        params: {
+            type: Object
         }
     },
     data () {
         return {
-            prevPaymentDetail: {}
+            action: interfaceUrl + 'tms/files/upload',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
+            prevPaymentDetail: {},
+            formData: {
+                payAmount: '',
+                payDate: '',
+                payVouchers: []
+            }
         }
     },
     watch: {
         async isOpen (val) {
             if (val) {
-                const { data } = await getPrevPayDetail(id)
+                const { data } = await getPrevPayDetail(this.params.paymentOrderId)
                 this.prevPaymentDetail = data
             }
         }
@@ -74,13 +100,30 @@ export default {
         onCancel () {
             this.$emit('onClose')
         },
-        onEnterPay () {
-            updatePrevPayPass()
+        async onEnterPay () {
+            const params = {
+                ...this.formData,
+                ...this.params
+            }
+            await updatePrevPayPass(params)
+            this.$emit('onClose')
         }
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+/deep/.el-form-item__label{
+    line-height: 20px;
+}
+/deep/.el-form-item__content{
+    line-height: 20px;
+}
+.prev-payment-dialog {
+    padding: 20px 12px;
+}
+.tips {
+    padding: 5px;
+}
 
 </style>
