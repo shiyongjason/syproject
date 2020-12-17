@@ -638,7 +638,7 @@ export default {
                 // 获取最大的Number
                 const arr = Array.from(document.getElementsByClassName('custom_sign')).map(item => item.dataset.number)
                 const nextNum = arr.length > 0 ? Math.max.apply(Math, arr) - 0 + 1 : 1
-                _temp = `<span><input class='custom_sign' data-en="customSign${nextNum}" data-number='${nextNum}' style='width:100px;margin:5px;border:1px solid #f00' value="客户签署区${nextNum}"></input>`
+                _temp = `<span><input class='custom_sign' data-en="customSign${nextNum}" data-number='${nextNum}' style='width:100px;margin:5px;border:1px solid #f00' value="客户签署区${nextNum}" readonly></input>`
                 this.$refs.RichEditor.insertHtml(_temp)
             }
             // console.log(document.getElementById('platform_sign'))
