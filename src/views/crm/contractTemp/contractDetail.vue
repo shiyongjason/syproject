@@ -104,6 +104,7 @@ export default {
                 { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '合同企业', prop: 'paramGroupName' },
                 { label: '经办人', prop: 'agent' },
+                { label: '签署区域', prop: 'signatureParam' },
                 {
                     label: '签署要求',
                     prop: 'signerDemand',
@@ -117,6 +118,7 @@ export default {
                 { label: '签署方', prop: 'signerName' },
                 { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '合同个人', prop: 'paramGroupName' },
+                { label: '签署区域', prop: 'signatureParam' },
                 {
                     label: '签署要求',
                     prop: 'signerDemand',
@@ -191,8 +193,11 @@ export default {
             this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
             // 签署方 type=2
             let singerArr = []
-
-            singerArr = this.verTempDetail.signerSetting.filter((val) => val.type == 2)
+            // 对客户签署区进行汉化处理，英文的customSign转成客户签署区
+            singerArr = this.verTempDetail.signerSetting.filter((val) => val.type == 2).map(item => {
+                item.signatureParam = item.signatureParam ? item.signatureParam.map(i => i.replace('customSign', '客户签署区')) : '-'
+                return item
+            })
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
 
