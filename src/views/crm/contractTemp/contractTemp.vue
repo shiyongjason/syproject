@@ -64,8 +64,10 @@
                                 <el-button type="primary" @click="onClickCur(2)">插入当前位置</el-button>
                                 <span class="ml10 red-word">平台为静默签署</span>
                             </el-form-item>
+                            <el-form-item label="客户签署区：">
+                                <el-button type="primary" @click="onClickCur(3)">插入当前位置</el-button>
+                            </el-form-item>
                         </el-form>
-
                     </div>
                 </div>
             </div>
@@ -75,7 +77,10 @@
                     <h-button type="primary" @click="onClick_Dialog(2)">添加签署方</h-button>
                 </div>
                 <div v-if="busData.length>0">
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :show-overflow-tooltip="true" :column="busLabel" :data="busData" isAction :isActionFixed='false'>
+                        <template slot="signatureParam" slot-scope="scope">
+                            {{scope.data.row.signatureParam ? scope.data.row.signatureParam.map(item => item.substring(0, item.indexOf('_'))).join(',') : '-'}}
+                        </template>
                         <template slot="action" slot-scope="scope">
                             <h-button table @click="onEditP(scope,2)">编辑</h-button>
                             <h-button table @click="onDelete(scope,1)">删除</h-button>
@@ -83,7 +88,10 @@
                     </hosJoyTable>
                 </div>
                 <div v-if="perData.length>0">
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :show-overflow-tooltip="true" :column="perLabel" isAction :data="perData" :isActionFixed='false'>
+                        <template slot="signatureParam" slot-scope="scope">
+                            {{scope.data.row.signatureParam ? scope.data.row.signatureParam.map(item => item.substring(0, item.indexOf('_'))).join(',') : '-'}}
+                        </template>
                         <template slot="action" slot-scope="scope">
                             <h-button table @click="onEditP(scope,2)">编辑</h-button>
                             <h-button table @click="onDelete(scope,2)">删除</h-button>
@@ -159,7 +167,7 @@
             </span>
         </el-dialog>
         <diffDialog ref="diffDialog"></diffDialog>
-        <contractDialog ref="contractDialog" @backEvent=backToTable></contractDialog>
+        <contractDialog ref="contractDialog" :customSignAll="customSignOptions" :customSignEx="customSignEx" @backEvent=backToTable></contractDialog>
     </div>
 </template>
 <script>
@@ -262,6 +270,7 @@ export default {
                 { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '合同企业', prop: 'paramGroupName' },
                 { label: '经办人', prop: 'agent' },
+                { label: '签署区域', prop: 'signatureParam', slot: 'signatureParam' },
                 {
                     label: '签署要求',
                     prop: 'signerDemand',
@@ -275,6 +284,7 @@ export default {
                 { label: '签署方', prop: 'signerName' },
                 { label: '签署方类型', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
                 { label: '合同个人', prop: 'paramGroupName' },
+                { label: '签署区域', prop: 'signatureParam', slot: 'signatureParam' },
                 {
                     label: '签署要求',
                     prop: 'signerDemand',
@@ -301,24 +311,9 @@ export default {
             bakParams: [],
             newParams: [],
             num: Date.now(), // 最好是个随机的
-            edit_index: ''
+            edit_index: '',
+            customSignOptions: []
         }
-    },
-    watch: {
-        'customTermsForm.hasDefault' (val) {
-            if (val == 0) {
-                this.customTermsForm.parameterValue = ''
-            }
-        }
-    },
-    async mounted () {
-        await this.onFindtempType()
-        if (this.$route.query.id) {
-            this.$nextTick(() => {
-                this.findTempDetail(this.$route.query.id)
-            })
-        }
-        this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
     },
     computed: {
         ...mapState({
@@ -340,7 +335,36 @@ export default {
         },
         uploadImgName () {
             return 'multiFile'
+        },
+        customSignEx () {
+            let result = []
+            this.perData.forEach(item => {
+                result = result.concat(item.signatureParam)
+            })
+            this.busData.forEach(item => {
+                result = result.concat(item.signatureParam)
+            })
+            return result
         }
+    },
+    watch: {
+        'customTermsForm.hasDefault' (val) {
+            if (val == 0) {
+                this.customTermsForm.parameterValue = ''
+            }
+        }
+    },
+    async mounted () {
+        await this.onFindtempType()
+        if (this.$route.query.id) {
+            this.$nextTick(() => {
+                this.findTempDetail(this.$route.query.id)
+            })
+        }
+        this.valid_form = JSON.parse(JSON.stringify(this.contractForm))
+        this.$nextTick(() => {
+            this.customSignOptions = this.findCustomSignInfo()
+        })
     },
     methods: {
         ...mapActions({
@@ -349,8 +373,45 @@ export default {
             getContratDetail: 'contractTemp/getContratDetail'
             // findCApage: 'contractTemp/findCApage'
         }),
+        findCustomSignInfo () {
+            return Array.from(document.getElementsByClassName('custom_sign')).map(item => item.value + '_customSign' + item.dataset.number)
+        },
+        delCustomSign () {
+            const newSignInfos = this.findCustomSignInfo()
+            // 判断客户签署区是否有被删除的
+            const delList = this.customSignOptions.filter(item => {
+                return !newSignInfos.includes(item)
+            })
+            if (delList.length > 0) {
+                // 检查被删除的客户签署区是否有关联的客户
+                let delSigner = []
+                this.perData = this.perData.filter(item => {
+                    // 对于签署区有多个情况下，删除其中一个的，保留该签署人
+                    // 如果签署人对应的签署区全部被删除，提示签署人被删除
+                    item.signatureParam = item.signatureParam.filter(item => !delList.includes(item))
+                    if (item.signatureParam.length == 0) {
+                        delSigner.push(item)
+                    }
+                    return item.signatureParam.length != 0
+                })
+                this.busData = this.busData.filter(item => {
+                    item.signatureParam = item.signatureParam.filter(item => !delList.includes(item))
+                    if (item.signatureParam.length == 0) {
+                        delSigner.push(item)
+                    }
+                    return item.signatureParam.length != 0
+                })
+                if (delSigner.length > 0) {
+                    this.$alert('由于签署区删除，' + delSigner.map(item => item.signerName).join(',') + '已经被删除', '提示', {
+                        confirmButtonText: '确定'
+                    })
+                }
+            }
+            this.customSignOptions = newSignInfos
+        },
         onchange () {
             this.domBindMethods()
+            this.delCustomSign()
         },
         onBlur () {
             // window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty()
@@ -428,6 +489,17 @@ export default {
                         }
                         this._keyValue = event.target.id
                         this.dialogVisible = true
+                    }
+                } else if (val.className.indexOf('contract_sign_') != -1) {
+                    // 自定义合同条款绑定点击事件
+                    val.onclick = (event) => {
+                        this.customTermsForm = {
+                            parameterName: event.target.value,
+                            parameterValue: event.target.dataset.content || '',
+                            hasDefault: event.target.dataset.content ? 1 : 0,
+                            id: event.target.className
+                        }
+                        this.customTermsDefineVisible = true
                     }
                 }
             })
@@ -530,6 +602,8 @@ export default {
         onShowCustomTermsDefine () {
             this.customTermsDefineVisible = true
             this.customTermsForm.hasDefault = 1
+            this.customTermsForm.parameterName = ''
+            this.customTermsForm.parameterValue = ''
             this.$nextTick(() => {
                 this.$refs.customTermsForm.clearValidate()
                 this.$refs.customTermsForm.resetFields()
@@ -551,28 +625,20 @@ export default {
                             _temp = `<input id="contract_sign_${this.num}" class="contract_sign_${this.num}" style="width:${inputWidth}px;color: #ff7a45;display: inline-block;height: 22px;min-width: 20px;border: none;text-align: center;margin-right: 3px;border-radius: 5px;cursor: pointer;"  
                             value="${this.customTermsForm.parameterName}" data-content="${this.customTermsForm.parameterValue}" readonly></input>`
                             this.$refs.RichEditor.insertHtml(_temp)
-                            document.getElementById(`contract_sign_${this.num}`).onclick = (e) => {
-                                this.customTermsForm = {
-                                    parameterName: e.target.value,
-                                    parameterValue: e.target.dataset.content,
-                                    hasDefault: e.target.dataset.content ? 1 : 0,
-                                    id: e.target.id
-                                }
-                                this.customTermsDefineVisible = true
-                            }
                         }
                         this.customTermsDefineVisible = false
                     }
                 })
-            } else {
-                // if (document.getElementById('platform_sign')) {
-                //     this.$message({
-                //         message: '只能插入一处平台签署区',
-                //         type: 'warning'
-                //     })
-                //     return
-                // }
+            } else if (val == 2) {
+                // 插入平台签署区
                 _temp = `<span><img class='platform_sign' style='width:100px;margin:5px;' src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201127/ab01c967-3172-4407-aba0-fa60351c19ab.png"/></span>`
+                this.$refs.RichEditor.insertHtml(_temp)
+            } else {
+                // 插入客户签署区
+                // 获取最大的Number
+                const arr = Array.from(document.getElementsByClassName('custom_sign')).map(item => item.dataset.number)
+                const nextNum = arr.length > 0 ? Math.max.apply(Math, arr) - 0 + 1 : 1
+                _temp = `<span><input class='custom_sign' data-en="customSign${nextNum}" data-number='${nextNum}' style='width:100px;margin:5px;border:1px solid #f00' value="客户签署区${nextNum}"></input>`
                 this.$refs.RichEditor.insertHtml(_temp)
             }
             // console.log(document.getElementById('platform_sign'))
@@ -732,9 +798,22 @@ export default {
                     })
                     return
                 }
+                // 保存并启用的时候，校验签署区是否都关联到了签署方
+                if (this.customSignEx.length < this.customSignOptions.length) {
+                    this.$message({
+                        message: '尚存在签署区未关联签署方，请检查配置',
+                        type: 'warning'
+                    })
+                    return
+                }
             }
 
             this.contractForm.signerSetting = [...this.busData, ...this.perData, ...this.platData]
+            // 调整关联签署区，选择的时候是包含中英文的，提交的时候只要提交英文的就好
+            this.contractForm.signerSetting = this.contractForm.signerSetting.map(item => {
+                item.signatureParam = item.signatureParam ? item.signatureParam.map(i => i.substr(i.indexOf('_') + 1)) : []
+                return item
+            })
             if (!this.$route.query.id) {
                 try {
                     await addContractTemp(this.contractForm)
@@ -786,7 +865,14 @@ export default {
             // 复制模板
             // 签署方 type=2
             let singerArr = []
-            singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2)
+            // 对签署区域做处理，数据库只存储了英文名，调整成中英文
+            singerArr = this.contractTempdetail.signerSetting.filter((val) => val.type == 2).map(item => {
+                // 兼容老数据
+                if (item.signatureParam) {
+                    item.signatureParam = item.signatureParam.map(i => i.replace(/(customSign)(\d)/, '客户签署区$2_$1$2'))
+                }
+                return item
+            })
             this.busData = singerArr.filter(val => val.signerType == 1)
             this.perData = singerArr.filter(val => val.signerType == 2)
             this.platData = this.contractTempdetail.signerSetting.filter((val) => val.type == 1)
