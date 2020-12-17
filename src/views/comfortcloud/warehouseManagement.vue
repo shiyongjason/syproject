@@ -465,9 +465,11 @@ export default {
             }
             this.clearCloudOutboundDeviceList()
             this.addRecordDialogVisible = true
-            if (this.$refs['addRecord']) {
-                this.$refs['addRecord'].clearValidate()
-            }
+            setTimeout(() => {
+                if (this.$refs['addRecord']) {
+                    this.$refs['addRecord'].clearValidate()
+                }
+            }, 50)
         },
         onAddRecordCancel () {
             this.addRecordDialogVisible = false
@@ -489,8 +491,8 @@ export default {
                 await addCloudOutbound(this.addRecord)
                 this.$message.success('新增成功')
             }
-
             this.addRecordDialogVisible = false
+
             this.onSearch()
         },
         async dealerRequest (query, cb) {
