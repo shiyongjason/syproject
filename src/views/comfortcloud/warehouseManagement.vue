@@ -41,6 +41,7 @@
             </div>
             <div class="query-cont-col">
                 <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                <el-button type="primary" class="ml20" @click="onShowRecordDialog">新增出库</el-button>
                 <el-button type="primary" class="ml20" @click="onOpenModel">导入数据</el-button>
                 <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
             </div>
@@ -50,49 +51,111 @@
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照设备出库模板内容导入数据，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">3.在模版中完成内容填写后，请将表格内已输入的内容复制到新的Excel中再进行导入</p>
             </el-upload>
-            <el-button class="errorBtn" v-if="errorData.containsList.length > 0" @click="errorShow = true">上传失败数据</el-button>
+            <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
             <div class="downloadExcel">
-                <a href="/excelTemplate/出库管理导入模板.xlsx" download="出库管理导入模板.xls">下载出库管理导入模板</a>
+                <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
             </div>
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
-            <el-dialog width="800px" title="上传结果" :visible.sync="errorShow" append-to-body>
+            <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>
                 <div>
                     <span class="uploadTips">上传数据：{{errorData.count}}条</span>
                 </div>
                 <div>
                     <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>
-                    <span class="uploadTips uploadErr">上传重复：{{errorData.containsCount}}条</span>
+                </div>
+                <div>
+                    <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>
                 </div>
                 <div class="basic-table">
-                    <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="errorData.containsList" :maxHeight='350'>
+                    <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>
                     </basicTable>
                 </div>
             </el-dialog>
         </el-dialog>
         <div class="page-body-cont">
-            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='80'>
+            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="outBoundList" :pagination="outBoundListPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='90'>
                 <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row.id)">删除</el-button>
                 </template>
-                <template slot="outboundType" slot-scope="scope" >
+                <template slot="outboundType" slot-scope="scope">
                     <p v-bind:class="{ 'red-content' : scope.data.row.outboundType === '出库类型错误' }">{{ scope.data.row.outboundType }}</p>
                 </template>
                 <template slot="deviceStatus" slot-scope="scope">
-                    <p>{{ scope.data.row.deviceStatus === 1 ? '在线' : '离线' }}</p>
+                    <p>{{ scope.data.row.deviceStatus === 1 ? '在线' : (scope.data.row.deviceStatus === 2 ? '--' : '离线') }}</p>
                 </template>
             </basicTable>
         </div>
+        <el-dialog :title="isEditRecord ? '修改出库' : '新增出库'" :modal-append-to-body=false :append-to-body=false :close-on-click-modal="false" :visible.sync="addRecordDialogVisible" width="50%">
+            <el-form class="add-record-form" ref="addRecord" :model="addRecord" :rules="rules" label-width="120px">
+                <el-form-item label-width="0">
+                    <el-col :span="8">
+                        <el-form-item label="归属品类：" prop="deviceCategory">
+                            <el-select v-model="addRecord.deviceCategory" @change="deviceCategorySelectChanged" :disabled="isEditRecord">
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.name" :value="item.name" v-for="item in cloudOutboundCategoryList" :key="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" :offset="2">
+                        <el-form-item label="商品型号：" prop="deviceType">
+                            <el-select v-model="addRecord.deviceType" @change="deviceTypeSelectChanged" :disabled="isEditRecord">
+                                <el-option label="选择" value=""></el-option>
+                                <el-option :label="item.name" :value="item.name" v-for="(item,index) in cloudOutboundDeviceList" :key="index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="设备数量：" prop="amount">
+                    <el-input style="width: 200px" placeholder="请输入设备数量" v-model="addRecord.amount" :disabled="!canInputDeviceAmount || isEditRecord"></el-input>
+                </el-form-item>
+                <el-form-item label="设备ID：" prop="iotId">
+                    <el-input v-model.trim="addRecord.iotId" show-word-limit placeholder="请输入设备ID" :disabled="canInputDeviceAmount || isEditRecord"></el-input>
+                </el-form-item>
+                <el-form-item label="出库类型：" prop="outboundType">
+                    <el-select v-model="addRecord.outboundType">
+                        <el-option label="样品" value="样品"></el-option>
+                        <el-option label="合同履约提货" value="合同履约提货"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label-width="0">
+                    <el-col :span="8">
+                        <el-form-item label="经销商名称：" prop="dealer">
+                            <el-autocomplete
+                                class="inline-input"
+                                v-model="addRecord.dealer"
+                                :fetch-suggestions="dealerRequest"
+                                placeholder="请输入经销商名称"
+                                :trigger-on-focus="false"
+                                @select="dealerChanged"
+                                :disabled="isEditRecord"
+                            ></el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" :offset="2">
+                        <el-form-item label="经销商电话：" prop="dealerPhone">
+                            <el-input v-model.trim="addRecord.dealerPhone" show-word-limit placeholder="输入经销商电话" :disabled="isEditRecord"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item>
+                    <el-button name="white-color" class="ml20" @click="onAddRecordCancel">取消</el-button>
+                    <el-button type="primary" @click="onAddRecord" :loading="loading">{{ loading ? '提交中 ...' : '确认出库' }}</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { iotUrl } from '@/api/config'
-import { mapActions, mapState } from 'vuex'
-import { downloadOutboundList, deleteOutboundList } from './api/index'
+import { mapActions, mapState, mapGetters } from 'vuex'
+import { downloadOutboundList, deleteOutboundList, addCloudOutbound, changeCloudOutbound } from './api/index'
 export default {
     name: 'equipmentError',
     data () {
@@ -110,16 +173,29 @@ export default {
             searchParams: {},
             tableData: [],
             errorData: {
-                containsList: []
+                failList: []
             },
             tableLabel: [
                 { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
-                { label: '设备类型', prop: 'deviceType' },
+                { label: '品类', prop: 'deviceCategory' },
+                { label: '设备型号', prop: 'deviceType' },
                 { label: '设备ID', prop: 'iotId' },
+                { label: '数量', prop: 'amount' },
                 { label: '出库类型', prop: 'outboundType' },
                 { label: '经销商', prop: 'dealer' },
                 { label: '经销商电话', prop: 'dealerPhone' },
                 { label: '设备状态', prop: 'deviceStatus' }
+            ],
+            errTableLabel: [
+                { label: '出库时间', prop: 'outboundTime', formatters: 'date' },
+                { label: '品类', prop: 'deviceCategory' },
+                { label: '设备型号', prop: 'deviceType' },
+                { label: '设备ID', prop: 'iotId' },
+                { label: '数量', prop: 'amount' },
+                { label: '出库类型', prop: 'outboundType' },
+                { label: '经销商', prop: 'dealer' },
+                { label: '经销商电话', prop: 'dealerPhone' },
+                { label: '失败原因', prop: 'reason' }
             ],
             uploadShow: false,
             errorShow: false,
@@ -139,7 +215,72 @@ export default {
                     operateUserName: ''
                 }
             },
-            loading: false
+            loading: false,
+            isEditRecord: false,
+            addRecordDialogVisible: false,
+            addRecord: {
+                deviceCategory: '',
+                deviceType: '',
+                amount: '',
+                iotId: '',
+                outboundType: '',
+                dealer: '',
+                dealerPhone: ''
+            },
+            canInputDeviceAmount: true, // 是否可以填写设备数量
+            rules: {
+                iotId: [
+                    { required: true, message: '请填写设备ID', trigger: 'blur' }
+                ],
+                outboundType: [
+                    { required: true, message: '请选择出库类型', trigger: 'change' }
+                ],
+                dealer: [
+                    { required: true, message: '请填写经销商名称', trigger: 'blur' }
+                ],
+                dealerPhone: [
+                    { required: true, message: '请填写经销商电话', trigger: 'blur' }
+                ],
+                deviceCategory: [{
+                    validator: (rule, value, callback) => {
+                        if (this.isEditRecord) {
+                            return callback()
+                        }
+                        if (value == null || value.length === 0) {
+                            return callback(new Error('请选择品类'))
+                        }
+
+                        callback()
+                    },
+                    trigger: 'change'
+                }],
+                deviceType: [{
+                    validator: (rule, value, callback) => {
+                        if (this.isEditRecord) {
+                            return callback()
+                        }
+                        if (value == null || value.length === 0) {
+                            return callback(new Error('请选择设备类型'))
+                        }
+
+                        callback()
+                    },
+                    trigger: 'change'
+                }],
+                amount: [{
+                    validator: (rule, value, callback) => {
+                        if (this.isEditRecord) {
+                            return callback()
+                        }
+                        if (value == null || value.length === 0) {
+                            return callback(new Error('请填写数量'))
+                        }
+
+                        callback()
+                    },
+                    trigger: 'blur'
+                }]
+            }
         }
     },
     computed: {
@@ -171,14 +312,27 @@ export default {
             userInfo: state => state.userInfo,
             outBoundList: state => state.cloudmanage.outBoundList,
             outBoundListPagination: state => state.cloudmanage.outBoundListPagination
+        }),
+        ...mapGetters({
+            cloudOutboundDeviceList: 'cloudOutboundDeviceList',
+            cloudOutboundMerchantList: 'cloudOutboundMerchantList',
+            cloudOutboundCategoryList: 'cloudOutboundCategoryList'
         })
     },
     mounted () {
+        if (this.$route.params.dealer && this.$route.params.dealer !== undefined) {
+            this.queryParams.dealer = decodeURIComponent(this.$route.params.dealer)
+        }
         this.onSearch()
+        this.findCloudOutboundCategoryList()
     },
     methods: {
         ...mapActions({
-            onQuery: 'getOutboundList'
+            onQuery: 'getOutboundList',
+            findCloudOutboundDeviceList: 'findCloudOutboundDeviceList',
+            findCloudOutboundMerchantList: 'findCloudOutboundMerchantList',
+            findCloudOutboundCategoryList: 'findCloudOutboundCategoryList',
+            clearCloudOutboundDeviceList: 'clearCloudOutboundDeviceList'
         }),
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -231,7 +385,7 @@ export default {
         },
         onOpenModel () {
             this.uploadShow = true
-            this.errorData.containsList = []
+            this.errorData.failList = []
         },
         onCloseDialog () {
             if (this.hasFile()) {
@@ -289,6 +443,115 @@ export default {
                 })
                 this.onQuery(this.searchParams)
             }).catch(() => { })
+        },
+        async onEdit (data) {
+            this.isEditRecord = true
+            this.addRecord = data
+            this.addRecordDialogVisible = true
+            if (this.$refs['addRecord']) {
+                this.$refs['addRecord'].clearValidate()
+            }
+        },
+        onShowRecordDialog () {
+            this.isEditRecord = false
+            this.addRecord = {
+                deviceCategory: '',
+                deviceType: '',
+                amount: '',
+                iotId: '',
+                outboundType: '',
+                dealer: '',
+                dealerPhone: ''
+            }
+            this.clearCloudOutboundDeviceList()
+            this.addRecordDialogVisible = true
+            setTimeout(() => {
+                if (this.$refs['addRecord']) {
+                    this.$refs['addRecord'].clearValidate()
+                }
+            }, 50)
+        },
+        onAddRecordCancel () {
+            this.addRecordDialogVisible = false
+        },
+        onAddRecord () {
+            this.$refs['addRecord'].validate((valid) => {
+                if (valid) {
+                    this.uploadOutbound()
+                } else {
+                    return false
+                }
+            })
+        },
+        async uploadOutbound () {
+            if (this.isEditRecord) {
+                await changeCloudOutbound({ id: this.addRecord.id, outboundType: this.addRecord.outboundType })
+                this.$message.success('修改成功')
+            } else {
+                await addCloudOutbound(this.addRecord)
+                this.$message.success('新增成功')
+            }
+            this.addRecordDialogVisible = false
+
+            this.onSearch()
+        },
+        async dealerRequest (query, cb) {
+            if (query.length >= 2) {
+                await this.findCloudOutboundMerchantList({ name: query })
+
+                const dealerOptions = this.cloudOutboundMerchantList.map((e) => { return { 'value': e.companyName } })
+                cb(dealerOptions)
+            } else {
+                // eslint-disable-next-line standard/no-callback-literal
+                cb([])
+            }
+        },
+        dealerChanged (val) {
+            for (let i = 0; i < this.cloudOutboundMerchantList.length; i++) {
+                let company = this.cloudOutboundMerchantList[i]
+                if (company.companyName === val.value) {
+                    this.addRecord.dealerPhone = company.contactNumber
+                    this.$refs['addRecord'].clearValidate(['dealerPhone'])
+                    return
+                }
+            }
+        },
+        async deviceCategorySelectChanged () {
+            this.addRecord.deviceType = ''
+
+            for (let i = 0; i < this.cloudOutboundCategoryList.length; i++) {
+                let category = this.cloudOutboundCategoryList[i]
+                if (category.name === this.addRecord.deviceCategory) {
+                    await this.findCloudOutboundDeviceList({ categoryId: category.id })
+                    return
+                }
+            }
+        },
+        deviceTypeSelectChanged (e) {
+            for (let i = 0; i < this.cloudOutboundDeviceList.length; i++) {
+                let device = this.cloudOutboundDeviceList[i]
+                if (device.name === this.addRecord.deviceType) {
+                    if (device.deviceClass === 1) {
+                        this.addRecord.amount = 1
+                        this.$refs['addRecord'].clearValidate(['amount'])
+                        this.canInputDeviceAmount = false
+                        this.addRecord.iotId = ''
+                    } else {
+                        this.canInputDeviceAmount = true
+                        this.addRecord.iotId = this.randomString(16)
+                        this.$refs['addRecord'].clearValidate(['iotId'])
+                    }
+                    break
+                }
+            }
+        },
+        randomString (e) {
+            e = e || 32
+            let t = 'ABCDEFGHJKMNPQRSTWXYZ1234567890'
+            let a = t.length
+            let n = ''
+            for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a))
+            return n
         }
     }
 }
@@ -308,7 +571,7 @@ export default {
 .download-template {
     margin-bottom: 30px;
 }
-.downloadExcel{
+.downloadExcel {
     margin-top: 10px;
 }
 .colred {
@@ -341,5 +604,9 @@ export default {
 
 .search-title {
     white-space: nowrap;
+}
+
+.add-record-form {
+    margin: 30px 0;
 }
 </style>
