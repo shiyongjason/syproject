@@ -446,25 +446,33 @@ export default {
             this.$emit('openApproveDialog', this.paymentOrderDetail)
         },
         openPrevPay () {
-            this.$emit('openPrevPayDialog')
+            const params = {
+                paymentOrderId: this.paymentOrderDetail.payOrderDetail.id,
+                poId: this.paymentOrderDetail.payOrderDetail.poId
+            }
+            this.$emit('openPrevPayDialog', params)
         },
         openConfirmReceipt () {
-            this.$emit('openConfirmReceiptDialog')
+            this.$emit('openConfirmReceiptDialog', this.paymentOrderDetail.payOrderDetail.id)
         },
         openFundsDialog (id, type) {
             const params = {
                 id: id,
                 orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
-                // companyName: this.paymentOrderDetail.projectInfo.companyName,
-                // amount: this.paymentOrderDetail.respFundResults.downpaymentFund.paidAmount
             }
             this.$emit('openFundsDialog', params, type)
         },
         openLookPrevPaymentDialog () {
-            this.$emit('openLookPrevPaymentDialog', this.paymentOrderDetail.payOrderPoDetail.poId)
+            const params = {
+                paymentOrderId: this.paymentOrderDetail.payOrderDetail.id
+            }
+            this.$emit('openLookPrevPaymentDialog', params)
         },
         openLookReceiptDetail () {
-            this.$emit('openLookReceiptDetail', this.paymentOrderDetail.payOrderPoDetail.poId)
+            const params = {
+                paymentOrderId: this.paymentOrderDetail.payOrderDetail.id
+            }
+            this.$emit('openLookReceiptDetail', params)
         }
     },
     watch: {
@@ -537,6 +545,7 @@ export default {
 
     .info-status-words {
         color: #FF7A45;
+        cursor: pointer;
     }
 
     .info-title-main-color {

@@ -90,12 +90,12 @@
                             ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail"
                              @onClose="approvePaymentVisible = false"></ApprovePaymentOrder>
-        <PrevPaymentDialog :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
-        <LookPrevPaymentDialog :id="paymentId" :is-open="lookPrevPaymentVisible"
+        <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
+        <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
                                @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
-        <ConfirmReceiptDialog :is-open="confirmReceiptVisible"
+        <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible"
                               @onClose="confirmReceiptVisible = false"></ConfirmReceiptDialog>
-        <LookReceiptDetail :id="paymentId" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
+        <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogVisible = false"></FundsDialog>
     </div>
 </template>
@@ -153,7 +153,7 @@ export default {
             lookReceiptVisible: false,
             fundsDialogVisible: false,
             paymentStatus: '',
-            paymentId: '', // 公共
+            paymentParams: '', // 公共
             fundsDialogDetail: {}
         }
     },
@@ -225,7 +225,8 @@ export default {
             this.paymentDetail = row
             this.approvePaymentVisible = true
         },
-        openPrevPayDialog () {
+        openPrevPayDialog (params) {
+            this.paymentParams = params
             this.prevPaymentVisible = true
         },
         openFundsDialog (row, status) {
@@ -236,12 +237,12 @@ export default {
         openConfirmReceiptDialog () {
             this.confirmReceiptVisible = true
         },
-        openLookReceiptDetail (id) {
-            this.paymentId = id
+        openLookReceiptDetail (params) {
+            this.paymentParams = params
             this.lookReceiptVisible = true
         },
-        openLookPrevPaymentDialog (id) {
-            this.paymentId = id
+        openLookPrevPaymentDialog (params) {
+            this.paymentParams = params
             this.lookPrevPaymentVisible = true
         },
         ...mapActions({

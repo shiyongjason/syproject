@@ -46,7 +46,8 @@ export default {
             type: Boolean,
             default: false
         },
-        id: {
+        params: {
+            type: Object
         }
     },
     data () {
@@ -57,7 +58,7 @@ export default {
     watch: {
         async isOpen (val) {
             if (val) {
-                const { data } = await getConfirmReceiptMoreDetail(this.id)
+                const { data } = await getConfirmReceiptMoreDetail(this.params.paymentOrderId)
                 this.receiptDetail = data
             }
         }

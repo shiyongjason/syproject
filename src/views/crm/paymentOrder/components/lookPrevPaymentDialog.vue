@@ -59,7 +59,7 @@ export default {
             type: Boolean,
             default: false
         },
-        id: {
+        params: {
         }
     },
     data () {
@@ -70,7 +70,7 @@ export default {
     watch: {
         async isOpen (val) {
             if (val) {
-                const { data } = await getPrevPayMoreDetail(this.id)
+                const { data } = await getPrevPayMoreDetail(this.params.paymentOrderId)
                 this.prevPaymentDetail = data
             }
         }
