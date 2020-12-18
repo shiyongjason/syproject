@@ -77,7 +77,7 @@
                     <h-button type="primary" @click="onClick_Dialog(2)">添加签署方</h-button>
                 </div>
                 <div v-if="busData.length>0">
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :show-overflow-tooltip="true" :column="busLabel" :data="busData" isAction :isActionFixed='false'>
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="busLabel" :data="busData" isAction :isActionFixed='false'>
                         <template slot="signatureParam" slot-scope="scope">
                             {{scope.data.row.signatureParam ? scope.data.row.signatureParam.map(item => item.substring(0, item.indexOf('_'))).join(',') : '-'}}
                         </template>
@@ -88,7 +88,7 @@
                     </hosJoyTable>
                 </div>
                 <div v-if="perData.length>0">
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :show-overflow-tooltip="true" :column="perLabel" isAction :data="perData" :isActionFixed='false'>
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe :column="perLabel" isAction :data="perData" :isActionFixed='false'>
                         <template slot="signatureParam" slot-scope="scope">
                             {{scope.data.row.signatureParam ? scope.data.row.signatureParam.map(item => item.substring(0, item.indexOf('_'))).join(',') : '-'}}
                         </template>
