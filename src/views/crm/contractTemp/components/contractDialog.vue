@@ -188,8 +188,9 @@ export default {
                 selectName: '',
                 selectCode: ''
             },
-            removeValue: false
-
+            removeValue: false,
+            // 记录弹出层弹出的时候默认值，以防止调整signatureParam选项的时候，下拉选项的值不对
+            signatureParam: []
         }
     },
     watch: {
@@ -212,7 +213,9 @@ export default {
             caPage: 'contractTemp/caPage'
         }),
         customSignOptions () {
-            const result = this.customSignAll.filter(item => !this.customSignEx.includes(item) || (this.signerTempForm.signatureParam && this.signerTempForm.signatureParam.includes(item))).map(item => ({
+            const result = this.customSignAll.filter(item => {
+                return !this.customSignEx.includes(item) || (this.signatureParam && this.signatureParam.includes(item))
+            }).map(item => ({
                 value: item,
                 label: item.substring(0, item.indexOf('_'))
             }))
@@ -280,6 +283,7 @@ export default {
                 // // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }
+            this.signatureParam = this.signerTempForm.signatureParam ? this.signerTempForm.signatureParam.slice() : []
             this.$nextTick(async () => {
                 if (val == 2) {
                     this.$refs.signerTempR.clearValidate()
