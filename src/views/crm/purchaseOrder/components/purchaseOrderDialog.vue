@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('backEvent')"
+    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> onClose"
                :close-on-click-modal="false">
         <div class="info-content">
             <div class="row-filed">
@@ -150,7 +150,7 @@
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
                     <el-form ref="form" :model="formData" v-if="dialogStatus.watch.status !== openStatus" :rules="rules"
                              label-width="120px">
-                        <el-form-item label="变更结果：" prop="resultRadioGroup">
+                        <el-form-item label="变更结果：" prop="signResult">
                             <el-radio-group v-model="formData.signResult">
                                 <el-radio :label="item.key" :key="item.key"
                                           v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
@@ -183,7 +183,7 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer" v-if="dialogStatus.watch.status !== openStatus">
-                <h-button @click="$emit('backEvent')">取消</h-button>
+                <h-button @click="onClose">取消</h-button>
                 <h-button type="primary" @click="onEnter">确定</h-button>
             </span>
     </el-dialog>
@@ -287,12 +287,7 @@ export default {
                         message = '采购确认变更成功'
                     }
                     this.$message.success(message)
-                    this.formData = {
-                        signResult: '',
-                        freeInterestType: '',
-                        remark: ''
-                    }
-                    this.$emit('backEvent')
+                    this.onClose()
                 }
             })
         },
@@ -302,6 +297,14 @@ export default {
             } catch (e) {
                 return string
             }
+        },
+        onClose () {
+            this.formData = {
+                signResult: '',
+                freeInterestType: '',
+                remark: ''
+            }
+            this.$emit('backEvent')
         }
     },
     watch: {
@@ -330,7 +333,7 @@ export default {
 
 <style scoped lang="scss">
 /deep/ .el-dialog__body {
-    max-height: 480px;
+    //max-height: 480px;
     padding: 0 20px 20px;
     overflow-x: hidden;
     overflow-y: scroll;

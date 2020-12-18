@@ -63,12 +63,12 @@ const PaymentOrderDict = Object.freeze({
         title: '申请类型',
         list: [
             {
-                key: 0,
-                value: '待支付'
+                key: 1,
+                value: '一次性'
             },
             {
-                key: 1,
-                value: '支付待确认'
+                key: 2,
+                value: '分批'
             }
         ]
     },

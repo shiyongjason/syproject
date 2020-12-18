@@ -11,7 +11,10 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.deptName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-select v-model="queryParams.deptName" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList"
+                                       :key="item.pkDeptDoc"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -69,13 +72,40 @@
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
-                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
+                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=320
                         :isShowIndex='true'>
+                <template slot="status" slot-scope="scope">
+                    <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW)">审核</h-button>
-                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM)">支付确认</h-button>
-                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)">上游支付</h-button>
-                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT)">确认收货</h-button>
+                    <h-button table
+                              @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)"
+                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && PaymentOrderDict.status.list[0].key === scope.data.row.status">审核</h-button>
+                    <h-button table
+                              @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)"
+                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) && (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)"
+                    >
+                        支付确认
+                    </h-button>
+                    <h-button table
+                              @click="tableOpenPrevPayDialog"
+                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
+                                  PaymentOrderDict.status.list[2].key === scope.data.row.status ||
+                                  PaymentOrderDict.status.list[3].key === scope.data.row.status ||
+                                  PaymentOrderDict.status.list[4].key === scope.data.row.status ||
+                                  PaymentOrderDict.status.list[5].key === scope.data.row.status
+                              )"
+                    >
+                        上游支付
+                    </h-button>
+                    <h-button table
+                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
+                                  PaymentOrderDict.status.list[2].key === scope.data.row.status ||
+                                  PaymentOrderDict.status.list[3].key === scope.data.row.status ||
+                                  PaymentOrderDict.status.list[4].key === scope.data.row.status ||
+                                  PaymentOrderDict.status.list[5].key === scope.data.row.status
+                              )"
+                    >确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                 </template>
             </basicTable>
@@ -115,6 +145,7 @@ import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import filters from '@/utils/filters'
 import * as Auths from '@/utils/auth_const'
+import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 
 export default {
     name: 'payOrder',
@@ -149,7 +180,7 @@ export default {
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },
                 { label: '经销商', prop: 'dealerCompanyName', width: '150' },
-                { label: '采购单名称', prop: 'purchaseOrderName', width: '150' },
+                { label: '采购单名称', prop: 'purchaseOrderName', width: '200' },
                 { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
                 { label: '金额', prop: 'applyAmount', width: '150' },
                 { label: '状态', prop: 'status', width: '150' },
@@ -170,7 +201,8 @@ export default {
             fundsDialogVisible: false,
             paymentStatus: '',
             paymentParams: {}, // 公共
-            fundsDialogDetail: {}
+            fundsDialogDetail: {},
+            PaymentOrderDict
         }
     },
     computed: {
@@ -199,6 +231,7 @@ export default {
         }),
         ...mapGetters({
             paymentOrderList: 'crmPaymentOrder/paymentOrderList',
+            crmdepList: 'crmmanage/crmdepList',
             paymentOrderPagination: 'crmPaymentOrder/paymentOrderPagination'
         })
     },
@@ -262,13 +295,39 @@ export default {
             this.paymentParams = params
             this.lookPrevPaymentVisible = true
         },
+        tableOpenPrevPayDialog (row) {
+            const params = {
+                paymentOrderId: row.id,
+                poId: row.poId
+            }
+            this.prevPaymentVisible = true
+        },
+        tableOpenFundsDialog (row) {
+
+        },
+        tableOpenConfirmReceiptDialog (row) {
+
+        },
+        tableOpenLookReceiptDetail (row) {
+
+        },
+        tableOpenLookPrevPaymentDialog (row) {
+
+        },
         ...mapActions({
-            findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList'
+            findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
+            findCrmdeplist: 'crmmanage/findCrmdeplist'
         })
     },
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         this.findPaymentOrderList(this.queryParams)
+        this.findCrmdeplist({
+            deptType: 'F',
+            pkDeptDoc: this.userInfo.pkDeptDoc,
+            jobNumber: this.userInfo.jobNumber,
+            authCode: JSON.parse(sessionStorage.getItem('authCode'))
+        })
     }
 }
 </script>

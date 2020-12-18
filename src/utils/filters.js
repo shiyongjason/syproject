@@ -65,6 +65,17 @@ const fundMoney = function (val, int) {
         return '-'
     }
 }
+// 资金台账金额格式 11.11
+const fundMoneyHasTail = function (val, int) {
+    if (val) {
+        const _val = Number(val).toFixed(2)
+        return (_val + '').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } else if (val === 0) {
+        return Number(val).toFixed(2)
+    } else {
+        return '-'
+    }
+}
 // 资金台账金额格式
 const fundMoneyHaveSpot = function (val, int) {
     if (val) {
@@ -151,6 +162,7 @@ export default {
     formatDateDuration,
     money,
     isNotBlank,
+    fundMoneyHasTail,
     fundMoney,
     moneyShow,
     fundMoneyHaveSpot,

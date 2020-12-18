@@ -27,7 +27,7 @@
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-50">
-                            <span class="label">采购单金额：</span> {{ paymentOrderDetail.payOrderPoDetail.poAmount }}元
+                            <span class="label">采购单金额：</span> {{ paymentOrderDetail.payOrderPoDetail.poAmount  | fundMoneyHasTail }}元
                         </p>
                         <p class="col-filed col-50">
                             <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderPoDetail.lastGoodsDate }}
@@ -45,24 +45,24 @@
                         </p>
                         <p class="col-filed col-50">
                             <span class="label address">收货地址：</span>
-                            {{ paymentOrderDetail.payOrderDetail.goodsAddress || '-' }}
+                            {{ paymentOrderDetail.payOrderPoDetail.goodsAddress || '-' }}
                         </p>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed col-25">
                             <span class="label">采购批次：</span>
-                            {{ paymentOrderDetail.payOrderDetail.poNumber }}
+                            {{ paymentOrderDetail.payOrderPoDetail.poNumber  | attributeComputed(PaymentOrderDict.applyType.list) }}
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderDetail.prePercent }}%
+                            <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
                         </p>
                         <p class="col-filed col-25">
                             <span class="label">剩余货款支付周期：</span>{{
-                                paymentOrderDetail.payOrderDetail.restPaymentPeriod
+                                paymentOrderDetail.payOrderPoDetail.restPaymentPeriod
                             }}月
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">免息方式：</span>{{ paymentOrderDetail.payOrderDetail.freeInterestType }}
+                            <span class="label">免息方式：</span>{{ paymentOrderDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list) }}
                         </p>
                     </div>
                     <div class="row-filed">
@@ -70,7 +70,7 @@
                             <span class="info-title">支付单信息</span>
                             <span class="info-status">
                                 {{
-                                    attributeComputed(PaymentOrderDict.status.list, paymentOrderDetail.payOrderDetail.status)
+                                    paymentOrderDetail.payOrderDetail.status | attributeComputed(PaymentOrderDict.status.list)
                                 }}
                             </span>
                         </p>
@@ -78,7 +78,7 @@
                     <div class="row-filed">
                         <p class="col-filed col-50">
                             <span class="label">申请支付金额：</span>
-                            {{ paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.applyAmount }}元
+                            {{ paymentOrderDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
                         </p>
                         <p class="col-filed col-50">
                             <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderDetail.lastGoodsDate }}
@@ -97,7 +97,7 @@
                         <p class="col-filed">
                             <span class="label">采购明细表：</span>
                             <template
-                                v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.poDetail">
+                                    v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
                                      v-for="item in paymentOrderDetail.payOrderDetail.poDetail">
                             </template>
@@ -106,7 +106,7 @@
                     <div class="row-filed">
                         <p class="col-filed">
                             <span class="label">申请时间：</span>
-                            {{ paymentOrderDetail.payOrderDetail.applyDate }}
+                            {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate }}
                         </p>
                         <p class="col-filed">
                             <span class="label">申请人：</span>
@@ -116,7 +116,10 @@
                         </p>
                     </div>
                     <div class="row-filed">
-                        <h-button type="assist" @click="openApproveDialog">支付单审核</h-button>
+                        <h-button type="assist" @click="openApproveDialog"
+                                  v-if="PaymentOrderDict.status.list[0].key === paymentOrderDetail.payOrderDetail.status">
+                            支付单审核
+                        </h-button>
                     </div>
                     <template v-if="PaymentOrderDict.status.list[1].key <= paymentOrderDetail.payOrderDetail.status">
                         <!--                    首付款待支付start-->
@@ -127,7 +130,7 @@
                                 }}（{{ paymentOrderDetail.payOrderDetail.approvalPhone }}）
                             </p>
                             <p class="col-filed col-33">
-                                <span class="label">审核时间：</span> {{ paymentOrderDetail.payOrderDetail.approvalTime }}
+                                <span class="label">审核时间：</span> {{ paymentOrderDetail.payOrderDetail.approvalTime | formatDate }}
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">审核结果：</span>{{ paymentOrderDetail.payOrderDetail.approvalStatus }}
@@ -173,7 +176,7 @@
                             《订单及服务费确认函》： <span class="info-status-words">未签约</span>
                             <!--                        首付款待签约以后-->
                             <h-button type="primary"
-                                      v-if="PaymentOrderDict.status.list[2]  <= paymentOrderDetail.payOrderDetail.status">
+                                      v-if="PaymentOrderDict.status.list[2]  <= paymentOrderDetail.payOrderDetail.status && hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE)">
                                 查看合同
                             </h-button>
                             <!--                        首付款待签约以后-->
@@ -202,16 +205,18 @@
                             <p class="col-filed col-25">
                                 <template
                                     v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                    <h-button table @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
+                                    <h-button table
+                                              v-if="hosAuthCheck(Auths.CRM_DOWN_PAYMENT_FUND_CONFIRM)"
+                                              @click="openFundsDialog(paymentOrderDetail.respFundResults.downpaymentFund.id,FundsDict.repaymentTypeArrays.list[0].key)">
                                         {{
-                                            attributeComputed(PaymentOrderDict.paymentFlag.list, paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag)
+                                            paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                         }}
                                     </h-button>
                                 </template>
                                 <template v-else>
                                 <span class="info-status">
                                     {{
-                                        attributeComputed(PaymentOrderDict.paymentFlag.list, paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag)
+                                        paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                     }}
                                 </span>
                                 </template>
@@ -238,16 +243,17 @@
                                     <template
                                         v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
                                         <h-button table
+                                                  v-if="hosAuthCheck(Auths.CRM_SERVICE_FUND_CONFIRM)"
                                                   @click="openFundsDialog(item.id, FundsDict.repaymentTypeArrays.list[1].key)">
                                             {{
-                                                attributeComputed(PaymentOrderDict.paymentFlag.list,item.paymentFlag)
+                                                item.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                             }}
                                         </h-button>
                                     </template>
                                     <template v-else>
                                         <span class="info-status">
                                             {{
-                                                attributeComputed(PaymentOrderDict.paymentFlag.list, item.paymentFlag)
+                                                item.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                             }}
                                         </span>
                                     </template>
@@ -265,7 +271,10 @@
                             </p>
                         </div>
                     </template>
-                    <template v-if="PaymentOrderDict.status.list[3].key  <= paymentOrderDetail.payOrderDetail.status">
+                    <template v-if="PaymentOrderDict.status.list[2].key === paymentOrderDetail.payOrderDetail.status  ||
+                                  PaymentOrderDict.status.list[3].key === paymentOrderDetail.payOrderDetail.status  ||
+                                  PaymentOrderDict.status.list[4].key === paymentOrderDetail.payOrderDetail.status  ||
+                                  PaymentOrderDict.status.list[5].key === paymentOrderDetail.payOrderDetail.status">
                         <div class="row-filed">
                             <p class="col-filed">
                                 <span class="info-title">上游支付：</span>
@@ -279,11 +288,13 @@
                                 <span class="label">已向上游支付：</span> 0元
                             </p>
                             <p class="col-filed col-33">
-                                <span class="info-status-words" @click="openLookPrevPaymentDialog">查看上游支付明细</span>
+                                <span class="info-status-words" @click="openLookPrevPaymentDialog"
+                                      v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT_DETAIL)"
+                                >查看上游支付明细</span>
                             </p>
                         </div>
                         <div class="row-filed">
-                            <h-button type="assist" @click="openPrevPay">上游支付</h-button>
+                            <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT)">上游支付</h-button>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed">
@@ -298,11 +309,12 @@
                                 <span class="label">已到货金额总计：</span> 0元
                             </p>
                             <p class="col-filed col-33">
-                                <span class="info-status-words" @click="openLookReceiptDetail">查看收货明细</span>
+                                <span class="info-status-words" @click="openLookReceiptDetail"
+                                      v-if="hosAuthCheck(Auths.CRM_REVIEW_RECEIPT_DETAIL)">查看收货明细</span>
                             </p>
                         </div>
                         <div class="row-filed">
-                            <h-button type="assist" @click="openConfirmReceipt">确认收货</h-button>
+                            <h-button type="assist" @click="openConfirmReceipt" v-if="hosAuthCheck(Auths.CRM_CONFORM_RECEIPT)">确认收货</h-button>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed">
@@ -326,15 +338,17 @@
                             <p class="col-filed col-25">
                                 <template
                                     v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
-                                    <h-button table @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
+                                    <h-button table
+                                              v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)"
+                                              @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
                                         {{
-                                            attributeComputed(PaymentOrderDict.paymentFlag.list, paymentOrderDetail.respFundResults.arrearFund.paymentFlag)
+                                            paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                         }}
                                     </h-button>
                                 </template>
                                 <template v-else>
                                         <span class="info-status">
-                                            {{ attributeComputed(PaymentOrderDict.paymentFlag.list, paymentOrderDetail.respFundResults.arrearFund.paymentFlag) }}
+                                            {{ paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}
                                         </span>
                                 </template>
                             </p>
@@ -355,11 +369,12 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { getPaymentOrderDetail } from '@/views/crm/paymentOrder/api'
 import PaymentOrderDict from '../paymentOrderDict'
 import FundsDict from '@/views/crm/funds/fundsDict'
-
+import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'paymentOrderDrawer',
     props: {
@@ -374,6 +389,7 @@ export default {
     },
     data () {
         return {
+            Auths,
             activeNames: ['1'],
             tableData: [],
             tableLabel: [
@@ -394,6 +410,7 @@ export default {
                 }
             },
             PaymentOrderDict,
+            PurchaseOrderDict,
             FundsDict
         }
     },
@@ -407,11 +424,6 @@ export default {
         })
     },
     methods: {
-        ...mapActions({
-            findNest: 'findNest',
-            findBusinessDetail: 'crmauthen/findBusinessDetail'
-
-        }),
         onChangeCheckbox (b, key) {
             if (!b) {
                 this.businessType[key] = ''
@@ -433,17 +445,12 @@ export default {
         goDetail (url) {
             window.open(url)
         },
-        attributeComputed (list, key) {
-            let value = ''
-            list.forEach(val => {
-                if (val.key === key) {
-                    value = val.value
-                }
-            })
-            return value
-        },
         openApproveDialog () {
             this.$emit('openApproveDialog', this.paymentOrderDetail)
+        },
+        async tableOpenApproveDialog (id) {
+            const { data } = await getPaymentOrderDetail(id)
+            this.$emit('openApproveDialog', data)
         },
         openPrevPay () {
             const params = {
@@ -462,6 +469,23 @@ export default {
             const params = {
                 id: id,
                 orderId: this.paymentOrderDetail.respFundResults.downpaymentFund.orderId
+            }
+            this.$emit('openFundsDialog', params, type)
+        },
+        async tableOpenFundsDialog (id, status) {
+            const { data } = await getPaymentOrderDetail(id)
+            let _id = ''
+            let type = ''
+            if (status === PaymentOrderDict.status.list[2].key) {
+                _id = data.respFundResults.downpaymentFund.id
+                type = FundsDict.repaymentTypeArrays.list[0].key
+            } else if (status === PaymentOrderDict.status.list[5].key) {
+                _id = data.respFundResults.arrearFund.id
+                type = FundsDict.repaymentTypeArrays.list[2].key
+            }
+            const params = {
+                id: _id,
+                orderId: data.respFundResults.downpaymentFund.orderId
             }
             this.$emit('openFundsDialog', params, type)
         },
