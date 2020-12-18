@@ -68,7 +68,7 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
-                项,采购单总金额：<b>{{ fundMoneys(paymentOrderPagination.amount) }}</b>元;
+                项,采购单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -88,7 +88,7 @@
                         支付确认
                     </h-button>
                     <h-button table
-                              @click="tableOpenPrevPayDialog"
+                              @click="tableOpenPrevPayDialog(scope.data.row)"
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
                                   PaymentOrderDict.status.list[2].key === scope.data.row.status ||
                                   PaymentOrderDict.status.list[3].key === scope.data.row.status ||
@@ -99,6 +99,7 @@
                         上游支付
                     </h-button>
                     <h-button table
+                              @click="tableOpenConfirmReceiptDialog(scope.data.row)"
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
                                   PaymentOrderDict.status.list[2].key === scope.data.row.status ||
                                   PaymentOrderDict.status.list[3].key === scope.data.row.status ||
@@ -264,12 +265,6 @@ export default {
             this.drawer = true
             this.paymentOrderRow = row
         },
-        fundMoneys (val) {
-            if (val > -1) {
-                return filters.money(val)
-            }
-            return '-'
-        },
         openApproveDialog (row) {
             this.paymentDetail = row
             this.approvePaymentVisible = true
@@ -300,19 +295,13 @@ export default {
                 paymentOrderId: row.id,
                 poId: row.poId
             }
-            this.prevPaymentVisible = true
-        },
-        tableOpenFundsDialog (row) {
-
+            this.openPrevPayDialog(params)
         },
         tableOpenConfirmReceiptDialog (row) {
-
-        },
-        tableOpenLookReceiptDetail (row) {
-
-        },
-        tableOpenLookPrevPaymentDialog (row) {
-
+            const params = {
+                paymentOrderId: row.id
+            }
+            this.openConfirmReceiptDialog(params)
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
