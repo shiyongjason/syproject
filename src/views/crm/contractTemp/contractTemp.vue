@@ -630,7 +630,7 @@ export default {
                 })
             } else if (val == 2) {
                 // 插入平台签署区
-                _temp = `<span><img class='platform_sign' style='width:100px;margin:5px;' src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201127/ab01c967-3172-4407-aba0-fa60351c19ab.png"/></span>`
+                _temp = `<span><img class='platform_sign' src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201127/ab01c967-3172-4407-aba0-fa60351c19ab.png" style='width:100px;margin:5px;'/></span>`
                 this.$refs.RichEditor.insertHtml(_temp)
             } else {
                 // 插入客户签署区
