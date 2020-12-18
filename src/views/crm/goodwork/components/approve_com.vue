@@ -74,7 +74,7 @@
                                       :limit=100 :action='action' :uploadParameters='uploadParameters'
                                       @successCb="()=>{handleSuccessCb(obj)}"
                                       style="margin:10px 0 0 5px">
-                            <h-button>上传</h-button>
+                          <el-button type="primary">上 传</el-button>
                         </hosjoyUpload>
                     </el-form-item>
                 </template>
@@ -107,7 +107,7 @@
                         <el-radio :label=0>不通过</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <template v-if="projectFinaleForm.result == 2">
+                <template v-if="projectFinaleForm.result == 1">
                     <el-form-item label="执行费率（银行承兑）：" prop="transferBankRate">
                         <el-input v-model="projectFinaleForm.transferBankRate"
                                   v-isNegative:2="projectFinaleForm.transferBankRate">
