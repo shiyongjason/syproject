@@ -60,6 +60,7 @@ export default {
             default: false
         },
         params: {
+            type: Object
         }
     },
     data () {

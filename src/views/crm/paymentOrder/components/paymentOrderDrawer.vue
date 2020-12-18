@@ -39,7 +39,7 @@
                             <template
                                 v-if="paymentOrderDetail.payOrderPoDetail && paymentOrderDetail.payOrderPoDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(paymentOrderDetail.payOrderPoDetail.poDetail)"
+                                     v-for="item in paymentOrderDetail.payOrderPoDetail.poDetail"
                                      class="info-img">
                             </template>
                         </p>
@@ -99,7 +99,7 @@
                             <template
                                 v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(paymentOrderDetail.payOrderDetail.poDetail)">
+                                     v-for="item in paymentOrderDetail.payOrderDetail.poDetail">
                             </template>
                         </p>
                     </div>
@@ -453,7 +453,10 @@ export default {
             this.$emit('openPrevPayDialog', params)
         },
         openConfirmReceipt () {
-            this.$emit('openConfirmReceiptDialog', this.paymentOrderDetail.payOrderDetail.id)
+            const params = {
+                paymentOrderId: this.paymentOrderDetail.payOrderDetail.id
+            }
+            this.$emit('openConfirmReceiptDialog', params)
         },
         openFundsDialog (id, type) {
             const params = {

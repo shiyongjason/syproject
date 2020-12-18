@@ -17,9 +17,8 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true
-                                   @change="onSelectDep">
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []"
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList"
                                        :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -76,26 +75,30 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderPagination.total }}
-                项,采购单总金额：<b>{{ fundMoneys(purchaseOrderPagination.amount) }}</b>元;
+                项,采购单总金额：<b>{{ purchaseOrderPagination.amount | fundMoney }}</b>元;
             </el-tag>
             <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200
                         :isShowIndex='true'>
                 <template slot="poAmount" slot-scope="scope">
-                    <span class="colblue"> {{ fundMoneys(scope.data.row.poAmount) }}</span>
+                    <span class="colblue"> {{ scope.data.row.poAmount | fundMoney }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span class="colblue"> {{ findStatusName(scope.data.row.status) }}</span>
+                    <span class="colblue"> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)"
-                              v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status">确认采购单
+                              v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
+                              hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM)">
+                        确认采购单
                     </h-button>
                     <h-button @click="openDialog(dialogStatus.changeEnter.status, scope.data.row)"
-                              v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status" table>确认变更
+                              v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status &&
+                              hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM_CHANGE)" table>确认变更
                     </h-button>
-                    <h-button table @click="openDetail(scope.data.row)">查看详情</h-button>
+                    <h-button table @click="openDetail(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PURCHASE_ORDER_SEE_DETAIL)">查看详情
+                    </h-button>
                 </template>
             </basicTable>
         </div>
@@ -114,12 +117,13 @@ import purchaseOrderDialog from '@/views/crm/purchaseOrder/components/purchaseOr
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
-import filters from '@/utils/filters'
+import * as Auths from '@/utils/auth_const'
 
 export default {
     name: 'purchaseOrder',
     data () {
         return {
+            Auths,
             queryParams: {
                 purchaseOrderNo: '',
                 poName: '',
@@ -129,7 +133,9 @@ export default {
                 projectNo: '',
                 status: '',
                 pageNumber: 1,
-                pageSize: 10
+                pageSize: 10,
+                'sort.property': null,
+                'sort.direction': null
             },
             paginationInfo: {},
             tableLabel: [
@@ -183,6 +189,7 @@ export default {
         }),
         ...mapGetters({
             purchaseOrderList: 'crmPurchaseOrder/purchaseOrderList',
+            crmdepList: 'crmmanage/crmdepList',
             purchaseOrderPagination: 'crmPurchaseOrder/purchaseOrderPagination'
         }),
         queryParamsUseQuery () {
@@ -242,31 +249,20 @@ export default {
             this.isOpen = false
             this.findPurchaseList(this.queryParamsUseQuery)
         },
-        fundMoneys (val) {
-            if (val > -1) {
-                return filters.money(val)
-            }
-            return '-'
-        },
-        findStatusName (status) {
-            let name = ''
-            if (status && status > -1) {
-                PurchaseOrderDict.status.list.forEach(value => {
-                    if (value.key == status) {
-                        name = value.value
-                    }
-                })
-                return name
-            }
-            return '-'
-        },
         ...mapActions({
-            findPurchaseList: 'crmPurchaseOrder/findPurchaseList'
+            findPurchaseList: 'crmPurchaseOrder/findPurchaseList',
+            findCrmdeplist: 'crmmanage/findCrmdeplist'
         })
     },
     async mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         this.findPurchaseList(this.queryParamsUseQuery)
+        this.findCrmdeplist({
+            deptType: 'F',
+            pkDeptDoc: this.userInfo.pkDeptDoc,
+            jobNumber: this.userInfo.jobNumber,
+            authCode: JSON.parse(sessionStorage.getItem('authCode'))
+        })
     }
 }
 </script>

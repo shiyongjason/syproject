@@ -71,11 +71,12 @@
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
                         :isShowIndex='true'>
-                <template slot="no" slot-scope="scope">
-                    <span class="colblue"> {{ scope.data.row.no }}</span>
-                </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="openDrawer(scope.data.row)">查看详情</h-button>
+                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW)">审核</h-button>
+                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM)">支付确认</h-button>
+                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)">上游支付</h-button>
+                    <h-button table v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT)">确认收货</h-button>
+                    <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
                 </template>
             </basicTable>
         </div>
@@ -90,13 +91,16 @@
                             ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail"
                              @onClose="approvePaymentVisible = false"></ApprovePaymentOrder>
-        <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible" @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
+        <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible"
+                           @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
                                @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible"
                               @onClose="confirmReceiptVisible = false"></ConfirmReceiptDialog>
-        <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
-        <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogVisible = false"></FundsDialog>
+        <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible"
+                           @onClose="lookReceiptVisible = false"></LookReceiptDetail>
+        <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible"
+                     @onClose="fundsDialogVisible = false"></FundsDialog>
     </div>
 </template>
 
@@ -110,6 +114,7 @@ import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import filters from '@/utils/filters'
+import * as Auths from '@/utils/auth_const'
 
 export default {
     name: 'payOrder',
@@ -124,9 +129,20 @@ export default {
     },
     data () {
         return {
+            Auths,
             queryParams: {
+                paymentOrderNo: '',
+                deptName: '',
+                dealerCompanyName: '',
+                purchaseOrderName: '',
+                purchaseOrderNo: '',
+                startApplyDate: '',
+                endApplyDate: '',
+                status: '',
                 pageSize: 10,
-                pageNumber: 1
+                pageNumber: 1,
+                'sort.property': null,
+                'sort.direction': null
             },
             tableData: [{ no: 1 }],
             tableLabel: [
@@ -153,7 +169,7 @@ export default {
             lookReceiptVisible: false,
             fundsDialogVisible: false,
             paymentStatus: '',
-            paymentParams: '', // 公共
+            paymentParams: {}, // 公共
             fundsDialogDetail: {}
         }
     },
@@ -234,7 +250,8 @@ export default {
             this.fundsDialogDetail = row
             this.paymentStatus = status
         },
-        openConfirmReceiptDialog () {
+        openConfirmReceiptDialog (params) {
+            this.paymentParams = params
             this.confirmReceiptVisible = true
         },
         openLookReceiptDetail (params) {

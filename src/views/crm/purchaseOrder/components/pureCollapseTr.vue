@@ -3,17 +3,18 @@
         <div class="tr" :key="item.id" v-for="item in contracts">
             <div class="td">{{ item.contractNo }}</div>
             <div class="td">{{ item.contractName }}</div>
-            <div class="td"><span class="info-status">{{ findStatusName('contractIsRunning', item.effectiveState) }}</span></div>
-<!--            <div class="td">{{ findStatusName('contractStatus', item.contractStatus) }}</div>-->
+            <div class="td"><span class="info-status">{{ item.effectiveState | attributeComputed(PurchaseOrderDict.contractIsRunning.list) }}</span></div>
+            <div class="td">{{ item.contractStatus | attributeComputed(PurchaseOrderDict.contractStatus.list) }}</div>
             <div class="td">{{ item.signedTime | formatDate('YYYY-MM-DD') }}</div>
             <div class="td">{{ item.createBy }}</div>
-            <div class="td"><h-button table>查看合同</h-button></div>
+            <div class="td"><h-button table v-if="hosAuthCheck(CRM_PURCHASE_ORDER_CONTRACT_SEE)" @click="goContractDetail(item.id)">查看合同</h-button></div>
         </div>
     </div>
 </template>
 
 <script>
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
+import { CRM_PURCHASE_ORDER_CONTRACT_SEE } from '@/utils/auth_const'
 
 export default {
     name: 'pureCollapseTr',
@@ -23,18 +24,20 @@ export default {
             type: Array
         }
     },
+    data () {
+        return {
+            CRM_PURCHASE_ORDER_CONTRACT_SEE,
+            PurchaseOrderDict
+        }
+    },
     methods: {
-        findStatusName (type, status) {
-            let name = ''
-            if (status > -1) {
-                PurchaseOrderDict[type].list.forEach(value => {
-                    if (value.key == status) {
-                        name = value.value
-                    }
-                })
-                return name
-            }
-            return '-'
+        goContractDetail (id) {
+            this.$router.push({
+                path: '/goodwork/contractSigningManagementDetail',
+                query: {
+                    id: id
+                }
+            })
         }
     }
 }

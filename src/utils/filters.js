@@ -133,6 +133,16 @@ const percentageShow = function (value) {
     }
     return '--'
 }
+const attributeComputed = function (key, list) {
+    if (key === null) return '-'
+    let value = ''
+    list.forEach(val => {
+        if (val.key === key) {
+            value = val.value
+        }
+    })
+    return value
+}
 
 export default {
     formatterTime,
@@ -145,5 +155,6 @@ export default {
     moneyShow,
     fundMoneyHaveSpot,
     momentFormat,
-    percentageShow
+    percentageShow,
+    attributeComputed
 }

@@ -33,7 +33,7 @@
                     <div class="row-filed">
                         <p class="col-filed">
                             创建人:
-                            {{ `${purchaseOrderDetail.purchaseOrder.createBy}（${purchaseOrderDetail.purchaseOrder.createMobile}）` }}
+                            {{ `${purchaseOrderDetail.purchaseOrder.createBy}（${purchaseOrderDetail.purchaseOrder.createPhone}）` }}
                         </p>
                         <p class="col-filed">
                             创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate }}
@@ -45,7 +45,7 @@
                             v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[1].key">
                             <div class="row-filed">
                                 <p class="col-filed">
-                                    提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitMobile}）` }}
+                                    提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
                                 </p>
                                 <p class="col-filed">
                                     提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate }}
@@ -73,14 +73,14 @@
                                     <span class="img-group"
                                           v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
                                         <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                             v-for="item in JSON.parse(purchaseOrderDetail.poInfo.poDetail)">
+                                             v-for="item in purchaseOrderDetail.poInfo.poDetail">
                                     </span>
                                 </p>
                             </div>
                             <template v-if="purchaseOrderDetail.poInfo">
                                 <div class="row-filed">
                                     <p class="col-filed">
-                                        采购批次： 一次性采购 {{ purchaseOrderDetail.poInfo.poNumber }}
+                                        采购批次： {{ purchaseOrderDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购
                                     </p>
                                     <p class="col-filed">
                                         最迟发货日期： {{ purchaseOrderDetail.poInfo.lastestGoodsDate }}
@@ -213,9 +213,6 @@
                         <div class="info-title info-title-main-color">支付单</div>
                         <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="true"
                                     :actionMinWidth=100 :isShowIndex='true'>
-<!--                            <template slot="No" slot-scope="scope">-->
-<!--                                <span :class="scope.data.row.No?'colgry':'colred'">{{ scope.data.row.No }}</span>-->
-<!--                            </template>-->
                         </basicTable>
                     </template>
                 </div>
@@ -238,6 +235,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
+import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import filters from '@/utils/filters'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
@@ -265,7 +263,8 @@ export default {
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
-            PurchaseOrderDict
+            PurchaseOrderDict,
+            PaymentOrderDict
         }
     },
     components: { PureCollapseTr },
@@ -315,9 +314,6 @@ export default {
                 this.findPurchaseOrderDetail(this.row.id)
             }
         }
-    },
-    mounted () {
-        // this.findPurchaseOrderDetail(this.orderId)
     }
 }
 </script>

@@ -17,7 +17,7 @@
                             <span class="label">采购明细表：</span>
                             <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(paymentDetail.payOrderDetail.poDetail)" class="info-img">
+                                     v-for="item in paymentDetail.payOrderDetail.poDetail" class="info-img">
                             </template>
                         </p>
                         <p>
@@ -125,7 +125,7 @@
                             <span>采购明细表：</span>
                             <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(paymentDetail.payOrderPoDetail.poDetail)" class="info-img">
+                                     v-for="item in paymentDetail.payOrderPoDetail.poDetail" class="info-img">
                             </template>
                         </p>
                         <p>

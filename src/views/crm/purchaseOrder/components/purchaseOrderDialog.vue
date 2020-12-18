@@ -14,7 +14,7 @@
                             <span class="label">采购明细表：</span>
                             <template v-if="dialogDetail.poInfo && dialogDetail.poInfo.poDetail">
                                 <img :src="item.url" class="info-img" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in JSON.parse(dialogDetail.poInfo.poDetail)">
+                                     v-for="item in dialogDetail.poInfo.poDetail">
                             </template>
                         </li>
                         <li>
@@ -27,7 +27,7 @@
                         </li>
                         <li>
                             <span class="label">剩余货款支付周期： </span>
-                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}</span>
+                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}月</span>
                         </li>
                         <li>
                             <span class="label">最迟发货日期：</span>
@@ -75,18 +75,20 @@
                             <td>{{ item.fieldName || '-' }}</td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.originalValue))">
-                                    <img :src="item.url" :key="item.url" alt="" v-for="item in checkedIsJson(item.originalValue)" class="info-img">
+                                    <img :src="item.url" :key="item.url" alt=""
+                                         v-for="item in checkedIsJson(item.originalValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    {{item.originalValue}}
+                                    {{ item.originalValue }}
                                 </template>
                             </td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.changedValue))">
-                                    <img :src="item.url" :key="item.url" alt="" v-for="item in checkedIsJson(item.changedValue)" class="info-img">
+                                    <img :src="item.url" :key="item.url" alt=""
+                                         v-for="item in checkedIsJson(item.changedValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    {{item.changedValue}}
+                                    {{ item.changedValue }}
                                 </template>
                             </td>
                         </tr>
@@ -109,9 +111,13 @@
                                 <th>合同</th>
                                 <th>合同类型</th>
                             </tr>
-                            <tr :key="item.id" v-for="item in dialogDetail.contracts">
+                            <tr :key="item.id"
+                                v-for="item in dialogDetail.contracts">
                                 <td>{{ item.contractName || '-' }}</td>
-                                <td>{{ item.contractTypeId || '-' }}</td>
+                                <td>{{
+                                        item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list)
+                                    }}
+                                </td>
                             </tr>
                         </table>
                     </template>
@@ -126,7 +132,10 @@
                                 <th>原合同</th>
                             </tr>
                             <tr :key="item.id" v-for="item in dialogDetail.poChangeContracts">
-                                <td>{{ item.contractTypeId }}</td>
+                                <td>{{
+                                        item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list)
+                                    }}
+                                </td>
                                 <td>{{ item.status }}</td>
                                 <td>{{ item.contractTypeId }}</td>
                                 <td>{{ item.originalContractId }}</td>
@@ -139,20 +148,25 @@
                 <div class="col-filed">
                     <div class="info-title">变更结果</div>
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
-                    <el-form v-if="dialogStatus.watch.status !== openStatus" label-width="120px">
-                        <el-form-item label="变更结果：">
-                            <el-radio-group v-model="resultRadioGroup">
+                    <el-form ref="form" :model="formData" v-if="dialogStatus.watch.status !== openStatus" :rules="rules"
+                             label-width="120px">
+                        <el-form-item label="变更结果：" prop="resultRadioGroup">
+                            <el-radio-group v-model="formData.signResult">
                                 <el-radio :label="item.key" :key="item.key"
                                           v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
                                 </el-radio>
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item label="驳回原因："
-                                      v-if="resultRadioGroup === purchaseOrderDict.changeResult.list[1].key">
-                            <el-input type="textarea" v-model="remark"></el-input>
+                                      v-if="formData.signResult === purchaseOrderDict.changeResult.list[1].key"
+                                      prop="remark">
+                            <el-input type="textarea" v-model="formData.remark" maxlength="200" class="remark"
+                                      :rows="5"></el-input>
                         </el-form-item>
-                        <el-form-item label="免息方式：">
-                            <el-radio-group v-model="InterestFreeRadioGroup">
+                        <el-form-item label="免息方式："
+                                      v-if="formData.signResult === purchaseOrderDict.changeResult.list[0].key"
+                                      prop="freeInterestType">
+                            <el-radio-group v-model="formData.freeInterestType">
                                 <el-radio :label="item.key" :key="item.key"
                                           v-for="item in purchaseOrderDict.freeInterestType.list">{{ item.value }}
                                 </el-radio>
@@ -160,8 +174,10 @@
                         </el-form-item>
                     </el-form>
                     <template v-if="dialogStatus.watch.status === openStatus">
-                        <p>变更结果：已驳回</p>
-                        <p>驳回原因：这里显示驳回的原因</p>
+                        <p>变更结果：{{
+                                dialogDetail.purchaseOrder.signResult | attributeComputed(purchaseOrderDict.changeResult.list)
+                            }}</p>
+                        <p>驳回原因：{{ dialogDetail.purchaseOrder.remark }}</p>
                     </template>
                 </div>
             </div>
@@ -203,12 +219,25 @@ export default {
     },
     data () {
         return {
-            resultRadioGroup: [],
-            InterestFreeRadioGroup: [],
             dialogStatus: PurchaseOrderDialogStatus,
             purchaseOrderDict: PurchaseOrderDict,
             dialogDetail: {},
-            remark: ''
+            formData: {
+                signResult: '',
+                freeInterestType: '',
+                remark: ''
+            },
+            rules: {
+                signResult: [
+                    { required: true, message: '请选择签约结果', trigger: 'blur' }
+                ],
+                freeInterestType: [
+                    { required: true, message: '请选择免息方式', trigger: 'blur' }
+                ],
+                remark: [
+                    { required: true, message: '请输入驳回原因', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -239,26 +268,33 @@ export default {
             }
             return '-'
         },
-        async onEnter () {
-            const params = {
-                poId: this.row.id,
-                signResult: this.resultRadioGroup,
-                updateBy: this.userinfo.employeeName,
-                updatePhone: this.userinfo.phoneNumber,
-                remark: this.remark,
-                freeInterestType: this.InterestFreeRadioGroup
-            }
-            let message = ''
-            if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
-                await updatePurchaseOrderConfirmStatus(params)
-                message = '采购确认成功'
-            }
-            if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
-                await updatePurchaseOrderChangeConfirmStatus(params)
-                message = '采购确认变更成功'
-            }
-            this.$message.success(message)
-            this.$emit('backEvent')
+        onEnter () {
+            this.$refs.form.validate(async (value) => {
+                if (value) {
+                    const params = {
+                        poId: this.row.id,
+                        updateBy: this.userinfo.employeeName,
+                        updatePhone: this.userinfo.phoneNumber,
+                        ...this.formData
+                    }
+                    let message = ''
+                    if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
+                        await updatePurchaseOrderConfirmStatus(params)
+                        message = '采购确认成功'
+                    }
+                    if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
+                        await updatePurchaseOrderChangeConfirmStatus(params)
+                        message = '采购确认变更成功'
+                    }
+                    this.$message.success(message)
+                    this.formData = {
+                        signResult: '',
+                        freeInterestType: '',
+                        remark: ''
+                    }
+                    this.$emit('backEvent')
+                }
+            })
         },
         checkedIsJson (string) {
             try {
@@ -271,15 +307,22 @@ export default {
     watch: {
         async isOpen (val) {
             if (val) {
+                let _data = {}
                 if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
                     const { data } = await getPurchaseOrderConfirmDetail(this.row.id)
-                    this.dialogDetail = data
+                    _data = data
                 }
                 if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
                     const { data } = await getPurchaseOrderConfirmChangeDetail(this.row.id)
-                    this.dialogDetail = data
+                    _data = data
                 }
+                _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)
+                this.dialogDetail = _data
             }
+        },
+        'formData.signResult' () {
+            this.formData.remark = ''
+            this.formData.freeInterestType = ''
         }
     }
 }
@@ -384,5 +427,9 @@ export default {
             font-size: 12px;
         }
     }
+}
+
+.remark {
+    width: 350px;
 }
 </style>
