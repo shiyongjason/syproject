@@ -28,7 +28,7 @@
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="(item, index) in getColumn">
-                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed && data.length > 0"
+                <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed && data.length > 0" :show-overflow-tooltip="item.showOverflowTooltip || true"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
                         <slot :name="item.prop" :data="scope"></slot>
