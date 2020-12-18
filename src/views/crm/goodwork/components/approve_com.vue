@@ -74,24 +74,22 @@
                                       :limit=100 :action='action' :uploadParameters='uploadParameters'
                                       @successCb="()=>{handleSuccessCb(obj)}"
                                       style="margin:10px 0 0 5px">
-                            <h-button>上传</h-button>
+                          <el-button type="primary">上 传</el-button>
                         </hosjoyUpload>
                     </el-form-item>
                 </template>
             </div>
         </el-form>
-        <el-dialog :title="approveTitle" :visible.sync="approveVisible" width="50%" :before-close="onColseApprove"
-                   :modal=false :close-on-click-modal=false>
-            <el-form ref="approveDailg" :model="approvedialgForm" :rules="spproveRules" label-width="180px">
+          <el-dialog :title="approveTitle" :visible.sync="approveVisible" width="30%" :before-close="onColseApprove" :modal=false :close-on-click-modal=false>
+            <el-form ref="approveDailg" :model="approvedialgForm" :rules="spproveRules" label-width="100px">
                 <el-form-item :label="approveTitle+'结果：'" prop="submitStatus">
                     <el-radio-group v-model="approvedialgForm.submitStatus">
-                        <el-radio :label=1>通过</el-radio>
-                        <el-radio :label=0>不通过</el-radio>
+                        <el-radio :label=2>通过</el-radio>
+                        <el-radio :label=3>不通过</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="approvedialgForm.remark" maxlength="500"
-                              :rows="8" show-word-limit></el-input>
+                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="approvedialgForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -99,16 +97,17 @@
                 <h-button type="primary" @click="onSaveapproveOrfinal(2)">确定</h-button>
             </span>
         </el-dialog>
+
         <el-dialog title="终审" :visible.sync="projectFinaleVisible" width="50%" :before-close="onCloseProjectFinale"
                    :modal=false :close-on-click-modal=false>
             <el-form ref="projectFinaleDialog" :model="projectFinaleForm" :rules="projectFinaleRules" label-width="180px">
                 <el-form-item :label="approveTitle+'结果：'" prop="submitStatus">
                     <el-radio-group v-model="projectFinaleForm.result">
-                        <el-radio :label=2>通过</el-radio>
-                        <el-radio :label=3>不通过</el-radio>
+                        <el-radio :label=1>通过</el-radio>
+                        <el-radio :label=0>不通过</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <template v-if="projectFinaleForm.result == 2">
+                <template v-if="projectFinaleForm.result == 1">
                     <el-form-item label="执行费率（银行承兑）：" prop="transferBankRate">
                         <el-input v-model="projectFinaleForm.transferBankRate"
                                   v-isNegative:2="projectFinaleForm.transferBankRate">
