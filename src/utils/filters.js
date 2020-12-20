@@ -152,7 +152,7 @@ const attributeComputed = function (key, list) {
             value = val.value
         }
     })
-    return value
+    return value || '-'
 }
 
 export default {

@@ -21,3 +21,5 @@ export const updateConfirmReceiptPass = (params) => axios.post(`/project/api/pay
 export const getConfirmReceiptDetail = (paymentOrderId) => axios.get(`/project/api/payment-orders/${paymentOrderId}/goods`)
 // 确认收货-
 export const getConfirmReceiptMoreDetail = (paymentOrderId) => axios.get(`/project/api/payment-orders/${paymentOrderId}/goods-detail`)
+// 计算服务费
+export const getComputedValue = (params) => axios.get(`/project/api/payment-orders/service-fee/calculate`, { params })

@@ -121,7 +121,7 @@
                             :row="paymentOrderRow"
                             ref="paymentOrderDrawer"></PaymentOrderDrawer>
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail"
-                             @onClose="approvePaymentVisible = false"></ApprovePaymentOrder>
+                             @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible"
                            @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
@@ -144,7 +144,6 @@ import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
 import ConfirmReceiptDialog from './components/confirmReceiptDialog'
 import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
-import filters from '@/utils/filters'
 import * as Auths from '@/utils/auth_const'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 
@@ -302,6 +301,10 @@ export default {
                 paymentOrderId: row.id
             }
             this.openConfirmReceiptDialog(params)
+        },
+        onCloseDialogAndQuery (type) {
+            this[type] = false
+            this.findPaymentOrderList(this.queryParams)
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',

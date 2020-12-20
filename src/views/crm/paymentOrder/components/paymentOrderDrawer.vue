@@ -30,7 +30,7 @@
                             <span class="label">采购单金额：</span> {{ paymentOrderDetail.payOrderPoDetail.poAmount  | fundMoneyHasTail }}元
                         </p>
                         <p class="col-filed col-50">
-                            <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderPoDetail.lastGoodsDate }}
+                            <span class="label">最迟发货日期：</span> {{ paymentOrderDetail.payOrderPoDetail.lastGoodsDate || '-' }}
                         </p>
                     </div>
                     <div class="row-filed">
@@ -51,7 +51,7 @@
                     <div class="row-filed">
                         <p class="col-filed col-25">
                             <span class="label">采购批次：</span>
-                            {{ paymentOrderDetail.payOrderPoDetail.poNumber  | attributeComputed(PaymentOrderDict.applyType.list) }}
+                            {{ paymentOrderDetail.payOrderPoDetail.poNumber  | attributeComputed(PaymentOrderDict.applyType.list) }} 采购
                         </p>
                         <p class="col-filed col-25">
                             <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
@@ -97,9 +97,9 @@
                         <p class="col-filed">
                             <span class="label">采购明细表：</span>
                             <template
-                                    v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.poDetail">
+                                    v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentOrderDetail.payOrderDetail.poDetail">
+                                     v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail" class="info-img">
                             </template>
                         </p>
                     </div>
@@ -133,22 +133,22 @@
                                 <span class="label">审核时间：</span> {{ paymentOrderDetail.payOrderDetail.approvalTime | formatDate }}
                             </p>
                             <p class="col-filed col-33">
-                                <span class="label">审核结果：</span>{{ paymentOrderDetail.payOrderDetail.approvalStatus }}
+                                <span class="label">审核结果：</span>{{ paymentOrderDetail.payOrderDetail.approvalStatus | attributeComputed(PurchaseOrderDict.signResult.list) }}
                             </p>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-33">
                                 <span class="label">应收账款质押：</span>{{
-                                    paymentOrderDetail.payOrderDetail.accountReceivablePledgeType
+                                    paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
                                 }}
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">上游支付方式：</span>
-                                {{ paymentOrderDetail.payOrderDetail.supplierPaymentType }}
+                                {{ paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list) }}
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">上游货款方式：</span>{{
-                                    paymentOrderDetail.payOrderDetail.supplierPaymentMethod
+                                    paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
                                 }}
                             </p>
                         </div>
@@ -172,7 +172,7 @@
                                 }}元
                             </p>
                         </div>
-                        <div class="row-filed">
+                        <div class="row-filed confirm-server">
                             《订单及服务费确认函》： <span class="info-status-words">未签约</span>
                             <!--                        首付款待签约以后-->
                             <h-button type="primary"
@@ -631,5 +631,12 @@ export default {
 .info-img {
     width: 80px;
     cursor: pointer;
+}
+.confirm-server {
+    display: flex;
+    font-size: 12px;
+    .info-status-words {
+        cursor: default;
+    }
 }
 </style>

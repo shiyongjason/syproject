@@ -66,10 +66,6 @@ const PurchaseOrderDict = Object.freeze({
         title: '签约结果',
         list: [
             {
-                key: 0,
-                value: '未知'
-            },
-            {
                 key: 1,
                 value: '确认签约完成'
             },
