@@ -17,7 +17,7 @@
                 <img :key="item.key"  :src="item.fileUrl" :alt="item.fileName" v-for="item in enterReceiptDetail.detailed" @click="goDetail(item.fileUrl)" class="info-img">
             </el-form-item>
             <el-form-item label="本次到货金额：" prop="goodsAmount">
-               <el-input type="text" v-model="formData.goodsAmount" maxlength="50"></el-input>
+               <el-input type="text" v-model="formData.goodsAmount" maxlength="50" v-isNegative="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
                 <hosjoyUpload

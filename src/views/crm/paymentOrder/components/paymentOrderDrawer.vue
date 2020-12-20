@@ -165,20 +165,20 @@
                         <div class="row-filed">
                             <p class="col-filed col-50">
                                 <span class="label">经销商首付款：</span>{{
-                                    paymentOrderDetail.payOrderDetail.downPaymentAmount
+                                    paymentOrderDetail.payOrderDetail.downPaymentAmount | fundMoneyHasTail
                                 }}元
                             </p>
                             <p class="col-filed col-50">
-                                <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount }}元
+                                <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount  | fundMoneyHasTail }}元
                             </p>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-50">
-                                <span class="label">预计服务费总额：</span> {{ paymentOrderDetail.payOrderDetail.feeAmount }}元
+                                <span class="label">预计服务费总额：</span> {{ paymentOrderDetail.payOrderDetail.feeAmount  | fundMoneyHasTail }}元
                             </p>
                             <p class="col-filed col-50">
                                 <span class="label">预计每期服务费：</span> {{
-                                    paymentOrderDetail.payOrderDetail.feeAmountPer
+                                    paymentOrderDetail.payOrderDetail.feeAmountPer  | fundMoneyHasTail
                                 }}元
                             </p>
                         </div>

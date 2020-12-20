@@ -26,7 +26,7 @@
                 {{prevPaymentDetail.goodsProgress}}%
             </el-form-item>
             <el-form-item label="本次支付金额：" prop="payAmount">
-                <el-input v-model="formData.payAmount" maxlength="50"></el-input>
+                <el-input v-model="formData.payAmount" maxlength="50" v-isNegative="formData.payAmount"></el-input>
             </el-form-item>
             <el-form-item label="支付日期：" prop="payDate">
                 <el-date-picker

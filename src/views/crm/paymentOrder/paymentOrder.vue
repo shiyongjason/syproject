@@ -74,6 +74,9 @@
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350
                         :isShowIndex='true'>
+                <template slot="applyAmount" slot-scope="scope">
+                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                </template>
                 <template slot="status" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
                 </template>
