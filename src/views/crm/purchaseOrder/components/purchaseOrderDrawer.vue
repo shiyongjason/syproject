@@ -163,8 +163,12 @@
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                                 驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate}}
                                             </p>
-                                            <p>
-                                                <h-button table @click="purchaseOrderChangeConfirm">查看变更</h-button>
+                                            <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
+                                                        item.changeResult !== PurchaseOrderDict.changeResult.list[1].key">
+                                                <h-button table @click="purchaseOrderChangeConfirm">确认变更</h-button>
+                                            </p>
+                                            <p v-else>
+                                                <h-button table @click="purchaseOrderWatchConfirm(item.id)">查看变更</h-button>
                                             </p>
                                         </div>
                                     </div>
@@ -188,31 +192,31 @@
                         <el-collapse-item title="销售合同" name="1">
                             <div class="table-body">
                                 <PureCollapseTr
-                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.contractTypeId === PurchaseOrderDict.contractType.list[3].key)"></PureCollapseTr>
+                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.effectiveState === 1  && value.contractTypeId === PurchaseOrderDict.contractType.list[3].key)"></PureCollapseTr>
                             </div>
                         </el-collapse-item>
                         <el-collapse-item title="采购合同" name="2">
                             <div class="table-body">
                                 <PureCollapseTr
-                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.contractTypeId === PurchaseOrderDict.contractType.list[4].key)"></PureCollapseTr>
+                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.effectiveState === 1  && value.contractTypeId === PurchaseOrderDict.contractType.list[4].key)"></PureCollapseTr>
                             </div>
                         </el-collapse-item>
                         <el-collapse-item title="担保合同" name="3">
                             <div class="table-body">
                                 <PureCollapseTr
-                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.contractTypeId === PurchaseOrderDict.contractType.list[1].key)"></PureCollapseTr>
+                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.effectiveState === 1  && value.contractTypeId === PurchaseOrderDict.contractType.list[1].key)"></PureCollapseTr>
                             </div>
                         </el-collapse-item>
                         <el-collapse-item title="应收账款质押合同" name="4">
                             <div class="table-body">
                                 <PureCollapseTr
-                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.contractTypeId === PurchaseOrderDict.contractType.list[2].key)"></PureCollapseTr>
+                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.effectiveState === 1  && value.contractTypeId === PurchaseOrderDict.contractType.list[2].key)"></PureCollapseTr>
                             </div>
                         </el-collapse-item>
                         <el-collapse-item title="其他合同" name="5">
                             <div class="table-body">
                                 <PureCollapseTr
-                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.contractTypeId === PurchaseOrderDict.contractType.list[0].key)"></PureCollapseTr>
+                                    :contracts="purchaseOrderDetail.contracts.filter(value => value.effectiveState === 1  && value.contractTypeId === PurchaseOrderDict.contractType.list[0].key)"></PureCollapseTr>
                             </div>
                         </el-collapse-item>
                     </el-collapse>
@@ -244,7 +248,6 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
-import filters from '@/utils/filters'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
 
 export default {
@@ -291,6 +294,9 @@ export default {
         },
         purchaseOrderChangeConfirm () {
             this.$emit('openDialog', PurchaseOrderDialogStatus.changeEnter.status, this.row)
+        },
+        purchaseOrderWatchConfirm (id) {
+            this.$emit('openDialog', PurchaseOrderDialogStatus.watch.status, { id: id })
         },
         handleClose () {
             this.$emit('backEvent')

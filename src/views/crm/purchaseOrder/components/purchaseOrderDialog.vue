@@ -144,7 +144,7 @@
                 </div>
             </div>
             <div class="row-filed result">
-                <div class="col-filed">
+                <div class="col-filed" v-if="dialogDetail.purchaseOrder">
                     <div class="info-title">变更结果</div>
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
                     <el-form ref="form" :model="formData" v-if="dialogStatus.watch.status !== openStatus" :rules="rules"
@@ -184,9 +184,10 @@
                         </el-form-item>
                     </el-form>
                     <template v-if="dialogStatus.watch.status === openStatus">
-                        <p>变更结果：{{
-                                dialogDetail.purchaseOrder.signResult | attributeComputed(purchaseOrderDict.changeResult.list)
-                            }}</p>
+                        <p>
+                            变更结果：
+                            {{ dialogDetail.purchaseOrder.signResult | attributeComputed(purchaseOrderDict.changeResult.list)}}
+                        </p>
                         <p>驳回原因：{{ dialogDetail.purchaseOrder.remark }}</p>
                     </template>
                 </div>
@@ -205,7 +206,7 @@ import {
     updatePurchaseOrderChangeConfirmStatus,
     updatePurchaseOrderConfirmStatus,
     getPurchaseOrderConfirmDetail,
-    getPurchaseOrderConfirmChangeDetail
+    getPurchaseOrderConfirmChangeDetail, getPurchaseOrderSeeDetail
 } from '@/views/crm/purchaseOrder/api'
 import PurchaseOrderDict from '../purchaseOrderDict'
 import filters from '@/utils/filters'
@@ -335,6 +336,10 @@ export default {
                 }
                 if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
                     const { data } = await getPurchaseOrderConfirmChangeDetail(this.row.id)
+                    _data = data
+                }
+                if (PurchaseOrderDialogStatus.watch.status === this.openStatus) {
+                    const { data } = await getPurchaseOrderSeeDetail(this.row.id)
                     _data = data
                 }
                 _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)
