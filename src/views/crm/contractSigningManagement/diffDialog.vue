@@ -57,10 +57,16 @@ export default {
                 if (item.dataset && item.dataset.mceStyle) {
                     item.removeAttribute('data-mce-style')
                 }
+                if (item.dataset && item.dataset.mceSrc) {
+                    item.removeAttribute('data-mce-src')
+                }
             })
             Array.from(spanList2).map(item => {
                 if (item.dataset && item.dataset.mceStyle) {
                     item.removeAttribute('data-mce-style')
+                }
+                if (item.dataset && item.dataset.mceSrc) {
+                    item.removeAttribute('data-mce-src')
                 }
             })
             this.$nextTick(() => {

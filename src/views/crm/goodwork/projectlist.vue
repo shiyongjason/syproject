@@ -102,6 +102,16 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">预估签约时间：</div>
+                    <div class="query-col__input">
+                        <el-date-picker v-model="queryParams.minEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimateSignTime)">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.maxEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimateSignTime)">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont__col">
 
                     <h-button type="primary" @click="searchList()">
                         查询
@@ -242,6 +252,7 @@ export default {
 
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
+                { label: '预估签约时间', prop: 'estimateSignTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true },
                 { label: '项目类别', prop: 'type', width: '120', slot: 'type', showOverflowTooltip: true },
                 // { label: '工程项目进度', prop: 'progress', width: '120', slot: 'progress' },
                 { label: '工程项目进度', prop: 'progress', width: '120', dicData: [{ value: 1, label: '项目跟踪阶段' }, { value: 2, label: '招投标' }, { value: 3, label: '合同已签订' }, { value: 4, label: '项目已开工' }] },
