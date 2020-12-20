@@ -17,7 +17,7 @@
                             <span class="info-title">采购单</span>
                             <span class="info-status">
                                 {{
-                                    attributeComputed(PurchaseOrderDict.status.list, purchaseOrderDetail.purchaseOrder.status)
+                                    purchaseOrderDetail.purchaseOrder.status | attributeComputed(PurchaseOrderDict.status.list)
                                 }}
                             </span>
                         </p>
@@ -56,7 +56,7 @@
                             v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
                             <div class="row-filed">
                                 <p class="col-filed">
-                                    采购单金额： {{ fundMoneys(purchaseOrderDetail.purchaseOrder.poAmount) }}元
+                                    采购单金额： {{ purchaseOrderDetail.purchaseOrder.poAmount | fundMoneyHasTail }}元
                                 </p>
                                 <template v-if="purchaseOrderDetail.poInfo">
                                     <p class="col-filed">
@@ -126,7 +126,7 @@
                             <div class="row-filed">
                                 <p class="col-filed">
                                     免息方式：
-                                    {{ attributeComputed(PurchaseOrderDict.freeInterestType.list, purchaseOrderDetail.purchaseOrder.freeInterestType) }}
+                                    {{ purchaseOrderDetail.purchaseOrder.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list) }}
                                 </p>
                             </div>
                             <div class="row-filed">
@@ -140,29 +140,36 @@
                         </template>
                         <!--                多种状态判断-->
                         <template
-                            v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[3].key">
-                            <div class="row-filed" v-if="purchaseOrderDetail.poChanges">
-                                <div class="jumbotron" :key="item.id" v-for="item in purchaseOrderDetail.poChanges">
-                                    <div class="jumbotron-status">
-                                        <img src="../../../../assets/images/good-job-status-icon.png" alt="">
-                                    </div>
-                                    <div>
-                                        <p class="jumbotron-title">订单变更：已确认！</p>
-                                        <p>
-                                            提交变更人：赵娟（15195954045） 提交变更时间：2019-06-11 16:32
-                                        </p>
-                                        <p>
-                                            变更备注：{{ item.remark }}
-                                        </p>
-                                        <p>
-                                            确认变更人：赵娟（15195954045） 确认变更时间：2019-06-11 16:32
-                                        </p>
-                                        <p>
-                                            <h-button table @click="purchaseOrderChangeConfirm">查看变更</h-button>
-                                        </p>
+                            v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
+                            <template v-if="purchaseOrderDetail.poChanges">
+                                <div class="row-filed" :key="item.id" v-for="item in purchaseOrderDetail.poChanges">
+                                    <div class="jumbotron">
+                                        <div class="jumbotron-status">
+                                            <img src="../../../../assets/images/good-job-status-icon.png" alt="">
+                                        </div>
+                                        <div>
+                                            <p class="jumbotron-title">订单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
+                                            <p>
+                                                提交变更人：{{ item.submitBy }}（{{ item.submitPhone }}） 提交变更时间：{{
+                                                    item.submitTime | formatDate
+                                                }}
+                                            </p>
+                                            <p>
+                                                变更备注：{{ item.remark || '-' }}
+                                            </p>
+                                            <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
+                                                确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate}}
+                                            </p>
+                                            <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
+                                                驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate}}
+                                            </p>
+                                            <p>
+                                                <h-button table @click="purchaseOrderChangeConfirm">查看变更</h-button>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
                         </template>
                     </template>
                 </div>
@@ -255,7 +262,6 @@ export default {
     data () {
         return {
             activeNames: ['1', '2', '3', '4', '5'],
-            tableData: [],
             tableLabel: [
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '120' },
                 { label: '金额', prop: 'applyAmount', width: '100' },
@@ -288,21 +294,6 @@ export default {
         },
         handleClose () {
             this.$emit('backEvent')
-        },
-        attributeComputed (list, key) {
-            let value = ''
-            list.forEach(val => {
-                if (val.key === key) {
-                    value = val.value
-                }
-            })
-            return value
-        },
-        fundMoneys (val) {
-            if (val) {
-                return filters.money(val)
-            }
-            return '-'
         },
         goDetail (url) {
             window.open(url)

@@ -1,44 +1,45 @@
 <template>
     <div>
         <el-dialog title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
-            <el-form class="info-content" v-if="paymentDetail">
+            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form">
                 <div class="row-filed">
                     <div class="col-filed">
                         <div class="info-title">上游支付申请信息</div>
                         <p>
                             <span class="label">申请支付金额：</span>
-                            {{ paymentDetail.payOrderDetail.applyAmount }}元
+                            {{ paymentDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
                         </p>
                         <p>
                             <span class="label">上游供应商：</span>
-                            {{ paymentDetail.payOrderDetail.supplierCompanyName }}
+                            {{ paymentDetail.payOrderDetail.supplierCompanyName || '-'  }}
                         </p>
-                        <p>
+                        <p class="info-img-group">
                             <span class="label">采购明细表：</span>
-                            <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.poDetail">
+                            <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentDetail.payOrderDetail.poDetail" class="info-img">
+                                     v-for="item in paymentDetail.payOrderDetail.paymentDetail" class="info-img">
                             </template>
                         </p>
                         <p>
                             <span>最迟发货日期：</span>
-                            {{ paymentDetail.payOrderDetail.lastGoodsDate }}
+                            {{ paymentDetail.payOrderDetail.lastGoodsDate || '-' }}
                         </p>
                         <p>
                             <span>收货地址：</span>
-                            {{paymentDetail.payOrderDetail.goodsAddress}}
+                            {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
                         </p>
                         <div class="info-title">审核信息</div>
                         <p>
-                            <span>审核结果：</span>
-                            <el-radio-group v-model="formData.checkPass">
-                                <el-radio label="pass">通过</el-radio>
-                                <el-radio label="noPass">不通过</el-radio>
-                            </el-radio-group>
+                            <el-form-item prop="checkPass" label="审核结果：">
+                                <el-radio-group v-model="formData.checkPass">
+                                    <el-radio label="pass">通过</el-radio>
+                                    <el-radio label="noPass">不通过</el-radio>
+                                </el-radio-group>
+                            </el-form-item>
                         </p>
                         <template v-if="formData.checkPass === 'pass'">
                             <p>
-                                <el-form-item label="应收账款质押：">
+                                <el-form-item label="应收账款质押：" prop="accountReceivablePledgeType">
                                     <el-radio-group v-model="formData.accountReceivablePledgeType">
                                         <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.accountReceivablePledgeType.list">
                                             {{ item.value }}
@@ -47,16 +48,16 @@
                                 </el-form-item>
                             </p>
                             <p>
-                                <el-form-item label="上游支付方式：">
+                                <el-form-item label="上游支付方式：" prop="supplierPaymentType">
                                     <el-radio-group v-model="formData.supplierPaymentType">
-                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
+                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentType.list">
                                             {{item.value}}
                                         </el-radio>
                                     </el-radio-group>
                                 </el-form-item>
                             </p>
                             <p>
-                                <el-form-item label="上游货款方式：">
+                                <el-form-item label="上游货款方式：" prop="supplierPaymentMethod">
                                     <el-radio-group v-model="formData.supplierPaymentMethod">
                                         <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
                                             {{item.value}}
@@ -64,26 +65,28 @@
                                     </el-radio-group>
                                 </el-form-item>
                             </p>
-                            <p>
-                                <span>经销商首付款：</span>
-                                {{formData.downPaymentAmount}}元
-                                <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit">
-                            </p>
-                            <p>
-                                <span>剩余货款：</span>
-                                {{ viewCallback.arrearAmount }}元
-                            </p>
-                            <p>
-                                <span>预计服务费总额：</span>
-                                {{ viewCallback.feeAmount }}元
-                            </p>
-                            <p>
-                                <span>预计每期服务费：</span>
-                                {{ viewCallback.feeAmountPer }}元
-                            </p>
+                            <template v-if="formData.supplierPaymentType">
+                                <p>
+                                    <span>经销商首付款：</span>
+                                    {{downPaymentAmount}}元
+                                    <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit">
+                                </p>
+                                <p>
+                                    <span>剩余货款：</span>
+                                    {{ serviceFee.arrearAmount }}元
+                                </p>
+                                <p>
+                                    <span>预计服务费总额：</span>
+                                    {{ serviceFee.feeAmount }}元
+                                </p>
+                                <p>
+                                    <span>预计每期服务费：</span>
+                                    {{ serviceFee.feeAmountPer }}元
+                                </p>
+                            </template>
                         </template>
                         <template v-if="formData.checkPass === 'noPass'">
-                            <el-form-item label="审核备注">
+                            <el-form-item label="审核备注" prop="approvalRemark">
                                 <el-input type="textarea" v-model="formData.approvalRemark"></el-input>
                             </el-form-item>
                         </template>
@@ -105,23 +108,21 @@
                         <div class="rate-row">
                             <p>
                                 <span>执行费率：</span>
-                                {{paymentDetail.projectInfo.transferBankRate}}%
                             </p>
                             <p>
-                                <span>银行承兑：</span>
+                                <span class="label">银行承兑：</span>
                                 {{paymentDetail.projectInfo.acceptBankRate}}%
-                            </p>
-                            <p>
-                                <span>银行转帐：</span>
+                                <span class="label">银行转帐：</span>
                                 {{paymentDetail.projectInfo.transferBankRate}}%
                             </p>
+
                         </div>
                         <div class="info-title">采购单信息</div>
                         <p>
                             <span>采购单金额：</span>
-                            {{ paymentDetail.payOrderPoDetail.poAmount }}元
+                            {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
                         </p>
-                        <p>
+                        <p class="info-img-group">
                             <span>采购明细表：</span>
                             <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
                                 <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
@@ -130,7 +131,7 @@
                         </p>
                         <p>
                             <span>采购批次：</span>
-                            {{ paymentDetail.payOrderPoDetail.poNumber }}
+                            {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购
                         </p>
                         <p>
                             <span>最迟发货日期：</span>
@@ -150,7 +151,7 @@
                         </p>
                         <p>
                             <span>免息方式：</span>
-                            {{paymentDetail.payOrderPoDetail.freeInterestType}}
+                            {{paymentDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
                         </p>
                     </div>
                 </div>
@@ -167,7 +168,7 @@
         </el-dialog>
         <el-dialog title="编辑经销商首付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" class="edit-amount-dialog">
             <div class="edit-amount">
-                经销商首付款:<el-input v-model="viewCallback.downPaymentAmount" maxlength="12"></el-input>
+                经销商首付款:<el-input v-model="formData.downPaymentAmount" v-isNegative="formData.downPaymentAmount" maxlength="20"></el-input>
             </div>
             <div slot="footer">
                 <h-button type="cancel" @click="onCancelAmount">取消</h-button>
@@ -178,8 +179,9 @@
 </template>
 
 <script>
-import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass } from '@/views/crm/paymentOrder/api'
+import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComputedValue } from '@/views/crm/paymentOrder/api'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
+import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 
 export default {
     name: 'approvePaymentOrder',
@@ -199,8 +201,9 @@ export default {
     },
     data () {
         return {
+            PurchaseOrderDict,
             formData: {
-                checkPass: 'pass',
+                checkPass: '',
                 approvalRemark: '',
                 accountReceivablePledgeType: '',
                 supplierPaymentType: '',
@@ -208,67 +211,130 @@ export default {
                 supplierPaymentMethod: ''
             },
             editAmountVisible: false,
-            viewCallback: {
-                downPaymentAmount: '',
-                feeAmount: '',
-                feeAmountPer: '',
-                arrearAmount: ''
+            PaymentOrderDict,
+            serviceFee: {},
+            serviceParams: {
+                totalAmount: '',
+                downpaymentAmount: '',
+                serviceFeeRate: '',
+                freeInterestType: '',
+                terms: ''
             },
-            PaymentOrderDict
+            rules: {
+                checkPass: [
+                    { required: true, message: '请选择审核结果' }
+                ],
+                approvalRemark: [
+                    { required: true, message: '请填写审核备注' }
+                ],
+                accountReceivablePledgeType: [
+                    { required: true, message: '请填写审核备注' }
+                ],
+                supplierPaymentType: [
+                    { required: true, message: '请选择上游支付方式' }
+                ],
+                supplierPaymentMethod: [
+                    { required: true, message: '请选择上游货款方式' }
+                ]
+            },
+            downPaymentAmount: '-'
         }
     },
     watch: {
-        paymentDetail (val) {
-            this.viewCallback = {
-                downPaymentAmount: val.payOrderPoDetail.downPaymentAmount,
-                feeAmount: val.payOrderPoDetail.feeAmount,
-                feeAmountPer: val.payOrderPoDetail.feeAmountPer,
-                arrearAmount: val.payOrderPoDetail.arrearAmount
+        isOpen (val) {
+            if (val) {
+                this.serviceParams = {
+                    ...this.serviceParams,
+                    downpaymentAmount: this.paymentDetail.payOrderDetail.downPaymentAmount,
+                    totalAmount: this.paymentDetail.payOrderDetail.applyAmount,
+                    freeInterestType: this.paymentDetail.payOrderPoDetail.freeInterestType,
+                    terms: this.paymentDetail.payOrderPoDetail.restPaymentPeriod
+                }
+                this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+                this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+                this.$nextTick(() => {
+                    this.$refs.form.clearValidate()
+                })
+            }
+        },
+        'formData.supplierPaymentType' (val) {
+            if (val) {
+                let serviceFeeRate = ''
+                if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[0].key) {
+                    serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
+                }
+                if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[1].key) {
+                    serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
+                }
+                this.serviceParams = {
+                    ...this.serviceParams,
+                    serviceFeeRate: serviceFeeRate
+                }
+                this.getComputedValue()
             }
         }
     },
     methods: {
         openEdit () {
-            this.downPaymentAmountTemp = this.viewCallback.downPaymentAmount
             this.editAmountVisible = true
         },
         onCancelAmount () {
             this.editAmountVisible = false
-            this.viewCallback.downPaymentAmount = this.downPaymentAmountTemp
+            this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
         },
-        onSaveAmount () {
-            if (this.viewCallback.downPaymentAmount) {
-                const reg = /^[0-9]+[\\.]?[0-9]*$/
-                if (reg.test(this.viewCallback.downPaymentAmount)) {
-                    this.formData.downPaymentAmount = this.viewCallback.downPaymentAmount
-                    this.editAmountVisible = false
-                } else {
-                    this.$message.error('格式不正确')
-                }
-            } else {
-                this.$message.error('不能为空')
+        async onSaveAmount () {
+            if (this.formData.downPaymentAmount === '') {
+                this.$message.error('经销商首付款不能为空')
+                return
             }
+            if (this.formData.downPaymentAmount === 0) {
+                this.$message.error('经销商首付款不能为0')
+                return
+            }
+            if (this.formData.downPaymentAmount > this.paymentDetail.payOrderDetail.applyAmount) {
+                this.$message.error('经销商首付款不能大于申请支付金额')
+                return
+            }
+            try {
+                this.serviceParams.downpaymentAmount = this.formData.downPaymentAmount
+                await this.getComputedValue()
+                this.downPaymentAmount = this.formData.downPaymentAmount
+                this.editAmountVisible = false
+            } catch (e) {}
         },
-        onCancel () {
+        clearForm () {
             this.formData = {
-                checkPass: 'pass',
+                checkPass: '',
                 approvalRemark: '',
                 accountReceivablePledgeType: '',
                 supplierPaymentType: '',
                 downPaymentAmount: '',
                 supplierPaymentMethod: ''
             }
+        },
+        onCancel () {
+            this.clearForm()
             this.$emit('onClose')
         },
         onReceived () {
-            if (this.formData.checkPass === 'pass') {
-                updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
-            } else if (this.formData.checkPass === 'noPass') {
-                updatePaymentOrderStatusNoPass(this.paymentDetail.payOrderDetail.id, this.formData)
-            }
+            this.$refs.form.validate(async (value) => {
+                if (value) {
+                    if (this.formData.checkPass === 'pass') {
+                        await updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
+                    } else if (this.formData.checkPass === 'noPass') {
+                        await updatePaymentOrderStatusNoPass(this.paymentDetail.payOrderDetail.id, this.formData)
+                    }
+                    this.clearForm()
+                    this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
+                }
+            })
         },
         goDetail (url) {
             window.open(url)
+        },
+        async getComputedValue () {
+            const { data } = await getComputedValue(this.serviceParams)
+            this.serviceFee = data
         }
     }
 }
@@ -290,7 +356,7 @@ export default {
             padding-right: 20px;
         }
         p{
-            padding: 5px 0;
+            padding: 10px 0;
         }
     }
 }
@@ -313,7 +379,10 @@ export default {
 }
 .rate-row {
     display: flex;
-    justify-content: space-between;
+    span.label{
+        padding-right: 5px;
+        padding-left: 5px;
+    }
 }
 .edit-amount-dialog {
     /deep/.el-dialog__body{
@@ -335,5 +404,8 @@ export default {
     .el-input{
         margin-left: 10px;
     }
+}
+.info-img-group {
+    display: flex;
 }
 </style>

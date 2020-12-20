@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> onClose"
+    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> onClose()"
                :close-on-click-modal="false">
         <div class="info-content">
             <div class="row-filed">
@@ -8,7 +8,7 @@
                     <ul class="purchase-order-info">
                         <li>
                             <span class="label">采购单金额：</span>
-                            <span>{{ fundMoneys(dialogDetail.poInfo.poAmount) }}元</span>
+                            <span>{{ dialogDetail.poInfo.poAmount | fundMoneyHasTail }}元</span>
                         </li>
                         <li>
                             <span class="label">采购明细表：</span>
@@ -132,13 +132,12 @@
                                 <th>原合同</th>
                             </tr>
                             <tr :key="item.id" v-for="item in dialogDetail.poChangeContracts">
-                                <td>{{
-                                        item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list)
-                                    }}
+                                <td>
+                                    <span class="go-contract" @click="goContractDetail(item.changedContractId)">{{item.changedContractName}}</span>
                                 </td>
-                                <td>{{ item.status }}</td>
-                                <td>{{ item.contractTypeId }}</td>
-                                <td>{{ item.originalContractId }}</td>
+                                <td>{{ item.status | attributeComputed(purchaseOrderDict.changedContract.list) }}</td>
+                                <td>{{ item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list) }}</td>
+                                <td><span class="go-contract"  @click="goContractDetail(item.originalContractId)">{{item.originalContractName}}</span></td>
                             </tr>
                         </table>
                     </template>
@@ -150,13 +149,24 @@
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
                     <el-form ref="form" :model="formData" v-if="dialogStatus.watch.status !== openStatus" :rules="rules"
                              label-width="120px">
-                        <el-form-item label="变更结果：" prop="signResult">
-                            <el-radio-group v-model="formData.signResult">
-                                <el-radio :label="item.key" :key="item.key"
-                                          v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
-                                </el-radio>
-                            </el-radio-group>
-                        </el-form-item>
+                        <template v-if="dialogStatus.enter.status === this.openStatus">
+                            <el-form-item label="签约结果：" prop="signResult">
+                                <el-radio-group v-model="formData.signResult">
+                                    <el-radio :label="item.key" :key="item.key"
+                                              v-for="item in purchaseOrderDict.signResult.list">{{ item.value }}
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                        </template>
+                        <template v-if="dialogStatus.changeEnter.status === this.openStatus">
+                            <el-form-item label="变更结果：" prop="signResult">
+                                <el-radio-group v-model="formData.signResult">
+                                    <el-radio :label="item.key" :key="item.key"
+                                              v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                        </template>
                         <el-form-item label="驳回原因："
                                       v-if="formData.signResult === purchaseOrderDict.changeResult.list[1].key"
                                       prop="remark">
@@ -259,6 +269,14 @@ export default {
         })
     },
     methods: {
+        goContractDetail (id) {
+            this.$router.push({
+                path: '/goodwork/contractSigningManagementDetail',
+                query: {
+                    id: id
+                }
+            })
+        },
         goDetail (url) {
             window.open(url)
         },
@@ -434,5 +452,9 @@ export default {
 
 .remark {
     width: 350px;
+}
+.go-contract {
+    color: #ff7a45;
+    cursor: pointer;
 }
 </style>
