@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> onClose()"
+    <el-dialog :title="title" :visible.sync="isOpen" width="1000px" :before-close="()=> onClose()"
                :close-on-click-modal="false">
         <div class="info-content">
             <div class="row-filed">
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-filed left" v-if="dialogStatus.enter.status !== openStatus">
                     <div class="info-title">变更的内容</div>
-                    <table>
+                    <table class="see-change">
                         <tr>
                             <th>变更字段</th>
                             <th>变更前</th>
@@ -137,14 +137,17 @@
                                 </td>
                                 <td>{{ item.status | attributeComputed(purchaseOrderDict.changedContract.list) }}</td>
                                 <td>{{ item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list) }}</td>
-                                <td><span class="go-contract"  @click="goContractDetail(item.originalContractId)">{{item.originalContractName}}</span></td>
+                                <td>
+                                    <span class="go-contract"  @click="goContractDetail(item.originalContractId)" v-if="item.originalContractId">{{item.originalContractName}}</span>
+                                    <span v-else></span>
+                                </td>
                             </tr>
                         </table>
                     </template>
                 </div>
             </div>
             <div class="row-filed result">
-                <div class="col-filed">
+                <div class="col-filed" v-if="dialogDetail.purchaseOrder">
                     <div class="info-title">变更结果</div>
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
                     <el-form ref="form" :model="formData" v-if="dialogStatus.watch.status !== openStatus" :rules="rules"
@@ -184,9 +187,10 @@
                         </el-form-item>
                     </el-form>
                     <template v-if="dialogStatus.watch.status === openStatus">
-                        <p>变更结果：{{
-                                dialogDetail.purchaseOrder.signResult | attributeComputed(purchaseOrderDict.changeResult.list)
-                            }}</p>
+                        <p>
+                            变更结果：
+                            {{ dialogDetail.purchaseOrder.signResult | attributeComputed(purchaseOrderDict.changeResult.list)}}
+                        </p>
                         <p>驳回原因：{{ dialogDetail.purchaseOrder.remark }}</p>
                     </template>
                 </div>
@@ -205,7 +209,7 @@ import {
     updatePurchaseOrderChangeConfirmStatus,
     updatePurchaseOrderConfirmStatus,
     getPurchaseOrderConfirmDetail,
-    getPurchaseOrderConfirmChangeDetail
+    getPurchaseOrderConfirmChangeDetail, getPurchaseOrderSeeDetail
 } from '@/views/crm/purchaseOrder/api'
 import PurchaseOrderDict from '../purchaseOrderDict'
 import filters from '@/utils/filters'
@@ -337,6 +341,10 @@ export default {
                     const { data } = await getPurchaseOrderConfirmChangeDetail(this.row.id)
                     _data = data
                 }
+                if (PurchaseOrderDialogStatus.watch.status === this.openStatus) {
+                    const { data } = await getPurchaseOrderSeeDetail(this.row.id)
+                    _data = data
+                }
                 _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)
                 this.dialogDetail = _data
             }
@@ -362,7 +370,7 @@ export default {
         display: flex;
 
         .col-filed.left {
-            width: 60%;
+            width: 50%;
             box-sizing: content-box;
             padding-right: 20px;
         }
@@ -372,6 +380,11 @@ export default {
             font-weight: 600;
             color: #FF7A45;
             padding: 12px 0;
+        }
+        .see-change {
+            th:nth-child(1){
+                width: 50px;
+            }
         }
     }
 
@@ -408,7 +421,7 @@ export default {
     }
 
     .project-info {
-        width: 40%;
+        width: 50%;
 
         p {
             line-height: 18px;
@@ -426,6 +439,12 @@ export default {
             background: #f2f2f4;
             padding: 5px;
         }
+        th:nth-child(2){
+            width: 80px;
+        }
+        th:nth-child(3){
+            width: 80px;
+        }
 
         td {
             border: 1px solid #EBEEF5;
@@ -435,6 +454,7 @@ export default {
 
     .info-img {
         width: 80px;
+        height: 80px;
         cursor: pointer;
     }
 

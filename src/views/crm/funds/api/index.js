@@ -4,7 +4,7 @@ export const getFundsList = (params) => axios.get('/project/api/fund/query-page'
 // boss 资金列表总计
 export const getFundsListTotal = (params) => axios.get('/project/api/fund/query-page-sum', { params })
 // boss 资金列表查看凭证
-export const getFundsTicket = (params) => axios.get('/project/api/fund/query-detail-attach/', { params })
+export const getFundsTicket = (fundId) => axios.get(`/project/api/fund/query-detail/${fundId}`)
 // boss 资金列表 首付款确认收到
 export const updateFirstPay = (params) => axios.patch('/project/api/payment-orders/downpayment-received', params)
 // boss 资金列表 首付款并未收到

@@ -53,13 +53,13 @@
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in []"
-                                       :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in PaymentOrderDict.status.list"
+                                       :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="findPaymentOrderList(queryParams)">
+                    <h-button type="primary" @click="findPaymentOrderList({...queryParams, pageNumber: 1})">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -72,8 +72,11 @@
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
-                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=320
+                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350
                         :isShowIndex='true'>
+                <template slot="applyAmount" slot-scope="scope">
+                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                </template>
                 <template slot="status" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
                 </template>
@@ -83,17 +86,15 @@
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && PaymentOrderDict.status.list[0].key === scope.data.row.status">审核</h-button>
                     <h-button table
                               @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)"
-                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) && (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)"
+                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
+                              (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)"
                     >
                         支付确认
                     </h-button>
                     <h-button table
                               @click="tableOpenPrevPayDialog(scope.data.row)"
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
-                                  PaymentOrderDict.status.list[2].key === scope.data.row.status ||
-                                  PaymentOrderDict.status.list[3].key === scope.data.row.status ||
-                                  PaymentOrderDict.status.list[4].key === scope.data.row.status ||
-                                  PaymentOrderDict.status.list[5].key === scope.data.row.status
+                                  PaymentOrderDict.status.list[0].key !== scope.data.row.status
                               )"
                     >
                         上游支付
@@ -101,10 +102,7 @@
                     <h-button table
                               @click="tableOpenConfirmReceiptDialog(scope.data.row)"
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
-                                  PaymentOrderDict.status.list[2].key === scope.data.row.status ||
-                                  PaymentOrderDict.status.list[3].key === scope.data.row.status ||
-                                  PaymentOrderDict.status.list[4].key === scope.data.row.status ||
-                                  PaymentOrderDict.status.list[5].key === scope.data.row.status
+                                  PaymentOrderDict.status.list[3].key === scope.data.row.status
                               )"
                     >确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
@@ -123,7 +121,7 @@
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail"
                              @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible"
-                           @onClose="prevPaymentVisible = false"></PrevPaymentDialog>
+                           @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
                                @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible"
@@ -246,6 +244,7 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
+            this.findPaymentOrderList(this.queryParams)
         },
         onSortChange (val) {
             if (val.order) {

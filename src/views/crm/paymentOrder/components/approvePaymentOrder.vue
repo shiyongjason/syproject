@@ -261,10 +261,12 @@ export default {
             if (val) {
                 let serviceFeeRate = ''
                 if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[0].key) {
-                    serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
+                    // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
+                    serviceFeeRate = this.paymentDetail.projectInfo.transferBankRate
                 }
                 if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[1].key) {
-                    serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
+                    // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
+                    serviceFeeRate = this.paymentDetail.projectInfo.acceptBankRate
                 }
                 this.serviceParams = {
                     ...this.serviceParams,
@@ -272,6 +274,13 @@ export default {
                 }
                 this.getComputedValue()
             }
+        },
+        'formData.checkPass' () {
+            this.formData.approvalRemark = ''
+            this.formData.accountReceivablePledgeType = ''
+            this.formData.supplierPaymentType = ''
+            this.formData.downPaymentAmount = ''
+            this.formData.supplierPaymentMethod = ''
         }
     },
     methods: {
@@ -362,6 +371,7 @@ export default {
 }
 .info-img {
     width: 80px;
+    height: 80px;
     cursor: pointer;
 }
 .info-img-edit {

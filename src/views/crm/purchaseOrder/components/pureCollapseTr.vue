@@ -3,7 +3,7 @@
         <div class="tr" :key="item.id" v-for="item in contracts">
             <div class="td">{{ item.contractNo }}</div>
             <div class="td">{{ item.contractName }}</div>
-            <div class="td"><span class="info-status">{{ item.effectiveState | attributeComputed(PurchaseOrderDict.contractIsRunning.list) }}</span></div>
+            <div class="td"><span class="info-status" v-if="item.effectiveState === 1">{{ item.effectiveState | attributeComputed(PurchaseOrderDict.contractIsRunning.list) }}</span></div>
             <div class="td">{{ item.contractStatus | attributeComputed(PurchaseOrderDict.contractStatus.list) }}</div>
             <div class="td">{{ item.signedTime | formatDate('YYYY-MM-DD') }}</div>
             <div class="td">{{ item.createBy }}</div>

@@ -66,7 +66,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="findPurchaseList(queryParamsUseQuery)">
+                    <h-button type="primary" @click="findPurchaseList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
                     <h-button @click="onReset">

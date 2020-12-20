@@ -3,9 +3,9 @@
         <div class="info-content">
             <div class="row-filed">
                 <span class="label">支付凭证：</span>
-                <img :src="item.fileUrl" alt="" :key="item.docId" v-for="item in imgGroup">
+                <img @click="goDetail(item.fileUrl)" :src="item.fileUrl" alt="" :key="item.docId" v-for="item in dialogDetail.attachDocList" class="img-info">
             </div>
-            <p class="tips" v-if="!detail._seeing">是否确认收到{{ detail.companyName }}支付的{{detail.amount}}元服务费？</p>
+            <p class="tips" v-if="!detail._seeing">是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount}}元服务费？</p>
         </div>
         <span slot="footer" class="dialog-footer" v-if="!detail._seeing">
                 <h-button type="assist" @click="onReceived">确认收到</h-button>
@@ -45,7 +45,7 @@ export default {
     },
     data () {
         return {
-            imgGroup: []
+            dialogDetail: {}
         }
     },
     computed: {
@@ -93,16 +93,19 @@ export default {
                 await updateFinalUnPay(params)
             }
             this.$emit('onClose')
+        },
+        async getFundsTicket () {
+            const { data } = await getFundsTicket(this.detail.id)
+            this.dialogDetail = data
+        },
+        goDetail (url) {
+            window.open(url)
         }
     },
     watch: {
         isOpen (value) {
             if (value) {
-                const { data } = getFundsTicket({
-                    bizId: this.detail.id,
-                    bizType: FundsDict.bizType.list[3].key
-                })
-                this.imgGroup = data
+                this.getFundsTicket()
             }
         }
     }
@@ -126,5 +129,11 @@ export default {
 }
 .tips {
     color: #8d8d8d;
+}
+.img-info {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    margin-right: 10px;
 }
 </style>

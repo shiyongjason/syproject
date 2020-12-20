@@ -388,6 +388,8 @@ export default {
                 if (valid) {
                     try {
                         this.projectFinaleForm.id = this.approveForm.projectId
+                        // this.projectFinaleForm.transferBankRate = this.$dividedBy(this.projectFinaleForm.transferBankRate, 100)
+                        // this.projectFinaleForm.acceptBankRate = this.$dividedBy(this.projectFinaleForm.acceptBankRate, 100)
                         await updateFinalStatus(this.projectFinaleForm)
                         this.$message.success(`项目终审提交成功`)
                         this.$emit('onCompsback')

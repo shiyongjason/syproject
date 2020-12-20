@@ -155,7 +155,7 @@
                                                 }}
                                             </p>
                                             <p>
-                                                变更备注：{{ item.remark || '-' }}
+                                                变更备注：{{ item.changeReason || '-' }}
                                             </p>
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
                                                 确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate}}
@@ -163,8 +163,15 @@
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                                 驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate}}
                                             </p>
-                                            <p>
-                                                <h-button table @click="purchaseOrderChangeConfirm">查看变更</h-button>
+                                            <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
+                                                驳回原因：{{item.remark || '-'}}
+                                            </p>
+                                            <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
+                                                        item.changeResult !== PurchaseOrderDict.changeResult.list[1].key">
+                                                <h-button table @click="purchaseOrderChangeConfirm">确认变更</h-button>
+                                            </p>
+                                            <p v-else>
+                                                <h-button table @click="purchaseOrderWatchConfirm(item.id)">查看变更</h-button>
                                             </p>
                                         </div>
                                     </div>
@@ -218,8 +225,14 @@
                     </el-collapse>
                     <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
                         <div class="info-title info-title-main-color">支付单</div>
-                        <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="true"
-                                    :actionMinWidth=100 :isShowIndex='true'>
+                        <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false"
+                                    :isShowIndex='true'>
+                            <template slot="status" slot-scope="scope">
+                                <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
+                            </template>
+                            <template slot="applyAmount" slot-scope="scope">
+                                <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                            </template>
                         </basicTable>
                     </template>
                 </div>
@@ -244,7 +257,6 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
-import filters from '@/utils/filters'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
 
 export default {
@@ -263,9 +275,9 @@ export default {
         return {
             activeNames: ['1', '2', '3', '4', '5'],
             tableLabel: [
-                { label: '支付单编号', prop: 'paymentOrderNo', width: '120' },
-                { label: '金额', prop: 'applyAmount', width: '100' },
-                { label: '状态', prop: 'status', width: '100' },
+                { label: '支付单编号', prop: 'paymentOrderNo' },
+                { label: '金额', prop: 'applyAmount' },
+                { label: '状态', prop: 'status' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
@@ -291,6 +303,9 @@ export default {
         },
         purchaseOrderChangeConfirm () {
             this.$emit('openDialog', PurchaseOrderDialogStatus.changeEnter.status, this.row)
+        },
+        purchaseOrderWatchConfirm (id) {
+            this.$emit('openDialog', PurchaseOrderDialogStatus.watch.status, { id: id })
         },
         handleClose () {
             this.$emit('backEvent')
