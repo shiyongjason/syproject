@@ -274,6 +274,13 @@ export default {
                 }
                 this.getComputedValue()
             }
+        },
+        'formData.checkPass' () {
+            this.formData.approvalRemark = ''
+            this.formData.accountReceivablePledgeType = ''
+            this.formData.supplierPaymentType = ''
+            this.formData.downPaymentAmount = ''
+            this.formData.supplierPaymentMethod = ''
         }
     },
     methods: {
@@ -364,6 +371,7 @@ export default {
 }
 .info-img {
     width: 80px;
+    height: 80px;
     cursor: pointer;
 }
 .info-img-edit {

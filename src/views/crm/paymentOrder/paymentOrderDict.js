@@ -114,6 +114,19 @@ const PaymentOrderDict = Object.freeze({
                 value: '其他'
             }
         ]
+    },
+    orderLetterStatus: {
+        title: '订单及服务费确认函状态',
+        list: [
+            {
+                key: 0,
+                value: '未签约'
+            },
+            {
+                key: 1,
+                value: '已签约'
+            }
+        ]
     }
 })
 

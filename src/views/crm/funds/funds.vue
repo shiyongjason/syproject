@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont-col">
-                    <div class="query-col__label">首付款流水号：</div>
+                    <div class="query-col__label">{{labelName}}：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.fundId" placeholder="请输入" maxlength="50"></el-input>
                     </div>
@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">支付单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.orderId" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="findFundsList(queryParams)">
+                    <h-button type="primary" @click="findFundsList({...queryParams, pageNumber: 1})">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -86,18 +86,20 @@
                 </el-tab-pane>
             </el-tabs>
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
-                项,采购单总金额：<b>{{ fundMoneys(fundsListPagination.amount) }} </b>元;
+                项,采购单总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true"
                         :actionMinWidth=200 :isShowIndex='true'>
-                <template slot="no" slot-scope="scope">
-                            <span class="colblue"
-                                  @click="jumpPurchaseOrderDetail(scope.data.row.no)"> {{ scope.data.row.no }}</span>
+                <template slot="paidAmount" slot-scope="scope">
+                            <span class="colblue"> {{ scope.data.row.paidAmount | fundMoneyHasTail }}</span>
+                </template>
+                <template slot="paymentFlag" slot-scope="scope">
+                    <span class="colblue"> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onPayEnter(scope.data.row)">支付确认</h-button>
+                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)">查看凭证</h-button>
                 </template>
             </basicTable>
@@ -112,7 +114,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import FundsDialog from './components/fundsDialog'
 import FundsDict from '@/views/crm/funds/fundsDict'
-import filters from '@/utils/filters'
+import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 
 export default {
     name: 'funds',
@@ -123,7 +125,7 @@ export default {
         return {
             queryParams: {
                 fundId: '',
-                orderId: '',
+                paymentOrderNo: '',
                 subsectionCode: '',
                 companyName: '',
                 projectName: '',
@@ -136,7 +138,9 @@ export default {
             },
             fundsDialogVisible: false,
             fundsDialogDetail: {},
-            FundsDict
+            FundsDict,
+            PaymentOrderDict,
+            labelName: ''
         }
     },
     computed: {
@@ -154,7 +158,7 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
-                { label: '支付单编号', prop: 'orderId', width: '150' },
+                { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
                 { label: '金额', prop: 'paidAmount', width: '150' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
@@ -204,6 +208,7 @@ export default {
             const { repaymentTypeArrays } = this.queryParams
             this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
             this.findFundsList(this.queryParams)
+            this.switchName()
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -238,14 +243,19 @@ export default {
             this.fundsDialogVisible = true
             this.fundsDialogDetail = {
                 _seeing: true,
-                fundsId: row.id
+                id: row.id
             }
         },
-        fundMoneys (val) {
-            if (val) {
-                return filters.money(val)
+        switchName () {
+            if (this.queryParams.repaymentTypeArrays === '1') {
+                this.labelName = '首付款流水号'
             }
-            return 0
+            if (this.queryParams.repaymentTypeArrays === '3') {
+                this.labelName = '服务费流水号'
+            }
+            if (this.queryParams.repaymentTypeArrays === '2') {
+                this.labelName = '尾款流水号'
+            }
         },
         ...mapActions({
             findFundsList: 'crmFunds/findPurchaseList',
@@ -262,6 +272,7 @@ export default {
             jobNumber: this.userInfo.jobNumber,
             authCode: temp
         })
+        this.switchName()
     }
 }
 </script>

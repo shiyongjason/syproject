@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" width="800px" :before-close="()=> onClose()"
+    <el-dialog :title="title" :visible.sync="isOpen" width="1000px" :before-close="()=> onClose()"
                :close-on-click-modal="false">
         <div class="info-content">
             <div class="row-filed">
@@ -65,7 +65,7 @@
                 </div>
                 <div class="col-filed left" v-if="dialogStatus.enter.status !== openStatus">
                     <div class="info-title">变更的内容</div>
-                    <table>
+                    <table class="see-change">
                         <tr>
                             <th>变更字段</th>
                             <th>变更前</th>
@@ -137,7 +137,10 @@
                                 </td>
                                 <td>{{ item.status | attributeComputed(purchaseOrderDict.changedContract.list) }}</td>
                                 <td>{{ item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list) }}</td>
-                                <td><span class="go-contract"  @click="goContractDetail(item.originalContractId)">{{item.originalContractName}}</span></td>
+                                <td>
+                                    <span class="go-contract"  @click="goContractDetail(item.originalContractId)" v-if="item.originalContractId">{{item.originalContractName}}</span>
+                                    <span v-else></span>
+                                </td>
                             </tr>
                         </table>
                     </template>
@@ -367,7 +370,7 @@ export default {
         display: flex;
 
         .col-filed.left {
-            width: 60%;
+            width: 50%;
             box-sizing: content-box;
             padding-right: 20px;
         }
@@ -377,6 +380,11 @@ export default {
             font-weight: 600;
             color: #FF7A45;
             padding: 12px 0;
+        }
+        .see-change {
+            th:nth-child(1){
+                width: 50px;
+            }
         }
     }
 
@@ -413,7 +421,7 @@ export default {
     }
 
     .project-info {
-        width: 40%;
+        width: 50%;
 
         p {
             line-height: 18px;
@@ -431,6 +439,12 @@ export default {
             background: #f2f2f4;
             padding: 5px;
         }
+        th:nth-child(2){
+            width: 80px;
+        }
+        th:nth-child(3){
+            width: 80px;
+        }
 
         td {
             border: 1px solid #EBEEF5;
@@ -440,6 +454,7 @@ export default {
 
     .info-img {
         width: 80px;
+        height: 80px;
         cursor: pointer;
     }
 
