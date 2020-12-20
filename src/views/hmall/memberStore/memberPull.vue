@@ -1,28 +1,28 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col" style="width: 400px;">
-                    <div class="query-col-title">被邀请人（会员）：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col" style="width: 400px;">
+                    <div class="query-col__lable">被邀请人（会员）：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.member" style="width: 260px;" placeholder="请输入被邀请会员的账号和企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col" style="width: 372px;">
-                    <div class="query-col-title">邀请人（会员）：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col" style="width: 372px;">
+                    <div class="query-col__lable">邀请人（会员）：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.recommendedMember" style="width: 240px;" placeholder="请输入邀请人的账号和企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">所属合伙人（平台公司）：</div>
-                    <div class="query-col-input">
+                <!-- <div class="query-cont__col">
+                    <div class="query-col__lable">所属合伙人（平台公司）：</div>
+                    <div class="query-col__input">
                         <el-input v-model="queryParams.merchantName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div> -->
-                <div class="query-cont-col">
-                    <div class="query-col-title">注册时间：</div>
-                    <div class="query-col-input">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">注册时间：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.createTimeStart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
@@ -30,23 +30,21 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <!-- <div class="query-cont-col">
-                    <div class="query-col-title">是否认证：</div>
-                    <div class="query-col-input">
+                <!-- <div class="query-cont__col">
+                    <div class="query-col__lable">是否认证：</div>
+                    <div class="query-col__input">
                         <el-select v-model="queryParams.authenticated" placeholder="请选择" >
                             <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.key">
                             </el-option>
                         </el-select>
                     </div>
                 </div> -->
-                <div class="query-cont-col">
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery()">查询</h-button>
                     <h-button @click="onReset()">重置</h-button>
                     <h-button @click="onImport()">导出</h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :actionMinWidth=250 :isShowIndex='false'>
                 <!-- <template slot="authenticated" slot-scope="scope">
                     {{scope.data.row.authenticated==1?'是':'否'}}

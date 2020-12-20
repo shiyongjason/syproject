@@ -13,49 +13,29 @@
             <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
             <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+            <ProjectOrderTab  v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
                         <h-button @click="onCallBack()">打回补充</h-button>
                     </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==12&&activeName==='2'&&form.docAfterStatus==2">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FINAL)&&status==11&&activeName==='4'">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_QIANYUE)&&status==6">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FANGKUAN)&&status==7">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_HUIKUAN)&&status==8">
-                        <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                    </template>
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_CHOINGZHI)">
-                        <h-button type="create" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</h-button>
+                    <template v-for="(item, index) in operateBtnList">
+                        <h-button type="assist" @click="onAuditstatus(status)" :key="index" v-if="item.isShow">{{item.name}}</h-button>
                     </template>
                     <h-button @click="cancelForm">取消</h-button>
                     <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
                 </div>
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                        <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'">
+                        <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核' && status !== 3">
                             <el-radio-group v-model="statusForm.result">
                                 <el-radio :label=1>通过</el-radio>
                                 <el-radio :label=0>不通过</el-radio>
                                 <el-radio :label=2>退回</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
+                        <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态' && status !== 3">
                             <el-radio-group v-model="statusForm.afterStatus">
                                 <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
                             </el-radio-group>
@@ -66,10 +46,9 @@
                     </el-form>
                     <span slot="footer" class="dialog-footer">
                         <h-button @click="dialogVisible = false">取消</h-button>
-                        <h-button type="primary" @click="onUpdateAudit">确定</h-button>
+                        <h-button type="primary" @click="onUpdateAudit">{{status === 3? '确定关闭' : '确定'}}</h-button>
                     </span>
                 </el-dialog>
-
             </div>
         </el-drawer>
         <!-- 签约和放款使用弹窗 -->
@@ -101,6 +80,7 @@
 import projectCom from './project_com'
 import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
+import ProjectOrderTab from './projectOrderTab'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
@@ -120,7 +100,7 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom, hosjoyUpload
+        projectCom, datacolCom, approveCom, hosjoyUpload, ProjectOrderTab
     },
     data () {
         return {
@@ -142,10 +122,14 @@ export default {
             signOrLoanVisible: false,
             newAuth,
             loading: false,
-            tabs: [{ key: '1', value: '初审' }, { key: '2', value: '项目资料清单' }, { key: '3', value: '立项' }, { key: '4', value: '终审' }],
+            tabs: [
+                { key: '1', value: '初审' },
+                { key: '2', value: '项目资料清单' },
+                { key: '3', value: '立项' },
+                { key: '4', value: '终审' },
+                { key: '5', value: '项目采购单' }
+            ],
             activeName: '1',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' },
-                { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',
@@ -192,6 +176,39 @@ export default {
         }
     },
     computed: {
+        operateBtnList () {
+            return [
+                { name: '审核', isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI) && this.status == 2 },
+                {
+                    name: '材料审核',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED) && this.status == 12 && this.activeName === '2' && this.form.docAfterStatus == 2
+                },
+                {
+                    name: '立项结果提交',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN) && this.status == 4 && this.activeName === '3'
+                },
+                {
+                    name: '终审结果提交',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_FINAL) && this.status == 11 && this.activeName === '4'
+                },
+                {
+                    name: '签约',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_QIANYUE) && this.status == 6
+                },
+                {
+                    name: '放款',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_FANGKUAN) && this.status == 7
+                },
+                {
+                    name: '全部回款',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_HUIKUAN) && this.status == 8
+                },
+                {
+                    name: '合作关闭',
+                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_CLOSE) && this.status == 3
+                }
+            ]
+        },
         ...mapState({
             userInfo: 'userInfo'
         }),
@@ -260,14 +277,6 @@ export default {
                 return true
             }
         },
-        isShowRest (val) {
-            const newVal = val && Object.keys(val)[0]
-            if (newVal == 2) {
-                return false
-            } else {
-                return true
-            }
-        },
         async onFindRiskproject (val) {
             // 材料收集tab
             this.bizType = val
@@ -311,7 +320,7 @@ export default {
             return res
         },
         async onAuditstatus (val) {
-            let status = Object.keys(val)[0]
+            let status = val
             let statusTxt = ''
             if (status == 2) {
                 // status = !!status + 1 // H5端审核中 显示审核 这里需要弹窗  通过 不通过
@@ -323,7 +332,17 @@ export default {
                     this.$refs['statusForm'].clearValidate()
                 })
                 return
-            } else if (status == 3 || status == 12) {
+            } else if (status == 3) {
+                this.dialogVisible = true
+                this.aduitTitle = '合作关闭'
+                this.statusForm = { ...this.copyStatusForm }
+                this.statusForm.afterStatus = 5
+                this.statusForm.reset = false
+                this.$nextTick(() => {
+                    this.$refs['statusForm'].clearValidate()
+                })
+                return
+            } else if (status == 12) {
                 // 材料审核通过 显示重置按钮 去调用材料审批流程 需要弹窗
                 // 这里新加了材料审核通过所以要多判断一个字段
                 this.$refs.datacolCom.onShowcollect()
@@ -382,31 +401,6 @@ export default {
                 type: 'success'
             })
             this.$emit('backEvent')
-        },
-        onReststatus (val) {
-            // 代码优化 根据不同合作状态去匹配 真正的num值截取当前合作状态前面的状态数组
-            const newSatusArr = this.newstatusType.filter(item => item.key == val)
-            this.statusType = this.newstatusType.slice(0, newSatusArr[0].num)
-            // if (val == 5) {
-            //     this.statusType = this.newstatusType
-            // } else if (val == 6 || val == 7 || val == 8) {
-            //     this.statusType = this.newstatusType.slice(0, val - 1)
-            // } else if (val == 10 || val == 3) {
-            //     this.statusType = this.newstatusType.slice(0, 1)
-            // } else if (val == 11) {
-            //     this.statusType = this.newstatusType.slice(0, 4)
-            // } else if (val == 12) {
-            //     this.statusType = this.newstatusType.slice(0, 2)
-            // } else {
-            //     this.statusType = this.newstatusType.slice(0, val - 1)
-            // }
-            this.statusForm = { ...this.copyStatusForm }
-            this.$nextTick(() => {
-                this.$refs['statusForm'].clearValidate()
-            })
-            this.statusForm.reset = true
-            this.dialogVisible = true
-            this.aduitTitle = '重置状态'
         },
         async onUpdateAudit (val) {
             const msg = this.aduitTitle

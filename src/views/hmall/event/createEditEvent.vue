@@ -1,9 +1,11 @@
 <template>
-    <div class="page-body">
+    <div class="page-body B2b">
         <div class="page-body-cont pb20">
             <el-form :model="form" ref='form' :rules="rules.event" label-position='left'>
                 <div class="forminfo">
-                    <h2>1.设置活动基本信息</h2>
+                    <div class="title-cont">
+                        <span class="title-cont__label">1.设置活动基本信息</span>
+                    </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <div class="query-col-input">
@@ -28,7 +30,7 @@
                             <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
                         </div>
                     </div>
-                    <el-form-item label="活动banner：" prop="image" ref="reqPictureList">
+                    <el-form-item label="活动banner：" prop="image" ref="reqPictureList" class="mb20">
                         <ul class="picture-container">
                             <template v-if="pictureContainer.length>0">
                                 <li v-for="(item,index) in pictureContainer" :key="index">
@@ -47,7 +49,9 @@
                     </el-form-item>
                 </div>
                 <div class="forminfo">
-                    <h2>2.设置规则和优惠</h2>
+                    <div class="title-cont">
+                        <span class="title-cont__label">2.设置规则和优惠</span>
+                    </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <div class="query-col-input">
@@ -71,7 +75,9 @@
                     </div>
                 </div>
                 <div class="forminfo">
-                    <h2>3.选择活动商品</h2>
+                    <div class="title-cont">
+                        <span class="title-cont__label">3.选择活动商品</span>
+                    </div>
                     <div class="query-cont-row">
                         <div class="query-cont-col">
                             <div class="query-col-title">活动商品：</div>

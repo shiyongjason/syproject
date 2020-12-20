@@ -1,10 +1,10 @@
 <template>
-    <div class="page-body">
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-row">
-                <div class="query-cont-col">
-                    <div class="query-col-title">时间筛选：</div>
-                    <div class="query-col-input">
+    <div class="page-body B2b">
+        <div class="page-body-cont">
+            <div class="query-cont__row">
+                <div class="query-cont__col">
+                    <div class="query-col__lable">时间筛选：</div>
+                    <div class="query-col__input">
                         <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
@@ -12,19 +12,15 @@
                         </el-date-picker>
                     </div>
                 </div>
-                <div class="query-cont-col">
-                    <div class="query-col-input">
-                        <h-button type="primary" class="ml20" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button class="ml20" @click="onExportTable()">
-                            导出详情
-                        </h-button>
-                    </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" class="ml20" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button class="ml20" @click="onExportTable()">
+                        导出详情
+                    </h-button>
                 </div>
             </div>
-        </div>
-        <div class="page-body-cont">
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="false" :actionMinWidth=250 :isShowIndex='true'>
            <template slot="totalMoney" slot-scope="scope">
                ¥{{scope.data.row.totalMoney}}

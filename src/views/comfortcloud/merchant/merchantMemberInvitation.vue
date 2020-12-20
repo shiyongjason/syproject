@@ -4,13 +4,13 @@
             <span>会员信息</span>
         </div>
         <div class="page-body-cont-top ">
-            <img style="height: 4rem " :src="this.$route.query.avatarUrl" >
+            <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)">
             <div class="top-box">
-                <span>{{this.$route.query.nickName}}  </span>
+                <span>{{decodeURIComponent(this.$route.query.nickName)}}  </span>
                 <span>手机号 ：{{this.$route.query.phone}}  </span>
             </div>
-            <div class="top-box-right" >
-                <span>注册时间： {{new Date(this.$route.query.createTime).toLocaleString()}}  </span>
+            <div class="top-box-right">
+                <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}}  </span>
                 <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
                 <span style="margin-left: 1rem">会员编号： {{this.$route.query.uuid}}</span>
             </div>
@@ -34,10 +34,12 @@
                                     @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
 
-                                <p @click="onEditMoney(scope.data.row)" class="colred">{{scope.data.row.rewardAmount}}</p>
+                                <p @click="onEditMoney(scope.data.row)" class="colred">
+                                    {{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择" @change="onEditMonth(scope.data.row)">
+                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择"
+                                           @change="onEditMonth(scope.data.row)">
                                     <el-option
                                         v-for=" item in monthOptions"
                                         :key="item.value"
@@ -52,6 +54,73 @@
                         </basicTable>
                         <el-button type="primary" class="ml20" @click="onExport()">导入订单</el-button>
                     </div>
+                </el-tab-pane>
+                <el-tab-pane label="会员变更记录" name="2">
+                    <div class="page-body-cont">
+                        <!-- 表格使用老毕的组件 -->
+                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false'
+                                    :pagination="paginationChange"
+                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="3" >
+                    <div class="page-body-cont-enterprise-info" v-if="this.enterpriseInfoData.id!=null">
+                        <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
+                        <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
+                        <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
+                        <span style="margin-bottom: 20px">联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
+                        <span >经营类型：{{this.enterpriseInfoData.businessType===1? '零售商':this.enterpriseInfoData.businessType===2? '工程商':''}}</span>
+                        <div class="page-body-cont-top-no-left">
+                          <span>主营业务:</span>
+                            <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                            </div>
+                            <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                            </div>
+                        </div>
+                        <div class="page-body-cont-top-no-left">
+                          <span>主营品牌:</span>
+                            <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn"
+                                        :key="tag"
+                                        :type="tag.type">
+                                    {{tag}}
+                                </el-tag>
+                            </div>
+                        </div>
+                        <div class="page-body-cont-top-no-align-items">
+                            <span>备注:</span>
+                            <el-input class="textarea"
+                                type="textarea"
+                                maxlength=500
+                                :rows="10"
+                                placeholder="请输入内容"
+                                      @blur="updateCompanyInfoRemark"
+                                v-model="enterpriseInfoData.remark">
+                            </el-input>
+                        </div>
+                    </div>
+                        <div class="page-body-cont-enterprise-info-empty" v-show="this.enterpriseInfoData.id==null">暂无数据</div>
+
                 </el-tab-pane>
             </el-tabs>
         </div>
@@ -85,9 +154,10 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
+import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail, updateCompanyInfo } from '../api'
 import { iotUrl } from '@/api/config'
 import axios from 'axios'
+
 export default {
     name: 'merchantMemberInvitation',
     data () {
@@ -99,6 +169,11 @@ export default {
             },
             searchParams: {},
             tableRegisterData: [],
+            enterpriseInfoData: {
+                respCompanyCommonTagBO: { businessCommon: [], businessOwn: [], brandsCommon: [], brandsOwn: [] },
+                remark: ''
+            },
+            tableChangeData: [],
             tableDoneData: [],
             inputMoney: '',
             inputMonth: '',
@@ -107,7 +182,13 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            textarea: '',
             paginationRegister: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            paginationChange: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
@@ -118,6 +199,9 @@ export default {
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
+            tableChangeList: [
+                { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '变更内容', prop: 'changeContent' }],
             tableDoneLabel: [
                 { label: '导入时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '订单来源', prop: 'source' },
@@ -199,7 +283,9 @@ export default {
         }),
         ...mapGetters({
             merchantmemberInvitationRegisterData: 'iotmerchantmemberInvitationRegisterData',
-            merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData'
+            merchantmemberEnterpriseInfo: 'iotmerchantmemberEnterpriseInfo',
+            merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
+            merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData'
         }),
         pickerOptionsStart () {
             return {
@@ -228,12 +314,20 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMemberInvitationRegistersituation: 'findMerchantMemberInvitationRegistersituation',
+            findMerchantMemberEnterpriseInfo: 'findMerchantMemberEnterpriseInfo',
+            findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
+            await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
+            await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
+            this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
+            this.tableChangeData = this.merchantmemberInvitationChangeData
+            console.log(this.tableChangeData, 111)
+            console.log(this.tableChangeData, 111)
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
                 pageNumber: this.merchantmemberInvitationRegisterData.current,
@@ -244,6 +338,11 @@ export default {
                 pageNumber: this.merchantmemberInvitationOrderData.current,
                 pageSize: this.merchantmemberInvitationOrderData.size,
                 total: this.merchantmemberInvitationOrderData.total
+            }
+            this.paginationChange = {
+                pageNumber: this.merchantmemberInvitationChangeData.current,
+                pageSize: this.merchantmemberInvitationChangeData.size,
+                total: this.merchantmemberInvitationChangeData.total
             }
         },
         uploadFile (param) {
@@ -258,10 +357,12 @@ export default {
                 url: `${iotUrl}/mall/wx/order/boss/import`,
                 method: 'post',
                 data: formdata,
-                headers: { 'Content-Type': 'multipart/form-data',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                     refreshToken: sessionStorage.getItem('refreshToken'),
                     token: `Bearer ` + sessionStorage.getItem('token'),
-                    AccessKeyId: '5ksbfewexbfc' }
+                    AccessKeyId: '5ksbfewexbfc'
+                }
             }).then(response => {
                 console.log(response)
                 if (response.data.rel) {
@@ -330,16 +431,31 @@ export default {
                     })
                     return
                 }
-                this.updataInvitation({ id: val.id, rewardAmount: value, operateUserName: this.$route.query.nickName })
+                this.updataInvitation({
+                    id: val.id,
+                    rewardAmount: value,
+                    operateUserName: this.$route.query.nickName
+                })
             }).catch(() => {
             })
         },
         onEditMonth (val) {
-            this.updataInvitation({ id: val.id, rewardMonth: val.rewardMonth, operateUserName: this.$route.query.nickName })
+            this.updataInvitation({
+                id: val.id,
+                rewardMonth: val.rewardMonth,
+                operateUserName: this.$route.query.nickName
+            })
         },
         async updataInvitation (val) {
             await updateInvitationDetail(val)
             this.onQuery()
+        },
+        async updateCompanyInfoRemark (val) {
+            console.log(val, 111)
+            if (this.enterpriseInfoData.remark != null) {
+                await updateCompanyInfo({ id: this.enterpriseInfoData.id, remark: this.enterpriseInfoData.remark })
+            }
+            // this.onQuery()
         },
         handleClick (tab, event) {
             this.tabIndex = tab.index
@@ -488,14 +604,16 @@ export default {
         justify-content: space-between;
         background: #ffffff;
     }
+
     .top-box-right {
         width: auto;
         margin-left: 3rem;
         display: flex;
         flex-direction: row;
-        justify-content:flex-end;
+        justify-content: flex-end;
         background: #ffffff;
     }
+
     .page-body-cont-top {
         display: flex;
         justify-content: flex-start;
@@ -505,5 +623,58 @@ export default {
         background: $whiteColor;
 
     }
+    .page-body-cont-top-no-left {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+        align-items: center;
 
+    }
+    .page-body-cont-top-no-align-items {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+
+    }
+
+    .page-body-cont-enterprise-info {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+
+    }
+    .textarea {
+        width: 800px;
+        padding-left: 40px;
+        background: $whiteColor;
+
+    }
+    .page-body-cont-enterprise {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        background: $whiteColor;
+
+    }
+    .page-body-cont-enterprise-info-empty {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        color:#888888 ;
+        flex-direction: column;
+        align-content: center;
+        padding:40px 200px 40px 200px;
+        background: $whiteColor;
+
+    }
 </style>

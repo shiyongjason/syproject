@@ -538,6 +538,28 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/searchProject/searchData.vue')
+                    },
+                    {
+                        path: 'searchLexicon',
+                        name: 'searchLexicon',
+                        meta: {
+                            title: '增加词库',
+                            tagName: '增加词库',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/searchProject/searchLexicon.vue')
+                    },
+                    {
+                        path: 'searchSynonym',
+                        name: 'searchSynonym',
+                        meta: {
+                            title: '增加同义词',
+                            tagName: '增加同义词',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/searchProject/searchSynonym.vue')
                     }
                 ]
             }

@@ -274,7 +274,7 @@
                             {{
                                 bossDetail.openStatus==1?'未开户':bossDetail.openStatus==2?'开户中':bossDetail.openStatus==3?'开户成功':bossDetail.openStatus==4?'开户失败':'-'
                             }}
-                            <span v-if="bossDetail.openFailureReason">（{{bossDetail.openFailureReason}}）</span>
+                            <span v-if="bossDetail.openStatus==4">（{{bossDetail.openFailureReason}}）</span>
                         </el-form-item>
                         <el-form-item label="开户时间：" :label-width="formLabelWidth">
                             {{formatTime(bossDetail.openTime)}}
