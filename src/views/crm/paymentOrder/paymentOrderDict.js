@@ -125,6 +125,10 @@ const PaymentOrderDict = Object.freeze({
             {
                 key: 1,
                 value: '已签约'
+            },
+            {
+                key: 2,
+                value: '客户已拒签'
             }
         ]
     }

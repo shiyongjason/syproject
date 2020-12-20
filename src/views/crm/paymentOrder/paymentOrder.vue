@@ -244,6 +244,7 @@ export default {
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
+            this.findPaymentOrderList(this.queryParams)
         },
         onSortChange (val) {
             if (val.order) {
