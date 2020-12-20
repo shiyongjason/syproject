@@ -20,6 +20,18 @@
                 <el-form-item label="经办人：" v-if="signerTempForm.signerType==1">
                     经办人由发起人指定
                 </el-form-item>
+                <el-form-item label="客户签署区：" prop="signatureParam">
+                    <el-select v-model="signerTempForm.signatureParam" placeholder="请选择客户签署区" multiple>
+                        <el-option v-for="item in customSignOptions" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                        <template slot="empty">
+                            <div class="select-empty">
+                                <p>无剩余可选签署区</p>
+                                <p>请新增签署区或取消已有签署区的关联关系</p>
+                            </div>
+                        </template>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="签署要求：" prop="_signerDemand">
                     <template v-if="signerTempForm.signerType==1">
                         <el-checkbox-group v-model="signerTempForm._signerDemand">
@@ -77,6 +89,16 @@ import { mapGetters, mapActions } from 'vuex'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 export default {
     components: { HAutocomplete },
+    props: {
+        customSignAll: {
+            type: Array,
+            default: () => {}
+        },
+        customSignEx: {
+            type: Array,
+            default: () => {}
+        }
+    },
     data () {
         return {
             restaurants: [],
@@ -102,7 +124,8 @@ export default {
                 templateVersionId: '',
                 signerDemand: '',
                 _signerDemand: [],
-                type: ''
+                type: '',
+                signatureParam: []
             },
             copy_signerTempForm: {
                 signerName: '',
@@ -118,7 +141,8 @@ export default {
                 templateVersionId: '',
                 signerDemand: '',
                 _signerDemand: [],
-                type: ''
+                type: '',
+                signatureParam: []
             },
             vaild_form: {},
             signerTempFormrules: {
@@ -128,11 +152,13 @@ export default {
                 signerType: [
                     { required: true, message: '请选择签署方类型', trigger: 'change' }
                 ],
+                signatureParam: [
+                    { required: true, message: '请选择客户签署区', trigger: 'change' }
+                ],
                 paramId: [
                     {
                         required: true,
                         validator: (r, v, callback) => {
-                            console.log(r, v)
                             if (!v) {
                                 if (this.signerTempForm.signerType == 1) {
                                     return callback(new Error('请选择合同企业'))
@@ -162,8 +188,9 @@ export default {
                 selectName: '',
                 selectCode: ''
             },
-            removeValue: false
-
+            removeValue: false,
+            // 记录弹出层弹出的时候默认值，以防止调整signatureParam选项的时候，下拉选项的值不对
+            signatureParam: []
         }
     },
     watch: {
@@ -184,7 +211,16 @@ export default {
     computed: {
         ...mapGetters({
             caPage: 'contractTemp/caPage'
-        })
+        }),
+        customSignOptions () {
+            const result = this.customSignAll.filter(item => {
+                return !this.customSignEx.includes(item) || (this.signatureParam && this.signatureParam.includes(item))
+            }).map(item => ({
+                value: item,
+                label: item.substring(0, item.indexOf('_'))
+            }))
+            return result
+        }
     },
     methods: {
         ...mapActions({
@@ -219,7 +255,6 @@ export default {
         async onShowDialog (val, arr, form) {
             await this.onFindCApage()
             this.tract_visible = true
-            console.log('编辑的form', val, arr, form, this.insertVal)
             // 类型
             this.signerTempForm = deepCopy(this.copy_signerTempForm)
 
@@ -245,11 +280,10 @@ export default {
             } else {
                 this.vaild_form = deepCopy(this.copy_signerTempForm)
                 this.signerTempForm._signerDemand = []
-
-                console.log('===', this.signerTempForm)
                 // // 如果是企业类型 默认 下拉里面 singerType==1
                 this.singerOps = this.contart_arr && this.contart_arr.filter(val => val.signerType == 1)
             }
+            this.signatureParam = this.signerTempForm.signatureParam ? this.signerTempForm.signatureParam.slice() : []
             this.$nextTick(async () => {
                 if (val == 2) {
                     this.$refs.signerTempR.clearValidate()
@@ -307,7 +341,6 @@ export default {
             this.signerTempForm.paramGroupName = this.singerOps.filter(item => item.id == val)[0].groupName
             // var aa = []
             // aa = this.singerOps.filter(item => item.id == val)
-            console.log(val, this.signerTempForm.paramGroupName)
         },
         changeCa (val) {
             this.signerTempForm.paramGroupName = this.caOptions.filter(item => item.id == val)[0].companyName
@@ -316,7 +349,6 @@ export default {
             this.singer_busArr = []
             this.singer_perArr = []
             if (this.contractType == 2) {
-                console.log('+++', this.signerTempForm._signerDemand)
                 this.signerTempForm.signerDemand = [...this.signerTempForm._signerDemand]
                 this.signerTempForm.signerDemand = this.signerTempForm.signerDemand.toString()
                 // this.signerTempForm.paramGroupId = this.signerTempForm.paramGroup.groupId
@@ -327,7 +359,8 @@ export default {
                     paramId: this.signerTempForm.paramId,
                     paramGroupName: this.signerTempForm.paramGroupName,
                     agent: '发起人指定',
-                    signerDemand: this.signerTempForm.signerDemand
+                    signerDemand: this.signerTempForm.signerDemand,
+                    signatureParam: this.signerTempForm.signatureParam
                 }
                 this.$refs.signerTempR.validate(valid => {
                     if (valid) {
@@ -344,8 +377,6 @@ export default {
                         } catch (error) {
 
                         }
-                    } else {
-
                     }
                 })
             } else {
@@ -371,8 +402,6 @@ export default {
                         } catch (error) {
 
                         }
-                    } else {
-
                     }
                 })
             }
@@ -381,7 +410,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.select-empty {
+    padding: 10px;
+    text-align: center;
+    color: #999;
+    font-size: 14px;
+}
  /deep/ .el-dialog .el-input{
-        width: 280px;
-    }
+    width: 280px;
+}
+/deep/ .el-select .el-input {
+    margin-left: 0;
+}
 </style>
