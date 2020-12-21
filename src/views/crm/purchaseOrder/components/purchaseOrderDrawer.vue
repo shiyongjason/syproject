@@ -9,7 +9,7 @@
                             经销商: {{ purchaseOrderDetail.purchaseOrder.companyName }}
                         </p>
                         <p class="col-filed">
-                            项目编号: {{ purchaseOrderDetail.purchaseOrder.purchaseOrderNo }}
+                            项目编号: {{ purchaseOrderDetail.purchaseOrder.projectNo }}
                         </p>
                     </div>
                     <div class="row-filed">
