@@ -212,8 +212,8 @@ export const CRM_PURCHASE_ORDER_SEE_DETAIL = 109503 // 查看详情
 // 好程工 支付单管理
 export const CRM_PAYMENT_REVIEW = 109504 // 审核
 export const CRM_PAYMENT_CONFIRM = 109505 // 支付确认
-export const CRM_PAYMENT_PREV = 109506 // 上游支付
-export const CRM_PAYMENT_CONFIRM_RECEIPT = 109507 // 确认收货
+export const CRM_PAYMENT_PREV = 109506 // 上游支付 支付单-列表 支付单-drawer
+export const CRM_PAYMENT_CONFIRM_RECEIPT = 109507 // 确认收货 支付单-列表 支付单-drawer
 export const CRM_PAYMENT_DETAIL = 109508 // 查看详情
 export const CRM_DOWN_PAYMENT_FUND_CONFIRM = 109509 // 首付款账单-支付确认
 export const CRM_PAYMENT_CONTRACT_SEE = 109510 // 支付单信息-查看合同
@@ -230,8 +230,7 @@ export const CRM_FUNDS_ARREAR_FUND_CONFIRM = 109519 // 尾款账单-支付确认
 export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
 // 好程工 后添加
 export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
-export const CRM_PREV_PAYMENT = 109522 // 上游支付
-export const CRM_CONFORM_RECEIPT = 109523 // 确认收货
+
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
 export const PLATFORM_OVERDUE_SUM_EXPORT = 110004
