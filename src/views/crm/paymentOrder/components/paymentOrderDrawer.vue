@@ -140,7 +140,7 @@
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">审核结果：</span>{{
-                                    paymentOrderDetail.payOrderDetail.approvalStatus | attributeComputed(PurchaseOrderDict.signResult.list)
+                                    paymentOrderDetail.payOrderDetail.approvalStatus | attributeComputed(PaymentOrderDict.approvalStatus.list)
                                 }}
                             </p>
                         </div>

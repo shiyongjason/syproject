@@ -30,7 +30,14 @@
                 <div class="collect-Info_result">{{ approveTitle + '结果：' }}
                     <i>{{ approveForm.approveResult == true ? '通过' : approveForm.approveResult == false ? '不通过' : '-' }}</i>
                 </div>
-                <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
+                <template v-if="activeName=='4'">
+                    <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
+                    <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>执行费率（银行转帐）：{{approveForm.transferBankRate}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>预付款比例：{{approveForm.advancePaymentRate}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                </template>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
                 <div class="collect-title">{{ item.firstCatagoryName }}</div>
@@ -80,7 +87,7 @@
                 </template>
             </div>
         </el-form>
-          <el-dialog :title="approveTitle" :visible.sync="approveVisible" width="30%" :before-close="onColseApprove" :modal=false :close-on-click-modal=false>
+        <el-dialog :title="approveTitle" :visible.sync="approveVisible" width="30%" :before-close="onColseApprove" :modal=false :close-on-click-modal=false>
             <el-form ref="approveDailg" :model="approvedialgForm" :rules="spproveRules" label-width="100px">
                 <el-form-item :label="approveTitle+'结果：'" prop="submitStatus">
                     <el-radio-group v-model="approvedialgForm.submitStatus">
@@ -97,7 +104,6 @@
                 <h-button type="primary" @click="onSaveapproveOrfinal(2)">确定</h-button>
             </span>
         </el-dialog>
-
         <el-dialog title="终审" :visible.sync="projectFinaleVisible" width="50%" :before-close="onCloseProjectFinale"
                    :modal=false :close-on-click-modal=false>
             <el-form ref="projectFinaleDialog" :model="projectFinaleForm" :rules="projectFinaleRules" label-width="180px">
@@ -110,13 +116,13 @@
                 <template v-if="projectFinaleForm.result == 1">
                     <el-form-item label="执行费率（银行承兑）：" prop="transferBankRate">
                         <el-input v-model="projectFinaleForm.transferBankRate"
-                                  v-isNegative:2="projectFinaleForm.transferBankRate">
+                                  v-is-num="projectFinaleForm.transferBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="执行费率（银行转账）：" prop="acceptBankRate">
                         <el-input v-model="projectFinaleForm.acceptBankRate"
-                                  v-isNegative:2="projectFinaleForm.acceptBankRate">
+                                  v-is-num="projectFinaleForm.acceptBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -128,7 +134,7 @@
                     </el-form-item>
                     <el-form-item label="预付款比例：" prop="advancePaymentRate">
                         <el-input v-model="projectFinaleForm.advancePaymentRate"
-                                  v-isNegative:2="projectFinaleForm.advancePaymentRate">
+                                  v-isNum="projectFinaleForm.advancePaymentRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -154,6 +160,37 @@
                 <h-button type="primary" @click="updateFinalStatus">确定</h-button>
             </span>
         </el-dialog>
+        <el-dialog title="终审字段修改" :visible.sync="finalConfirmVisible"  :modal=false  width="50%" :close-on-click-modal=false :before-close="finalConfirmDialogClose">
+            <el-form :model="formData" :rules="rules" ref="finalConfirmForm" label-width="180px">
+                <el-form-item label="执行费率（银行承兑）：" prop="acceptBankRate">
+                    <el-input type="text" maxlength="50" v-isNegative:2="formData.acceptBankRate" v-model="formData.acceptBankRate"></el-input>
+                </el-form-item>
+                <el-form-item label="执行费率（银行转帐）：" prop="transferBankRate">
+                    <el-input type="text" maxlength="50" v-model="formData.transferBankRate" v-isNegative:2="formData.transferBankRate"></el-input>
+                </el-form-item>
+                <el-form-item label="最大采购总额：" prop="maxPurchaseAmount">
+                    <el-input type="text" maxlength="50" v-model="formData.maxPurchaseAmount" v-isNum="formData.maxPurchaseAmount"></el-input>
+                </el-form-item>
+                <el-form-item label="预付款比例：" prop="advancePaymentRate">
+                    <el-input type="text" maxlength="50" v-model="formData.advancePaymentRate" v-isNum="formData.advancePaymentRate"></el-input>
+                </el-form-item>
+                <el-form-item label="剩余货款支付周期：" prop="remainPaymentCycle">
+                    <el-select v-model="formData.remainPaymentCycle">
+                        <el-option label="1" value="1"></el-option>
+                        <el-option label="2" value="2"></el-option>
+                        <el-option label="3" value="3"></el-option>
+                        <el-option label="4" value="4"></el-option>
+                        <el-option label="5" value="5"></el-option>
+                        <el-option label="6" value="6"></el-option>
+                    </el-select>
+                    个月
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <h-button @click="finalConfirmDialogClose">取消</h-button>
+                <h-button type="primary" @click="updateFinalConfirmFiled">确定</h-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -161,7 +198,7 @@ import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
-import { submitProjectdoc, saveProjectdoc, updateFinalStatus } from '../api/index'
+import { submitProjectdoc, saveProjectdoc, updateFinalStatus, putProjectDetail } from '../api/index'
 import { handleImgDownload } from '../../projectInformation/utils'
 
 export default {
@@ -190,6 +227,12 @@ export default {
     data () {
         function validateNumber (r, v, callback) {
             if (v < 0 || v > 100) {
+                return callback(new Error(r.message))
+            }
+            return callback()
+        }
+        function validateThanZero (r, v, callback) {
+            if (v < 0) {
                 return callback(new Error(r.message))
             }
             return callback()
@@ -243,27 +286,90 @@ export default {
                 ],
                 acceptBankRate: [
                     { required: true, message: '请输入', trigger: 'blur' },
-                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                    { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 maxPurchaseAmount: [
-                    { required: true, message: '请输入', trigger: 'blur' }
+                    { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
+                    { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
-                    { required: true, message: '请输入', trigger: 'blur' },
-                    { message: '预付款比例0-100', validator: validateNumber, trigger: 'blur' }
+                    { required: true, message: '预付款比例不能为空', trigger: 'blur' },
+                    { message: '预付款比例0-100', validator: validateThanZero, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择', trigger: 'blur' }
                 ]
             },
             isDownLoad: false,
-            isDownLoads: false
+            isDownLoads: false,
+            finalConfirmVisible: false,
+            formData: {
+                acceptBankRate: '',
+                transferBankRate: '',
+                maxPurchaseAmount: '',
+                advancePaymentRate: '',
+                remainPaymentCycle: ''
+            },
+            rules: {
+                acceptBankRate: [
+                    { required: true, message: '执行费率（银行承兑）不能为空', trigger: 'blur' },
+                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                ],
+                transferBankRate: [
+                    { required: true, message: '执行费率（银行转帐）不能为空', trigger: 'blur' },
+                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                ],
+                maxPurchaseAmount: [
+                    { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
+                    { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
+                ],
+                advancePaymentRate: [
+                    { required: true, message: '预付款比例不能为空', trigger: 'blur' },
+                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                ],
+                remainPaymentCycle: [
+                    { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
+                ]
+            }
         }
     },
-    mounted () {
-
-    },
     methods: {
+        updateFinalConfirmFiled () {
+            this.$refs.finalConfirmForm.validate(async (value) => {
+                if (value) {
+                    const params = { ...this.formData }
+                    params.id = this.approveForm.projectId
+                    await putProjectDetail(params)
+                    this.finalConfirmDialogClose()
+                    this.$emit('refreshDetail')
+                }
+            })
+        },
+        openFinalConfirmDialog () {
+            this.finalConfirmVisible = true
+            // finalConfirmForm
+            this.formData.acceptBankRate = this.approveForm.acceptBankRate
+            this.formData.transferBankRate = this.approveForm.transferBankRate
+            this.formData.maxPurchaseAmount = this.approveForm.maxPurchaseAmount
+            this.formData.advancePaymentRate = this.approveForm.advancePaymentRate
+            this.formData.remainPaymentCycle = this.approveForm.remainPaymentCycle
+            this.$nextTick(() => {
+                this.$refs.finalConfirmForm.clearValidate()
+            })
+        },
+        clearFormData () {
+            this.formData = {
+                acceptBankRate: '',
+                transferBankRate: '',
+                maxPurchaseAmount: '',
+                advancePaymentRate: '',
+                remainPaymentCycle: ''
+            }
+        },
+        finalConfirmDialogClose () {
+            this.clearFormData()
+            this.finalConfirmVisible = false
+        },
         onShowApprove () {
             this.approveVisible = this.status == 4
             this.projectFinaleVisible = this.status != 4
@@ -619,9 +725,21 @@ export default {
     }
 
     p {
+        display: flex;
         font-size: 14px;
         color: #666666;
         padding-top: 16px;
+        align-items: center;
     }
+}
+.crm-edit {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    margin-left: 10px;
+}
+.star {
+    color: red;
+    font-size: 14px;
 }
 </style>

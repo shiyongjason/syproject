@@ -131,6 +131,19 @@ const PaymentOrderDict = Object.freeze({
                 value: '客户已拒签'
             }
         ]
+    },
+    approvalStatus: {
+        title: '审核结果',
+        list: [
+            {
+                key: 1,
+                value: '通过'
+            },
+            {
+                key: 2,
+                value: '不通过'
+            }
+        ]
     }
 })
 

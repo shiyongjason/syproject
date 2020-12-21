@@ -12,7 +12,7 @@
             <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
             <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
-            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
             <ProjectOrderTab  v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
             <div class="drawer-footer">
                 <div class="drawer-button">
@@ -267,11 +267,18 @@ export default {
             this.isDownLoads = false
             if (tab.index > 0) this.onFindRiskproject(tab.index)
         },
+        refreshFinalDetail () {
+            this.onFindRiskproject(3)
+        },
         isShowTab (key, status) {
             // 由于新加了资料审核状态 status ==12
             // 骚操作 12=》3
             if (status == 12) {
                 status = 3
+            }
+            let arr = [5, 6, 7, 8, 9] // 采购单tab是否显示
+            if (key == '5') {
+                return arr.indexOf(status) > -1
             }
             if (key < status) {
                 return true
