@@ -99,8 +99,8 @@
                     <span class="colblue"> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">支付确认</h-button>
-                    <h-button table @click="seePayEnter(scope.data.row)">查看凭证</h-button>
+                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
+                    <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
                 </template>
             </basicTable>
             <FundsDialog :is-open="fundsDialogVisible" :detail="fundsDialogDetail" :status="queryParams.repaymentTypeArrays"
@@ -115,6 +115,7 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import FundsDialog from './components/fundsDialog'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
+import * as Auths from '@/utils/auth_const'
 
 export default {
     name: 'funds',
@@ -123,6 +124,7 @@ export default {
     },
     data () {
         return {
+            Auths,
             queryParams: {
                 fundId: '',
                 paymentOrderNo: '',
@@ -184,6 +186,30 @@ export default {
         }
     },
     methods: {
+        hasPayEnterAuth (type) {
+            // 1-首付款；2-尾款；3-服务费；
+            if (type === '1') {
+                return this.hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM)
+            }
+            if (type === '2') {
+                return this.hosAuthCheck(this.Auths.CRM_FUNDS_ARREAR_FUND_CONFIRM)
+            }
+            if (type === '3') {
+                return this.hosAuthCheck(this.Auths.CRM_FUNDS_SERVICE_FUND_CONFIRM)
+            }
+        },
+        hasSeePayEnterAuth (type) {
+            // 1-首付款；2-尾款；3-服务费；
+            if (type === '1') {
+                return this.hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_PAYMENT_FUND_SEE)
+            }
+            if (type === '2') {
+                return this.hosAuthCheck(this.Auths.CRM_FUNDS_ARREAR_FUND_SEE)
+            }
+            if (type === '3') {
+                return this.hosAuthCheck(this.Auths.CRM_FUNDS_SERVICE_FUND_SEE)
+            }
+        },
         pickerOptionsStart (type) {
             return {
                 disabledDate: (time) => {

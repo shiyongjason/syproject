@@ -195,6 +195,13 @@
                                 <!--                        首付款待签约以后-->
                             </div>
                         </template>
+                        <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus === PaymentOrderDict.orderLetterStatus.list[2].key">
+                            <div class="row-filed">
+                                <p class="col-filed col-33">
+                                    <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
+                                </p>
+                            </div>
+                        </template>
                     </template>
                     <!--                    首付款待支付end-->
                     <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
@@ -329,7 +336,7 @@
                                 </p>
                             </div>
                             <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
-                                <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT)">
+                                <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)">
                                     上游支付
                                 </h-button>
                             </div>
@@ -353,7 +360,7 @@
                                 </div>
                                 <div class="row-filed">
                                     <h-button type="assist" @click="openConfirmReceipt"
-                                              v-if="hosAuthCheck(Auths.CRM_CONFORM_RECEIPT)">确认收货
+                                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT)">确认收货
                                     </h-button>
                                 </div>
                             </template>
