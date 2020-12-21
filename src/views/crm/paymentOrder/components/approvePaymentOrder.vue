@@ -279,7 +279,6 @@ export default {
             this.formData.approvalRemark = ''
             this.formData.accountReceivablePledgeType = ''
             this.formData.supplierPaymentType = ''
-            this.formData.downPaymentAmount = ''
             this.formData.supplierPaymentMethod = ''
         }
     },
