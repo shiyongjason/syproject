@@ -196,9 +196,9 @@
                     <template v-if="dialogStatus.watch.status === openStatus">
                         <p>
                             变更结果：
-                            {{ dialogDetail.purchaseOrder.signResult | attributeComputed(purchaseOrderDict.changeResult.list)}}
+                            {{ dialogDetail.poChange.changeResult | attributeComputed(purchaseOrderDict.changeResult.list)}}
                         </p>
-                        <p>驳回原因：{{ dialogDetail.purchaseOrder.remark }}</p>
+                        <p>驳回原因：{{ dialogDetail.poChange.remark }}</p>
                     </template>
                 </div>
             </div>
