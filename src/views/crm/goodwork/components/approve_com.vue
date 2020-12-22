@@ -27,16 +27,16 @@
         </div>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
-                <div class="collect-Info_result">{{ approveTitle + '结果：' }}
+                <div class="collect-Info_result">{{ approveTitle + '结果：' }} {{approveForm.approveResult}}
                     <i>{{ approveForm.approveResult == true ? '通过' : approveForm.approveResult == false ? '不通过' : '-' }}</i>
                 </div>
                 <template v-if="activeName=='4'">
                     <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
-                    <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>执行费率（银行转帐）：{{approveForm.transferBankRate}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>执行费率（银行转帐）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>预付款比例：{{approveForm.advancePaymentRate}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>预付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                 </template>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
@@ -278,26 +278,26 @@ export default {
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ],
                 transferBankRate: [
-                    { required: true, message: '请输入执行费率', trigger: 'blur' },
+                    { required: true, message: '请输入执行费率（银行承兑）', trigger: 'blur' },
                     {
                         trigger: 'blur',
                         message: '执行费率（银行承兑）0-100',
                         validator: validateNumber }
                 ],
                 acceptBankRate: [
-                    { required: true, message: '请输入', trigger: 'blur' },
+                    { required: true, message: '请输入执行费率（银行转账）', trigger: 'blur' },
                     { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 maxPurchaseAmount: [
                     { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
-                    { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
+                    { message: '最大采购总额不能小于零', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
                     { required: true, message: '预付款比例不能为空', trigger: 'blur' },
                     { message: '预付款比例0-100', validator: validateThanZero, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
-                    { required: true, message: '请选择', trigger: 'blur' }
+                    { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
                 ]
             },
             isDownLoad: false,
@@ -330,6 +330,24 @@ export default {
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
                 ]
+            }
+        }
+    },
+    computed: {
+        canIOpenTheWindow () {
+            let flag = 0
+            let name = ''
+            this.approveForm.projectDocList.forEach(item => {
+                item.respRiskCheckDocTemplateList && item.respRiskCheckDocTemplateList.forEach(obj => {
+                    if (obj.mondatoryFlag && obj.riskCheckProjectDocPos.length === 0) {
+                        flag += 1
+                        if (!name) name = obj.secondCatagoryName
+                    }
+                })
+            })
+            return {
+                flag: flag === 0,
+                name: name
             }
         }
     },
@@ -372,13 +390,18 @@ export default {
         },
         onShowApprove () {
             this.approveVisible = this.status == 4
-            this.projectFinaleVisible = this.status != 4
-            this.approveTitle = this.status == 4 ? '立项' : '终审'
-            if (this.status !== 4) {
-                this.$nextTick(() => {
-                    this.$refs.projectFinaleDialog.clearValidate()
-                })
+            let isFinal = this.status != 4
+            if (isFinal) {
+                if (this.canIOpenTheWindow.flag) {
+                    this.projectFinaleVisible = isFinal
+                    this.$nextTick(() => {
+                        this.$refs.projectFinaleDialog.clearValidate()
+                    })
+                } else {
+                    this.$message.error(`${this.canIOpenTheWindow.name}不能为空`)
+                }
             }
+            this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
         validFormInfo (list) {
             const respTemp = this.approveForm.projectDocList[0].respRiskCheckDocTemplateList

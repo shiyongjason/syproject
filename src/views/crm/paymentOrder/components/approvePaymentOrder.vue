@@ -416,5 +416,16 @@ export default {
 }
 .info-img-group {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    .label{
+        width: 100px;
+        flex: 0 0 100px;
+    }
+    img {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
 }
 </style>
