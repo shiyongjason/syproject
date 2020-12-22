@@ -83,7 +83,7 @@
                                         采购批次： {{ purchaseOrderDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购
                                     </p>
                                     <p class="col-filed">
-                                        最迟发货日期： {{ purchaseOrderDetail.poInfo.lastestGoodsDate }}
+                                        最迟发货日期： {{ purchaseOrderDetail.poInfo.lastGoodsDate }}
                                     </p>
                                 </div>
                                 <div class="row-filed">
@@ -131,10 +131,10 @@
                             </div>
                             <div class="row-filed">
                                 <p class="col-filed">
-                                    更新时间：{{ purchaseOrderDetail.purchaseOrder.updateTime }}
+                                    更新时间：{{ purchaseOrderDetail.purchaseOrder.updateTime | formatDate }}
                                 </p>
                                 <p class="col-filed">
-                                    更新人：{{ purchaseOrderDetail.purchaseOrder.updateBy }}（{{ purchaseOrderDetail.purchaseOrder.updateBy }}）
+                                    更新人：{{ purchaseOrderDetail.purchaseOrder.updateBy }}（{{ purchaseOrderDetail.purchaseOrder.updatePhone }}）
                                 </p>
                             </div>
                         </template>
@@ -278,7 +278,7 @@ export default {
                 { label: '支付单编号', prop: 'paymentOrderNo' },
                 { label: '金额', prop: 'applyAmount' },
                 { label: '状态', prop: 'status' },
-                { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes' },
+                { label: '申请时间', prop: 'applyDate', formatters: 'dateTimes', width: '150' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes' }
             ],
             PurchaseOrderDict,

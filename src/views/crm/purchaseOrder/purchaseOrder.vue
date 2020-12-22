@@ -58,8 +58,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true
-                                   @change="onSelectStatus">
+                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
                             <el-option :label="item.value" :value="item.key"
                                        v-for="item in PurchaseOrderDict.status.list" :key="item.key"></el-option>
                         </el-select>
@@ -81,11 +80,14 @@
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200
                         :isShowIndex='true'>
+                <template slot="projectNo" slot-scope="scope">
+                    <span class="colblue" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
+                </template>
                 <template slot="poAmount" slot-scope="scope">
-                    <span class="colblue"> {{ scope.data.row.poAmount | fundMoney }}</span>
+                    <span> {{ scope.data.row.poAmount | fundMoney }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
-                    <span class="colblue"> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
+                    <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)"
@@ -145,7 +147,7 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
-                { label: '采购购单金额', prop: 'poAmount', width: '100' },
+                { label: '采购单金额', prop: 'poAmount', width: '100' },
                 { label: '状态', prop: 'status', width: '120' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'createTimeOrder' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTimeOrder' }
@@ -202,9 +204,14 @@ export default {
         }
     },
     methods: {
-        onSelectDep () {
-        },
-        onSelectStatus () {
+        goProjectDetail (row) {
+            this.$router.push({
+                path: '/goodwork/projectlist',
+                query: {
+                    detail: true,
+                    projectNo: row.projectNo
+                }
+            })
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
@@ -270,5 +277,9 @@ export default {
 <style scoped>
 .eltagtop {
     margin-bottom: 10px;
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 </style>

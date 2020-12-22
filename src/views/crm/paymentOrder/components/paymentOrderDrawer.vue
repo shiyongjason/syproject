@@ -112,7 +112,19 @@
                     <div class="row-filed">
                         <p class="col-filed">
                             <span class="label">申请时间：</span>
-                            {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate }}
+                            {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                        </p>
+                        <p class="col-filed">
+                            <span class="label">申请人：</span>
+                            {{
+                                paymentOrderDetail.payOrderDetail.createBy
+                            }}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
+                        </p>
+                    </div>
+                    <div class="row-filed" v-if="PaymentOrderDict.status.list[7].key === paymentOrderDetail.payOrderDetail.status">
+                        <p class="col-filed">
+                            <span class="label">关闭时间：</span>
+                            {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
                         </p>
                         <p class="col-filed">
                             <span class="label">申请人：</span>
@@ -136,7 +148,7 @@
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">审核时间：</span>
-                                {{ paymentOrderDetail.payOrderDetail.approvalTime | formatDate }}
+                                {{ paymentOrderDetail.payOrderDetail.approvalTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">审核结果：</span>{{
@@ -144,6 +156,13 @@
                                 }}
                             </p>
                         </div>
+                        <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus === PaymentOrderDict.approvalStatus.list[1].key">
+                            <div class="row-filed">
+                                <p class="col-filed col-33">
+                                    <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
+                                </p>
+                            </div>
+                        </template>
                         <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus !== PurchaseOrderDict.signResult.list[1].key && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
                             <div class="row-filed">
                                 <p class="col-filed col-33">
@@ -195,13 +214,6 @@
                                 <!--                        首付款待签约以后-->
                             </div>
                         </template>
-                        <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus === PaymentOrderDict.orderLetterStatus.list[2].key">
-                            <div class="row-filed">
-                                <p class="col-filed col-33">
-                                    <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
-                                </p>
-                            </div>
-                        </template>
                     </template>
                     <!--                    首付款待支付end-->
                     <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
@@ -246,11 +258,11 @@
                                         </h-button>
                                     </template>
                                     <template v-else>
-                                <span class="info-status">
-                                    {{
-                                        paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                    }}
-                                </span>
+                                        <span class="info-status">
+                                            {{
+                                                paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
+                                            }}
+                                        </span>
                                     </template>
                                 </p>
                             </div>

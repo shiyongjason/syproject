@@ -362,6 +362,9 @@ export default {
         })
     },
     async mounted () {
+        if (this.$route.query.detail) {
+            this.queryParams.projectNo = this.$route.query.projectNo
+        }
         this.queryParams.jobNumber = this.userInfo.jobNumber
         this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
         this.searchList()

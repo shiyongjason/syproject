@@ -148,7 +148,10 @@
             </div>
             <div class="row-filed result">
                 <div class="col-filed" v-if="dialogDetail.purchaseOrder">
-                    <div class="info-title">变更结果</div>
+                    <div class="info-title">
+                        <template v-if="dialogStatus.enter.status === openStatus">签约结果</template>
+                        <template v-else>变更结果</template>
+                    </div>
                     <!--采购单变更和采购单确认变更 变更结果模板一样-->
                     <el-form ref="form" :model="formData" v-if="dialogStatus.watch.status !== openStatus" :rules="rules"
                              label-width="120px">
@@ -243,10 +246,10 @@ export default {
             },
             rules: {
                 signResult: [
-                    { required: true, message: '请选择签约结果', trigger: 'blur' }
+                    { required: true, message: '请选择签约结果', trigger: 'change' }
                 ],
                 freeInterestType: [
-                    { required: true, message: '请选择免息方式', trigger: 'blur' }
+                    { required: true, message: '请选择免息方式', trigger: 'change' }
                 ],
                 remark: [
                     { required: true, message: '请输入驳回原因', trigger: 'blur' }
@@ -347,6 +350,9 @@ export default {
                 }
                 _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)
                 this.dialogDetail = _data
+                this.$nextTick(() => {
+                    this.$refs.form.clearValidate()
+                })
             }
         },
         'formData.signResult' () {
