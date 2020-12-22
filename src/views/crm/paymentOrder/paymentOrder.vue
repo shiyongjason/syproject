@@ -304,6 +304,7 @@ export default {
         onCloseDialogAndQuery (type) {
             this[type] = false
             this.findPaymentOrderList(this.queryParams)
+            this.drawer = false
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',

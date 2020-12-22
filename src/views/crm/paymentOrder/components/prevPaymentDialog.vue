@@ -39,7 +39,7 @@
                 <hosjoyUpload
                               v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=100
                               :limit=100 :action='action' :uploadParameters='uploadParameters'
-                              style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()">
+                              style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>

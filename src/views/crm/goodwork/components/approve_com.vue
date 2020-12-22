@@ -116,13 +116,13 @@
                 <template v-if="projectFinaleForm.result == 1">
                     <el-form-item label="执行费率（银行承兑）：" prop="transferBankRate">
                         <el-input v-model="projectFinaleForm.transferBankRate"
-                                  v-is-num="projectFinaleForm.transferBankRate">
+                                  v-isNegative:2="projectFinaleForm.transferBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="执行费率（银行转账）：" prop="acceptBankRate">
                         <el-input v-model="projectFinaleForm.acceptBankRate"
-                                  v-is-num="projectFinaleForm.acceptBankRate">
+                                  v-isNegative:2="projectFinaleForm.acceptBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -134,7 +134,7 @@
                     </el-form-item>
                     <el-form-item label="预付款比例：" prop="advancePaymentRate">
                         <el-input v-model="projectFinaleForm.advancePaymentRate"
-                                  v-isNum="projectFinaleForm.advancePaymentRate">
+                                  v-isNegative:2="projectFinaleForm.advancePaymentRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -169,10 +169,10 @@
                     <el-input type="text" maxlength="50" v-model="formData.transferBankRate" v-isNegative:2="formData.transferBankRate"></el-input>
                 </el-form-item>
                 <el-form-item label="最大采购总额：" prop="maxPurchaseAmount">
-                    <el-input type="text" maxlength="50" v-model="formData.maxPurchaseAmount" v-isNum="formData.maxPurchaseAmount"></el-input>
+                    <el-input type="text" maxlength="50" v-model="formData.maxPurchaseAmount" v-isNegative:2="formData.maxPurchaseAmount"></el-input>
                 </el-form-item>
                 <el-form-item label="预付款比例：" prop="advancePaymentRate">
-                    <el-input type="text" maxlength="50" v-model="formData.advancePaymentRate" v-isNum="formData.advancePaymentRate"></el-input>
+                    <el-input type="text" maxlength="50" v-model="formData.advancePaymentRate" v-isNegative:2="formData.advancePaymentRate"></el-input>
                 </el-form-item>
                 <el-form-item label="剩余货款支付周期：" prop="remainPaymentCycle">
                     <el-select v-model="formData.remainPaymentCycle">
