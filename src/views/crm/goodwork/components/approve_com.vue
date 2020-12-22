@@ -27,7 +27,8 @@
         </div>
         <el-form :model="approveForm" ref="approveForm" class="demo-ruleForm">
             <div class="collect-Info" v-if="(activeName=='3'&&status!=4)||(activeName=='4'&&status!=11)">
-                <div class="collect-Info_result">{{ approveTitle + '结果：' }} {{approveForm.approveResult}}
+                <div class="collect-Info_result">{{ approveTitle + '结果：' }}
+
                     <i>{{ approveForm.approveResult == true ? '通过' : approveForm.approveResult == false ? '不通过' : '-' }}</i>
                 </div>
                 <template v-if="activeName=='4'">
@@ -35,7 +36,7 @@
                     <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>执行费率（银行转帐）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>预付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                 </template>
             </div>
@@ -115,24 +116,24 @@
                 </el-form-item>
                 <template v-if="projectFinaleForm.result == 1">
                     <el-form-item label="执行费率（银行承兑）：" prop="transferBankRate">
-                        <el-input v-model="projectFinaleForm.transferBankRate"
+                        <el-input v-model="projectFinaleForm.transferBankRate" maxlength="10"
                                   v-isNegative:2="projectFinaleForm.transferBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="执行费率（银行转账）：" prop="acceptBankRate">
-                        <el-input v-model="projectFinaleForm.acceptBankRate"
+                        <el-input v-model="projectFinaleForm.acceptBankRate" maxlength="10"
                                   v-isNegative:2="projectFinaleForm.acceptBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
                     <el-form-item label="最大采购总额：" prop="maxPurchaseAmount">
-                        <el-input v-model="projectFinaleForm.maxPurchaseAmount"
+                        <el-input v-model="projectFinaleForm.maxPurchaseAmount" maxlength="18"
                                   v-isNegative:2="projectFinaleForm.maxPurchaseAmount">
                             <template slot="suffix">元</template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="预付款比例：" prop="advancePaymentRate">
+                    <el-form-item label="首付款比例：" prop="advancePaymentRate" maxlength="10">
                         <el-input v-model="projectFinaleForm.advancePaymentRate"
                                   v-isNegative:2="projectFinaleForm.advancePaymentRate">
                             <template slot="suffix">%</template>
@@ -163,16 +164,16 @@
         <el-dialog title="终审字段修改" :visible.sync="finalConfirmVisible"  :modal=false  width="50%" :close-on-click-modal=false :before-close="finalConfirmDialogClose">
             <el-form :model="formData" :rules="rules" ref="finalConfirmForm" label-width="180px">
                 <el-form-item label="执行费率（银行承兑）：" prop="acceptBankRate">
-                    <el-input type="text" maxlength="50" v-isNegative:2="formData.acceptBankRate" v-model="formData.acceptBankRate"></el-input>
+                    <el-input type="text" maxlength="10" v-isNegative:2="formData.acceptBankRate" v-model="formData.acceptBankRate"></el-input>
                 </el-form-item>
                 <el-form-item label="执行费率（银行转帐）：" prop="transferBankRate">
-                    <el-input type="text" maxlength="50" v-model="formData.transferBankRate" v-isNegative:2="formData.transferBankRate"></el-input>
+                    <el-input type="text" maxlength="10" v-model="formData.transferBankRate" v-isNegative:2="formData.transferBankRate"></el-input>
                 </el-form-item>
                 <el-form-item label="最大采购总额：" prop="maxPurchaseAmount">
-                    <el-input type="text" maxlength="50" v-model="formData.maxPurchaseAmount" v-isNegative:2="formData.maxPurchaseAmount"></el-input>
+                    <el-input type="text" maxlength="18" v-model="formData.maxPurchaseAmount" v-isNegative:2="formData.maxPurchaseAmount"></el-input>
                 </el-form-item>
-                <el-form-item label="预付款比例：" prop="advancePaymentRate">
-                    <el-input type="text" maxlength="50" v-model="formData.advancePaymentRate" v-isNegative:2="formData.advancePaymentRate"></el-input>
+                <el-form-item label="首付款比例：" prop="advancePaymentRate">
+                    <el-input type="text" maxlength="10" v-model="formData.advancePaymentRate" v-isNegative:2="formData.advancePaymentRate"></el-input>
                 </el-form-item>
                 <el-form-item label="剩余货款支付周期：" prop="remainPaymentCycle">
                     <el-select v-model="formData.remainPaymentCycle">
@@ -219,6 +220,11 @@ export default {
         },
         showPacking: {
             default: null
+        },
+        projectForm: {
+            default: function () {
+                return {}
+            }
         }
     },
     components: {
@@ -293,8 +299,8 @@ export default {
                     { message: '最大采购总额不能小于零', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
-                    { required: true, message: '预付款比例不能为空', trigger: 'blur' },
-                    { message: '预付款比例0-100', validator: validateThanZero, trigger: 'blur' }
+                    { required: true, message: '首付款比例不能为空', trigger: 'blur' },
+                    { message: '首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
@@ -324,7 +330,7 @@ export default {
                     { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
-                    { required: true, message: '预付款比例不能为空', trigger: 'blur' },
+                    { required: true, message: '首付款比例不能为空', trigger: 'blur' },
                     { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
@@ -357,6 +363,9 @@ export default {
                 if (value) {
                     const params = { ...this.formData }
                     params.id = this.approveForm.projectId
+                    params.deviceAmount = this.projectForm.projectId
+                    params.contractAmount = this.projectForm.projectId
+                    params.predictLoanAmount = this.projectForm.projectId
                     await putProjectDetail(params)
                     this.finalConfirmDialogClose()
                     this.$emit('refreshDetail')

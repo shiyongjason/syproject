@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="查看收货明细" :visible.sync="isOpen" width="600px" :before-close="()=> $emit('onClose')">
+    <el-dialog :close-on-click-modal=false title="查看收货明细" :visible.sync="isOpen" width="600px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
             <div class="tab-pane">
                 <p>

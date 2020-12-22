@@ -12,7 +12,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.deptName" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList"
+                            <el-option :label="item.deptName" :value="item.deptName" v-for="item in crmdepList"
                                        :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -39,12 +39,12 @@
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.startApplyDate" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
+                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.endApplyDate" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
+                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
-                项,采购单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
+                项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
             </el-tag>
             <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -94,7 +94,7 @@
                     <h-button table
                               @click="tableOpenPrevPayDialog(scope.data.row)"
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
-                                  PaymentOrderDict.status.list[0].key !== scope.data.row.status
+                                  scope.data.row.supplierPayFlag === 1
                               )"
                     >
                         上游支付
@@ -102,7 +102,7 @@
                     <h-button table
                               @click="tableOpenConfirmReceiptDialog(scope.data.row)"
                               v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
-                                  PaymentOrderDict.status.list[3].key === scope.data.row.status
+                                  scope.data.row.goodsConfirmFlag === 1
                               )"
                     >确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
@@ -121,7 +121,8 @@
         <ApprovePaymentOrder :is-open="approvePaymentVisible" :paymentDetail="paymentDetail"
                              @onClose="approvePaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ApprovePaymentOrder>
         <PrevPaymentDialog :params="paymentParams" :is-open="prevPaymentVisible"
-                           @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')"></PrevPaymentDialog>
+                           @onClose="prevPaymentVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery('prevPaymentVisible')"
+            @onCloseDialogAndQueryDetail="onCloseDialogAndQueryDetail"></PrevPaymentDialog>
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
                                @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible"
@@ -305,6 +306,10 @@ export default {
             this[type] = false
             this.findPaymentOrderList(this.queryParams)
             this.drawer = false
+        },
+        onCloseDialogAndQueryDetail (type) {
+            this[type] = false
+            this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',

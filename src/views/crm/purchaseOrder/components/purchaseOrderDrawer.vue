@@ -60,7 +60,7 @@
                                 </p>
                                 <template v-if="purchaseOrderDetail.poInfo">
                                     <p class="col-filed">
-                                        经销商预付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
+                                        经销商首付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
                                     </p>
                                     <p class="col-filed">
                                         剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}月
@@ -225,15 +225,17 @@
                     </el-collapse>
                     <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
                         <div class="info-title info-title-main-color">支付单</div>
-                        <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false"
-                                    :isShowIndex='true'>
-                            <template slot="status" slot-scope="scope">
-                                <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
-                            </template>
-                            <template slot="applyAmount" slot-scope="scope">
-                                <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
-                            </template>
-                        </basicTable>
+                        <div class="payment-table">
+                            <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false"
+                                        :isShowIndex='true'>
+                                <template slot="status" slot-scope="scope">
+                                    <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
+                                </template>
+                                <template slot="applyAmount" slot-scope="scope">
+                                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                                </template>
+                            </basicTable>
+                        </div>
                     </template>
                 </div>
                 <div class="drawer-footer">
@@ -491,5 +493,8 @@ export default {
     font-weight: 600;
     color: #000000;
     font-size: 14px;
+}
+.payment-table {
+    padding-bottom: 100px;
 }
 </style>

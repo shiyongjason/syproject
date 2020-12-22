@@ -62,12 +62,12 @@
                     <div class="query-col__label">支付成功时间：</div>
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.paidStartTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
+                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart('paidEndTime')">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.paidEndTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
+                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd('paidStartTime')">
                         </el-date-picker>
                     </div>

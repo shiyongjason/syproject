@@ -20,11 +20,11 @@ const PaymentOrderDict = Object.freeze({
             },
             {
                 key: 9,
-                value: '尾款待支付'
+                value: '剩余货款待支付'
             },
             {
                 key: 10,
-                value: '尾款待确认'
+                value: '剩余货款待确认'
             },
             {
                 key: 11,

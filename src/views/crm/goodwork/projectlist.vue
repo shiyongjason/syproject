@@ -278,7 +278,7 @@ export default {
                 {
                     label: '工程项目回款方式',
                     children: [
-                        { label: '预付款比例', prop: 'advancePaymentProportion', width: '100', unit: '%' },
+                        { label: '首付款比例', prop: 'advancePaymentProportion', width: '100', unit: '%' },
                         { label: '货到付款比例', prop: 'deliveryPaymentProportion', width: '100', unit: '%' },
                         { label: '安装进度款比例', prop: 'installProgressPaymentProportion', width: '130', unit: '%' },
                         { label: '验收款比例', prop: 'acceptancePaymentProportion', width: '100', unit: '%' },

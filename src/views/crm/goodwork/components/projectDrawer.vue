@@ -12,7 +12,7 @@
             <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
             <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
-            <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+            <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
             <ProjectOrderTab  v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
             <div class="drawer-footer">
                 <div class="drawer-button">
