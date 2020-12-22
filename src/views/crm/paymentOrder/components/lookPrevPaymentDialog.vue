@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="查看上游支付明细" :visible.sync="isOpen" width="600px" :before-close="()=> onClose()">
+    <el-dialog :close-on-click-modal=false title="查看上游支付明细" :visible.sync="isOpen" width="600px" :before-close="()=> onClose()">
         <div class="info-content">
             <div class="tab-pane">
                 <div class="row">

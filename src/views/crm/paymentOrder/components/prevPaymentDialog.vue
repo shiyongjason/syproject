@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="上游支付" :visible.sync="isOpen" width="800px" :before-close="()=> onCancel()" class="prev-payment-dialog">
+    <el-dialog :close-on-click-modal=false title="上游支付" :visible.sync="isOpen" width="800px" :before-close="()=> onCancel()" class="prev-payment-dialog">
         <el-form :model="formData" :rules="rules" label-width="150px" ref="form">
             <el-form-item label="经销商：">
                 {{ prevPaymentDetail.companyName }}
@@ -11,7 +11,7 @@
                 {{ prevPaymentDetail.deptName }}
             </el-form-item>
             <el-form-item label="剩余应上游支付：">
-                {{ prevPaymentDetail.surplusAmount }}元
+                {{ prevPaymentDetail.surplusAmount | fundMoneyHasTail }}元
             </el-form-item>
             <el-form-item label="上游供应商：">
                 {{ prevPaymentDetail.supplierCompanyName }}
@@ -137,7 +137,7 @@ export default {
                         ...this.params
                     }
                     await updatePrevPayPass(params)
-                    this.$emit('onClose')
+                    this.$emit('onCloseDialogAndQueryDetail', 'prevPaymentVisible')
                 }
             })
         }

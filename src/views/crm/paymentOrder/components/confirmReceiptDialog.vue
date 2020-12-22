@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="确认收货" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('onClose')">
+    <el-dialog title="确认收货" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('onClose')" :close-on-click-modal=false>
         <el-form label-width="150px" :model="formData" :rules="rules" ref="form">
             <el-form-item label="经销商：">
                 {{ enterReceiptDetail.companyName }}

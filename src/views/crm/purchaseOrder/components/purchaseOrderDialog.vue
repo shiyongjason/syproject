@@ -22,7 +22,7 @@
                             <span>{{ dialogDetail.poInfo.poNumber || '-' }}</span>
                         </li>
                         <li>
-                            <span class="label">经销商预付款比例： </span>
+                            <span class="label">经销商首付款比例： </span>
                             <span>{{ dialogDetail.poInfo.prePercent || '-' }}%</span>
                         </li>
                         <li>
@@ -113,7 +113,11 @@
                             </tr>
                             <tr :key="item.id"
                                 v-for="item in dialogDetail.contracts">
-                                <td>{{ item.contractName || '-' }}</td>
+                                <td>
+                                    <span class="go-contract" @click="goContractDetail(item.changedContractId)">
+                                        {{ item.contractName || '-' }}
+                                    </span>
+                                </td>
                                 <td>{{
                                         item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list)
                                     }}
@@ -139,7 +143,7 @@
                                 <td>{{ item.contractTypeId | attributeComputed(purchaseOrderDict.contractType.list) }}</td>
                                 <td>
                                     <span class="go-contract"  @click="goContractDetail(item.originalContractId)" v-if="item.originalContractId">{{item.originalContractName}}</span>
-                                    <span v-else></span>
+                                    <span v-else>/</span>
                                 </td>
                             </tr>
                         </table>
@@ -246,7 +250,7 @@ export default {
             },
             rules: {
                 signResult: [
-                    { required: true, message: '请选择签约结果', trigger: 'change' }
+                    { required: true, message: PurchaseOrderDialogStatus.enter.status === this.openStatus ? '请选择签约结果' : '请选择变更结果', trigger: 'change' }
                 ],
                 freeInterestType: [
                     { required: true, message: '请选择免息方式', trigger: 'change' }
@@ -358,6 +362,9 @@ export default {
         'formData.signResult' () {
             this.formData.remark = ''
             this.formData.freeInterestType = ''
+            this.$nextTick(() => {
+                this.$refs.form.clearValidate()
+            })
         }
     }
 }

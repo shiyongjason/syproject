@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
+        <el-dialog :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
             <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form">
                 <div class="row-filed">
                     <div class="col-filed">
@@ -142,7 +142,7 @@
                             {{ paymentDetail.payOrderPoDetail.goodsAddress }}
                         </p>
                         <p>
-                            <span>经销商预付款比例：</span>
+                            <span>经销商首付款比例：</span>
                             {{ paymentDetail.payOrderPoDetail.prePercent }}%
                         </p>
                         <p>
@@ -418,7 +418,6 @@ export default {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
     .label{
         width: 100px;
         flex: 0 0 100px;

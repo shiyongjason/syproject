@@ -96,7 +96,7 @@
                 个月
             </el-form-item>
             <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">
-                <el-form-item label="预付款比例">
+                <el-form-item label="首付款比例">
                     <el-input v-model="projectForm.advancePaymentProportion" maxlength="10" v-isNum:2="form.advancePaymentProportion"><template slot="append">%</template></el-input>
                 </el-form-item>
                 <el-form-item label="货到付款比例">

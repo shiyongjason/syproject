@@ -58,7 +58,7 @@
                             }} 采购
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
+                            <span class="label">经销商首付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
                         </p>
                         <p class="col-filed col-25">
                             <span class="label">剩余货款支付周期：</span>{{
@@ -124,7 +124,7 @@
                     <div class="row-filed" v-if="PaymentOrderDict.status.list[7].key === paymentOrderDetail.payOrderDetail.status">
                         <p class="col-filed">
                             <span class="label">关闭时间：</span>
-                            {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                            {{ paymentOrderDetail.payOrderDetail.closeTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                         </p>
                         <p class="col-filed">
                             <span class="label">申请人：</span>
@@ -328,7 +328,7 @@
                                 </p>
                             </div>
                         </template>
-                        <template v-if="PaymentOrderDict.status.list[0].key !== paymentOrderDetail.payOrderDetail.status">
+                        <template v-if="paymentOrderDetail.payOrderDetail.supplierPayFlag === 1">
                             <div class="row-filed">
                                 <p class="col-filed">
                                     <span class="info-title">上游支付：</span>
@@ -348,11 +348,11 @@
                                 </p>
                             </div>
                             <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
-                                <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)">
+                                <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)&& (paymentOrderDetail.respSupplierAmount.totalAmount !== paymentOrderDetail.respSupplierAmount.paidAmount )">
                                     上游支付
                                 </h-button>
                             </div>
-                            <template v-if="PaymentOrderDict.status.list[3].key === paymentOrderDetail.payOrderDetail.status">
+                            <template v-if="paymentOrderDetail.goodsConfirmFlag === 1">
                                 <div class="row-filed">
                                     <p class="col-filed">
                                         <span class="info-title">到货信息：</span>
@@ -372,7 +372,7 @@
                                 </div>
                                 <div class="row-filed">
                                     <h-button type="assist" @click="openConfirmReceipt"
-                                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT)">确认收货
+                                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (paymentOrderDetail.respGoodsAmount.goodsAmount !== paymentOrderDetail.respGoodsAmount.totalAmount)">确认收货
                                     </h-button>
                                 </div>
                             </template>
