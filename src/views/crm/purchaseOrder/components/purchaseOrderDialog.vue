@@ -202,7 +202,7 @@
                             变更结果：
                             {{ dialogDetail.poChange.changeResult | attributeComputed(purchaseOrderDict.changeResult.list)}}
                         </p>
-                        <p>驳回原因：{{ dialogDetail.poChange.remark }}</p>
+                        <p v-if="dialogDetail.poChange.changeResult === purchaseOrderDict.changeResult.list[1].key">驳回原因：{{ dialogDetail.poChange.remark }}</p>
                     </template>
                 </div>
             </div>
@@ -363,7 +363,7 @@ export default {
                 _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)
                 this.dialogDetail = _data
                 this.$nextTick(() => {
-                    this.$refs.form.clearValidate()
+                    this.$refs.form && this.$refs.form.clearValidate()
                 })
             }
         },
@@ -377,7 +377,7 @@ export default {
             }
 
             this.$nextTick(() => {
-                this.$refs.form.clearValidate()
+                this.$refs.form && this.$refs.form.clearValidate()
             })
         }
     }
