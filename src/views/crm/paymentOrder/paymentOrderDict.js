@@ -85,6 +85,23 @@ const PaymentOrderDict = Object.freeze({
             }
         ]
     },
+    closeReasonCode: {
+        title: '支付单关闭原因对应code',
+        list: [
+            {
+                key: 1,
+                value: '支付单审核不通过'
+            },
+            {
+                key: 2,
+                value: '用户拒签订单及服务费确认函'
+            },
+            {
+                key: 3,
+                value: '用户主动取消'
+            }
+        ]
+    },
     supplierPaymentType: {
         title: '上游支付方式',
         list: [

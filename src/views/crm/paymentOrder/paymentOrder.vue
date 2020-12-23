@@ -77,6 +77,12 @@
                 <template slot="applyAmount" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
+                <template slot="applyDate" slot-scope="scope">
+                    <span class="colblue">{{ scope.data.row.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                </template>
+                <template slot="updateTime" slot-scope="scope">
+                    <span class="colblue">{{ scope.data.row.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                </template>
                 <template slot="status" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
                 </template>

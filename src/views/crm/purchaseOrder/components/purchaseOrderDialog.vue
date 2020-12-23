@@ -176,7 +176,7 @@
                             </el-form-item>
                         </template>
                         <template v-if="dialogStatus.changeEnter.status === this.openStatus">
-                            <el-form-item label="变更结果：" prop="changeResult">
+                            <el-form-item label="变更结果：" prop="signResult">
                                 <el-radio-group v-model="formData.signResult">
                                     <el-radio :label="item.key" :key="item.key"
                                               v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
@@ -229,7 +229,6 @@ import PurchaseOrderDict from '../purchaseOrderDict'
 import filters from '@/utils/filters'
 import { mapState } from 'vuex'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
-
 export default {
     name: 'purchaseOrderChangeDialog',
     props: {
@@ -260,9 +259,6 @@ export default {
             rules: {
                 signResult: [
                     { required: true, message: '请选择签约结果', trigger: 'change' }
-                ],
-                changeResult: [
-                    { required: true, message: '请选择变更结果', trigger: 'change' }
                 ],
                 freeInterestType: [
                     { required: true, message: '请选择免息方式', trigger: 'change' }
@@ -367,6 +363,11 @@ export default {
                 }
                 _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)
                 this.dialogDetail = _data
+                if (this.dialogStatus.changeEnter.status === this.openStatus) {
+                    this.rules.signResult[0].message = '请选择变更结果'
+                } else if (this.dialogStatus.enter.status === this.openStatus) {
+                    this.rules.signResult[0].message = '请选择签约结果'
+                }
                 this.$nextTick(() => {
                     this.$refs.form && this.$refs.form.clearValidate()
                 })
@@ -375,7 +376,6 @@ export default {
         'formData.signResult' () {
             this.formData.remark = ''
             if (this.formData.signResult && PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
-                this.formData.freeInterestType = this.dialogDetail.purchaseOrder.freeInterestType
                 this.$set(this.formData, 'freeInterestType', this.dialogDetail.purchaseOrder.freeInterestType)
             } else {
                 this.formData.freeInterestType = ''
