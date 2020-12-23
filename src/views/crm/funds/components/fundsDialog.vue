@@ -1,9 +1,13 @@
 <template>
     <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="500px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
-            <div class="row-filed">
+            <div class="row-filed info-img-group">
                 <span class="label">支付凭证：</span>
-                <img @click="goDetail(item.fileUrl)" :src="item.fileUrl" alt="" :key="item.docId" v-for="item in dialogDetail.attachDocList" class="img-info">
+                <p class="content">
+                    <span class="img-box" @click="goDetail(item.fileUrl)" :key="item.docId" v-for="item in dialogDetail.attachDocList">
+                         <img  :src="item.fileUrl" alt="">
+                    </span>
+                </p>
             </div>
             <p class="tips" v-if="!detail._seeing">是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount}}元服务费？</p>
         </div>
@@ -117,7 +121,6 @@ export default {
     min-height: 150px;
 }
 .info-content{
-    height: 130px;
     display: flex;
     flex-direction: column;
     padding-top: 20px;
@@ -135,5 +138,29 @@ export default {
     height: 80px;
     cursor: pointer;
     margin-right: 10px;
+}
+.info-img-group {
+    display: flex;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
+    }
+    .label {
+        flex: 0 0 100px;
+    }
 }
 </style>
