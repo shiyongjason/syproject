@@ -9,7 +9,7 @@
                             <span class="info-title">项目信息</span>
                         </p>
                     </div>
-                    <div class="row-filed">
+                    <div class="row-filed project">
                         <p class="col-filed">
                             <span class="label">项目： </span>{{ paymentOrderDetail.projectInfo.projectName }}
                         </p>
@@ -36,16 +36,18 @@
                         </p>
                     </div>
                     <div class="row-filed">
-                        <p class="col-filed col-50">
+                        <div class="col-filed col-50 info-img-group">
                             <span class="label">采购明细表：</span>
-                            <template
-                                v-if="paymentOrderDetail.payOrderPoDetail && paymentOrderDetail.payOrderPoDetail.poDetail">
-                                <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentOrderDetail.payOrderPoDetail.poDetail"
-                                     class="info-img">
-                            </template>
-                        </p>
-                        <p class="col-filed col-50">
+                            <p class="content">
+                                <template
+                                    v-if="paymentOrderDetail.payOrderPoDetail && paymentOrderDetail.payOrderPoDetail.poDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderPoDetail.poDetail" @click="goDetail(item.url)">
+                                         <img :src="item.url"  alt="" >
+                                    </span>
+                                </template>
+                            </p>
+                        </div>
+                        <p class="col-filed col-50 address-group">
                             <span class="label address">收货地址：</span>
                             {{ paymentOrderDetail.payOrderPoDetail.goodsAddress || '-' }}
                         </p>
@@ -55,7 +57,7 @@
                             <span class="label">采购批次：</span>
                             {{
                                 paymentOrderDetail.payOrderPoDetail.poNumber  | attributeComputed(PaymentOrderDict.applyType.list)
-                            }} 采购
+                            }}采购
                         </p>
                         <p class="col-filed col-25">
                             <span class="label">经销商首付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
@@ -100,14 +102,17 @@
                         </p>
                     </div>
                     <div class="row-filed">
-                        <p class="col-filed">
+                        <div class="col-filed info-img-group">
                             <span class="label">采购明细表：</span>
-                            <template
-                                v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
-                                <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail" class="info-img">
-                            </template>
-                        </p>
+                            <p class="content">
+                                <template
+                                    v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box" @click="goDetail(item.url)" :key="item.url"  v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                        <img :src="item.url" alt="" >
+                                    </span>
+                                </template>
+                            </p>
+                        </div>
                     </div>
                     <div class="row-filed">
                         <p class="col-filed">
@@ -163,7 +168,8 @@
                                 </p>
                             </div>
                         </template>
-                        <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus !== PurchaseOrderDict.signResult.list[1].key && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
+<!--                        todo-->
+                        <template v-if="(!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode >= 2) && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
                             <div class="row-filed">
                                 <p class="col-filed col-33">
                                     <span class="label">应收账款质押：</span>{{
@@ -216,8 +222,8 @@
                         </template>
                     </template>
                     <!--                    首付款待支付end-->
-                    <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
-                        <template v-if="PaymentOrderDict.status.list[2].key  <= paymentOrderDetail.payOrderDetail.status && paymentOrderDetail.respFundResults.downpaymentFund">
+                    <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key && paymentOrderDetail.respFundResults.downpaymentFund">
+                        <template v-if="PaymentOrderDict.status.list[1].key  <= paymentOrderDetail.payOrderDetail.status">
                             <div class="row-filed">
                                 <p class="col-filed">
                                     <span class="info-title">首付款支付计划：</span>
@@ -674,14 +680,16 @@ export default {
 <style scoped lang="scss">
 .info-content {
     padding: 0 20px;
-
+    .project {
+        display: flex;
+        justify-content: space-between;
+    }
     .row-filed {
         display: flex;
         padding: 10px;
 
         .col-filed {
             display: flex;
-            align-items: center;
             padding-right: 15px;
             font-size: 14px;
             color: #333333;
@@ -727,7 +735,7 @@ export default {
         color: #ffffff;
         padding: 4px 14px;
         border-radius: 4px;
-
+        line-height: 22px;
     }
 
     .info-status-words {
@@ -824,6 +832,37 @@ export default {
     display: flex;
     .mr-50 {
         margin-right: 30px;
+    }
+}
+.info-img-group {
+    display: flex;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
+    }
+    .label {
+        flex: 0 0 100px;
+    }
+}
+.address-group {
+    display: flex;
+    align-items: flex-start;
+    .address {
+        flex: 0 0 80px;
     }
 }
 </style>

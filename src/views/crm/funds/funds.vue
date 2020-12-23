@@ -92,8 +92,8 @@
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
                         @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true"
                         :actionMinWidth=200 :isShowIndex='true'>
-                <template slot="paidAmount" slot-scope="scope">
-                            <span class="colblue"> {{ scope.data.row.paidAmount | fundMoneyHasTail }}</span>
+                <template slot="paymentAmount" slot-scope="scope">
+                            <span class="colblue"> {{ scope.data.row.paymentAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="paymentFlag" slot-scope="scope">
                     <span class="colblue"> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
@@ -136,7 +136,7 @@ export default {
                 scheduleEndTime: '',
                 paidStartTime: '',
                 paidEndTime: '',
-                repaymentTypeArrays: '1' // 默认 1-首付款；2-尾款；3-服务费；
+                repaymentTypeArrays: '1' // 默认 1-首付款；2-剩余货款；3-服务费；
             },
             fundsDialogVisible: false,
             fundsDialogDetail: {},
@@ -161,7 +161,7 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
-                { label: '金额', prop: 'paidAmount', width: '150' },
+                { label: '金额', prop: 'paymentAmount', width: '150' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
                     label: '应支付日期',
@@ -180,14 +180,14 @@ export default {
                 label[0].label = '服务费流水号'
                 label.splice(5, 0, { label: '期数', prop: 'feeRepaymentOrder', width: '100' })
             } else if (this.queryParams.repaymentTypeArrays === '2') {
-                label[0].label = '尾款流水号'
+                label[0].label = '剩余货款流水号'
             }
             return label
         }
     },
     methods: {
         hasPayEnterAuth (type) {
-            // 1-首付款；2-尾款；3-服务费；
+            // 1-首付款；2-剩余货款；3-服务费；
             if (type === '1') {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM)
             }
@@ -199,7 +199,7 @@ export default {
             }
         },
         hasSeePayEnterAuth (type) {
-            // 1-首付款；2-尾款；3-服务费；
+            // 1-首付款；2-剩余货款；3-服务费；
             if (type === '1') {
                 return this.hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_PAYMENT_FUND_SEE)
             }
@@ -280,7 +280,7 @@ export default {
                 this.labelName = '服务费流水号'
             }
             if (this.queryParams.repaymentTypeArrays === '2') {
-                this.labelName = '尾款流水号'
+                this.labelName = '剩余货款流水号'
             }
         },
         ...mapActions({

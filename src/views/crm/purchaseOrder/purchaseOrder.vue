@@ -108,7 +108,7 @@
                              @openDialog="openDialog" ref="drawerDetail"
                              :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus"
-                             @backEvent='dialogBackEvent' :row="purchaseOrderRow"
+                             @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :row="purchaseOrderRow"
                              ref="dialog"></purchaseOrderDialog>
     </div>
 </template>

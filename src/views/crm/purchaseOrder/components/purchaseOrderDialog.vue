@@ -317,6 +317,7 @@ export default {
                     }
                     this.$message.success(message)
                     this.onClose()
+                    this.$emit('closeDrawer')
                 }
             })
         },

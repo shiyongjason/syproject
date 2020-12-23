@@ -9,7 +9,7 @@ const DialogStatus = Object.freeze({
     },
     endPayEnter: {
         status: 3,
-        title: '尾款支付确认'
+        title: '剩余货款支付确认'
     },
     seePayEnter: {
         status: 4,

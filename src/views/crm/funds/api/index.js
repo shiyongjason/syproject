@@ -13,7 +13,7 @@ export const updateFirstUnPay = (params) => axios.patch('/project/api/payment-or
 export const updateServicePay = (params) => axios.patch('/project/api/payment-orders/service-fee-received', params)
 // boss 资金列表 服务费并未收到
 export const updateServiceUnPay = (params) => axios.patch('/project/api/payment-orders/service-fee-not-received', params)
-// boss 资金列表 尾款支付确认收到
+// boss 资金列表 剩余货款支付确认收到
 export const updateFinalPay = (params) => axios.patch('/project/api/payment-orders/balance-received', params)
-// boss 资金列表 尾款支付确认收到
+// boss 资金列表 剩余货款支付确认收到
 export const updateFinalUnPay = (params) => axios.patch('/project/api/payment-orders/balance-not-received', params)
