@@ -126,7 +126,7 @@
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
                                @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible"
-                              @onClose="confirmReceiptVisible = false"></ConfirmReceiptDialog>
+                              @onClose="confirmReceiptVisible = false"  @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible"
                            @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible"

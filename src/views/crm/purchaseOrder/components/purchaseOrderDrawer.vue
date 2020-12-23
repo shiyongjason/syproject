@@ -223,7 +223,7 @@
                             </div>
                         </el-collapse-item>
                     </el-collapse>
-                    <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
+                    <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[1].key">
                         <div class="info-title info-title-main-color">支付单</div>
                         <div class="payment-table">
                             <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false"

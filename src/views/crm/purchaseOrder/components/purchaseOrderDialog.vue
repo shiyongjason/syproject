@@ -10,12 +10,16 @@
                             <span class="label">采购单金额：</span>
                             <span>{{ dialogDetail.poInfo.poAmount | fundMoneyHasTail }}元</span>
                         </li>
-                        <li>
+                        <li class="info-img-group">
                             <span class="label">采购明细表：</span>
-                            <template v-if="dialogDetail.poInfo && dialogDetail.poInfo.poDetail">
-                                <img :src="item.url" class="info-img" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in dialogDetail.poInfo.poDetail">
-                            </template>
+                            <p class="content">
+                                <template v-if="dialogDetail.poInfo && dialogDetail.poInfo.poDetail">
+                                    <span class="img-box" :key="item.url" @click="goDetail(item.url)"  v-for="item in dialogDetail.poInfo.poDetail">
+                                        <img :src="item.url" class="info-img"  alt="">
+                                    </span>
+                                </template>
+                            </p>
+
                         </li>
                         <li>
                             <span class="label">采购批次：</span>
@@ -169,7 +173,7 @@
                             </el-form-item>
                         </template>
                         <template v-if="dialogStatus.changeEnter.status === this.openStatus">
-                            <el-form-item label="变更结果：" prop="signResult">
+                            <el-form-item label="变更结果：" prop="changeResult">
                                 <el-radio-group v-model="formData.signResult">
                                     <el-radio :label="item.key" :key="item.key"
                                               v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
@@ -250,7 +254,10 @@ export default {
             },
             rules: {
                 signResult: [
-                    { required: true, message: PurchaseOrderDialogStatus.enter.status === this.openStatus ? '请选择签约结果' : '请选择变更结果', trigger: 'change' }
+                    { required: true, message: '请选择签约结果', trigger: 'change' }
+                ],
+                changeResult: [
+                    { required: true, message: '请选择变更结果', trigger: 'change' }
                 ],
                 freeInterestType: [
                     { required: true, message: '请选择免息方式', trigger: 'change' }
@@ -362,7 +369,13 @@ export default {
         },
         'formData.signResult' () {
             this.formData.remark = ''
-            this.formData.freeInterestType = ''
+            if (this.formData.signResult && PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
+                this.formData.freeInterestType = this.dialogDetail.purchaseOrder.freeInterestType
+                this.$set(this.formData, 'freeInterestType', this.dialogDetail.purchaseOrder.freeInterestType)
+            } else {
+                this.formData.freeInterestType = ''
+            }
+
             this.$nextTick(() => {
                 this.$refs.form.clearValidate()
             })
@@ -490,5 +503,29 @@ export default {
 .go-contract {
     color: #ff7a45;
     cursor: pointer;
+}
+.info-img-group {
+    display: flex;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
+    }
+    .label {
+        flex: 0 0 100px;
+    }
 }
 </style>

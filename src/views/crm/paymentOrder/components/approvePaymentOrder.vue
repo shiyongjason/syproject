@@ -87,7 +87,7 @@
                         </template>
                         <template v-if="formData.checkPass === 'noPass'">
                             <el-form-item label="审核备注" prop="approvalRemark">
-                                <el-input type="textarea" v-model="formData.approvalRemark"></el-input>
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>
                         </template>
                     </div>
@@ -228,7 +228,7 @@ export default {
                     { required: true, message: '请填写审核备注' }
                 ],
                 accountReceivablePledgeType: [
-                    { required: true, message: '请填写审核备注' }
+                    { required: true, message: '请选择应收账款质押' }
                 ],
                 supplierPaymentType: [
                     { required: true, message: '请选择上游支付方式' }
