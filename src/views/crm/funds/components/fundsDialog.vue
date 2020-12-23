@@ -1,11 +1,21 @@
 <template>
     <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="500px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
-            <div class="row-filed">
+            <div class="row-filed info-img-group">
                 <span class="label">支付凭证：</span>
-                <img @click="goDetail(item.fileUrl)" :src="item.fileUrl" alt="" :key="item.docId" v-for="item in dialogDetail.attachDocList" class="img-info">
+                <p class="content">
+                    <span class="img-box" @click="goDetail(item.fileUrl)" :key="item.docId" v-for="item in dialogDetail.attachDocList">
+                         <img  :src="item.fileUrl" alt="">
+                    </span>
+                </p>
             </div>
-            <p class="tips" v-if="!detail._seeing">是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount}}元服务费？</p>
+            <p class="tips" v-if="!detail._seeing">
+                是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount | fundMoneyHasTail}}元
+                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
+                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
+                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
+                ？
+            </p>
         </div>
         <span slot="footer" class="dialog-footer" v-if="!detail._seeing">
                 <h-button type="assist" @click="onReceived">确认收到</h-button>
@@ -45,7 +55,8 @@ export default {
     },
     data () {
         return {
-            dialogDetail: {}
+            dialogDetail: {},
+            FundsDict
         }
     },
     computed: {
@@ -117,7 +128,6 @@ export default {
     min-height: 150px;
 }
 .info-content{
-    height: 130px;
     display: flex;
     flex-direction: column;
     padding-top: 20px;
@@ -135,5 +145,29 @@ export default {
     height: 80px;
     cursor: pointer;
     margin-right: 10px;
+}
+.info-img-group {
+    display: flex;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
+    }
+    .label {
+        flex: 0 0 100px;
+    }
 }
 </style>

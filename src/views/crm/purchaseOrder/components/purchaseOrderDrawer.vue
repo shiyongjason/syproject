@@ -39,21 +39,17 @@
                             创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate }}
                         </p>
                     </div>
-                    <!--                多种状态判断 -->
-                    <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[0].key">
+                    <template v-if="purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[0].key">
+                        <div class="row-filed">
+                            <p class="col-filed">
+                                提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
+                            </p>
+                            <p class="col-filed">
+                                提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate }}
+                            </p>
+                        </div>
                         <template
-                            v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[1].key">
-                            <div class="row-filed">
-                                <p class="col-filed">
-                                    提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
-                                </p>
-                                <p class="col-filed">
-                                    提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate }}
-                                </p>
-                            </div>
-                        </template>
-                        <template
-                            v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
+                            v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[1].key">
                             <div class="row-filed">
                                 <p class="col-filed">
                                     采购单金额： {{ purchaseOrderDetail.purchaseOrder.poAmount | fundMoneyHasTail }}元
@@ -99,7 +95,7 @@
                                     </p>
                                     <p class="col-filed">
                                         收款账户户名：
-                                        {{ purchaseOrderDetail.poInfo.receiverAccountBank }}
+                                        {{ purchaseOrderDetail.poInfo.receiverAccountName }}
                                     </p>
                                 </div>
                                 <div class="row-filed">
@@ -139,44 +135,41 @@
                             </div>
                         </template>
                         <!--                多种状态判断-->
-                        <template
-                            v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
-                            <template v-if="purchaseOrderDetail.poChanges">
-                                <div class="row-filed" :key="item.id" v-for="item in purchaseOrderDetail.poChanges">
-                                    <div class="jumbotron">
-                                        <div class="jumbotron-status">
-                                            <img src="../../../../assets/images/good-job-status-icon.png" alt="">
-                                        </div>
-                                        <div>
-                                            <p class="jumbotron-title">订单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
-                                            <p>
-                                                提交变更人：{{ item.submitBy }}（{{ item.submitPhone }}） 提交变更时间：{{
-                                                    item.submitTime | formatDate
-                                                }}
-                                            </p>
-                                            <p>
-                                                变更备注：{{ item.changeReason || '-' }}
-                                            </p>
-                                            <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
-                                                确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate}}
-                                            </p>
-                                            <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
-                                                驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate}}
-                                            </p>
-                                            <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
-                                                驳回原因：{{item.remark || '-'}}
-                                            </p>
-                                            <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
+                        <template v-if="purchaseOrderDetail.poChanges">
+                            <div class="row-filed" :key="item.id" v-for="item in purchaseOrderDetail.poChanges">
+                                <div class="jumbotron">
+                                    <div class="jumbotron-status">
+                                        <img src="../../../../assets/images/good-job-status-icon.png" alt="">
+                                    </div>
+                                    <div>
+                                        <p class="jumbotron-title">订单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
+                                        <p>
+                                            提交变更人：{{ item.submitBy }}（{{ item.submitPhone }}） 提交变更时间：{{
+                                                item.submitTime | formatDate
+                                            }}
+                                        </p>
+                                        <p>
+                                            变更备注：{{ item.changeReason || '-' }}
+                                        </p>
+                                        <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
+                                            确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate}}
+                                        </p>
+                                        <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
+                                            驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate}}
+                                        </p>
+                                        <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
+                                            驳回原因：{{item.remark || '-'}}
+                                        </p>
+                                        <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
                                                         item.changeResult !== PurchaseOrderDict.changeResult.list[1].key">
-                                                <h-button table @click="purchaseOrderChangeConfirm">确认变更</h-button>
-                                            </p>
-                                            <p v-else>
-                                                <h-button table @click="purchaseOrderWatchConfirm(item.id)">查看变更</h-button>
-                                            </p>
-                                        </div>
+                                            <h-button table @click="purchaseOrderChangeConfirm">确认变更</h-button>
+                                        </p>
+                                        <p v-else>
+                                            <h-button table @click="purchaseOrderWatchConfirm(item.id)">查看变更</h-button>
+                                        </p>
                                     </div>
                                 </div>
-                            </template>
+                            </div>
                         </template>
                     </template>
                 </div>
@@ -223,7 +216,7 @@
                             </div>
                         </el-collapse-item>
                     </el-collapse>
-                    <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[2].key">
+                    <template v-if="purchaseOrderDetail.purchaseOrder.status > PurchaseOrderDict.status.list[1].key">
                         <div class="info-title info-title-main-color">支付单</div>
                         <div class="payment-table">
                             <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false"

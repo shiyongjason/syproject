@@ -126,11 +126,11 @@
         <LookPrevPaymentDialog :params="paymentParams" :is-open="lookPrevPaymentVisible"
                                @onClose="lookPrevPaymentVisible = false"></LookPrevPaymentDialog>
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible"
-                              @onClose="confirmReceiptVisible = false"></ConfirmReceiptDialog>
+                              @onClose="confirmReceiptVisible = false"  @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible"
                            @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible"
-                     @onClose="fundsDialogVisible = false"></FundsDialog>
+                     @onClose="fundsDialogClose"></FundsDialog>
     </div>
 </template>
 
@@ -235,6 +235,10 @@ export default {
         })
     },
     methods: {
+        fundsDialogClose () {
+            this.fundsDialogVisible = false
+            this.findPaymentOrderList(this.queryParams)
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.findPaymentOrderList(this.queryParams)
@@ -309,7 +313,13 @@ export default {
         },
         onCloseDialogAndQueryDetail (type) {
             this[type] = false
-            this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
+            if (this.drawer) {
+                this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
+                this.findPaymentOrderList(this.queryParams)
+            } else {
+                this.findPaymentOrderList(this.queryParams)
+            }
+            // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',

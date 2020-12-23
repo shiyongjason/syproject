@@ -125,6 +125,7 @@ export default {
                     }
                     await updateConfirmReceiptPass(params)
                     this.onCancel()
+                    this.$emit('onCloseDialogAndQuery', 'confirmReceiptVisible')
                 }
             })
         },
