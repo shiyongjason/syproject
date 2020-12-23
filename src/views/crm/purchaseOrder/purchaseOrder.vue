@@ -84,7 +84,7 @@
                     <span class="colblue" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
                 </template>
                 <template slot="poAmount" slot-scope="scope">
-                    <span> {{ scope.data.row.poAmount | fundMoney }}</span>
+                    <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
                 </template>
                 <template slot="status" slot-scope="scope">
                     <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
