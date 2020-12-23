@@ -213,8 +213,8 @@ export default [
                 path: 'paymentOrder',
                 name: 'paymentOrder',
                 meta: {
-                    title: '支付单',
-                    tagName: '支付单',
+                    title: '支付单管理',
+                    tagName: '支付单管理',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/paymentOrder'
@@ -226,8 +226,8 @@ export default [
                 path: 'funds',
                 name: 'funds',
                 meta: {
-                    title: '资金',
-                    tagName: '资金',
+                    title: '账单管理',
+                    tagName: '账单管理',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/funds'

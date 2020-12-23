@@ -164,16 +164,24 @@
         <el-dialog title="终审字段修改" :visible.sync="finalConfirmVisible"  :modal=false  width="50%" :close-on-click-modal=false :before-close="finalConfirmDialogClose">
             <el-form :model="formData" :rules="rules" ref="finalConfirmForm" label-width="180px">
                 <el-form-item label="执行费率（银行承兑）：" prop="acceptBankRate">
-                    <el-input type="text" maxlength="10" v-isNegative:2="formData.acceptBankRate" v-model="formData.acceptBankRate"></el-input>
+                    <el-input type="text" maxlength="10" v-isNegative:2="formData.acceptBankRate" v-model="formData.acceptBankRate">
+                        <template slot="suffix">%</template>
+                    </el-input>
                 </el-form-item>
-                <el-form-item label="执行费率（银行转帐）：" prop="transferBankRate">
-                    <el-input type="text" maxlength="10" v-model="formData.transferBankRate" v-isNegative:2="formData.transferBankRate"></el-input>
+                <el-form-item label="执行费率（银行转账）：" prop="transferBankRate">
+                    <el-input type="text" maxlength="10" v-model="formData.transferBankRate" v-isNegative:2="formData.transferBankRate">
+                        <template slot="suffix">%</template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="最大采购总额：" prop="maxPurchaseAmount">
-                    <el-input type="text" maxlength="18" v-model="formData.maxPurchaseAmount" v-isNegative:2="formData.maxPurchaseAmount"></el-input>
+                    <el-input type="text" maxlength="18" v-model="formData.maxPurchaseAmount" v-isNegative:2="formData.maxPurchaseAmount">
+                        <template slot="suffix">元</template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="首付款比例：" prop="advancePaymentRate">
-                    <el-input type="text" maxlength="10" v-model="formData.advancePaymentRate" v-isNegative:2="formData.advancePaymentRate"></el-input>
+                    <el-input type="text" maxlength="10" v-model="formData.advancePaymentRate" v-isNegative:2="formData.advancePaymentRate">
+                        <template slot="suffix">%</template>
+                    </el-input>
                 </el-form-item>
                 <el-form-item label="剩余货款支付周期：" prop="remainPaymentCycle">
                     <el-select v-model="formData.remainPaymentCycle">
@@ -322,7 +330,7 @@ export default {
                     { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 transferBankRate: [
-                    { required: true, message: '执行费率（银行转帐）不能为空', trigger: 'blur' },
+                    { required: true, message: '执行费率（银行转账）不能为空', trigger: 'blur' },
                     { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 maxPurchaseAmount: [
