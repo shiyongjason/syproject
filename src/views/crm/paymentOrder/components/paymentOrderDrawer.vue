@@ -168,8 +168,7 @@
                                 </p>
                             </div>
                         </template>
-<!--                        todo-->
-                        <template v-if="(!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode >= 2) && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
+                        <template v-if="(!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode >= PaymentOrderDict.closeReasonCode.list[1].key) && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key">
                             <div class="row-filed">
                                 <p class="col-filed col-33">
                                     <span class="label">应收账款质押：</span>{{
@@ -222,7 +221,7 @@
                         </template>
                     </template>
                     <!--                    首付款待支付end-->
-                    <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key && paymentOrderDetail.respFundResults.downpaymentFund">
+                    <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key && paymentOrderDetail.respFundResults.downpaymentFund && (paymentOrderDetail.payOrderDetail.closeReasonCode >=PaymentOrderDict.closeReasonCode.list[2].key)">
                         <template v-if="PaymentOrderDict.status.list[1].key  <= paymentOrderDetail.payOrderDetail.status">
                             <div class="row-filed">
                                 <p class="col-filed">
@@ -332,7 +331,10 @@
                                 </p>
                             </div>
                         </template>
-                        <template v-if="paymentOrderDetail.payOrderDetail.supplierPayFlag === 1">
+                        <template v-if="(PaymentOrderDict.status.list[3].key  === paymentOrderDetail.payOrderDetail.status ||
+                                        PaymentOrderDict.status.list[4].key  === paymentOrderDetail.payOrderDetail.status ||
+PaymentOrderDict.status.list[5].key  === paymentOrderDetail.payOrderDetail.status||
+PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.status ) && true">
                             <div class="row-filed">
                                 <p class="col-filed">
                                     <span class="info-title">上游支付：</span>
@@ -380,7 +382,7 @@
                                     </h-button>
                                 </div>
                             </template>
-                            <template v-if="PaymentOrderDict.status.list[3].key <= paymentOrderDetail.payOrderDetail.status">
+                            <template v-if="PaymentOrderDict.status.list[3].key <= paymentOrderDetail.payOrderDetail.status  && paymentOrderDetail.payOrderDetail.closeReasonCode">
                                 <div class="row-filed">
                                     <p class="col-filed">
                                         <span class="info-title">剩余货款支付计划：</span>

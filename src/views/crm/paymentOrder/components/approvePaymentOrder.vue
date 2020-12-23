@@ -300,7 +300,7 @@ export default {
                 return
             }
             if (this.formData.downPaymentAmount == this.paymentDetail.payOrderDetail.applyAmount) {
-                this.$message.error('经销商首付款不能等于申请支付金额确认')
+                this.$message.error('首付款金额最大不可超过申请支付金额')
                 return
             }
             if (this.formData.downPaymentAmount > this.paymentDetail.payOrderDetail.applyAmount) {

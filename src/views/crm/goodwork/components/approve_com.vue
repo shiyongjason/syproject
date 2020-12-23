@@ -34,7 +34,7 @@
                 <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
                 <template v-if="activeName=='4'">
                     <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>执行费率（银行转帐）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
@@ -327,11 +327,11 @@ export default {
             rules: {
                 acceptBankRate: [
                     { required: true, message: '执行费率（银行承兑）不能为空', trigger: 'blur' },
-                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                    { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 transferBankRate: [
                     { required: true, message: '执行费率（银行转账）不能为空', trigger: 'blur' },
-                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                    { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 maxPurchaseAmount: [
                     { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
@@ -339,7 +339,7 @@ export default {
                 ],
                 advancePaymentRate: [
                     { required: true, message: '首付款比例不能为空', trigger: 'blur' },
-                    { message: '执行费率（银行转帐）0-100', validator: validateNumber, trigger: 'blur' }
+                    { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
