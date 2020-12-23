@@ -90,6 +90,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantPriceManage.vue')
+                    },
+                    {
+                        path: 'merchantRecommendList',
+                        name: 'merchantRecommendList',
+                        meta: {
+                            title: '推荐榜单',
+                            tagName: '推荐榜单',
+                            parentName: '商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantRecommendList.vue')
                     }
                 ]
             },

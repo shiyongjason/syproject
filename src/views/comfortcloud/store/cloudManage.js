@@ -81,7 +81,9 @@ const state = {
     cloudMerchantShopCategoryTypeList: [],
     cloudOutboundDeviceList: [],
     cloudOutboundMerchantList: [],
-    cloudOutboundCategoryList: []
+    cloudOutboundCategoryList: [],
+    cloudMerchantRecommendList: [],
+    cloudMerchantRecommendListPagination: {}
 }
 
 const getters = {
@@ -172,7 +174,9 @@ const getters = {
     iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination,
     cloudOutboundDeviceList: state => state.cloudOutboundDeviceList,
     cloudOutboundMerchantList: state => state.cloudOutboundMerchantList,
-    cloudOutboundCategoryList: state => state.cloudOutboundCategoryList
+    cloudOutboundCategoryList: state => state.cloudOutboundCategoryList,
+    cloudMerchantRecommendList: state => state.cloudMerchantRecommendList,
+    cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination
 }
 
 const mutations = {
@@ -401,6 +405,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_OUTBOUND_CATEGORY_LIST] (state, payload) {
         state.cloudOutboundCategoryList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST] (state, payload) {
+        state.cloudMerchantRecommendList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantRecommendListPagination = payload
     }
 }
 
@@ -747,6 +757,15 @@ const actions = {
     },
     async clearCloudOutboundDeviceList ({ commit }) {
         commit(cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST, [])
+    },
+    async findCloudMerchantRecommendList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantRecommendList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
     }
 }
 export default {

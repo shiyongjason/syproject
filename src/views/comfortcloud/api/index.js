@@ -574,3 +574,28 @@ export function addCloudOutbound (params) {
 export function changeCloudOutbound (params) {
     return axios.put(iotUrl + '/api/outbound', params)
 }
+
+// 获取推荐榜单列表
+export function getCloudMerchantRecommendList (params) {
+    return axios.get(iotUrl + '/mall/boss/recommend-list', { params })
+}
+
+// 添加推荐榜单
+export function addCloudMerchantRecommend (params) {
+    return axios.post(iotUrl + '/mall/boss/recommend-list', params)
+}
+
+// 删除推荐榜单
+export function deleteCloudMerchantRecommend (params) {
+    return axios.delete(iotUrl + '/mall/boss/recommend-list', { data: params })
+}
+
+// 修改推荐榜单
+export function changeCloudMerchantRecommend (params) {
+    return axios.put(iotUrl + '/mall/boss/recommend-list', params)
+}
+
+// 移动推荐榜单
+export function moveCloudMerchantRecommend (params) {
+    return axios.put(iotUrl + '/mall/boss/recommend-list/move', params)
+}
