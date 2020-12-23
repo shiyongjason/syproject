@@ -9,7 +9,13 @@
                     </span>
                 </p>
             </div>
-            <p class="tips" v-if="!detail._seeing">是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount}}元服务费？</p>
+            <p class="tips" v-if="!detail._seeing">
+                是否确认收到{{ dialogDetail.companyName }}支付的{{dialogDetail.paymentAmount | fundMoneyHasTail}}元
+                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[0].key">首付款</template>
+                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[1].key">服务费</template>
+                <template v-if="this.status === FundsDict.repaymentTypeArrays.list[2].key">剩余货款</template>
+                ？
+            </p>
         </div>
         <span slot="footer" class="dialog-footer" v-if="!detail._seeing">
                 <h-button type="assist" @click="onReceived">确认收到</h-button>
@@ -49,7 +55,8 @@ export default {
     },
     data () {
         return {
-            dialogDetail: {}
+            dialogDetail: {},
+            FundsDict
         }
     },
     computed: {

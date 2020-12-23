@@ -31,8 +31,8 @@
 
                     <i>{{ approveForm.approveResult == true ? '通过' : approveForm.approveResult == false ? '不通过' : '-' }}</i>
                 </div>
+                <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
                 <template v-if="activeName=='4'">
-                    <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
                     <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>执行费率（银行转帐）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>

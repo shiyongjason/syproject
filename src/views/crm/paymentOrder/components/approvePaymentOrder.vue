@@ -166,7 +166,7 @@
                 </div>
             </div>
         </el-dialog>
-        <el-dialog title="编辑经销商首付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" class="edit-amount-dialog">
+        <el-dialog title="编辑经销商首付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" :close-on-click-modal=false class="edit-amount-dialog">
             <div class="edit-amount">
                 经销商首付款:<el-input v-model="formData.downPaymentAmount" v-isNegative="formData.downPaymentAmount" maxlength="20"></el-input>
             </div>
@@ -295,8 +295,12 @@ export default {
                 this.$message.error('经销商首付款不能为空')
                 return
             }
-            if (this.formData.downPaymentAmount === 0) {
+            if (this.formData.downPaymentAmount == 0) {
                 this.$message.error('经销商首付款不能为0')
+                return
+            }
+            if (this.formData.downPaymentAmount == this.paymentDetail.payOrderDetail.applyAmount) {
+                this.$message.error('经销商首付款不能等于申请支付金额确认')
                 return
             }
             if (this.formData.downPaymentAmount > this.paymentDetail.payOrderDetail.applyAmount) {

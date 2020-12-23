@@ -23,10 +23,10 @@
                         </li>
                         <li>
                             <span class="label">采购批次：</span>
-                            <span>{{ dialogDetail.poInfo.poNumber || '-' }}</span>
+                            <span>{{ dialogDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购</span>
                         </li>
                         <li>
-                            <span class="label">经销商首付款比例： </span>
+                            <span class="label">经销商预付款比： </span>
                             <span>{{ dialogDetail.poInfo.prePercent || '-' }}%</span>
                         </li>
                         <li>
@@ -97,6 +97,9 @@
                             </td>
                         </tr>
                     </table>
+                    <p class="change-tips" v-if="dialogDetail.poChangeFields && dialogDetail.poChangeFields.length === 0">
+                        暂无数据
+                    </p>
                 </div>
                 <div class="col-filed project-info">
                     <div class="info-title">项目信息</div>
@@ -225,6 +228,7 @@ import {
 import PurchaseOrderDict from '../purchaseOrderDict'
 import filters from '@/utils/filters'
 import { mapState } from 'vuex'
+import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 
 export default {
     name: 'purchaseOrderChangeDialog',
@@ -245,6 +249,7 @@ export default {
     data () {
         return {
             dialogStatus: PurchaseOrderDialogStatus,
+            PaymentOrderDict,
             purchaseOrderDict: PurchaseOrderDict,
             dialogDetail: {},
             formData: {
@@ -527,5 +532,12 @@ export default {
     .label {
         flex: 0 0 100px;
     }
+}
+.change-tips {
+    text-align: center;
+    font-size: 12px;
+    color: #333333;
+    line-height: 20px;
+    padding-top: 20px;
 }
 </style>
