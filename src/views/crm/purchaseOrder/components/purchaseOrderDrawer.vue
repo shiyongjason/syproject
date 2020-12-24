@@ -36,7 +36,7 @@
                             {{ `${purchaseOrderDetail.purchaseOrder.createBy}（${purchaseOrderDetail.purchaseOrder.createPhone}）` }}
                         </p>
                         <p class="col-filed">
-                            创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate }}
+                            创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                         </p>
                     </div>
                     <template v-if="purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[0].key">
@@ -45,7 +45,7 @@
                                 提交人：{{ `${purchaseOrderDetail.purchaseOrder.submitBy}（${purchaseOrderDetail.purchaseOrder.submitPhone}）` }}
                             </p>
                             <p class="col-filed">
-                                提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate }}
+                                提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                             </p>
                         </div>
                         <template
@@ -127,7 +127,7 @@
                             </div>
                             <div class="row-filed">
                                 <p class="col-filed">
-                                    更新时间：{{ purchaseOrderDetail.purchaseOrder.updateTime | formatDate }}
+                                    更新时间：{{ purchaseOrderDetail.purchaseOrder.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                 </p>
                                 <p class="col-filed">
                                     更新人：{{ purchaseOrderDetail.purchaseOrder.updateBy }}（{{ purchaseOrderDetail.purchaseOrder.updatePhone }}）
@@ -145,17 +145,17 @@
                                         <p class="jumbotron-title">采购单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
                                         <p>
                                             提交变更人：{{ item.submitBy }}（{{ item.submitPhone }}） 提交变更时间：{{
-                                                item.submitTime | formatDate
+                                                item.submitTime | formatDate('YYYY-MM-DD HH:mm:ss')
                                             }}
                                         </p>
                                         <p>
                                             变更备注：{{ item.changeReason || '-' }}
                                         </p>
                                         <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
-                                            确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate}}
+                                            确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                                         </p>
                                         <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
-                                            驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate}}
+                                            驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
                                         </p>
                                         <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                             驳回原因：{{item.remark || '-'}}
