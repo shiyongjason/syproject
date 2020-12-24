@@ -45,12 +45,12 @@
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.startTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期"
+                                        value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.endTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期"
+                                        value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
@@ -149,8 +149,8 @@ export default {
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '采购单金额', prop: 'poAmount', width: '100' },
                 { label: '状态', prop: 'status', width: '120' },
-                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'createTimeOrder' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTimeOrder' }
+                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTime', sortable: 'createTimeOrder' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTimeOrder' }
             ],
             purchaseOrderData: [],
             drawer: false,
