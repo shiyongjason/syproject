@@ -406,7 +406,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                     </p>
                                     <p class="col-filed col-25">
                                         <span class="label">支付时间：</span>
-                                        {{ paymentOrderDetail.respFundResults.arrearFund.paidDate | formatDate }}
+                                        {{ paymentOrderDetail.respFundResults.arrearFund.paidDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                     </p>
                                     <p class="col-filed col-25">
                                         <template
