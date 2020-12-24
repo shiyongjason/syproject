@@ -502,6 +502,9 @@ export default {
         onRest () {
             this.categoryIdArr = []
             this.queryParams = deepCopy(this.copyParams)
+            if (this.$route.query.detail) {
+                this.queryParams.projectNo = ''
+            }
             this.status = []
             this.typeArr = []
             this.deviceCategoryChange = []
