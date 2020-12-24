@@ -74,7 +74,7 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderPagination.total }}
-                项,采购单总金额：<b>{{ purchaseOrderPagination.amount | fundMoney }}</b>元;
+                项， 采购单总金额：<b>{{ purchaseOrderPagination.amount | fundMoney }}</b>元
             </el-tag>
             <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
