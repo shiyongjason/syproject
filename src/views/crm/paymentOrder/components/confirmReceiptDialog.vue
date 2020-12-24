@@ -127,7 +127,7 @@ export default {
                         createBy: this.userInfo.employeeName,
                         createPhone: this.userInfo.phoneNumber
                     }
-                    // await updateConfirmReceiptPass(params)
+                    await updateConfirmReceiptPass(params)
                     this.$message.success('到货信息已更新')
                     this.onCancel()
                     this.$emit('onCloseDialogAndQuery', 'confirmReceiptVisible')
