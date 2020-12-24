@@ -163,7 +163,7 @@
                         </div>
                         <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus === PaymentOrderDict.approvalStatus.list[1].key">
                             <div class="row-filed">
-                                <p class="col-filed col-33">
+                                <p class="col-filed approval-remark">
                                     <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
                                 </p>
                             </div>
@@ -406,7 +406,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                     </p>
                                     <p class="col-filed col-25">
                                         <span class="label">支付时间：</span>
-                                        {{ paymentOrderDetail.respFundResults.arrearFund.paidDate | formatDate }}
+                                        {{ paymentOrderDetail.respFundResults.arrearFund.paidDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                     </p>
                                     <p class="col-filed col-25">
                                         <template
@@ -875,5 +875,11 @@ export default {
 }
 .ml-20{
     margin-left: 20px;
+}
+.approval-remark {
+    display: flex;
+    .label {
+        flex: 0 0 80px;
+    }
 }
 </style>

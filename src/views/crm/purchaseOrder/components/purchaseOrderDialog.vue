@@ -79,20 +79,36 @@
                             <td>{{ item.fieldName || '-' }}</td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.originalValue))">
-                                    <img :src="item.url" :key="item.url" alt=""
+                                    <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
                                          v-for="item in checkedIsJson(item.originalValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    {{ item.originalValue }}
+                                    <template v-if="item.fieldName === 'poNumber'">
+                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                    </template>
+                                    <template v-if="item.fieldName === 'poNumber'">
+                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                    </template>
+                                    <template v-else>
+                                        {{ item.originalValue }}
+                                    </template>
                                 </template>
                             </td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.changedValue))">
-                                    <img :src="item.url" :key="item.url" alt=""
+                                    <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
                                          v-for="item in checkedIsJson(item.changedValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    {{ item.changedValue }}
+                                    <template v-if="item.fieldName === 'poNumber'">
+                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                    </template>
+                                    <template v-if="item.fieldName === 'poNumber'">
+                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                    </template>
+                                    <template v-else>
+                                        {{ item.originalValue }}
+                                    </template>
                                 </template>
                             </td>
                         </tr>
@@ -179,7 +195,7 @@
                             <el-form-item label="变更结果：" prop="signResult">
                                 <el-radio-group v-model="formData.signResult">
                                     <el-radio :label="item.key" :key="item.key"
-                                              v-for="item in purchaseOrderDict.changeResult.list">{{ item.value }}
+                                              v-for="item in purchaseOrderDict.changeResultDialog.list">{{ item.value }}
                                     </el-radio>
                                 </el-radio-group>
                             </el-form-item>

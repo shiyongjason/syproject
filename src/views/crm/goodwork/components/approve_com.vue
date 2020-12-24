@@ -538,6 +538,7 @@ export default {
                         let riskCheckProjectDocPoList = []
                         projectDocList && projectDocList.map(val => {
                             val.respRiskCheckDocTemplateList.map(obj => {
+                                obj.projectId = this.approveForm.projectId
                                 riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
                             })
                         })

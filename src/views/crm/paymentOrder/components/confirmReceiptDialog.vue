@@ -25,13 +25,14 @@
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
                 <hosjoyUpload
-                    v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=100
+                    v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=20
                     :limit=20 :action='action' :uploadParameters='uploadParameters'
-                    style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()">
+                    style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
                 </hosjoyUpload>
+                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传20张图片，单张图片限制20M</p>
             </el-form-item>
             <el-form-item label="收货备注：">
                 <el-input type="textarea" v-model="formData.goodsRemark" maxlength="200"></el-input>
@@ -171,5 +172,8 @@ export default {
     width: 80px;
     height: 80px;
     cursor: pointer;
+}
+.tips {
+    color: #8d8d8d;
 }
 </style>
