@@ -26,7 +26,7 @@
                 {{prevPaymentDetail.goodsProgress}}%
             </el-form-item>
             <el-form-item label="本次支付金额：" prop="payAmount">
-                <el-input v-model="formData.payAmount" maxlength="50" v-isNegative="formData.payAmount"></el-input>
+                <el-input placeholder="请输入" v-model="formData.payAmount" maxlength="50" v-isNegative="formData.payAmount"></el-input>
             </el-form-item>
             <el-form-item label="支付日期：" prop="payDate">
                 <el-date-picker
@@ -38,7 +38,7 @@
             <el-form-item label="上传上游支付凭证：" prop="payVouchers">
                 <hosjoyUpload
                               v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=100
-                              :limit=20 :action='action' :uploadParameters='uploadParameters'
+                              :limit=9 :action='action' :uploadParameters='uploadParameters'
                               style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
@@ -89,7 +89,7 @@ export default {
             },
             rules: {
                 payAmount: [
-                    { required: true, message: '请输入支付金额', trigger: 'blur' }
+                    { required: true, message: '请输入本次支付金额', trigger: 'blur' }
                 ],
                 payDate: [
                     { required: true, message: '请选择支付日期', trigger: 'blur' }
