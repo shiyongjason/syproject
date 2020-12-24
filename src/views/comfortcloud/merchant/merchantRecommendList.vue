@@ -172,10 +172,10 @@ export default {
             this.dialogDiscountPriceVisible = true
         },
         canMoveDown (scope) {
-            return scope.data.$index < this.cloudMerchantRecommendListPagination.total - 1
+            return scope.data.$index + (this.cloudMerchantRecommendListPagination.pageNumber - 1) * this.cloudMerchantRecommendListPagination.pageSize < this.cloudMerchantRecommendListPagination.total - 1
         },
         canMoveUp (scope) {
-            return scope.data.$index > 0
+            return scope.data.$index + (this.cloudMerchantRecommendListPagination.pageNumber - 1) * this.cloudMerchantRecommendListPagination.pageSize > 0
         },
         onDelete (data) {
             this.$confirm('删除后小程序端将不展示该推荐商品，请确认是否继续删除？', '提示', {
