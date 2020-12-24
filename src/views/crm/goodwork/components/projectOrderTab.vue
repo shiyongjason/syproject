@@ -25,7 +25,7 @@ export default {
         return {
             queryParams: {
                 'sort.property': 'createTime',
-                'sort.direction': 'ASC',
+                'sort.direction': 'DESC',
                 pageNumber: 1,
                 pageSize: 10
             },

@@ -17,7 +17,7 @@
                         <span class="icon">{{index + 1}}</span>
                         <span class="label">本次到货金额：</span>
                         <span class="orange-main">{{ item.goodsAmount | fundMoneyHasTail }}元</span>
-                        <span class="info">{{ item.createTime | formatDate }} {{item.createBy}}（{{ item.createPhone }}）</span>
+                        <span class="info">{{ item.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }} {{item.createBy}}（{{ item.createPhone }}）</span>
                     </p>
                     <div class="info-img-group">
                         <span class="label">

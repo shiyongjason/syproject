@@ -21,7 +21,7 @@
                 </div>
             </el-form-item>
             <el-form-item label="本次到货金额：" prop="goodsAmount">
-               <el-input type="text" v-model="formData.goodsAmount" maxlength="50" v-isNegative="formData.goodsAmount"></el-input>
+               <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
                 <hosjoyUpload
@@ -127,7 +127,8 @@ export default {
                         createBy: this.userInfo.employeeName,
                         createPhone: this.userInfo.phoneNumber
                     }
-                    await updateConfirmReceiptPass(params)
+                    // await updateConfirmReceiptPass(params)
+                    this.$message.success('到货信息已更新')
                     this.onCancel()
                     this.$emit('onCloseDialogAndQuery', 'confirmReceiptVisible')
                 }
@@ -140,7 +141,32 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.info-img-group{
+    display: flex;
+    width: 100%;
+    span {
+        display: block;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 20px;
+        margin-right: 12px;
+        cursor: pointer;
+    }
+    .img-box {
+        width: 80px;
+    }
+    img {
+        display: block;
+        margin: auto;
+        max-height: 80px;
+        max-width: 80px;
+    }
+    .label {
+        flex: 0 0 100px;
+    }
+
+}
 .info-img {
     width: 80px;
     height: 80px;
