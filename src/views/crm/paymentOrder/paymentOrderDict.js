@@ -107,7 +107,7 @@ const PaymentOrderDict = Object.freeze({
         list: [
             {
                 key: 1,
-                value: '银行转帐'
+                value: '银行转账'
             },
             {
                 key: 2,

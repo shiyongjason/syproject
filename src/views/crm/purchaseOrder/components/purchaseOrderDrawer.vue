@@ -142,7 +142,7 @@
                                         <img src="../../../../assets/images/good-job-status-icon.png" alt="">
                                     </div>
                                     <div>
-                                        <p class="jumbotron-title">订单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
+                                        <p class="jumbotron-title">采购单变更：{{ item.changeResult | attributeComputed(PurchaseOrderDict.changeResult.list) }}！</p>
                                         <p>
                                             提交变更人：{{ item.submitBy }}（{{ item.submitPhone }}） 提交变更时间：{{
                                                 item.submitTime | formatDate

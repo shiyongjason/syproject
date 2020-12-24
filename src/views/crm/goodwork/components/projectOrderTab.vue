@@ -4,8 +4,11 @@
                 @onCurrentChange="handleCurrentChange"
                 @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false"
                 :isShowIndex='true'>
+        <template slot="poAmount" slot-scope="scope">
+            <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
+        </template>
         <template slot="status" slot-scope="scope">
-            <span class="colblue"> {{ findStatusName(scope.data.row.status) }}</span>
+            <span class="colblue"> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
         </template>
     </basicTable>
 </div>
@@ -33,7 +36,8 @@ export default {
                 { label: '状态', prop: 'status', width: '100' },
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTimes' },
                 { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
-            ]
+            ],
+            PurchaseOrderDict
         }
     },
     computed: {
@@ -64,19 +68,7 @@ export default {
         },
         ...mapActions({
             findPurchaseList: 'crmPurchaseOrder/findPurchaseList'
-        }),
-        findStatusName (status) {
-            let name = ''
-            if (status && status > -1) {
-                PurchaseOrderDict.status.list.forEach(value => {
-                    if (value.key == status) {
-                        name = value.value
-                    }
-                })
-                return name
-            }
-            return '-'
-        }
+        })
     },
     mounted () {
         this.findPurchaseList(this.queryParamsUseQuery)

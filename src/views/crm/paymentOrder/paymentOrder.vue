@@ -52,14 +52,14 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.status" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in PaymentOrderDict.status.list"
                                        :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="findPaymentOrderList({...queryParams, pageNumber: 1})">
+                    <h-button type="primary" @click="findPaymentOrderList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -238,24 +238,32 @@ export default {
             paymentOrderList: 'crmPaymentOrder/paymentOrderList',
             crmdepList: 'crmmanage/crmdepList',
             paymentOrderPagination: 'crmPaymentOrder/paymentOrderPagination'
-        })
+        }),
+        queryParamsUseQuery () {
+            return {
+                ...this.queryParams,
+                status: this.queryParams.status.join(','),
+                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                jobNumber: this.userInfo.jobNumber
+            }
+        }
     },
     methods: {
         fundsDialogClose () {
             this.fundsDialogVisible = false
-            this.findPaymentOrderList(this.queryParams)
+            this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findPaymentOrderList(this.queryParams)
+            this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findPaymentOrderList(this.queryParams)
+            this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
-            this.findPaymentOrderList(this.queryParams)
+            this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         onSortChange (val) {
             if (val.order) {
@@ -265,7 +273,7 @@ export default {
                 this.queryParams['sort.property'] = null
                 this.queryParams['sort.direction'] = null
             }
-            this.findPaymentOrderList(this.queryParams)
+            this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         paymentOrderBackEvent () {
             this.drawer = false
@@ -314,16 +322,16 @@ export default {
         },
         onCloseDialogAndQuery (type) {
             this[type] = false
-            this.findPaymentOrderList(this.queryParams)
+            this.findPaymentOrderList(this.queryParamsUseQuery)
             this.drawer = false
         },
         onCloseDialogAndQueryDetail (type) {
             this[type] = false
             if (this.drawer) {
                 this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
-                this.findPaymentOrderList(this.queryParams)
+                this.findPaymentOrderList(this.queryParamsUseQuery)
             } else {
-                this.findPaymentOrderList(this.queryParams)
+                this.findPaymentOrderList(this.queryParamsUseQuery)
             }
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
@@ -334,7 +342,7 @@ export default {
     },
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
-        this.findPaymentOrderList(this.queryParams)
+        this.findPaymentOrderList(this.queryParamsUseQuery)
         this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,

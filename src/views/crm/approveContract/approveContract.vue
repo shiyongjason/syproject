@@ -312,10 +312,10 @@ export default {
                                     return [{ value: '男', label: '男' }, { value: '女', label: '女' }]
                                 }
                                 if (_this.currentKey.paramKey == 'down_pay_form') {
-                                    return [{ value: '银行转帐', label: '银行转帐' }, { value: '银票', label: '银票' }, { value: '商票', label: '商票' }]
+                                    return [{ value: '银行转账', label: '银行转账' }, { value: '银票', label: '银票' }, { value: '商票', label: '商票' }]
                                 }
                                 if (_this.currentKey.paramKey == 'supplier_prepay_form') {
-                                    return [{ value: '银行转帐', label: '银行转帐' }, { value: '银行承兑汇票', label: '银行承兑汇票' }]
+                                    return [{ value: '银行转账', label: '银行转账' }, { value: '银行承兑汇票', label: '银行承兑汇票' }]
                                 }
                                 if (_this.currentKey.paramKey == 'purch_order_purch_batch' || _this.currentKey.paramKey == 'purch_batch') {
                                     return [{ value: '一次性采购', label: '一次性采购' }, { value: '分批采购', label: '分批采购' }]
