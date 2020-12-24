@@ -205,6 +205,7 @@
                             变更结果：
                             {{ dialogDetail.poChange.changeResult | attributeComputed(purchaseOrderDict.changeResult.list)}}
                         </p>
+                        <p v-if="dialogDetail.poChange.changeResult === purchaseOrderDict.changeResult.list[0].key">免息方式：{{ dialogDetail.poChange.freeInterestType | attributeComputed(purchaseOrderDict.freeInterestType.list) }}</p>
                         <p v-if="dialogDetail.poChange.changeResult === purchaseOrderDict.changeResult.list[1].key">驳回原因：{{ dialogDetail.poChange.remark }}</p>
                     </template>
                 </div>
@@ -391,7 +392,7 @@ export default {
 
 <style scoped lang="scss">
 /deep/ .el-dialog__body {
-    //max-height: 480px;
+    max-height: 480px;
     padding: 0 20px 20px;
     overflow-x: hidden;
     overflow-y: scroll;

@@ -182,6 +182,10 @@ const PurchaseOrderDict = Object.freeze({
             {
                 key: 2,
                 value: '驳回'
+            },
+            {
+                key: 0,
+                value: '待确认'
             }
         ]
     },

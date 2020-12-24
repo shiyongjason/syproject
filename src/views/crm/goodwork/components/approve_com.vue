@@ -292,7 +292,7 @@ export default {
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ],
                 transferBankRate: [
-                    { required: true, message: '请输入执行费率（银行承兑）', trigger: 'blur' },
+                    { required: true, message: '执行费率（银行承兑）不能为空', trigger: 'blur' },
                     {
                         trigger: 'blur',
                         message: '执行费率（银行承兑）0-100',
@@ -327,7 +327,7 @@ export default {
             rules: {
                 acceptBankRate: [
                     { required: true, message: '执行费率（银行承兑）不能为空', trigger: 'blur' },
-                    { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
+                    { message: '执行费率（银行承兑）0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 transferBankRate: [
                     { required: true, message: '执行费率（银行转账）不能为空', trigger: 'blur' },
@@ -339,7 +339,7 @@ export default {
                 ],
                 advancePaymentRate: [
                     { required: true, message: '首付款比例不能为空', trigger: 'blur' },
-                    { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
+                    { message: '首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }

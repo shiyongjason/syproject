@@ -112,7 +112,7 @@
                             <p>
                                 <span class="label">银行承兑：</span>
                                 {{paymentDetail.projectInfo.acceptBankRate}}%
-                                <span class="label">银行转帐：</span>
+                                <span class="label">银行转账：</span>
                                 {{paymentDetail.projectInfo.transferBankRate}}%
                             </p>
 
@@ -353,6 +353,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.payment-dialog{
+    /deep/ .el-dialog__body {
+        max-height: 480px;
+        padding: 0 20px 20px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+}
 .info-content{
     padding-top: 20px;
     padding-bottom: 20px;
