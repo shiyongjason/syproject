@@ -41,6 +41,10 @@ export function getMembersituation (params) {
 export function getMerchantMembersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/manage`, { params })
 }
+// 奖励管理
+export function merchantReward (params) {
+    return axios.get(iotUrl + `/mall/boss/wx/reward/manage`, { params })
+}
 // 经销商分销员列表
 export function getMerchantMembersDistributor (params) {
     return axios.get(iotUrl + `/mall/boss/distributor`, { params })
@@ -68,7 +72,12 @@ export function getMerchantMemberTotalsituation (params) {
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
     return axios.put(iotUrl + `/mall/wx/order/boss`, params)
-}// 修改企业信息备注
+}
+// 奖励修改
+export function updateRewardDetail (params) {
+    return axios.post(iotUrl + `/mall/boss/wx/reward/send`, params)
+}
+// 修改企业信息备注
 export function updateCompanyInfo (params) {
     return axios.post(iotUrl + `/mall/boss/company`, params)
 }
