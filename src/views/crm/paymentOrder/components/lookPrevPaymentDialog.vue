@@ -31,12 +31,16 @@
                         <span class="orange-main">{{ item.payAmount | fundMoneyHasTail }}元</span>
                         <span class="info">{{ item.createTime | formatDate }} {{ item.createBy }}（{{ item.createPhone }}）</span>
                     </p>
-                    <p class="body">
+                    <div class="body info-img-group">
                         <span class="label">
                             支付凭证：
                         </span>
-                        <img :key="subItem.fileUrl" :src="subItem.fileUrl" alt="" v-for="subItem in item.payVouchers" @click="goDetail(subItem.fileUrl)" class="info-img">
-                    </p>
+                        <p class="content">
+                            <span class="img-box" v-for="subItem in item.payVouchers" @click="goDetail(subItem.fileUrl)" :key="subItem.fileUrl" >
+                                <img :src="subItem.fileUrl" alt="" >
+                            </span>
+                        </p>
+                    </div>
                     <p>
                         <span class="label">
                             支付日期：
@@ -118,6 +122,30 @@ li{
         cursor: pointer;
     }
 }
+.info-img-group {
+    display: flex;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
+    }
+    .label {
+        flex: 0 0 100px;
+    }
+}
 .icon {
     display: inline-block;
     width: 20px;
@@ -139,5 +167,10 @@ li{
     width: 80px;
     height: 80px;
     cursor: pointer;
+}
+/deep/ .el-dialog__body{
+    max-height: 480px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 </style>

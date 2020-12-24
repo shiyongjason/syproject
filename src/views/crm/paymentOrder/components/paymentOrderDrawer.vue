@@ -96,7 +96,7 @@
                         <p class="col-filed col-50">
                             <span class="label">上游供应商：</span>{{ paymentOrderDetail.payOrderDetail.supplierCompanyName }}
                         </p>
-                        <p class="col-filed col-50">
+                        <p class="col-filed col-50 address-group">
                             <span class="label address">收货地址：</span>
                             {{ paymentOrderDetail.payOrderDetail.goodsAddress }}
                         </p>
@@ -298,7 +298,8 @@
                                     </p>
                                     <div class="col-filed col-40 service-pay-time need-center">
                                         <p class="mr-50">
-                                            <span class="label">支付{{ item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key ? '失败': '成功'}}时间：</span>{{ item.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                            <span class="label">支付<template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>
+                                                <template v-else-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template>时间：</span>{{ item.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                         </p>
                                         <template
                                             v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
@@ -839,6 +840,7 @@ export default {
 }
 .info-img-group {
     display: flex;
+    width: 100%;
     .content {
         display: flex;
         flex-wrap: wrap;

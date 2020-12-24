@@ -14,7 +14,11 @@
                 {{ enterReceiptDetail.surplusAmount | fundMoneyHasTail }}元
             </el-form-item>
             <el-form-item label="采购明细表：">
-                <img :key="item.key"  :src="item.fileUrl" :alt="item.fileName" v-for="item in enterReceiptDetail.detailed" @click="goDetail(item.fileUrl)" class="info-img">
+                <div class="info-img-group">
+                    <span :key="item.key" class="img-box"  v-for="item in enterReceiptDetail.detailed" @click="goDetail(item.fileUrl)">
+                        <img :src="item.fileUrl" :alt="item.fileName">
+                    </span>
+                </div>
             </el-form-item>
             <el-form-item label="本次到货金额：" prop="goodsAmount">
                <el-input type="text" v-model="formData.goodsAmount" maxlength="50" v-isNegative="formData.goodsAmount"></el-input>
@@ -22,7 +26,7 @@
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
                 <hosjoyUpload
                     v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=100
-                    :limit=100 :action='action' :uploadParameters='uploadParameters'
+                    :limit=20 :action='action' :uploadParameters='uploadParameters'
                     style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
@@ -30,7 +34,7 @@
                 </hosjoyUpload>
             </el-form-item>
             <el-form-item label="收货备注：">
-                <el-input type="textarea" v-model="formData.goodsRemark"></el-input>
+                <el-input type="textarea" v-model="formData.goodsRemark" maxlength="200"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">

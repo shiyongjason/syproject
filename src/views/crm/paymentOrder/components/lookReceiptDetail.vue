@@ -1,6 +1,6 @@
 <template>
     <el-dialog :close-on-click-modal=false title="查看收货明细" :visible.sync="isOpen" width="600px" :before-close="()=> $emit('onClose')">
-        <div class="info-content">
+        <div class="info-content look-receipt-detail">
             <div class="tab-pane">
                 <p>
                     <span>应到货金额总计：</span>
@@ -19,12 +19,16 @@
                         <span class="orange-main">{{ item.goodsAmount | fundMoneyHasTail }}元</span>
                         <span class="info">{{ item.createTime | formatDate }} {{item.createBy}}（{{ item.createPhone }}）</span>
                     </p>
-                    <p class="info-img-group">
+                    <div class="info-img-group">
                         <span class="label">
                             到货验收单：
                         </span>
-                        <img :key="subItem.fileUrl" :src="subItem.fileUrl" alt="" v-for="subItem in item.goodsVouchers" class="info-img" @click="goDetail(subItem.fileUrl)">
-                    </p>
+                        <p class="content">
+                            <span class="img-box"  @click="goDetail(subItem.fileUrl)" :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers">
+                                <img :src="subItem.fileUrl" alt="">
+                            </span>
+                        </p>
+                    </div>
                     <p>
                         <span class="label">
                             收货备注：
@@ -91,6 +95,27 @@ li{
 }
 .info-img-group {
     display: flex;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
+    }
+    .label {
+        flex: 0 0 100px;
+    }
 }
 .info-img {
     width: 80px;
@@ -119,5 +144,10 @@ li{
     width: 80px;
     height: 80px;
     cursor: pointer;
+}
+/deep/ .el-dialog__body{
+    max-height: 480px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 </style>

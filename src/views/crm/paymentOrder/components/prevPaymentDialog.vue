@@ -38,7 +38,7 @@
             <el-form-item label="上传上游支付凭证：" prop="payVouchers">
                 <hosjoyUpload
                               v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=100
-                              :limit=100 :action='action' :uploadParameters='uploadParameters'
+                              :limit=20 :action='action' :uploadParameters='uploadParameters'
                               style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>

@@ -534,6 +534,14 @@ export default {
                 if (valid) {
                     try {
                         this.projectFinaleForm.id = this.approveForm.projectId
+                        const projectDocList = this.approveForm.projectDocList
+                        let riskCheckProjectDocPoList = []
+                        projectDocList && projectDocList.map(val => {
+                            val.respRiskCheckDocTemplateList.map(obj => {
+                                riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
+                            })
+                        })
+                        this.projectFinaleForm.riskCheckProjectDocPoList = riskCheckProjectDocPoList
                         // this.projectFinaleForm.transferBankRate = this.$dividedBy(this.projectFinaleForm.transferBankRate, 100)
                         // this.projectFinaleForm.acceptBankRate = this.$dividedBy(this.projectFinaleForm.acceptBankRate, 100)
                         await updateFinalStatus(this.projectFinaleForm)
