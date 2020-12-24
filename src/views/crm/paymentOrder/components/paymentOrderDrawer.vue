@@ -163,7 +163,7 @@
                         </div>
                         <template v-if="paymentOrderDetail.payOrderDetail.approvalStatus === PaymentOrderDict.approvalStatus.list[1].key">
                             <div class="row-filed">
-                                <p class="col-filed col-33">
+                                <p class="col-filed approval-remark">
                                     <span class="label">审核备注：</span>{{paymentOrderDetail.payOrderDetail.approvalRemark || '-'}}
                                 </p>
                             </div>
@@ -875,5 +875,11 @@ export default {
 }
 .ml-20{
     margin-left: 20px;
+}
+.approval-remark {
+    display: flex;
+    .label {
+        flex: 0 0 80px;
+    }
 }
 </style>

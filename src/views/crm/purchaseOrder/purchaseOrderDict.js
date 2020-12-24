@@ -189,6 +189,19 @@ const PurchaseOrderDict = Object.freeze({
             }
         ]
     },
+    changeResultDialog: {
+        title: '变更结果',
+        list: [
+            {
+                key: 1,
+                value: '确认变更'
+            },
+            {
+                key: 2,
+                value: '驳回'
+            }
+        ]
+    },
     changedContract: {
         title: '采购单变更合同信息状态',
         list: [

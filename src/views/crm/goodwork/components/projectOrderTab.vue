@@ -79,6 +79,6 @@ export default {
 <style scoped lang="scss">
 .collect-wrap {
     margin-top: 50px;
-    padding: 20px;
+    padding: 20px 20px 200px;
 }
 </style>
