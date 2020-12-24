@@ -149,8 +149,8 @@ export default {
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '采购单金额', prop: 'poAmount', width: '100' },
                 { label: '状态', prop: 'status', width: '120' },
-                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'createTimeOrder' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTimeOrder' }
+                { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTime', sortable: 'createTimeOrder' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTimeOrder' }
             ],
             purchaseOrderData: [],
             drawer: false,
