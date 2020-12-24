@@ -221,7 +221,7 @@
                         </template>
                     </template>
                     <!--                    首付款待支付end-->
-                    <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key && paymentOrderDetail.respFundResults.downpaymentFund && (paymentOrderDetail.payOrderDetail.closeReasonCode >=PaymentOrderDict.closeReasonCode.list[2].key)">
+                    <template v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[0].key && paymentOrderDetail.respFundResults.downpaymentFund && (!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode  >=PaymentOrderDict.closeReasonCode.list[2].key)">
                         <template v-if="PaymentOrderDict.status.list[1].key  <= paymentOrderDetail.payOrderDetail.status">
                             <div class="row-filed">
                                 <p class="col-filed">
@@ -354,11 +354,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                 </p>
                             </div>
                             <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
-                                <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)&& (paymentOrderDetail.respSupplierAmount.totalAmount !== paymentOrderDetail.respSupplierAmount.paidAmount )">
+                                <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)&& (paymentOrderDetail.supplierPayFlag === 1)">
                                     上游支付
                                 </h-button>
                             </div>
-                            <template v-if="paymentOrderDetail.goodsConfirmFlag === 1">
+                            <template>
                                 <div class="row-filed">
                                     <p class="col-filed">
                                         <span class="info-title">到货信息：</span>
@@ -382,7 +382,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                     </h-button>
                                 </div>
                             </template>
-                            <template v-if="PaymentOrderDict.status.list[3].key <= paymentOrderDetail.payOrderDetail.status  && paymentOrderDetail.payOrderDetail.closeReasonCode">
+                            <template v-if="!paymentOrderDetail.payOrderDetail.closeReasonCode">
                                 <div class="row-filed">
                                     <p class="col-filed">
                                         <span class="info-title">剩余货款支付计划：</span>

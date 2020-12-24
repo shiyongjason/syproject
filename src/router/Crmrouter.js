@@ -200,8 +200,8 @@ export default [
                 path: 'purchaseOrder',
                 name: 'purchaseOrder',
                 meta: {
-                    title: '采购单',
-                    tagName: '采购单',
+                    title: '采购单管理',
+                    tagName: '采购单管理',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/purchaseOrder'
