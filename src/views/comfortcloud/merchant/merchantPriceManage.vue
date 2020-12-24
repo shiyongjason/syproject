@@ -137,6 +137,9 @@
                 <el-form-item label="佣金设置：" prop="commissionRate">
                     <el-input v-model="form.commissionRate" maxlength="10" style="width: 100px" placeholder="填写佣金比例">10</el-input> %
                 </el-form-item>
+                <el-form-item label="推广话术：" prop="promotedTagline">
+                    <el-input v-model="form.promotedTagline" maxlength="100" :rows="2" type="textarea" placeholder="输入推荐话术，将展示在推广商品列表中，不超过100字符"/>
+                </el-form-item>
                 <div style="height : 20px"></div>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -192,6 +195,7 @@ export default {
                     wxProductUrl: '',
                     price: ''
                 }],
+                promotedTagline: '',
                 operator: ''
             },
             tableLabel: [
@@ -266,6 +270,9 @@ export default {
                 ],
                 productDetailImg: [
                     { required: true, message: '请设置商品详情图片' }
+                ],
+                promotedTagline: [
+                    { required: false, message: '请输入推广话术' }
                 ]
             }
         }
@@ -360,6 +367,7 @@ export default {
                         wxProductUrl: '',
                         price: ''
                     }],
+                    promotedTagline: '',
                     operator: ''
                 }
             }

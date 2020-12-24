@@ -33,7 +33,7 @@
                     <el-input style="width: 300px" placeholder="输入已上架的商品名称" v-model="form.productName"></el-input>
                 </el-form-item>
                 <el-form-item label="商品卖点：" prop="sellingPoints">
-                    <el-input style="width: 300px" placeholder="输入商品卖点，不超过100个字符" maxlength="100" v-model="form.sellingPoints"></el-input>
+                    <el-input type="textarea"  placeholder="输入商品卖点，不超过100个字符" maxlength="100" v-model="form.sellingPoints"></el-input>
                 </el-form-item>
                 <el-form-item label="特惠价：" prop="discountPrice">
                     <el-input v-model="form.discountPrice" style="width: 150px" maxlength="10" placeholder="请输入特惠价"></el-input> 元
@@ -44,10 +44,10 @@
                 <el-button type="primary" @click="submitAddForm" :loading="isAdding">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog class="edit-dialog" width="600px" title="商品卖点编辑" :visible.sync="dialogSellingPointsVisible" :close-on-click-modal="false" :before-close="onCloseSellingPointsDialog">
+        <el-dialog class="edit-dialog" width="800px" title="商品卖点编辑" :visible.sync="dialogSellingPointsVisible" :close-on-click-modal="false" :before-close="onCloseSellingPointsDialog">
             <el-form :model="sellingPointsForm" :rules="sellingPointsRules" ref="sellingPointsForm" label-width="140px">
                 <el-form-item label="商品卖点：" prop="sellingPoints">
-                    <el-input style="width: 300px" placeholder="输入商品卖点，不超过100个字符" maxlength="100" v-model="sellingPointsForm.sellingPoints"></el-input>
+                    <el-input type="textarea" placeholder="输入商品卖点，不超过100个字符" maxlength="100" v-model="sellingPointsForm.sellingPoints"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
