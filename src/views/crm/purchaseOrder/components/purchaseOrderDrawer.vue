@@ -271,7 +271,7 @@ export default {
             activeNames: ['1', '2', '3', '4', '5'],
             tableLabel: [
                 { label: '支付单编号', prop: 'paymentOrderNo' },
-                { label: '金额', prop: 'applyAmount' },
+                { label: '金额', prop: 'applyAmount', align: 'right' },
                 { label: '状态', prop: 'status' },
                 { label: '申请时间', prop: 'applyDate', formatters: 'dateTime', width: '150' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime' }

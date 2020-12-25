@@ -18,7 +18,7 @@
             <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
             <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
             <template v-for="item in tableLabel">
-                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="item.label" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
+                <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true" v-bind="item">
                     <template slot-scope="scope">
                         <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
                         <slot v-else-if="item.formatters === 'moneyShow'" :name="item.prop" :data="scope">{{scope.row[item.prop] | moneyShow}}</slot>
@@ -70,7 +70,8 @@ export default {
             checkedCities: [],
             isIndeterminate: true,
             collapse: false,
-            selectTh: []
+            selectTh: [],
+            changeThNum: 0
         }
     },
     props: {
@@ -194,13 +195,14 @@ export default {
         },
         tableLabel: {
             handler (val) {
-                this.selectTh = []
+                let selectTh = []
                 this.tableLabel.map(item => {
                     item.choosed = (item.choosed === undefined ? true : item.choosed)
                     if (item.choosed) {
-                        this.selectTh.push(item.label)
+                        selectTh.push(item.label)
                     }
                 })
+                this.selectTh = selectTh
             },
             deep: true,
             immediate: true
@@ -209,6 +211,9 @@ export default {
             handler (val) {
                 this.minWidth = val
             }
+        },
+        selectTh () {
+            this.changeThNum = this.changeThNum + 1
         }
     },
     methods: {
@@ -264,8 +269,10 @@ export default {
             this.checkAll = checkedCount === this.defaultTh.length
             this.isIndeterminate = checkedCount > 0 && checkedCount < this.selectTh.length
             this.$emit('field-change', this.selectTh)
+        },
+        columnKey (item) {
+            return item.label + this.changeThNum
         }
-
     },
     mounted () {
         this.initWidth()
