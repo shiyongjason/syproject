@@ -176,4 +176,9 @@ export default {
 .tips {
     color: #8d8d8d;
 }
+/deep/ .el-dialog__body{
+    max-height: 480px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
 </style>

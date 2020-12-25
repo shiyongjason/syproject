@@ -76,39 +76,23 @@
                             <th>变更后</th>
                         </tr>
                         <tr :key="item.id" v-for="item in dialogDetail.poChangeFields">
-                            <td>{{ item.fieldName || '-' }}</td>
+                            <td>{{ item.fieldName | attributeComputed(purchaseOrderDict.fileName.list)}}</td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.originalValue))">
-                                    <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                    <img :src="item.url" :key="item.url" alt=""
                                          v-for="item in checkedIsJson(item.originalValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    <template v-if="item.fieldName === 'poNumber'">
-                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
-                                    </template>
-                                    <template v-if="item.fieldName === 'poNumber'">
-                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
-                                    </template>
-                                    <template v-else>
-                                        {{ item.originalValue }}
-                                    </template>
+                                    {{ item.originalValue }}
                                 </template>
                             </td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.changedValue))">
-                                    <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                    <img :src="item.url" :key="item.url" alt=""
                                          v-for="item in checkedIsJson(item.changedValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    <template v-if="item.fieldName === 'poNumber'">
-                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
-                                    </template>
-                                    <template v-if="item.fieldName === 'poNumber'">
-                                        {{item.changedValue | attributeComputed(PaymentOrderDict.applyType.list)}}
-                                    </template>
-                                    <template v-else>
-                                        {{ item.originalValue }}
-                                    </template>
+                                    {{ item.changedValue }}
                                 </template>
                             </td>
                         </tr>
@@ -330,6 +314,10 @@ export default {
                         updateBy: this.userinfo.employeeName,
                         updatePhone: this.userinfo.phoneNumber,
                         ...this.formData
+                    }
+                    if (params.freeInterestType > this.dialogDetail.poInfo.restPaymentPeriod) {
+                        this.$message.success('免息周期不能超过剩余货款支付周期')
+                        return
                     }
                     let message = ''
                     if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {

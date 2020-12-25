@@ -454,7 +454,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                 <el-form-item label="应支付时间：" prop="time">
                     <el-date-picker
                         v-model="updateForm.time"
-                        type="datetime"
+                        type="date"
                         placeholder="选择日期时间">
                     </el-date-picker>
                 </el-form-item>

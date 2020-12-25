@@ -86,7 +86,7 @@
                 </el-tab-pane>
             </el-tabs>
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
-                项,采购单总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
+                项,剩余货款总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -174,8 +174,8 @@ export default {
                     formatters: 'date',
                     sortable: 'custom'
                 },
-                { label: '支付成功时间', prop: 'paidTime', width: '150', formatters: 'dateTime', sortable: 'paidTime' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'paidTime' }
+                { label: '支付成功时间', prop: 'paidTime', width: '150', formatters: 'dateTime' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTime' }
             ]
             // FundsDict repaymentTypeArrays类型
             if (this.queryParams.repaymentTypeArrays === '1') {

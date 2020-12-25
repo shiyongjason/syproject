@@ -214,6 +214,53 @@ const PurchaseOrderDict = Object.freeze({
                 value: '变更'
             }
         ]
+    },
+    fileName: {
+        title: '采购单变更弹窗变更字段',
+        list: [
+            {
+                key: 'purch_batch_amount',
+                value: '采购单金额'
+            },
+            {
+                key: 'purchase_details',
+                value: '采购明细表'
+            },
+            {
+                key: 'purch_order_purch_batch',
+                value: '采购批次'
+            }, {
+                key: 'purch_order_latest_shipment_date',
+                value: '最迟发货日期'
+            }, {
+                key: 'purch_order_shipping_address',
+                value: '收货地址'
+            }, {
+                key: 'advance_payment_proportion',
+                value: '经销商预付款比例'
+            }, {
+                key: 'loan_month',
+                value: '剩余货款支付周期'
+            }, {
+                key: 'hosjoy_account_name',
+                value: '收款账户户名'
+            }, {
+                key: 'hosjoy_account_number',
+                value: '收款账户银行账号'
+            }, {
+                key: 'hosjoy_account_bank',
+                value: '收款账户开户行'
+            }, {
+                key: 'regulatory_account_name',
+                value: '监管账户户名'
+            }, {
+                key: 'regulatory_account_number',
+                value: '监管账户银行账号'
+            }, {
+                key: 'regulatory_account_bank',
+                value: '监管账户开户行'
+            }
+        ]
     }
 })
 
