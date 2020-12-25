@@ -147,7 +147,7 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
                 { label: '项目编号', prop: 'projectNo', width: '150' },
-                { label: '采购单金额', prop: 'poAmount', width: '100' },
+                { label: '采购单金额', prop: 'poAmount', width: '100', align: 'right' },
                 { label: '状态', prop: 'status', width: '120' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTime', sortable: 'createTimeOrder' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTimeOrder' }
