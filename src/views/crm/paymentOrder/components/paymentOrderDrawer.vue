@@ -144,7 +144,7 @@
                         </h-button>
                     </div>
                     <template v-if="paymentOrderDetail.payOrderDetail.status !== PaymentOrderDict.status.list[0].key">
-                        <template v-if="PaymentOrderDict.status.list[1].key <= paymentOrderDetail.payOrderDetail.status">
+                        <template v-if="PaymentOrderDict.status.list[1].key <= paymentOrderDetail.payOrderDetail.status && (paymentOrderDetail.payOrderDetail.approvalStatus >= PaymentOrderDict.approvalStatus.list[0].key)">
                             <!--                    首付款待支付start-->
                             <div class="row-filed">
                                 <p class="col-filed col-33">
