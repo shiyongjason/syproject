@@ -86,7 +86,7 @@
                 </el-tab-pane>
             </el-tabs>
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
-                项,{{ labelName }}总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
+                项,{{ totalLabelName }}总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -146,7 +146,8 @@ export default {
             fundsDialogDetail: {},
             FundsDict,
             PaymentOrderDict,
-            labelName: ''
+            labelName: '',
+            totalLabelName: ''
         }
     },
     computed: {
@@ -290,12 +291,15 @@ export default {
         switchName () {
             if (this.queryParams.repaymentTypeArrays === '1') {
                 this.labelName = '首付款流水号'
+                this.totalLabelName = '首付款'
             }
             if (this.queryParams.repaymentTypeArrays === '3') {
                 this.labelName = '服务费流水号'
+                this.totalLabelName = '服务费'
             }
             if (this.queryParams.repaymentTypeArrays === '2') {
                 this.labelName = '剩余货款流水号'
+                this.totalLabelName = '剩余货款'
             }
         },
         ...mapActions({
