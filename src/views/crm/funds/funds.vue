@@ -165,7 +165,8 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
-                { label: '金额', prop: 'paymentAmount', width: '150' },
+                { label: '期数', prop: 'feeRepaymentOrder', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
+                { label: '金额', prop: 'paymentAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
                     label: '应支付日期',
@@ -182,7 +183,6 @@ export default {
                 label[0].label = '首付款流水号'
             } else if (this.queryParams.repaymentTypeArrays === '3') {
                 label[0].label = '服务费流水号'
-                label.splice(5, 0, { label: '期数', prop: 'feeRepaymentOrder', width: '100' })
             } else if (this.queryParams.repaymentTypeArrays === '2') {
                 label[0].label = '剩余货款流水号'
             }
