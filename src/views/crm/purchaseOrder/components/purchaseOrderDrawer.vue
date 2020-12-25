@@ -56,7 +56,7 @@
                                 </p>
                                 <template v-if="purchaseOrderDetail.poInfo">
                                     <p class="col-filed">
-                                        经销商首付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
+                                        经销商预付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
                                     </p>
                                     <p class="col-filed">
                                         剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}月

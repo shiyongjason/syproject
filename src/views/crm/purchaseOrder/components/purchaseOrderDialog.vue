@@ -26,7 +26,7 @@
                             <span>{{ dialogDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购</span>
                         </li>
                         <li>
-                            <span class="label">经销商预付款比： </span>
+                            <span class="label">经销商预付款比例： </span>
                             <span>{{ dialogDetail.poInfo.prePercent || '-' }}%</span>
                         </li>
                         <li>
@@ -84,7 +84,7 @@
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
-                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}采购
                                     </template>
                                     <template v-else>
                                         {{ item.originalValue + (item.unit || '') }}
@@ -98,7 +98,7 @@
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
-                                        {{ (item.changedValue -0) | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                        {{ (item.changedValue -0) | attributeComputed(PaymentOrderDict.applyType.list)}}采购
                                     </template>
                                     <template v-else>
                                         {{ item.changedValue + (item.unit || '') }}

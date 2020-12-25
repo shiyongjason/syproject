@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <h-button type="primary" @click="findFundsList({...queryParams, pageNumber: 1})">
+                    <h-button type="primary" @click="findFundsList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
                     <h-button @click="onReset">
@@ -86,7 +86,7 @@
                 </el-tab-pane>
             </el-tabs>
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
-                项,剩余货款总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
+                项,{{ labelName }}总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -187,12 +187,19 @@ export default {
                 label[0].label = '剩余货款流水号'
             }
             return label
+        },
+        queryParamsUseQuery () {
+            return {
+                ...this.queryParams,
+                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                jobNumber: this.userInfo.jobNumber
+            }
         }
     },
     methods: {
         fundsDialogClose () {
             this.fundsDialogVisible = false
-            this.findFundsList(this.queryParams)
+            this.findFundsList(this.queryParamsUseQuery)
         },
         hasPayEnterAuth (type) {
             // 1-首付款；2-剩余货款；3-服务费；
@@ -241,20 +248,20 @@ export default {
         handleClick () {
             const { repaymentTypeArrays } = this.queryParams
             this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
-            this.findFundsList(this.queryParams)
+            this.findFundsList(this.queryParamsUseQuery)
             this.switchName()
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findFundsList(this.queryParams)
+            this.findFundsList(this.queryParamsUseQuery)
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findFundsList(this.queryParams)
+            this.findFundsList(this.queryParamsUseQuery)
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
-            this.findFundsList(this.queryParams)
+            this.findFundsList(this.queryParamsUseQuery)
         },
         onSortChange (val) {
             if (val.order) {
@@ -264,7 +271,7 @@ export default {
                 this.queryParams['sort.property'] = null
                 this.queryParams['sort.direction'] = null
             }
-            this.findFundsList(this.queryParams)
+            this.findFundsList(this.queryParamsUseQuery)
         },
         onPayEnter (row) {
             this.fundsDialogVisible = true
@@ -299,7 +306,7 @@ export default {
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
         const temp = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
-        this.findFundsList(this.queryParams)
+        this.findFundsList(this.queryParamsUseQuery)
         this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,

@@ -251,6 +251,7 @@ export default {
     methods: {
         fundsDialogClose () {
             this.fundsDialogVisible = false
+            this.drawer = false
             this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         handleSizeChange (val) {

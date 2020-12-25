@@ -26,7 +26,7 @@
                 {{prevPaymentDetail.goodsProgress}}%
             </el-form-item>
             <el-form-item label="本次支付金额：" prop="payAmount">
-                <el-input placeholder="请输入" v-model="formData.payAmount" maxlength="50" v-isNegative="formData.payAmount"></el-input>
+                <el-input placeholder="请输入" v-model="formData.payAmount" maxlength="50" v-isNegative:2="formData.payAmount"></el-input>
             </el-form-item>
             <el-form-item label="支付日期：" prop="payDate">
                 <el-date-picker

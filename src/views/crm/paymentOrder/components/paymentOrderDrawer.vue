@@ -393,7 +393,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                 <div class="row-filed" v-if="paymentOrderDetail.respFundResults.arrearFund">
                                     <p class="col-filed col-25">
                                         <span class="label">剩余货款：</span>
-                                        {{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount }}元
+                                        {{ paymentOrderDetail.respFundResults.arrearFund.paymentAmount | fundMoneyHasTail }}元
                                     </p>
                                     <p class="col-filed col-25">
                                         <span class="label">应支付时间：</span>
