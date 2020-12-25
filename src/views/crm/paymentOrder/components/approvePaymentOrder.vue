@@ -68,20 +68,20 @@
                             <template v-if="formData.supplierPaymentType">
                                 <p>
                                     <span>经销商首付款：</span>
-                                    {{downPaymentAmount}}元
+                                    {{downPaymentAmount | fundMoneyHasTail}}元
                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit">
                                 </p>
                                 <p>
                                     <span>剩余货款：</span>
-                                    {{ serviceFee.arrearAmount }}元
+                                    {{ serviceFee.arrearAmount | fundMoneyHasTail}}元
                                 </p>
                                 <p>
                                     <span>预计服务费总额：</span>
-                                    {{ serviceFee.feeAmount }}元
+                                    {{ serviceFee.feeAmount | fundMoneyHasTail}}元
                                 </p>
                                 <p>
                                     <span>预计每期服务费：</span>
-                                    {{ serviceFee.feeAmountPer }}元
+                                    {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
                                 </p>
                             </template>
                         </template>

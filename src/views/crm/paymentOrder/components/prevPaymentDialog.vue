@@ -57,7 +57,7 @@
 <script>
 import { getPrevPayDetail, updatePrevPayPass } from '@/views/crm/paymentOrder/api'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 
 export default {
@@ -76,7 +76,7 @@ export default {
     },
     data () {
         return {
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

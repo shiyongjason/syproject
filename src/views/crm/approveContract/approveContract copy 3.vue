@@ -143,7 +143,7 @@ import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
 import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi } from './api/index'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 
 export default {
     name: 'approveContract',
@@ -155,7 +155,7 @@ export default {
                 updateUid: '',
                 reservedName: false
             },
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             imgArr: [],
             drawerVisible: false,
             originalContentFieldsList: '',

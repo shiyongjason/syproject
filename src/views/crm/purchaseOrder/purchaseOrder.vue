@@ -108,7 +108,7 @@
                              @openDialog="openDialog" ref="drawerDetail"
                              :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus"
-                             @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :row="purchaseOrderRow"
+                             @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams"
                              ref="dialog"></purchaseOrderDialog>
     </div>
 </template>
@@ -158,7 +158,8 @@ export default {
             PurchaseOrderDict,
             isOpen: false,
             openStatus: PurchaseOrderDialogStatus.enter.status,
-            purchaseOrderRow: {}
+            purchaseOrderRow: {},
+            purchaseOrderDialogParams: {}
         }
     },
     components: {
@@ -232,9 +233,6 @@ export default {
 
             this.findPurchaseList(this.queryParamsUseQuery)
         },
-        jumpPurchaseOrderDetail (id) {
-            this.$router.push({ path: '/goodwork/purchaseOrderDetail', query: { orderNo: id } })
-        },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
             this.findPurchaseList(this.queryParamsUseQuery)
@@ -247,10 +245,10 @@ export default {
             this.drawer = false
             this.findPurchaseList(this.queryParamsUseQuery)
         },
-        openDialog (status, row) {
-            this.isOpen = true
+        openDialog (status, dialogParams) {
             this.openStatus = status
-            this.purchaseOrderRow = row
+            this.purchaseOrderDialogParams = dialogParams
+            this.isOpen = true
         },
         dialogBackEvent () {
             this.isOpen = false

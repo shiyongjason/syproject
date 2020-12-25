@@ -86,7 +86,7 @@ import * as newAuth from '@/utils/auth_const'
 import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 
 export default {
     name: 'projectdrawer',
@@ -105,7 +105,7 @@ export default {
     data () {
         return {
             showPacking: null,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

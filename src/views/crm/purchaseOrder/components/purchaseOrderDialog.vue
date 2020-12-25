@@ -1,6 +1,6 @@
 <template>
     <el-dialog :title="title" :visible.sync="isOpen" width="1000px" :before-close="()=> onClose()"
-               :close-on-click-modal="false">
+               :close-on-click-modal="false" :destroy-on-close="true">
         <div class="info-content">
             <div class="row-filed">
                 <div class="col-filed left" v-if="dialogDetail.poInfo && dialogStatus.enter.status === openStatus">
@@ -83,7 +83,12 @@
                                          v-for="item in checkedIsJson(item.originalValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    {{ item.originalValue }}
+                                    <template v-if="item.fieldName === 'purch_order_purch_batch'">
+                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                    </template>
+                                    <template v-else>
+                                        {{ item.originalValue + (item.unit || '') }}
+                                    </template>
                                 </template>
                             </td>
                             <td>
@@ -92,7 +97,12 @@
                                          v-for="item in checkedIsJson(item.changedValue)" class="info-img">
                                 </template>
                                 <template v-else>
-                                    {{ item.changedValue }}
+                                    <template v-if="item.fieldName === 'purch_order_purch_batch'">
+                                        {{ (item.changedValue -0) | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                    </template>
+                                    <template v-else>
+                                        {{ item.changedValue + (item.unit || '') }}
+                                    </template>
                                 </template>
                             </td>
                         </tr>
@@ -241,7 +251,7 @@ export default {
             type: Number,
             required: true
         },
-        row: {
+        dialogParams: {
             type: Object,
             required: true
         }
@@ -310,12 +320,12 @@ export default {
             this.$refs.form.validate(async (value) => {
                 if (value) {
                     const params = {
-                        poId: this.row.id,
+                        poId: this.dialogParams.id,
                         updateBy: this.userinfo.employeeName,
                         updatePhone: this.userinfo.phoneNumber,
                         ...this.formData
                     }
-                    if (params.freeInterestType > this.dialogDetail.poInfo.restPaymentPeriod) {
+                    if (this.dialogDetail.poInfo && params.freeInterestType > this.dialogDetail.poInfo.restPaymentPeriod) {
                         this.$message.success('免息周期不能超过剩余货款支付周期')
                         return
                     }
@@ -355,15 +365,15 @@ export default {
             if (val) {
                 let _data = {}
                 if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
-                    const { data } = await getPurchaseOrderConfirmDetail(this.row.id)
+                    const { data } = await getPurchaseOrderConfirmDetail(this.dialogParams.id)
                     _data = data
                 }
                 if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
-                    const { data } = await getPurchaseOrderConfirmChangeDetail(this.row.id)
+                    const { data } = await getPurchaseOrderConfirmChangeDetail(this.dialogParams.id)
                     _data = data
                 }
                 if (PurchaseOrderDialogStatus.watch.status === this.openStatus) {
-                    const { data } = await getPurchaseOrderSeeDetail(this.row.id)
+                    const { data } = await getPurchaseOrderSeeDetail(this.dialogParams.id)
                     _data = data
                 }
                 _data.contracts && _data.contracts.sort((value1, value2) => value1.contractTypeId - value2.contractTypeId)

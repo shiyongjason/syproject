@@ -148,7 +148,7 @@ import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
 import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi } from './api/index'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 // api:https://www.tiny.cloud/docs/integrations/vue/
 // http://tinymce.ax-z.cn/general/basic-setup.php
@@ -179,7 +179,7 @@ export default {
                 updateUid: '',
                 reservedName: false
             },
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             imgArr: [],
             drawerVisible: false,
             originalContentFieldsList: '',
@@ -219,7 +219,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         uploadImgServer () {
-            return interfaceUrl + 'tms/files/upload-list'
+            return ccpBaseUrl + 'common/files/upload-old'
         },
         uploadImgParams () {
             return {
