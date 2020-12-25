@@ -86,7 +86,7 @@
                 </el-tab-pane>
             </el-tabs>
             <el-tag size="medium" class="eltagtop">已筛选 {{ fundsListPagination.total }}
-                项,采购单总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
+                项,剩余货款总金额：<b>{{ fundsListPagination.amount | fundMoneyHasTail }} </b>元;
             </el-tag>
             <basicTable :tableData="fundsList" :tableLabel="tableLabel" :pagination="fundsListPagination"
                         @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
@@ -165,7 +165,8 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
-                { label: '金额', prop: 'paymentAmount', width: '150' },
+                { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
+                { label: '金额', prop: 'paymentAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
                     label: '应支付日期',
@@ -174,15 +175,14 @@ export default {
                     formatters: 'date',
                     sortable: 'custom'
                 },
-                { label: '支付成功时间', prop: 'paidTime', width: '150', formatters: 'dateTime', sortable: 'paidTime' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'paidTime' }
+                { label: '支付成功时间', prop: 'paidTime', width: '150', formatters: 'dateTime' },
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTime' }
             ]
             // FundsDict repaymentTypeArrays类型
             if (this.queryParams.repaymentTypeArrays === '1') {
                 label[0].label = '首付款流水号'
             } else if (this.queryParams.repaymentTypeArrays === '3') {
                 label[0].label = '服务费流水号'
-                label.splice(5, 0, { label: '期数', prop: 'feeRepaymentOrder', width: '100' })
             } else if (this.queryParams.repaymentTypeArrays === '2') {
                 label[0].label = '剩余货款流水号'
             }

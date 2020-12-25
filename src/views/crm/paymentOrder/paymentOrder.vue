@@ -187,7 +187,7 @@ export default {
                 { label: '经销商', prop: 'dealerCompanyName', width: '150' },
                 { label: '采购单名称', prop: 'purchaseOrderName', width: '200' },
                 { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
-                { label: '金额', prop: 'applyAmount', width: '150' },
+                { label: '金额', prop: 'applyAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {

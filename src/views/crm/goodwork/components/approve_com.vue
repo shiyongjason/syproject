@@ -542,9 +542,10 @@ export default {
                                 riskCheckProjectDocPoList = riskCheckProjectDocPoList.concat(obj.riskCheckProjectDocPos)
                             })
                         })
+                        riskCheckProjectDocPoList.forEach(value => {
+                            value.projectId = this.approveForm.projectId
+                        })
                         this.projectFinaleForm.riskCheckProjectDocPoList = riskCheckProjectDocPoList
-                        // this.projectFinaleForm.transferBankRate = this.$dividedBy(this.projectFinaleForm.transferBankRate, 100)
-                        // this.projectFinaleForm.acceptBankRate = this.$dividedBy(this.projectFinaleForm.acceptBankRate, 100)
                         await updateFinalStatus(this.projectFinaleForm)
                         this.$message.success(`项目终审提交成功`)
                         this.$emit('onCompsback')
