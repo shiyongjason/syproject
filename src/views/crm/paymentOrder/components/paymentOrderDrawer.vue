@@ -248,8 +248,9 @@
                                          class="info-img-edit">
                                 </p>
                                 <p class="col-filed col-40 need-center">
-                                    <span class="label">{{paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key ? '支付成功' : '支付'}}时间：</span>
-                                    {{ paymentOrderDetail.respFundResults.downpaymentFund.paidDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                    <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>
+                                        <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template>时间：</span>
+                                    {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                     <template
                                         v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
                                         <h-button table class="ml-20"
@@ -406,7 +407,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                     </p>
                                     <p class="col-filed col-25">
                                         <span class="label">支付时间：</span>
-                                        {{ paymentOrderDetail.respFundResults.arrearFund.paidDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                        {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                     </p>
                                     <p class="col-filed col-25">
                                         <template

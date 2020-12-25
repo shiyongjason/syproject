@@ -206,7 +206,7 @@
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { submitProjectdoc, saveProjectdoc, updateFinalStatus, putProjectDetail } from '../api/index'
 import { handleImgDownload } from '../../projectInformation/utils'
 
@@ -255,7 +255,7 @@ export default {
             Auths,
             moment,
             handleImgDownload,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

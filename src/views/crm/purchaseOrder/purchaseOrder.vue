@@ -254,7 +254,7 @@ export default {
         },
         dialogBackEvent () {
             this.isOpen = false
-            this.findPurchaseList(this.queryParamsUseQuery)
+            // this.findPurchaseList(this.queryParamsUseQuery)
         },
         ...mapActions({
             findPurchaseList: 'crmPurchaseOrder/findPurchaseList',

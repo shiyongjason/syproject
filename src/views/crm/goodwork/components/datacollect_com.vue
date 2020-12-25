@@ -174,7 +174,7 @@ import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { refuseDoc, submitProjectdoc, checkTemplatedoc, getProjectLevels, setProjectLevels } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { handleImgDownload } from '../../projectInformation/utils'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 export default {
     name: 'datacollectcom',
     props: {
@@ -200,7 +200,7 @@ export default {
             projectLevels: {},
             Auths,
             handleImgDownload,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

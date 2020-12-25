@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="确认收货" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('onClose')" :close-on-click-modal=false>
+    <el-dialog title="确认收货" :visible.sync="isOpen" width="800px" :before-close="()=> $emit('onClose')" :close-on-click-modal=false :destroy-on-close="true">
         <el-form label-width="150px" :model="formData" :rules="rules" ref="form">
             <el-form-item label="经销商：">
                 {{ enterReceiptDetail.companyName }}
@@ -48,7 +48,7 @@
 <script>
 import { getConfirmReceiptDetail, updateConfirmReceiptPass } from '@/views/crm/paymentOrder/api'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { mapState } from 'vuex'
 
 export default {
@@ -65,7 +65,7 @@ export default {
     },
     data () {
         return {
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

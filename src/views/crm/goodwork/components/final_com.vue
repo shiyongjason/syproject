@@ -46,7 +46,7 @@
 </template>
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { handleImgDownload } from '../../projectInformation/utils'
 export default {
     props: {
@@ -66,7 +66,7 @@ export default {
                 fileName: 'asd.jpeg'
             }],
             colForm: {},
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false
