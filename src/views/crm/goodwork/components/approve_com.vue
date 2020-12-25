@@ -36,7 +36,7 @@
                     <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>经销商首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                 </template>
             </div>
@@ -133,7 +133,7 @@
                             <template slot="suffix">元</template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="首付款比例：" prop="advancePaymentRate" maxlength="10">
+                    <el-form-item label="经销商首付款比例：" prop="advancePaymentRate" maxlength="10">
                         <el-input v-model="projectFinaleForm.advancePaymentRate"
                                   v-isNegative:2="projectFinaleForm.advancePaymentRate">
                             <template slot="suffix">%</template>
@@ -178,7 +178,7 @@
                         <template slot="suffix">元</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="首付款比例：" prop="advancePaymentRate">
+                <el-form-item label="经销商首付款比例：" prop="advancePaymentRate">
                     <el-input type="text" maxlength="10" v-model="formData.advancePaymentRate" v-isNegative:2="formData.advancePaymentRate">
                         <template slot="suffix">%</template>
                     </el-input>
@@ -307,8 +307,8 @@ export default {
                     { message: '最大采购总额不能小于零', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
-                    { required: true, message: '首付款比例不能为空', trigger: 'blur' },
-                    { message: '首付款比例0-100', validator: validateNumber, trigger: 'blur' }
+                    { required: true, message: '经销商首付款比例不能为空', trigger: 'blur' },
+                    { message: '经销商首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
@@ -338,8 +338,8 @@ export default {
                     { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
-                    { required: true, message: '首付款比例不能为空', trigger: 'blur' },
-                    { message: '首付款比例0-100', validator: validateNumber, trigger: 'blur' }
+                    { required: true, message: '经销商首付款比例不能为空', trigger: 'blur' },
+                    { message: '经销商首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
