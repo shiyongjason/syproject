@@ -165,7 +165,7 @@ export default {
                 { label: '经销商', prop: 'companyName', width: '150' },
                 { label: '所属项目', prop: 'projectName', width: '150' },
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
-                { label: '期数', prop: 'feeRepaymentOrder', width: '150', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
+                { label: '期数', prop: 'feeRepaymentOrder', width: '100', isHidden: this.queryParams.repaymentTypeArrays !== '3' },
                 { label: '金额', prop: 'paymentAmount', width: '150', align: 'right' },
                 { label: '状态', prop: 'paymentFlag', width: '150' },
                 {
