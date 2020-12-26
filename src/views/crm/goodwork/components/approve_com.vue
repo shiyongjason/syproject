@@ -32,7 +32,7 @@
                     <i>{{ approveForm.approveResult == true ? '通过' : approveForm.approveResult == false ? '不通过' : '-' }}</i>
                 </div>
                 <p>说明： {{ approveForm.remark ? approveForm.remark : '-' }}</p>
-                <template v-if="activeName=='4'">
+                <template v-if="activeName=='4' && approveForm.approveResult == true">
                     <p><span class="star">*</span>执行费率（银行承兑）： {{approveForm.acceptBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
@@ -115,15 +115,15 @@
                     </el-radio-group>
                 </el-form-item>
                 <template v-if="projectFinaleForm.result == 1">
-                    <el-form-item label="执行费率（银行承兑）：" prop="transferBankRate">
-                        <el-input v-model="projectFinaleForm.transferBankRate" maxlength="10"
-                                  v-isNegative:2="projectFinaleForm.transferBankRate">
+                    <el-form-item label="执行费率（银行承兑）：" prop="acceptBankRate">
+                        <el-input v-model="projectFinaleForm.acceptBankRate" maxlength="10"
+                                  v-isNegative:2="projectFinaleForm.acceptBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
-                    <el-form-item label="执行费率（银行转账）：" prop="acceptBankRate">
-                        <el-input v-model="projectFinaleForm.acceptBankRate" maxlength="10"
-                                  v-isNegative:2="projectFinaleForm.acceptBankRate">
+                    <el-form-item label="执行费率（银行转账）：" prop="transferBankRate">
+                        <el-input v-model="projectFinaleForm.transferBankRate" maxlength="10"
+                                  v-isNegative:2="projectFinaleForm.transferBankRate">
                             <template slot="suffix">%</template>
                         </el-input>
                     </el-form-item>
@@ -192,7 +192,7 @@
                         <el-option label="5" value="5"></el-option>
                         <el-option label="6" value="6"></el-option>
                     </el-select>
-                    个月
+                    月
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -291,14 +291,14 @@ export default {
                 remark: [
                     { required: true, message: '请输入说明', trigger: 'blur' }
                 ],
-                transferBankRate: [
+                acceptBankRate: [
                     { required: true, message: '执行费率（银行承兑）不能为空', trigger: 'blur' },
                     {
                         trigger: 'blur',
                         message: '执行费率（银行承兑）0-100',
                         validator: validateNumber }
                 ],
-                acceptBankRate: [
+                transferBankRate: [
                     { required: true, message: '请输入执行费率（银行转账）', trigger: 'blur' },
                     { message: '执行费率（银行转账）0-100', validator: validateNumber, trigger: 'blur' }
                 ],

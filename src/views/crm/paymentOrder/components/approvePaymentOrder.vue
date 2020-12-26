@@ -67,7 +67,7 @@
                             </p>
                             <template v-if="formData.supplierPaymentType">
                                 <p>
-                                    <span>经销商首付款：</span>
+                                    <span>经销商预付款：</span>
                                     {{downPaymentAmount | fundMoneyHasTail}}元
                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit">
                                 </p>
@@ -142,7 +142,7 @@
                             {{ paymentDetail.payOrderPoDetail.goodsAddress }}
                         </p>
                         <p>
-                            <span>经销商首付款比例：</span>
+                            <span>经销商预付款比例：</span>
                             {{ paymentDetail.payOrderPoDetail.prePercent }}%
                         </p>
                         <p>
@@ -166,9 +166,9 @@
                 </div>
             </div>
         </el-dialog>
-        <el-dialog title="编辑经销商首付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" :close-on-click-modal=false class="edit-amount-dialog">
+        <el-dialog title="编辑经销商预付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" :close-on-click-modal=false class="edit-amount-dialog">
             <div class="edit-amount">
-                经销商首付款:<el-input v-model="formData.downPaymentAmount" v-isNegative="formData.downPaymentAmount" maxlength="20"></el-input>
+                经销商预付款:<el-input v-model="formData.downPaymentAmount" v-isNegative="formData.downPaymentAmount" maxlength="20"></el-input>
             </div>
             <div slot="footer">
                 <h-button type="cancel" @click="onCancelAmount">取消</h-button>
@@ -292,11 +292,11 @@ export default {
         },
         async onSaveAmount () {
             if (this.formData.downPaymentAmount === '') {
-                this.$message.error('经销商首付款不能为空')
+                this.$message.error('经销商预付款不能为空')
                 return
             }
             if (this.formData.downPaymentAmount == 0) {
-                this.$message.error('经销商首付款不能为0')
+                this.$message.error('经销商预付款不能为0')
                 return
             }
             if (this.formData.downPaymentAmount == this.paymentDetail.payOrderDetail.applyAmount) {
@@ -304,7 +304,7 @@ export default {
                 return
             }
             if (this.formData.downPaymentAmount > this.paymentDetail.payOrderDetail.applyAmount) {
-                this.$message.error('经销商首付款不能大于申请支付金额')
+                this.$message.error('经销商预付款不能大于申请支付金额')
                 return
             }
             try {
