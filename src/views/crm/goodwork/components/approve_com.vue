@@ -304,7 +304,7 @@ export default {
                 ],
                 maxPurchaseAmount: [
                     { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
-                    { message: '最大采购总额不能小于零', validator: validateThanZero, trigger: 'blur' }
+                    { message: '最大采购金额必须是正数', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
                     { required: true, message: '经销商首付款比例不能为空', trigger: 'blur' },
@@ -335,7 +335,7 @@ export default {
                 ],
                 maxPurchaseAmount: [
                     { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
-                    { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
+                    { message: '最大采购金额必须是正数', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
                     { required: true, message: '经销商首付款比例不能为空', trigger: 'blur' },
