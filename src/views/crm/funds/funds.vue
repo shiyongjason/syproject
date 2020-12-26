@@ -130,6 +130,8 @@ export default {
         return {
             Auths,
             queryParams: {
+                pageNumber: 1,
+                pageSize: 10,
                 fundId: '',
                 paymentOrderNo: '',
                 subsectionCode: '',

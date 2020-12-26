@@ -246,7 +246,7 @@ export default {
             return callback()
         }
         function validateThanZero (r, v, callback) {
-            if (v < 0) {
+            if (v <= 0) {
                 return callback(new Error(r.message))
             }
             return callback()
@@ -655,7 +655,7 @@ export default {
     i {
         color: #ff0000;
         vertical-align: middle;
-        padding: 0 2 0 0px;
+        padding: 0 2px 0 0;
         font-style: normal;
     }
 
@@ -663,7 +663,7 @@ export default {
         font-size: 14px;
         margin: 0;
         padding: 16px 0 0 0;
-        line-height: auto;
+        line-height: normal;
     }
 }
 
