@@ -67,8 +67,13 @@
                         {{scope.data.row.rewardMonth}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">删除</el-button>
+                    <template v-if="(scope.data.row.settled===1) ">
+                        <p class="colred">--</p>
+                    </template>
+                    <template v-else>
+                        <el-button class="orangeBtn" @click="onEdit(scope.data.row)">发放奖励</el-button>
+                        <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
+                    </template>
                 </template>
             </basicTable>
         </div>
@@ -242,7 +247,6 @@ export default {
             this.onQuery()
         },
         onEdit (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
