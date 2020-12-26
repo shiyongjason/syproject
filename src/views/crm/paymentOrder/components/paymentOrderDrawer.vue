@@ -249,9 +249,14 @@
                                              class="info-img-edit">
                                     </p>
                                     <p class="col-filed col-40 need-center">
-                                    <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>
-                                        <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template>时间：</span>
-                                        {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                    <span class="label">
+                                        支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：</span>
+                                        <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">
+                                            {{ paymentOrderDetail.respFundResults.downpaymentFund.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                        </template>
+                                        <template v-else>
+                                            {{ paymentOrderDetail.respFundResults.downpaymentFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                        </template>
                                         <template
                                             v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
                                             <h-button table class="ml-20"
@@ -300,8 +305,12 @@
                                         </p>
                                         <div class="col-filed col-40 service-pay-time need-center">
                                             <p class="mr-50">
-                                            <span class="label">支付<template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>
-                                                <template v-else-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template>时间：</span>{{ item.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                            <span class="label">
+<!--                                                换行有空格-->
+                                                支付<template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template v-else-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：</span><template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">{{ item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</template>
+                                                <template v-else>
+                                                    {{ item.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
+                                                </template>
                                             </p>
                                             <template
                                                 v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
@@ -407,7 +416,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                  class="info-img-edit">
                                         </p>
                                         <p class="col-filed col-25">
-                                            <span class="label">支付时间：</span>
+                                            <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>时间：</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                         </p>
                                         <p class="col-filed col-25">

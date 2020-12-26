@@ -246,7 +246,7 @@ export default {
             return callback()
         }
         function validateThanZero (r, v, callback) {
-            if (v < 0) {
+            if (v <= 0) {
                 return callback(new Error(r.message))
             }
             return callback()
@@ -304,7 +304,7 @@ export default {
                 ],
                 maxPurchaseAmount: [
                     { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
-                    { message: '最大采购总额不能小于零', validator: validateThanZero, trigger: 'blur' }
+                    { message: '最大采购金额必须是正数', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
                     { required: true, message: '经销商首付款比例不能为空', trigger: 'blur' },
@@ -335,7 +335,7 @@ export default {
                 ],
                 maxPurchaseAmount: [
                     { required: true, message: '最大采购总额不能为空', trigger: 'blur' },
-                    { message: '不能小于零', validator: validateThanZero, trigger: 'blur' }
+                    { message: '最大采购金额必须是正数', validator: validateThanZero, trigger: 'blur' }
                 ],
                 advancePaymentRate: [
                     { required: true, message: '经销商首付款比例不能为空', trigger: 'blur' },
@@ -655,7 +655,7 @@ export default {
     i {
         color: #ff0000;
         vertical-align: middle;
-        padding: 0 2 0 0px;
+        padding: 0 2px 0 0;
         font-style: normal;
     }
 
@@ -663,7 +663,7 @@ export default {
         font-size: 14px;
         margin: 0;
         padding: 16px 0 0 0;
-        line-height: auto;
+        line-height: normal;
     }
 }
 

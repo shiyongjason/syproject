@@ -539,4 +539,7 @@ export default {
     width: 100%;
     z-index: 11;
 }
+.el-textarea /deep/.el-input__count{
+    bottom: -45px;
+}
 </style>
