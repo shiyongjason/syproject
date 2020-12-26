@@ -415,11 +415,9 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                  @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)"
                                                  class="info-img-edit">
                                         </p>
-                                        <p class="col-filed col-25">
+                                        <p class="col-filed col-50 resp-fund-results">
                                             <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>时间：</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
-                                        </p>
-                                        <p class="col-filed col-25">
                                             <template
                                                 v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
                                                 <h-button table
@@ -431,11 +429,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                 </h-button>
                                             </template>
                                             <template v-else>
-                                        <span class="info-status">
-                                            {{
-                                                paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
-                                            }}
-                                        </span>
+                                                <span class="info-status">
+                                                    {{
+                                                        paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
+                                                    }}
+                                                </span>
                                             </template>
                                         </p>
                                     </div>
@@ -908,5 +906,11 @@ export default {
 }
 .arrear-fund {
     align-items: center;
+}
+.resp-fund-results {
+    align-items: center;
+    .info-status {
+        margin-left: 20px;
+    }
 }
 </style>

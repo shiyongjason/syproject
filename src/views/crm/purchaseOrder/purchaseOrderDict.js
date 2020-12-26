@@ -177,11 +177,11 @@ const PurchaseOrderDict = Object.freeze({
         list: [
             {
                 key: 1,
-                value: '确认变更'
+                value: '已驳回'
             },
             {
                 key: 2,
-                value: '驳回'
+                value: '已确认'
             },
             {
                 key: 0,

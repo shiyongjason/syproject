@@ -152,7 +152,7 @@
                                             变更备注：{{ item.changeReason || '-' }}
                                         </p>
                                         <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[0].key">
-                                            确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
+                                            确认变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 确认变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}} 免息方式：{{ item.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
                                         </p>
                                         <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                             驳回变更人：{{ item.updateBy }}（{{ item.updatePhone }}） 驳回变更时间：{{item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss')}}
