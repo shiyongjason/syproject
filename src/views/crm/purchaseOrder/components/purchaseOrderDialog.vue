@@ -326,7 +326,7 @@ export default {
                         ...this.formData
                     }
                     if (this.dialogDetail.poInfo && params.freeInterestType > this.dialogDetail.poInfo.restPaymentPeriod) {
-                        this.$message.success('免息周期不能超过剩余货款支付周期')
+                        this.$message.error('免息周期不能超过剩余货款支付周期')
                         return
                     }
                     let message = ''

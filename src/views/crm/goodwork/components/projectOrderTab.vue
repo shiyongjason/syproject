@@ -7,6 +7,9 @@
         <template slot="poAmount" slot-scope="scope">
             <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
         </template>
+        <template slot="purchaseOrderNo" slot-scope="scope">
+            <span class="blue" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
+        </template>
         <template slot="status" slot-scope="scope">
             <span class="colblue"> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
         </template>
@@ -58,6 +61,14 @@ export default {
         }
     },
     methods: {
+        goPurchaseOrderNo (id) {
+            this.$router.push({
+                path: '/goodwork/purchaseOrder',
+                query: {
+                    id: id
+                }
+            })
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.findPurchaseList(this.queryParamsUseQuery)
@@ -80,5 +91,9 @@ export default {
 .collect-wrap {
     margin-top: 50px;
     padding: 20px 20px 200px;
+}
+.blue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 </style>

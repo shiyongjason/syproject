@@ -60,7 +60,7 @@
                             }}采购
                         </p>
                         <p class="col-filed col-25">
-                            <span class="label">经销商首付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
+                            <span class="label">经销商预付款比例：</span> {{ paymentOrderDetail.payOrderPoDetail.prePercent }}%
                         </p>
                         <p class="col-filed col-25">
                             <span class="label">剩余货款支付周期：</span>{{
@@ -191,7 +191,7 @@
                                 </div>
                                 <div class="row-filed">
                                     <p class="col-filed col-50">
-                                        <span class="label">经销商首付款：</span>{{
+                                        <span class="label">经销商预付款：</span>{{
                                             paymentOrderDetail.payOrderDetail.downPaymentAmount | fundMoneyHasTail
                                         }}元
                                     </p>
@@ -215,7 +215,7 @@
                                     }}</span>
                                     <!--                        首付款待签约以后-->
                                     <h-button table class="go-contract-detail" @click="goContractDetail"
-                                              v-if="PaymentOrderDict.status.list[2].key  <= paymentOrderDetail.payOrderDetail.status && hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE)">
+                                              v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONTRACT_SEE) && paymentOrderDetail.payOrderDetail.orderLetterStatus === PaymentOrderDict.orderLetterStatus.list[1].key">
                                         查看合同
                                     </h-button>
                                     <!--                        首付款待签约以后-->

@@ -261,6 +261,9 @@ export default {
     },
     async mounted () {
         this.queryParamsTemp = { ...this.queryParams }
+        if (this.$route.query.id) {
+            this.queryParams.purchaseOrderNo = this.$route.query.id
+        }
         this.findPurchaseList(this.queryParamsUseQuery)
         this.findCrmdeplist({
             deptType: 'F',
