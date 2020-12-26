@@ -332,11 +332,11 @@ export default {
                     let message = ''
                     if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
                         await updatePurchaseOrderConfirmStatus(params)
-                        message = '采购确认成功'
+                        message = '采购单确认成功'
                     }
                     if (PurchaseOrderDialogStatus.changeEnter.status === this.openStatus) {
                         await updatePurchaseOrderChangeConfirmStatus(params)
-                        message = '采购确认变更成功'
+                        message = '采购单确认变更成功'
                     }
                     this.$message.success(message)
                     this.onClose()
