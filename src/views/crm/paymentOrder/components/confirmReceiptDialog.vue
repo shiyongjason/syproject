@@ -165,8 +165,8 @@ export default {
     img {
         display: block;
         margin: auto;
-        max-height: 80px;
-        max-width: 80px;
+        max-height: 78px;
+        max-width: 78px;
     }
     .label {
         flex: 0 0 100px;
