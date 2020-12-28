@@ -64,19 +64,24 @@
                                 </template>
                             </div>
                             <div class="row-filed" v-if="purchaseOrderDetail.poInfo">
-                                <p class="col-filed">
-                                    采购明细表：
-                                    <span class="img-group"
-                                          v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
+                                <div class="col-filed info-img-group">
+                                    <span class="label">
+                                        采购明细表：
+                                    </span>
+                                    <p class="content">
+                                        <span class="img-box"
+                                              v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
                                         <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
                                              v-for="item in purchaseOrderDetail.poInfo.poDetail">
                                     </span>
-                                </p>
+                                    </p>
+
+                                </div>
                             </div>
                             <template v-if="purchaseOrderDetail.poInfo">
                                 <div class="row-filed">
                                     <p class="col-filed">
-                                        采购批次： {{ purchaseOrderDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购
+                                        采购批次： {{ purchaseOrderDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
                                     </p>
                                     <p class="col-filed">
                                         最迟发货日期： {{ purchaseOrderDetail.poInfo.lastGoodsDate }}
@@ -446,10 +451,30 @@ export default {
             width: 25%;
         }
     }
-
-    .img-group  img{
-        width: 80px;
-        cursor: pointer;
+    .info-img-group {
+        display: flex;
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            span {
+                display: block;
+                width: 80px;
+                height: 80px;
+                margin-bottom: 20px;
+                margin-right: 12px;
+                cursor: pointer;
+                border: 1px solid #e5e5e5;
+            }
+            img {
+                display: block;
+                margin: auto;
+                max-height: 80px;
+                max-width: 80px;
+            }
+        }
+        .label {
+            flex: 0 0 100px;
+        }
     }
 }
 

@@ -64,11 +64,11 @@ const PaymentOrderDict = Object.freeze({
         list: [
             {
                 key: 1,
-                value: '一次性'
+                value: '一次性采购'
             },
             {
                 key: 2,
-                value: '分批'
+                value: '分批采购'
             }
         ]
     },
