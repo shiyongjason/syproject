@@ -148,7 +148,7 @@
                             <el-option label="5" value="5"></el-option>
                             <el-option label="6" value="6"></el-option>
                         </el-select>
-                        月
+                        个月
                     </el-form-item>
                 </template>
                 <el-form-item label="说明：" prop="remark">
@@ -192,7 +192,7 @@
                         <el-option label="5" value="5"></el-option>
                         <el-option label="6" value="6"></el-option>
                     </el-select>
-                    月
+                    个月
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
