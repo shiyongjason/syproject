@@ -132,7 +132,7 @@
                             {{ paymentOrderDetail.payOrderDetail.closeTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                         </p>
                         <p class="col-filed">
-                            <span class="label">申请人：</span>
+                            <span class="label">关闭人：</span>
                             {{
                                 paymentOrderDetail.payOrderDetail.createBy
                             }}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
