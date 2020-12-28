@@ -134,6 +134,7 @@ li{
             margin-bottom: 20px;
             margin-right: 12px;
             cursor: pointer;
+            border: 1px solid #e5e5e5;
         }
         img {
             display: block;

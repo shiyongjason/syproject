@@ -13,13 +13,17 @@
                             <span class="label">上游供应商：</span>
                             {{ paymentDetail.payOrderDetail.supplierCompanyName || '-'  }}
                         </p>
-                        <p class="info-img-group">
+                        <div class="info-img-group">
                             <span class="label">采购明细表：</span>
-                            <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
-                                <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentDetail.payOrderDetail.paymentDetail" class="info-img">
-                            </template>
-                        </p>
+                            <p class="content">
+                                <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box">
+                                        <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
+                                             v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                    </span>
+                                </template>
+                            </p>
+                        </div>
                         <p>
                             <span>最迟发货日期：</span>
                             {{ paymentDetail.payOrderDetail.lastGoodsDate || '-' }}
@@ -131,7 +135,7 @@
                         </p>
                         <p>
                             <span>采购批次：</span>
-                            {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购
+                            {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
                         </p>
                         <p>
                             <span>最迟发货日期：</span>
@@ -432,15 +436,27 @@ export default {
 }
 .info-img-group {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    .label{
-        width: 100px;
-        flex: 0 0 100px;
+    .content {
+        display: flex;
+        flex-wrap: wrap;
+        span {
+            display: block;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            border: 1px solid #e5e5e5;
+        }
+        img {
+            display: block;
+            margin: auto;
+            max-height: 80px;
+            max-width: 80px;
+        }
     }
-    img {
-        margin-bottom: 10px;
-        margin-right: 10px;
+    .label {
+        flex: 0 0 100px;
     }
 }
 </style>

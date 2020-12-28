@@ -23,7 +23,7 @@
                         </li>
                         <li>
                             <span class="label">采购批次：</span>
-                            <span>{{ dialogDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}采购</span>
+                            <span>{{ dialogDetail.poInfo.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}</span>
                         </li>
                         <li>
                             <span class="label">经销商预付款比例： </span>
@@ -84,7 +84,7 @@
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
-                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}采购
+                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
                                     </template>
                                     <template v-else>
                                         {{ item.originalValue + (item.unit || '') }}
@@ -98,7 +98,7 @@
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
-                                        {{ (item.changedValue -0) | attributeComputed(PaymentOrderDict.applyType.list)}}采购
+                                        {{ (item.changedValue -0) | attributeComputed(PaymentOrderDict.applyType.list)}}
                                     </template>
                                     <template v-else>
                                         {{ item.changedValue + (item.unit || '') }}
@@ -325,10 +325,10 @@ export default {
                         updatePhone: this.userinfo.phoneNumber,
                         ...this.formData
                     }
-                    if (this.dialogDetail.poInfo && params.freeInterestType > this.dialogDetail.poInfo.restPaymentPeriod) {
-                        this.$message.error('免息周期不能超过剩余货款支付周期')
-                        return
-                    }
+                    // if (this.dialogDetail.poInfo && params.freeInterestType > this.dialogDetail.poInfo.restPaymentPeriod) {
+                    //     this.$message.error('免息周期不能超过剩余货款支付周期')
+                    //     return
+                    // }
                     let message = ''
                     if (PurchaseOrderDialogStatus.enter.status === this.openStatus) {
                         await updatePurchaseOrderConfirmStatus(params)
@@ -539,6 +539,7 @@ export default {
             margin-bottom: 20px;
             margin-right: 12px;
             cursor: pointer;
+            border: 1px solid #e5e5e5;
         }
         img {
             display: block;
