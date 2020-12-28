@@ -17,9 +17,8 @@
                             <span class="label">采购明细表：</span>
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
-                                    <span class="img-box">
-                                        <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                             v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box" :key="item.url"  v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                        <img :src="item.url" alt="" @click="goDetail(item.url)">
                                     </span>
                                 </template>
                             </p>
@@ -126,13 +125,16 @@
                             <span>采购单金额：</span>
                             {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
                         </p>
-                        <p class="info-img-group">
-                            <span>采购明细表：</span>
-                            <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
-                                <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentDetail.payOrderPoDetail.poDetail" class="info-img">
-                            </template>
-                        </p>
+                        <div class="info-img-group">
+                            <span class="label">采购明细表：</span>
+                            <p class="content">
+                                <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderPoDetail.poDetail">
+                                        <img :src="item.url" alt="" @click="goDetail(item.url)">
+                                    </span>
+                                </template>
+                            </p>
+                        </div>
                         <p>
                             <span>采购批次：</span>
                             {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
@@ -443,7 +445,7 @@ export default {
             display: block;
             width: 80px;
             height: 80px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             margin-right: 12px;
             cursor: pointer;
             border: 1px solid #e5e5e5;
