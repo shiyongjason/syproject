@@ -300,12 +300,13 @@ export default {
     },
     methods: {
         goContractDetail (id) {
-            this.$router.push({
+            let routeUrl = this.$router.resolve({
                 path: '/goodwork/contractSigningManagementDetail',
                 query: {
                     id: id
                 }
             })
+            window.open(routeUrl.href, '_blank')
         },
         goDetail (url) {
             window.open(url)
