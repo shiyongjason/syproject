@@ -554,12 +554,13 @@ export default {
     },
     methods: {
         goContractDetail () {
-            this.$router.push({
+            let routeUrl = this.$router.resolve({
                 path: '/goodwork/contractSigningManagementDetail',
                 query: {
                     id: this.paymentOrderDetail.payOrderDetail.paymentOrderContractId
                 }
             })
+            window.open(routeUrl.href, '_blank')
         },
         updateRow (labelName, row, hideAmount) {
             this.updateRowVisible = true
