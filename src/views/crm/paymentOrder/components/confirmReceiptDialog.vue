@@ -157,6 +157,7 @@ export default {
         margin-right: 12px;
         cursor: pointer;
         border: 1px solid #e5e5e5;
+        box-sizing: border-box;
     }
     .img-box {
         width: 80px;
