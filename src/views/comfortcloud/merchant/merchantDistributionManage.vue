@@ -86,7 +86,7 @@
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { updateDistribution } from '../api'
+import { updateDistribution, editDistributorName } from '../api'
 import moment from 'moment'
 
 export default {
@@ -102,6 +102,7 @@ export default {
             },
             searchParams: {},
             editName: '',
+            editId: 0,
             tableData: [],
             pagination: {
                 pageNumber: 1,
@@ -153,7 +154,7 @@ export default {
         },
         onEdit (val) {
             if (val.status === 1) {
-                this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: val })
+                this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberReward', query: val })
             } else if (val.status === 0) {
                 this.checkData = val
                 this.rightsDialogVisible = true
@@ -161,12 +162,13 @@ export default {
         },
         onNameEdit (val) {
             this.editName = ''
+            this.editId = val.id
             this.editDialogVisible = true
         },
         editCancel () {
             this.editDialogVisible = false
         },
-        editConform () {
+        async editConform () {
             if (this.editName.length === 0) {
                 this.$message({
                     message: '请输入修改名称！',
@@ -175,7 +177,8 @@ export default {
                 return
             }
             this.editDialogVisible = false
-            console.log(this.editName)
+            const data = await editDistributorName({ 'id': this.editId, 'name': this.editName })
+            this.onSearch()
         },
         async onChangeCheckStatus (val) {
             this.rightsDialogVisible = false

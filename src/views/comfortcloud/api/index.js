@@ -608,3 +608,8 @@ export function changeCloudMerchantRecommend (params) {
 export function moveCloudMerchantRecommend (params) {
     return axios.put(iotUrl + '/mall/boss/recommend-list/move', params)
 }
+
+// 修改分销员姓名
+export function editDistributorName (params) {
+    return axios.post(iotUrl + '/mall/boss/distributor/name', params)
+}

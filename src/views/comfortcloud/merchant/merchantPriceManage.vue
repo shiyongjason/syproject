@@ -516,6 +516,7 @@ export default {
                 retailPrice: data.retailPrice,
                 commissionRate: data.commissionRate,
                 priceList: data.priceList,
+                promotedTagline: data.promotedTagline,
                 operator: data.operator
             }
 
