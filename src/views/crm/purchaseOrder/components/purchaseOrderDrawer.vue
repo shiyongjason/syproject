@@ -317,12 +317,13 @@ export default {
             window.open(url)
         },
         goPaymentDetail (id) {
-            this.$router.push({
+            let routeUrl = this.$router.resolve({
                 path: '/goodwork/paymentOrder',
                 query: {
                     id: id
                 }
             })
+            window.open(routeUrl.href, '_blank')
         }
     },
     watch: {

@@ -206,13 +206,14 @@ export default {
     },
     methods: {
         goProjectDetail (row) {
-            this.$router.push({
+            let routeUrl = this.$router.resolve({
                 path: '/goodwork/projectlist',
                 query: {
                     detail: true,
                     projectNo: row.projectNo
                 }
             })
+            window.open(routeUrl.href, '_blank')
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
