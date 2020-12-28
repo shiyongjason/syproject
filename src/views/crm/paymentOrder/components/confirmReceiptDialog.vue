@@ -120,7 +120,7 @@ export default {
             this.$emit('onClose')
         },
         async onEnter () {
-            this.$refs.form.validate(async (value) => {
+            this.$refs.form.validate(async (value, rules) => {
                 if (value) {
                     const params = {
                         ...this.formData,
@@ -132,6 +132,9 @@ export default {
                     this.$message.success('到货信息已更新')
                     this.onCancel()
                     this.$emit('onCloseDialogAndQuery', 'confirmReceiptVisible')
+                } else {
+                    const needTip = Object.keys(rules)
+                    this.$message.error(`${rules[needTip[0]][0].message}`)
                 }
             })
         },
