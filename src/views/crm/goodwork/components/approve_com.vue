@@ -371,9 +371,9 @@ export default {
                 if (value) {
                     const params = { ...this.formData }
                     params.id = this.approveForm.projectId
-                    params.deviceAmount = this.projectForm.projectId
-                    params.contractAmount = this.projectForm.projectId
-                    params.predictLoanAmount = this.projectForm.projectId
+                    params.deviceAmount = this.projectForm.deviceAmount
+                    params.contractAmount = this.projectForm.contractAmount
+                    params.predictLoanAmount = this.projectForm.predictLoanAmount
                     await putProjectDetail(params)
                     this.finalConfirmDialogClose()
                     this.$emit('refreshDetail')
