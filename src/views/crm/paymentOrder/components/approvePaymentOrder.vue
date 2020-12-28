@@ -331,6 +331,7 @@ export default {
         onReceived () {
             this.$refs.form.validate(async (value) => {
                 if (value) {
+                    this.formData.updateTime = this.paymentDetail.payOrderDetail.updateTime
                     if (this.formData.checkPass === 'pass') {
                         await updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
                     } else if (this.formData.checkPass === 'noPass') {
