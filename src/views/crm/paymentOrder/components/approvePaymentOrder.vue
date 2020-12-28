@@ -329,9 +329,9 @@ export default {
             this.$emit('onClose')
         },
         onReceived () {
-            this.$refs.form.validate(async (value) => {
+            this.$refs.form.validate(async (value, rules) => {
                 if (value) {
-                    this.formData.updateTime = this.paymentDetail.payOrderDetail.updateTime
+                    this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
                     if (this.formData.checkPass === 'pass') {
                         await updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
                     } else if (this.formData.checkPass === 'noPass') {
@@ -339,6 +339,9 @@ export default {
                     }
                     this.clearForm()
                     this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
+                } else {
+                    const needTip = Object.keys(rules)
+                    this.$message.error(`${rules[needTip[0]][0].message}`)
                 }
             })
         },

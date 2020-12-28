@@ -130,7 +130,7 @@ export default {
             this.$emit('onClose')
         },
         onEnterPay () {
-            this.$refs.form.validate(async (value) => {
+            this.$refs.form.validate(async (value, rules) => {
                 if (value) {
                     const params = {
                         ...this.formData,
@@ -138,6 +138,9 @@ export default {
                     }
                     await updatePrevPayPass(params)
                     this.$emit('onCloseDialogAndQueryDetail', 'prevPaymentVisible')
+                } else {
+                    const needTip = Object.keys(rules)
+                    this.$message.error(`${rules[needTip[0]][0].message}`)
                 }
             })
         }

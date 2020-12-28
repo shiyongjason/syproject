@@ -580,7 +580,7 @@ export default {
             this.updateForm.id = ''
         },
         updateRowEnter () {
-            this.$refs.form.validate(async (value) => {
+            this.$refs.form.validate(async (value, rules) => {
                 if (value) {
                     const params = {
                         id: this.updateForm.id,
@@ -592,6 +592,9 @@ export default {
                     this.$message.success('更新成功')
                     this.getPaymentOrderDetail()
                     this.updateRowClose()
+                } else {
+                    const needTip = Object.keys(rules)
+                    this.$message.error(`${rules[needTip[0]][0].message}`)
                 }
             })
         },

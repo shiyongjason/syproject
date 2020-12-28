@@ -317,7 +317,7 @@ export default {
             return '-'
         },
         onEnter () {
-            this.$refs.form.validate(async (value) => {
+            this.$refs.form.validate(async (value, rules) => {
                 if (value) {
                     const params = {
                         poId: this.dialogParams.id,
@@ -341,6 +341,9 @@ export default {
                     this.$message.success(message)
                     this.onClose()
                     this.$emit('closeDrawer')
+                } else {
+                    const needTip = Object.keys(rules)
+                    this.$message.error(`${rules[needTip[0]][0].message}`)
                 }
             })
         },
