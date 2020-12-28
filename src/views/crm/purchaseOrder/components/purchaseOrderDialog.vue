@@ -559,6 +559,7 @@ export default {
     font-size: 12px;
     color: #333333;
     line-height: 20px;
-    padding-top: 20px;
+    padding: 12px;
+    border: 1px solid #EBEEF5;
 }
 </style>
