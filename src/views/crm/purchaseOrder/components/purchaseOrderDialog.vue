@@ -537,7 +537,7 @@ export default {
             display: block;
             width: 80px;
             height: 80px;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
             margin-right: 12px;
             cursor: pointer;
             border: 1px solid #e5e5e5;
