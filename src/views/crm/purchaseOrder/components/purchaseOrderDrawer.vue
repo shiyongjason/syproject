@@ -221,11 +221,14 @@
                         <div class="payment-table">
                             <basicTable :tableData="purchaseOrderDetail.payOrderDetails" :tableLabel="tableLabel" :isMultiple="false" :isAction="false"
                                         :isShowIndex='true'>
+                                <template slot="paymentOrderNo" slot-scope="scope">
+                                    <span class="colblue" @click="goPaymentDetail(scope.data.row.paymentOrderNo)">{{ scope.data.row.paymentOrderNo }}</span>
+                                </template>
                                 <template slot="status" slot-scope="scope">
-                                    <span class="colblue">{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
+                                    <span>{{ scope.data.row.status | attributeComputed(PaymentOrderDict.status.list) }}</span>
                                 </template>
                                 <template slot="applyAmount" slot-scope="scope">
-                                    <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
+                                    <span>{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                                 </template>
                             </basicTable>
                         </div>
@@ -307,6 +310,14 @@ export default {
         },
         goDetail (url) {
             window.open(url)
+        },
+        goPaymentDetail (id) {
+            this.$router.push({
+                path: '/goodwork/paymentOrder',
+                query: {
+                    id: id
+                }
+            })
         }
     },
     watch: {
@@ -489,5 +500,9 @@ export default {
 }
 .payment-table {
     padding-bottom: 100px;
+}
+.colblue {
+    color: #50b7f7;
+    cursor: pointer;
 }
 </style>

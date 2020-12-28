@@ -343,6 +343,9 @@ export default {
     },
     mounted () {
         this.queryParamsTemp = { ...this.queryParams }
+        if (this.$route.query.id) {
+            this.queryParams.paymentOrderNo = this.$route.query.id
+        }
         this.findPaymentOrderList(this.queryParamsUseQuery)
         this.findCrmdeplist({
             deptType: 'F',
