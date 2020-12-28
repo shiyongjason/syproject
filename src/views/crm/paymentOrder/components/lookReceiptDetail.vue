@@ -111,8 +111,8 @@ li{
         img {
             display: block;
             margin: auto;
-            max-height: 80px;
-            max-width: 80px;
+            max-height: 78px;
+            max-width: 78px;
         }
     }
     .label {
