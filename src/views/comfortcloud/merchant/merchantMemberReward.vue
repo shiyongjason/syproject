@@ -59,9 +59,6 @@
                 <template slot="settled" slot-scope="scope">
                     {{scope.data.row.settled===0?'未结算':'已结算'}}
                 </template>
-                <template slot="merchantType" slot-scope="scope">
-                    {{setMerchantType(scope.data.row)}}
-                </template>
                 <template slot="rewardMonth" slot-scope="scope">
                     <p @click="onEditMonth(scope.data.row)" class="colred">
                         {{scope.data.row.rewardMonth}}</p>
@@ -120,9 +117,10 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
-import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
+import {delInvitationOrder, downloadQuestionTemp, sendReward, updateInvitationDetail} from '../api'
 import { iotUrl } from '@/api/config'
-
+import moment from 'moment'
+import md5 from 'blueimp-md5'
 export default {
     name: 'comfortcloudMemberReward',
     data () {
@@ -143,6 +141,9 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            errMessage: '',
+            fileList: [],
+            errorShow: false,
             uploadShow: false,
             updateMonthShow: false,
             updateIndexData: {},
@@ -246,7 +247,33 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onEdit (val) {
+        async onEdit (val) {
+            let time = new Date()
+            // eslint-disable-next-line no-unused-vars
+            let map = new Map()
+            map.set('orderItemId', val.orderItemId)
+            map.set('phone', this.userInfo.phoneNumber)
+            map.set('timestamp', moment(time).valueOf())
+            let arrayObj = Array.from(map)
+            arrayObj.sort(function (a, b) {
+                return a[0].localeCompare(b[0])
+            })
+            let sign = ''
+
+            map.forEach((key, value) => {
+                sign.concat(key, '=', value, '&')
+            })
+            sign.concat('secretKey=1IyhvL4_sg')
+            var hash = md5(sign, '1IyhvL4_sg')
+            console.log(this.userInfo)
+            console.log(hash)
+            await sendReward({
+                orderItemId: val.orderItemId,
+                phone: this.userInfo.phoneNumber,
+                operateUserName: this.userInfo.employeeName,
+                sign: hash,
+                timestamp: moment(time).valueOf()
+            })
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -255,22 +282,6 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
-        },
-        setMerchantType (val) {
-            let type = ''
-            if (val.role === 1) {
-                type += '新人'
-            } else if (val.role === 2) {
-                type += '普通会员'
-            }
-            if (val.distributorStatus === 1) {
-                type += '、分销员'
-            }
-            if (val.agentStatus === 10) {
-                type += '、经销商'
-            }
-
-            return type
         },
         onInput () {
             this.uploadShow = true
