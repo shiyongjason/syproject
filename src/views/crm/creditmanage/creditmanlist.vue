@@ -95,7 +95,7 @@
                     {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-1].value:'待提交'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
                     <h-button table @click="onEditproject(scope.data.row)" v-if="(scope.data.row.documentStatus==4||!scope.data.row.documentStatus||scope.data.row.documentStatus==1)&&hosAuthCheck(auths.CRM_CREDIT_ZL)">上传资料</h-button>
                     <h-button table @click="onLookproject(scope.data.row)" v-if="(scope.data.row.documentStatus==2||scope.data.row.documentStatus==3)&&hosAuthCheck(auths.CRM_CREDIT_LOOK)">查看资料</h-button>
                 </template>
@@ -281,7 +281,10 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'creditDetail' || to.name != 'creditApprove') {
+        console.log(to.name)
+        if (to.name != 'creditDetail') {
+
+        } else if (to.name != 'creditApprove') {
 
         } else {
             clearCache('creditManage')

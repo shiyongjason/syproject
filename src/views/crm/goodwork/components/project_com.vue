@@ -17,7 +17,7 @@
                     </el-form-item>
                 </el-col>
                 <span class="posiStyle">
-                    <h-button class="btn" table @click="onEditCridtle(projectForm)">编辑</h-button>
+                    <h-button class="btn" table @click="onEditCridtle(projectForm)" v-if="hosAuthCheck(newAuth.CRM_WORK_EDIT)">编辑</h-button>
                 </span>
             </div>
             <el-form-item label="分部：">
@@ -118,6 +118,10 @@
                     <el-input v-model.trim="projectForm.payOtherText" maxlength="100"></el-input>
                 </el-form-item>
             </el-form-item>
+            <el-form-item label="预估签约时间：" prop="estimateSignTime">
+                <el-date-picker v-model="projectForm.estimateSignTime" value-format="yyyy-MM-dd" type="date" placeholder="请选择预计可签约的时间">
+                </el-date-picker>
+            </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
                 <hosjoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='2' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                 </hosjoyUpload>
@@ -144,6 +148,7 @@
 </template>
 <script>
 import { mapGetters, mapState } from 'vuex'
+import * as newAuth from '@/utils/auth_const'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { interfaceUrl } from '@/api/config'
 import { putProjectDetail, saveCreditLevel } from './../api/index'
@@ -161,6 +166,7 @@ export default {
     },
     data () {
         return {
+            newAuth,
             droplist: CREDITLEVEL,
             loading: false,
             statusTxt: '',
@@ -225,6 +231,9 @@ export default {
                 ],
                 estimatedLoanTime: [
                     { required: true, message: '请选择预估借款时间', trigger: 'change' }
+                ],
+                estimateSignTime: [
+                    { required: true, message: '请选择预计可签约的时间', trigger: 'change' }
                 ],
                 upstreamPayTypearr: [
                     { type: 'array', required: true, message: '请至少选择一个上游接受付款方式', trigger: 'change' }

@@ -1,18 +1,34 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
-            <el-form ref="form" :model="form" :rules="rules" label-width="130px">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <div class="page-body-title">
                     <h3>招商广告编辑</h3>
                 </div>
                 <el-form-item label="招商广告标题：" prop="title">
                     <el-input v-model.trim="form.title" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-                <el-form-item label="招商品类：" prop="category">
-                    <el-checkbox-group v-model="form.category">
-                        <el-checkbox v-for="item in categorys" :label="item.id" :key="item.id" name="type">{{ item.agentCategoryName }}</el-checkbox>
-                    </el-checkbox-group>
+
+                <el-form-item label="招商品类和型号：" prop="categorys">
+                    <el-button type="primary" @click="onAddCategory">+添加招商品类</el-button>
                 </el-form-item>
+
+                <div class="query-cont-row" v-for="(categoryItem,index) in form.categorys" :key="index">
+                    <el-form-item label="品类：" :prop="'categorys.' + index + '.categoryId'" :rules="rules.category">
+                        <el-select v-model="categoryItem.categoryId" @change="()=> { selectChanged(index) }" >
+                            <el-option label="选择" value=""></el-option>
+                            <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="商品型号：" :prop="'categorys.' + index + '.specificationId'" :rules="rules.type">
+                        <el-select v-model="categoryItem.specificationId" @change="selectSpecificationIdChanged">
+                            <el-option label="选择" value=""></el-option>
+                            <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveCategory(index) }">删除</el-button>
+                </div>
+
                 <div class="page-body-title">
                     <h3>广告内容</h3>
                 </div>
@@ -41,7 +57,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveCloudMerchantAd, getCloudMerchantCategory } from '../api'
+import { saveCloudMerchantAd } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -50,10 +66,11 @@ export default {
         return {
             form: {
                 title: '',
-                category: [],
+                categorys: [],
                 content: ''
             },
-            categorys: [],
+            categoryTypes: [],
+            allCategorys: [],
             menus: [
                 'head', // 标题
                 'bold', // 粗体
@@ -78,9 +95,33 @@ export default {
                 title: [
                     { required: true, message: '请输入广告标题', trigger: 'blur' }
                 ],
-                category: [
-                    { required: true, message: '请选择招商品类' }
+                categorys: [
+                    { required: true, message: '请添加招商品类和类型', trigger: 'change' }
                 ],
+                category: [{ required: true, message: '品类不能为空', trigger: 'change' }],
+                type: [{
+                    required: true,
+                    validator: (rule, value, callback) => {
+                        if (!value) {
+                            return callback(new Error('商品类型不能为空'))
+                        }
+
+                        const index = parseInt(rule.field.split('.')[1])
+                        const categoryId = this.form.categorys[index].categoryId
+                        const specificationId = value
+
+                        for (let i = 0; i < this.form.categorys.length; i++) {
+                            if (i === index) {
+                                continue
+                            }
+                            let item = this.form.categorys[i]
+                            if (item.categoryId === categoryId && item.specificationId === specificationId) {
+                                return callback(new Error('商品类型不能重复'))
+                            }
+                        }
+                        callback()
+                    },
+                    trigger: 'change' }],
                 content: [
                     {
                         validator: (rule, value, callback) => {
@@ -104,7 +145,9 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            cloudMerchantAdDetail: 'cloudMerchantAdDetail'
+            cloudMerchantAdDetail: 'cloudMerchantAdDetail',
+            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
+            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
         videoUpload () {
             return {
@@ -143,32 +186,53 @@ export default {
             }
         }
     },
-    mounted () {
+    async mounted () {
+        await this.findCloudMerchantShopCategoryList()
+        this.allCategorys = this.cloudMerchantShopCategoryList
+
         if (this.$route.query.id) {
             this.getAdDetail(this.$route.query.id)
         }
-        this.getCategory()
     },
     methods: {
         ...mapActions({
             setNewTags: 'setNewTags',
-            getCloudMerchantAdDetail: 'getCloudMerchantAdDetail'
+            getCloudMerchantAdDetail: 'getCloudMerchantAdDetail',
+            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
+            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
-
-        async getCategory () {
-            let { data } = await getCloudMerchantCategory()
-            this.categorys = data.data
-        },
 
         async getAdDetail (id) {
             await this.getCloudMerchantAdDetail(id)
+            let categorys = []
+            let categoryTypes = []
+
+            // 判断merchantsCategory是否是json
+            if (this.cloudMerchantAdDetail.merchantsCategory.indexOf('{') !== -1) {
+                let merchantsCategory = JSON.parse(this.cloudMerchantAdDetail.merchantsCategory)
+                let keys = Object.keys(merchantsCategory)
+
+                for (let i = 0; i < keys.length; i++) {
+                    let ids = merchantsCategory[keys[i]]
+                    for (let j = 0; j < ids.length; j++) {
+                        categorys.push({
+                            categoryId: parseInt(keys[i]),
+                            specificationId: parseInt(ids[j])
+                        })
+
+                        await this.findCloudMerchantShopCategoryTypeList({ categoryId: keys[i] })
+                        categoryTypes.push(this.cloudMerchantShopCategoryTypeList)
+                    }
+                }
+            }
+
             this.form = {
                 title: this.cloudMerchantAdDetail.title,
-                category: this.cloudMerchantAdDetail.merchantsCategory.split(',').map(function (value) {
-                    return parseInt(value)
-                }),
+                categorys: categorys,
                 content: this.cloudMerchantAdDetail.content
             }
+            this.categoryTypes = categoryTypes
+            console.log(this.form)
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -177,14 +241,25 @@ export default {
 
         onSaveAd () {
             this.loading = true
+            console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
+                        let dic = {}
+                        this.form.categorys.map((item) => {
+                            if (dic[item.categoryId] == null) {
+                                dic[item.categoryId] = [item.specificationId]
+                            } else {
+                                dic[item.categoryId].push(item.specificationId)
+                            }
+                        })
+
                         let params = {
                             title: this.form.title,
                             content: this.form.content,
-                            merchantsCategory: this.form.category.sort().join(',')
+                            merchantsCategory: JSON.stringify(dic)
                         }
+                        console.log(params)
 
                         if (this.$route.query.id) {
                             params['id'] = this.$route.query.id
@@ -195,7 +270,7 @@ export default {
                             this.$message.success('广告保存成功')
                         }
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/merchant/merchantAd')
+                        this.$router.push('/comfortCloudMerchant/merchantManage/merchantAd')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -222,6 +297,26 @@ export default {
         onInsertVideo () {
             this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
             this.dialogVisible = false
+        },
+        onAddCategory () {
+            this.form.categorys.push({ categoryId: '', specificationId: '' })
+            this.categoryTypes.push([])
+            this.$refs['form'].clearValidate(['categorys'])
+        },
+        async selectChanged (index) {
+            this.form.categorys[index].specificationId = ''
+            this.categoryTypes.splice(index, 1, [])
+            await this.findCloudMerchantShopCategoryTypeList({ categoryId: this.form.categorys[index].categoryId })
+            this.categoryTypes.splice(index, 1, this.cloudMerchantShopCategoryTypeList)
+        },
+        selectSpecificationIdChanged () {
+            for (let i = 0; i < this.form.categorys.length; i++) {
+                this.$refs['form'].validateField('categorys.' + i + '.specificationId')
+            }
+        },
+        onRemoveCategory (index) {
+            this.form.categorys.splice(index, 1)
+            this.categoryTypes.splice(index, 1)
         }
     }
 }
@@ -262,5 +357,8 @@ export default {
     }
     /deep/.editor-wrap{
         margin-bottom: 23px  !important;
+    }
+    /deep/.w-e-toolbar {
+        z-index: 99 !important;
     }
 </style>

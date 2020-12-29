@@ -9,11 +9,7 @@
                     <el-input v-model.trim="cloudForm.question" show-word-limit placeholder="请输入问题标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="所属类目：" prop="selectedOptions">
-                    <el-cascader
-                            :options="options"
-                            v-model="cloudForm.selectedOptions"
-                            :props="defaultProps"
-                            @change="handleChange">
+                    <el-cascader :options="options" v-model="cloudForm.selectedOptions" :props="defaultProps" @change="handleChange">
                     </el-cascader>
                 </el-form-item>
                 <div class="page-body-title">
@@ -21,7 +17,8 @@
                 </div>
                 <el-form-item label="详情：" prop="answer">
                     <el-button type="primary" icon="el-icon-video-camera-solid" @click="onAddvideo">插入视频</el-button>
-                    <RichEditor @blur="$refs['cloudForm'].validateField('answer')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.answer" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
+                    <RichEditor @blur="$refs['cloudForm'].validateField('answer')" tabindex="0" hidefocus="true" ref="editors" v-model="cloudForm.answer" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams"
+                        style="outline: 0;margin-bottom: 12px;width:100%"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveact()" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
@@ -206,7 +203,7 @@ export default {
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/comfortCloud/knowledge')
+            this.$router.push('/comfortCloud/operationsManagement/knowledge')
         },
         async getActivityDetail (id) {
             await this.getQuestionDetailAct(id)
@@ -240,7 +237,7 @@ export default {
                         await saveQuestion(params)
                         this.$message.success('问题保存成功')
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloud/knowledge')
+                        this.$router.push('/comfortCloud/operationsManagement/knowledge')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
@@ -279,7 +276,7 @@ export default {
     // z-index: 99999 !important;
 }
 /deep/.newTitle {
-    width: 500px!important;
+    width: 500px !important;
 }
 .el-picker-panel {
     z-index: 99999 !important;
@@ -290,7 +287,10 @@ export default {
 /deep/.w-e-menu {
     z-index: 99 !important;
 }
-/deep/.editor-wrap{
-    margin-bottom: 23px  !important;
+/deep/.editor-wrap {
+    margin-bottom: 23px !important;
+}
+/deep/.w-e-toolbar {
+    z-index: 99 !important;
 }
 </style>
