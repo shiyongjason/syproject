@@ -142,6 +142,8 @@ export default {
                 scheduleEndTime: '',
                 paidStartTime: '',
                 paidEndTime: '',
+                'sort.property': null,
+                'sort.direction': null,
                 repaymentTypeArrays: '1' // 默认 1-首付款；2-剩余货款；3-服务费；
             },
             fundsDialogVisible: false,
