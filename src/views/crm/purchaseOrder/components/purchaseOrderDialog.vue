@@ -31,7 +31,7 @@
                         </li>
                         <li>
                             <span class="label">剩余货款支付周期： </span>
-                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}月</span>
+                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}个月</span>
                         </li>
                         <li>
                             <span class="label">最迟发货日期：</span>

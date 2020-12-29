@@ -59,7 +59,7 @@
                                         经销商预付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
                                     </p>
                                     <p class="col-filed">
-                                        剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}月
+                                        剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}个月
                                     </p>
                                 </template>
                             </div>
