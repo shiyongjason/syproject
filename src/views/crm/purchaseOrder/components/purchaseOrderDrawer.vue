@@ -68,11 +68,10 @@
                                     <span class="label">
                                         采购明细表：
                                     </span>
-                                    <p class="content">
-                                        <span class="img-box"
-                                              v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
-                                        <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                             v-for="item in purchaseOrderDetail.poInfo.poDetail">
+                                    <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
+                                        <span class="img-box" :key="item.url"
+                                              v-for="item in purchaseOrderDetail.poInfo.poDetail">
+                                        <img :src="item.url"  alt="" @click="goDetail(item.url)">
                                     </span>
                                     </p>
 
