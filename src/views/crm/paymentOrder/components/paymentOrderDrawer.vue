@@ -134,8 +134,8 @@
                         <p class="col-filed">
                             <span class="label">关闭人：</span>
                             {{
-                                paymentOrderDetail.payOrderDetail.createBy
-                            }}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
+                                paymentOrderDetail.payOrderDetail.closeBy
+                            }}（{{ paymentOrderDetail.payOrderDetail.closePhone }}）
                         </p>
                     </div>
                     <div class="row-filed" v-if="PaymentOrderDict.status.list[0].key === paymentOrderDetail.payOrderDetail.status">
