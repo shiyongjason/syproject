@@ -153,7 +153,7 @@
                         </p>
                         <p>
                             <span>剩余货款支付周期：</span>
-                            {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}月
+                            {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}个月
                         </p>
                         <p>
                             <span>免息方式：</span>
