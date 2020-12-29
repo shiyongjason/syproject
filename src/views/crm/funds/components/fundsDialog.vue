@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="500px" :before-close="()=> $emit('onClose')">
+    <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="650px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
             <div class="row-filed info-img-group">
                 <span class="label">支付凭证：</span>

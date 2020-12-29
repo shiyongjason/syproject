@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="采购单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%'
+        <el-drawer title="采购单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <div class="info-content">
