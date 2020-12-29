@@ -28,10 +28,12 @@
                     <div class="query-col-title">奖励月份：</div>
                     <div class="query-col-input">
 
-                        <el-date-picker v-model="queryParams.startMonth" type="month" value-format='yyyy-MM' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startMonth" type="month" value-format='yyyy-MM'
+                                        placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endMonth" type="month" value-format='yyyy-MM' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endMonth" type="month" value-format='yyyy-MM'
+                                        placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -43,7 +45,9 @@
                 </div>
             </div>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :action-min-width="200">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
+                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
+                        :isAction="true" :action-min-width="200">
                 <template slot="source" slot-scope="scope">
                     {{scope.data.row.source==='1'?'微信小店':'好友推荐'}}
                 </template>
@@ -69,8 +73,10 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
-            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+        <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px"
+                   :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess"
+                       :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
@@ -88,8 +94,10 @@
                 </div>
             </el-dialog>
         </el-dialog>
-        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px" :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
-            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month" value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
+        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month"
+                            value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
             </el-date-picker>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editMonth(0)">取消</el-button>
@@ -101,7 +109,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
-import {delInvitationOrder, downloadQuestionTemp, sendReward, updateInvitationDetail} from '../api'
+import { delInvitationOrder, downloadQuestionTemp, sendReward, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
 import moment from 'moment'
 import md5 from 'blueimp-md5'
@@ -239,20 +247,26 @@ export default {
             // eslint-disable-next-line no-unused-vars
             let map = new Map()
             map.set('orderItemId', val.orderItemId)
-            map.set('phone', this.userInfo.phoneNumber)
             map.set('timestamp', moment(time).valueOf())
+            map.set('operateUserName', this.userInfo.employeeName)
+            map.set('phone', this.userInfo.phoneNumber)
             let arrayObj = Array.from(map)
             arrayObj.sort(function (a, b) {
                 return a[0].localeCompare(b[0])
             })
             let sign = ''
 
-            map.forEach((key, value) => {
-                sign.concat(key, '=', value, '&')
+            arrayObj.forEach((value, key) => {
+                console.log(value[0])
+                console.log(value[1])
+                sign += value[0]
+                sign += '='
+                sign += value[1]
+                sign += '&'
             })
-            sign.concat('secretKey=1IyhvL4_sg')
-            var hash = md5(sign, '1IyhvL4_sg')
-            console.log(this.userInfo)
+            sign += 'secretKey=1IyhvL4_sg'
+            var hash = md5(sign)
+            console.log(sign)
             console.log(hash)
             await sendReward({
                 orderItemId: val.orderItemId,
@@ -425,40 +439,40 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.spanflex {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
+    .spanflex {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
 
-    span {
-        flex: 1;
+        span {
+            flex: 1;
 
-        &:first-child {
-            font-size: 16px;
-        }
+            &:first-child {
+                font-size: 16px;
+            }
 
-        &:last-child {
-            text-align: right;
+            &:last-child {
+                text-align: right;
+            }
         }
     }
-}
 
-.topTitle {
-    margin-right: 2rem;
-    font-weight: bold;
-}
+    .topTitle {
+        margin-right: 2rem;
+        font-weight: bold;
+    }
 
-.colred {
-    color: #ff7a45;
-    cursor: pointer;
-}
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
 
-.topColred {
-    color: #ff7a45;
-    cursor: pointer;
-}
+    .topColred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
 
-/deep/ .el-dialog__body {
-    padding-top: 10px;
-}
+    /deep/ .el-dialog__body {
+        padding-top: 10px;
+    }
 </style>
