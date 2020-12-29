@@ -311,7 +311,7 @@ export default {
                     { message: '经销商首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
-                    { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
+                    { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
                 ]
             },
             isDownLoad: false,
@@ -342,7 +342,7 @@ export default {
                     { message: '经销商首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
-                    { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
+                    { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
                 ]
             }
         }
