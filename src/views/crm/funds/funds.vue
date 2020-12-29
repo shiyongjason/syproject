@@ -265,7 +265,8 @@ export default {
             this.findFundsList(this.queryParamsUseQuery)
         },
         onReset () {
-            this.queryParams = { ...this.queryParamsTemp }
+            const repaymentTypeArrays = this.queryParams.repaymentTypeArrays
+            this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
             this.findFundsList(this.queryParamsUseQuery)
         },
         onSortChange (val) {
