@@ -37,7 +37,7 @@
                     <p><span class="star">*</span>执行费率（银行转账）：{{approveForm.transferBankRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>最大采购总额：{{approveForm.maxPurchaseAmount | fundMoneyHasTail}}元 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     <p><span class="star">*</span>经销商首付款比例：{{approveForm.advancePaymentRate || '-'}}% <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                    <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                    <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}个月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                 </template>
             </div>
             <div class="collect-wrapbox" v-for="item in approveForm.projectDocList" :key="item.firstCatagoryId">
@@ -148,7 +148,7 @@
                             <el-option label="5" value="5"></el-option>
                             <el-option label="6" value="6"></el-option>
                         </el-select>
-                        月
+                        个月
                     </el-form-item>
                 </template>
                 <el-form-item label="说明：" prop="remark">
@@ -192,7 +192,7 @@
                         <el-option label="5" value="5"></el-option>
                         <el-option label="6" value="6"></el-option>
                     </el-select>
-                    月
+                    个月
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -311,7 +311,7 @@ export default {
                     { message: '经销商首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
-                    { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
+                    { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
                 ]
             },
             isDownLoad: false,
@@ -342,7 +342,7 @@ export default {
                     { message: '经销商首付款比例0-100', validator: validateNumber, trigger: 'blur' }
                 ],
                 remainPaymentCycle: [
-                    { required: true, message: '请选择剩余货款支付周期', trigger: 'blur' }
+                    { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
                 ]
             }
         }

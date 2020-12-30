@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="采购单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%'
+        <el-drawer title="采购单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <div class="info-content">
@@ -59,7 +59,7 @@
                                         经销商预付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
                                     </p>
                                     <p class="col-filed">
-                                        剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}月
+                                        剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}个月
                                     </p>
                                 </template>
                             </div>
@@ -68,11 +68,10 @@
                                     <span class="label">
                                         采购明细表：
                                     </span>
-                                    <p class="content">
-                                        <span class="img-box"
-                                              v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
-                                        <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                             v-for="item in purchaseOrderDetail.poInfo.poDetail">
+                                    <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
+                                        <span class="img-box" :key="item.url"
+                                              v-for="item in purchaseOrderDetail.poInfo.poDetail">
+                                        <img :src="item.url"  alt="" @click="goDetail(item.url)">
                                     </span>
                                     </p>
 
@@ -458,7 +457,7 @@ export default {
             display: flex;
             flex-wrap: wrap;
             span {
-                display: block;
+                display: flex;
                 width: 80px;
                 height: 80px;
                 margin-bottom: 12px;
@@ -470,8 +469,8 @@ export default {
             img {
                 display: block;
                 margin: auto;
-                max-height: 80px;
-                max-width: 80px;
+                max-height: 78px;
+                max-width: 78px;
             }
         }
         .label {

@@ -99,7 +99,7 @@ li{
         display: flex;
         flex-wrap: wrap;
         span {
-            display: block;
+            display: flex;
             width: 80px;
             height: 80px;
             margin-bottom: 12px;
@@ -111,8 +111,8 @@ li{
         img {
             display: block;
             margin: auto;
-            max-height: 80px;
-            max-width: 80px;
+            max-height: 78px;
+            max-width: 78px;
         }
     }
     .label {

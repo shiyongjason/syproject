@@ -99,7 +99,7 @@
                     <span class="colblue"> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="paidTime" slot-scope="scope">
-                    <span class="colblue" v-if="scope.data.row.paymentFlag !== PaymentOrderDict.paymentFlag.list[3].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span class="colblue" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                     <span v-else>-</span>
                 </template>
                 <template slot="action" slot-scope="scope">
@@ -142,6 +142,8 @@ export default {
                 scheduleEndTime: '',
                 paidStartTime: '',
                 paidEndTime: '',
+                'sort.property': null,
+                'sort.direction': null,
                 repaymentTypeArrays: '1' // 默认 1-首付款；2-剩余货款；3-服务费；
             },
             fundsDialogVisible: false,
@@ -263,7 +265,8 @@ export default {
             this.findFundsList(this.queryParamsUseQuery)
         },
         onReset () {
-            this.queryParams = { ...this.queryParamsTemp }
+            const repaymentTypeArrays = this.queryParams.repaymentTypeArrays
+            this.queryParams = { ...this.queryParamsTemp, repaymentTypeArrays }
             this.findFundsList(this.queryParamsUseQuery)
         },
         onSortChange (val) {

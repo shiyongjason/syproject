@@ -180,7 +180,6 @@ export default {
                 'sort.property': null,
                 'sort.direction': null
             },
-            tableData: [{ no: 1 }],
             tableLabel: [
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
                 { label: '所属分部', prop: 'deptName', width: '150' },

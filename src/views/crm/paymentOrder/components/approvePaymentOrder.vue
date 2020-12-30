@@ -17,9 +17,8 @@
                             <span class="label">采购明细表：</span>
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
-                                    <span class="img-box">
-                                        <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                             v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box" :key="item.url"  v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                        <img :src="item.url" alt="" @click="goDetail(item.url)">
                                     </span>
                                 </template>
                             </p>
@@ -126,13 +125,16 @@
                             <span>采购单金额：</span>
                             {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
                         </p>
-                        <p class="info-img-group">
-                            <span>采购明细表：</span>
-                            <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
-                                <img :src="item.url" :key="item.url" alt="" @click="goDetail(item.url)"
-                                     v-for="item in paymentDetail.payOrderPoDetail.poDetail" class="info-img">
-                            </template>
-                        </p>
+                        <div class="info-img-group">
+                            <span class="label">采购明细表：</span>
+                            <p class="content">
+                                <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderPoDetail.poDetail">
+                                        <img :src="item.url" alt="" @click="goDetail(item.url)">
+                                    </span>
+                                </template>
+                            </p>
+                        </div>
                         <p>
                             <span>采购批次：</span>
                             {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
@@ -151,7 +153,7 @@
                         </p>
                         <p>
                             <span>剩余货款支付周期：</span>
-                            {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}月
+                            {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}个月
                         </p>
                         <p>
                             <span>免息方式：</span>
@@ -172,7 +174,7 @@
         </el-dialog>
         <el-dialog title="编辑经销商预付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" :close-on-click-modal=false class="edit-amount-dialog">
             <div class="edit-amount">
-                经销商预付款:<el-input v-model="formData.downPaymentAmount" v-isNegative="formData.downPaymentAmount" maxlength="20"></el-input>
+                经销商预付款:<el-input v-model="formData.downPaymentAmount" v-isNegative:2="formData.downPaymentAmount" maxlength="20"></el-input>
             </div>
             <div slot="footer">
                 <h-button type="cancel" @click="onCancelAmount">取消</h-button>
@@ -288,11 +290,14 @@ export default {
     },
     methods: {
         openEdit () {
+            this.formData.downPaymentAmount = this.downPaymentAmount
             this.editAmountVisible = true
         },
-        onCancelAmount () {
+        async onCancelAmount () {
+            // this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+            // this.serviceParams.downpaymentAmount = this.downPaymentAmount
+            // await this.getComputedValue()
             this.editAmountVisible = false
-            this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
         },
         async onSaveAmount () {
             if (this.formData.downPaymentAmount === '') {
@@ -440,7 +445,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         span {
-            display: block;
+            display: flex;
             width: 80px;
             height: 80px;
             margin-bottom: 12px;
@@ -452,8 +457,8 @@ export default {
         img {
             display: block;
             margin: auto;
-            max-height: 80px;
-            max-width: 80px;
+            max-height: 78px;
+            max-width: 78px;
         }
     }
     .label {

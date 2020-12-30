@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%'
+        <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false>
             <div class="drawer-content">
                 <div class="info-content">
@@ -132,10 +132,10 @@
                             {{ paymentOrderDetail.payOrderDetail.closeTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                         </p>
                         <p class="col-filed">
-                            <span class="label">申请人：</span>
+                            <span class="label">关闭人：</span>
                             {{
-                                paymentOrderDetail.payOrderDetail.createBy
-                            }}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
+                                paymentOrderDetail.payOrderDetail.closeBy
+                            }}（{{ paymentOrderDetail.payOrderDetail.closePhone }}）
                         </p>
                     </div>
                     <div class="row-filed" v-if="PaymentOrderDict.status.list[0].key === paymentOrderDetail.payOrderDetail.status">
@@ -877,7 +877,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         span {
-            display: block;
+            display: flex;
             width: 80px;
             height: 80px;
             margin-bottom: 12px;
@@ -889,8 +889,8 @@ export default {
         img {
             display: block;
             margin: auto;
-            max-height: 80px;
-            max-width: 80px;
+            max-height: 78px;
+            max-width: 78px;
         }
     }
     .label {

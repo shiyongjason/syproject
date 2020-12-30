@@ -31,7 +31,7 @@
                         </li>
                         <li>
                             <span class="label">剩余货款支付周期： </span>
-                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}月</span>
+                            <span>{{ dialogDetail.poInfo.restPaymentPeriod || '-' }}个月</span>
                         </li>
                         <li>
                             <span class="label">最迟发货日期：</span>
@@ -84,7 +84,7 @@
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
-                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                        {{ (item.originalValue - 0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
                                     </template>
                                     <template v-else>
                                         {{ item.originalValue + (item.unit || '') }}
@@ -534,7 +534,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         span {
-            display: block;
+            display: flex;
             width: 80px;
             height: 80px;
             margin-bottom: 12px;
@@ -546,8 +546,8 @@ export default {
         img {
             display: block;
             margin: auto;
-            max-height: 80px;
-            max-width: 80px;
+            max-height: 78px;
+            max-width: 78px;
         }
     }
     .label {
@@ -559,6 +559,7 @@ export default {
     font-size: 12px;
     color: #333333;
     line-height: 20px;
-    padding-top: 20px;
+    padding: 12px;
+    border: 1px solid #EBEEF5;
 }
 </style>

@@ -34,7 +34,7 @@ export default {
             },
             paginationInfo: {},
             tableLabel: [
-                { label: '采购单编号', prop: 'purchaseOrderNo', width: '150' },
+                { label: '采购单编号', prop: 'purchaseOrderNo', width: '120' },
                 { label: '采购单金额(元)', prop: 'poAmount', width: '120', align: 'right' },
                 { label: '状态', prop: 'status', width: '100' },
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },

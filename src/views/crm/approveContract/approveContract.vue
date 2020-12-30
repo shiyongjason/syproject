@@ -163,10 +163,9 @@ export default {
                 menubar: false,
                 language: 'zh_CN',
                 skin_url: '/tinymce/skins/ui/oxide', // public目录下
-                // plugins: ['export'], // 表格 'table' export导出
-                // 工具栏 表格 | table
+                // plugins: ['export'], // 表格 'table'
+                // 工具栏 表格 | table | export 导出
                 toolbar: 'h1 h2 bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent  | undo redo | link unlink image  | removeformat',
-                // | export
                 height: 504,
                 fontsize_formats: '11px 12px 14px 16px 18px 24px 36px 48px',
                 content_css: '/tinymce/skins/mycontent.css',
@@ -237,7 +236,7 @@ export default {
                 return 'isPositiveInt'
             }
             // 纯数字
-            if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse' || paramKey == 'dealer_down_pay_period' || paramKey == 'pay_shipment_batch') {
+            if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse') {
                 return 'isAllNum'
             }
             // 元 %
@@ -663,7 +662,7 @@ export default {
                         let spanList = this.contractDocument.getElementsByTagName('span')
                         let _keyValIncontract = []
                         Array.from(spanList).map(item => {
-                            if (item.dataset && item.dataset.inputstyle && item.className) {
+                            if (item.dataset && item.dataset.inputstyle) {
                                 _keyValIncontract.push(item.className)
                             }
                         })
@@ -754,8 +753,7 @@ export default {
                     if (item.inputStyle && item.inputStyle == 9) {
                         let imgDom = this.contractDocument.getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
-                            // 筛除盖章处和确认函的采购明细表
-                            if (item.className && item.className != 'platform_sign' && item.className != 'pay_order_purchase_details') {
+                            if (item.className != 'platform_sign') {
                                 item.onclick = (event) => {
                                     console.log(event)
                                     this.currentKey = {
@@ -799,7 +797,7 @@ export default {
                     this.keyValIncontract = []
                     let spanList = this.contractDocument.getElementsByTagName('span')
                     Array.from(spanList).map(item => {
-                        if (item.dataset && item.dataset.inputstyle && item.className) {
+                        if (item.dataset && item.dataset.inputstyle) {
                             this.keyValIncontract.push(item.className)
                         }
                     })

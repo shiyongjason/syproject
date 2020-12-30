@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="500px" :before-close="()=> $emit('onClose')">
+    <el-dialog :title="title" :visible.sync="isOpen" :close-on-click-modal=false width="650px" :before-close="()=> $emit('onClose')">
         <div class="info-content">
             <div class="row-filed info-img-group">
                 <span class="label">支付凭证：</span>
@@ -152,7 +152,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         span {
-            display: block;
+            display: flex;
             width: 80px;
             height: 80px;
             margin-bottom: 12px;
@@ -164,8 +164,8 @@ export default {
         img {
             display: block;
             margin: auto;
-            max-height: 80px;
-            max-width: 80px;
+            max-height: 78px;
+            max-width: 78px;
         }
     }
     .label {
