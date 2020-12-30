@@ -260,7 +260,6 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
-
 export default {
     name: 'purchaseOrderDrawer',
     props: {
