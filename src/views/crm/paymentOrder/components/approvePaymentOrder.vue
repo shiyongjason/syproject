@@ -257,6 +257,7 @@ export default {
                     terms: this.paymentDetail.payOrderPoDetail.restPaymentPeriod
                 }
                 this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+                this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
                 this.$nextTick(() => {
                     this.$refs.form.clearValidate()
                 })
