@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
+        <el-dialog ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
             <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form">
                 <div class="row-filed">
                     <div class="col-filed">
@@ -349,8 +349,13 @@ export default {
                     this.clearForm()
                     this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
                 } else {
-                    const needTip = Object.keys(rules)
-                    this.$message.error(`${rules[needTip[0]][0].message}`)
+                    // console.log(object)
+                    // const needTip = Object.keys(rules)
+                    // this.$message.error(`${rules[needTip[0]][0].message}`)
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.querySelector('input').focus()
+                    })
                 }
             })
         },

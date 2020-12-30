@@ -94,7 +94,7 @@
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.changedValue))">
                                     <img :src="item.url" :key="item.url" alt=""
-                                         v-for="item in checkedIsJson(item.changedValue)" class="info-img">
+                                         v-for="item in checkedIsJson(item.changedValue)" class="info-img" @click="goDetail(item.url)">
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
@@ -343,8 +343,10 @@ export default {
                     this.onClose()
                     this.$emit('closeDrawer')
                 } else {
-                    const needTip = Object.keys(rules)
-                    this.$message.error(`${rules[needTip[0]][0].message}`)
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.querySelector('input').focus()
+                    })
                 }
             })
         },

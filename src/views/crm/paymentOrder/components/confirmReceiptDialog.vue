@@ -133,8 +133,10 @@ export default {
                     this.onCancel()
                     this.$emit('onCloseDialogAndQuery', 'confirmReceiptVisible')
                 } else {
-                    const needTip = Object.keys(rules)
-                    this.$message.error(`${rules[needTip[0]][0].message}`)
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.querySelector('input').focus()
+                    })
                 }
             })
         },
