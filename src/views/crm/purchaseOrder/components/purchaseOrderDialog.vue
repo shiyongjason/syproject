@@ -84,7 +84,7 @@
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
-                                        {{ (item.originalValue -0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
+                                        {{ (item.originalValue - 0 ) | attributeComputed(PaymentOrderDict.applyType.list)}}
                                     </template>
                                     <template v-else>
                                         {{ item.originalValue + (item.unit || '') }}
