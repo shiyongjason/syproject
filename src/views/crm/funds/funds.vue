@@ -99,7 +99,7 @@
                     <span class="colblue"> {{ scope.data.row.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list) }}</span>
                 </template>
                 <template slot="paidTime" slot-scope="scope">
-                    <span class="colblue" v-if="scope.data.row.paymentFlag !== PaymentOrderDict.paymentFlag.list[3].key || scope.data.row.paymentFlag !== PaymentOrderDict.paymentFlag.list[1].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
+                    <span class="colblue" v-if="scope.data.row.paymentFlag !== PaymentOrderDict.paymentFlag.list[3].key && scope.data.row.paymentFlag !== PaymentOrderDict.paymentFlag.list[1].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                     <span v-else>-</span>
                 </template>
                 <template slot="action" slot-scope="scope">
