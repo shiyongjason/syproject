@@ -174,7 +174,7 @@
         </el-dialog>
         <el-dialog title="编辑经销商预付款" width="400px" :visible.sync="editAmountVisible" :before-close="()=> editAmountVisible= false" :close-on-click-modal=false class="edit-amount-dialog">
             <div class="edit-amount">
-                经销商预付款:<el-input v-model="formData.downPaymentAmount" v-isNegative="formData.downPaymentAmount" maxlength="20"></el-input>
+                经销商预付款:<el-input v-model="formData.downPaymentAmount" v-isNegative:2="formData.downPaymentAmount" maxlength="20"></el-input>
             </div>
             <div slot="footer">
                 <h-button type="cancel" @click="onCancelAmount">取消</h-button>
@@ -257,7 +257,6 @@ export default {
                     terms: this.paymentDetail.payOrderPoDetail.restPaymentPeriod
                 }
                 this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
-                this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
                 this.$nextTick(() => {
                     this.$refs.form.clearValidate()
                 })
@@ -290,11 +289,14 @@ export default {
     },
     methods: {
         openEdit () {
+            this.formData.downPaymentAmount = this.downPaymentAmount
             this.editAmountVisible = true
         },
-        onCancelAmount () {
+        async onCancelAmount () {
+            // this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+            // this.serviceParams.downpaymentAmount = this.downPaymentAmount
+            // await this.getComputedValue()
             this.editAmountVisible = false
-            this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
         },
         async onSaveAmount () {
             if (this.formData.downPaymentAmount === '') {
