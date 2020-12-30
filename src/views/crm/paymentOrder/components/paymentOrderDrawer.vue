@@ -65,7 +65,7 @@
                         <p class="col-filed col-25">
                             <span class="label">剩余货款支付周期：</span>{{
                                 paymentOrderDetail.payOrderPoDetail.restPaymentPeriod
-                            }}月
+                            }}个月
                         </p>
                         <p class="col-filed col-25">
                             <span class="label">免息方式：</span>{{
