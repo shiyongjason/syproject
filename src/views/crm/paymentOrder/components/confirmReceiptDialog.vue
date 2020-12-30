@@ -150,7 +150,7 @@ export default {
     display: flex;
     width: 100%;
     span {
-        display: block;
+        display: flex;
         width: 80px;
         height: 80px;
         margin-bottom: 12px;
