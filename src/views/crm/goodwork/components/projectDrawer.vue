@@ -1,7 +1,7 @@
 <template>
     <div class="project-wrap">
 
-        <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
+        <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <template v-for="item in tabs">
                     <template v-if='isShowTab(item.key,status)'>
