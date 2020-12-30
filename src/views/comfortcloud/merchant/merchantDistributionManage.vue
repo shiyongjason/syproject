@@ -37,7 +37,10 @@
                     {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'审核不通过'}}
                 </template>
                 <template slot="name" slot-scope="scope">
-                    <p class="coloedit title" @click="onNameEdit(scope.data.row)">
+                    <p class="coloedit title" @click="onNameEdit(scope.data.row)" v-if="scope.data.row.status===1">
+                        {{scope.data.row.name}}
+                    </p>
+                    <p class="title" v-else>
                         {{scope.data.row.name}}
                     </p>
                 </template>
@@ -161,9 +164,11 @@ export default {
             }
         },
         onNameEdit (val) {
-            this.editName = ''
-            this.editId = val.id
-            this.editDialogVisible = true
+            if (val.status === 1) {
+                this.editName = ''
+                this.editId = val.id
+                this.editDialogVisible = true
+            }
         },
         editCancel () {
             this.editDialogVisible = false
