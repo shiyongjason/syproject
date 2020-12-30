@@ -82,7 +82,7 @@
                 <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
-                <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载奖励明细模板</a>
+                <a href="/excelTemplate/奖励明细模板.xlsx" download="奖励明细模板.xls">下载奖励明细模板</a>
             </div>
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
@@ -102,6 +102,16 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editMonth(0)">取消</el-button>
                 <el-button type="primary" @click="editMonth(1)">确认</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="奖励发放确认" :visible.sync="rewardShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <p  class="redcolred">请确认该订单已确认收货且未产生退货。</p>
+            <p>奖励金额：{{this.rewardPerson.rewardAmount}}元</p>
+            <p>奖励对象：{{this.rewardPerson.distributorName}}</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="reward(0)">取消</el-button>
+                <el-button type="primary" @click="reward(1)">确认发放</el-button>
             </span>
         </el-dialog>
     </div>
@@ -133,11 +143,13 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            rewardPerson: { distributorName: '', rewardAmount: '' },
             errMessage: '',
             fileList: [],
             errorShow: false,
             uploadShow: false,
             updateMonthShow: false,
+            rewardShow: false,
             updateIndexData: {},
             uploadData: {
                 accept: '.xlsx,.xls',
@@ -243,38 +255,8 @@ export default {
             this.onQuery()
         },
         async onEdit (val) {
-            let time = new Date()
-            // eslint-disable-next-line no-unused-vars
-            let map = new Map()
-            map.set('orderItemId', val.orderItemId)
-            map.set('timestamp', moment(time).valueOf())
-            map.set('operateUserName', this.userInfo.employeeName)
-            map.set('phone', this.userInfo.phoneNumber)
-            let arrayObj = Array.from(map)
-            arrayObj.sort(function (a, b) {
-                return a[0].localeCompare(b[0])
-            })
-            let sign = ''
-
-            arrayObj.forEach((value, key) => {
-                console.log(value[0])
-                console.log(value[1])
-                sign += value[0]
-                sign += '='
-                sign += value[1]
-                sign += '&'
-            })
-            sign += 'secretKey=1IyhvL4_sg'
-            var hash = md5(sign)
-            console.log(sign)
-            console.log(hash)
-            await sendReward({
-                orderItemId: val.orderItemId,
-                phone: this.userInfo.phoneNumber,
-                operateUserName: this.userInfo.employeeName,
-                sign: hash,
-                timestamp: moment(time).valueOf()
-            })
+            this.rewardShow = true
+            this.rewardPerson = val
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -375,36 +357,41 @@ export default {
         },
         onCloseEditMonthDialog () {
             this.updateMonthShow = false
+            this.rewardShow = false
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
         },
         onEditMoney (val) {
-            this.$prompt('奖励金额', '奖励金额编辑', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                inputPattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
-                inputErrorMessage: '金额格式不正确',
-                inputValue: val.rewardAmount
-            }).then(({ value }) => {
-                if (value.length > 6) {
-                    this.$message({
-                        message: '奖励金额不符',
-                        type: 'error'
+            if (val.settled === 0) {
+                this.$prompt('奖励金额', '奖励金额编辑', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
+                    inputErrorMessage: '金额格式不正确',
+                    inputValue: val.rewardAmount
+                }).then(({ value }) => {
+                    if (value.length > 6) {
+                        this.$message({
+                            message: '奖励金额不符',
+                            type: 'error'
+                        })
+                        return
+                    }
+                    this.update({
+                        id: val.id,
+                        rewardAmount: value,
+                        operateUserName: this.userInfo.employeeName
                     })
-                    return
-                }
-                this.update({
-                    id: val.id,
-                    rewardAmount: value,
-                    operateUserName: this.userInfo.employeeName
+                }).catch(() => {
                 })
-            }).catch(() => {
-            })
+            }
         },
         onEditMonth (val) {
-            this.updateMonthShow = true
-            this.updateIndexData = val
+            if (val.settled === 0) {
+                this.updateMonthShow = true
+                this.updateIndexData = val
+            }
         },
         editMonth (val) {
             this.updateMonthShow = false
@@ -414,6 +401,46 @@ export default {
                     rewardMonth: this.updateIndexData.rewardMonth,
                     operateUserName: this.userInfo.employeeName
                 })
+            }
+        },
+        async reward (val) {
+            if (val === 1) {
+                let time = new Date()
+                // eslint-disable-next-line no-unused-vars
+                let map = new Map()
+                map.set('orderItemId', this.rewardPerson.orderItemId)
+                map.set('timestamp', moment(time).valueOf())
+                map.set('operateUserName', this.userInfo.employeeName)
+                map.set('phone', this.userInfo.phoneNumber)
+                let arrayObj = Array.from(map)
+                arrayObj.sort(function (a, b) {
+                    return a[0].localeCompare(b[0])
+                })
+                let sign = ''
+
+                arrayObj.forEach((value, key) => {
+                    console.log(value[0])
+                    console.log(value[1])
+                    sign += value[0]
+                    sign += '='
+                    sign += value[1]
+                    sign += '&'
+                })
+                sign += 'secretKey=1IyhvL4_sg'
+                var hash = md5(sign)
+                console.log(sign)
+                console.log(hash)
+                this.rewardShow = false
+                await sendReward({
+                    orderItemId: this.rewardPerson.orderItemId,
+                    phone: this.userInfo.phoneNumber,
+                    operateUserName: this.userInfo.employeeName,
+                    sign: hash,
+                    timestamp: moment(time).valueOf()
+                })
+                this.onQuery()
+            } else {
+                this.rewardShow = false
             }
         },
         async update (val) {
@@ -464,6 +491,10 @@ export default {
 
     .colred {
         color: #ff7a45;
+        cursor: pointer;
+    }
+    .redcolred {
+        color: red;
         cursor: pointer;
     }
 
