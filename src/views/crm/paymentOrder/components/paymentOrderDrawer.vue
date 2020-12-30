@@ -594,8 +594,10 @@ export default {
                     this.getPaymentOrderDetail()
                     this.updateRowClose()
                 } else {
-                    const needTip = Object.keys(rules)
-                    this.$message.error(`${rules[needTip[0]][0].message}`)
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.querySelector('input').focus()
+                    })
                 }
             })
         },

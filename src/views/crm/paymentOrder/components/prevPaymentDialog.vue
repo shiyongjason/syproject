@@ -139,8 +139,10 @@ export default {
                     await updatePrevPayPass(params)
                     this.$emit('onCloseDialogAndQueryDetail', 'prevPaymentVisible')
                 } else {
-                    const needTip = Object.keys(rules)
-                    this.$message.error(`${rules[needTip[0]][0].message}`)
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom.querySelector('input').focus()
+                    })
                 }
             })
         }
