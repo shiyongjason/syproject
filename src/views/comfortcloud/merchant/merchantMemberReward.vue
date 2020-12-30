@@ -28,10 +28,12 @@
                     <div class="query-col-title">奖励月份：</div>
                     <div class="query-col-input">
 
-                        <el-date-picker v-model="queryParams.startMonth" type="month" value-format='yyyy-MM' placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startMonth" type="month" value-format='yyyy-MM'
+                                        placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endMonth" type="month" value-format='yyyy-MM' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endMonth" type="month" value-format='yyyy-MM'
+                                        placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -43,7 +45,9 @@
                 </div>
             </div>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :action-min-width="200">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
+                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
+                        :isAction="true" :action-min-width="200">
                 <template slot="source" slot-scope="scope">
                     {{scope.data.row.source==='1'?'微信小店':'好友推荐'}}
                 </template>
@@ -53,9 +57,6 @@
                 </template>
                 <template slot="settled" slot-scope="scope">
                     {{scope.data.row.settled===0?'未结算':'已结算'}}
-                </template>
-                <template slot="merchantType" slot-scope="scope">
-                    {{setMerchantType(scope.data.row)}}
                 </template>
                 <template slot="rewardMonth" slot-scope="scope">
                     <p @click="onEditMonth(scope.data.row)" class="colred">
@@ -72,14 +73,16 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
-            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+        <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px"
+                   :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess"
+                       :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
-                <a href="/excelTemplate/订单明细模板.xlsx" download="订单明细模板.xls">下载奖励明细模板</a>
+                <a href="/excelTemplate/奖励明细模板.xlsx" download="奖励明细模板.xls">下载奖励明细模板</a>
             </div>
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
@@ -91,12 +94,24 @@
                 </div>
             </el-dialog>
         </el-dialog>
-        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px" :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
-            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month" value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
+        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month"
+                            value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
             </el-date-picker>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editMonth(0)">取消</el-button>
                 <el-button type="primary" @click="editMonth(1)">确认</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="奖励发放确认" :visible.sync="rewardShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <p  class="redcolred">请确认该订单已确认收货且未产生退货。</p>
+            <p>奖励金额：{{this.rewardPerson.rewardAmount}}元</p>
+            <p>奖励对象：{{this.rewardPerson.distributorName}}</p>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="reward(0)">取消</el-button>
+                <el-button type="primary" @click="reward(1)">确认发放</el-button>
             </span>
         </el-dialog>
     </div>
@@ -104,9 +119,10 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
-import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail } from '../api'
+import { delInvitationOrder, downloadQuestionTemp, sendReward, updateInvitationDetail } from '../api'
 import { iotUrl } from '@/api/config'
-
+import moment from 'moment'
+import md5 from 'blueimp-md5'
 export default {
     name: 'comfortcloudMemberReward',
     data () {
@@ -127,8 +143,13 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            rewardPerson: { distributorName: '', rewardAmount: '' },
+            errMessage: '',
+            fileList: [],
+            errorShow: false,
             uploadShow: false,
             updateMonthShow: false,
+            rewardShow: false,
             updateIndexData: {},
             uploadData: {
                 accept: '.xlsx,.xls',
@@ -233,7 +254,9 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        onEdit (val) {
+        async onEdit (val) {
+            this.rewardShow = true
+            this.rewardPerson = val
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -242,22 +265,6 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
-        },
-        setMerchantType (val) {
-            let type = ''
-            if (val.role === 1) {
-                type += '新人'
-            } else if (val.role === 2) {
-                type += '普通会员'
-            }
-            if (val.distributorStatus === 1) {
-                type += '、分销员'
-            }
-            if (val.agentStatus === 10) {
-                type += '、经销商'
-            }
-
-            return type
         },
         onInput () {
             this.uploadShow = true
@@ -350,36 +357,41 @@ export default {
         },
         onCloseEditMonthDialog () {
             this.updateMonthShow = false
+            this.rewardShow = false
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
         },
         onEditMoney (val) {
-            this.$prompt('奖励金额', '奖励金额编辑', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                inputPattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
-                inputErrorMessage: '金额格式不正确',
-                inputValue: val.rewardAmount
-            }).then(({ value }) => {
-                if (value.length > 6) {
-                    this.$message({
-                        message: '奖励金额不符',
-                        type: 'error'
+            if (val.settled === 0) {
+                this.$prompt('奖励金额', '奖励金额编辑', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    inputPattern: /^[0-9]+([.]{1}[0-9]+){0,1}$/,
+                    inputErrorMessage: '金额格式不正确',
+                    inputValue: val.rewardAmount
+                }).then(({ value }) => {
+                    if (value.length > 6) {
+                        this.$message({
+                            message: '奖励金额不符',
+                            type: 'error'
+                        })
+                        return
+                    }
+                    this.update({
+                        id: val.id,
+                        rewardAmount: value,
+                        operateUserName: this.userInfo.employeeName
                     })
-                    return
-                }
-                this.update({
-                    id: val.id,
-                    rewardAmount: value,
-                    operateUserName: this.userInfo.employeeName
+                }).catch(() => {
                 })
-            }).catch(() => {
-            })
+            }
         },
         onEditMonth (val) {
-            this.updateMonthShow = true
-            this.updateIndexData = val
+            if (val.settled === 0) {
+                this.updateMonthShow = true
+                this.updateIndexData = val
+            }
         },
         editMonth (val) {
             this.updateMonthShow = false
@@ -389,6 +401,46 @@ export default {
                     rewardMonth: this.updateIndexData.rewardMonth,
                     operateUserName: this.userInfo.employeeName
                 })
+            }
+        },
+        async reward (val) {
+            if (val === 1) {
+                let time = new Date()
+                // eslint-disable-next-line no-unused-vars
+                let map = new Map()
+                map.set('orderItemId', this.rewardPerson.orderItemId)
+                map.set('timestamp', moment(time).valueOf())
+                map.set('operateUserName', this.userInfo.employeeName)
+                map.set('phone', this.userInfo.phoneNumber)
+                let arrayObj = Array.from(map)
+                arrayObj.sort(function (a, b) {
+                    return a[0].localeCompare(b[0])
+                })
+                let sign = ''
+
+                arrayObj.forEach((value, key) => {
+                    console.log(value[0])
+                    console.log(value[1])
+                    sign += value[0]
+                    sign += '='
+                    sign += value[1]
+                    sign += '&'
+                })
+                sign += 'secretKey=1IyhvL4_sg'
+                var hash = md5(sign)
+                console.log(sign)
+                console.log(hash)
+                this.rewardShow = false
+                await sendReward({
+                    orderItemId: this.rewardPerson.orderItemId,
+                    phone: this.userInfo.phoneNumber,
+                    operateUserName: this.userInfo.employeeName,
+                    sign: hash,
+                    timestamp: moment(time).valueOf()
+                })
+                this.onQuery()
+            } else {
+                this.rewardShow = false
             }
         },
         async update (val) {
@@ -414,40 +466,44 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.spanflex {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
+    .spanflex {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
 
-    span {
-        flex: 1;
+        span {
+            flex: 1;
 
-        &:first-child {
-            font-size: 16px;
-        }
+            &:first-child {
+                font-size: 16px;
+            }
 
-        &:last-child {
-            text-align: right;
+            &:last-child {
+                text-align: right;
+            }
         }
     }
-}
 
-.topTitle {
-    margin-right: 2rem;
-    font-weight: bold;
-}
+    .topTitle {
+        margin-right: 2rem;
+        font-weight: bold;
+    }
 
-.colred {
-    color: #ff7a45;
-    cursor: pointer;
-}
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+    .redcolred {
+        color: red;
+        cursor: pointer;
+    }
 
-.topColred {
-    color: #ff7a45;
-    cursor: pointer;
-}
+    .topColred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
 
-/deep/ .el-dialog__body {
-    padding-top: 10px;
-}
+    /deep/ .el-dialog__body {
+        padding-top: 10px;
+    }
 </style>
