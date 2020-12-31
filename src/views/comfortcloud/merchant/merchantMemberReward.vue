@@ -48,9 +48,9 @@
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
                         :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
                         :isAction="true" :action-min-width="200">
-                <template slot="source" slot-scope="scope">
-                    {{scope.data.row.source==='1'?'微信小店':'好友推荐'}}
-                </template>
+<!--                <template slot="source" slot-scope="scope">-->
+<!--                    {{scope.data.row.source==='1'?'微信小店':'好友推荐'}}-->
+<!--                </template>-->
                 <template slot="rewardAmount" slot-scope="scope">
                     <p @click="onEditMoney(scope.data.row)" class="colred">
                         {{scope.data.row.rewardAmount}}</p>
@@ -82,7 +82,7 @@
                 <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
             </el-upload>
             <div class="downloadExcel">
-                <a href="/excelTemplate/奖励明细模板.xlsx" download="奖励明细模板.xls">下载奖励明细模板</a>
+                <a href="/excelTemplate/奖励明细模板.xls" download="奖励明细模板.xls">下载奖励明细模板</a>
             </div>
             <div style="color: red">{{errMessage}}</div>
             <span slot="footer" class="dialog-footer">
