@@ -208,7 +208,6 @@ export default {
                     }).catch(() => {
 
                     })
-                    // return
                 }
             } else {
                 try {
