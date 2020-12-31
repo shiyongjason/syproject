@@ -769,13 +769,6 @@ export default {
             }
 
             if (val == 1) {
-                // if (this.contractForm.reqParam.length == 0) {
-                //     this.$message({
-                //         message: '请至少添加一个合同字段',
-                //         type: 'warning'
-                //     })
-                //     return
-                // }
                 if (!document.getElementsByClassName('platform_sign')[0]) {
                     this.$message({
                         message: '请插入一处平台签署区',
