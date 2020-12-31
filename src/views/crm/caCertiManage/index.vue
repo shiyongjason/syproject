@@ -83,18 +83,19 @@
                     <h-button table @click="onDrawerinfo(scope.data.row)">查看印章</h-button>
                 </template>
             </basicTable>
-            <el-drawer title="查看信息" :visible.sync="drawer" direction="rtl" :before-close="handleClose">
-                <div class="drawer-content">
-                    <p>印章</p>
-                    <!-- <img src="https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/images/20200311/5c506b71-d665-4c61-948d-3cfd3cce4140.png" alt=""> -->
-                    <a :href="imgUrl">
-                        <img :src="imgUrl" alt="">
-                    </a>
-                </div>
-                <div class="drawer-footer">
-                    <h-button @click="drawer = false">好的</h-button>
-                </div>
-            </el-drawer>
+                <h-drawer title="查看信息" :visible.sync="drawer" :options="options" @beforeClose="handleClose">
+                    <template #connect>
+                        <div class="drawer-content">
+                            <p>印章</p>
+                            <a :href="imgUrl">
+                                <img :src="imgUrl" alt="">
+                            </a>
+                        </div>
+                    </template>
+                    <template #btn>
+                        <h-button @click="drawer = false">好的</h-button>
+                    </template>
+                </h-drawer>
         </div>
     </div>
 </template>
@@ -107,6 +108,10 @@ export default {
     name: 'caCertiManage',
     data () {
         return {
+            options: {
+                direction: "rtl",
+                size: '400'
+            },
             activeName: 'personage',
             copyParms: {},
             queryParams: {
@@ -224,6 +229,7 @@ export default {
             this.drawer = true
         },
         handleClose () {
+            console.log(1)
             this.drawer = false
         }
     }
