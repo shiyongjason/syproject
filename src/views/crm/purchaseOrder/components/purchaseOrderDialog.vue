@@ -80,7 +80,7 @@
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.originalValue))">
                                     <img :src="item.url" :key="item.url" alt=""
-                                         v-for="item in checkedIsJson(item.originalValue)" class="info-img">
+                                         v-for="item in checkedIsJson(item.originalValue)" class="info-img" @click="goDetail(item.url)">
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
