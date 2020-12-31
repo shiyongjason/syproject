@@ -67,7 +67,6 @@
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { mapActions, mapGetters } from 'vuex'
 import { enableTemp, disableTemp } from './api'
-// import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 export default {
     name: 'contractlist',
