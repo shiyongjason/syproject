@@ -52,7 +52,7 @@
             </hosJoyTable>
         </div>
         <!---->
-        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" :options="{size:'50%'}" @beforeClose="handleClose">
+        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" :options="{size:'50%'}" @beforeClose="handleClose">
             <template #connect>
                 <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="verLabel" :data="ver_Data" @pagination="versionList" :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total" isAction>
                     <template slot="action" slot-scope="scope">
