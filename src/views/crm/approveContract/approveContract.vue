@@ -163,9 +163,9 @@ export default {
                 menubar: false,
                 language: 'zh_CN',
                 skin_url: '/tinymce/skins/ui/oxide', // public目录下
-                plugins: ['export'], // 表格 'table'
-                // 工具栏 表格 | table
-                toolbar: 'h1 h2 bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent  | undo redo | link unlink image  | removeformat| export ',
+                // plugins: ['export'], // 表格 'table'
+                // 工具栏 表格 | table | export 导出
+                toolbar: 'h1 h2 bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent  | undo redo | link unlink image  | removeformat',
                 height: 504,
                 fontsize_formats: '11px 12px 14px 16px 18px 24px 36px 48px',
                 content_css: '/tinymce/skins/mycontent.css',
@@ -335,7 +335,7 @@ export default {
                             placeholder: '请输入内容',
                             type: 'textarea',
                             autosize: { minRows: 5, maxRows: 6 },
-                            maxlength: '200',
+                            maxlength: this.currentKey.maxLength,
                             class: this.currentKey.paramKey,
                             showWordLimit: true
                             // disabled: !this.currentKey.modify
@@ -486,6 +486,11 @@ export default {
                 let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
+                })
+                // 对客户签署区进行转化
+                let customSignDOMS = this.contractDocument.getElementsByClassName('custom_sign')
+                Array.from(customSignDOMS).map(item => {
+                    item.outerHTML = `<span class="custom_sign" style="color:#fff">${item.dataset.en}</span>`
                 })
                 // 法务审核通过把非必填且没值的标记清空
                 let res = this.contractFieldsList.filter(item => (!item.required && !item.paramValue))
