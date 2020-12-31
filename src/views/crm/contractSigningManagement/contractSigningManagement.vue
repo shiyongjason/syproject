@@ -154,7 +154,7 @@ import diffDialog from './diffDialog'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { contractSigningList, contractTypes, contractStatic, getCheckHistory, getDiffApi } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { clearCache, newCache } from '@/utils/index'
+// import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 
 const _queryParams = {
