@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap" v-if="account">
-        <h-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' @beforeClose="handleClose">
+        <h-drawer title="账号详情" :visible.sync="drawer" :options='options' @beforeClose="handleClose">
             <template #connect>
                 <div class="account-top">
                     <div class="account-topimg"><img :src="account.avatarUrl?account.avatarUrl:'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20200409/73cd7f43-41c6-4493-a517-13d2d8c8d024.png'" /></div>
@@ -65,6 +65,10 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: "rtl",
+                size: '50%'
+            },
             account: {
                 b2bCompanyList: [],
                 crmCompanyList: [],

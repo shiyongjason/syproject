@@ -83,8 +83,9 @@
                     <h-button table @click="onDrawerinfo(scope.data.row)">查看印章</h-button>
                 </template>
             </basicTable>
-            <h-drawer title="查看信息" :visible.sync="drawer" :options="options" @beforeClose="handleClose">
-                <template #connect>
+
+            <h-drawer title="查看信息" :visible.sync="drawer" @beforeClose="handleClose" :options='options'>
+                <template #connect>
                     <div class="drawer-content">
                         <p>印章</p>
                         <a :href="imgUrl">
@@ -93,7 +94,7 @@
                     </div>
                 </template>
                 <template #btn>
-                    <h-button @click="drawer = false">好的</h-button>
+                    <h-button @click="drawer=false">好的</h-button>
                 </template>
             </h-drawer>
         </div>
@@ -110,7 +111,7 @@ export default {
         return {
             options: {
                 direction: "rtl",
-                size: '400'
+                size: '400px'
             },
             activeName: 'personage',
             copyParms: {},

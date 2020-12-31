@@ -103,9 +103,9 @@
             </hosJoyTable>
         </div>
 
-                <h-drawer  title="查看信息" :visible.sync="drawerVisible" :options="options" @beforeClose="() => drawerVisible=false">
-                        <template #connect>
-                            <div slot="title">审核记录</div>
+        <h-drawer title="查看信息" :visible.sync="drawerVisible" :options="options" @beforeClose="() => drawerVisible=false">
+            <template #connect>
+                <div slot="title">审核记录</div>
                 <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
                 <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
                 <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
@@ -144,7 +144,6 @@
             <template #btn>
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
             </template>
-                    
         </h-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
     </div>

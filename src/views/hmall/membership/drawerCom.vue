@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <h-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' @beforeClose="handleClose">
+        <h-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" :options='options' @beforeClose="handleClose">
             <template #connect>
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first"></el-tab-pane>
@@ -20,7 +20,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="所属商家：" :label-width="formLabelWidth" v-if="type==='member'">
-                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30  @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
+                        <HAutocomplete :placeholder="'输入商家'" :maxlength=30 @back-event="backFindbrand" :selectArr="merchantArr" v-if="merchantArr" :selectObj="targetObj" :remove-value='removeValue' />
                     </el-form-item>
                     <el-form-item label="经营区域：" :label-width="formLabelWidth" required>
                         <el-col :span="6">
@@ -112,7 +112,7 @@
                 <div class="" v-if="activeName=='second'&&bossDetail.authenticationTime">
                     <el-form :model="bossDetail">
                         <el-form-item label="企业名称：" :label-width="formLabelWidth">
-                           {{bossDetail.companyName||'-'}}
+                            {{bossDetail.companyName||'-'}}
                         </el-form-item>
                         <el-form-item label="企业类型：" :label-width="formLabelWidth">
                             <!-- 11=个人，12=企业，13=个体工商户 -->
@@ -128,18 +128,13 @@
                         </el-form-item>
                         <el-form-item label="营业执照照片：" :label-width="formLabelWidth">
                             <div v-if="bossDetail.corporation&&bossDetail.corporation.businessLicensePhoto">
-                                <el-image
-                                    class="yyzzpic"
-                                    fit="contain"
-                                    style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;"
-                                    :src="bossDetail.corporation.businessLicensePhoto"
-                                    :preview-src-list="[`${bossDetail.corporation.businessLicensePhoto}`]">
+                                <el-image class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.businessLicensePhoto" :preview-src-list="[`${bossDetail.corporation.businessLicensePhoto}`]">
                                 </el-image>
                             </div>
                             <div v-else>-</div>
                         </el-form-item>
 
-                        <el-form-item v-if="bossDetail.userType==12"  label="法人姓名：" :label-width="formLabelWidth">
+                        <el-form-item v-if="bossDetail.userType==12" label="法人姓名：" :label-width="formLabelWidth">
                             {{
                                 bossDetail.corporation
                                 ?
@@ -147,7 +142,7 @@
                                 :'-'
                             }}
                         </el-form-item>
-                        <el-form-item v-if="bossDetail.userType==11"  label="法人姓名：" :label-width="formLabelWidth">
+                        <el-form-item v-if="bossDetail.userType==11" label="法人姓名：" :label-width="formLabelWidth">
                             {{
                                 bossDetail.individual
                                 ?
@@ -175,48 +170,24 @@
 
                         <el-form-item v-if="bossDetail.userType==12" label="法人身份证照片：" :label-width="formLabelWidth">
                             <div style="float:left">
-                                <el-image
-                                    v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoA"
-                                    class="yyzzpic"
-                                    fit="contain"
-                                    style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;"
-                                    :src="bossDetail.corporation.certPhotoA"
-                                    :preview-src-list="[`${bossDetail.corporation.certPhotoA}`]">
+                                <el-image v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoA" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.certPhotoA" :preview-src-list="[`${bossDetail.corporation.certPhotoA}`]">
                                 </el-image>
                                 <font v-else>-</font>
                             </div>
                             <div style="float:left;margin-left:10px">
-                                <el-image
-                                    v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoB"
-                                    class="yyzzpic"
-                                    fit="contain"
-                                    style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;"
-                                    :src="bossDetail.corporation.certPhotoB"
-                                    :preview-src-list="[`${bossDetail.corporation.certPhotoB}`]">
+                                <el-image v-if="bossDetail.corporation&&bossDetail.corporation.certPhotoB" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.corporation.certPhotoB" :preview-src-list="[`${bossDetail.corporation.certPhotoB}`]">
                                 </el-image>
                                 <font v-else>-</font>
                             </div>
                         </el-form-item>
                         <el-form-item v-if="bossDetail.userType==11" label="法人身份证照片：" :label-width="formLabelWidth">
                             <div style="float:left">
-                                <el-image
-                                    v-if="bossDetail.individual&&bossDetail.individual.certPhotoA"
-                                    class="yyzzpic"
-                                    fit="contain"
-                                    style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;"
-                                    :src="bossDetail.individual.certPhotoA"
-                                    :preview-src-list="[`${bossDetail.individual.certPhotoA}`]">
+                                <el-image v-if="bossDetail.individual&&bossDetail.individual.certPhotoA" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.individual.certPhotoA" :preview-src-list="[`${bossDetail.individual.certPhotoA}`]">
                                 </el-image>
                                 <font v-else>-</font>
                             </div>
                             <div style="float:left;margin-left:10px">
-                                <el-image
-                                    v-if="bossDetail.individual&&bossDetail.individual.certPhotoB"
-                                    class="yyzzpic"
-                                    fit="contain"
-                                    style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;"
-                                    :src="bossDetail.individual.certPhotoB"
-                                    :preview-src-list="[`${bossDetail.individual.certPhotoB}`]">
+                                <el-image v-if="bossDetail.individual&&bossDetail.individual.certPhotoB" class="yyzzpic" fit="contain" style="width: 100px; height: 100px;border: 1px solid #c7c7c7;border-radius: 3px;" :src="bossDetail.individual.certPhotoB" :preview-src-list="[`${bossDetail.individual.certPhotoB}`]">
                                 </el-image>
                                 <font v-else>-</font>
                             </div>
@@ -301,6 +272,10 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: "rtl",
+                size: '50%'
+            },
             userType: { 11: '个人', 12: '企业', 13: '个体工商户' },
             type: '',
             removeValue: true,
@@ -571,7 +546,7 @@ export default {
 .el-form-item__content .el-input {
     width: 200px !important;
 }
-.yyzzpic{
+.yyzzpic {
     margin-right: 10px;
 }
 </style>

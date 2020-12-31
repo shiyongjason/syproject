@@ -39,31 +39,28 @@
             <div class="query-cont__row">
                 <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData"  @pagination="searchList"
-             :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction
-                :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" @pagination="searchList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onCopy(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_COPY)">复制</h-button>
                     <h-button table @click="onEdit(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_EDIT)">编辑</h-button>
-                    <h-button table v-if="scope.data.row.status==1&&hosAuthCheck(Auths.CRM_CONTRACT_OPER)"  @click="onEnable(scope.data.row)">禁用</h-button>
+                    <h-button table v-if="scope.data.row.status==1&&hosAuthCheck(Auths.CRM_CONTRACT_OPER)" @click="onEnable(scope.data.row)">禁用</h-button>
                     <h-button table v-if="scope.data.row.status==0&&hosAuthCheck(Auths.CRM_CONTRACT_OPER)" @click="onEnable(scope.data.row)">启用</h-button>
                     <h-button table @click="onShowVer(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_VER)">版本记录</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <!---->
-        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" :options="{size:'50%'}" @beforeClose="handleClose">
-            <template #connect>
-                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data" @pagination="versionList"
-             :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total"  isAction   >
-                <template slot="action" slot-scope="scope">
-                    <h-button table @click="onShowTempdetail(scope.data.row.id)">查看</h-button>
-                </template>
+        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" :options="{size:'50%'}" @beforeClose="handleClose">
+            <template #connect>
+                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination border stripe :column="verLabel" :data="ver_Data" @pagination="versionList" :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total" isAction>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onShowTempdetail(scope.data.row.id)">查看</h-button>
+                    </template>
                 </hosJoyTable>
             </template>
         </h-drawer>
-        
+
     </div>
 </template>
 <script>
@@ -112,11 +109,13 @@ export default {
             verLabel: [
                 { label: '版本号', prop: 'versionNo' },
                 { label: '创建时间', prop: 'createTime', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-                { label: '创建人',
+                {
+                    label: '创建人',
                     prop: 'createBy',
                     render: (h, scope) => {
                         return <span>{scope.row.createBy} ({scope.row.createAccount})</span>
-                    } }
+                    }
+                }
             ],
             ver_Data: [],
             paginationInfo: {},
@@ -261,7 +260,7 @@ export default {
 .tag_top {
     margin: 10px 0;
 }
-/deep/.el-drawer__body{
+/deep/.el-drawer__body {
     padding: 0 10px;
 }
 </style>

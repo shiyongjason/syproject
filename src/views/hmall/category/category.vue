@@ -52,7 +52,7 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <h-drawer title="参数详情" :visible.sync="setVisible" @beforeClose="closeDialog" direction="rtl" size='900px'>
+        <h-drawer title="参数详情" :visible.sync="setVisible" @beforeClose="closeDialog" :options='options'>
             <template #connect>
                 <setParameters ref="setting" :categoryId="current.id" />
             </template>
@@ -75,6 +75,10 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: "rtl",
+                size: '900px'
+            },
             data: [],
             columns: [
                 {

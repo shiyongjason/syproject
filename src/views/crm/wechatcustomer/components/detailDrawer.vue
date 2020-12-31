@@ -1,7 +1,7 @@
 <template>
     <div class="drawer-wrap">
-        <h-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" :options="options" @beforeClose="handleClose">
-            <template #connect>
+        <h-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" :options="options" @beforeClose="handleClose">
+            <template #connect>
                 <div class="drawer-content">
                     <div class="drawer-cont" v-if="modelType==1">
                         <div class="drawer-cont_top">

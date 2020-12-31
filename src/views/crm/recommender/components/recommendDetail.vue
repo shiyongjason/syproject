@@ -1,7 +1,7 @@
 <template>
     <div>
-        <h-drawer title="邀请详情" :visible.sync="open" :options="{size:'50%'}" @beforeClose="handleClose">
-            <template #connect>
+        <h-drawer title="邀请详情" :visible.sync="open" :options="{size:'50%'}" @beforeClose="handleClose">
+            <template #connect>
                 <div class="drawer-wrap">
                 <div class="user-base-info">
                     <p class="avatar">

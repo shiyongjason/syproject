@@ -103,7 +103,7 @@
             <basicTable :tableLabel="tableLabel_four" :tableData="tableData_four" :pagination="pagination_four" @onSizeChange="onSizeChange_four" @onCurrentChange="onCurrentChange_four">
             </basicTable>
         </div>
-        <h-drawer title="详情" :visible.sync="drawer" size='640px'>
+        <h-drawer title="详情" :visible.sync="drawer" :options="options">
             <template #connect>
                 <basicTable :tableLabel="tableLabel_info" :tableData="tableData_info" :pagination="pagination_info" @onSizeChange="onSizeChange_info" @onCurrentChange="onCurrentChange_info">
                     <template slot="action" slot-scope="scope">
@@ -124,6 +124,9 @@ export default {
     name: 'searchDataList',
     data () {
         return {
+            options: {
+                size: '640px'
+            },
             drawer: false,
             queryParams_one: {
                 source: '',
