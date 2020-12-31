@@ -197,9 +197,9 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.queryParams.endRegisterTime
+                    let endDateVal = this.queryParams.endMonth
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
@@ -208,9 +208,9 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.startRegisterTime
+                    let beginDateVal = this.queryParams.startMonth
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() < new Date(beginDateVal).getTime()
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
