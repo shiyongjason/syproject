@@ -53,14 +53,17 @@
             </hosJoyTable>
         </div>
         <!---->
-        <el-drawer title="合同版本记录" :visible.sync="ver_drawer" size="50%" :before-close="handleClose">
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data" @pagination="versionList"
+        <h-drawer title="合同版本记录" :visible.sync="ver_drawer" :options="{size:'50%'}" @beforeClose="handleClose">
+            <template #connect>
+                <hosJoyTable isShowIndex ref="hosjoyTable" align="center" showPagination  border stripe :column="verLabel" :data="ver_Data" @pagination="versionList"
              :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="verpaginationInfo.total"  isAction   >
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onShowTempdetail(scope.data.row.id)">查看</h-button>
                 </template>
-            </hosJoyTable>
-        </el-drawer>
+                </hosJoyTable>
+            </template>
+        </h-drawer>
+        
     </div>
 </template>
 <script>

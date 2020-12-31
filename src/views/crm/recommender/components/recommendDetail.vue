@@ -1,7 +1,8 @@
 <template>
     <div>
-        <el-drawer title="邀请详情" :visible.sync="open" :before-close="handleClose" size="50%">
-            <div class="drawer-wrap">
+        <h-drawer title="邀请详情" :visible.sync="open" :options="{size:'50%'}" @beforeClose="handleClose">
+            <template #connect>
+                <div class="drawer-wrap">
                 <div class="user-base-info">
                     <p class="avatar">
                         <img v-if="detail.avatarUrl" :src="detail.avatarUrl" alt="">
@@ -52,12 +53,11 @@
                     </p>
                 </div>
             </div>
-            <div class="drawer-footer">
-                <div class="drawer-button">
+            </template>
+             <template #btn>
                     <h-button @click="handleClose">取消</h-button>
-                </div>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
     </div>
 </template>
 
