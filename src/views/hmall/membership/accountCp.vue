@@ -66,7 +66,7 @@ export default {
     data () {
         return {
             options: {
-                direction: "rtl",
+                direction: 'rtl',
                 size: '50%'
             },
             account: {

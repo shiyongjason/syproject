@@ -39,7 +39,8 @@
             <div class="query-cont__row">
                 <el-tag size="medium" class="tag_top">已筛选 {{paginationInfo.total||0}} 项</el-tag>
             </div>
-            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" @pagination="searchList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" @pagination="searchList" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" actionWidth='375' isAction
+                :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
 
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onCopy(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_CONTRACT_COPY)">复制</h-button>
@@ -60,7 +61,6 @@
                 </hosJoyTable>
             </template>
         </h-drawer>
-
     </div>
 </template>
 <script>

@@ -64,7 +64,8 @@
                         </el-tabs>
                         <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
-                        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
+                        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total"
+                            @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
                         </hosJoyTable>
                     </div>
                 </div>
@@ -85,7 +86,7 @@ export default {
     data () {
         return {
             options: {
-                direction: "rtl",
+                direction: 'rtl',
                 size: '40%',
                 wrapperClosable: false
             },

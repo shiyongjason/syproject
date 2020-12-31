@@ -110,7 +110,7 @@ export default {
     data () {
         return {
             options: {
-                direction: "rtl",
+                direction: 'rtl',
                 size: '400px'
             },
             activeName: 'personage',
