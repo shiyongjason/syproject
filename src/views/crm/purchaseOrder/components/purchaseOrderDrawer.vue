@@ -255,6 +255,7 @@
 </template>
 
 <script>
+
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
