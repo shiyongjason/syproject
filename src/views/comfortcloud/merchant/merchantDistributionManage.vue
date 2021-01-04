@@ -70,7 +70,7 @@
                     <div class="query-cont-col">
                         <div class="query-col-title">分销员姓名：</div>
                         <div class="query-col-input">
-                            <el-input v-model="editName" placeholder="输入已认证的分销员名称" maxlength="50"></el-input>
+                            <el-input v-model="editName" placeholder="输入已实名认证的真实姓名" maxlength="50"></el-input>
                         </div>
                     </div>
                 </div>
@@ -182,7 +182,7 @@ export default {
                 return
             }
             this.editDialogVisible = false
-            const data = await editDistributorName({ 'id': this.editId, 'name': this.editName })
+            await editDistributorName({ 'id': this.editId, 'name': this.editName })
             this.onSearch()
         },
         async onChangeCheckStatus (val) {
