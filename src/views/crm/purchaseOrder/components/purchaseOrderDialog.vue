@@ -345,7 +345,8 @@ export default {
                 } else {
                     this.$nextTick(() => {
                         const dom = document.querySelector('.is-error')
-                        dom.querySelector('input').focus()
+                        const _dom = dom.querySelector('input') || dom.querySelector('textarea')
+                        _dom.focus()
                     })
                 }
             })
