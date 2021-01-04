@@ -767,7 +767,6 @@ export default {
                 })
                 return
             }
-
             if (val == 1) {
                 if (!document.getElementsByClassName('platform_sign')[0]) {
                     this.$message({
