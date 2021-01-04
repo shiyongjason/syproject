@@ -55,7 +55,7 @@
                 <el-button type="primary" @click="submitSellingPointsForm" :loading="isAdding">确 定</el-button>
             </span>
         </el-dialog>
-        <el-dialog class="edit-dialog" width="600px" title="商品卖点编辑" :visible.sync="dialogDiscountPriceVisible" :close-on-click-modal="false" :before-close="onCloseDiscountPriceDialog">
+        <el-dialog class="edit-dialog" width="600px" title="商品特惠价编辑" :visible.sync="dialogDiscountPriceVisible" :close-on-click-modal="false" :before-close="onCloseDiscountPriceDialog">
             <el-form :model="discountPriceForm" :rules="discountPriceFormRules" ref="discountPriceForm" label-width="140px">
                 <el-form-item label="特惠价：" prop="discountPrice">
                     <el-input v-model="discountPriceForm.discountPrice" style="width: 150px" maxlength="10" placeholder="请输入特惠价"></el-input> 元
