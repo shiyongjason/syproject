@@ -354,7 +354,8 @@ export default {
                     // this.$message.error(`${rules[needTip[0]][0].message}`)
                     this.$nextTick(() => {
                         const dom = document.querySelector('.is-error')
-                        dom.querySelector('input').focus()
+                        const _dom = dom.querySelector('input') || dom.querySelector('textarea')
+                        _dom.focus()
                     })
                 }
             })

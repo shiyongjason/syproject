@@ -259,7 +259,9 @@ export default {
             console.log('onShowSignOrLoan', this.status)
             this.signOrLoanVisible = true
             this.signOrLoanVisibleTitle = this.status == 6 ? '签约' : '放款'
-            this.$refs['signOrLoanDialog'].clearValidate()
+            this.$nextTick(() => {
+                this.$refs['signOrLoanDialog'].clearValidate()
+            })
         },
         handleClick (tab, event) {
             this.showPacking = null
