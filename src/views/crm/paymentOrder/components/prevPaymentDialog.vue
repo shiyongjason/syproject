@@ -31,6 +31,8 @@
             <el-form-item label="支付日期：" prop="payDate">
                 <el-date-picker
                     v-model="formData.payDate"
+                    value-format="yyyy-MM-dd"
+                    format="yyyy-MM-dd"
                     type="date"
                     placeholder="选择日期">
                 </el-date-picker>
