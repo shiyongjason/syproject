@@ -313,6 +313,7 @@ export default {
         },
         goDetail (url) {
             window.open(url)
+        //
         },
         goPaymentDetail (id) {
             let routeUrl = this.$router.resolve({
