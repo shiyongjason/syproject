@@ -198,7 +198,7 @@ export default {
         onMoveUp (data) {
             this.moveProduct(data, 1)
         },
-        async moveProduct (data, moveType) { // 1=上移,-1=下移
+        async moveProduct (data, moveType) { // 1=上移, -1=下移
             await moveCloudMerchantRecommend({
                 id: data.id,
                 moveType: moveType,
