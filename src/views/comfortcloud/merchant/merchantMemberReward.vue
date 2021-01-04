@@ -134,6 +134,7 @@ export default {
                 phone: '',
                 distributorName: '',
                 endMonth: '',
+                distributorPhone: '',
                 startMonth: ''
             },
             searchParams: {},
@@ -153,7 +154,7 @@ export default {
             updateIndexData: {},
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/api/outbound/import`,
+                action: `${iotUrl}/mall/wx/order/boss/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: {
@@ -219,7 +220,7 @@ export default {
     },
     mounted () {
         if (this.$route.query.phone && this.$route.query !== undefined) {
-            this.queryParams.phone = this.$route.query.phone
+            this.queryParams.distributorPhone = this.$route.query.phone
         }
         this.onSearch()
     },
