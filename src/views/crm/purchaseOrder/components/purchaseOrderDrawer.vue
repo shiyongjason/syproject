@@ -238,6 +238,7 @@
                         </div>
                     </template>
                 </div>
+
                 <div class="drawer-footer">
                     <div class="drawer-button">
                         <h-button type="assist"
