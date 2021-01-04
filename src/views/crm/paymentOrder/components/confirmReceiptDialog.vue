@@ -152,6 +152,7 @@ export default {
 .info-img-group{
     display: flex;
     width: 100%;
+    flex-wrap: wrap;
     span {
         display: flex;
         width: 80px;
