@@ -85,7 +85,7 @@
 </template>
 <script>
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions } from 'vuex'
 import { saveDoctemp, docTempformat, saveCeditDoctemp } from './api/index'
 export default {
@@ -98,7 +98,7 @@ export default {
             loading: false,
             formLabelWidth: '120px',
             dialogVisible: false,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

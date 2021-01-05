@@ -150,9 +150,14 @@
 <script>
 import diffDialog from './diffDialog'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { contractSigningList, contractTypes, contractStatic, getCheckHistory, getDiffApi } from './api/index'
+import {
+    contractSigningList,
+    contractStatic,
+    getCheckHistory,
+    getDiffApi,
+    contractTypesNotConfirm
+} from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 
 const _queryParams = {
@@ -369,7 +374,7 @@ export default {
             this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
         },
         async getcontractTypes () {
-            const { data } = await contractTypes()
+            const { data } = await contractTypesNotConfirm()
             this.contractTypes = data
             this.contractTypes.unshift({
                 id: '',
