@@ -23,6 +23,9 @@ import crmRecommeder from '@/views/crm/recommender/store/index'
 import crmAwardManage from '@/views/crm/awardManage/store/index'
 import caCertiManage from '@/views/crm/caCertiManage/store/index'
 import projectInformation from '@/views/crm/projectInformation/store/projectInformation'
+import crmPurchaseOrder from '@/views/crm/purchaseOrder/store/index'
+import crmPaymentOrder from '@/views/crm/paymentOrder/store/index'
+import crmFunds from '@/views/crm/funds/store/index'
 import riskManage from '@/views/crm/riskManage/store/riskManage'
 import vipManage from '@/views/crm/vipmanage/store/vipManage'
 import creditManage from '@/views/crm/creditmanage/store/creditManage'
@@ -80,6 +83,9 @@ const store = new Vuex.Store({
         vipApply,
         creditManage,
         wxMember,
+        crmPurchaseOrder,
+        crmPaymentOrder,
+        crmFunds,
         contractTemp
     }
 })

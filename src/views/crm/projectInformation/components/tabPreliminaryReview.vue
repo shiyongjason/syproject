@@ -73,7 +73,7 @@
         <div class="preliminaryreview-col">
             <h2 class="preliminaryreview-title">工程项目回款方式</h2>
             <p class="preliminaryreview-p">
-                <span>预付款比例</span>
+                <span>首付款比例</span>
                 {{tabPreliminaryReview.advancePaymentProportion?`${tabPreliminaryReview.advancePaymentProportion}%`:'-'}}
             </p>
             <p class="preliminaryreview-p">

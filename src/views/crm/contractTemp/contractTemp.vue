@@ -128,7 +128,7 @@
             <div class="contract-html" v-html="newContent">
             </div>
         </el-drawer>
-        <el-dialog title="自定义合同条款" :visible.sync="customTermsDefineVisible" width="450px" :close-on-click-modal=false>
+        <el-dialog title="自定义合同条款" :visible.sync="customTermsDefineVisible" width="450px" :close-on-click-modal=false :before-close="onCancelCustomTerms">
             <el-form :model="customTermsForm" :rules="formRules" ref="customTermsForm">
                 <el-form-item label="条款名称" label-width="80px" prop="parameterName">
                     <el-input v-model="customTermsForm.parameterName" autocomplete="off" :maxlength="10"></el-input>
@@ -142,7 +142,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="customTermsDefineVisible = false">取 消</el-button>
+                <el-button @click="onCancelCustomTerms">取 消</el-button>
                 <el-button type="primary" @click="onClickCur(1)">确 定</el-button>
             </span>
         </el-dialog>
@@ -608,6 +608,10 @@ export default {
                 this.$refs.customTermsForm.clearValidate()
             })
         },
+        onCancelCustomTerms () {
+            this.customTermsDefineVisible = false
+            this.customTermsForm.id = ''
+        },
         onClickCur (val) {
             ++this.num
             let _temp = ''
@@ -626,6 +630,7 @@ export default {
                             this.$refs.RichEditor.insertHtml(_temp)
                         }
                         this.customTermsDefineVisible = false
+                        this.customTermsForm.id = ''
                     }
                 })
             } else if (val == 2) {

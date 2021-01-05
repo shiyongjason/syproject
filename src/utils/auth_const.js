@@ -187,6 +187,8 @@ export const CRM_GOODWORK_IMPORT = 109123
 export const CRM_AUTHEN_DETAIL = 109211
 export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
+// 好橙工
+export const CRM_GOODWORK_CLOSE = 109214 // 合作关闭
 
 // 好橙工 申请列表
 export const CRM_APPLY_ASSIGN = 109301 // 分配
@@ -203,6 +205,33 @@ export const CRM_AWARD_SEND = 109309 //  推荐奖励发放
 // 好橙工信用 上传 查看
 export const CRM_CREDIT_ZL = 109401
 export const CRM_CREDIT_LOOK = 109402
+
+// 好程工 采购单
+export const CRM_PURCHASE_ORDER_CONFIRM = 109501 // 确认采购单
+export const CRM_PURCHASE_ORDER_CONFIRM_CHANGE = 109502 // 确认变更
+export const CRM_PURCHASE_ORDER_SEE_DETAIL = 109503 // 查看详情
+// 好程工 支付单管理
+export const CRM_PAYMENT_REVIEW = 109504 // 审核
+export const CRM_PAYMENT_CONFIRM = 109505 // 支付确认
+export const CRM_PAYMENT_PREV = 109506 // 上游支付 支付单-列表 支付单-drawer
+export const CRM_PAYMENT_CONFIRM_RECEIPT = 109507 // 确认收货 支付单-列表 支付单-drawer
+export const CRM_PAYMENT_DETAIL = 109508 // 查看详情
+export const CRM_DOWN_PAYMENT_FUND_CONFIRM = 109509 // 首付款账单-支付确认
+export const CRM_PAYMENT_CONTRACT_SEE = 109510 // 支付单信息-查看合同
+export const CRM_SERVICE_FUND_CONFIRM = 109511 // 服务费账单-支付确认
+export const CRM_PREV_PAYMENT_DETAIL = 109512 // 查看上游支付明细
+export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
+export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
+// 好程工 资金
+export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支付确认
+export const CRM_FUNDS_DOWN_PAYMENT_FUND_SEE = 109516 // 首付款账单-查看凭证
+export const CRM_FUNDS_SERVICE_FUND_CONFIRM = 109517 // 服务费账单-支付确认
+export const CRM_FUNDS_SERVICE_FUND_SEE = 109518 // 服务费账单-查看凭证
+export const CRM_FUNDS_ARREAR_FUND_CONFIRM = 109519 // 尾款账单-支付确认
+export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
+// 好程工 后添加
+export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
+export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
