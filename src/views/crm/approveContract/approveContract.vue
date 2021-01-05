@@ -148,7 +148,7 @@ import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
 import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi } from './api/index'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 // api:https://www.tiny.cloud/docs/integrations/vue/
 // http://tinymce.ax-z.cn/general/basic-setup.php
@@ -179,7 +179,7 @@ export default {
                 updateUid: '',
                 reservedName: false
             },
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             imgArr: [],
             drawerVisible: false,
             originalContentFieldsList: '',
@@ -219,7 +219,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         uploadImgServer () {
-            return interfaceUrl + 'tms/files/upload-list'
+            return ccpBaseUrl + 'common/files/upload-old'
         },
         uploadImgParams () {
             return {
@@ -274,33 +274,32 @@ export default {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
                 1: {
-                    [this.inputStyleDom]:
-                        this.inputStyleDom !== 'elInput'
-                            ? {
-                                bind: {
-                                    paramKey: this.currentKey.paramKey,
-                                    value: this.currentKey.paramValue,
-                                    placeholder: '请输入内容',
-                                    disabled: !this.currentKey.modify,
-                                    style: this.currentKey.unit ? { width: '250px' } : '',
-                                    innerHtml: this.currentKey.unit || '',
-                                    maxlength: this.currentKey.maxLength || ''
-                                },
-                                on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
-                                }
+                    [this.inputStyleDom]: this.inputStyleDom !== 'elInput'
+                        ? {
+                            bind: {
+                                paramKey: this.currentKey.paramKey,
+                                value: this.currentKey.paramValue,
+                                placeholder: '请输入内容',
+                                disabled: !this.currentKey.modify,
+                                style: this.currentKey.unit ? { width: '250px' } : '',
+                                innerHtml: this.currentKey.unit || '',
+                                maxlength: this.currentKey.maxLength || ''
+                            },
+                            on: {
+                                input: (val) => { this.currentKey.paramValue = val.trim() }
                             }
-                            : {
-                                bind: {
-                                    value: this.currentKey.paramValue,
-                                    placeholder: '请输入内容',
-                                    disabled: !this.currentKey.modify,
-                                    maxlength: this.currentKey.maxLength || ''
-                                },
-                                on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
-                                }
+                        }
+                        : {
+                            bind: {
+                                value: this.currentKey.paramValue,
+                                placeholder: '请输入内容',
+                                disabled: !this.currentKey.modify,
+                                maxlength: this.currentKey.maxLength || ''
+                            },
+                            on: {
+                                input: (val) => { this.currentKey.paramValue = val.trim() }
                             }
+                        }
                 },
                 3: {
                     selectCom: {
@@ -313,10 +312,10 @@ export default {
                                     return [{ value: '男', label: '男' }, { value: '女', label: '女' }]
                                 }
                                 if (_this.currentKey.paramKey == 'down_pay_form') {
-                                    return [{ value: '银行转帐', label: '银行转帐' }, { value: '银票', label: '银票' }, { value: '商票', label: '商票' }]
+                                    return [{ value: '银行转账', label: '银行转账' }, { value: '银票', label: '银票' }, { value: '商票', label: '商票' }]
                                 }
                                 if (_this.currentKey.paramKey == 'supplier_prepay_form') {
-                                    return [{ value: '银行转帐', label: '银行转帐' }, { value: '银行承兑汇票', label: '银行承兑汇票' }]
+                                    return [{ value: '银行转账', label: '银行转账' }, { value: '银行承兑汇票', label: '银行承兑汇票' }]
                                 }
                                 if (_this.currentKey.paramKey == 'purch_order_purch_batch' || _this.currentKey.paramKey == 'purch_batch') {
                                     return [{ value: '一次性采购', label: '一次性采购' }, { value: '分批采购', label: '分批采购' }]

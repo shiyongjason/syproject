@@ -65,6 +65,17 @@ const fundMoney = function (val, int) {
         return '-'
     }
 }
+// 资金台账金额格式 11.11
+const fundMoneyHasTail = function (val, int) {
+    if (val) {
+        const _val = Number(val).toFixed(2)
+        return (_val + '').replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    } else if (val === 0) {
+        return Number(val).toFixed(2)
+    } else {
+        return '-'
+    }
+}
 // 资金台账金额格式
 const fundMoneyHaveSpot = function (val, int) {
     if (val) {
@@ -133,6 +144,16 @@ const percentageShow = function (value) {
     }
     return '--'
 }
+const attributeComputed = function (key, list) {
+    if (key === null) return '-'
+    let value = ''
+    list.forEach(val => {
+        if (val.key === key) {
+            value = val.value
+        }
+    })
+    return value || '-'
+}
 
 export default {
     formatterTime,
@@ -141,9 +162,11 @@ export default {
     formatDateDuration,
     money,
     isNotBlank,
+    fundMoneyHasTail,
     fundMoney,
     moneyShow,
     fundMoneyHaveSpot,
     momentFormat,
-    percentageShow
+    percentageShow,
+    attributeComputed
 }
