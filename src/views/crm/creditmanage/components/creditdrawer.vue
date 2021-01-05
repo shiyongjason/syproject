@@ -185,7 +185,7 @@
 <script>
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
@@ -250,7 +250,7 @@ export default {
                 projectUpload: [],
                 serviceFee: 0
             },
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

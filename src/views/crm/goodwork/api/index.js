@@ -27,6 +27,8 @@ export const refuseDoc = (params) => axios.post(`/fms/api/doc-template/project/r
 export const getRefuseDoc = (params) => axios.get(`/fms/api/doc-template/project/refuse/${params}`)
 // 材料状态提交
 export const submitProjectdoc = (params) => axios.post(`/fms/api/risk-check/submit/project-doc`, params)
+// 工程项目终审
+export const updateFinalStatus = (params) => axios.post(`/memeber/openapi/project/final-approve`, params)
 
 export const saveProjectdoc = (params) => axios.post(`/fms/api/risk-check/save/project-doc`, params)
 

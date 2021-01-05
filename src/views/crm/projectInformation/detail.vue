@@ -87,7 +87,7 @@
 <script>
 import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { handleImgDownload } from './utils'
 import { saveDoc, submitDoc, getProjectLevels } from './api/index'
 import moment from 'moment'
@@ -110,7 +110,7 @@ export default {
             tempDetail: '',
             handleImgDownload,
             dialogVisible: false,
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             // 上传时附带的额外参数同el-upload 的 data
             uploadParameters: {
                 updateUid: '',

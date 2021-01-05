@@ -84,7 +84,7 @@
 <script>
 import moment from 'moment'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
-import { interfaceUrl } from '@/api/config'
+import { ccpBaseUrl } from '@/api/config'
 import { mapActions, mapGetters } from 'vuex'
 import { postCompanyvip, putCompanyvip } from '../api/index'
 import * as auths from '@/utils/auth_const'
@@ -162,7 +162,7 @@ export default {
             },
             copyVip: {},
             newVipForm: {},
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false

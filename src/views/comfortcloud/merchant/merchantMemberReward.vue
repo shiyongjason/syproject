@@ -3,9 +3,9 @@
         <div class="page-body-cont ">
             <div class="query-cont__row">
                 <div class="query-cont-col">
-                    <div class="query-col-title">会员账号：</div>
+                    <div class="query-col-title">分销员账号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.phone" placeholder="请输入手机号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.distributorPhone" placeholder="请输入手机号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -131,7 +131,6 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 settled: '',
-                phone: '',
                 distributorName: '',
                 endMonth: '',
                 distributorPhone: '',
@@ -221,6 +220,7 @@ export default {
     mounted () {
         if (this.$route.query.phone && this.$route.query !== undefined) {
             this.queryParams.distributorPhone = this.$route.query.phone
+            this.queryParams.distributorName = this.$route.query.name
         }
         this.onSearch()
     },
