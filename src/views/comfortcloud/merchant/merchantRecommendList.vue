@@ -148,11 +148,11 @@ export default {
         ...mapActions({
             findCloudMerchantRecommendList: 'findCloudMerchantRecommendList'
         }),
-        addDiscountPriceChanged: function(value) {
-            this.form.discountPrice = value.replace(/[^\d.]/g,'')
+        addDiscountPriceChanged: function (value) {
+            this.form.discountPrice = value.replace(/[^\d.]/g, '')
         },
-        editDiscountPriceChanged: function(value) {
-            this.discountPriceForm.discountPrice = value.replace(/[^\d.]/g,'')
+        editDiscountPriceChanged: function (value) {
+            this.discountPriceForm.discountPrice = value.replace(/[^\d.]/g, '')
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
