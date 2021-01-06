@@ -36,7 +36,7 @@
                     <el-input type="textarea"  placeholder="输入商品卖点，不超过100个字符" maxlength="100" v-model="form.sellingPoints"></el-input>
                 </el-form-item>
                 <el-form-item label="特惠价：" prop="discountPrice">
-                    <el-input v-model="form.discountPrice" oninput="value=value.replace(/[^\d.]/g,'')" style="width: 150px" maxlength="10" placeholder="请输入特惠价"></el-input> 元
+                    <el-input v-model="form.discountPrice" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width: 150px" maxlength="10" placeholder="请输入特惠价"></el-input> 元
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -58,7 +58,7 @@
         <el-dialog class="edit-dialog" width="600px" title="商品特惠价编辑" :visible.sync="dialogDiscountPriceVisible" :close-on-click-modal="false" :before-close="onCloseDiscountPriceDialog">
             <el-form :model="discountPriceForm" :rules="discountPriceFormRules" ref="discountPriceForm" label-width="140px">
                 <el-form-item label="特惠价：" prop="discountPrice">
-                    <el-input v-model="discountPriceForm.discountPrice" oninput="value=value.replace(/[^\d.]/g,'')" style="width: 150px" maxlength="10" placeholder="请输入特惠价"></el-input> 元
+                    <el-input v-model="discountPriceForm.discountPrice" onkeyup="value=value.replace(/[^\d.]/g,'')" style="width: 150px" maxlength="10" placeholder="请输入特惠价"></el-input> 元
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
