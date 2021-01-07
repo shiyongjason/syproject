@@ -819,7 +819,8 @@ export default {
             this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
             this.fieldContent = paramValue
             // 非必填处理
-            if (this.currentKey.paramname && !this.currentKey.paramValue) {
+            if (this.currentKey.paramname && !this.currentKey.paramValue && this.currentKey.inputStyle != 9) {
+                console.log('非必填处理')
                 let canEmptyDom = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
                 Array.from(canEmptyDom).map(jtem => {
                     jtem.innerHTML = this.currentKey.paramname
