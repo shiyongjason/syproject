@@ -41,6 +41,10 @@ export function getMembersituation (params) {
 export function getMerchantMembersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/manage`, { params })
 }
+// 奖励管理
+export function merchantReward (params) {
+    return axios.get(iotUrl + `/mall/boss/wx/reward/manage`, { params })
+}
 // 经销商分销员列表
 export function getMerchantMembersDistributor (params) {
     return axios.get(iotUrl + `/mall/boss/distributor`, { params })
@@ -68,7 +72,12 @@ export function getMerchantMemberTotalsituation (params) {
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
     return axios.put(iotUrl + `/mall/wx/order/boss`, params)
-}// 修改企业信息备注
+}
+// 奖励发放
+export function sendReward (params) {
+    return axios.post(iotUrl + `/mall/boss/wx/reward/send`, params)
+}
+// 修改企业信息备注
 export function updateCompanyInfo (params) {
     return axios.post(iotUrl + `/mall/boss/company`, params)
 }
@@ -573,4 +582,34 @@ export function addCloudOutbound (params) {
 // 修改出库类型
 export function changeCloudOutbound (params) {
     return axios.put(iotUrl + '/api/outbound', params)
+}
+
+// 获取推荐榜单列表
+export function getCloudMerchantRecommendList (params) {
+    return axios.get(iotUrl + '/mall/boss/recommend-list', { params })
+}
+
+// 添加推荐榜单
+export function addCloudMerchantRecommend (params) {
+    return axios.post(iotUrl + '/mall/boss/recommend-list', params)
+}
+
+// 删除推荐榜单
+export function deleteCloudMerchantRecommend (params) {
+    return axios.delete(iotUrl + '/mall/boss/recommend-list', { data: params })
+}
+
+// 修改推荐榜单
+export function changeCloudMerchantRecommend (params) {
+    return axios.put(iotUrl + '/mall/boss/recommend-list', params)
+}
+
+// 移动推荐榜单
+export function moveCloudMerchantRecommend (params) {
+    return axios.put(iotUrl + '/mall/boss/recommend-list/move', params)
+}
+
+// 修改分销员姓名
+export function editDistributorName (params) {
+    return axios.post(iotUrl + '/mall/boss/distributor/name', params)
 }
