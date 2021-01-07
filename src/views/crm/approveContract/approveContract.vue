@@ -709,6 +709,7 @@ export default {
             let tempArr = []
             // 键值对给后台，用于判断是否删除。
             console.log('xxxxxxx', this.contractFieldsList)
+            let flag = true
             this.contractFieldsList.map(item => {
                 // 必填的
                 if (item.required) {
@@ -734,7 +735,7 @@ export default {
                             this.init(() => {
                                 this.domBindMethods()
                             })
-                            return
+                            flag = false
                         } else {
                             let temp = []
                             Array.from(DomList).map(dom => {
@@ -767,7 +768,7 @@ export default {
                     }
                 }
             })
-
+            if (!flag) return
             console.log('this.contractFieldsList', this.contractFieldsList)
 
             for (const key in tempObj) {
