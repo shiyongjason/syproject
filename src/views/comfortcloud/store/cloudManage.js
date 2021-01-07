@@ -9,6 +9,7 @@ const state = {
     iotmerchantmemberDataPagination: {},
     iotmerchantDistributorPagination: {},
     iotmerchantDistributorData: {},
+    iotmerchantRewardData: {},
     iotmerchantmemberTotalData: {},
     iotmerchantmemberInvitationRegisterData: {},
     iotmerchantmemberEnterpriseInfo: {},
@@ -81,7 +82,9 @@ const state = {
     cloudMerchantShopCategoryTypeList: [],
     cloudOutboundDeviceList: [],
     cloudOutboundMerchantList: [],
-    cloudOutboundCategoryList: []
+    cloudOutboundCategoryList: [],
+    cloudMerchantRecommendList: [],
+    cloudMerchantRecommendListPagination: {}
 }
 
 const getters = {
@@ -89,6 +92,7 @@ const getters = {
     iotmerchantmemberData: state => state.iotmerchantmemberData,
     iotmerchantmemberTotalData: state => state.iotmerchantmemberTotalData,
     iotmerchantDistributorData: state => state.iotmerchantDistributorData,
+    iotmerchantRewardData: state => state.iotmerchantRewardData,
     iotmerchantmemberInvitationOrderData: state => state.iotmerchantmemberInvitationOrderData,
     iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
     iotmerchantmemberEnterpriseInfo: state => state.iotmerchantmemberEnterpriseInfo,
@@ -172,7 +176,9 @@ const getters = {
     iotmerchantmemberInvitationOrderDataPagination: state => state.iotmerchantmemberInvitationOrderDataPagination,
     cloudOutboundDeviceList: state => state.cloudOutboundDeviceList,
     cloudOutboundMerchantList: state => state.cloudOutboundMerchantList,
-    cloudOutboundCategoryList: state => state.cloudOutboundCategoryList
+    cloudOutboundCategoryList: state => state.cloudOutboundCategoryList,
+    cloudMerchantRecommendList: state => state.cloudMerchantRecommendList,
+    cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination
 }
 
 const mutations = {
@@ -190,6 +196,9 @@ const mutations = {
     },
     [types.MEMBERS_DISTRIBUTOR] (state, payload) {
         state.iotmerchantDistributorData = payload
+    },
+    [types.MERCHANT_REWARD_DATA] (state, payload) {
+        state.iotmerchantRewardData = payload
     },
     [types.MERCHANT_MEMBERS_INVITATION_ORDER_DATA] (state, payload) {
         state.iotmerchantmemberInvitationOrderData = payload
@@ -401,6 +410,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_OUTBOUND_CATEGORY_LIST] (state, payload) {
         state.cloudOutboundCategoryList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST] (state, payload) {
+        state.cloudMerchantRecommendList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantRecommendListPagination = payload
     }
 }
 
@@ -421,6 +436,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async getmerchantRewardData ({ commit }, params) {
+        const { data } = await Api.merchantReward(params)
+        commit(types.MERCHANT_REWARD_DATA, data)
     },
     async findMerchantMemberInvitationRegistersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationRegistersituation(params)
@@ -747,6 +766,15 @@ const actions = {
     },
     async clearCloudOutboundDeviceList ({ commit }) {
         commit(cloud.GET_CLOUD_OUTBOUND_DEVICE_LIST, [])
+    },
+    async findCloudMerchantRecommendList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantRecommendList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
     }
 }
 export default {
