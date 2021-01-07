@@ -96,7 +96,7 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false">
+        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="approvalcontract-layout-left">
                 <h1>字段/自定义合同条款修订</h1>
                 <div class="setarea" v-if="currentKey">
@@ -768,9 +768,9 @@ export default {
                         }
                     }
                     // 非必填,就算页面上被法务删了，也要放回字段，后台是这样设计的。黑人问号脸。
-                    if (!(item.paramKey in tempObj)) {
-                        tempObj[item.paramKey] = this.contractFieldsList.filter(ktem => ktem.paramKey === item.paramKey)
-                    }
+                    // if (!(item.paramKey in tempObj)) {
+                    //     tempObj[item.paramKey] = this.contractFieldsList.filter(ktem => ktem.paramKey === item.paramKey)
+                    // }
                 }
             })
             if (!flag) return
@@ -871,7 +871,7 @@ export default {
                 'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
             })
             console.log('return')
-            // return
+            return
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
@@ -984,8 +984,13 @@ export default {
                                 let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
                                 // 遍历dom添加点击事件
                                 jtem.onclick = (event) => {
-                                    this.currentKey = { ...fields, event, paramname: jtem.dataset.paramname || '' }
-                                    console.log('this.currentKeyxxx: ', this.currentKey)
+                                    this.currentKey = {
+                                        ...fields,
+                                        event,
+                                        paramname: jtem.dataset.paramname || '',
+                                        paramValue: fields.paramValue || ''
+                                    }
+                                    console.log('this.currentKeyxxxooo: ', this.currentKey)
                                     this.editorDrawer = true
                                     this.$nextTick(() => {
                                         this.$refs['ruleForm'].resetFields()
