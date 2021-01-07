@@ -871,7 +871,7 @@ export default {
                 'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
             })
             console.log('return')
-            return
+
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
