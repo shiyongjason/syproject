@@ -1,6 +1,6 @@
 <template>
     <div class="page-body B2b">
-        <el-image fit="contain" ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]"></el-image>
+        <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]"></el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
@@ -96,7 +96,7 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :modal-append-to-body="false">
+        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false">
             <div class="approvalcontract-layout-left">
                 <h1>字段/自定义合同条款修订</h1>
                 <div class="setarea" v-if="currentKey">
@@ -266,6 +266,12 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        editorDrawerClose (done) {
+            if (this.imgArr && this.imgArr.length > 0) {
+                this.imgArr = []
+            }
+            done()
+        },
         onBlur () {
             console.log('onBlur')
         },
@@ -574,7 +580,8 @@ export default {
                 })
                 //
                 if (img.length == 1) {
-                    doms[0].outerHTML = `<span style="word-break: break-all;color: #ff7a45;cursor: pointer;" class='${this.currentKey.paramKey}' data-paramName='${dataParamName}' data-inputStyle='${this.currentKey.inputStyle}' data-index='${this.currentKey.imgIndex}' contenteditable="false">${dataParamName}</span>`
+                    // doms[0].outerHTML = `<span style="word-break: break-all;color: #ff7a45;cursor: pointer;" class='${this.currentKey.paramKey}' data-paramName='${dataParamName}' data-inputStyle='${this.currentKey.inputStyle}' data-index='${this.currentKey.imgIndex}' contenteditable="false">${dataParamName}</span>`
+                    doms[0].outerHTML = `${dataParamName}`
                     this.contractFieldsList.map((d, i) => {
                         if (d.paramKey === this.currentKey.paramKey) {
                             d.paramValue = ''
@@ -625,7 +632,7 @@ export default {
                 this.imgArr && this.imgArr.map((j, jindex) => {
                     content += `<img class='${this.currentKey.paramKey}_${jindex}' style='cursor: pointer; max-width: 100%;' src='${j.fileUrl}' data-key='${this.currentKey.paramKey}' data-index='${jindex}' data-imgIndex='${jindex}' data-name='${this.currentKey.paramName}' />`
                 })
-                doms[0].outerHTML = `<span class='${this.currentKey.paramKey}' data-inputStyle='${this.currentKey.inputStyle}' data-paramName='${this.currentKey.paramName}'>${content}</span>`
+                doms[0].outerHTML = `<span style="word-break: break-all; color: #ff7a45; cursor: pointer;" class='${this.currentKey.paramKey}' data-paramName='${this.currentKey.paramName}' data-inputStyle='${this.currentKey.inputStyle}' contenteditable="false">${content}</span>`
                 this.currentKey.paramValue = this.imgArr[0].fileUrl
             }
             /* // 测试代码
