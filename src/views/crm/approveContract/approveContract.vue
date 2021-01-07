@@ -698,7 +698,6 @@ export default {
                         this.dealSaveContent(operatorType)
                     }
                 })
-                this.editorDrawer = false
             } else {
                 this.dealSaveContent(operatorType)
             }
@@ -884,6 +883,7 @@ export default {
                 this.init(() => {
                     this.domBindMethods()
                 })
+                this.editorDrawer = false
             } catch (error) {
                 this.init(() => {
                     this.domBindMethods()
