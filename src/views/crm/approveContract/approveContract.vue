@@ -687,7 +687,6 @@ export default {
             }
             if (this.currentKey.inputStyle == 9 && operatorType == '') {
                 // 修改图片，图片必填
-                console.log('setImg')
                 this.setImg()
                 return
             }
@@ -699,6 +698,7 @@ export default {
                     }
                 })
             } else {
+                // 保存条款的时候也要遍历键值对去找dom，应该后台需要拿最新的键值对来判断是否有没有被删除的字段
                 this.dealSaveContent(operatorType)
             }
         },
@@ -707,7 +707,6 @@ export default {
             let tempObj = {}
             let tempArr = []
             // 键值对给后台，用于判断是否删除。
-            console.log('xxxxxxx', this.contractFieldsList)
             let flag = true
             this.contractFieldsList.map(item => {
                 // 必填的
@@ -774,14 +773,12 @@ export default {
                 tempArr.push(tempObj[key][0])
             }
             console.log('tempArr: ', tempArr)
-
             tempArr.map(item => {
                 // 修改对应的键值对里的值
                 if (item.paramKey === paramKey && item.inputStyle != 9) {
                     item.paramValue = paramValue
                 }
             })
-
             // 法务修改字段触发
             if (this.detailRes.contractStatus == 6 && !operatorType) {
                 let curHTML = this.contractDocument.innerHTML
