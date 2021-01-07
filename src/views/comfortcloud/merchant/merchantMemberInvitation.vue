@@ -38,15 +38,8 @@
                                     {{scope.data.row.rewardAmount}}</p>
                             </template>
                             <template slot="rewardMonth" slot-scope="scope">
-                                <el-select v-model="scope.data.row.rewardMonth" placeholder="请选择"
-                                           @change="onEditMonth(scope.data.row)">
-                                    <el-option
-                                        v-for=" item in monthOptions"
-                                        :key="item.value"
-                                        :label="item.label"
-                                        :value="item.value">
-                                    </el-option>
-                                </el-select>
+                                <p @click="onEditMonth(scope.data.row)" class="colred">
+                                    {{scope.data.row.rewardMonth}}</p>
                             </template>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
@@ -150,6 +143,18 @@
                 </div>
             </el-dialog>
         </el-dialog>
+        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth"
+                            clear-icon=""
+                            type="month" value-format='yyyy-MM'
+                            placeholder="" :picker-options="pickerOptionsStart">
+            </el-date-picker>
+            <span slot="footer" class="dialog-footer">
+                    <el-button @click="editMonth(0)">取消</el-button>
+                    <el-button type="primary" @click="editMonth(1)">确认</el-button>
+                </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -167,6 +172,8 @@ export default {
                 pageSize: 10,
                 uuid: this.$route.query.uuid
             },
+            updateMonthShow: false,
+            updateIndexData: {},
             searchParams: {},
             tableRegisterData: [],
             enterpriseInfoData: {
@@ -440,11 +447,18 @@ export default {
             })
         },
         onEditMonth (val) {
-            this.updataInvitation({
-                id: val.id,
-                rewardMonth: val.rewardMonth,
-                operateUserName: this.$route.query.nickName
-            })
+            this.updateMonthShow = true
+            this.updateIndexData = val
+        },
+        editMonth (val) {
+            this.updateMonthShow = false
+            if (val === 1) {
+                this.update({
+                    id: this.updateIndexData.id,
+                    rewardMonth: this.updateIndexData.rewardMonth,
+                    operateUserName: this.userInfo.employeeName
+                })
+            }
         },
         async updataInvitation (val) {
             await updateInvitationDetail(val)
