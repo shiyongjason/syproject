@@ -716,61 +716,53 @@ export default {
             // 键值对给后台，用于判断是否删除。
             let flag = true
             this.contractFieldsList.map(item => {
-                // 必填的
-                if (item.required) {
+                if (item.inputStyle == 9 && !item.required) {
                     let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
-                    // 筛选出页面上的键值对，可能会被删除
-                    if (DomList && DomList.length > 0) {
-                        // 页面合同上的所有键值对、签署字段不存在className
-                        if (!(item.paramKey in tempObj) && item.paramKey !== '') {
-                            tempObj[item.paramKey] = JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === item.paramKey)
-                        }
-                    }
-                } else {
-                    if (item.inputStyle == 9 && !item.required) {
-                        let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
-                        console.log('有图片', item.paramValue)
-                        if (DomList.length == 0) {
-                            console.log('字段标记位都删了 ')
-                            item.paramValue = ''
-                            this.$message({
-                                message: `合同${item.paramName}字段不可删除`,
-                                type: 'error'
-                            })
-                            this.init(() => {
-                                this.domBindMethods()
-                            })
-                            flag = false
-                        } else {
-                            let temp = []
-                            Array.from(DomList).map(dom => {
-                                let img = dom.getElementsByTagName('img')
-                                console.log('img: ', img)
-                                if (img.length == 0) {
-                                    item.paramValue = ''
-                                } else {
-                                    console.log('有图片xxxxx', item.paramValue)
-                                    Array.from(img).map(d => {
-                                        console.log('d: ', d)
-                                        let dData = item.paramValue.filter(pv => {
-                                            if (pv && pv.fileUrl === d.src) {
-                                                return true
-                                            }
-                                        })
-                                        console.log('dData: ', dData)
-                                        if (dData && dData.length > 0) {
-                                            temp.push(dData[0])
+                    console.log('有图片', item.paramValue)
+                    if (DomList.length == 0) {
+                        console.log('字段标记位都删了 ')
+                        item.paramValue = ''
+                        this.$message({
+                            message: `合同${item.paramName}字段不可删除`,
+                            type: 'error'
+                        })
+                        this.init(() => {
+                            this.domBindMethods()
+                        })
+                        flag = false
+                    } else {
+                        let temp = []
+                        Array.from(DomList).map(dom => {
+                            let img = dom.getElementsByTagName('img')
+                            console.log('img: ', img)
+                            if (img.length == 0) {
+                                item.paramValue = ''
+                            } else {
+                                console.log('有图片xxxxx', item.paramValue)
+                                Array.from(img).map(d => {
+                                    console.log('d: ', d)
+                                    let dData = item.paramValue.filter(pv => {
+                                        if (pv && pv.fileUrl === d.src) {
+                                            return true
                                         }
                                     })
-                                    item.paramValue = temp
-                                }
-                            })
-                        }
+                                    console.log('dData: ', dData)
+                                    if (dData && dData.length > 0) {
+                                        temp.push(dData[0])
+                                    }
+                                })
+                                item.paramValue = temp
+                            }
+                        })
                     }
-                    // 非必填,就算页面上被法务删了，也要放回字段，后台是这样设计的。黑人问号脸。
-                    // if (!(item.paramKey in tempObj)) {
-                    //     tempObj[item.paramKey] = this.contractFieldsList.filter(ktem => ktem.paramKey === item.paramKey)
-                    // }
+                }
+                let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
+                // 筛选出页面上的键值对，可能会被删除
+                if (DomList && DomList.length > 0) {
+                    // 页面合同上的所有键值对、签署字段不存在className
+                    if (!(item.paramKey in tempObj) && item.paramKey !== '') {
+                        tempObj[item.paramKey] = JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === item.paramKey)
+                    }
                 }
             })
             if (!flag) return
@@ -871,7 +863,7 @@ export default {
                 'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
             })
             console.log('return')
-
+            // return
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
