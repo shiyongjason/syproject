@@ -1,61 +1,13 @@
 <template>
     <div class="page-body B2b">
-        <el-image fit="contain" ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue" :preview-src-list="[this.currentKey.paramValue]"></el-image>
+        <el-image fit="contain" ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]"></el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
             </div>
             <div class="approvalcontract-layout">
-                <div class="approvalcontract-layout-left">
-                    <h1>字段/自定义合同条款修订</h1>
-                    <div class="setarea" v-if="currentKey">
-                        <!-- v-if 法务 detailRes.contractStatus == 6-->
-                        <!-- <template>
-                            <el-dropdown @command="handleCommand">
-                                <span class="el-dropdown-link">
-                                    {{currentKey.paramName}}<i class="el-icon-arrow-down el-icon--right"></i> ：
-                                </span>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item :command=item v-for="(item,index) in contractKeyValueList" :key="index">
-                                        {{item.paramName}}
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </template> -->
-                        <!-- <el-form :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
-                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-                                </component>
-                            </el-form-item>
-                        </el-form> -->
-                        <!-- else -->
-                        <p class="setarea-key">{{currentKey.paramName}}：</p>
-                        <p style="display: flex;justify-content: space-between;align-items: center;">
-                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
-                                <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-                                    <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
-                                        <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-                                    </component>
-                                </el-form-item>
-                            </el-form>
 
-                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-demo" drag :action="action" :multiple='false' :fileSize='20' :fileNum='imgArr.length+1' style="width:60%;margin-right: 2%;" accept='.jpeg,.jpg,.png'
-                                :uploadParameters='uploadParameters' @successArg='successArg'>
-                                <i class="el-icon-upload"></i>
-                                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
-                                <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
-                            </hosjoyUpload>
-                        </p>
-                        <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
-                    </div>
-                    <div class="tips">
-                        <div><b>注意事项：</b></div>
-                        <p>1、点击保存，则会记录修订记录，并保存为最新的合同文档；</p>
-                        <p>2、暂不审核，不会撤销字段修订记录；</p>
-                    </div>
-                </div>
                 <div class="approvalcontract-layout-right">
                     <h1>合同预览</h1>
                     <div class="loader-css" v-if="detailRes.contractStatus == 6&&showLoading">
@@ -67,7 +19,7 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp"></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur'></editor>
                             <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
@@ -107,13 +59,21 @@
                         <span class="name">{{item.operator}} </span>
                         <span>{{item.operationName}}</span>
                         <template v-if="item.operationName == '编辑了'">
-                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
                                 <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
                                 从<font>
-                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                        :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
                                 </font>
                                 变为<font>
-                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    <span v-if="JSON.parse(item.operationContent).fieldContent==''"></span>
+                                    <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                        <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                            :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </template>
+                                    <template v-else>
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </template>
                                 </font>
                             </span>
                             <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
@@ -136,6 +96,58 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
+        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :modal-append-to-body="false">
+            <div class="approvalcontract-layout-left">
+                <h1>字段/自定义合同条款修订</h1>
+                <div class="setarea" v-if="currentKey">
+                    <!-- v-if 法务 detailRes.contractStatus == 6-->
+                    <!-- <template>
+                            <el-dropdown @command="handleCommand">
+                                <span class="el-dropdown-link">
+                                    {{currentKey.paramName}}<i class="el-icon-arrow-down el-icon--right"></i> ：
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item :command=item v-for="(item,index) in contractKeyValueList" :key="index">
+                                        {{item.paramName}}
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </template> -->
+                    <!-- <el-form :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
+                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                </component>
+                            </el-form-item>
+                        </el-form> -->
+                    <!-- else -->
+                    <p class="setarea-key">{{currentKey.paramName}}：</p>
+                    <p style="display: flex;justify-content: space-between;align-items: center;">
+                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
+                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
+                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                </component>
+                            </el-form-item>
+                        </el-form>
+
+                        <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
+                            accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
+                            <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
+                        </hosjoyUpload>
+                    </p>
+                    <h-button v-if="currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
+                    <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
+                </div>
+                <div class="tips">
+                    <div><b>注意事项：</b></div>
+                    <p>1、点击保存，则会记录修订记录，并保存为最新的合同文档；</p>
+                    <p>2、暂不审核，不会撤销字段修订记录；</p>
+                </div>
+            </div>
+        </el-drawer>
     </div>
 </template>
 <script>
@@ -157,9 +169,13 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            editorDrawer: false,
+            oldImg: '',
+            emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             showShake: false,
             showLoading: true,
             editorInit: {
+                inline: true,
                 menubar: false,
                 language: 'zh_CN',
                 skin_url: '/tinymce/skins/ui/oxide', // public目录下
@@ -250,6 +266,9 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        onBlur () {
+            console.log('onBlur')
+        },
         checkField (rule, value, callback) {
             console.log('checkField')
             if (this.currentKey.required && !this.currentKey.paramValue) {
@@ -270,6 +289,7 @@ export default {
                 callback()
             }
         },
+
         currentKeyToComponent () {
             // 1.单行输入框, 2.单选框, 3.单选选择项(下拉), 4.多行输入框, 5.邮箱, 6.数字选择器, 7.单选拨轮, 8.日期选择器, 9.上传
             const comObj = {
@@ -390,8 +410,8 @@ export default {
                 9: {
                     elImage: {
                         bind: {
-                            style: 'width: 120px; height: 120px; border-radius: 7px;border: 1px solid #d9d9d9',
-                            src: this.currentKey.paramValue,
+                            style: 'width: 140px; height: 140px; border-radius: 7px;border: 1px solid #d9d9d9',
+                            src: this.currentKey.paramValue || this.emptyImg,
                             fit: 'cover'
                             // previewSrcList: [this.currentKey.paramValue]
                         },
@@ -531,26 +551,37 @@ export default {
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
         },
-        async setImg () {
-            if (this.imgArr.length == 0) return
-            let temp = [this.imgArr[this.imgArr.length - 1]]
-            let doms = this.contractDocument.getElementsByClassName(`${this.currentKey.paramKey}_${this.currentKey.imgIndex}`)
-            this.currentKey.paramValue = temp[0].fileUrl
-            Array.from(doms).map(img => {
-                img.setAttribute('src', temp[0].fileUrl)
-            })
-            let fieldOriginalContent = ''
-            // 修改键值对
-            let contractFieldsList = JSON.parse(this.detailRes.contractFieldsList)
-            contractFieldsList.map(item => {
-                if (item.paramKey === this.currentKey.paramKey) {
-                    fieldOriginalContent = item.paramValue[this.currentKey.imgIndex].fileUrl
-                    item.paramValue[this.currentKey.imgIndex] = {
-                        fileName: temp[0].fileName,
-                        fileUrl: temp[0].fileUrl,
-                        url: temp[0].fileUrl,
-                        size: ''
+        async emptyTheImg () {
+            let classN = `${this.currentKey.paramKey}_${this.currentKey.imgIndex}`
+            let doms = this.contractDocument.getElementsByClassName(classN)
+            if (doms.length == 0) return
+            let dataParamName = `{#${this.currentKey.paramName}#}`
+            let domList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
+            let old = this.currentKey.paramValue
+            Array.from(domList).map(jtem => {
+                let img = jtem.getElementsByTagName('img')
+                //
+                this.contractFieldsList.map((d, i) => {
+                    if (d.paramKey === this.currentKey.paramKey) {
+                        let dData = d.paramValue.filter(pv => {
+                            if (pv && pv.fileUrl !== this.currentKey.paramValue) {
+                                return true
+                            }
+                        })
+                        console.log('dData-emptyTheImg: ', dData)
+                        d.paramValue = dData
                     }
+                })
+                //
+                if (img.length == 1) {
+                    doms[0].outerHTML = `<span style="word-break: break-all;color: #ff7a45;cursor: pointer;" class='${this.currentKey.paramKey}' data-paramName='${dataParamName}' data-inputStyle='${this.currentKey.inputStyle}' data-index='${this.currentKey.imgIndex}' contenteditable="false">${dataParamName}</span>`
+                    this.contractFieldsList.map((d, i) => {
+                        if (d.paramKey === this.currentKey.paramKey) {
+                            d.paramValue = ''
+                        }
+                    })
+                } else {
+                    doms[0].outerHTML = ''
                 }
             })
             await saveContent({
@@ -559,8 +590,82 @@ export default {
                 'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                 'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
                 'fieldName': this.currentKey.paramKey, // 编辑字段
+                'fieldOriginalContent': old, // 编辑前内容
+                'fieldContent': '', // 编辑内容
+                'contractContent': this.contractDocument.innerHTML, // 拿input版的合同去提交。法务审核的时候需要用到。
+                'createBy': this.userInfo.employeeName,
+                // 'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
+                'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
+            })
+            this.init(() => {
+                this.domBindMethods()
+            })
+            this.editorDrawer = false
+        },
+        async setImg () {
+            if (this.imgArr.length == 0) return
+            this.imgArr.map(img => {
+                img.url = img.fileUrl
+                img.size = ''
+            })
+            if (this.currentKey.tagName == 'IMG') {
+                console.log('IMG')
+                let doms = this.contractDocument.getElementsByClassName(`${this.currentKey.paramKey}_${this.currentKey.imgIndex}`)
+                let nums = Math.ceil(Math.random() * 1000000)
+                let content = ''
+                this.imgArr.map((img, imgIndex) => {
+                    content += `<img class='${this.currentKey.paramKey}_${nums}' style='cursor: pointer; max-width: 100%;' src='${img.fileUrl}' data-key='${this.currentKey.paramKey}' data-index='${nums}' data-name='${this.currentKey.paramName}' />`
+                })
+                doms[0].outerHTML = content
+            } else {
+                console.log('SPAN')
+                // 非必填的图片添加数据，有数据的走以前图片逻辑判断
+                let doms = this.contractDocument.getElementsByClassName(`${this.currentKey.paramKey}`)
+                let content = ''
+                this.imgArr && this.imgArr.map((j, jindex) => {
+                    content += `<img class='${this.currentKey.paramKey}_${jindex}' style='cursor: pointer; max-width: 100%;' src='${j.fileUrl}' data-key='${this.currentKey.paramKey}' data-index='${jindex}' data-imgIndex='${jindex}' data-name='${this.currentKey.paramName}' />`
+                })
+                doms[0].outerHTML = `<span class='${this.currentKey.paramKey}' data-inputStyle='${this.currentKey.inputStyle}' data-paramName='${this.currentKey.paramName}'>${content}</span>`
+                this.currentKey.paramValue = this.imgArr[0].fileUrl
+            }
+            /* // 测试代码
+            this.domBindMethods()
+            this.imgArr = []
+            return
+            // end 测试代码 */
+            let fieldOriginalContent = ''
+            // 修改键值对
+            let contractFieldsList = JSON.parse(this.detailRes.contractFieldsList)
+            console.log('contractFieldsList: ', contractFieldsList)
+            contractFieldsList.map(item => {
+                if (item.paramKey === this.currentKey.paramKey) {
+                    // 图片非必填首次执行,可多图
+                    if (!this.currentKey.imgIndex) {
+                        item.paramValue = this.imgArr
+                    } else {
+                        console.log('旧图', this.oldImg)
+                        fieldOriginalContent = this.oldImg
+                        item.paramValue.map((img, i) => {
+                            if (img.fileUrl === this.oldImg) {
+                                console.log('i: ', i)
+                                let a = JSON.parse(JSON.stringify(item.paramValue))
+                                a.splice(i, 1, ...this.imgArr)
+                                item.paramValue = a
+                            }
+                        })
+                    }
+                }
+            })
+            console.log('contractFieldsList', contractFieldsList)
+            await saveContent({
+                'contractId': this.$route.query.id,
+                // 合同审批角色 1：分财 2：风控 3：法务
+                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                'fieldName': this.currentKey.paramKey, // 编辑字段
                 'fieldOriginalContent': fieldOriginalContent, // 编辑前内容
-                'fieldContent': temp[0].fileUrl, // 编辑内容
+                // 'fieldContent': temp[0].fileUrl, // 编辑内容
+                'fieldContent': JSON.stringify(this.imgArr), // 编辑内容
                 'contractContent': this.contractDocument.innerHTML, // 拿input版的合同去提交。法务审核的时候需要用到。
                 'createBy': this.userInfo.employeeName,
                 'contractFieldsList': JSON.stringify(contractFieldsList) // 合同字段键值对
@@ -568,10 +673,11 @@ export default {
             this.init(() => {
                 this.domBindMethods()
             })
+            this.editorDrawer = false
         },
-        // operatorType 3 更新条款
+
+        // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
-            let { paramKey, paramValue } = this.currentKey
             if (operatorType) {
                 let curHTML = this.contractDocument.innerHTML
                 if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
@@ -579,150 +685,209 @@ export default {
                     return
                 }
             }
-            // 多行文本。展示html。可空格可换行。
-            /* if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
-                let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
-                newString = newString.replace(/_#_@/g, '<br/>')
-                newString = newString.replace(/_@/g, '<br/>')
-                newString = newString.replace(/\s/g, '&nbsp;')
-                paramValue = newString
-            } */
             if (this.currentKey.inputStyle == 9 && operatorType == '') {
                 // 修改图片，图片必填
                 console.log('setImg')
                 this.setImg()
                 return
             }
-            this.$refs.ruleForm.validate(async (valid) => {
-                if (valid) {
-                    let tempObj = {}
-                    let tempArr = []
-                    this.contractFieldsList.map(item => {
+            // 1.span里包img2.非必填可上传多图
+            if (operatorType == '') {
+                this.$refs.ruleForm.validate(async (valid) => {
+                    if (valid) {
+                        this.dealSaveContent(operatorType)
+                    }
+                })
+                this.editorDrawer = false
+            } else {
+                this.dealSaveContent(operatorType)
+            }
+        },
+        async dealSaveContent (operatorType) {
+            let { paramKey, paramValue } = this.currentKey
+            let tempObj = {}
+            let tempArr = []
+            // 键值对给后台，用于判断是否删除。
+            console.log('xxxxxxx', this.contractFieldsList)
+            this.contractFieldsList.map(item => {
+                // 必填的
+                if (item.required) {
+                    let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
+                    // 筛选出页面上的键值对，可能会被删除
+                    if (DomList && DomList.length > 0) {
+                        // 页面合同上的所有键值对、签署字段不存在className
+                        if (!(item.paramKey in tempObj) && item.paramKey !== '') {
+                            tempObj[item.paramKey] = JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === item.paramKey)
+                        }
+                    }
+                } else {
+                    if (item.inputStyle == 9 && !item.required) {
                         let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
-                        // 筛选出页面上的键值对，可能会被删除
-                        if (DomList && DomList.length > 0) {
-                            // 页面合同上的所有键值对、签署字段不存在className
-                            if (!(item.paramKey in tempObj) && item.paramKey !== '') {
-                                tempObj[item.paramKey] = JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === item.paramKey)
-                            }
-                        }
-                    })
-                    for (const key in tempObj) {
-                        tempArr.push(tempObj[key][0])
-                    }
-                    console.log('tempArr: ', tempArr)
-                    tempArr.map(item => {
-                        // 修改对应的键值对里的值
-                        if (item.paramKey === paramKey) {
-                            item.paramValue = paramValue
-                        }
-                    })
-                    // 法务修改字段触发
-                    if (this.detailRes.contractStatus == 6 && !operatorType) {
-                        let curHTML = this.contractDocument.innerHTML
-                        if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                            console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
-                            console.log('this.contractAfterApi: ', this.contractAfterApi)
+                        console.log('有图片', item.paramValue)
+                        if (DomList.length == 0) {
+                            console.log('字段标记位都删了 ')
+                            item.paramValue = ''
                             this.$message({
-                                message: `条款已被编辑，请先保存条款`,
+                                message: `合同${item.paramName}字段不可删除`,
                                 type: 'error'
                             })
-                            this.showShake = true
-                            setTimeout(() => { this.showShake = false }, 1200)
+                            this.init(() => {
+                                this.domBindMethods()
+                            })
                             return
-                        }
-                    }
-                    // return
-                    // div版合同,修改页面上的值
-                    let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
-                    Array.from(ryanList).map(jtem => {
-                        if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
-                            let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
-                            newString = newString.replace(/_#_@/g, '<br/>')
-                            newString = newString.replace(/_@/g, '<br/>')
-                            newString = newString.replace(/\s/g, '&nbsp;')
-                            jtem.innerHTML = newString
-                        } else if (this.currentKey.inputStyle != 9) { // fix 替换图片后修改条款把图片也保存了
-                            jtem.innerText = paramValue
-                        }
-                    })
-                    // 通过dom生成最新的html
-                    this.fieldName = paramKey // 编辑字段
-                    // 编辑前内容
-                    this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
-                    this.fieldContent = paramValue
-                    if (this.currentKey.paramname && !this.currentKey.paramValue) {
-                        let canEmptyDom = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
-                        Array.from(canEmptyDom).map(jtem => {
-                            jtem.innerHTML = this.currentKey.paramname
-                        })
-                    }
-                    // 法务审核校验字段是否有删除
-                    if (this.detailRes.contractStatus == 6) {
-                        let spanList = this.contractDocument.getElementsByTagName('span')
-                        let _keyValIncontract = []
-                        Array.from(spanList).map(item => {
-                            if (item.dataset && item.dataset.inputstyle) {
-                                _keyValIncontract.push(item.className)
-                            }
-                        })
-                        if (_keyValIncontract.length != this.keyValIncontract.length) {
-                            console.log('this.keyValIncontract: ', this.keyValIncontract)
-                            console.log('_keyValIncontract: ', _keyValIncontract)
-                            let _tempClassName = []
-                            let _tempClassTxt = ''
-                            for (var i = 0; i < this.keyValIncontract.length; i++) {
-                                if (_keyValIncontract.indexOf(this.keyValIncontract[i]) === -1) {
-                                    _tempClassName.push(this.keyValIncontract[i])
+                        } else {
+                            let temp = []
+                            Array.from(DomList).map(dom => {
+                                let img = dom.getElementsByTagName('img')
+                                console.log('img: ', img)
+                                if (img.length == 0) {
+                                    item.paramValue = ''
+                                } else {
+                                    console.log('有图片xxxxx', item.paramValue)
+                                    Array.from(img).map(d => {
+                                        console.log('d: ', d)
+                                        let dData = item.paramValue.filter(pv => {
+                                            if (pv && pv.fileUrl === d.src) {
+                                                return true
+                                            }
+                                        })
+                                        console.log('dData: ', dData)
+                                        if (dData && dData.length > 0) {
+                                            temp.push(dData[0])
+                                        }
+                                    })
+                                    item.paramValue = temp
                                 }
-                            }
-                            _tempClassName.map(ktem => {
-                                let resTemp = this.contractFieldsList.filter(item => item.paramKey == ktem)
-                                _tempClassTxt = _tempClassTxt + ' ' + resTemp[0].paramName + ' '
-                                console.log('_tempClassTxt: ', _tempClassTxt)
                             })
-                            this.$message({
-                                message: `合同${_tempClassTxt}字段不可删除`,
-                                type: 'error'
-                            })
-                            return
                         }
                     }
-                    console.log({
-                        'contractId': this.$route.query.id,
-                        // 合同审批角色 1：分财 2：风控 3：法务
-                        'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                        'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                        'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
-                        'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
-                        'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                        'contractContent': this.contractDocument.innerHTML,
-                        'createBy': this.userInfo.employeeName,
-                        'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-                    })
-                    try {
-                        await saveContent({
-                            'contractId': this.$route.query.id,
-                            // 合同审批角色 1：分财 2：风控 3：法务
-                            'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                            'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                            'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
-                            'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
-                            'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                            'contractContent': this.contractDocument.innerHTML,
-                            'createBy': this.userInfo.employeeName,
-                            'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-                        })
-                        this.init(() => {
-                            this.domBindMethods()
-                        })
-                    } catch (error) {
-                        this.init(() => {
-                            this.domBindMethods()
-                        })
+                    // 非必填,就算页面上被法务删了，也要放回字段，后台是这样设计的。黑人问号脸。
+                    if (!(item.paramKey in tempObj)) {
+                        tempObj[item.paramKey] = this.contractFieldsList.filter(ktem => ktem.paramKey === item.paramKey)
                     }
                 }
             })
+
+            console.log('this.contractFieldsList', this.contractFieldsList)
+
+            for (const key in tempObj) {
+                tempArr.push(tempObj[key][0])
+            }
+            console.log('tempArr: ', tempArr)
+
+            tempArr.map(item => {
+                // 修改对应的键值对里的值
+                if (item.paramKey === paramKey && item.inputStyle != 9) {
+                    item.paramValue = paramValue
+                }
+            })
+
+            // 法务修改字段触发
+            if (this.detailRes.contractStatus == 6 && !operatorType) {
+                let curHTML = this.contractDocument.innerHTML
+                if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
+                    console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
+                    console.log('this.contractAfterApi: ', this.contractAfterApi)
+                    this.$message({
+                        message: `条款已被编辑，请先保存条款`,
+                        type: 'error'
+                    })
+                    this.showShake = true
+                    setTimeout(() => { this.showShake = false }, 1200)
+                }
+            }
+            // div版合同,修改页面上的值
+            let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
+            Array.from(ryanList).map(jtem => {
+                if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
+                    let newString = this.currentKey.paramValue.replace(/\n/g, '_@').replace(/\r/g, '_#')
+                    newString = newString.replace(/_#_@/g, '<br/>')
+                    newString = newString.replace(/_@/g, '<br/>')
+                    newString = newString.replace(/\s/g, '&nbsp;')
+                    jtem.innerHTML = newString
+                } else if (this.currentKey.inputStyle != 9) { // fix 替换图片后修改条款把图片也保存了
+                    jtem.innerText = paramValue
+                }
+            })
+            // 通过dom生成最新的html
+            this.fieldName = paramKey // 编辑字段
+            // 编辑前内容
+            this.fieldOriginalContent = this.originalContentFieldsList.filter(item => item.paramKey === paramKey)[0].paramValue
+            this.fieldContent = paramValue
+            // 非必填处理
+            if (this.currentKey.paramname && !this.currentKey.paramValue) {
+                let canEmptyDom = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
+                Array.from(canEmptyDom).map(jtem => {
+                    jtem.innerHTML = this.currentKey.paramname
+                })
+            }
+
+            // 法务审核校验字段是否有删除
+            /* if (this.detailRes.contractStatus == 6) {
+            let spanList = this.contractDocument.getElementsByTagName('span')
+            let _keyValIncontract = []
+            Array.from(spanList).map(item => {
+                if (item.dataset && item.dataset.inputstyle) {
+                    _keyValIncontract.push(item.className)
+                }
+            })
+            if (_keyValIncontract.length != this.keyValIncontract.length) {
+                console.log('this.keyValIncontract: ', this.keyValIncontract)
+                console.log('_keyValIncontract: ', _keyValIncontract)
+                let _tempClassName = []
+                let _tempClassTxt = ''
+                for (var i = 0; i < this.keyValIncontract.length; i++) {
+                    if (_keyValIncontract.indexOf(this.keyValIncontract[i]) === -1) {
+                        _tempClassName.push(this.keyValIncontract[i])
+                    }
+                }
+                _tempClassName.map(ktem => {
+                    let resTemp = this.contractFieldsList.filter(item => item.paramKey == ktem)
+                    _tempClassTxt = _tempClassTxt + ' ' + resTemp[0].paramName + ' '
+                    console.log('_tempClassTxt: ', _tempClassTxt)
+                })
+                this.$message({
+                    message: `合同${_tempClassTxt}字段不可删除`,
+                    type: 'error'
+                })
+                return
+            }
+        } */
+            console.log({
+                'contractId': this.$route.query.id,
+                // 合同审批角色 1：分财 2：风控 3：法务
+                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
+                'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
+                'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
+                'contractContent': this.contractDocument.innerHTML,
+                'createBy': this.userInfo.employeeName,
+                'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+            })
+            console.log('return')
+            // return
+            try {
+                await saveContent({
+                    'contractId': this.$route.query.id,
+                    // 合同审批角色 1：分财 2：风控 3：法务
+                    'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                    'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
+                    'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
+                    'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
+                    'contractContent': this.contractDocument.innerHTML,
+                    'createBy': this.userInfo.employeeName,
+                    'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                })
+                this.init(() => {
+                    this.domBindMethods()
+                })
+            } catch (error) {
+                this.init(() => {
+                    this.domBindMethods()
+                })
+            }
         },
         editorOnInit () {
             console.log('编辑器初始化完成domBindMethods')
@@ -730,7 +895,8 @@ export default {
         },
         onKeyUp () {
             // keyCode 91
-            if (event.keyCode == 91) {
+            console.log('event.keyCode', event.keyCode)
+            if (event.keyCode == 91 || event.keyCode == 90) {
                 this.domBindMethods('no')
             }
         },
@@ -743,29 +909,64 @@ export default {
                 }
                 // 拿键值对遍历
                 if (this.detailRes.contractStatus == 6) {
-                    let ifram = document.getElementsByClassName('tox-edit-area')[0].getElementsByClassName('tox-edit-area__iframe')[0]
-                    this.contractDocument = ifram.contentWindow.document.getElementById('tinymce')
+                    // let ifram = document.getElementsByClassName('tox-edit-area')[0].getElementsByClassName('tox-edit-area__iframe')[0]
+                    // this.contractDocument = ifram.contentWindow.document.getElementById('tinymce')
+                    this.contractDocument = document.getElementsByClassName('mce-content-body')[0]
                 } else {
                     this.contractDocument = document.getElementsByClassName('approvalcontract-content')[0]
                 }
                 //
                 this.contractFieldsList.map(item => {
                     if (item.inputStyle && item.inputStyle == 9) {
+                        // 图片但非必填的展示<span...>{#比如采购明细表(采购单)#}</span>，添加点击事件
+                        if (!item.required && !item.paramValue) {
+                            let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
+                            Array.from(DomList).map((jtem, index) => {
+                                // 有数据span会变成img标签
+                                if (jtem.tagName == 'SPAN') {
+                                    let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === jtem.className)[0]
+                                    // 遍历dom添加点击事件
+                                    jtem.onclick = (event) => {
+                                        this.currentKey = {
+                                            ...fields,
+                                            event,
+                                            paramname: jtem.dataset.paramname || '',
+                                            tagName: 'SPAN',
+                                            multiple: true
+                                        }
+                                        console.log('this.currentKeyxxx: ', this.currentKey)
+                                        this.editorDrawer = true
+                                        this.$nextTick(() => {
+                                            this.$refs['ruleForm'].resetFields()
+                                        })
+                                    }
+                                }
+                            })
+                            return
+                        }
+                        // crm图片存在多图上传字段名后会加上序号不能用paramKey查dom
                         let imgDom = this.contractDocument.getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
-                            if (item.className != 'platform_sign') {
+                            // 查找图片上传字段
+                            if (item.className != 'platform_sign' && item.dataset.key) {
                                 item.onclick = (event) => {
                                     console.log(event)
                                     this.currentKey = {
-                                        required: true,
+                                        required: this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.dataset.key)[0].required,
                                         inputStyle: 9,
                                         paramKey: event.target.dataset.key,
                                         paramValue: event.target.currentSrc,
                                         paramName: event.target.dataset.name,
-                                        imgIndex: event.target.dataset.index
+                                        imgIndex: event.target.dataset.index,
+                                        tagName: 'IMG',
+                                        multiple: !this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.dataset.key)[0].required
                                     }
                                     console.log('imgclick this.currentKey', this.currentKey)
-                                    this.$refs['ruleForm'].resetFields()
+                                    this.oldImg = event.target.currentSrc
+                                    this.editorDrawer = true
+                                    this.$nextTick(() => {
+                                        this.$refs['ruleForm'].resetFields()
+                                    })
                                 }
                             }
                         })
@@ -779,7 +980,10 @@ export default {
                                 jtem.onclick = (event) => {
                                     this.currentKey = { ...fields, event, paramname: jtem.dataset.paramname || '' }
                                     console.log('this.currentKeyxxx: ', this.currentKey)
-                                    this.$refs['ruleForm'].resetFields()
+                                    this.editorDrawer = true
+                                    this.$nextTick(() => {
+                                        this.$refs['ruleForm'].resetFields()
+                                    })
                                 }
                             })
                         } else {
@@ -789,9 +993,9 @@ export default {
                 })
                 // 动态设置高度
                 if (this.detailRes.contractStatus == 6 && flag == '') {
-                    console.log('设置')
-                    let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
-                    document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('tox-tinymce')[0].style.height = `${hVal}px`
+                    // let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
+                    // document.getElementsByClassName('approvalcontract-content-legal-affairs')[0].getElementsByClassName('mce-content-body')[0].style.height = `${hVal}px`
+                    // console.log('动态设置高度', hVal)
                     this.showLoading = false
                     this.contractAfterApi = this.contractDocument.innerHTML.replace(/\ufeff/g, '')
                     this.keyValIncontract = []
@@ -814,6 +1018,8 @@ export default {
             if (this.detailRes.contractStatus != 6) {
                 this.domBindMethods()
             }
+            this.imgArr = []
+            console.log('init____this.contractFieldsList', this.contractFieldsList)
         },
         formatTxt (txt) {
             if (txt) {
@@ -938,8 +1144,8 @@ export default {
         }
         &-right {
             // position: relative;
-            width: 65%;
-            float: right;
+            width: 100%;
+            // float: right;
             // overflow-y: scroll;
             height: 100%;
             position: relative;
@@ -1071,56 +1277,149 @@ export default {
     }
 }
 ::-webkit-scrollbar-thumb {
-        background-color: #d6d1d1 !important;
-    }
+    background-color: #d6d1d1 !important;
+}
 .shake {
-  animation: shake 0.8s;
-  -moz-animation: shake 0.8s; /* Firefox */
-  -webkit-animation: shake 0.8s; /* Safari and Chrome */
-  -o-animation: shake 0.8s; /* Opera */
+    animation: shake 0.8s;
+    -moz-animation: shake 0.8s; /* Firefox */
+    -webkit-animation: shake 0.8s; /* Safari and Chrome */
+    -o-animation: shake 0.8s; /* Opera */
 }
 @-webkit-keyframes shake {
-  from,
-  to {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    -webkit-transform: translate3d(-10px, 0, 0);
-    transform: translate3d(-10px, 0, 0);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    -webkit-transform: translate3d(10px, 0, 0);
-    transform: translate3d(10px, 0, 0);
-  }
+    from,
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0);
+    }
 }
 @keyframes shake {
-  from,
-  to {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-  10%,
-  30%,
-  50%,
-  70%,
-  90% {
-    -webkit-transform: translate3d(-10px, 0, 0);
-    transform: translate3d(-10px, 0, 0);
-  }
-  20%,
-  40%,
-  60%,
-  80% {
-    -webkit-transform: translate3d(10px, 0, 0);
-    transform: translate3d(10px, 0, 0);
-  }
+    from,
+    to {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        -webkit-transform: translate3d(-10px, 0, 0);
+        transform: translate3d(-10px, 0, 0);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        -webkit-transform: translate3d(10px, 0, 0);
+        transform: translate3d(10px, 0, 0);
+    }
+}
+.upload-editor {
+    /deep/.elupload {
+        width: 100%;
+    }
+}
+.editordrawerbox {
+    /deep/ .el-drawer__header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+        font-size: 18px;
+        // color: #000;
+        // font-weight: bold;
+        // margin-bottom:10px
+    }
+}
+.approvalcontract-layout {
+    // height: calc(100vh - 230px);
+    // position: relative;
+    // overflow: hidden;
+    &-left {
+        width: 530px;
+        margin: 0 auto;
+        overflow: hidden;
+        h1 {
+            font-size: 20px;
+        }
+        box-sizing: border-box;
+        padding: 15px 0;
+
+        .setarea {
+            min-height: 160px;
+            border-bottom: 1px solid #e9e9e9;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            margin-top: 10px;
+            /deep/.el-dropdown-selfdefine {
+                cursor: pointer;
+                font-size: 16px;
+                margin: 10px 0 10px;
+                color: #000;
+            }
+            /deep/.el-form-item__content {
+                margin-left: 0 !important;
+            }
+            /deep/.el-form .el-input {
+                width: 100%;
+            }
+            /deep/.el-slider__runway {
+                width: 85%;
+                margin: 16px auto 0;
+            }
+            /deep/.el-slider__marks-text {
+                width: 38px;
+            }
+            /deep/.el-upload {
+                width: 100%;
+            }
+            /deep/.el-upload-dragger:hover {
+                border: 1px dashed #ff7a45 !important;
+            }
+            /deep/.el-upload-dragger {
+                width: 100%;
+                height: 126px;
+                text-align: center !important;
+                border: 1px dashed #d9d9d9 !important;
+                border-radius: 6px !important;
+                box-sizing: border-box !important;
+                padding: 12px 12px 23px !important;
+                .el-icon-upload {
+                    margin: 5px 0 5px;
+                }
+                .el-icon-upload {
+                    font-size: 50px;
+                }
+                .el-upload__text {
+                    font-size: 13px;
+                }
+            }
+        }
+        .tips {
+            font-size: 16px;
+            b {
+                margin-bottom: 10px;
+                display: inline-block;
+            }
+            p {
+                font-size: 14px;
+                line-height: 2;
+                color: #6b6868;
+            }
+        }
+    }
 }
 </style>

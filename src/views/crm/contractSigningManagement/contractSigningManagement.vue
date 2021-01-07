@@ -116,14 +116,20 @@
                         <span class="name">{{item.operator}} </span>
                         <span>{{item.operationName}}</span>
                         <template v-if="item.operationName == '编辑了'">
-                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
                                 <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                从<font>
-                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
+                                从<el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                变为
+                                    <font>
+                                    <span v-if="JSON.parse(item.operationContent).fieldContent==''"></span>
+                                    <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                        <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                            :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </template>
+                                    <template v-else>
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </template>
                                 </font>
-                                变为<font>
-                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                    </font>
                             </span>
                             <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
                         </template>
@@ -186,6 +192,7 @@ export default {
     data () {
         return {
             Auths,
+            emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             detailRes: {},
             historyList: '',
             drawerVisible: false,
