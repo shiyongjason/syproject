@@ -164,6 +164,7 @@ import {
     contractTypesNotConfirm
 } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 
 const _queryParams = {
@@ -403,8 +404,8 @@ export default {
         this.getcontractTypes()
         await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
         this.branchArr = this.crmdepList
-    }
-    /* async activated () {
+    },
+    async activated () {
         this.getList()
         this.getcontractTypes()
         await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
@@ -421,7 +422,7 @@ export default {
             clearCache('contractSigningManagement')
         }
         next()
-    } */
+    }
 }
 </script>
 <style scoped lang="scss">
