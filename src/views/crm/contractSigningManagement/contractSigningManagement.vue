@@ -124,7 +124,7 @@
                                     <span v-if="JSON.parse(item.operationContent).fieldContent==''"></span>
                                     <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
                                         <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                            :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                            :preview-src-list="[imgItem.fileUrl]"></el-image>
                                     </template>
                                     <template v-else>
                                         <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
