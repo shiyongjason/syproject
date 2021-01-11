@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="projectRecord">
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -149,7 +149,7 @@
                 </template>
             </span>
         </el-dialog>
-        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
+        <el-dialog class="recordsVisibleDialog" v-if="recordsVisible" title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
             <div class="project-record">
                 <template v-if="refuseRecord.length>0">
                     <el-timeline>
@@ -838,5 +838,8 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
+}
+.projectRecord{
+    /deep/.recordsVisibleDialog .el-dialog__body{ max-height: 500px; overflow-y: scroll;}
 }
 </style>
