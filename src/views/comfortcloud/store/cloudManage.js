@@ -84,7 +84,10 @@ const state = {
     cloudOutboundMerchantList: [],
     cloudOutboundCategoryList: [],
     cloudMerchantRecommendList: [],
-    cloudMerchantRecommendListPagination: {}
+    cloudMerchantRecommendListPagination: {},
+    cloudMerchantClassifyList: [],
+    cloudMerchantClassifyListPagination: {}
+
 }
 
 const getters = {
@@ -178,7 +181,9 @@ const getters = {
     cloudOutboundMerchantList: state => state.cloudOutboundMerchantList,
     cloudOutboundCategoryList: state => state.cloudOutboundCategoryList,
     cloudMerchantRecommendList: state => state.cloudMerchantRecommendList,
-    cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination
+    cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination,
+    cloudMerchantClassifyList: state => state.cloudMerchantClassifyList,
+    cloudMerchantClassifyListPagination: state => state.cloudMerchantClassifyListPagination
 }
 
 const mutations = {
@@ -416,6 +421,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantRecommendListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST] (state, payload) {
+        state.cloudMerchantClassifyList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantClassifyListPagination = payload
     }
 }
 
@@ -771,6 +782,15 @@ const actions = {
         const { data } = await Api.getCloudMerchantRecommendList(params)
         commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST, data.records)
         commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findCloudMerchantClassifyList ({ commit }, params) {
+        const { data } = await Api.getMerchantClassifyList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST_PAGINATION, {
             pageNumber: data.current,
             pageSize: data.size,
             total: data.total

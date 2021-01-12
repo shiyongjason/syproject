@@ -613,3 +613,33 @@ export function moveCloudMerchantRecommend (params) {
 export function editDistributorName (params) {
     return axios.post(iotUrl + '/mall/boss/distributor/name', params)
 }
+
+// 获取主营产品分类
+export function getMerchantClassifyList (params) {
+    return axios.get(iotUrl + '/mall/boss/main-product', params)
+}
+
+// 编辑主营产品分类
+export function editMerchantClassifyList (params) {
+    return axios.put(iotUrl + '/mall/boss/main-product', params)
+}
+
+// 增加主营产品分类
+export function addMerchantClassifyList (params) {
+    return axios.post(iotUrl + '/mall/boss/main-product', params)
+}
+
+// 删除主营产品分类
+export function deleteMerchantClassifyList (params) {
+    return axios.delete(iotUrl + '/mall/boss/main-product', { data: params })
+}
+
+// 获取主营产品某个分类对应的商品名称
+export function getMerchantClassifyOfCategoryList (params) {
+    return axios.get(iotUrl + '/mall/boss/main-product/products-of-category', { params })
+}
+
+// 根据商品名称模糊查询商品列表
+export function getLikeMerchantList (params) {
+    return axios.get(iotUrl + '/mall/boss/product/products-like-name', { params })
+}
