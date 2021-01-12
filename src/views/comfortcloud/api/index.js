@@ -61,6 +61,10 @@ export function getMerchantMemberEnterpriseInfo (params) {
 export function getMerchantMemberInvitationChangesituation (params) {
     return axios.get(iotUrl + `/mall/boss/user/` + params)
 }
+// 经销商会员购买记录
+export function getMerchantMemberInvitationBuy (params) {
+    return axios.get(iotUrl + `/mall/boss/user/` + params)
+}
 // 经销商会员邀请成交列表分页查询
 export function getMerchantMemberInvitationOrdersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/order/` + params.uuid, { params })

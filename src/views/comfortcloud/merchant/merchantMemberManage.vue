@@ -86,6 +86,8 @@ export default {
                 { label: '注册来源', prop: 'source' },
                 { label: '推荐人会员账号', prop: 'invitePhone' },
                 { label: '推荐人会员编号', prop: 'inviteUuid' },
+                { label: '购买订单数', prop: 'inviteUuid' },
+                { label: '购买订单金额', prop: 'inviteUuid' },
                 { label: '邀请会员数量', prop: 'registerCount' },
                 { label: '邀请成交订单数', prop: 'orderCount' },
                 { label: '邀请成交金额', prop: 'payAmountTotal' },
