@@ -17,6 +17,21 @@
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
+<!--                <el-tab-pane label="购买记录" name="0">-->
+<!--                    <el-tag size="medium" class="eltagtop">-->
+<!--                        合计 共购买 {{merchantmemberData.total}}种商品；-->
+<!--                        累计购买订单数：{{merchantmemberTotalData.registerCount}}笔；-->
+<!--                        累计购买件数：{{merchantmemberTotalData.orderCount}}件；-->
+<!--                        累计购买金额：{{merchantmemberTotalData.payAmountTotal}}元；-->
+<!--                    </el-tag>-->
+<!--                    <div class="page-body-cont">-->
+<!--                        &lt;!&ndash; 表格使用老毕的组件 &ndash;&gt;-->
+<!--                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'-->
+<!--                                    :pagination="paginationBuy"-->
+<!--                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">-->
+<!--                        </basicTable>-->
+<!--                    </div>-->
+<!--                </el-tab-pane>-->
                 <el-tab-pane label="已注册" name="0">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
@@ -57,15 +72,15 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="3" >
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="3">
                     <div class="page-body-cont-enterprise-info" v-if="this.enterpriseInfoData.id!=null">
                         <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
                         <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
                         <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
                         <span style="margin-bottom: 20px">联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
-                        <span >经营类型：{{this.enterpriseInfoData.businessType===1? '零售商':this.enterpriseInfoData.businessType===2? '工程商':''}}</span>
+                        <span>经营类型：{{this.enterpriseInfoData.businessType===1? '零售商':this.enterpriseInfoData.businessType===2? '工程商':''}}</span>
                         <div class="page-body-cont-top-no-left">
-                          <span>主营业务:</span>
+                            <span>主营业务:</span>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
                                 <el-tag style="margin-left: 20px"
                                         v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
@@ -84,7 +99,7 @@
                             </div>
                         </div>
                         <div class="page-body-cont-top-no-left">
-                          <span>主营品牌:</span>
+                            <span>主营品牌:</span>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
                                 <el-tag style="margin-left: 20px"
                                         v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
@@ -103,16 +118,17 @@
                         <div class="page-body-cont-top-no-align-items">
                             <span>备注:</span>
                             <el-input class="textarea"
-                                type="textarea"
-                                maxlength=500
-                                :rows="10"
-                                placeholder="请输入内容"
+                                      type="textarea"
+                                      maxlength=500
+                                      :rows="10"
+                                      placeholder="请输入内容"
                                       @blur="updateCompanyInfoRemark"
-                                v-model="enterpriseInfoData.remark">
+                                      v-model="enterpriseInfoData.remark">
                             </el-input>
                         </div>
                     </div>
-                        <div class="page-body-cont-enterprise-info-empty" v-show="this.enterpriseInfoData.id==null">暂无数据</div>
+                    <div class="page-body-cont-enterprise-info-empty" v-show="this.enterpriseInfoData.id==null">暂无数据
+                    </div>
 
                 </el-tab-pane>
             </el-tabs>
@@ -176,6 +192,7 @@ export default {
             updateIndexData: {},
             searchParams: {},
             tableRegisterData: [],
+            tableBuyData: [],
             enterpriseInfoData: {
                 respCompanyCommonTagBO: { businessCommon: [], businessOwn: [], brandsCommon: [], brandsOwn: [] },
                 remark: ''
@@ -195,6 +212,11 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            paginationBuy: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
             paginationChange: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -205,6 +227,16 @@ export default {
                 { label: '被邀请人昵称', prop: 'nickName', width: '220px' },
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
+            ],
+            tableBuyLabel: [
+                { label: '品类', prop: 'invitePhone' },
+                { label: '型号', prop: 'nickName', width: '220px' },
+                { label: '商品名称', prop: 'phone' },
+                { label: '商品ID', prop: 'createTime', formatters: 'dateTime' },
+                { label: '最近一次购买时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '累计购买订单数', prop: 'createTime' },
+                { label: '累计购买件数', prop: 'createTime' },
+                { label: '累计购买金额', prop: 'createTime' }
             ],
             tableChangeList: [
                 { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },
@@ -244,44 +276,7 @@ export default {
                 data: {
                     operateUserName: ''
                 }
-            },
-            monthOptions: [{
-                value: '1月',
-                label: '1月'
-            }, {
-                value: '2月',
-                label: '2月'
-            }, {
-                value: '3月',
-                label: '3月'
-            }, {
-                value: '4月',
-                label: '4月'
-            }, {
-                value: '5月',
-                label: '5月'
-            }, {
-                value: '6月',
-                label: '6月'
-            }, {
-                value: '7月',
-                label: '7月'
-            }, {
-                value: '8月',
-                label: '8月'
-            }, {
-                value: '9月',
-                label: '9月'
-            }, {
-                value: '10月',
-                label: '10月'
-            }, {
-                value: '11月',
-                label: '11月'
-            }, {
-                value: '12月',
-                label: '12月'
-            }]
+            }
         }
     },
     computed: {
@@ -292,7 +287,8 @@ export default {
             merchantmemberInvitationRegisterData: 'iotmerchantmemberInvitationRegisterData',
             merchantmemberEnterpriseInfo: 'iotmerchantmemberEnterpriseInfo',
             merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
-            merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData'
+            merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData',
+            merchantmemberInvitationBuy: 'iotmerchantmemberInvitationBuy'
         }),
         pickerOptionsStart () {
             return {
@@ -321,18 +317,21 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMemberInvitationRegistersituation: 'findMerchantMemberInvitationRegistersituation',
+            findMerchantMemberInvitationBuysituation: 'findMerchantMemberInvitationBuy',
             findMerchantMemberEnterpriseInfo: 'findMerchantMemberEnterpriseInfo',
             findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
+            await this.findMerchantMemberInvitationBuysituation(this.$route.query.unionId)
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
             this.tableChangeData = this.merchantmemberInvitationChangeData
+            this.tableChangeData = this.merchantmemberInvitationBuy
             console.log(this.tableChangeData, 111)
             console.log(this.tableChangeData, 111)
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
@@ -637,6 +636,7 @@ export default {
         background: $whiteColor;
 
     }
+
     .page-body-cont-top-no-left {
         display: flex;
         justify-content: flex-start;
@@ -647,6 +647,7 @@ export default {
         align-items: center;
 
     }
+
     .page-body-cont-top-no-align-items {
         display: flex;
         justify-content: flex-start;
@@ -666,12 +667,14 @@ export default {
         background: $whiteColor;
 
     }
+
     .textarea {
         width: 800px;
         padding-left: 40px;
         background: $whiteColor;
 
     }
+
     .page-body-cont-enterprise {
         display: flex;
         width: 100%;
@@ -679,15 +682,16 @@ export default {
         background: $whiteColor;
 
     }
+
     .page-body-cont-enterprise-info-empty {
         display: flex;
         justify-content: center;
         width: 100%;
         text-align: center;
-        color:#888888 ;
+        color: #888888;
         flex-direction: column;
         align-content: center;
-        padding:40px 200px 40px 200px;
+        padding: 40px 200px 40px 200px;
         background: $whiteColor;
 
     }

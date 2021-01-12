@@ -14,6 +14,7 @@ const state = {
     iotmerchantmemberInvitationRegisterData: {},
     iotmerchantmemberEnterpriseInfo: {},
     iotmerchantmemberInvitationChangeData: {},
+    iotmerchantmemberInvitationBuy: {},
     iotmerchantmemberInvitationRegisterDataPagination: {},
     iotmerchantmemberInvitationOrderData: {},
     iotmerchantmemberInvitationOrderDataPagination: {},
@@ -100,6 +101,7 @@ const getters = {
     iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
     iotmerchantmemberEnterpriseInfo: state => state.iotmerchantmemberEnterpriseInfo,
     iotmerchantmemberInvitationChangeData: state => state.iotmerchantmemberInvitationChangeData,
+    iotmerchantmemberInvitationBuy: state => state.iotmerchantmemberInvitationBuy,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
     cloudActivitydetail: state => state.cloudActivitydetail,
@@ -216,6 +218,9 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA] (state, payload) {
         state.iotmerchantmemberInvitationChangeData = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_BUY_DATA] (state, payload) {
+        state.iotmerchantmemberInvitationBuy = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
         state.iotmemberDetail = payload
@@ -473,6 +478,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findMerchantMemberInvitationBuy ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationBuy(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_BUY_DATA, data)
     },
     async findMerchantMemberInvitationOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOrdersituation(params)
