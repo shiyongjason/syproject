@@ -7,11 +7,9 @@ export const saveContent = (params) => axios.post('/project/api/contract-approva
 // 合同审批
 export const approvalContent = (params) => axios.post('/project/api/contract-approval/approval', params)
 //
-// export const getCheckHistory = (params) => axios.get('/project/api/contract-approval/check-history', { params })
-export const getCheckHistory = (params) => axios.get(`http://192.168.20.168:30100/api/contract-approval/check-history`, { params })
+export const getCheckHistory = (params) => axios.get('/project/api/contract-approval/check-history', { params })
 // 查询对比合同内容
 export const getDiffApi = (params) => axios.get('/project/api/contract-approval/compare', { params })
 
 // 查询对比合同内容
-// export const getPurchaseOrderList = (params) => axios.get(`/project/api/contracts/purchase-order-list/${params}`)
-export const getPurchaseOrderList = (params) => axios.get(`http://192.168.20.168:30100/api/contracts/purchase-order-list/${params}`)
+export const getPurchaseOrderList = (params) => axios.get(`/project/api/contracts/purchase-order-list/${params}`)

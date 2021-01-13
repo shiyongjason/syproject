@@ -4,7 +4,7 @@
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <div>
-                    {{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同<em class="contentvs" @click="contentvsVisible = true" v-if="detailRes.contractStatus == 6">这边名字叫啥来着</em>
+                    {{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同<em class="contentvs" @click="contentvsVisible = true" v-if="detailRes.contractStatus == 6&&contentvsData&&contentvsData.length>0">合同对比</em>
                 </div>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
             </div>
