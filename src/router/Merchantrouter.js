@@ -90,6 +90,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantPriceManage.vue')
+                    },
+                    {
+                        path: 'merchantRecommendList',
+                        name: 'merchantRecommendList',
+                        meta: {
+                            title: '推荐榜单',
+                            tagName: '推荐榜单',
+                            parentName: '商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantRecommendList.vue')
                     }
                 ]
             },
@@ -136,6 +148,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberInvitation.vue')
+                    },
+                    {
+                        path: 'merchantMemberReward',
+                        name: 'merchantMemberReward',
+                        meta: {
+                            title: '奖励管理',
+                            tagName: '奖励管理',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberReward.vue')
                     }
                 ]
             }
