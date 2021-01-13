@@ -106,6 +106,29 @@ export default [
                 ]
             },
             {
+                path: 'merchantOrderManage',
+                meta: {
+                    title: '订单管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantOrderList',
+                        name: 'merchantOrderList',
+                        meta: {
+                            title: '订单列表',
+                            tagName: '订单列表',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantOrderList.vue')
+                    }
+                ]
+            },
+            {
                 path: 'merchantVIP',
                 meta: {
                     title: '会员管理',
