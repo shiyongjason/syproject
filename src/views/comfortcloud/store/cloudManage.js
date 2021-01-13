@@ -15,6 +15,7 @@ const state = {
     iotmerchantmemberEnterpriseInfo: {},
     iotmerchantmemberInvitationChangeData: {},
     iotmerchantmemberInvitationBuy: {},
+    iotmerchantmemberInvitationTotal: {},
     iotmerchantmemberInvitationRegisterDataPagination: {},
     iotmerchantmemberInvitationOrderData: {},
     iotmerchantmemberInvitationOrderDataPagination: {},
@@ -102,6 +103,7 @@ const getters = {
     iotmerchantmemberEnterpriseInfo: state => state.iotmerchantmemberEnterpriseInfo,
     iotmerchantmemberInvitationChangeData: state => state.iotmerchantmemberInvitationChangeData,
     iotmerchantmemberInvitationBuy: state => state.iotmerchantmemberInvitationBuy,
+    iotmerchantmemberInvitationTotal: state => state.iotmerchantmemberInvitationTotal,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
     cloudActivitydetail: state => state.cloudActivitydetail,
@@ -221,6 +223,9 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_INVITATION_BUY_DATA] (state, payload) {
         state.iotmerchantmemberInvitationBuy = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_BUY_DATA_TOTAL] (state, payload) {
+        state.iotmerchantmemberInvitationTotal = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
         state.iotmemberDetail = payload
@@ -482,6 +487,10 @@ const actions = {
     async findMerchantMemberInvitationBuy ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationBuy(params)
         commit(types.MERCHANT_MEMBERS_INVITATION_BUY_DATA, data)
+    },
+    async findMerchantMemberInvitationBuyTotal ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationBuyTotal(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_BUY_DATA_TOTAL, data)
     },
     async findMerchantMemberInvitationOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOrdersituation(params)

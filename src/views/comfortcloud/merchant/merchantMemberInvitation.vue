@@ -17,22 +17,25 @@
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
-<!--                <el-tab-pane label="购买记录" name="0">-->
-<!--                    <el-tag size="medium" class="eltagtop">-->
-<!--                        合计 共购买 {{merchantmemberData.total}}种商品；-->
-<!--                        累计购买订单数：{{merchantmemberTotalData.registerCount}}笔；-->
-<!--                        累计购买件数：{{merchantmemberTotalData.orderCount}}件；-->
-<!--                        累计购买金额：{{merchantmemberTotalData.payAmountTotal}}元；-->
-<!--                    </el-tag>-->
-<!--                    <div class="page-body-cont">-->
-<!--                        &lt;!&ndash; 表格使用老毕的组件 &ndash;&gt;-->
-<!--                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'-->
-<!--                                    :pagination="paginationBuy"-->
-<!--                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">-->
-<!--                        </basicTable>-->
-<!--                    </div>-->
-<!--                </el-tab-pane>-->
-                <el-tab-pane label="已注册" name="0">
+                <el-tab-pane label="购买记录" name="0">
+                    <el-tag size="medium" class="eltagtop">
+                        合计 共购买 {{tableBuyData.length}}种商品；
+                        累计购买订单数：{{tableBuyTotalData.totalOrderCount}}笔；
+                        累计购买件数：{{tableBuyTotalData.totalProductCount}}件；
+                        累计购买金额：{{tableBuyTotalData.totalOrderAmount}}元；
+                    </el-tag>
+                    <div class="page-body-cont">
+                        <!-- 表格使用老毕的组件 -->
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
+                                    :pagination="paginationBuy"
+                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="action" slot-scope="scope">
+                                <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
+                            </template>
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane label="已注册" name="1">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
                         <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true'
@@ -41,7 +44,7 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="已成交" name="1">
+                <el-tab-pane label="已成交" name="2">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
                         <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true'
@@ -63,7 +66,7 @@
                         <el-button type="primary" class="ml20" @click="onExport()">导入订单</el-button>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="会员变更记录" name="2">
+                <el-tab-pane label="会员变更记录" name="3">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
                         <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false'
@@ -72,7 +75,7 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="3">
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="4">
                     <div class="page-body-cont-enterprise-info" v-if="this.enterpriseInfoData.id!=null">
                         <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
                         <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
@@ -193,6 +196,7 @@ export default {
             searchParams: {},
             tableRegisterData: [],
             tableBuyData: [],
+            tableBuyTotalData: { totalOrderCount: 0, totalProductCount: 0, totalOrderAmount: 0 },
             enterpriseInfoData: {
                 respCompanyCommonTagBO: { businessCommon: [], businessOwn: [], brandsCommon: [], brandsOwn: [] },
                 remark: ''
@@ -229,14 +233,13 @@ export default {
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
             tableBuyLabel: [
-                { label: '品类', prop: 'invitePhone' },
-                { label: '型号', prop: 'nickName', width: '220px' },
-                { label: '商品名称', prop: 'phone' },
-                { label: '商品ID', prop: 'createTime', formatters: 'dateTime' },
-                { label: '最近一次购买时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '累计购买订单数', prop: 'createTime' },
-                { label: '累计购买件数', prop: 'createTime' },
-                { label: '累计购买金额', prop: 'createTime' }
+                { label: '品类', prop: 'categoryName' },
+                { label: '型号', prop: 'specificationName', width: '220px' },
+                { label: '商品名称', prop: 'productName' },
+                { label: '最近一次购买时间', prop: 'lastOrderTime', formatters: 'dateTime' },
+                { label: '累计购买订单数', prop: 'orderCount' },
+                { label: '累计购买件数', prop: 'productCount' },
+                { label: '累计购买金额', prop: 'productCount' }
             ],
             tableChangeList: [
                 { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },
@@ -265,7 +268,7 @@ export default {
             fileList: [],
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/mall/wx/order/boss/import`,
+                action: `${iotUrl}/mall/boss/wx/reward/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: { // todo I'm need a config file
@@ -288,7 +291,8 @@ export default {
             merchantmemberEnterpriseInfo: 'iotmerchantmemberEnterpriseInfo',
             merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
             merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData',
-            merchantmemberInvitationBuy: 'iotmerchantmemberInvitationBuy'
+            merchantmemberInvitationBuy: 'iotmerchantmemberInvitationBuy',
+            merchantmemberInvitationTotal: 'iotmerchantmemberInvitationTotal'
         }),
         pickerOptionsStart () {
             return {
@@ -317,28 +321,35 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMemberInvitationRegistersituation: 'findMerchantMemberInvitationRegistersituation',
-            findMerchantMemberInvitationBuysituation: 'findMerchantMemberInvitationBuy',
+            findMerchantMemberInvitationBuy: 'findMerchantMemberInvitationBuy',
+            findMerchantMemberInvitationBuyTotalsituation: 'findMerchantMemberInvitationBuyTotal',
             findMerchantMemberEnterpriseInfo: 'findMerchantMemberEnterpriseInfo',
             findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
-            await this.findMerchantMemberInvitationBuysituation(this.$route.query.unionId)
+            await this.findMerchantMemberInvitationBuy(this.searchParams)
+            await this.findMerchantMemberInvitationBuyTotalsituation({ 'uuid': this.$route.query.unionId })
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
             this.tableChangeData = this.merchantmemberInvitationChangeData
-            this.tableChangeData = this.merchantmemberInvitationBuy
-            console.log(this.tableChangeData, 111)
-            console.log(this.tableChangeData, 111)
+            this.tableBuyData = this.merchantmemberInvitationBuy.records
+            this.tableBuyTotalData = this.merchantmemberInvitationTotal
+            console.log(this.merchantmemberInvitationTotal, 111)
             this.tableDoneData = this.merchantmemberInvitationOrderData.records
             this.paginationRegister = {
                 pageNumber: this.merchantmemberInvitationRegisterData.current,
                 pageSize: this.merchantmemberInvitationRegisterData.size,
                 total: this.merchantmemberInvitationRegisterData.total
+            }
+            this.paginationBuy = {
+                pageNumber: this.merchantmemberInvitationBuy.current,
+                pageSize: this.merchantmemberInvitationBuy.size,
+                total: this.merchantmemberInvitationBuy.total
             }
             this.paginationDone = {
                 pageNumber: this.merchantmemberInvitationOrderData.current,
@@ -360,7 +371,7 @@ export default {
             formdata.append('upload', param.fileList)
             formdata.append('operateUserName', this.userInfo.employeeName)
             axios({
-                url: `${iotUrl}/mall/wx/order/boss/import`,
+                url: `${iotUrl}/mall/boss/wx/reward/import`,
                 method: 'post',
                 data: formdata,
                 headers: {
@@ -568,8 +579,10 @@ export default {
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
+        },
+        goToDetail (val) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
         }
-
     }
 }
 </script>
