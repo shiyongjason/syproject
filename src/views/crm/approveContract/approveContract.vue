@@ -59,10 +59,10 @@
                     <div class="history-css-flex" :key="index">
                         <!-- signStatus==6下一步 -->
                         <div v-if="item.signStatus==6" class="history-css-left">
-                            <span class="name">{{item.operationContent}} </span>
-                            <span>{{item.operationName}}</span>
+                            <span class="name">{{item.operator}} </span>
+                            <span style="">{{item.operationName}} </span>
                             <span class="operationcontent-css">
-                                <font>{{item.operator}}</font>
+                                <font>{{item.operationContent}}</font>
                             </span>
                         </div>
                         <div v-else class="history-css-left">
