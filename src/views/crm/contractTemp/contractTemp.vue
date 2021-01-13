@@ -178,6 +178,7 @@ import diffDialog from './components/diffDialog'
 import contractDialog from './components/contractDialog'
 import { addContractTemp, putContractTemp } from './api/index'
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import * as Auths from '@/utils/auth_const'
 
 export default {
     name: 'contractTemp',
@@ -465,7 +466,9 @@ export default {
             return cArr.toString()
         },
         async onFindtempType () {
-            await this.getContratType()
+            await this.getContratType({
+                typeAuth: this.hosAuthCheck(Auths.CONTRACTLIST_TYPE_AUTH) ? '' : 2 // 1确认函
+            })
             this.contract_list = this.tempType
         },
         async onChangeparam (val) {

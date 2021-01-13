@@ -1,9 +1,9 @@
 .DS_Store
 node_modules
 /dist
-/src/api/config.js
 /public/mock
 package-lock.json
+src/api/config.js
 
 # local env files
 .env.local

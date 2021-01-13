@@ -5,7 +5,8 @@ export const getContratTemp = (params) => axios.get(`/project/api/contract-templ
 export const getContratDetail = (params) => axios.get(`/project/api/contract-templates/${params}`)
 
 // 模板type
-export const getContratType = (params) => axios.get(`/project/api/contract-template/types`)
+// export const getContratType = (params) => axios.get(`/project/api/contract-template/types`, { params })
+export const getContratType = (params) => axios.get(`/project/api/contract-template/types/auth-types`, { params })
 
 // 合同约定字段
 export const getContratParam = (params) => axios.get(`/project/api/contract-template/types/${params}/params`)

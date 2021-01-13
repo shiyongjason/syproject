@@ -50,9 +50,9 @@ export default {
         }
     },
     methods: {
-        forMat () {
-            let spanList = document.getElementById('oldT').getElementsByTagName('span')
-            let spanList2 = document.getElementById('newT').getElementsByTagName('span')
+        forMat (tag, cb) {
+            let spanList = document.getElementById('oldT').getElementsByTagName(tag)
+            let spanList2 = document.getElementById('newT').getElementsByTagName(tag)
             Array.from(spanList).map(item => {
                 if (item.dataset && item.dataset.mceStyle) {
                     item.removeAttribute('data-mce-style')
@@ -69,20 +69,23 @@ export default {
                     item.removeAttribute('data-mce-src')
                 }
             })
-            this.$nextTick(() => {
-                let oldT = document.getElementById('oldT').innerHTML
-                let newT = document.getElementById('newT').innerHTML
-                fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
-                    if (res) {
-                        this.diffHtml = res
-                    }
-                })
-            })
+            cb && cb()
         },
         onShowDiff () {
             this.diff_visible = true
             this.$nextTick(() => {
-                this.forMat()
+                this.forMat('span')
+                this.forMat('img', () => {
+                    this.$nextTick(() => {
+                        let oldT = document.getElementById('oldT').innerHTML
+                        let newT = document.getElementById('newT').innerHTML
+                        fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
+                            if (res) {
+                                this.diffHtml = res
+                            }
+                        })
+                    })
+                })
             })
         },
         handleClose () {

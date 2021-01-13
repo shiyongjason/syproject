@@ -267,3 +267,6 @@ export const CRM_CONTRACT_ADD = 120005
 export const CRM_CONTRACT_FIN = 120011
 export const CRM_CONTRACT_RISK = 120012
 export const CRM_CONTRACT_LEGAL = 120013
+
+// 合同模板确认函筛选项控制
+export const CONTRACTLIST_TYPE_AUTH = 5111115
