@@ -3,21 +3,33 @@ import OSS from 'ali-oss'
 import { getOssSTS } from '@/api'
 import imageCompression from 'browser-image-compression'
 import { ossBucket, ossRegion } from '@/api/config'
+
+function genraterBaseUrl () {
+    const date = new Date()
+    return `hbp/files/${date.getFullYear()}${date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1}${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}/`
+}
 // sdk方法扩展比较简单，不想改了。移动端和boss不一样实现
 const TIMEOUT_SERVER = 1000 * 60 * 30
 let TIMEOUT_CLIENT = 1000 * 60 * 30
+let serverResponseError = false
 
 let OSSConfig = {
     region: ossRegion,
     bucket: ossBucket
 }
 async function getCredentials () {
-    const { data } = await getOssSTS()
-    OSSConfig = {
-        ...OSSConfig,
-        accessKeyId: data.accessKeyId,
-        accessKeySecret: data.accessKeySecret,
-        stsToken: data.securityToken
+    try {
+        if (!serverResponseError) {
+            const { data } = await getOssSTS()
+            OSSConfig = {
+                ...OSSConfig,
+                accessKeyId: data.accessKeyId,
+                accessKeySecret: data.accessKeySecret,
+                stsToken: data.securityToken
+            }
+        }
+    } catch (e) {
+        serverResponseError = true
     }
 }
 const initOssSTS = (function () {
@@ -90,7 +102,7 @@ export default {
         let result
         const ossUtil = await initOssSTS()
         try {
-            result = await ossUtil.put(fileName, fileBlob)
+            result = await ossUtil.put(genraterBaseUrl() + fileName, fileBlob)
         } catch (e) {
             result = ''
         }
@@ -130,7 +142,7 @@ export default {
         try {
             result = await ossUtil.signatureUrl(decodeURI(new URL(url).pathname), { expires: TIMEOUT_CLIENT })
         } catch (e) {
-            result = ''
+            result = url
         }
         return result
     },

@@ -15,11 +15,12 @@
   "dependencies": {
     "@sentry/browser": "^5.21.1",
     "@sentry/integrations": "^5.21.1",
-    "ali-oss": "^6.11.2",
     "@tinymce/tinymce-vue": "^3.2.6",
+    "ali-oss": "^6.11.2",
     "app-info-parser": "^0.3.5",
     "bignumber.js": "^9.0.0",
     "blueimp-md5": "^2.18.0",
+    "browser-image-compression": "^1.0.14",
     "clipboard": "^2.0.6",
     "core-js": "^2.6.5",
     "echarts": "^4.2.1",
