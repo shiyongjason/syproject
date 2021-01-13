@@ -14,6 +14,8 @@ const state = {
     iotmerchantmemberInvitationRegisterData: {},
     iotmerchantmemberEnterpriseInfo: {},
     iotmerchantmemberInvitationChangeData: {},
+    iotmerchantmemberInvitationBuy: {},
+    iotmerchantmemberInvitationTotal: {},
     iotmerchantmemberInvitationRegisterDataPagination: {},
     iotmerchantmemberInvitationOrderData: {},
     iotmerchantmemberInvitationOrderDataPagination: {},
@@ -84,7 +86,10 @@ const state = {
     cloudOutboundMerchantList: [],
     cloudOutboundCategoryList: [],
     cloudMerchantRecommendList: [],
-    cloudMerchantRecommendListPagination: {}
+    cloudMerchantRecommendListPagination: {},
+    cloudMerchantClassifyList: [],
+    cloudMerchantClassifyListPagination: {}
+
 }
 
 const getters = {
@@ -97,6 +102,8 @@ const getters = {
     iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
     iotmerchantmemberEnterpriseInfo: state => state.iotmerchantmemberEnterpriseInfo,
     iotmerchantmemberInvitationChangeData: state => state.iotmerchantmemberInvitationChangeData,
+    iotmerchantmemberInvitationBuy: state => state.iotmerchantmemberInvitationBuy,
+    iotmerchantmemberInvitationTotal: state => state.iotmerchantmemberInvitationTotal,
     iotmemberDetail: state => state.iotmemberDetail,
     familyData: state => state.familyData,
     cloudActivitydetail: state => state.cloudActivitydetail,
@@ -178,7 +185,9 @@ const getters = {
     cloudOutboundMerchantList: state => state.cloudOutboundMerchantList,
     cloudOutboundCategoryList: state => state.cloudOutboundCategoryList,
     cloudMerchantRecommendList: state => state.cloudMerchantRecommendList,
-    cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination
+    cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination,
+    cloudMerchantClassifyList: state => state.cloudMerchantClassifyList,
+    cloudMerchantClassifyListPagination: state => state.cloudMerchantClassifyListPagination
 }
 
 const mutations = {
@@ -211,6 +220,12 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA] (state, payload) {
         state.iotmerchantmemberInvitationChangeData = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_BUY_DATA] (state, payload) {
+        state.iotmerchantmemberInvitationBuy = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_BUY_DATA_TOTAL] (state, payload) {
+        state.iotmerchantmemberInvitationTotal = payload
     },
     [types.MEMBERS_DETAIL] (state, payload) {
         state.iotmemberDetail = payload
@@ -416,6 +431,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantRecommendListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST] (state, payload) {
+        state.cloudMerchantClassifyList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantClassifyListPagination = payload
     }
 }
 
@@ -462,6 +483,14 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findMerchantMemberInvitationBuy ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationBuy(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_BUY_DATA, data)
+    },
+    async findMerchantMemberInvitationBuyTotal ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationBuyTotal(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_BUY_DATA_TOTAL, data)
     },
     async findMerchantMemberInvitationOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOrdersituation(params)
@@ -771,6 +800,15 @@ const actions = {
         const { data } = await Api.getCloudMerchantRecommendList(params)
         commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST, data.records)
         commit(cloud.GET_CLOUD_MERCHANT_RECOMMEND_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findCloudMerchantClassifyList ({ commit }, params) {
+        const { data } = await Api.getMerchantClassifyList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST_PAGINATION, {
             pageNumber: data.current,
             pageSize: data.size,
             total: data.total
