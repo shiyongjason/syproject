@@ -232,6 +232,7 @@ export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
 // 好程工 后添加
 export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
 export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
+export const CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT = 109523 // 支付单- [日期修改,服务费修改]
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
