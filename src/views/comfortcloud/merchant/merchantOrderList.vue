@@ -173,7 +173,6 @@ export default {
             this.onQuery(this.searchParams)
         },
         async onDetail (val) {
-            console.log(val)
             this.focusDetailOrder = val
             await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
             this.detailDialogVisible = true
