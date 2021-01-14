@@ -581,7 +581,7 @@ export default {
             return this.$refs.upload.uploadFiles.length > 0
         },
         goToDetail (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: val })
+            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: { phone: this.$route.query.phone } })
         }
     }
 }
