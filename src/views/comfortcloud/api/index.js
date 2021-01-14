@@ -651,3 +651,13 @@ export function getMerchantClassifyOfCategoryList (params) {
 export function getLikeMerchantList (params) {
     return axios.get(iotUrl + '/mall/boss/product/products-like-name', { params })
 }
+
+// 获取微信订单列表
+export function getCloudMerchantProductOrderList (params) {
+    return axios.get(iotUrl + '/mall/boss/order', { params })
+}
+
+// 获取微信订单详情
+export function getCloudMerchantProductOrderDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/order/detail', { params })
+}

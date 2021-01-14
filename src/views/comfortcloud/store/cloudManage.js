@@ -88,8 +88,11 @@ const state = {
     cloudMerchantRecommendList: [],
     cloudMerchantRecommendListPagination: {},
     cloudMerchantClassifyList: [],
-    cloudMerchantClassifyListPagination: {}
-
+    cloudMerchantClassifyListPagination: {},
+    cloudMerchantProductOrderList: [],
+    cloudMerchantProductOrderPagination: {},
+    cloudMerchantProductOrderDetail: {},
+    cloudMerchantProductOrderTotal: {}
 }
 
 const getters = {
@@ -187,7 +190,11 @@ const getters = {
     cloudMerchantRecommendList: state => state.cloudMerchantRecommendList,
     cloudMerchantRecommendListPagination: state => state.cloudMerchantRecommendListPagination,
     cloudMerchantClassifyList: state => state.cloudMerchantClassifyList,
-    cloudMerchantClassifyListPagination: state => state.cloudMerchantClassifyListPagination
+    cloudMerchantClassifyListPagination: state => state.cloudMerchantClassifyListPagination,
+    cloudMerchantProductOrderList: state => state.cloudMerchantProductOrderList,
+    cloudMerchantProductOrderPagination: state => state.cloudMerchantProductOrderPagination,
+    cloudMerchantProductOrderDetail: state => state.cloudMerchantProductOrderDetail,
+    cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal
 }
 
 const mutations = {
@@ -437,6 +444,18 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_CLASSIFY_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantClassifyListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_LIST] (state, payload) {
+        state.cloudMerchantProductOrderList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantProductOrderPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_DETAIL] (state, payload) {
+        state.cloudMerchantProductOrderDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_TOTAL] (state, payload) {
+        state.cloudMerchantProductOrderTotal = payload
     }
 }
 
@@ -813,6 +832,20 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findCloudMerchantProductOrderList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProductOrderList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_LIST, data.orderPageDatas.records)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_LIST_PAGINATION, {
+            pageNumber: data.orderPageDatas.current,
+            pageSize: data.orderPageDatas.size,
+            total: data.orderPageDatas.total
+        })
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_TOTAL, data.orderTotal)
+    },
+    async findCloudMerchantProductOrderDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProductOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_DETAIL, data)
     }
 }
 export default {

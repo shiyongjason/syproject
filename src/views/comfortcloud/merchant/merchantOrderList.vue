@@ -11,7 +11,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">订单号：</div>
                     <div class="query-col-input">
-                        <el-input v-model="queryParams.orderNo" placeholder="请输入订单号"></el-input>
+                        <el-input v-model="queryParams.orderId" placeholder="请输入订单号"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -22,12 +22,12 @@
                 </div>
 
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间： </div>
+                    <div class="query-col-title">下单时间： </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -38,28 +38,31 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">
-                已筛选 {{merchantmemberData.total}} 项；
-                累计成交订单: {{merchantmemberTotalData.registerCount}}笔；
-                累计销售件数: {{merchantmemberTotalData.orderCount}}单；
-                累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
+                已筛选 {{cloudMerchantProductOrderPagination.total}} 项；
+                累计成交订单: {{cloudMerchantProductOrderTotal.totalOrderCount}}笔；
+                累计销售件数: {{cloudMerchantProductOrderTotal.totalProductCount}}单；
+                累计成交金额:{{cloudMerchantProductOrderTotal.totalOrderAmount}}元
             </el-tag>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOrderList" :isShowIndex='false' :pagination="cloudMerchantProductOrderPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="status" slot-scope="scope">
+                    {{orderStatusDesc(scope.data.row.status)}}
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
 
             <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
                 <h1>订单信息</h1>
-                <p>商品总价 ￥1395.00 <br>
-                    订单运费 ￥0.00<br>
-                    优惠金额 -￥14.00<br>
-                    商品改价 -￥261.00<br>
-                    总11件，实付款￥1120.00
+                <p>商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
+                    订单运费 ￥{{focusDetailOrder.freight}}<br>
+                    优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
+                    商品改价 -￥{{focusDetailOrder.changePrice}}<br>
+                    总11件，实付款￥{{focusDetailOrder.payAmount}}
                 </p>
                 <h1>商品明细</h1>
-                <basicTable style="margin-top: 20px" :tableLabel="prouctDetailTableLabel" :tableData="prouctDetailTableData" :isShowIndex='false'>
+                <basicTable style="margin-top: 20px" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
         </div>
@@ -67,7 +70,6 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { clearCache, newCache } from '../../../utils'
 export default {
     name: 'merchantOrderList',
     data () {
@@ -76,43 +78,41 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: this.$route.query.phone,
-                endRegisterTime: '',
-                startRegisterTime: ''
+                orderId: '',
+                productName: '',
+                startTime: '',
+                endTime: ''
             },
             searchParams: {},
             tableData: [],
-            pagination: {
-                pageNumber: 1,
-                pageSize: 10,
-                total: 0
-            },
             tableLabel: [
-                { label: '订单来源', prop: 'from' },
-                { label: '订单号', prop: 'from' },
-                { label: '下单时间', prop: 'from' },
-                { label: '订单状态', prop: 'from' },
+                { label: '订单来源', prop: 'source' },
+                { label: '订单号', prop: 'orderId' },
+                { label: '下单时间', prop: 'orderTime', formatters: 'dateTime' },
+                { label: '订单状态', prop: 'status' },
                 { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
-                { label: '收件人姓名', prop: 'nickName' },
-                { label: '收件人地址', prop: 'nickName' },
-                { label: '收件人手机', prop: 'nickName' },
-                { label: '订单实际支付金额', prop: 'nickName' },
-                { label: '订单运费', prop: 'nickName' },
-                { label: '订单件数', prop: 'nickName' },
-                { label: '支付方式', prop: 'nickName' },
-                { label: '支付时间', prop: 'nickName' },
-                { label: '物流公司', prop: 'nickName' },
-                { label: '快递单号', prop: 'nickName' }
+                { label: '收件人姓名', prop: 'consigneeName' },
+                { label: '收件人地址', prop: 'consigneeAddress' },
+                { label: '收件人手机', prop: 'consigneePhone' },
+                { label: '订单实际支付金额', prop: 'payAmount', formatters: 'money' },
+                { label: '订单运费', prop: 'freight' },
+                { label: '订单件数', prop: 'orderProductCount' },
+                { label: '支付方式', prop: 'payMethod' },
+                { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
+                { label: '物流公司', prop: 'deliveryName' },
+                { label: '快递单号', prop: 'waybillId' }
             ],
             prouctDetailTableLabel: [
-                { label: '商品ID', prop: 'from' },
-                { label: '商品名称', prop: 'from' },
-                { label: '商品规格', prop: 'from' },
-                { label: '商品价格（元）', prop: 'from' },
-                { label: '商品数量（件）', prop: 'from' }
+                { label: '商品ID', prop: 'productId' },
+                { label: '商品名称', prop: 'productName' },
+                { label: '商品规格', prop: 'wxSpecification' },
+                { label: '商品价格（元）', prop: 'productPrice' },
+                { label: '商品数量（件）', prop: 'productCount' }
             ],
             prouctDetailTableData: [],
-            detailDialogVisible: false
+            detailDialogVisible: false,
+            focusDetailOrder: {}
         }
     },
     computed: {
@@ -120,72 +120,49 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            merchantmemberData: 'iotmerchantmemberData',
-            merchantmemberTotalData: 'iotmerchantmemberTotalData'
+            cloudMerchantProductOrderList: 'cloudMerchantProductOrderList',
+            cloudMerchantProductOrderPagination: 'cloudMerchantProductOrderPagination',
+            cloudMerchantProductOrderDetail: 'cloudMerchantProductOrderDetail',
+            cloudMerchantProductOrderTotal: 'cloudMerchantProductOrderTotal'
         }),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.queryParams.endRegisterTime
+                    let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
                         return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         },
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.startRegisterTime
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
-                    // return time.getTime() <= Date.now() - 8.64e7
                 }
             }
         }
     },
     mounted () {
-        // this.tableData = [{ productN: '123' }]
         this.onSearch()
     },
     activated () {
         this.onQuery()
     },
-    beforeRouteEnter (to, from, next) {
-        newCache('comfortcloudMembermanage')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        console.log(to.name)
-        if (to.name != 'merchantMemberInvitation') {
-            clearCache('comfortcloudMembermanage')
-        }
-        next()
-    },
     methods: {
         ...mapActions({
-            findMerchantMembersituation: 'findMerchantMembersituation',
-            iotmerchantmemberDataPagination: 'iotmerchantmemberDataPagination',
-            findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation'
+            findCloudMerchantProductOrderList: 'findCloudMerchantProductOrderList',
+            findCloudMerchantProductOrderDetail: 'findCloudMerchantProductOrderDetail'
         }),
         async onQuery () {
-            await this.findMerchantMembersituation(this.searchParams)
-            await this.findMerchantMemberTotalsituation()
-            this.tableData = this.merchantmemberData.records
-            this.pagination = {
-                pageNumber: this.merchantmemberData.current,
-                pageSize: this.merchantmemberData.size,
-                total: this.merchantmemberData.total
-            }
+            await this.findCloudMerchantProductOrderList(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
-        },
-        onEdit (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -195,21 +172,25 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
         },
-        setMerchantType (val) {
-            let type = ''
-            if (val.role === 1) {
-                type += '新人'
-            } else if (val.role === 2) {
-                type += '普通会员'
+        async onDetail (val) {
+            console.log(val)
+            this.focusDetailOrder = val
+            await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
+            this.detailDialogVisible = true
+        },
+        orderStatusDesc (status) {
+            if (status == 10) {
+                return '待付款'
+            } else if (status == 20) {
+                return '待发货'
+            } else if (status == 30) {
+                return '已完成'
+            } else if (status == 100) {
+                return '全部商品售后之后,订单取消'
+            } else if (status == 250) {
+                return '用户主动取消或待付款超时取消'
             }
-            if (val.distributorStatus === 1) {
-                type += '、分销员'
-            }
-            if (val.agentStatus === 10) {
-                type += '、经销商'
-            }
-
-            return type
+            return status
         }
     }
 }
