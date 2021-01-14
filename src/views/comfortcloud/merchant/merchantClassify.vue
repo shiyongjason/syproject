@@ -29,8 +29,8 @@
                     <el-button type="primary" @click="addClassifyMerchants">新增</el-button>
                 </el-form-item>
                 <el-form-item label="商品名称：" v-for="(item,index) in form.mainProductList" :key="index" :prop="'mainProductList.'+index+'.productId'" :rules="rules.productId">
-                    <el-select v-model="item.productId" @change='selectItem(item)' placeholder="输入已上架的商品名称" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
-                        <el-option v-for="items in options" :key="items.productId" :label="items.productName" :value="items.productId">
+                    <el-select v-model="item.productName" @change='selectItem(item)' placeholder="输入已上架的商品名称" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
+                        <el-option v-for="items in options" :key="items.productId" :label="items.productName" :value="items.productName">
                         </el-option>
                     </el-select>
                     <el-button type="danger" style="margin-left:20px" @click="deleteClassifyMerchants(index)">删除</el-button>
@@ -129,7 +129,7 @@ export default {
             this.form.mainCategoryName = item.mainCategoryName
             this.form.id = item.id
             this.form.mainProductList = mainProductList.data
-
+            console.log(this.form, '查看列表')
             this.dialogAddVisible = true
         },
         addClassifyMerchants: function () {
@@ -153,13 +153,13 @@ export default {
             let sel = null
             for (let index = 0; index < this.options.length; index++) {
                 const element = this.options[index]
-                if (element.productId == item.productId) {
+                if (element.productName == item.productName) {
                     sel = element
                     break
                 }
             }
             if (sel) {
-                item.productName = sel.productName
+                item.productId = sel.productId
             }
         },
 
