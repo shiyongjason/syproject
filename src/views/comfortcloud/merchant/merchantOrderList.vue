@@ -54,15 +54,15 @@
             </basicTable>
 
             <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
-                <h1>订单信息</h1>
-                <p>商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
+                <h1 style="padding-bottom: 10px">订单信息</h1>
+                <p style="line-height: 25px">商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
                     订单运费 ￥{{focusDetailOrder.freight}}<br>
                     优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
                     商品改价 -￥{{focusDetailOrder.changePrice}}<br>
                     总11件，实付款￥{{focusDetailOrder.payAmount}}
                 </p>
-                <h1>商品明细</h1>
-                <basicTable style="margin-top: 20px" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
+                <h1 style="padding-top: 20px">商品明细</h1>
+                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
         </div>
