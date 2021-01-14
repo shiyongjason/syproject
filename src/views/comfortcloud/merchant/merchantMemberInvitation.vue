@@ -330,7 +330,7 @@ export default {
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
             await this.findMerchantMemberInvitationBuy(this.searchParams)
-            await this.findMerchantMemberInvitationBuyTotalsituation({ 'uuid': this.$route.query.unionId })
+            await this.findMerchantMemberInvitationBuyTotalsituation({ 'uuid': this.$route.query.uuid })
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
@@ -581,7 +581,7 @@ export default {
             return this.$refs.upload.uploadFiles.length > 0
         },
         goToDetail (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
+            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: val })
         }
     }
 }
