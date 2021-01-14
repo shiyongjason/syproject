@@ -14,7 +14,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src="example.fileUrl" :preview-src-list="srcList(jtem,exampleIndex)" />
+                                <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src.sync="DefaultImage" v-oss-sts-element-image="{item: example, key: 'fileUrl'}" :preview-src-list="srcList(jtem,exampleIndex)" />
                             </div>
                         </div>
                         <!--  -->
@@ -53,6 +53,7 @@
 
 <script>
 import { handleImgDownload } from '../utils'
+import DefaultImage from '@/assets/images/img_403@2x.png'
 import moment from 'moment'
 
 export default {
@@ -60,7 +61,8 @@ export default {
     props: ['informationDetail'],
     data () {
         return {
-            handleImgDownload
+            handleImgDownload,
+            DefaultImage
         }
     },
     methods: {

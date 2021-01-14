@@ -25,7 +25,7 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="ktem.fileUrl" target="_blank">
+                                            <a v-oss-sts-a-download="ktem.fileUrl" target="_blank">
                                                 <font>{{ktem.fileName}}</font>
                                             </a>
                                         </template>
@@ -34,7 +34,7 @@
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
                                     <!-- <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font> -->
-                                    <a class="fileItemDownLoad" :href="ktem.fileUrl+'?response-content-type=application/octet-stream'" :download="ktem.fileName"
+                                    <a class="fileItemDownLoad" v-oss-sts-a-download="ktem.fileUrl" :download="ktem.fileName"
                                         v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1">
                                         下载
                                     </a>
