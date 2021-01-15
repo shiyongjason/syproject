@@ -560,7 +560,6 @@ export default {
                     console.log('提交失败')
                     this.flag = false
                     await this.init(() => {
-                        this.flag = true
                         this.domBindMethods()
                     })
                     this.handleClose()
@@ -1034,6 +1033,7 @@ export default {
             this.contractContentDiv = res.data.contractContent // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
                 this.domBindMethods()
