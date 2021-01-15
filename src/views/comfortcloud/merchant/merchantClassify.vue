@@ -180,7 +180,7 @@ export default {
                 this.$message.error('至少需保留1个主营产品推荐')
                 return
             }
-            this.$confirm('请确认是否继续删除？', '提示', {
+            this.$confirm('删除后小程序端将不展示该匹配商品，请确认是否继续删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
