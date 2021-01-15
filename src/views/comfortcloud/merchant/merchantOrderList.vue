@@ -59,7 +59,7 @@
                     订单运费 ￥{{focusDetailOrder.freight}}<br>
                     优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
                     商品改价 -￥{{focusDetailOrder.changePrice}}<br>
-                    总11件，实付款￥{{focusDetailOrder.payAmount}}
+                    总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
                 </p>
                 <h1 style="padding-top: 20px">商品明细</h1>
                 <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
@@ -183,8 +183,10 @@ export default {
             } else if (status == 20) {
                 return '待发货'
             } else if (status == 30) {
-                return '已完成'
+                return '待收货'
             } else if (status == 100) {
+                return '已完成'
+            } else if (status == 200) {
                 return '全部商品售后之后,订单取消'
             } else if (status == 250) {
                 return '用户主动取消或待付款超时取消'
