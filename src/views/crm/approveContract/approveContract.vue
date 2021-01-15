@@ -599,7 +599,6 @@ export default {
                     console.log('提交失败')
                     this.flag = false
                     await this.init(() => {
-                        this.flag = true
                         this.domBindMethods()
                     })
                     this.handleClose()
@@ -1060,6 +1059,7 @@ export default {
                 const response = await getPurchaseOrderList(this.$route.query.id)
                 this.contentvsData = response.data
             }
+            if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
                 this.domBindMethods()
