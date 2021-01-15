@@ -59,7 +59,7 @@
                     订单运费 ￥{{focusDetailOrder.freight}}<br>
                     优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
                     商品改价 -￥{{focusDetailOrder.changePrice}}<br>
-                    总11件，实付款￥{{focusDetailOrder.payAmount}}
+                    总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
                 </p>
                 <h1 style="padding-top: 20px">商品明细</h1>
                 <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
