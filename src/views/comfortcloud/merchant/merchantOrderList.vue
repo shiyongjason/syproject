@@ -183,8 +183,10 @@ export default {
             } else if (status == 20) {
                 return '待发货'
             } else if (status == 30) {
-                return '已完成'
+                return '待收货'
             } else if (status == 100) {
+                return '已完成'
+            } else if (status == 200) {
                 return '全部商品售后之后,订单取消'
             } else if (status == 250) {
                 return '用户主动取消或待付款超时取消'
