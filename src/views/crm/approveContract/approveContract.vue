@@ -507,7 +507,11 @@ export default {
             }
         },
         async onApprove () {
+            let contractContentBeforeTransfer = '' // 内容
+            let contractFieldsListBeforeTransfer = ''// 字段
             if (this.detailRes.contractStatus == 6) {
+                contractContentBeforeTransfer = this.contractDocument.innerHTML
+                contractFieldsListBeforeTransfer = JSON.parse(JSON.stringify(this.contractFieldsList))
                 let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
@@ -525,6 +529,7 @@ export default {
                         if (resDom && resDom.length > 0) {
                             Array.from(resDom).map(jtem => {
                                 jtem.outerHTML = ''
+                                // jtem.outerHTML = `<span class="custom_sign" style="color:#fff" contenteditable="false">${item.dataset.en}</span>`
                             })
                         }
                     })
@@ -538,7 +543,9 @@ export default {
                     approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                     approvalStatus: this.dialog.status,
                     approvalRemark: this.dialog.remark,
-                    contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : ''
+                    contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
+                    contractContentBeforeTransfer, // 备份
+                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer)// 备份
                 }
                 await approvalContent(query)
                 this.$message({
