@@ -8,7 +8,7 @@
                         <el-input v-model="queryParams.phone" placeholder="请输入手机号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">iot-12376 修改小程序邀请的人按钮边框
+                <div class="query-cont-col">
                     <div class="flex-wrap-title">会员类型：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.role" style="width: 100%">
