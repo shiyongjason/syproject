@@ -608,7 +608,6 @@ export default {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
-
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
         },
