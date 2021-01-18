@@ -814,7 +814,7 @@ export default {
                     return
                 }
             }
-            let _tableset = JSON.stringify(JSON.parse([...this.busData, ...this.perData, ...this.platData]))
+            let _tableset = JSON.parse(JSON.stringify([...this.busData, ...this.perData, ...this.platData]))
             console.log(this.busData, this.perData)
             // 调整关联签署区，选择的时候是包含中英文的，提交的时候只要提交英文的就好
             _tableset = _tableset.map(item => {
