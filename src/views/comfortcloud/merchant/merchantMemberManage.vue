@@ -8,7 +8,7 @@
                         <el-input v-model="queryParams.phone" placeholder="请输入手机号" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div class="query-cont-col">
+                <div class="query-cont-col">iot-12376 修改小程序邀请的人按钮边框
                     <div class="flex-wrap-title">会员类型：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.role" style="width: 100%">
@@ -37,7 +37,7 @@
             <el-tag size="medium" class="eltagtop">
                   已筛选 {{merchantmemberData.total}} 项；
                   累计注册: {{merchantmemberTotalData.registerCount}}个；
-                  累计邀请成交订单: {{merchantmemberTotalData.orderCount}}单；
+                  累计邀请成交订单: {{merchantmemberTotalData.rewardCount}}单；
                   累计邀请成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
                   累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
             </el-tag>
@@ -153,7 +153,7 @@ export default {
         }),
         async onQuery () {
             await this.findMerchantMembersituation(this.searchParams)
-            await this.findMerchantMemberTotalsituation()
+            await this.findMerchantMemberTotalsituation(this.searchParams)
             this.tableData = this.merchantmemberData.records
             this.pagination = {
                 pageNumber: this.merchantmemberData.current,
