@@ -19,7 +19,7 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur'></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur' v-if="flag"></editor>
                             <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
@@ -169,6 +169,7 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            flag: true,
             editorDrawer: false,
             oldImg: '',
             emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
@@ -507,7 +508,11 @@ export default {
             }
         },
         async onApprove () {
+            let contractContentBeforeTransfer = '' // 内容
+            let contractFieldsListBeforeTransfer = ''// 字段
             if (this.detailRes.contractStatus == 6) {
+                contractContentBeforeTransfer = this.contractDocument.innerHTML
+                contractFieldsListBeforeTransfer = JSON.parse(JSON.stringify(this.contractFieldsList))
                 let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
@@ -525,6 +530,7 @@ export default {
                         if (resDom && resDom.length > 0) {
                             Array.from(resDom).map(jtem => {
                                 jtem.outerHTML = ''
+                                // jtem.outerHTML = `<span class="custom_sign" style="color:#fff" contenteditable="false">${item.dataset.en}</span>`
                             })
                         }
                     })
@@ -538,22 +544,32 @@ export default {
                     approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                     approvalStatus: this.dialog.status,
                     approvalRemark: this.dialog.remark,
-                    contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : ''
+                    contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
+                    contractContentBeforeTransfer, // 备份
+                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer)// 备份
                 }
-                await approvalContent(query)
-                this.$message({
-                    message: `提交成功`,
-                    type: 'success'
-                })
-                this.handleClose()
-                this.goBack()
+                try {
+                    await approvalContent(query)
+                    this.$message({
+                        message: `提交成功`,
+                        type: 'success'
+                    })
+                    this.handleClose()
+                    this.goBack()
+                } catch (error) {
+                    console.log('提交失败')
+                    this.flag = false
+                    await this.init(() => {
+                        this.domBindMethods()
+                    })
+                    this.handleClose()
+                }
             })
         },
         goBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
-
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
         },
@@ -1017,6 +1033,7 @@ export default {
             this.contractContentDiv = res.data.contractContent // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
                 this.domBindMethods()

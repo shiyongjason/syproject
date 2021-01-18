@@ -187,9 +187,9 @@ export default {
             } else if (status == 100) {
                 return '已完成'
             } else if (status == 200) {
-                return '全部商品售后之后,订单取消'
+                return '已退货退款'
             } else if (status == 250) {
-                return '用户主动取消或待付款超时取消'
+                return '已取消'
             }
             return status
         }
