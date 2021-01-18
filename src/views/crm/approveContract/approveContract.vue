@@ -312,7 +312,6 @@ export default {
             done()
         },
         onBlur () {
-            // console.log('onBlur: ', this.editorDrawer)
             this.onSaveContent(3)
         },
         checkField (rule, value, callback) {
