@@ -814,13 +814,15 @@ export default {
                     return
                 }
             }
-
-            this.contractForm.signerSetting = [...this.busData, ...this.perData, ...this.platData]
+            let _tableset = JSON.stringify(JSON.parse([...this.busData, ...this.perData, ...this.platData]))
+            console.log(this.busData, this.perData)
             // 调整关联签署区，选择的时候是包含中英文的，提交的时候只要提交英文的就好
-            this.contractForm.signerSetting = this.contractForm.signerSetting.map(item => {
+            _tableset = _tableset.map(item => {
                 item.signatureParam = item.signatureParam ? item.signatureParam.map(i => i.substr(i.indexOf('_') + 1)) : []
                 return item
             })
+            this.contractForm.signerSetting = _tableset
+
             if (!this.$route.query.id) {
                 try {
                     await addContractTemp(this.contractForm)

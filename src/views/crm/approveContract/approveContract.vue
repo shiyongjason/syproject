@@ -20,7 +20,7 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur'></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur' v-if="flag"></editor>
                             <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
@@ -194,6 +194,7 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            flag: true,
             contentvsData: [],
             contentvsVisible: false,
             editorDrawer: false,
@@ -586,13 +587,22 @@ export default {
                     contractContentBeforeTransfer, // 备份
                     contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer)// 备份
                 }
-                await approvalContent(query)
-                this.$message({
-                    message: `提交成功`,
-                    type: 'success'
-                })
-                this.handleClose()
-                this.goBack()
+                try {
+                    await approvalContent(query)
+                    this.$message({
+                        message: `提交成功`,
+                        type: 'success'
+                    })
+                    this.handleClose()
+                    this.goBack()
+                } catch (error) {
+                    console.log('提交失败')
+                    this.flag = false
+                    await this.init(() => {
+                        this.domBindMethods()
+                    })
+                    this.handleClose()
+                }
             })
         },
         goBack () {
@@ -1048,6 +1058,7 @@ export default {
                 const response = await getPurchaseOrderList(this.$route.query.id)
                 this.contentvsData = response.data
             }
+            if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
                 this.domBindMethods()
