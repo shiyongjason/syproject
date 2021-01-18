@@ -239,7 +239,7 @@ export default {
                 { label: '最近一次购买时间', prop: 'lastOrderTime', formatters: 'dateTime' },
                 { label: '累计购买订单数', prop: 'orderCount' },
                 { label: '累计购买件数', prop: 'productCount' },
-                { label: '累计购买金额', prop: 'productCount' }
+                { label: '累计购买金额', prop: 'orderAmount' }
             ],
             tableChangeList: [
                 { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },

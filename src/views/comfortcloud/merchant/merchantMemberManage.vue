@@ -37,8 +37,8 @@
             <el-tag size="medium" class="eltagtop">
                   已筛选 {{merchantmemberData.total}} 项；
                   累计注册: {{merchantmemberTotalData.registerCount}}个；
-                  累计成交订单: {{merchantmemberTotalData.orderCount}}单；
-                  累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
+                  累计邀请成交订单: {{merchantmemberTotalData.orderCount}}单；
+                  累计邀请成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
                   累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
             </el-tag>
             <!-- 表格使用老毕的组件 -->
