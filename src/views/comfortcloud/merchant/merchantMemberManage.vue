@@ -37,8 +37,8 @@
             <el-tag size="medium" class="eltagtop">
                   已筛选 {{merchantmemberData.total}} 项；
                   累计注册: {{merchantmemberTotalData.registerCount}}个；
-                  累计成交订单: {{merchantmemberTotalData.orderCount}}单；
-                  累计成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
+                  累计邀请成交订单: {{merchantmemberTotalData.rewardCount}}单；
+                  累计邀请成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
                   累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
             </el-tag>
             <!-- 表格使用老毕的组件 -->
@@ -86,8 +86,10 @@ export default {
                 { label: '注册来源', prop: 'source' },
                 { label: '推荐人会员账号', prop: 'invitePhone' },
                 { label: '推荐人会员编号', prop: 'inviteUuid' },
+                { label: '购买订单数', prop: 'orderCount' },
+                { label: '购买订单金额', prop: 'orderAmount' },
                 { label: '邀请会员数量', prop: 'registerCount' },
-                { label: '邀请成交订单数', prop: 'orderCount' },
+                { label: '邀请成交订单数', prop: 'rewardCount' },
                 { label: '邀请成交金额', prop: 'payAmountTotal' },
                 { label: '奖励金额', prop: 'rewardAmountTotal' }
             ],
@@ -151,7 +153,7 @@ export default {
         }),
         async onQuery () {
             await this.findMerchantMembersituation(this.searchParams)
-            await this.findMerchantMemberTotalsituation()
+            await this.findMerchantMemberTotalsituation(this.searchParams)
             this.tableData = this.merchantmemberData.records
             this.pagination = {
                 pageNumber: this.merchantmemberData.current,
