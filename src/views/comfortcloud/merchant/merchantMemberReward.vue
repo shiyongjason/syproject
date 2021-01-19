@@ -153,7 +153,7 @@ export default {
             updateIndexData: {},
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/mall/wx/order/boss/import`,
+                action: `${iotUrl}/mall/boss/wx/reward/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: {
