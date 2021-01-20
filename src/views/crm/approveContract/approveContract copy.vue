@@ -20,7 +20,7 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur' v-if="flag"></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur'></editor>
                             <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
@@ -194,7 +194,6 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
-            flag: true,
             contentvsData: [],
             contentvsVisible: false,
             editorDrawer: false,
@@ -312,6 +311,7 @@ export default {
             done()
         },
         onBlur () {
+            // console.log('onBlur: ', this.editorDrawer)
             this.onSaveContent(3)
         },
         checkField (rule, value, callback) {
@@ -546,11 +546,7 @@ export default {
             }
         },
         async onApprove () {
-            let contractContentBeforeTransfer = '' // 内容
-            let contractFieldsListBeforeTransfer = ''// 字段
             if (this.detailRes.contractStatus == 6) {
-                contractContentBeforeTransfer = this.contractDocument.innerHTML
-                contractFieldsListBeforeTransfer = JSON.parse(JSON.stringify(this.contractFieldsList))
                 let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
                 Array.from(signDOMS).map(item => {
                     item.outerHTML = `<span class="platform_sign" style="color:#fff">platform_sign</span>`
@@ -558,7 +554,7 @@ export default {
                 // 对客户签署区进行转化
                 let customSignDOMS = this.contractDocument.getElementsByClassName('custom_sign')
                 Array.from(customSignDOMS).map(item => {
-                    item.outerHTML = `<span class="custom_sign" style="color:#fff">${item.dataset.en}</span>`
+                    item.outerHTML = `<span class="custom_sign" style="color:#fff" data-en="${item.dataset.en}">${item.dataset.en}</span>`
                 })
                 // 法务审核通过把非必填且没值的标记清空
                 let res = this.contractFieldsList.filter(item => (!item.required && !item.paramValue))
@@ -568,7 +564,6 @@ export default {
                         if (resDom && resDom.length > 0) {
                             Array.from(resDom).map(jtem => {
                                 jtem.outerHTML = ''
-                                // jtem.outerHTML = `<span class="custom_sign" style="color:#fff" contenteditable="false">${item.dataset.en}</span>`
                             })
                         }
                     })
@@ -582,32 +577,22 @@ export default {
                     approverRole: this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
                     approvalStatus: this.dialog.status,
                     approvalRemark: this.dialog.remark,
-                    contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : '',
-                    contractContentBeforeTransfer, // 备份
-                    contractFieldsListBeforeTransfer: JSON.stringify(contractFieldsListBeforeTransfer)// 备份
+                    contractContent: this.detailRes.contractStatus == 6 ? this.contractDocument.innerHTML : ''
                 }
-                try {
-                    await approvalContent(query)
-                    this.$message({
-                        message: `提交成功`,
-                        type: 'success'
-                    })
-                    this.handleClose()
-                    this.goBack()
-                } catch (error) {
-                    console.log('提交失败')
-                    this.flag = false
-                    await this.init(() => {
-                        this.domBindMethods()
-                    })
-                    this.handleClose()
-                }
+                await approvalContent(query)
+                this.$message({
+                    message: `提交成功`,
+                    type: 'success'
+                })
+                this.handleClose()
+                this.goBack()
             })
         },
         goBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
+
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
         },
@@ -769,12 +754,18 @@ export default {
             let tempArr = []
             // 键值对给后台，用于判断是否删除。
             let flag = true
+            let originalTemp = []
             this.contractFieldsList.map(item => {
+                // if (!item.required) {
+                //     let originalObj = this.originalContentFieldsList.filter(o => o.paramKey === item.paramKey)
+                //     originalTemp.push(originalObj[0])
+                // }
                 if (item.inputStyle == 9 && !item.required) {
                     let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
                     console.log('有图片', item.paramValue)
                     if (DomList.length == 0) {
-                        console.log('字段标记位都删了 ')
+                        console.log('字段标记位都删了 ::::', item.paramKey)
+
                         item.paramValue = ''
                         this.$message({
                             message: `合同${item.paramName}字段不可删除`,
@@ -783,7 +774,7 @@ export default {
                         this.init(() => {
                             this.domBindMethods()
                         })
-                        flag = false
+                        // flag = false
                     } else {
                         let temp = []
                         Array.from(DomList).map(dom => {
@@ -832,6 +823,8 @@ export default {
                     item.paramValue = paramValue
                 }
             })
+            // fix用印审批驳回
+            // tempArr = [...tempArr, ...originalTemp]
             // 法务修改字段触发,`条款已被编辑，请先保存条款`
 
             // div版合同,修改页面上的值
@@ -872,7 +865,7 @@ export default {
                 'createBy': this.userInfo.employeeName,
                 'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
             })
-            // return
+            return
             try {
                 if (this.detailRes.contractStatus == 6 && !operatorType) {
                     let curHTML = this.contractDocument.innerHTML
@@ -1056,7 +1049,6 @@ export default {
                 const response = await getPurchaseOrderList(this.$route.query.id)
                 this.contentvsData = response.data
             }
-            if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
                 this.domBindMethods()

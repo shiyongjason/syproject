@@ -66,6 +66,8 @@
 <script>
 import { mapGetters, mapActions, mapState } from 'vuex'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import * as Auths from '@/utils/auth_const'
+
 export default {
     name: 'contractTemp',
     components: { hosJoyTable },
@@ -182,7 +184,9 @@ export default {
             return cArr.toString()
         },
         async onFindtempType () {
-            await this.getContratType()
+            await this.getContratType({
+                typeAuth: this.hosAuthCheck(Auths.CONTRACTLIST_TYPE_AUTH) ? '' : 2 // 1确认函
+            })
             this.contract_list = this.tempType
         },
         async findTempDetail (val) {
