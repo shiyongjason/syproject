@@ -13,7 +13,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src.sync="DefaultImage" v-oss-sts-element-image="{item: example, key: 'fileUrl'}" :preview-src-list="srcList(jtem,exampleIndex)" />
+                                <elImageAddToken v-if="example.fileUrl" :file-url="example.fileUrl"></elImageAddToken>
                             </div>
                         </div>
                         <!--  -->
@@ -23,19 +23,20 @@
                                 <div class="posrtv">
                                     <template v-if="ktem&&ktem.fileUrl">
                                         <i class="el-icon-document"></i>
-                                        <a href="" class="oss-sts-download" v-oss-sts-a-download="ktem.fileUrl" target="_blank" :un-repeat-key="1">
-                                            <font>{{ktem.fileName}}</font>
-                                        </a>
+                                        <downloadFileAddToken isPreview
+                                                              :file-name="ktem.fileName"
+                                                              :file-url="ktem.fileUrl"
+                                                              :a-link-words="ktem.fileName"
+                                                              is-type="main" />
                                     </template>
                                 </div>
                                 <div>{{formatMoment(ktem.createTime)}}</div>
                                 <div>
-                                    <!-- <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font> -->
-                                    <a class="fileItemDownLoad oss-sts-download" :download="ktem.fileName" v-oss-sts-a-download="ktem.fileUrl" :un-repeat-key="2"
-                                        v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1">
-                                        下载
-                                    </a>
-                                    <font v-else><a class='fileItemDownLoad oss-sts-download' v-oss-sts-a-download="ktem.fileUrl" :un-repeat-key="1" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken
+                                                          :file-name="ktem.fileName"
+                                                          :file-url="ktem.fileUrl"
+                                                          :a-link-words="'下载'"
+                                                          is-type="btn" />
                                 </div>
                             </div>
                         </template>
@@ -54,19 +55,21 @@
 </template>
 
 <script>
-import { handleImgDownload } from './utils'
 import moment from 'moment'
 import { getCreditdocumentType } from './api'
 import OssFileUtils from '@/utils/OssFileUtils'
-import DefaultImage from '@/assets/images/img_403@2x.png'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
+import elImageAddToken from '@/components/elImageAddToken'
 export default {
     name: 'creditApprove',
     data () {
         return {
-            handleImgDownload,
-            detail: [],
-            DefaultImage: DefaultImage
+            detail: []
         }
+    },
+    components: {
+        downloadFileAddToken,
+        elImageAddToken
     },
     methods: {
         formatMoment (val) {
@@ -96,13 +99,6 @@ export default {
         }
         const { data } = await getCreditdocumentType(query)
         this.detail = data
-        // OssFileUtils.Event.onload()
-        // this.$nextTick(() => {
-        //     OssFileUtils.Event.onload()
-        // })
-        // setTimeout(function () {
-        //     OssFileUtils.Event.onload()
-        // }, 100)
     }
 }
 </script>

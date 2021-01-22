@@ -15,8 +15,8 @@
             </el-form-item>
             <el-form-item label="采购明细表：">
                 <div class="info-img-group">
-                    <span :key="item.key" class="img-box"  v-for="item in enterReceiptDetail.detailed" @click="goDetail(item.fileUrl)">
-                        <img :src="item.fileUrl" :alt="item.fileName">
+                    <span :key="item.key" class="img-box"  v-for="item in enterReceiptDetail.detailed">
+                        <imageAddToken :file-url="item.url" />
                     </span>
                 </div>
             </el-form-item>
@@ -24,14 +24,14 @@
                <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
-                <hosjoyUpload
+                <OssFileHosjoyUpload
                     v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=20
                     :limit=20 :action='action' :uploadParameters='uploadParameters'
                     style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
-                </hosjoyUpload>
+                </OssFileHosjoyUpload>
                 <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传20张图片，单张图片限制20M</p>
             </el-form-item>
             <el-form-item label="收货备注：">
@@ -47,14 +47,16 @@
 
 <script>
 import { getConfirmReceiptDetail, updateConfirmReceiptPass } from '@/views/crm/paymentOrder/api'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { mapState } from 'vuex'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'enterReceiptDialog',
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload,
+        imageAddToken
     },
     props: {
         isOpen: {

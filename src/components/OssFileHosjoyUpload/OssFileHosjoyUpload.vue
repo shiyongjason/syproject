@@ -11,18 +11,19 @@
                     </div>
                     <!-- TODO: 这块功能还未涉及到，已经更新了对应代码 没有场景用到，可能会有bug-->
                     <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
-                        <img v-oss-sts-image-preview="pdfbase">
+                        <img :src="pdfbase">
                     </div>
                     <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.xls') != -1||(item.fileUrl).indexOf('.xlxs') != -1">
-                        <img v-oss-sts-image-preview="xlsbase">
+                        <img :src="xlsbase">
                     </div>
                     <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.zip') != -1||(item.fileUrl).indexOf('.rar') != -1">
-                        <img v-oss-sts-image-preview="zipbase">
+                        <img :src="zipbase">
                     </div>
                     <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.doc') != -1||(item.fileUrl).indexOf('.docx') != -1||(item.fileUrl).indexOf('.word') != -1">
-                        <img v-oss-sts-image-preview="worldbase">
+                        <img :src="worldbase">
                     </div>
-                    <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src.sync="DefaultImage" v-oss-sts-element-image="{item: item, key: 'fileUrl'}" :preview-src-list="previewSrcList"></el-image>
+<!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
+                    <elImageAddToken  v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
                 </div>
             </template>
         </template>
@@ -30,9 +31,10 @@
             <span v-for="(item,index) in fileList" :key="index" class="posrtv">
                 <template v-if="item&&item.fileUrl">
                     <i class="el-icon-document"></i>
-                    <a v-oss-sts-a-download="item.fileUrl" target="_blank">
-                        <font>{{item.fileName}}</font>
-                    </a>
+<!--                    <a src="item.fileUrl" target="_blank">-->
+<!--                        <font>{{item.fileName}}</font>-->
+<!--                    </a>-->
+                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
                     <div class="abs">
                         <i class="el-icon-circle-close" @click="remove(index)"></i>
                     </div>
@@ -54,8 +56,6 @@
                 </slot>
                 <!-- 提示说明文字 -->
                 <slot name="tip"></slot>
-                <!-- 上传进度 -->
-                <!-- <el-progress v-if="progressFlag&&showProgress" type="dashboard" :percentage="uploadPercent" :width='110' :stroke-width="5" color="#FF7A45" class="uploadprogress"></el-progress> -->
             </el-upload>
 
         </div>
@@ -71,7 +71,8 @@
 
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
-import DefaultImage from '@/assets/images/img_403@2x.png'
+import elImageAddToken from '@/components/elImageAddToken'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
     name: 'OssFileHosjoyUpload',
     props: {
@@ -88,12 +89,10 @@ export default {
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
         accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' } // 上传的类型
-
     },
-    // components: { hosjoyListPreView },
+    components: { elImageAddToken, downloadFileAddToken },
     data () {
         return {
-            DefaultImage,
             successFileTemp: {},
             isBeyond: true,
             haveslot: false,
@@ -122,7 +121,6 @@ export default {
     },
     methods: {
         handleError (err) {
-            // console.log(JSON.parse(err.message))
             let errMessage = (JSON.parse(err.message)).message || ''
             this.$message.error(`上传失败：` + errMessage)
             this.progressFlag = false
@@ -133,7 +131,7 @@ export default {
             this.progressFlag = true
             this.uploadPercent = Math.floor(event.percent)
         },
-        handleSuccess (response, file, fileList) {
+        async handleSuccess (response, file, fileList) {
             let obj = {
                 fileName: this.successFileTemp.name,
                 fileUrl: this.successFileTemp.url
@@ -201,11 +199,8 @@ export default {
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
-                this.previewSrcList = tempArr.map((item, index) => {
-                    OssFileUtils.Event.listen(async function (item) {
-                        item.fileUrl = await OssFileUtils.getUrl(item.fileUrl)
-                    }, item)
-                    return item.fileUrl
+                this.previewSrcList = tempArr.forEach(async (item, index) => {
+                    item.fileUrl = await OssFileUtils.getUrl(item.fileUrl)
                 })
                 const pre = this.$refs[`preview_${index}`]
                 if (pre && pre[0]) {
@@ -216,7 +211,6 @@ export default {
             }
         },
         async uploadFile (params) {
-            // console.log(params)
             this.successFileTemp = await OssFileUtils.uploadFile(params.file)
         }
     },

@@ -71,21 +71,22 @@
                                         <span class="posrtv">
                                             <template v-if="jtem&&jtem.fileUrl">
                                                 <i class="el-icon-document"></i>
-                                                <a  v-oss-sts-a-download="jtem.fileUrl" class="oss-sts-download" :un-repeat-key="1" target="_blank">
-                                                    <font>{{jtem.fileName}}</font>
-                                                </a>
+                                                 <downloadFileAddToken isPreview
+                                                                       :file-name="jtem.fileName"
+                                                                       :file-url="jtem.fileUrl"
+                                                                       :a-link-words="jtem.fileName"
+                                                                       is-type="main" />
                                             </template>
                                         </span>
                                     </p>
                                     <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                     <p>
                                         <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
-                                        <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
-                                        <a class="fileItemDownLoad oss-sts-download" v-oss-sts-a-download="jtem.fileUrl" :un-repeat-key="2" :download="jtem.fileName"
-                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">
-                                            下载
-                                        </a>
-                                        <font v-else><a class='fileItemDownLoad oss-sts-download' v-oss-sts-a-download="jtem.fileUrl" target='_blank'>下载</a></font>
+                                        <downloadFileAddToken
+                                                              :file-name="jtem.fileName"
+                                                              :file-url="jtem.fileUrl"
+                                                              :a-link-words="'下载'"
+                                                              is-type="btn" />
                                     </p>
                                 </div>
                                 <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
@@ -185,12 +186,11 @@
 <script>
 import moment from 'moment'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
-import HosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 import { interfaceUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
-import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
 export default {
     name: 'creditdrawer',
@@ -198,7 +198,6 @@ export default {
         return {
             showPacking: null,
             auths,
-            handleImgDownload,
             moment,
             isloading: false,
             resloading: false,
@@ -277,7 +276,7 @@ export default {
     },
     components: {
         OssFileHosjoyUpload,
-        HosjoyUpload
+        downloadFileAddToken
     },
     watch: {
         'form.projectUpload' (val) {

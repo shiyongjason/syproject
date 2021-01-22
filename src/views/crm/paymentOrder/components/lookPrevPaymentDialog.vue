@@ -36,8 +36,8 @@
                             支付凭证：
                         </span>
                         <p class="content">
-                            <span class="img-box" v-for="subItem in item.payVouchers" @click="goDetail(subItem.fileUrl)" :key="subItem.fileUrl" >
-                                <img :src="subItem.fileUrl" alt="" >
+                            <span class="img-box" v-for="subItem in item.payVouchers" :key="subItem.fileUrl" >
+                                <imageAddToken :file-url="subItem.url" />
                             </span>
                         </p>
                     </div>
@@ -56,9 +56,13 @@
 <script>
 import { getPrevPayMoreDetail } from '@/views/crm/paymentOrder/api'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'lookPrevPaymentDialog',
+    components: {
+        imageAddToken
+    },
     props: {
         isOpen: {
             type: Boolean,

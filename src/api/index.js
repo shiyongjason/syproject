@@ -3,5 +3,5 @@ import axios from 'axios'
 export const tracking = (params) => axios.post('ets/api/event-tracks', params)
 // oss 文件操作获取身份
 export const getOssSTS = () => {
-    return axios.get('common/oss/credentials')
+    return axios.get('http://192.168.20.168:30300/oss/credentials')
 }

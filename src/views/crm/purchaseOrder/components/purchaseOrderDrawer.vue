@@ -71,8 +71,8 @@
                                     <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
                                         <span class="img-box" :key="item.url"
                                               v-for="item in purchaseOrderDetail.poInfo.poDetail">
-                                        <img :src="item.url"  alt="" @click="goDetail(item.url)">
-                                    </span>
+                                            <imageAddToken :file-url="item.url" class="info-img"/>
+                                        </span>
                                     </p>
 
                                 </div>
@@ -262,6 +262,7 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
+import imageAddToken from '@/components/imageAddToken'
 export default {
     name: 'purchaseOrderDrawer',
     props: {
@@ -288,7 +289,7 @@ export default {
             PaymentOrderDict
         }
     },
-    components: { PureCollapseTr },
+    components: { PureCollapseTr, imageAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo

@@ -362,12 +362,6 @@ router.beforeEach(async (to, from, next) => {
     // sessionStorage.setItem('authCodeArr',JSON.stringify(data))
     next()
 })
-router.afterEach((to, from) => {
-    let isFirst = store.state.isFirst
-    if(!isFirst){
-        OssFileUtils.Event.clear()
-    }
-})
 export default router
 export {
     routerMapping

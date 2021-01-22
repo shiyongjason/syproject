@@ -15,7 +15,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image v-if="example.fileUrl" style="width: 100px; height: 100px" :src.sync="DefaultImage" v-oss-sts-element-image="{item: example, key: 'fileUrl'}" :preview-src-list="srcList(jtem,exampleIndex)" />
+                                <elImageAddToken v-if="example.fileUrl" :file-url="example.fileUrl" />
                             </div>
                         </div>
                         <!--  -->
@@ -26,17 +26,22 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a  class="oss-sts-download" v-oss-sts-a-download="ktem.fileUrl" key="1" target="_blank">
-                                                <font>{{ktem.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken isPreview
+                                                                  :file-name="ktem.fileName"
+                                                                  :file-url="ktem.fileUrl"
+                                                                  :a-link-words="ktem.fileName"
+                                                                  :is-type="'main'" />
                                         </template>
                                     </span>
                                 </p>
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}" v-if="$route.query.docAfterStatus!=2">删除</font>
-                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1"  v-oss-sts-a-download="ktem.fileUrl">下载</font>
-                                    <font v-else><a class='fileItemDownLoad oss-sts-download' v-oss-sts-a-download="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken
+                                                          :file-name="ktem.fileName"
+                                                          :file-url="ktem.fileUrl"
+                                                          :a-link-words="'下载'"
+                                                          :is-type="'btn'" />
                                 </p>
                             </div>
                         </template>
@@ -84,9 +89,10 @@
 import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { ccpBaseUrl } from '@/api/config'
-import { handleImgDownload } from './utils'
 import { submitDoc, getCreditdocumentType, submitcreditDoc } from './api/index'
-import DefaultImage from '@/assets/images/img_403@2x.png'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
+import elImageAddToken from '@/components/elImageAddToken'
 
 import moment from 'moment'
 import OssFileUtils from '@/utils/OssFileUtils'
@@ -98,7 +104,9 @@ const _reqRiskCheckProjectDoc = {
 export default {
     name: 'creditDetail',
     components: {
-        OssFileHosjoyUpload: () => import('@/components/OssFileHosjoyUpload/OssFileHosjoyUpload')
+        OssFileHosjoyUpload,
+        downloadFileAddToken,
+        elImageAddToken
     },
     data () {
         return {
@@ -106,7 +114,6 @@ export default {
             moment,
             detail: '',
             tempDetail: '',
-            handleImgDownload,
             dialogVisible: false,
             action: ccpBaseUrl + 'common/files/upload-old',
             // 上传时附带的额外参数同el-upload 的 data
@@ -117,8 +124,7 @@ export default {
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],
             refuseInfos: [],
-            creditFrom: {},
-            DefaultImage: DefaultImage
+            creditFrom: {}
         }
     },
     computed: {

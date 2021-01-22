@@ -25,20 +25,21 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a v-oss-sts-a-download="ktem.fileUrl" target="_blank">
-                                                <font>{{ktem.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken isPreview
+                                                                  :file-name="ktem.fileName"
+                                                                  :file-url="ktem.fileUrl"
+                                                                  :a-link-words="ktem.fileName"
+                                                                  is-type="main" />
                                         </template>
                                     </span>
                                 </p>
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
-                                    <!-- <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font> -->
-                                    <a class="fileItemDownLoad" v-oss-sts-a-download="ktem.fileUrl" :download="ktem.fileName"
-                                        v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1">
-                                        下载
-                                    </a>
-                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken
+                                                          :file-name="ktem.fileName"
+                                                          :file-url="ktem.fileUrl"
+                                                          :a-link-words="'下载'"
+                                                          is-type="btn" />
                                 </p>
                             </div>
                         </template>
@@ -53,13 +54,13 @@
 
 <script>
 import moment from 'moment'
-import { handleImgDownload } from '../utils'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index'
 export default {
     name: 'tabLetterTrial',
     props: ['informationDetail'],
+    components: { downloadFileAddToken },
     data () {
         return {
-            handleImgDownload
         }
     },
     methods: {
@@ -67,9 +68,6 @@ export default {
             if (!val) return ''
             return moment(val).format('YYYY-MM-DD HH:mm:ss')
         }
-    },
-    mounted () {
-
     }
 }
 </script>
@@ -181,5 +179,8 @@ export default {
 .explanation {
     font-size: 14px;
     margin-bottom: 20px;
+}
+.download {
+    cursor: pointer;
 }
 </style>

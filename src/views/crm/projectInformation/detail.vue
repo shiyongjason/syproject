@@ -29,7 +29,7 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="ktem.fileUrl" target="_blank">
+                                            <a class="download" @click="handleImgDownloadPreload(ktem.fileUrl, ktem.fileName)">
                                                 <font>{{ktem.fileName}}</font>
                                             </a>
                                         </template>
@@ -38,17 +38,17 @@
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}" v-if="$route.query.docAfterStatus!=2">删除</font>
-                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font>
-                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownloadPreload(ktem.fileUrl, ktem.fileName)">下载</font>
+                                    <font v-else><a class='fileItemDownLoad' @click="handleImgDownloadPreload(ktem.fileUrl, ktem.fileName)" target='_blank'>下载</a></font>
                                 </p>
                             </div>
                         </template>
                         <p v-else>-</p>
                     </div>
                     <div class="secondclass-documents_upload" v-if="$route.query.docAfterStatus!=2">
-                        <hosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
+                        <OssFileHosjoyUpload :fileSize=20 :fileNum=100 :limit=100 v-model="jtem.riskCheckProjectDocPos" :showPreView=false :action='action' :uploadParameters='uploadParameters' @successCb='()=>{handleSuccessCb(jtem)}'>
                             <el-button type="primary" style="width:130px">上传</el-button>
-                        </hosjoyUpload>
+                        </OssFileHosjoyUpload>
                     </div>
                 </div>
             </div>
@@ -88,9 +88,11 @@
 import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { ccpBaseUrl } from '@/api/config'
-import { handleImgDownload } from './utils'
+import { ossDownload } from '@/utils/utils'
 import { saveDoc, submitDoc, getProjectLevels } from './api/index'
 import moment from 'moment'
+import DefaultImage from '@/assets/images/img_403@2x.png'
+import OssFileUtils from '@/utils/OssFileUtils'
 const _reqRiskCheckProjectDoc = {
     bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
     projectId: '', // 工程项目id
@@ -100,7 +102,7 @@ const _reqRiskCheckProjectDoc = {
 export default {
     name: 'detail',
     components: {
-        hosjoyUpload: () => import('@/components/HosJoyUpload/HosJoyUpload')
+        OssFileHosjoyUpload: () => import('@/components/OssFileHosjoyUpload/OssFileHosjoyUpload')
     },
     data () {
         return {
@@ -108,7 +110,6 @@ export default {
             moment,
             detail: '',
             tempDetail: '',
-            handleImgDownload,
             dialogVisible: false,
             action: ccpBaseUrl + 'common/files/upload-old',
             // 上传时附带的额外参数同el-upload 的 data
@@ -118,7 +119,8 @@ export default {
             },
             reqRiskCheckProjectDoc: JSON.parse(JSON.stringify(_reqRiskCheckProjectDoc)),
             mondatoryFlagRes: [],
-            refuseInfos: []
+            refuseInfos: [],
+            DefaultImage
         }
     },
     computed: {
@@ -135,11 +137,13 @@ export default {
             findInformationEditDetail: 'projectInformation/findInformationEditDetail',
             findRefuseinfo: 'projectInformation/findRefuseinfo'
         }),
+        async handleImgDownloadPreload (fileUrl, fileName) {
+            const url = await OssFileUtils.getUrl(fileUrl)
+            ossDownload(url, fileName)
+        },
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
-                const res = item.riskCheckDocTemplateSamplePos.filter(item => {
-                    return item.fileUrl
-                })
+                const res = item.riskCheckDocTemplateSamplePos
                 return res.length > 0 && [res[index].fileUrl]
             }
             return []
@@ -197,10 +201,16 @@ export default {
             }
             await this.findInformationEditDetail(query)
             this.detail = this.listDetail
-            this.detail.projectDocList.map(item => {
-                item.respRiskCheckDocTemplateList.map(jtem => {
+            this.detail.projectDocList.forEach(item => {
+                item.respRiskCheckDocTemplateList.forEach(jtem => {
                     if (!jtem.riskCheckProjectDocPos) {
                         jtem.riskCheckProjectDocPos = []
+                    } else {
+                        jtem.riskCheckProjectDocPos.forEach(kitem => {
+                            kitem.riskCheckDocTemplateSamplePos && kitem.riskCheckDocTemplateSamplePos.forEach(async value => {
+                                value.fileUrl = await OssFileUtils.getUrl(value.fileUrl)
+                            })
+                        })
                     }
                 })
             })
@@ -214,7 +224,6 @@ export default {
                 })
             })
             this.tempDetail = JSON.parse(JSON.stringify(this.detail))
-            console.log('this.mondatoryFlagRes: ', this.mondatoryFlagRes)
         },
         // 处理保存、提交资料入参
         dealReqRiskCheckProjectDoc (submitStatus = '') {
@@ -430,5 +439,8 @@ export default {
     p {
         line-height: 2;
     }
+}
+.download {
+    cursor: pointer;
 }
 </style>

@@ -41,8 +41,8 @@
                             <p class="content">
                                 <template
                                     v-if="paymentOrderDetail.payOrderPoDetail && paymentOrderDetail.payOrderPoDetail.poDetail">
-                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderPoDetail.poDetail" @click="goDetail(item.url)">
-                                         <img :src="item.url"  alt="" >
+                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderPoDetail.poDetail">
+                                        <imageAddToken :file-url="item.url" />
                                     </span>
                                 </template>
                             </p>
@@ -107,8 +107,8 @@
                             <p class="content">
                                 <template
                                     v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
-                                    <span class="img-box" @click="goDetail(item.url)" :key="item.url"  v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
-                                        <img :src="item.url" alt="" >
+                                    <span class="img-box" :key="item.url"  v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                         <imageAddToken :file-url="item.url" />
                                     </span>
                                 </template>
                             </p>
@@ -485,6 +485,7 @@ import PaymentOrderDict from '../paymentOrderDict'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'paymentOrderDrawer',
@@ -543,7 +544,7 @@ export default {
 
         }
     },
-    components: {},
+    components: { imageAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo

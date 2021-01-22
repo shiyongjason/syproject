@@ -14,7 +14,7 @@
                         <p class="secondclass-documents_title">样例：<span v-if="!jtem.riskCheckDocTemplateSamplePos">-</span></p>
                         <div class="secondclass-documents_case" v-if="jtem.riskCheckDocTemplateSamplePos">
                             <div class="secondclass-documents_case_box" v-for="(example,exampleIndex) in jtem.riskCheckDocTemplateSamplePos" :key="exampleIndex">
-                                <el-image style="width: 100px; height: 100px" v-if="example.fileUrl" :src.sync="DefaultImage" v-oss-sts-element-image="{item: example, key: 'fileUrl'}" :preview-src-list="srcList(jtem,exampleIndex)" />
+                                <elImageAddToken  v-if="example.fileUrl" :fileUrl="example.fileUrl" :fit="'contain'"></elImageAddToken>
                             </div>
                         </div>
                         <!--  -->
@@ -25,20 +25,20 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="ktem.fileUrl" target="_blank">
-                                                <font>{{ktem.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken isPreview
+                                                                  :file-name="ktem.fileName"
+                                                                  :file-url="ktem.fileUrl"
+                                                                  :a-link-words="ktem.fileName"
+                                                                  is-type="main" />
                                         </template>
                                     </span>
                                 </p>
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
-                                    <!-- <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(ktem.fileUrl, ktem.fileName)">下载</font> -->
-                                    <a class="fileItemDownLoad" :href="ktem.fileUrl+'?response-content-type=application/octet-stream'" :download="ktem.fileName"
-                                        v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1">
-                                        下载
-                                    </a>
-                                    <font v-else><a class='fileItemDownLoad' :href="ktem.fileUrl" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken :file-name="ktem.fileName"
+                                                          :file-url="ktem.fileUrl"
+                                                          :a-link-words="'下载'"
+                                                          is-type="btn" />
                                 </p>
                             </div>
                         </template>
@@ -52,17 +52,17 @@
 </template>
 
 <script>
-import { handleImgDownload } from '../utils'
-import DefaultImage from '@/assets/images/img_403@2x.png'
 import moment from 'moment'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index'
+import elImageAddToken from '@/components/elImageAddToken/index'
 
 export default {
     name: 'tabChecklist',
     props: ['informationDetail'],
+    components: { downloadFileAddToken, elImageAddToken },
     data () {
         return {
-            handleImgDownload,
-            DefaultImage
+            informationDetailTokenVersion: []
         }
     },
     methods: {
@@ -79,9 +79,6 @@ export default {
             }
             return []
         }
-    },
-    mounted () {
-
     }
 }
 </script>
