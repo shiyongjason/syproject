@@ -163,16 +163,24 @@
                 </div>
             </div>
         </el-drawer>
-        <el-dialog title="合同对比" :visible.sync="contentvsVisible" width="800px" class="contentvsbox">
-            <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsItem(item)">
-                <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210109/141004436/edf75389-4645-44f4-8965-61ee4a718da5.png' />
-                {{item.contractName}}
+        <el-dialog title="关联的采购单" :visible.sync="contentvsVisible" width="600px" class="contentvsbox">
+            <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsPurchaseOrder(item)">
+                <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/163503360/a954aef4-b308-4043-b4b1-fea72116bd89.png' />
+                {{item.purchaseOrderName}}
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="contentvsVisible = false">取 消</el-button>
                 <el-button type="primary" @click="contentvsVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+            <div class="vsList">
+                <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
+            </div>
+            <div class="history-bttom-css">
+                <h-button type="primary" @click="closevsdrawer">好的</h-button>
+            </div>
+        </el-drawer>
     </div>
 </template>
 <script>
@@ -194,6 +202,8 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            contentvsDataVisible: false,
+            contentvsDataList: [],
             flag: true,
             contentvsData: [],
             contentvsVisible: false,
@@ -295,15 +305,38 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        async onClickVsPurchaseOrder (item) {
+            const response = await getPurchaseOrderList({
+                neContractId: this.$route.query.id,
+                purchaseOrderId: item.purchaseOrderId
+            })
+            this.contentvsDataList = response.data
+            this.contentvsDataVisible = true
+            setTimeout(() => {
+                this.contentvsVisible = false
+            }, 500)
+        },
         onClickVsItem (item) {
             console.log('item: ', item)
             let routeUrl = this.$router.resolve({
                 path: '/goodwork/contractSigningManagementDetail',
                 query: {
-                    id: item.id
+                    id: item.contractId
                 }
             })
             window.open(routeUrl.href, '_blank')
+        },
+        closevsdrawer () {
+            if (this.contentvsDataList && this.contentvsDataList.length > 0) {
+                this.contentvsDataList = []
+            }
+            this.contentvsDataVisible = false
+        },
+        vsdrawerClose (done) {
+            if (this.contentvsDataList && this.contentvsDataList.length > 0) {
+                this.contentvsDataList = []
+            }
+            done()
         },
         editorDrawerClose (done) {
             if (this.imgArr && this.imgArr.length > 0) {
@@ -1053,7 +1086,9 @@ export default {
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             if (this.detailRes.contractStatus == 6) {
-                const response = await getPurchaseOrderList(this.$route.query.id)
+                const response = await getPurchaseOrderList({
+                    contractId: this.$route.query.id
+                })
                 this.contentvsData = response.data
             }
             if (!this.flag) this.flag = true
@@ -1440,6 +1475,39 @@ export default {
         // color: #000;
         // font-weight: bold;
         // margin-bottom:10px
+    }
+}
+.vsList{
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 150px);
+    p{
+       color: #ff7a45;
+       display: flex;
+       margin-bottom: 10px;
+       cursor: pointer;
+       img{
+           width: 20px;
+           height: 20px;
+           margin-right: 5px;
+
+       }
+    }
+}
+.vsdrawercss{
+    /deep/.history-bttom-css {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        text-align: right;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+    /deep/ .el-drawer__header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 12px;
+        margin-bottom: 10px;
+        font-size: 18px;
     }
 }
 .approvalcontract-layout {
