@@ -40,18 +40,18 @@
                     {{scope.data.row.status===1?'待审核':scope.data.row.status===2?'推广中':scope.data.row.status===3?'已失效':'审核不通过'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <template>
+                    <template class="action-active">
                         <el-button class="orangeBtn" @click="onEdit(scope.data.row)">活动预览</el-button>
-                        <el-button class="orangeBtn" @click="onOperate(scope.data.row)">
+                        <span class="colred" @click="onOperate(scope.data.row)">
                             {{operationStatus(scope.data.row)}}
-                        </el-button>
+                        </span>
                     </template>
                 </template>
             </basicTable>
         </div>
         <el-dialog title="审核门店活动" :visible.sync="checkActiveDialogShow" class="upload-show" width="400px"
                    :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
-            <p class="redcolred">活动内容要求：</p>
+            <p>活动内容要求：</p>
             <p>1、露出的活动需实际业务匹配；</p>
             <p>2、活动内容需确保不涉及任何违法广告法等、违法信息。</p>
             <p>请确认活动信息无需后进行审核。</p>
@@ -174,20 +174,6 @@ export default {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
         },
-        async onImport () {
-            if (this.loading) return
-            this.loading = true
-            if (this.hasFile()) {
-                this.uploadData.data.operateUserName = this.userInfo.employeeName
-                try {
-                    await this.$refs.upload.submit()
-                } catch (e) {
-                }
-            } else {
-                this.$message.error('请选择上传的文件')
-                this.loading = false
-            }
-        },
         operationStatus (val) {
             if (val.status === 1) {
                 return '审核'
@@ -196,7 +182,7 @@ export default {
             } else if (val.status === 3) {
                 return '生效'
             } else if (val.status === 4) {
-                return '--'
+                return '----'
             }
         },
         onCloseEditMonthDialog () {
@@ -219,13 +205,14 @@ export default {
                 this.$prompt('审核不通过的原因备注', '审核不通过的原因备注', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消'
-                }).then(({ value }) => {
-                    checkActiveStatus({
+                }).then(async ({ value }) => {
+                    await checkActiveStatus({
                         'id': this.CheckActiveData.id,
                         'remark': value,
                         'auditResult': 4,
                         'operator': this.userInfo.employeeName
                     })
+                    this.onQuery()
                 }).catch(() => {
                 })
             }
@@ -284,7 +271,6 @@ export default {
             }
         }
     }
-
     .topTitle {
         margin-right: 2rem;
         font-weight: bold;
@@ -293,13 +279,17 @@ export default {
     .colred {
         color: #ff7a45;
         cursor: pointer;
+        width: 100px;
     }
 
     .redcolred {
         color: red;
         cursor: pointer;
     }
-
+.action-active{
+    display: flex;
+    flex-direction: column;
+}
     .topColred {
         color: #ff7a45;
         cursor: pointer;
