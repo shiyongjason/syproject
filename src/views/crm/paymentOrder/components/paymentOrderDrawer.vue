@@ -241,12 +241,14 @@
                                         {{
                                             paymentOrderDetail.respFundResults.downpaymentFund.schedulePaymentDate | formatDate('YYYY-MM-DD')
                                         }}
-                                        <img src="../../../../assets/images/crm-edit.png" alt=""
-                                             v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag ||
+                                        <template  v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                            <img src="../../../../assets/images/crm-edit.png" alt=""
+                                                 v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag ||
                                             PaymentOrderDict.paymentFlag.list[1].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag||
                                             PaymentOrderDict.paymentFlag.list[3].key === paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag"
-                                             @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)"
-                                             class="info-img-edit">
+                                                 @click="updateRow('首付款', paymentOrderDetail.respFundResults.downpaymentFund, false)"
+                                                 class="info-img-edit">
+                                        </template>
                                     </p>
                                     <p class="col-filed col-40 need-center">
                                     <span class="label">
@@ -287,21 +289,25 @@
                                         <p class="col-filed col-30">
                                             <span class="label">第{{ index + 1 }}期服务费：</span>
                                             {{ item.paymentAmount  | fundMoneyHasTail }} 元
-                                            <img src="../../../../assets/images/crm-edit.png" alt=""
-                                                 v-if="PaymentOrderDict.paymentFlag.list[0].key === item.paymentFlag ||
+                                            <template  v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt=""
+                                                     v-if="PaymentOrderDict.paymentFlag.list[0].key === item.paymentFlag ||
                                             PaymentOrderDict.paymentFlag.list[1].key === item.paymentFlag||
                                             PaymentOrderDict.paymentFlag.list[3].key === item.paymentFlag"
-                                                 @click="updateRow(`第${index + 1}期服务费`, item)"
-                                                 class="info-img-edit">
+                                                     @click="updateRow(`第${index + 1}期服务费`, item)"
+                                                     class="info-img-edit">
+                                            </template>
                                         </p>
                                         <p class="col-filed col-30">
                                             <span class="label">应支付时间：</span>{{ item.schedulePaymentDate }}
-                                            <img src="../../../../assets/images/crm-edit.png" alt=""
-                                                 v-if="PaymentOrderDict.paymentFlag.list[0].key === item.paymentFlag ||
+                                            <template  v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt=""
+                                                     v-if="PaymentOrderDict.paymentFlag.list[0].key === item.paymentFlag ||
                                             PaymentOrderDict.paymentFlag.list[1].key === item.paymentFlag||
                                             PaymentOrderDict.paymentFlag.list[3].key === item.paymentFlag"
-                                                 @click="updateRow(`第${index + 1}期服务费`, item)"
-                                                 class="info-img-edit">
+                                                     @click="updateRow(`第${index + 1}期服务费`, item)"
+                                                     class="info-img-edit">
+                                            </template>
                                         </p>
                                         <div class="col-filed col-40 service-pay-time need-center">
                                             <p class="mr-50">
@@ -408,12 +414,14 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                         <p class="col-filed col-25">
                                             <span class="label">应支付时间：</span>
                                             {{ paymentOrderDetail.respFundResults.arrearFund.schedulePaymentDate }}
-                                            <img src="../../../../assets/images/crm-edit.png" alt=""
-                                                 v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag ||
+                                            <template  v-if="hosAuthCheck(Auths.CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT)">
+                                                <img src="../../../../assets/images/crm-edit.png" alt=""
+                                                     v-if="PaymentOrderDict.paymentFlag.list[0].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag ||
                                             PaymentOrderDict.paymentFlag.list[1].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag||
                                             PaymentOrderDict.paymentFlag.list[3].key === paymentOrderDetail.respFundResults.arrearFund.paymentFlag"
-                                                 @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)"
-                                                 class="info-img-edit">
+                                                     @click="updateRow(`尾款`, paymentOrderDetail.respFundResults.arrearFund, false)"
+                                                     class="info-img-edit">
+                                            </template>
                                         </p>
                                         <p class="col-filed col-50 resp-fund-results">
                                             <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>时间：</span>

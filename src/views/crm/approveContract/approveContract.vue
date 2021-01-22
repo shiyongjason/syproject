@@ -3,11 +3,12 @@
         <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]"></el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
-                <font>{{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同</font>
+                <div>
+                    {{detailRes.contractStatus == 2 ? '分财' : detailRes.contractStatus == 4 ? '风控' : '法务'}}审核合同<em class="contentvs" @click="contentvsVisible = true" v-if="detailRes.contractStatus == 6&&contentvsData&&contentvsData.length>0">合同对比</em>
+                </div>
                 <h-button type="primary" @click="getHistory">审核及签署流程</h-button>
             </div>
             <div class="approvalcontract-layout">
-
                 <div class="approvalcontract-layout-right">
                     <h1>合同预览</h1>
                     <div class="loader-css" v-if="detailRes.contractStatus == 6&&showLoading">
@@ -25,7 +26,7 @@
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
                         </div>
                     </div>
-                    <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6" :class="showShake?'shake':''">更新条款</h-button>
+                    <!-- <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6" :class="showShake?'shake':''">更新条款</h-button> -->
                     <div class="approvalcontract-btn">
                         <h-button @click="goBack">暂不审核</h-button>
                         <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
@@ -54,42 +55,56 @@
             <div style="text-align: center;font-size: 18px;">{{detailRes.contractStatus == 2?'待分财审核':detailRes.contractStatus == 4?'待风控审核':detailRes.contractStatus == 6?'待法务审核':''}}</div>
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
-                <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
-                    <div class="history-css-left">
-                        <span class="name">{{item.operator}} </span>
-                        <span>{{item.operationName}}</span>
-                        <template v-if="item.operationName == '编辑了'">
-                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
-                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                从<font>
-                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
-                                        :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
-                                </font>
-                                变为<font>
-                                    <span v-if="JSON.parse(item.operationContent).fieldContent==''"></span>
-                                    <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
-                                        <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                            :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                    </template>
-                                    <template v-else>
-                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                    </template>
-                                </font>
-                            </span>
-                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
-                        </template>
-                        <template v-else-if="item.operationName == '修订了'">
-                            <font style="margin: 0 4px;">合同</font>
-                            <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
-                        </template>
-                        <template v-else>
+                <template v-else v-for="(item,index) in historyList">
+                    <div class="history-css-flex" :key="index">
+                        <!-- signStatus==6下一步 -->
+                        <div v-if="item.signStatus==6" class="history-css-left">
+                            <span class="name">{{item.operator}} </span>
+                            <span style="">{{item.operationName}} </span>
                             <span class="operationcontent-css">
                                 <font>{{item.operationContent}}</font>
                             </span>
-                        </template>
+                        </div>
+                        <div v-else class="history-css-left">
+                            <span class="name">{{item.operator}} </span>
+                            <span>{{item.operationName}}</span>
+                            <template v-if="item.operationName == '编辑了'">
+                                <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
+                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                    从<font>
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                            :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                    </font>
+                                    变为<font>
+                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
+                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
+                                        </template>
+                                        <template v-else>
+                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                        </template>
+                                    </font>
+                                </span>
+                                <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                            </template>
+                            <template v-else-if="item.operationName == '修订了'">
+                                <font style="margin: 0 4px;">合同</font>
+                                <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                            </template>
+                            <template v-else>
+                                <span class="operationcontent-css">
+                                    <font>{{item.operationContent}}</font>
+                                </span>
+                            </template>
+                        </div>
+                        <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
-                </div>
+                    <div class="approvalRemark" v-if="item.approvalRemark"  :key="index+'approvalRemark'">
+                        {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
+                    </div>
+                </template>
+
             </div>
             <div class="history-bttom">
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
@@ -148,6 +163,24 @@
                 </div>
             </div>
         </el-drawer>
+        <el-dialog title="关联的采购单" :visible.sync="contentvsVisible" width="600px" class="contentvsbox">
+            <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsPurchaseOrder(item)">
+                <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/163503360/a954aef4-b308-4043-b4b1-fea72116bd89.png' />
+                {{item.purchaseOrderName}}
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="contentvsVisible = false">取 消</el-button>
+                <el-button type="primary" @click="contentvsVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+            <div class="vsList">
+                <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
+            </div>
+            <div class="history-bttom-css">
+                <h-button type="primary" @click="closevsdrawer">好的</h-button>
+            </div>
+        </el-drawer>
     </div>
 </template>
 <script>
@@ -159,7 +192,7 @@ import isNum from './components/isNum'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
 // api:https://www.tiny.cloud/docs/integrations/vue/
@@ -169,13 +202,18 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            contentvsDataVisible: false,
+            contentvsDataList: [],
             flag: true,
+            contentvsData: [],
+            contentvsVisible: false,
             editorDrawer: false,
             oldImg: '',
             emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             showShake: false,
             showLoading: true,
             editorInit: {
+                // auto_focus: true,
                 inline: true,
                 menubar: false,
                 language: 'zh_CN',
@@ -267,6 +305,39 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        async onClickVsPurchaseOrder (item) {
+            const response = await getPurchaseOrderList({
+                neContractId: this.$route.query.id,
+                purchaseOrderId: item.purchaseOrderId
+            })
+            this.contentvsDataList = response.data
+            this.contentvsDataVisible = true
+            setTimeout(() => {
+                this.contentvsVisible = false
+            }, 500)
+        },
+        onClickVsItem (item) {
+            console.log('item: ', item)
+            let routeUrl = this.$router.resolve({
+                path: '/goodwork/contractSigningManagementDetail',
+                query: {
+                    id: item.contractId
+                }
+            })
+            window.open(routeUrl.href, '_blank')
+        },
+        closevsdrawer () {
+            if (this.contentvsDataList && this.contentvsDataList.length > 0) {
+                this.contentvsDataList = []
+            }
+            this.contentvsDataVisible = false
+        },
+        vsdrawerClose (done) {
+            if (this.contentvsDataList && this.contentvsDataList.length > 0) {
+                this.contentvsDataList = []
+            }
+            done()
+        },
         editorDrawerClose (done) {
             if (this.imgArr && this.imgArr.length > 0) {
                 this.imgArr = []
@@ -274,7 +345,7 @@ export default {
             done()
         },
         onBlur () {
-            console.log('onBlur')
+            this.onSaveContent(3)
         },
         checkField (rule, value, callback) {
             console.log('checkField')
@@ -287,7 +358,6 @@ export default {
                 let Reg = new RegExp(this.currentKey.checkRule)
                 console.log(!Reg.test(this.currentKey.paramValue))
                 if (!Reg.test(this.currentKey.paramValue)) {
-                    // return callback(new Error(this.currentKey.checkNote || '格式不正确'))
                     return callback(new Error(`请输入正确的${this.currentKey.paramName}`))
                 } else {
                     callback()
@@ -478,15 +548,16 @@ export default {
             if (this.detailRes.contractStatus == 6) {
                 let curHTML = this.contractDocument.innerHTML
                 if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                    console.log('curHTML', curHTML.replace(/\ufeff/g, ''))
-                    console.log('this.contractAfterApi: ', this.contractAfterApi)
-                    this.$message({
-                        message: `条款已被编辑，请先保存条款`,
-                        type: 'error'
-                    })
-                    this.showShake = true
-                    setTimeout(() => { this.showShake = false }, 1200)
-                    return
+                    // console.log('curHTML', curHTML.replace(/\ufeff/g, ''))
+                    // console.log('this.contractAfterApi: ', this.contractAfterApi)
+                    // this.$message({
+                    //     message: `条款已被编辑，请先保存条款`,
+                    //     type: 'error'
+                    // })
+                    // this.showShake = true
+                    // setTimeout(() => { this.showShake = false }, 1200)
+                    // return
+                    this.onSaveContent(3)
                 }
             }
             this.dialog.dialogVisible = true
@@ -596,7 +667,6 @@ export default {
                 })
                 //
                 if (img.length == 1) {
-                    // doms[0].outerHTML = `<span style="word-break: break-all;color: #ff7a45;cursor: pointer;" class='${this.currentKey.paramKey}' data-paramName='${dataParamName}' data-inputStyle='${this.currentKey.inputStyle}' data-index='${this.currentKey.imgIndex}' contenteditable="false">${dataParamName}</span>`
                     doms[0].outerHTML = `${dataParamName}`
                     this.contractFieldsList.map((d, i) => {
                         if (d.paramKey === this.currentKey.paramKey) {
@@ -703,10 +773,11 @@ export default {
         onSaveContent (operatorType = '') {
             if (operatorType) {
                 let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '') || this.editorDrawer) {
                     // 条款没有变化
                     return
                 }
+                console.log('更新条款')
             }
             if (this.currentKey.inputStyle == 9 && operatorType == '') {
                 // 修改图片，图片必填
@@ -794,20 +865,8 @@ export default {
                     item.paramValue = paramValue
                 }
             })
-            // 法务修改字段触发
-            if (this.detailRes.contractStatus == 6 && !operatorType) {
-                let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                    console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
-                    console.log('this.contractAfterApi: ', this.contractAfterApi)
-                    this.$message({
-                        message: `条款已被编辑，请先保存条款`,
-                        type: 'error'
-                    })
-                    this.showShake = true
-                    setTimeout(() => { this.showShake = false }, 1200)
-                }
-            }
+            // 法务修改字段触发,`条款已被编辑，请先保存条款`
+
             // div版合同,修改页面上的值
             let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
             Array.from(ryanList).map(jtem => {
@@ -834,38 +893,6 @@ export default {
                     jtem.innerHTML = this.currentKey.paramname
                 })
             }
-
-            // 法务审核校验字段是否有删除
-            /* if (this.detailRes.contractStatus == 6) {
-            let spanList = this.contractDocument.getElementsByTagName('span')
-            let _keyValIncontract = []
-            Array.from(spanList).map(item => {
-                if (item.dataset && item.dataset.inputstyle) {
-                    _keyValIncontract.push(item.className)
-                }
-            })
-            if (_keyValIncontract.length != this.keyValIncontract.length) {
-                console.log('this.keyValIncontract: ', this.keyValIncontract)
-                console.log('_keyValIncontract: ', _keyValIncontract)
-                let _tempClassName = []
-                let _tempClassTxt = ''
-                for (var i = 0; i < this.keyValIncontract.length; i++) {
-                    if (_keyValIncontract.indexOf(this.keyValIncontract[i]) === -1) {
-                        _tempClassName.push(this.keyValIncontract[i])
-                    }
-                }
-                _tempClassName.map(ktem => {
-                    let resTemp = this.contractFieldsList.filter(item => item.paramKey == ktem)
-                    _tempClassTxt = _tempClassTxt + ' ' + resTemp[0].paramName + ' '
-                    console.log('_tempClassTxt: ', _tempClassTxt)
-                })
-                this.$message({
-                    message: `合同${_tempClassTxt}字段不可删除`,
-                    type: 'error'
-                })
-                return
-            }
-        } */
             console.log({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -878,9 +905,34 @@ export default {
                 'createBy': this.userInfo.employeeName,
                 'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
             })
-            console.log('return')
             // return
             try {
+                if (this.detailRes.contractStatus == 6 && !operatorType) {
+                    let curHTML = this.contractDocument.innerHTML
+                    if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
+                        // console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
+                        // console.log('this.contractAfterApi: ', this.contractAfterApi)
+                        // this.$message({
+                        //     message: `条款已被编辑，请先保存条款`,
+                        //     type: 'error'
+                        // })
+                        // this.showShake = true
+                        // setTimeout(() => { this.showShake = false }, 1200)
+                        console.log(`条款已被编辑，请先保存条款`)
+                        await saveContent({
+                            'contractId': this.$route.query.id,
+                            // 合同审批角色 1：分财 2：风控 3：法务
+                            'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                            'type': 3, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                            'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
+                            'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
+                            'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
+                            'contractContent': this.contractDocument.innerHTML,
+                            'createBy': this.userInfo.employeeName,
+                            'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                        })
+                    }
+                }
                 await saveContent({
                     'contractId': this.$route.query.id,
                     // 合同审批角色 1：分财 2：风控 3：法务
@@ -1033,6 +1085,12 @@ export default {
             this.contractContentDiv = res.data.contractContent // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
+            if (this.detailRes.contractStatus == 6) {
+                const response = await getPurchaseOrderList({
+                    contractId: this.$route.query.id
+                })
+                this.contentvsData = response.data
+            }
             if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
@@ -1064,6 +1122,10 @@ export default {
 }
 </script>
 <style scoped lang="scss">
+.approvalRemark{
+    font-size: 14px;
+    color: #f00;
+}
 .approvalcontract {
     height: 80%;
     position: fixed;
@@ -1190,7 +1252,37 @@ export default {
     /deep/.approvalcontract-content input {
         color: #ff7a45 !important;
     }
+    .contentvs {
+        font-style: normal;
+        font-size: 16px;
+        margin-left: 15px;
+        font-weight: normal;
+        color: #ff7a45;
+        cursor: pointer;
+    }
 }
+/deep/.contentvsbox .contentvsData-item {
+    color: #ff7a45;
+    cursor: pointer;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: flex-start;
+    em {
+        font-style: normal;
+    }
+    img {
+        width: 18px;
+        margin-right: 6px;
+    }
+}
+/deep/.contentvsbox .el-dialog__body {
+    max-height: 400px;
+    overflow: scroll;
+}
+/deep/.contentvsbox ::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+
 .dialogbox {
     margin-top: 50px;
     display: flex;
@@ -1296,6 +1388,27 @@ export default {
         transform: rotate(360deg);
     }
 }
+
+@keyframes scale {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+}
+@keyframes scaleClose {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+
 ::-webkit-scrollbar-thumb {
     background-color: #d6d1d1 !important;
 }
@@ -1362,6 +1475,39 @@ export default {
         // color: #000;
         // font-weight: bold;
         // margin-bottom:10px
+    }
+}
+.vsList{
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 150px);
+    p{
+       color: #ff7a45;
+       display: flex;
+       margin-bottom: 10px;
+       cursor: pointer;
+       img{
+           width: 20px;
+           height: 20px;
+           margin-right: 5px;
+
+       }
+    }
+}
+.vsdrawercss{
+    /deep/.history-bttom-css {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        text-align: right;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+    /deep/ .el-drawer__header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 12px;
+        margin-bottom: 10px;
+        font-size: 18px;
     }
 }
 .approvalcontract-layout {
