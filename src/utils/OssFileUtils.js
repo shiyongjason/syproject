@@ -64,13 +64,13 @@ export default {
         const ossUtil = await initOssSTS()
         try {
             result = await ossUtil.put(
-                generateBaseUrl() + (isRandomName ? generateFileNameByUUID() + suffix : file.name),
+                generateBaseUrl() + (isRandomName ? generateFileNameByUUID() + suffix : encodeURIComponent(file.name)),
                 new Blob([file], {
                     type: file.type,
                     size: file.size
                 })
             )
-            result.name = result.name.slice(result.name.lastIndexOf('/') + 1)
+            result.name = result.name.slice(decodeURIComponent(result.name).lastIndexOf('/') + 1)
         } catch (e) {
             console.log(e)
             result = ''
@@ -90,7 +90,7 @@ export default {
         const ossUtil = await initOssSTS()
         try {
             // URL兼容性 {@link https://developer.mozilla.org/en-US/docs/Web/API/URL/URL}
-            result = await ossUtil.signatureUrl(decodeURI(new URL(url).pathname), { expires: FILE_TIMEOUT_SECOND })
+            result = await ossUtil.signatureUrl(decodeURIComponent(new URL(url).pathname), { expires: FILE_TIMEOUT_SECOND })
         } catch (e) {
             result = url
         }

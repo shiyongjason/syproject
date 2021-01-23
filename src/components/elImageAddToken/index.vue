@@ -25,7 +25,6 @@ export default {
     },
     async mounted () {
         this.tokenUrl = await OssFileUtils.getUrl(this.fileUrl)
-        console.log(this.tokenUrl)
     },
     methods: {
         clickHandler () {

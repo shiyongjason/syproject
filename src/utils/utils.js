@@ -42,12 +42,12 @@ export const ossDownload = (url, fileName, ext = '') => {
             let dataURL = canvas.toDataURL('image/' + ext) // 传递的自定义的参数
             canvas = null
             downDom.setAttribute('href', dataURL)
-            downDom.setAttribute('download', fileName)
+            downDom.setAttribute('download', decodeURIComponent(fileName))
             downDom.click()
         }
     } else {
         downDom.setAttribute('href', url)
-        downDom.setAttribute('download', fileName)
+        downDom.setAttribute('download', decodeURIComponent(fileName))
         downDom.setAttribute('target', '_blank')
         downDom.click()
     }

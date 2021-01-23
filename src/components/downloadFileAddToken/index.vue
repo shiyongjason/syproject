@@ -1,6 +1,6 @@
 <template>
     <a @click="handle" class="download-btn" target="_blank" v-if="isType === 'btn'">{{aLinkWords}}</a>
-    <a @click="handle" class="download-main" target="_blank" v-else-if="isType === 'main'">{{aLinkWords}}</a>
+    <a @click="handle" class="download-main" target="_blank" v-else-if="isType === 'main'">{{decodeURIComponent(aLinkWords)}}</a>
     <a @click="handle" class="download-default" target="_blank" v-else-if="isType === 'default'">{{aLinkWords}}</a>
 </template>
 
