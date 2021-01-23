@@ -29,17 +29,14 @@
                                     <span class="posrtv">
                                         <template v-if="ktem&&ktem.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a class="download" @click="handleImgDownloadPreload(ktem.fileUrl, ktem.fileName)">
-                                                <font>{{ktem.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken :file-url="ktem.fileUrl" :file-name="ktem.fileName" is-preview :a-link-words="ktem.fileName" is-type="main" />
                                         </template>
                                     </span>
                                 </p>
                                 <p style="flex:0.5">{{formatMoment(ktem.createTime)}}</p>
                                 <p>
                                     <font class="fileItemDownLoad" @click="()=>{onDelete(jtem,kndex)}" v-if="$route.query.docAfterStatus!=2">删除</font>
-                                    <font class="fileItemDownLoad" v-if="ktem.fileName.toLowerCase().indexOf('.png') != -1||ktem.fileName.toLowerCase().indexOf('.jpg') != -1||ktem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownloadPreload(ktem.fileUrl, ktem.fileName)">下载</font>
-                                    <font v-else><a class='fileItemDownLoad' @click="handleImgDownloadPreload(ktem.fileUrl, ktem.fileName)" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken :file-url="ktem.fileUrl" :file-name="ktem.fileName" a-link-words="下载" is-type="btn" />
                                 </p>
                             </div>
                         </template>
@@ -88,21 +85,23 @@
 import * as auths from '@/utils/auth_const'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { ccpBaseUrl } from '@/api/config'
-import { ossDownload } from '@/utils/utils'
 import { saveDoc, submitDoc, getProjectLevels } from './api/index'
 import moment from 'moment'
 import DefaultImage from '@/assets/images/img_403@2x.png'
 import OssFileUtils from '@/utils/OssFileUtils'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 const _reqRiskCheckProjectDoc = {
     bizType: 1, // 业务类型 1：项目材料 2：立项材料 3：终审材料
     projectId: '', // 工程项目id
     riskCheckProjectDocPoList: [],
     submitStatus: ''// 提交状态 1：提交 2：材料审核通过 3：立项结果提交 4：终审结果提交
 }
+
 export default {
     name: 'detail',
     components: {
-        OssFileHosjoyUpload: () => import('@/components/OssFileHosjoyUpload/OssFileHosjoyUpload')
+        OssFileHosjoyUpload: () => import('@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'),
+        downloadFileAddToken
     },
     data () {
         return {
@@ -137,10 +136,6 @@ export default {
             findInformationEditDetail: 'projectInformation/findInformationEditDetail',
             findRefuseinfo: 'projectInformation/findRefuseinfo'
         }),
-        async handleImgDownloadPreload (fileUrl, fileName) {
-            const url = await OssFileUtils.getUrl(fileUrl)
-            ossDownload(url, fileName)
-        },
         srcList (item, index) {
             if (item.riskCheckDocTemplateSamplePos) {
                 const res = item.riskCheckDocTemplateSamplePos
