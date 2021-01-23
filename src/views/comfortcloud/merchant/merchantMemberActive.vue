@@ -23,6 +23,7 @@
                             <el-option label="审核不通过" value=4></el-option>
                             <el-option label="推广中" value=2></el-option>
                             <el-option label="已失效" value=3></el-option>
+                            <el-option label="已删除" value=5></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -37,12 +38,12 @@
                         :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
                         :isAction="true" :action-min-width="200">
                 <template slot="status" slot-scope="scope">
-                    {{scope.data.row.status===1?'待审核':scope.data.row.status===2?'推广中':scope.data.row.status===3?'已失效':'审核不通过'}}
+                    {{scope.data.row.status===1?'待审核':scope.data.row.status===2?'推广中':scope.data.row.status===3?'已失效':scope.data.row.status===4?'审核不通过':'已删除'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <template class="action-active">
-                        <el-button class="orangeBtn" @click="onEdit(scope.data.row)">活动预览</el-button>
-                        <span class="colred" @click="onOperate(scope.data.row)">
+                        <el-button class="orangeBtn" @click="onPreviewActive(scope.data.row)">活动预览</el-button>
+                        <span class="colred"  @click="onOperate(scope.data.row)">
                             {{operationStatus(scope.data.row)}}
                         </span>
                     </template>
@@ -59,6 +60,10 @@
                 <el-button @click="checkActive(0)">审核不通过</el-button>
                 <el-button type="primary" @click="checkActive(1)">审核通过</el-button>
             </span>
+        </el-dialog>
+        <el-dialog title="活动预览" :visible.sync="activePreviewDialogShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <el-image :src="activePreviewUrl"></el-image>
         </el-dialog>
     </div>
 </template>
@@ -88,6 +93,8 @@ export default {
             CheckActiveData: {},
             errMessage: '',
             checkActiveDialogShow: false,
+            activePreviewDialogShow: false,
+            activePreviewUrl: '',
             updateIndexData: {},
             uploadData: {
                 accept: '.xlsx,.xls',
@@ -164,7 +171,10 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        async onEdit (val) {
+        onPreviewActive (val) {
+            this.activePreviewDialogShow = true
+            this.activePreviewUrl = val.poster
+            console.log(this.activePreviewUrl)
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -176,17 +186,20 @@ export default {
         },
         operationStatus (val) {
             if (val.status === 1) {
-                return '审核'
+                return ' 审核'
             } else if (val.status === 2) {
-                return '失效'
+                return ' 失效'
             } else if (val.status === 3) {
-                return '生效'
+                return ' 生效'
             } else if (val.status === 4) {
                 return '----'
+            } else if (val.status === 5) {
+                return '已删除'
             }
         },
         onCloseEditMonthDialog () {
             this.checkActiveDialogShow = false
+            this.activePreviewDialogShow = false
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
@@ -279,7 +292,13 @@ export default {
     .colred {
         color: #ff7a45;
         cursor: pointer;
-        width: 100px;
+        width:40px;
+        display:inline-block;
+    }
+    .colred-default {
+        cursor: pointer;
+        width:40px;
+        display:inline-block;
     }
 
     .redcolred {
