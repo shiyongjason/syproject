@@ -43,7 +43,7 @@
                 <template slot="action" slot-scope="scope">
                     <template class="action-active">
                         <el-button class="orangeBtn" @click="onPreviewActive(scope.data.row)">活动预览</el-button>
-                        <span class="colred"  @click="onOperate(scope.data.row)">
+                        <span class="colred" @click="onOperate(scope.data.row)">
                             {{operationStatus(scope.data.row)}}
                         </span>
                     </template>
@@ -217,15 +217,20 @@ export default {
             } else {
                 this.$prompt('审核不通过的原因备注', '审核不通过的原因备注', {
                     confirmButtonText: '确定',
-                    cancelButtonText: '取消'
+                    cancelButtonText: '取消',
+                    inputErrorMessage: '备注不能为空',
+                    inputPattern: /\S/
                 }).then(async ({ value }) => {
-                    await checkActiveStatus({
-                        'id': this.CheckActiveData.id,
-                        'remark': value,
-                        'auditResult': 4,
-                        'operator': this.userInfo.employeeName
-                    })
-                    this.onQuery()
+                    console.log(value)
+                    if (value) {
+                        await checkActiveStatus({
+                            'id': this.CheckActiveData.id,
+                            'remark': value,
+                            'auditResult': 4,
+                            'operator': this.userInfo.employeeName
+                        })
+                        this.onQuery()
+                    }
                 }).catch(() => {
                 })
             }
@@ -284,6 +289,7 @@ export default {
             }
         }
     }
+
     .topTitle {
         margin-right: 2rem;
         font-weight: bold;
@@ -292,23 +298,26 @@ export default {
     .colred {
         color: #ff7a45;
         cursor: pointer;
-        width:40px;
-        display:inline-block;
+        width: 40px;
+        display: inline-block;
     }
+
     .colred-default {
         cursor: pointer;
-        width:40px;
-        display:inline-block;
+        width: 40px;
+        display: inline-block;
     }
 
     .redcolred {
         color: red;
         cursor: pointer;
     }
-.action-active{
-    display: flex;
-    flex-direction: column;
-}
+
+    .action-active {
+        display: flex;
+        flex-direction: column;
+    }
+
     .topColred {
         color: #ff7a45;
         cursor: pointer;
