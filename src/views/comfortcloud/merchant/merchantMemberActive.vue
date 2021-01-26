@@ -194,7 +194,7 @@ export default {
             } else if (val.status === 4) {
                 return '----'
             } else if (val.status === 5) {
-                return '已删除'
+                return '----'
             }
         },
         onCloseEditMonthDialog () {
