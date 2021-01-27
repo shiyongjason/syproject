@@ -174,9 +174,10 @@
             </span>
         </el-dialog>
         <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
-            <div class="vsList">
+            <div class="vsList" v-if="contentvsDataList&&contentvsDataList.length>0">
                 <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
             </div>
+            <div class="vsList" v-else>暂无数据</div>
             <div class="history-bttom-css">
                 <h-button type="primary" @click="closevsdrawer">好的</h-button>
             </div>
