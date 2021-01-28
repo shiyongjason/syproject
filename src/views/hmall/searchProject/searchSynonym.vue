@@ -3,82 +3,41 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                <div class="query-col__lable">词名称：</div>
-                <div class="query-col__input">
-                    <el-input
-                        type="text"
-                        maxlength="50"
-                        v-model="queryParams.keyword"
-                        placeholder="请输入搜索词名称"
-                    >
-                    </el-input>
-                </div>
+                    <div class="query-col__lable">词名称：</div>
+                    <div class="query-col__input">
+                        <el-input type="text" maxlength="50" v-model="queryParams.keyword" placeholder="请输入搜索词名称">
+                        </el-input>
+                    </div>
                 </div>
                 <div class="query-cont__col">
-                <h-button type="primary" @click="onQuery">查询</h-button>
-                <h-button @click="onReset">重置</h-button>
+                    <h-button type="primary" @click="onQuery">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
             <div class="button-cont">
                 <h-button type="create" @click="onAddOrEdit('add')">新增</h-button>
                 <h-button @click="onRefresh">批量刷新</h-button>
             </div>
-            <h-table
-                :tableLabel="tableLabel"
-                :tableData="tableData"
-                :pagination="pagination"
-                :tableAttrs="{ ...tableAttrs, isIndex: true }"
-                :multiSelection="multiSelection"
-                @onSizeChange="onSizeChange"
-                @onCurrentChange="onCurrentChange"
-            >
+            <h-table :tableLabel="tableLabel" :tableData="tableData" :pagination="pagination" :tableAttrs="{ ...tableAttrs, isIndex: true }" :multiSelection="multiSelection" @onSizeChange="onSizeChange" @onCurrentChange="onCurrentChange">
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onAddOrEdit('edit', scope.data.row)">编辑</h-button>
                     <h-button table @click="onDelete(scope.data.row)">删除</h-button>
                 </template>
             </h-table>
         </div>
-        <el-dialog
-            :title="dialogInfo.title"
-            :visible.sync="dialogVisible"
-            :before-close="closeDialog"
-            append-to-body
-            width="500px"
-        >
-            <el-form
-                ref="form"
-                :model="form"
-                :rules="formRules"
-                label-width="150px">
+        <el-dialog :title="dialogInfo.title" :visible.sync="dialogVisible" :before-close="closeDialog" append-to-body width="500px">
+            <el-form ref="form" :model="form" :rules="formRules" label-width="150px">
                 <el-form-item label=" 同义词1：" prop="keyword" class="mb-5">
-                    <el-input type="input" v-model.trim="form.keyword" style="width: 200px" maxlength="20" ></el-input>
-                    <span
-                        class="ml10 el-icon-circle-plus-outline form-add-remove"
-                        v-show="form.options.length < 9"
-                        @click="addOption"
-                    ></span>
+                    <el-input type="input" v-model.trim="form.keyword" style="width: 200px" maxlength="20"></el-input>
+                    <span class="ml10 el-icon-circle-plus-outline form-add-remove" v-show="form.options.length < 9" @click="addOption"></span>
                 </el-form-item>
 
                 <!-- 根据不同的选择出现不同的操作， -->
                 <div class="isCombobox-box">
-                    <el-form-item
-                        v-for="(item, index) in form.options"
-                        :label="' = 同义词' + (index + 2) + '：'"
-                        :key="item.key"
-                        :prop="`options[${index}].option`"
-                        :rules="formRules.option"
-                    >
+                    <el-form-item v-for="(item, index) in form.options" :label="' = 同义词' + (index + 2) + '：'" :key="item.key" :prop="`options[${index}].option`" :rules="formRules.option">
                         <el-input v-model="item.option" style="width: 200px" maxlength="20"></el-input>
-                        <span
-                            v-if="form.options.length > 1"
-                            class="ml10 el-icon-remove-outline form-add-remove"
-                            @click="removeOption(item)"
-                        ></span>
-                        <span
-                            class="ml10 el-icon-circle-plus-outline form-add-remove"
-                            v-if="form.options.length < 9 && index + 1 === form.options.length"
-                            @click="addOption"
-                        ></span>
+                        <span v-if="form.options.length > 1" class="ml10 el-icon-remove-outline form-add-remove" @click="removeOption(item)"></span>
+                        <span class="ml10 el-icon-circle-plus-outline form-add-remove" v-if="form.options.length < 9 && index + 1 === form.options.length" @click="addOption"></span>
                     </el-form-item>
                 </div>
             </el-form>
@@ -158,7 +117,7 @@ export default {
             this.queryParams = { ...this.resetParams }
             this.getTableList()
         },
-        onSeeInfo ({ searchId }) {},
+        onSeeInfo ({ searchId }) { },
         onSizeChange (value) {
             this.queryParams.pageSize = value
             this.getTableList()
