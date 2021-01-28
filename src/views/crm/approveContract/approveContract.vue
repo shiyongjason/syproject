@@ -29,8 +29,8 @@
                     <!-- <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6" :class="showShake?'shake':''">更新条款</h-button> -->
                     <div class="approvalcontract-btn">
                         <h-button @click="goBack">暂不审核</h-button>
-                        <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
-                        <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
+                        <h-button type="primary" @mousedown.native="openDialog('驳回',3)">驳回</h-button>
+                        <h-button type="primary" @mousedown.native="openDialog('通过',2)">通过</h-button>
                     </div>
                 </div>
 
@@ -546,21 +546,6 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
-            if (this.detailRes.contractStatus == 6) {
-                let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                    // console.log('curHTML', curHTML.replace(/\ufeff/g, ''))
-                    // console.log('this.contractAfterApi: ', this.contractAfterApi)
-                    // this.$message({
-                    //     message: `条款已被编辑，请先保存条款`,
-                    //     type: 'error'
-                    // })
-                    // this.showShake = true
-                    // setTimeout(() => { this.showShake = false }, 1200)
-                    // return
-                    this.onSaveContent(3)
-                }
-            }
             this.dialog.dialogVisible = true
             this.dialog.title = title
             this.dialog.status = status
@@ -908,32 +893,6 @@ export default {
             })
             // return
             try {
-                if (this.detailRes.contractStatus == 6 && !operatorType) {
-                    let curHTML = this.contractDocument.innerHTML
-                    if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                        // console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
-                        // console.log('this.contractAfterApi: ', this.contractAfterApi)
-                        // this.$message({
-                        //     message: `条款已被编辑，请先保存条款`,
-                        //     type: 'error'
-                        // })
-                        // this.showShake = true
-                        // setTimeout(() => { this.showShake = false }, 1200)
-                        console.log(`条款已被编辑，请先保存条款`)
-                        await saveContent({
-                            'contractId': this.$route.query.id,
-                            // 合同审批角色 1：分财 2：风控 3：法务
-                            'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                            'type': 3, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                            'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
-                            'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
-                            'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                            'contractContent': this.contractDocument.innerHTML,
-                            'createBy': this.userInfo.employeeName,
-                            'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-                        })
-                    }
-                }
                 await saveContent({
                     'contractId': this.$route.query.id,
                     // 合同审批角色 1：分财 2：风控 3：法务
@@ -962,7 +921,6 @@ export default {
         },
         onKeyUp () {
             // keyCode 91
-            console.log('event.keyCode', event.keyCode)
             if (event.keyCode == 91 || event.keyCode == 90) {
                 this.domBindMethods('no')
             }
