@@ -28,7 +28,7 @@
                     </div>
                     <!-- <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6" :class="showShake?'shake':''">更新条款</h-button> -->
                     <div class="approvalcontract-btn">
-                        <h-button @click="goBack">暂不审核</h-button>
+                        <h-button @mousedown.native="goBack">暂不审核</h-button>
                         <h-button type="primary" @mousedown.native="openDialog('驳回',3)">驳回</h-button>
                         <h-button type="primary" @mousedown.native="openDialog('通过',2)">通过</h-button>
                     </div>
@@ -623,7 +623,8 @@ export default {
                 }
             })
         },
-        goBack () {
+        async  goBack () {
+            this.dealSaveContent(3)
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
@@ -1039,6 +1040,11 @@ export default {
             })
         },
         async init (cb) {
+            console.log('this.$route.query.id', this.$route.query.id)
+            if (!this.$route.query.id) {
+                return
+            }
+            console.log('getContractsContent')
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
