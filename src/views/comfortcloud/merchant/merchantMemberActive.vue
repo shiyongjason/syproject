@@ -61,9 +61,9 @@
                 <el-button type="primary" @click="checkActive(1)">审核通过</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="活动预览" :visible.sync="activePreviewDialogShow" class="upload-show" width="400px"
+        <el-dialog  title="活动预览" :visible.sync="activePreviewDialogShow" class="upload-show"  width="400px"
                    :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
-            <el-image :src="activePreviewUrl"></el-image>
+                <el-image  :src="activePreviewUrl"></el-image>
         </el-dialog>
     </div>
 </template>
@@ -116,7 +116,7 @@ export default {
                 { label: '创建人微信昵称', prop: 'nickName', width: 100 },
                 { label: '活动城市', prop: 'cityName', width: 100 },
                 { label: '活动名称', prop: 'activityName', width: 100 },
-                { label: '活动地址', prop: 'countryName', width: 100 },
+                { label: '活动地址', prop: 'shopAddress', width: 100 },
                 { label: '活动开始时间', prop: 'startTime', formatters: 'dateTime', width: 100 },
                 { label: '活动结束时间', prop: 'endTime', formatters: 'dateTime', width: 100 },
                 { label: '活动状态', prop: 'status', width: 100 },
@@ -237,7 +237,7 @@ export default {
         },
         onOperate (val) {
             if (val.status === 2) {
-                this.$confirm('该获得已在舒适云APP中推广，失效后，将不再展示，请确认是否继续操作？', '门店活动推广失效', {
+                this.$confirm('该活动已在舒适云APP中推广，失效后，将不再展示，请确认是否继续操作？', '门店活动推广失效', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -322,8 +322,13 @@ export default {
         color: #ff7a45;
         cursor: pointer;
     }
-
+    .el-scrollbar_wrap {
+        max-height: 70%; // 最大高度
+        overflow-x: hidden; // 隐藏横向滚动栏
+    }
     /deep/ .el-dialog__body {
         padding-top: 10px;
+        max-height: 600px; // 最大高度
+        overflow: auto;
     }
 </style>
