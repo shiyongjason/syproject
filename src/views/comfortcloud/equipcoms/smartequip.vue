@@ -102,7 +102,6 @@ export default {
                 { key: 'heating', name: '采暖控制' },
                 { key: 'freshAir', name: '新风控制' },
                 { key: 'sensor', name: '传感器' },
-                { key: 'smartAppliance', name: '智能家电' },
                 { key: 'switchPanel', name: '开关面板' }],
             smartData: {}
         }

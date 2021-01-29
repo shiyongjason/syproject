@@ -10,6 +10,10 @@ let ccpBaseUrl = ''
 let fileUploadUrl = ''
 let iotUrl = ''
 let iotZsUrl = ''
+let ossBucket = ''
+let ossOldBucket = ''
+let ossRegion = ''
+let ossAliyun = '' // 这条url为了解决新窗口打开图片用
 var env = process.env.NODE_ENV === 'development'
     ? 'development' : (process.env.VUE_APP_TITLE === 'dev'
         ? 'dev' : process.env.VUE_APP_TITLE === 'test'
@@ -19,15 +23,19 @@ var env = process.env.NODE_ENV === 'development'
 
 switch (env) {
     case 'development':
-        interfaceUrl = 'https://hbp-test.hosjoy.com/'
-        ossUrl = 'https://route-test.hosjoy.com/'
-        iframeUrl = 'https://crm-test.hosjoy.com/'
+        interfaceUrl = 'http://192.168.20.248:30000/'
+        ossUrl = 'http://192.168.20.248:8089/'
+        iframeUrl = 'http://devcrm.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
-        fileUploadUrl = 'https://hbp-test.hosjoy.com/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
+        B2bUrl = 'http://192.168.20.248:40000/'
+        ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+        ossBucket = 'hosjoy-private-test'
+        ossOldBucket = 'hosjoy-oss-test'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'dev':
         interfaceUrl = 'http://192.168.20.248:30000/'
@@ -39,6 +47,10 @@ switch (env) {
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
+        ossBucket = 'hosjoy-private-test'
+        ossOldBucket = 'hosjoy-oss-test'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'test':
         interfaceUrl = 'https://hbp-test.hosjoy.com/'
@@ -50,6 +62,10 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+        ossBucket = 'hosjoy-private-test'
+        ossOldBucket = 'hosjoy-oss-test'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'newtest':
         interfaceUrl = 'https://hbp-test245.hosjoy.com/'
@@ -61,6 +77,10 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
+        ossBucket = 'hosjoy-private-test'
+        ossOldBucket = 'hosjoy-oss-test'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
         break
     case 'preview':
         interfaceUrl = 'https://staging-hbp.hosjoy.com/'
@@ -72,6 +92,10 @@ switch (env) {
         fileUploadUrl = 'https://staging-hbp.hosjoy.com/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
+        ossBucket = 'hosjoy-private'
+        ossOldBucket = 'hosjoy-oss'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun.hosjoy.com/'
         break
     case 'production':
         // TODO: 给产品调用
@@ -84,6 +108,10 @@ switch (env) {
         fileUploadUrl = 'https://hbp.hosjoy.com/'
         iotUrl = 'https://iot.hosjoy.com'
         iotZsUrl = 'https://iot-proxy.hosjoy.com'
+        ossBucket = 'hosjoy-private'
+        ossOldBucket = 'hosjoy-oss'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun.hosjoy.com/'
         break
 }
 export {
@@ -95,5 +123,9 @@ export {
     ccpBaseUrl,
     fileUploadUrl,
     iotUrl,
-    iotZsUrl
+    iotZsUrl,
+    ossBucket,
+    ossOldBucket,
+    ossRegion,
+    ossAliyun
 }
