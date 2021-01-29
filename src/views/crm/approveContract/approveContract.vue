@@ -567,7 +567,7 @@ export default {
         async onApprove () {
             let contractContentBeforeTransfer = '' // 内容
             let contractFieldsListBeforeTransfer = ''// 字段
-            if (this.detailRes.contractStatus == 6) {
+            if (this.detailRes.contractStatus == 6 && this.dialog.status == 2) {
                 contractContentBeforeTransfer = this.contractDocument.innerHTML
                 contractFieldsListBeforeTransfer = JSON.parse(JSON.stringify(this.contractFieldsList))
                 let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
@@ -612,7 +612,9 @@ export default {
                         type: 'success'
                     })
                     this.handleClose()
-                    this.goBack()
+                    // this.goBack()
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
+                    this.$router.push('/goodwork/contractSigningManagement')
                 } catch (error) {
                     console.log('提交失败')
                     this.flag = false
