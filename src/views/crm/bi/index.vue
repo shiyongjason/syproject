@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe :src="biUrl" frameborder="0" style="width: 100%; height: 100vh"></iframe>
+        <iframe :src="biUrl" frameborder="0" style="width: 100%; height: 100vh" v-if="biToken"></iframe>
     </div>
 </template>
 
