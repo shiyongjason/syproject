@@ -131,7 +131,7 @@
                             <tr :key="item.id"
                                 v-for="item in dialogDetail.contracts">
                                 <td>
-                                    <span class="go-contract" @click="goContractDetail(item.id)">
+                                    <span class="go-contract" @click="goContractDetail(item.contractId)">
                                         {{ item.contractName || '-' }}
                                     </span>
                                 </td>
