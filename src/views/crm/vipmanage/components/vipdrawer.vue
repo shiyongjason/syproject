@@ -17,7 +17,7 @@
                         <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditVip(scope.data.row.id)" >查看合同</h-button>
+                        <h-button table @click="onLookContract(scope.data.row.contractId)" >查看合同</h-button>
                     </template>
                     <!-- <template slot="action" slot-scope="scope">
                         <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
@@ -231,6 +231,9 @@ export default {
             findPagedetail: 'vipManage/findPagedetail',
             findContract: 'vipApply/findContract'
         }),
+        onLookContract (id) {
+            this.$router.push({ path: '/goodwork/contractSigningManagementDetail', query: { id: id } })
+        },
         async onShowDrawerinfn (companyId, companyName) {
             this.queryParams.companyId = companyId
             this.companyName = companyName
