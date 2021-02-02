@@ -28,9 +28,9 @@
                     </div>
                     <!-- <h-button type="primary" @click="onSaveContent(3)" v-if="detailRes.contractStatus == 6" :class="showShake?'shake':''">更新条款</h-button> -->
                     <div class="approvalcontract-btn">
-                        <h-button @click="goBack">暂不审核</h-button>
-                        <h-button type="primary" @click="openDialog('驳回',3)">驳回</h-button>
-                        <h-button type="primary" @click="openDialog('通过',2)">通过</h-button>
+                        <h-button @mousedown.native="goBack">暂不审核</h-button>
+                        <h-button type="primary" @mousedown.native="openDialog('驳回',3)">驳回</h-button>
+                        <h-button type="primary" @mousedown.native="openDialog('通过',2)">通过</h-button>
                     </div>
                 </div>
 
@@ -163,16 +163,25 @@
                 </div>
             </div>
         </el-drawer>
-        <el-dialog title="合同对比" :visible.sync="contentvsVisible" width="800px" class="contentvsbox">
-            <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsItem(item)">
-                <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210109/141004436/edf75389-4645-44f4-8965-61ee4a718da5.png' />
-                {{item.contractName}}
+        <el-dialog title="关联的采购单" :visible.sync="contentvsVisible" width="600px" class="contentvsbox">
+            <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsPurchaseOrder(item)">
+                <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/163503360/a954aef4-b308-4043-b4b1-fea72116bd89.png' />
+                {{item.purchaseOrderName}}
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="contentvsVisible = false">取 消</el-button>
                 <el-button type="primary" @click="contentvsVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+            <div class="vsList" v-if="contentvsDataList&&contentvsDataList.length>0">
+                <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
+            </div>
+            <div class="vsList" v-else>暂无数据</div>
+            <div class="history-bttom-css">
+                <h-button type="primary" @click="closevsdrawer">好的</h-button>
+            </div>
+        </el-drawer>
     </div>
 </template>
 <script>
@@ -194,6 +203,8 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
     data () {
         return {
+            contentvsDataVisible: false,
+            contentvsDataList: [],
             flag: true,
             contentvsData: [],
             contentvsVisible: false,
@@ -284,8 +295,8 @@ export default {
             if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse') {
                 return 'isAllNum'
             }
-            // 元 %
-            if (unit) {
+            // 元 % 带小数
+            if (unit || paramKey == 'vip_next_year_discount') {
                 return 'isNum'
             }
             return 'elInput'
@@ -295,15 +306,38 @@ export default {
         ...mapActions({
             setNewTags: 'setNewTags'
         }),
+        async onClickVsPurchaseOrder (item) {
+            const response = await getPurchaseOrderList({
+                neContractId: this.$route.query.id,
+                purchaseOrderId: item.purchaseOrderId
+            })
+            this.contentvsDataList = response.data
+            this.contentvsDataVisible = true
+            setTimeout(() => {
+                this.contentvsVisible = false
+            }, 500)
+        },
         onClickVsItem (item) {
             console.log('item: ', item)
             let routeUrl = this.$router.resolve({
                 path: '/goodwork/contractSigningManagementDetail',
                 query: {
-                    id: item.id
+                    id: item.contractId
                 }
             })
             window.open(routeUrl.href, '_blank')
+        },
+        closevsdrawer () {
+            if (this.contentvsDataList && this.contentvsDataList.length > 0) {
+                this.contentvsDataList = []
+            }
+            this.contentvsDataVisible = false
+        },
+        vsdrawerClose (done) {
+            if (this.contentvsDataList && this.contentvsDataList.length > 0) {
+                this.contentvsDataList = []
+            }
+            done()
         },
         editorDrawerClose (done) {
             if (this.imgArr && this.imgArr.length > 0) {
@@ -347,7 +381,9 @@ export default {
                                 disabled: !this.currentKey.modify,
                                 style: this.currentKey.unit ? { width: '250px' } : '',
                                 innerHtml: this.currentKey.unit || '',
-                                maxlength: this.currentKey.maxLength || ''
+                                maxlength: this.currentKey.maxLength || '',
+                                decimal: this.currentKey.decimal || '',
+                                calculationRules: this.currentKey.calculationRules || ''// 最大值
                             },
                             on: {
                                 input: (val) => { this.currentKey.paramValue = val.trim() }
@@ -467,6 +503,22 @@ export default {
                             }
                         }
                     }
+                },
+                // 年份选择器
+                10: {
+                    elDatePicker: {
+                        bind: {
+                            value: this.currentKey.paramValue,
+                            type: 'year',
+                            disabled: !this.currentKey.modify,
+                            placeholder: '选择年份',
+                            valueFormat: 'yyyy',
+                            style: { width: '250px' }
+                        },
+                        on: {
+                            input: (val) => { this.currentKey.paramValue = val }
+                        }
+                    }
                 }
 
             }
@@ -512,21 +564,6 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
-            if (this.detailRes.contractStatus == 6) {
-                let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                    // console.log('curHTML', curHTML.replace(/\ufeff/g, ''))
-                    // console.log('this.contractAfterApi: ', this.contractAfterApi)
-                    // this.$message({
-                    //     message: `条款已被编辑，请先保存条款`,
-                    //     type: 'error'
-                    // })
-                    // this.showShake = true
-                    // setTimeout(() => { this.showShake = false }, 1200)
-                    // return
-                    this.onSaveContent(3)
-                }
-            }
             this.dialog.dialogVisible = true
             this.dialog.title = title
             this.dialog.status = status
@@ -548,7 +585,7 @@ export default {
         async onApprove () {
             let contractContentBeforeTransfer = '' // 内容
             let contractFieldsListBeforeTransfer = ''// 字段
-            if (this.detailRes.contractStatus == 6) {
+            if (this.detailRes.contractStatus == 6 && this.dialog.status == 2) {
                 contractContentBeforeTransfer = this.contractDocument.innerHTML
                 contractFieldsListBeforeTransfer = JSON.parse(JSON.stringify(this.contractFieldsList))
                 let signDOMS = this.contractDocument.getElementsByClassName('platform_sign')
@@ -593,7 +630,9 @@ export default {
                         type: 'success'
                     })
                     this.handleClose()
-                    this.goBack()
+                    // this.goBack()
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
+                    this.$router.push('/goodwork/contractSigningManagement')
                 } catch (error) {
                     console.log('提交失败')
                     this.flag = false
@@ -604,7 +643,8 @@ export default {
                 }
             })
         },
-        goBack () {
+        async  goBack () {
+            this.dealSaveContent(3)
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
         },
@@ -874,32 +914,6 @@ export default {
             })
             // return
             try {
-                if (this.detailRes.contractStatus == 6 && !operatorType) {
-                    let curHTML = this.contractDocument.innerHTML
-                    if (this.contractAfterApi !== curHTML.replace(/\ufeff/g, '')) {
-                        // console.log('curHTML: ', curHTML.replace(/\ufeff/g, ''))
-                        // console.log('this.contractAfterApi: ', this.contractAfterApi)
-                        // this.$message({
-                        //     message: `条款已被编辑，请先保存条款`,
-                        //     type: 'error'
-                        // })
-                        // this.showShake = true
-                        // setTimeout(() => { this.showShake = false }, 1200)
-                        console.log(`条款已被编辑，请先保存条款`)
-                        await saveContent({
-                            'contractId': this.$route.query.id,
-                            // 合同审批角色 1：分财 2：风控 3：法务
-                            'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                            'type': 3, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                            'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
-                            'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
-                            'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                            'contractContent': this.contractDocument.innerHTML,
-                            'createBy': this.userInfo.employeeName,
-                            'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-                        })
-                    }
-                }
                 await saveContent({
                     'contractId': this.$route.query.id,
                     // 合同审批角色 1：分财 2：风控 3：法务
@@ -928,7 +942,6 @@ export default {
         },
         onKeyUp () {
             // keyCode 91
-            console.log('event.keyCode', event.keyCode)
             if (event.keyCode == 91 || event.keyCode == 90) {
                 this.domBindMethods('no')
             }
@@ -1047,13 +1060,20 @@ export default {
             })
         },
         async init (cb) {
+            console.log('this.$route.query.id', this.$route.query.id)
+            if (!this.$route.query.id) {
+                return
+            }
+            console.log('getContractsContent')
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             if (this.detailRes.contractStatus == 6) {
-                const response = await getPurchaseOrderList(this.$route.query.id)
+                const response = await getPurchaseOrderList({
+                    contractId: this.$route.query.id
+                })
                 this.contentvsData = response.data
             }
             if (!this.flag) this.flag = true
@@ -1440,6 +1460,39 @@ export default {
         // color: #000;
         // font-weight: bold;
         // margin-bottom:10px
+    }
+}
+.vsList{
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: scroll;
+    height: calc(100vh - 150px);
+    p{
+       color: #ff7a45;
+       display: flex;
+       margin-bottom: 10px;
+       cursor: pointer;
+       img{
+           width: 20px;
+           height: 20px;
+           margin-right: 5px;
+
+       }
+    }
+}
+.vsdrawercss{
+    /deep/.history-bttom-css {
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        text-align: right;
+        padding-right: 20px;
+        box-sizing: border-box;
+    }
+    /deep/ .el-drawer__header {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 12px;
+        margin-bottom: 10px;
+        font-size: 18px;
     }
 }
 .approvalcontract-layout {

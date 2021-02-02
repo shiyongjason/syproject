@@ -318,6 +318,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/caCertiManage/index.vue')
+            },
+            {
+                path: 'bi',
+                name: 'bi',
+                meta: {
+                    title: '好橙工BI',
+                    tagName: '好橙工BI',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/bi/index.vue')
             }
         ]
     }
