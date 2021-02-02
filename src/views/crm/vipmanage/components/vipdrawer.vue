@@ -6,7 +6,7 @@
                 <div class="drawer-wrap_btn">
                     <div class="drawer-wrap_btn-flex">VIP签约信息</div>
                     <div class="drawer-wrap_btn-flex">
-                        <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button>
+                        <!-- <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button> -->
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
@@ -17,8 +17,11 @@
                         <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
+                        <h-button table @click="onEditVip(scope.data.row.id)" >查看合同</h-button>
                     </template>
+                    <!-- <template slot="action" slot-scope="scope">
+                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
+                    </template> -->
                 </basicTable>
                 <p>
                     最近维护时间：{{this.vipDetail.updateTime?moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
@@ -103,9 +106,15 @@ export default {
             tableData: [],
             tableLabel: [
                 { label: '签约年份', prop: 'signYear' },
-                { label: 'VIP等级', prop: 'vipRule' },
-                { label: 'VIP折扣（折）', prop: 'serviceFeeDiscount' },
+                { label: '信用评级', prop: 'vipCreditLevel' },
+                { label: '服务费', prop: 'vipServiceFee' },
+                { label: '可代采额度（万元）', prop: 'vipPurchaseQuota', formatters: 'money', width: '120px' },
+                { label: '单项目单笔最高金额（万元）', prop: 'vipObjectMaxAmount', width: '120px', formatters: 'money' },
+                // { label: 'VIP等级', prop: 'vipRule' },
+                // { label: 'VIP折扣（折）', prop: 'serviceFeeDiscount' },
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
+                { label: '次年服务费V折扣（折）', prop: 'serviceFeeDiscount', width: '120px' },
+                { label: '预付款比例（%）', prop: 'advancePaymentProportion' },
                 { label: '签约人', prop: 'assignedUserName', width: '150' },
                 { label: '签约时间', prop: 'signTime', formatters: 'date' },
                 { label: '状态', prop: 'status' }
@@ -343,6 +352,7 @@ export default {
         height: 40px;
         line-height: 40px;
         margin-bottom: 10px;
+        padding-left: 10px;
     }
     &_btn {
         display: flex;
@@ -361,6 +371,7 @@ export default {
     }
     p {
         margin-top: 25px;
+        font-size: 14px;
     }
     .green {
         color: #62b439;
