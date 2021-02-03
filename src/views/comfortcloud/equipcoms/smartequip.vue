@@ -199,7 +199,7 @@ export default {
         drawLine (data) {
             // 绘制图表
             var charts = {
-                unit: '单位/台',
+                unit: '在线设备/台',
                 names: [],
                 lineX: [],
                 value: []
