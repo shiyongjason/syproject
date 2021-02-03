@@ -97,11 +97,11 @@ export default {
                 pageNumber: 1
             },
             smartList: [{ key: 'smartHost', name: '智能主机' },
-            { key: 'airCondition', name: '空调控制' },
-            { key: 'heating', name: '采暖控制' },
-            { key: 'freshAir', name: '新风控制' },
-            { key: 'sensor', name: '传感器' },
-            { key: 'switchPanel', name: '开关面板' }],
+                { key: 'airCondition', name: '空调控制' },
+                { key: 'heating', name: '采暖控制' },
+                { key: 'freshAir', name: '新风控制' },
+                { key: 'sensor', name: '传感器' },
+                { key: 'switchPanel', name: '开关面板' }],
             smartData: {}
         }
     },
@@ -164,6 +164,7 @@ export default {
             findHistoryReport: 'findHistoryReport',
             findCloudDeviceDetailList: 'findCloudDeviceDetailList'
         }),
+
         onSortChange (val) {
             if (val.order) {
                 this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
@@ -216,7 +217,7 @@ export default {
             })
             var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97', 'rgba(45,207,182', 'rgba(2,188,111', 'rgba(175,153,255']
             var lineY = []
-            // 根据数据条数 渲染y轴数据
+            // 根据数据条数  渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
                 var x = i
                 if (x > color.length - 1) {
