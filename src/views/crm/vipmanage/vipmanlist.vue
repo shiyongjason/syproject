@@ -26,7 +26,7 @@
                     </div>
                 </div> -->
                 <div class="query-cont__col">
-                    <div class="query-col__label">VIP折扣：</div>
+                    <div class="query-col__label">次年服务费折扣：</div>
                     <div class="query-col__input">
                         <el-input v-model="minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:1><template slot="append">折</template></el-input>
                         ~
