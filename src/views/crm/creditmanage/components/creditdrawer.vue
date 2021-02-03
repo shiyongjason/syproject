@@ -334,6 +334,7 @@ export default {
             await this.findCreditPage({ companyId: this.companyId })
             this.tableData = this.creditPage.companyCreditList
             this.drawer = true
+            this.isloading = false
         },
         async onShowCreditdocument () {
             this.isDownLoad = false
@@ -460,6 +461,7 @@ export default {
                     await this.findCreditPage({ companyId: this.companyId })
                     this.tableData = this.creditPage.companyCreditList
                     this.$emit('backEvent')
+                    this.isloading = false
                 } catch (error) {
                     this.isloading = false
                 }
