@@ -910,6 +910,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .el-form .el-input{
+    width: 270px;
+}
 .contract-temp {
     &_flex {
         display: flex;
