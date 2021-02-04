@@ -109,7 +109,7 @@ export default {
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
                 { label: '次年服务费V折扣（折）', prop: 'serviceFeeDiscount', width: '120px' },
                 { label: '预付款比例（%）', prop: 'advancePaymentProportion' },
-                { label: '签约人', prop: 'assignedUserName', width: '150' },
+                { label: '签约人', prop: 'createBy', width: '150' },
                 { label: '签约时间', prop: 'signTime', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
