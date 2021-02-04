@@ -197,6 +197,29 @@ export default [
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberReward.vue')
                     }
                 ]
+            },
+            {
+                path: 'merchantActive',
+                meta: {
+                    title: '活动管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantMemberActive',
+                        name: 'merchantMemberActive',
+                        meta: {
+                            title: '活动审核',
+                            tagName: '活动审核',
+                            parentName: '活动管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberActive.vue')
+                    }
+                ]
             }
         ]
     }
