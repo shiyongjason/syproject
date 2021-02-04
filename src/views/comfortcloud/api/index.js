@@ -45,6 +45,10 @@ export function getMerchantMembersituation (params) {
 export function merchantReward (params) {
     return axios.get(iotUrl + `/mall/boss/wx/reward/manage`, { params })
 }
+// 活动管理
+export function merchantActive (params) {
+    return axios.get(iotUrl + `/mall/boss/shop-activity`, { params })
+}
 // 经销商分销员列表
 export function getMerchantMembersDistributor (params) {
     return axios.get(iotUrl + `/mall/boss/distributor`, { params })
@@ -98,6 +102,16 @@ export function updateDistribution (params) {
 export function delInvitationOrder (params) {
     console.log(params)
     return axios.delete(iotUrl + `/mall/boss/wx/reward/` + params.id, { params })
+}
+// 生效失效活动
+export function checkActiveStatus (params) {
+    console.log(params)
+    return axios.put(iotUrl + `/mall/boss/shop-activity`, params)
+}
+// 审核活动
+export function operationActiveStatus (params) {
+    console.log(params)
+    return axios.put(iotUrl + `/mall/boss/shop-activity/status`, params)
 }
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
