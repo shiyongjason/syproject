@@ -23,12 +23,6 @@
                         <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
                     </template> -->
                 </basicTable>
-                <p>
-                    最近维护时间：{{this.vipDetail.updateTime?moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
-                </p>
-                <p>
-                    最近维护人：{{this.vipDetail.updateBy||'-'}}（{{this.vipDetail.updateByMobile||'-'}}）
-                </p>
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
