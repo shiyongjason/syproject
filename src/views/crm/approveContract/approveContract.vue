@@ -266,7 +266,13 @@ export default {
             },
             contractDocument: '',
             contractAfterApi: '',
-            keyValIncontract: []
+            keyValIncontract: [],
+            // 只能选择当前时间之后的时间
+            pickerOptions: {
+                disabledDate: (time) => {
+                    return time.getTime() < Date.now() - 1 * 24 * 3600 * 1000
+                }
+            }
 
         }
     },
@@ -513,7 +519,8 @@ export default {
                             disabled: !this.currentKey.modify,
                             placeholder: '选择年份',
                             valueFormat: 'yyyy',
-                            style: { width: '250px' }
+                            style: { width: '250px' },
+                            pickerOptions: this.pickerOptions
                         },
                         on: {
                             input: (val) => { this.currentKey.paramValue = val }
