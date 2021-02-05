@@ -13,6 +13,7 @@
                     <template slot="assignedUserName" slot-scope="scope">
                         {{scope.data.row.assignedUserName}} {{scope.data.row.assignedUserMobile}}
                     </template>
+
                     <template slot="status" slot-scope="scope">
                         <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
@@ -101,7 +102,7 @@ export default {
             tableLabel: [
                 { label: '签约年份', prop: 'signYear' },
                 { label: '信用评级', prop: 'vipCreditLevel' },
-                { label: '服务费（%）', prop: 'vipServiceFee' },
+                { label: '服务费（%）', prop: 'vipServiceFee', width: '120px' },
                 { label: '可代采额度（万元）', prop: 'vipPurchaseQuota', formatters: 'money', width: '120px' },
                 { label: '单项目单笔最高金额（万元）', prop: 'vipObjectMaxAmount', width: '120px', formatters: 'money' },
                 // { label: 'VIP等级', prop: 'vipRule' },
@@ -109,7 +110,7 @@ export default {
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
                 { label: '次年服务费折扣（折）', prop: 'serviceFeeDiscount', width: '120px' },
                 { label: '预付款比例（%）', prop: 'advancePaymentProportion' },
-                { label: '签约人', prop: 'createBy', width: '150' },
+                { label: '签约人', prop: 'assignedUserName', width: '150' },
                 { label: '签约时间', prop: 'signTime', formatters: 'date' },
                 { label: '状态', prop: 'status' }
             ],
