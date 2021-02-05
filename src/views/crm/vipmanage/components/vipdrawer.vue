@@ -101,7 +101,7 @@ export default {
             tableLabel: [
                 { label: '签约年份', prop: 'signYear' },
                 { label: '信用评级', prop: 'vipCreditLevel' },
-                { label: '服务费', prop: 'vipServiceFee' },
+                { label: '服务费（%）', prop: 'vipServiceFee' },
                 { label: '可代采额度（万元）', prop: 'vipPurchaseQuota', formatters: 'money', width: '120px' },
                 { label: '单项目单笔最高金额（万元）', prop: 'vipObjectMaxAmount', width: '120px', formatters: 'money' },
                 // { label: 'VIP等级', prop: 'vipRule' },
