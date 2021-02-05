@@ -118,7 +118,6 @@ export default {
     },
     methods: {
         handleError (err) {
-            // console.log(JSON.parse(err.message))
             let errMessage = (JSON.parse(err.message)).message || ''
             this.$message.error(`上传失败：` + errMessage)
             this.progressFlag = false
