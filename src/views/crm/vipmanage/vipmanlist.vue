@@ -97,7 +97,6 @@ export default {
                 { label: '信用评级', prop: 'vipCreditLevel' },
                 { label: '服务费（%）', prop: 'vipServiceFee' },
                 { label: '可代采购额度（万元）', prop: 'vipPurchaseQuota', formatters: 'money' },
-                { label: '签约年份', prop: 'deptName' },
                 { label: '单项目单笔最高（万元）', prop: 'vipObjectMaxAmount', formatters: 'money' },
                 { label: 'VIP目标（万元）', prop: 'vipTarget', formatters: 'money' },
                 { label: '次年服务费折扣（折）', prop: 'serviceFeeDiscount' },
