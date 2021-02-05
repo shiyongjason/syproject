@@ -160,7 +160,8 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberManage.vue')
-                    }, {
+                    },
+                    {
                         path: 'merchantDistributionManage',
                         name: 'merchantDistributionManage',
                         meta: {
@@ -195,6 +196,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberReward.vue')
+                    },
+                    {
+                        path: 'merchantExternalMember',
+                        name: 'merchantExternalMember',
+                        meta: {
+                            title: '外部蓄水客户',
+                            tagName: '外部蓄水客户',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantExternalMember.vue')
                     }
                 ]
             },
