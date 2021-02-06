@@ -208,6 +208,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantExternalMember.vue')
+                    },
+                    {
+                        path: 'merchantMemberTag',
+                        name: 'merchantMemberTag',
+                        meta: {
+                            title: '会员标签',
+                            tagName: '会员标签',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberTag.vue')
                     }
                 ]
             },
