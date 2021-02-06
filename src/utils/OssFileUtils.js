@@ -64,13 +64,13 @@ export default {
         const ossUtil = await initOssSTS()
         try {
             result = await ossUtil.put(
-                generateBaseUrl() + (isRandomName ? generateFileNameByUUID() + suffix : encodeURIComponent(file.name)),
+                generateBaseUrl() + (isRandomName ? generateFileNameByUUID() + suffix : file.name),
                 new Blob([file], {
                     type: file.type,
                     size: file.size
                 })
             )
-            result.name = result.name.slice(decodeURIComponent(result.name).lastIndexOf('/') + 1)
+            result.name = result.name.slice(result.name.lastIndexOf('/') + 1)
         } catch (e) {
             console.log(e)
             result = ''
@@ -90,7 +90,7 @@ export default {
         const ossUtil = await initOssSTS()
         try {
             // URL兼容性 {@link https://developer.mozilla.org/en-US/docs/Web/API/URL/URL}
-            result = await ossUtil.signatureUrl(decodeURIComponent(new URL(url).pathname), { expires: FILE_TIMEOUT_SECOND })
+            result = await ossUtil.signatureUrl(new URL(url).pathname, { expires: FILE_TIMEOUT_SECOND * 1000 })
         } catch (e) {
             result = url
         }
@@ -107,10 +107,13 @@ export default {
      水印 'image/watermark,text_SGVsbG8g5Zu-54mH5pyN5YqhIQ'
      格式转换 'image/format,png'
      图片信息 'image/info'
-     * @returns {Promise<url name>}
+     * @returns {Promise<string>}
      */
     async getImageSelfStyle (url, process) {
         let result
+        if (url && url.indexOf(ossOldBucket + '.') > -1) {
+            return `${url}?x-oss-process=${process}`
+        }
         const ossUtil = await initOssSTS()
         const params = {
             expires: FILE_TIMEOUT_SECOND,

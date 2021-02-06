@@ -71,10 +71,9 @@
                                     <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
                                         <span class="img-box" :key="item.url"
                                               v-for="item in purchaseOrderDetail.poInfo.poDetail">
-                                            <imageAddToken :file-url="item.url" class="info-img"/>
+                                            <imageAddToken :fileUrl="item.url" class="info-img"/>
                                         </span>
                                     </p>
-
                                 </div>
                             </div>
                             <template v-if="purchaseOrderDetail.poInfo">
@@ -355,6 +354,7 @@ export default {
             font-weight: 400;
             cursor: default;
             line-height: 15px;
+            width: 100%;
         }
     }
 

@@ -25,7 +25,7 @@ export default {
         }
     },
     async mounted () {
-        this.fileUrlAddToken = await OssFileUtils.getUrl(this.fileUrl)
+        this.fileUrlAddToken = await OssFileUtils.getImageSelfStyle(this.fileUrl, 'image/resize,m_fixed,w_100,h_100')
     }
 }
 </script>
