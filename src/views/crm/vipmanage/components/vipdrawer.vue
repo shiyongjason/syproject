@@ -6,26 +6,24 @@
                 <div class="drawer-wrap_btn">
                     <div class="drawer-wrap_btn-flex">VIP签约信息</div>
                     <div class="drawer-wrap_btn-flex">
-                        <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button>
+                        <!-- <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button> -->
                     </div>
                 </div>
                 <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
                     <template slot="assignedUserName" slot-scope="scope">
                         {{scope.data.row.assignedUserName}} {{scope.data.row.assignedUserMobile}}
                     </template>
+
                     <template slot="status" slot-scope="scope">
                         <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
+                        <h-button v-if="scope.data.row.contractId" table @click="onLookContract(scope.data.row.contractId)" >查看合同</h-button>
                     </template>
+                    <!-- <template slot="action" slot-scope="scope">
+                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
+                    </template> -->
                 </basicTable>
-                <p>
-                    最近维护时间：{{this.vipDetail.updateTime?moment(this.vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
-                </p>
-                <p>
-                    最近维护人：{{this.vipDetail.updateBy||'-'}}（{{this.vipDetail.updateByMobile||'-'}}）
-                </p>
             </div>
             <div class="drawer-footer">
                 <div class="drawer-button">
@@ -103,9 +101,15 @@ export default {
             tableData: [],
             tableLabel: [
                 { label: '签约年份', prop: 'signYear' },
-                { label: 'VIP等级', prop: 'vipRule' },
-                { label: 'VIP折扣（折）', prop: 'serviceFeeDiscount' },
+                { label: '信用评级', prop: 'vipCreditLevel' },
+                { label: '服务费（%）', prop: 'vipServiceFee', width: '120px' },
+                { label: '可代采额度（万元）', prop: 'vipPurchaseQuota', formatters: 'money', width: '120px' },
+                { label: '单项目单笔最高金额（万元）', prop: 'vipObjectMaxAmount', width: '120px', formatters: 'money' },
+                // { label: 'VIP等级', prop: 'vipRule' },
+                // { label: 'VIP折扣（折）', prop: 'serviceFeeDiscount' },
                 { label: 'VIP目标(万元)', prop: 'vipTarget', formatters: 'money' },
+                { label: '次年服务费折扣（折）', prop: 'serviceFeeDiscount', width: '120px' },
+                { label: '预付款比例（%）', prop: 'advancePaymentProportion' },
                 { label: '签约人', prop: 'assignedUserName', width: '150' },
                 { label: '签约时间', prop: 'signTime', formatters: 'date' },
                 { label: '状态', prop: 'status' }
@@ -222,6 +226,9 @@ export default {
             findPagedetail: 'vipManage/findPagedetail',
             findContract: 'vipApply/findContract'
         }),
+        onLookContract (id) {
+            this.$router.push({ path: '/goodwork/contractSigningManagementDetail', query: { id: id } })
+        },
         async onShowDrawerinfn (companyId, companyName) {
             this.queryParams.companyId = companyId
             this.companyName = companyName
@@ -343,6 +350,7 @@ export default {
         height: 40px;
         line-height: 40px;
         margin-bottom: 10px;
+        padding-left: 10px;
     }
     &_btn {
         display: flex;
@@ -361,6 +369,7 @@ export default {
     }
     p {
         margin-top: 25px;
+        font-size: 14px;
     }
     .green {
         color: #62b439;

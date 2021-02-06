@@ -17,16 +17,16 @@
                         </el-select>
                     </div>
                 </div>
-                <div class="query-cont__col">
+                <!-- <div class="query-cont__col">
                     <div class="query-col__label">VIP等级：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.vipRuleId" placeholder="请选择" :clearable=true>
                             <el-option :label="item.vipRule" :value="item.id" v-for="item in vipLevels" :key="item.id"></el-option>
                         </el-select>
                     </div>
-                </div>
+                </div> -->
                 <div class="query-cont__col">
-                    <div class="query-col__label">VIP折扣：</div>
+                    <div class="query-col__label">次年服务费折扣：</div>
                     <div class="query-col__input">
                         <el-input v-model="minServiceFeeDiscount" placeholder="请输入最小折扣" v-isNum:1><template slot="append">折</template></el-input>
                         ~
@@ -42,14 +42,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-
-                        <h-button type="primary" @click="searchList()">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
-
+                    <h-button type="primary" @click="searchList()">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
                 </div>
             </div>
 
@@ -95,9 +93,14 @@ export default {
             tableLabel: [
                 { label: '企业名称', prop: 'companyName', width: '' },
                 { label: '所属分部', prop: 'deptName' },
-                { label: 'VIP等级', prop: 'vipRule' },
-                { label: '次年服务费折扣（折）', prop: 'serviceFeeDiscount' },
+                // { label: 'VIP等级', prop: 'vipRule' },
+                { label: '信用评级', prop: 'vipCreditLevel' },
+                { label: '服务费（%）', prop: 'vipServiceFee' },
+                { label: '可代采购额度（万元）', prop: 'vipPurchaseQuota', formatters: 'money' },
+                { label: '单项目单笔最高（万元）', prop: 'vipObjectMaxAmount', formatters: 'money' },
                 { label: 'VIP目标（万元）', prop: 'vipTarget', formatters: 'money' },
+                { label: '次年服务费折扣（折）', prop: 'serviceFeeDiscount' },
+                { label: '预付款比例（%）', prop: 'advancePaymentProportion' },
                 { label: '更新时间', prop: 'updateTime', formatters: 'dateTimes' }
             ],
             tableData: [],

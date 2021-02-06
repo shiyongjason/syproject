@@ -266,7 +266,13 @@ export default {
             },
             contractDocument: '',
             contractAfterApi: '',
-            keyValIncontract: []
+            keyValIncontract: [],
+            // 只能选择当前时间之后的时间
+            pickerOptions: {
+                disabledDate: (time) => {
+                    return time.getTime() < Date.now() - 1 * 24 * 3600 * 1000
+                }
+            }
 
         }
     },
@@ -295,8 +301,8 @@ export default {
             if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse') {
                 return 'isAllNum'
             }
-            // 元 %
-            if (unit) {
+            // 元 % 带小数
+            if (unit || paramKey == 'vip_next_year_discount') {
                 return 'isNum'
             }
             return 'elInput'
@@ -381,7 +387,9 @@ export default {
                                 disabled: !this.currentKey.modify,
                                 style: this.currentKey.unit ? { width: '250px' } : '',
                                 innerHtml: this.currentKey.unit || '',
-                                maxlength: this.currentKey.maxLength || ''
+                                maxlength: this.currentKey.maxLength || '',
+                                decimal: this.currentKey.decimal || '',
+                                calculationRules: this.currentKey.calculationRules || ''// 最大值
                             },
                             on: {
                                 input: (val) => { this.currentKey.paramValue = val.trim() }
@@ -499,6 +507,23 @@ export default {
                                 console.log(this.$refs['zoomImage'])
                                 this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
                             }
+                        }
+                    }
+                },
+                // 年份选择器
+                10: {
+                    elDatePicker: {
+                        bind: {
+                            value: this.currentKey.paramValue,
+                            type: 'year',
+                            disabled: !this.currentKey.modify,
+                            placeholder: '选择年份',
+                            valueFormat: 'yyyy',
+                            style: { width: '250px' },
+                            pickerOptions: this.pickerOptions
+                        },
+                        on: {
+                            input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
                 }
