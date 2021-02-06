@@ -1,7 +1,13 @@
-ul,li{
+ul,
+li {
     padding: 0;
     margin: 0;
 }
+
+* {
+    outline: none;
+}
+
 /**
  * ElementUI 的样式重置
  **/
@@ -178,9 +184,10 @@ ul,li{
     color: $hosjoyColor;
 }
 
-.el-message{
+.el-message {
     top: 150px;
 }
+
 .el-message-box {
     margin-bottom: 0;
 }
@@ -193,9 +200,11 @@ ul,li{
 .el-message-box__content {
     min-height: 0px;
 }
-.el-message-box__wrapper{
+
+.el-message-box__wrapper {
     z-index: 10001 !important
 }
+
 .el-message-box__btns {
     padding: 10px 24px;
     // border-top: 1px solid #e5e5ea;
@@ -206,6 +215,7 @@ ul,li{
         color: #666666;
         border: 1px solid rgba(229, 229, 234, 1);
         padding: 12px 20px;
+
         &:active {
             border-color: $hosjoyColor;
             background: $whiteColorActive;
@@ -223,6 +233,7 @@ ul,li{
         border-radius: 4px;
         color: $whiteColor;
         padding: 11px 20px;
+
         &:active {
             background: $hosjoyColorActive;
         }
@@ -232,6 +243,7 @@ ul,li{
         }
     }
 }
+
 // .el-button--primary{
 //     background: #FF7A45;
 //     border: 1px solid #FF7A45;
@@ -288,11 +300,12 @@ ul,li{
     height: 104px !important;
     line-height: 104px !important;
 }
+
 .brand-drawer {
     .el-upload--picture-card {
         float: left;
         margin-right: 10px;
-        width:  80px !important;
+        width: 80px !important;
         height: 80px !important;
         line-height: 80px !important;
     }
@@ -384,7 +397,7 @@ ul,li{
     max-width: 500px;
 }
 
-.el-collapse{
+.el-collapse {
     border-bottom: 0;
 }
 
@@ -408,6 +421,7 @@ ul,
 li {
     list-style: none;
 }
+
 .el-table__body-wrapper::-webkit-scrollbar-thumb {
     min-height: 20px;
     background-color: rgba(33, 37, 43, 0.26);

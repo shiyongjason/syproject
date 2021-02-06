@@ -118,7 +118,6 @@ export default {
     },
     methods: {
         handleError (err) {
-            // console.log(JSON.parse(err.message))
             let errMessage = (JSON.parse(err.message)).message || ''
             this.$message.error(`上传失败：` + errMessage)
             this.progressFlag = false
@@ -130,7 +129,6 @@ export default {
             this.uploadPercent = Math.floor(event.percent)
         },
         handleSuccess (response, file, fileList) {
-            console.log('fileList: ', fileList)
             let obj = {
                 fileName: response.data.fileName,
                 fileUrl: response.data.accessUrl
