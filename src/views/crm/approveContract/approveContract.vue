@@ -945,6 +945,7 @@ export default {
         },
         editorOnInit () {
             console.log('编辑器初始化完成domBindMethods')
+
             this.domBindMethods()
         },
         onKeyUp () {
@@ -1066,6 +1067,24 @@ export default {
                     })
                 }
             })
+            this.$nextTick(() => {
+                // setTimeout(() => {
+                // 这里去给table赋值 style
+                console.log('==', document.getElementsByTagName('table'))
+                let tableobj = document.getElementsByTagName('table')
+
+                console.log(111, tableobj, Array.from(tableobj).length)
+                Array.from(tableobj).map(item => {
+                    console.log(item.getElementsByTagName('tr'))
+                    Array.from(item.getElementsByTagName('tr')).map(jtem => {
+                        jtem.style.border = '1px solid #333'
+                    })
+                    Array.from(item.getElementsByTagName('td')).map(jtem => {
+                        jtem.style.border = '1px solid #333'
+                    })
+                })
+                // }, 2000)
+            })
         },
         async init (cb) {
             console.log('this.$route.query.id', this.$route.query.id)
@@ -1076,24 +1095,24 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
-            this.$nextTick(() => {
-                setTimeout(() => {
-                // 这里去给table赋值 style
-                    console.log('==', document.getElementsByTagName('table'))
-                    let tableobj = document.getElementsByTagName('table')
+            // this.$nextTick(() => {
+            //     setTimeout(() => {
+            //     // 这里去给table赋值 style
+            //         console.log('==', document.getElementsByTagName('table'))
+            //         let tableobj = document.getElementsByTagName('table')
 
-                    console.log(111, tableobj, Array.from(tableobj).length)
-                    Array.from(tableobj).map(item => {
-                        console.log(item.getElementsByTagName('tr'))
-                        Array.from(item.getElementsByTagName('tr')).map(jtem => {
-                            jtem.style.border = '1px solid #333'
-                        })
-                        Array.from(item.getElementsByTagName('td')).map(jtem => {
-                            jtem.style.border = '1px solid #333'
-                        })
-                    })
-                }, 2000)
-            })
+            //         console.log(111, tableobj, Array.from(tableobj).length)
+            //         Array.from(tableobj).map(item => {
+            //             console.log(item.getElementsByTagName('tr'))
+            //             Array.from(item.getElementsByTagName('tr')).map(jtem => {
+            //                 jtem.style.border = '1px solid #333'
+            //             })
+            //             Array.from(item.getElementsByTagName('td')).map(jtem => {
+            //                 jtem.style.border = '1px solid #333'
+            //             })
+            //         })
+            //     }, 2000)
+            // })
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             if (this.detailRes.contractStatus == 6) {
@@ -1134,12 +1153,12 @@ export default {
 </script>
 <style scoped lang="scss">
 /deep/.approvalcontract-content table td {
-    border: 1px solid #ccc;
+    // border: 1px solid #ccc;
     // border-right: 1px solid #ccc;
 
 }
 /deep/ .mce-item-table:not([border]) td {
-     border: 1px solid #333 !important;
+    //  border: 1px solid #333 !important;
 }
 .approvalRemark {
     font-size: 14px;
