@@ -189,7 +189,6 @@ import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
-import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
 export default {
     name: 'creditdrawer',
@@ -197,7 +196,6 @@ export default {
         return {
             showPacking: null,
             auths,
-            handleImgDownload,
             moment,
             isloading: false,
             resloading: false,
