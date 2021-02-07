@@ -1086,10 +1086,10 @@ export default {
                     Array.from(tableobj).map(item => {
                         console.log(item.getElementsByTagName('tr'))
                         Array.from(item.getElementsByTagName('tr')).map(jtem => {
-                            jtem.style.border = '1px solid #ccc'
+                            jtem.style.border = '1px solid #333'
                         })
                         Array.from(item.getElementsByTagName('td')).map(jtem => {
-                            jtem.style.border = '1px solid #ccc'
+                            jtem.style.border = '1px solid #333'
                         })
                     })
                 }, 2000)
@@ -1105,7 +1105,7 @@ export default {
             if (!this.flag) this.flag = true
             cb && cb()
             if (this.detailRes.contractStatus != 6) {
-                // this.domBindMethods()
+                this.domBindMethods()
             }
             this.imgArr = []
             console.log('init____this.contractFieldsList', this.contractFieldsList)
@@ -1133,11 +1133,13 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.approvalcontract-content table td {
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    padding: 3px 5px;
-    min-height: 30px;
+/deep/.approvalcontract-content table td {
+    border: 1px solid #ccc;
+    // border-right: 1px solid #ccc;
+
+}
+/deep/ .mce-item-table:not([border]) td {
+     border: 1px solid #333 !important;
 }
 .approvalRemark {
     font-size: 14px;
