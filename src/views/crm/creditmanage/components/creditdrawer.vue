@@ -149,7 +149,7 @@
                 </template>
             </span>
         </el-dialog>
-        <el-dialog class="recordsVisibleDialog" v-if="recordsVisible" title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
+        <el-dialog title="打回记录" :visible.sync="recordsVisible" width="30%" :before-close="()=>recordsVisible = false" :modal=false>
             <div class="project-record">
                 <template v-if="refuseRecord.length>0">
                     <el-timeline>
@@ -189,7 +189,6 @@ import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
-import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
 export default {
     name: 'creditdrawer',
@@ -197,7 +196,6 @@ export default {
         return {
             showPacking: null,
             auths,
-            handleImgDownload,
             moment,
             isloading: false,
             resloading: false,
@@ -334,7 +332,6 @@ export default {
             await this.findCreditPage({ companyId: this.companyId })
             this.tableData = this.creditPage.companyCreditList
             this.drawer = true
-            this.isloading = false
         },
         async onShowCreditdocument () {
             this.isDownLoad = false
@@ -461,7 +458,6 @@ export default {
                     await this.findCreditPage({ companyId: this.companyId })
                     this.tableData = this.creditPage.companyCreditList
                     this.$emit('backEvent')
-                    this.isloading = false
                 } catch (error) {
                     this.isloading = false
                 }
@@ -840,8 +836,5 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
-}
-.projectRecord{
-    /deep/.recordsVisibleDialog .el-dialog__body{ max-height: 500px; overflow-y: scroll;}
 }
 </style>
