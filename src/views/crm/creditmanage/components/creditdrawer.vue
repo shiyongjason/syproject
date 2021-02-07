@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="projectRecord">
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
@@ -71,27 +71,26 @@
                                         <span class="posrtv">
                                             <template v-if="jtem&&jtem.fileUrl">
                                                 <i class="el-icon-document"></i>
-                                                 <downloadFileAddToken isPreview
-                                                                       :file-name="jtem.fileName"
-                                                                       :file-url="jtem.fileUrl"
-                                                                       :a-link-words="jtem.fileName"
-                                                                       is-type="main" />
+                                                <a :href="jtem.fileUrl" target="_blank">
+                                                    <font>{{jtem.fileName}}</font>
+                                                </a>
                                             </template>
                                         </span>
                                     </p>
                                     <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
                                     <p>
                                         <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
-                                        <downloadFileAddToken
-                                                              :file-name="jtem.fileName"
-                                                              :file-url="jtem.fileUrl"
-                                                              :a-link-words="'下载'"
-                                                              is-type="btn" />
+                                        <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
+                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"
+                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">
+                                            下载
+                                        </a>
+                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>
                                     </p>
                                 </div>
-                                <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
+                                <hosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
                                     <el-button type="primary">上 传</el-button>
-                                </OssFileHosjoyUpload>
+                                </hosjoyUpload>
                             </el-form-item>
                         </template>
                     </div>
@@ -134,8 +133,8 @@
                     <el-input type="textarea" v-model="ruleForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
                 <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                    <HosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
-                    </HosjoyUpload>
+                    <hosjoyUpload v-model="ruleForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
+                    </hosjoyUpload>
                     2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式
                 </el-form-item>
             </el-form>
@@ -185,12 +184,12 @@
 </template>
 <script>
 import moment from 'moment'
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
-import downloadFileAddToken from '@/components/downloadFileAddToken'
-import { interfaceUrl } from '@/api/config'
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { ccpBaseUrl } from '@/api/config'
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { postCreditDetail, putCreditDocument, refuseCredit, uploadCredit, saveCreditDocument, getComcredit, downLoadZip } from '../api'
 import { CREDITLEVEL } from '../../const'
+import { handleImgDownload } from '../../projectInformation/utils'
 import * as auths from '@/utils/auth_const'
 export default {
     name: 'creditdrawer',
@@ -198,6 +197,7 @@ export default {
         return {
             showPacking: null,
             auths,
+            handleImgDownload,
             moment,
             isloading: false,
             resloading: false,
@@ -250,7 +250,7 @@ export default {
                 projectUpload: [],
                 serviceFee: 0
             },
-            action: interfaceUrl + 'tms/files/upload',
+            action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
                 reservedName: false
@@ -275,8 +275,7 @@ export default {
         }
     },
     components: {
-        OssFileHosjoyUpload,
-        downloadFileAddToken
+        hosjoyUpload
     },
     watch: {
         'form.projectUpload' (val) {
@@ -839,8 +838,5 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
-}
-.oss-sts-download {
-    cursor: pointer;
 }
 </style>

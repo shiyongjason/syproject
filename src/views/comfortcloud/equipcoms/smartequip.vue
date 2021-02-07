@@ -5,10 +5,10 @@
                 <span :class="index==tabindex?'active':''" @click="onTabs(index,item.key)" v-for="(item,index) in smartList" :key=index>{{item.name}}</span>
             </div>
             <div class="echart-time">
-                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期"  :picker-options="pickerOptionsStart">
+                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.startDate" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                 </el-date-picker>
                 <span class="">-</span>
-                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.endDate " value-format="yyyy-MM-dd" placeholder="结束日期"  :picker-options="pickerOptionsEnd">
+                <el-date-picker type="date" :editable="false" :clearable="false" v-model="smartparams.endDate " value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                 </el-date-picker>
                 <el-button type="primary" class="ml20" @click="onFindHistoryR()">
                     查询
@@ -57,10 +57,9 @@
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="cloudDeviceDetailList" :pagination="cloudDeviceDetailPagination"
-                        @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth="80">
+            <basicTable :tableLabel="tableLabel" :tableData="cloudDeviceDetailList" :pagination="cloudDeviceDetailPagination" @onSortChange="onSortChange" isShowIndex @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth="80">
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn"  @click="onDetail(scope.data.row)">详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">详情</el-button>
                 </template>
             </basicTable>
         </div>
@@ -102,7 +101,6 @@ export default {
                 { key: 'heating', name: '采暖控制' },
                 { key: 'freshAir', name: '新风控制' },
                 { key: 'sensor', name: '传感器' },
-                { key: 'smartAppliance', name: '智能家电' },
                 { key: 'switchPanel', name: '开关面板' }],
             smartData: {}
         }
@@ -166,6 +164,7 @@ export default {
             findHistoryReport: 'findHistoryReport',
             findCloudDeviceDetailList: 'findCloudDeviceDetailList'
         }),
+
         onSortChange (val) {
             if (val.order) {
                 this.queryParams.createTimeSortType = val.order === 'descending' ? '2' : '1'
@@ -191,16 +190,19 @@ export default {
             this.drawLine(this.smartData)
         },
         onDetail (val) {
-            this.$router.push({ path: '/comfortcloud/equipmentOverview/deviceDetail',
-                query: { iotId: val.iotId,
+            this.$router.push({
+                path: '/comfortcloud/equipmentOverview/deviceDetail',
+                query: {
+                    iotId: val.iotId,
                     subIotId: val.subIotId,
                     deviceClass: val.deviceClass
-                } })
+                }
+            })
         },
         drawLine (data) {
             // 绘制图表
             var charts = {
-                unit: '单位/台',
+                unit: '在线设备/台',
                 names: [],
                 lineX: [],
                 value: []
@@ -213,9 +215,9 @@ export default {
                     if (index === 0) charts.lineX.push(value1.dateTime)
                 })
             })
-            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97']
+            var color = ['rgba(23, 255, 243', 'rgba(255,100,97', 'rgba(71,100,197', 'rgba(255,158,37', 'rgba(255,135,97', 'rgba(45,207,182', 'rgba(2,188,111', 'rgba(175,153,255']
             var lineY = []
-            // 根据数据条数 渲染y轴数据
+            // 根据数据条数  渲染y轴数据
             for (var i = 0; i < charts.names.length; i++) {
                 var x = i
                 if (x > color.length - 1) {
@@ -320,7 +322,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .home-detail-title {
-        padding-bottom: 20px;
-    }
+.home-detail-title {
+    padding-bottom: 20px;
+}
 </style>

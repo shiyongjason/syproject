@@ -102,6 +102,41 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantRecommendList.vue')
+                    },
+                    {
+                        path: 'merchantClassify',
+                        name: 'merchantClassify',
+                        meta: {
+                            title: '产品匹配',
+                            tagName: '产品匹配',
+                            parentName: '商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantClassify.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantOrderManage',
+                meta: {
+                    title: '订单管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantOrderList',
+                        name: 'merchantOrderList',
+                        meta: {
+                            title: '订单列表',
+                            tagName: '订单列表',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantOrderList.vue')
                     }
                 ]
             },
@@ -160,6 +195,29 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberReward.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantActive',
+                meta: {
+                    title: '活动管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantMemberActive',
+                        name: 'merchantMemberActive',
+                        meta: {
+                            title: '活动审核',
+                            tagName: '活动审核',
+                            parentName: '活动管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberActive.vue')
                     }
                 ]
             }

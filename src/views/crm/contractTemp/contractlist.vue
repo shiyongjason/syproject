@@ -76,6 +76,7 @@ export default {
         return {
             Auths,
             queryParams: {
+                typeAuth: '',
                 templateName: '',
                 typeId: '',
                 status: '',
@@ -146,7 +147,11 @@ export default {
         },
         async searchList (val) {
             if (val == 1) { this.queryParams.pageNumber = val }
-            await this.getContractTmep(this.queryParams)
+            let _query = {
+                ...this.queryParams,
+                typeAuth: this.hosAuthCheck(Auths.CONTRACTLIST_TYPE_AUTH) ? '' : 2 // 1确认函
+            }
+            await this.getContractTmep(_query)
             this.tableData = this.contractTempdata.records
             this.paginationInfo = {
                 pageNumber: this.contractTempdata.current,
@@ -245,7 +250,9 @@ export default {
     },
     mounted () {
         this.copy_queryParams = JSON.parse(JSON.stringify(this.queryParams))
-        this.getContratType()
+        this.getContratType({
+            typeAuth: this.hosAuthCheck(Auths.CONTRACTLIST_TYPE_AUTH) ? '' : 2 // 1确认函
+        })
         this.searchList()
     },
     activated () {

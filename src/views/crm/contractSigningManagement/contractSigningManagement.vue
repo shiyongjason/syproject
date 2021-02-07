@@ -95,7 +95,7 @@
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
                 actionWidth='275' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
-                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)" >分财审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)">分财审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
@@ -111,40 +111,54 @@
             <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
-                <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
-                    <div class="history-css-left">
-                        <span class="name">{{item.operator}} </span>
-                        <span>{{item.operationName}}</span>
-                        <template v-if="item.operationName == '编辑了'">
-                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
-                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                从<el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
-                                变为
-                                    <font>
-                                    <span v-if="JSON.parse(item.operationContent).fieldContent==''"></span>
-                                    <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
-                                        <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                            :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                    </template>
-                                    <template v-else>
-                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                    </template>
-                                </font>
-                            </span>
-                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
-                        </template>
-                        <template v-else-if="item.operationName == '修订了'">
-                            <font style="margin: 0 4px;">合同</font>
-                            <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
-                        </template>
-                        <template v-else>
+                <template v-else v-for="(item,index) in historyList">
+                    <div class="history-css-flex"  :key="index">
+                        <!-- signStatus==6下一步 -->
+                        <div v-if="item.signStatus==6" class="history-css-left">
+                            <span class="name">{{item.operator}} </span>
+                            <span style="">{{item.operationName}} </span>
                             <span class="operationcontent-css">
                                 <font>{{item.operationContent}}</font>
                             </span>
-                        </template>
+                        </div>
+                        <div v-else class="history-css-left">
+                            <span class="name">{{item.operator}} </span>
+                            <span>{{item.operationName}}</span>
+                            <template v-if="item.operationName == '编辑了'">
+                                <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
+                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                    从<el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                        :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                    变为
+                                    <font>
+                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
+                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
+                                        </template>
+                                        <template v-else>
+                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                        </template>
+                                    </font>
+                                </span>
+                                <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                            </template>
+                            <template v-else-if="item.operationName == '修订了'">
+                                <font style="margin: 0 4px;">合同</font>
+                                <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                            </template>
+                            <template v-else>
+                                <span class="operationcontent-css">
+                                    <font>{{item.operationContent}}</font>
+                                </span>
+                            </template>
+                        </div>
+                        <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
-                </div>
+                    <div class="approvalRemark" v-if="item.approvalRemark"  :key="index+'approvalRemark'">
+                        {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
+                    </div>
+                </template>
             </div>
             <div class="history-bttom">
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
@@ -164,6 +178,7 @@ import {
     contractTypesNotConfirm
 } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
+import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 
 const _queryParams = {
@@ -218,7 +233,7 @@ export default {
                     prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
-                        return <span>{!scope.row.templateId ? '-' : scope.row.templateId }</span>
+                        return <span>{!scope.row.templateId ? '-' : scope.row.templateId}</span>
                     }
                 },
                 { label: '合同模版版本', prop: 'versionNo', width: '120' },
@@ -403,8 +418,8 @@ export default {
         this.getcontractTypes()
         await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
         this.branchArr = this.crmdepList
-    }
-    /* async activated () {
+    },
+    async activated () {
         this.getList()
         this.getcontractTypes()
         await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
@@ -421,7 +436,7 @@ export default {
             clearCache('contractSigningManagement')
         }
         next()
-    } */
+    }
 }
 </script>
 <style scoped lang="scss">
@@ -485,6 +500,9 @@ export default {
         padding-right: 20px;
         box-sizing: border-box;
     }
-
+    .approvalRemark{
+        font-size: 14px;
+        color: #f00;
+    }
 }
 </style>
