@@ -72,7 +72,6 @@ export default {
             )
             result.name = result.name.slice(result.name.lastIndexOf('/') + 1)
         } catch (e) {
-            console.log(e)
             result = ''
         }
         return result
@@ -90,7 +89,7 @@ export default {
         const ossUtil = await initOssSTS()
         try {
             // URL兼容性 {@link https://developer.mozilla.org/en-US/docs/Web/API/URL/URL}
-            result = await ossUtil.signatureUrl(new URL(url).pathname, { expires: FILE_TIMEOUT_SECOND * 1000 })
+            result = await ossUtil.signatureUrl(decodeURIComponent(new URL(url).pathname), { expires: FILE_TIMEOUT_SECOND * 1000 })
         } catch (e) {
             result = url
         }
