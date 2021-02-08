@@ -1067,24 +1067,6 @@ export default {
                     })
                 }
             })
-            this.$nextTick(() => {
-                // setTimeout(() => {
-                // 这里去给table赋值 style
-                console.log('==', document.getElementsByTagName('table'))
-                let tableobj = document.getElementsByTagName('table')
-
-                console.log(111, tableobj, Array.from(tableobj).length)
-                Array.from(tableobj).map(item => {
-                    console.log(item.getElementsByTagName('tr'))
-                    Array.from(item.getElementsByTagName('tr')).map(jtem => {
-                        jtem.style.border = '1px solid #333'
-                    })
-                    Array.from(item.getElementsByTagName('td')).map(jtem => {
-                        jtem.style.border = '1px solid #333'
-                    })
-                })
-                // }, 2000)
-            })
         },
         async init (cb) {
             console.log('this.$route.query.id', this.$route.query.id)
