@@ -755,6 +755,21 @@ export default {
                     })
                 }
             })
+
+            // 这里去给table赋值 style
+            let tableobj = document.getElementsByClassName('w-e-text')[0].getElementsByTagName('table')
+
+            console.log(111, tableobj, Array.from(tableobj).length)
+            Array.from(tableobj).map(item => {
+                console.log(item.getElementsByTagName('tr'))
+                Array.from(item.getElementsByTagName('tr')).map(jtem => {
+                    jtem.style.border = '1px solid #333'
+                })
+                Array.from(item.getElementsByTagName('td')).map(jtem => {
+                    jtem.style.border = '1px solid #333'
+                })
+            })
+
             this.contractForm.content = document.getElementsByClassName('w-e-text')[0].innerHTML
             this.contractForm.operatorBy = this.userInfo.employeeName
             this.contractForm.operatorAccount = this.userInfo.phoneNumber
@@ -822,7 +837,6 @@ export default {
                 return item
             })
             this.contractForm.signerSetting = _tableset
-
             if (!this.$route.query.id) {
                 try {
                     await addContractTemp(this.contractForm)
