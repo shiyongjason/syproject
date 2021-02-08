@@ -137,6 +137,17 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOrderList.vue')
+                    }, {
+                        path: 'merchantOutOrderList',
+                        name: 'merchantOutOrderList',
+                        meta: {
+                            title: '外部订单列表',
+                            tagName: '外部订单列表',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantOutOrderList.vue')
                     }
                 ]
             },
