@@ -52,7 +52,7 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <h-drawer title="参数详情" :visible.sync="setVisible" @beforeClose="closeDialog" :options='options'>
+        <h-drawer title="参数详情" :visible.sync="setVisible" :beforeClose="closeDialog" direction='rtl' size='900px'>
             <template #connect>
                 <setParameters ref="setting" :categoryId="current.id" />
             </template>

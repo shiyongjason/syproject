@@ -56,7 +56,7 @@
                 </template>
             </basicTable>
         </div>
-        <h-drawer :title="drawerMsg.title" :visible="drawerShow" @beforeClose="onCancel">
+        <h-drawer :title="drawerMsg.title" :visible="drawerShow" :beforeClose="onCancel">
             <template #connect>
                 <el-form ref="suggest" :rules="rules" :model="suggest" class="suggest" label-width="100px">
                     <el-form-item label="供应商：" class="mb-5">

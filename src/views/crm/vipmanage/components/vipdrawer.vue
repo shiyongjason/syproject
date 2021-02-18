@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h-drawer title="详情" :visible.sync="drawer" @beforeClose="handleClose" :options="options">
+        <h-drawer title="详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <div class="drawer-wrap" v-if="vipDetail">
                     <div class="drawer-wrap_title">{{companyName}}</div>

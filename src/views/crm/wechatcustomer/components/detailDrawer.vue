@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <h-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" :options="options" @beforeClose="handleClose">
+        <h-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" direction='rtl' size='40%' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
                 <div class="drawer-content">
                     <div class="drawer-cont" v-if="modelType==1">
@@ -64,8 +64,7 @@
                         </el-tabs>
                         <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
-                        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total"
-                            @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
+                        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
                         </hosJoyTable>
                     </div>
                 </div>

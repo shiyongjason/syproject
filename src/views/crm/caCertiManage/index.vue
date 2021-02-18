@@ -84,7 +84,7 @@
                 </template>
             </basicTable>
 
-            <h-drawer title="查看信息" :visible.sync="drawer" @beforeClose="handleClose" :options='options'>
+            <h-drawer title="查看信息" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='400px'>
                 <template #connect>
                     <div class="drawer-content">
                         <p>印章</p>
