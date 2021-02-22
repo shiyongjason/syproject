@@ -240,7 +240,24 @@ const router = new Router({
         {
             path: '/403',
             name: '403',
-            component: () => import('./views/error/403'),
+            // component: () => import('./views/error/403'),
+            component: Layout,
+            meta: {
+                title: '403',
+                isMenu: false
+            },
+            children: [
+                {
+                    path: '',
+                    name: '403',
+                    meta: {
+                        title: '403',
+                        isMenu: false
+                    },
+                    component: () => import('./views/error/403'),
+                    hidden: true
+                }
+            ],
             hidden: true
         }
     ]
@@ -307,7 +324,7 @@ router.beforeEach(async (to, from, next) => {
             // 非登录的情况下
             if (!userInfo) {
                 return next({
-                    name: 'login'
+                    path: '/login?backUrl=' + encodeURIComponent(to.path),
                 })
             } else {
                 if (isFirst) {

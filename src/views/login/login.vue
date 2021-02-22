@@ -140,7 +140,13 @@ export default {
             handleMenuResources(data.employeeAuthDetailsList, resourceList)
             const menu = makeMenus(routerMapping, resourceList)
             sessionStorage.setItem('menuList', JSON.stringify(menu))
-            this.makeIndex(menu)
+            if (this.$route.query.backUrl) {
+                this.$router.push({
+                    path: this.$route.query.backUrl
+                })
+            } else {
+                this.makeIndex(menu)
+            }
         },
         ...mapMutations({
             setUserInfo: 'USER_INFO',
