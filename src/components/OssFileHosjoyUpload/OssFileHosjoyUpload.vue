@@ -193,21 +193,23 @@ export default {
                 return false
             }
         },
-        open (index, item = null) {
+        async open (index, item = null) {
             if ((item.fileName).indexOf('.png') > -1 || (item.fileName).indexOf('.jpg') > -1 || (item.fileName).indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
-                this.previewSrcList = tempArr.forEach(async (item, index) => {
-                    item.fileUrl = await OssFileUtils.getUrl(item.fileUrl)
-                })
+                for (let tempArrElement of tempArr) {
+                    tempArrElement = await OssFileUtils.getUrl(tempArrElement.fileUrl)
+                }
+                this.previewSrcList = tempArr
                 const pre = this.$refs[`preview_${index}`]
                 if (pre && pre[0]) {
                     pre[0].clickHandler()
                 }
             } else {
-                window.open(item.fileUrl)
+                let url = await OssFileUtils.getUrl(item.fileUrl)
+                window.open(url)
             }
         },
         async uploadFile (params) {
