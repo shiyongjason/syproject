@@ -4,7 +4,7 @@
             <div class="row-filed info-img-group">
                 <span class="label">支付凭证：</span>
                 <p class="content">
-                    <span class="img-box" :key="item.docId" v-for="item in dialogDetail.attachDocList">
+                    <span class="img-box" :key="item.fileUrl" v-for="item in dialogDetail.attachDocList">
                         <imageAddToken :file-url="item.fileUrl" />
                     </span>
                 </p>
