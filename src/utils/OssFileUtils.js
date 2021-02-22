@@ -76,7 +76,6 @@ export default {
         } catch (e) {
             result = ''
         }
-        console.log(result)
         return result
     },
     /**
