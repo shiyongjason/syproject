@@ -323,6 +323,9 @@ router.beforeEach(async (to, from, next) => {
         } else {
             // 非登录的情况下
             if (!userInfo) {
+                if (to.path === '/') {
+                    return next({ name: 'login' })
+                }
                 return next({
                     path: '/login?backUrl=' + encodeURIComponent(to.path),
                 })
