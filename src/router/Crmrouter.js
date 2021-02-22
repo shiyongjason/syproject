@@ -329,6 +329,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/bi/index.vue')
+            },
+            {
+                path: 'fullcalendar',
+                name: 'fullcalendar',
+                meta: {
+                    title: '好橙工fullcalendar',
+                    tagName: '好橙工fullcalendar',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/holiday/index.vue')
             }
         ]
     }
