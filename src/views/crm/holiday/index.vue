@@ -1,104 +1,162 @@
 <template>
 <div class="page-body">
-      <div class="page-body-cont">
-    <div class="fullCalendarCont">
-        <el-date-picker size="small" style="width: 144px;" v-model="selectDate" type="date" placeholder="选择时间" @change="changeDate">
-        </el-date-picker>
-        <full-calendar :config="config" :events="events" ref="calendar"></full-calendar>
+    <div class="page-body-cont">
+        <div class="selection-area">
+            <el-radio-group v-model="tab" style="margin-bottom: 20px;">
+                <el-radio-button label="month">月</el-radio-button>
+                <el-radio-button label="year">年</el-radio-button>
+            </el-radio-group>
+        </div>
+        <div v-if="tab === 'year'">
+            <div class="title">{{currYear}}年</div>
+            <ul class="calendar_wrapper">
+                <li v-for="item in months" :key="item" class="month-wrapper" @dblclick="onShowMonth(item)">
+                    <div class="month-title">{{cnMonths[item - 1]}}月</div>
+                    <div class="month-content">
+                        <div class="date-title-wrapper">
+                            <div v-for="obj in cnWeeks" :key="obj" class="date-title">{{obj}}</div>
+                        </div>
+                        <div v-for="(arr, index) in allDate(item)" :key="index" class="date-content-wrapper">
+                            <div v-for="obj in arr" :key="obj.day" :class="{'date-content': true, 'disabled':  obj.disabled}">
+                                {{obj.day}}
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div v-if="tab === 'month'">
+            <div class="title">{{currYear}}年{{currMonth}}月</div>
+            <div class="month-content">
+                <div class="date-title-wrapper">
+                    <div v-for="obj in cnWeeks" :key="obj" class="month-date-title">周{{obj}}</div>
+                </div>
+                <div v-for="(arr, index) in allDate(currMonth)" :key="index" class="month-date-content-wrapper">
+                    <div v-for="obj in arr" :key="obj.day" :class="{'month-date-content': true, 'disabled':  obj.disabled}">
+                        {{obj.day}}日
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-      </div>
-    </div>
+</div>
 </template>
 <script>
-import { FullCalendar } from 'vue-full-calendar'
-import "fullcalendar/dist/fullcalendar.css";
 export default {
-    components: { FullCalendar },
     data () {
         return {
-            selectDate: '',//日期选择器选中的月份
-            events: [{
-                id: 1,
-                title: '出差',
-                start: '2021-02-20', // 事件开始时间
-                end: '2021-02-22',   // 事件结束时间
-            },
-            {
-                id: 2,
-                title: '出差2',
-                start: '2021-02-20', // 事件开始时间
-                end: '2021-02-22',   // 事件结束时间
-            },],
-            config: {
-                firstDay: '0',//以周日为每周的第一天
-                buttonText: {
-                    today: '今天',
-                    month: '月',
-                    week: '周',
-                    day: '日'
-                },
-               header: {
-                      left: 'hide',
-                      center: 'title',
-                      right: 'hide,hide,hide'
-                    },
-                theme: false,//是否允许使用jquery的ui主题
-                height: 'auto',
-                slotLabelFormat: 'H:mm', // axisFormat 'H(:mm)'
-                //slotLabelInterval:1,
-                views: {
-                    month: {
-                        titleFormat: 'YYYY年MMM'
-                    },
-                    day: {
-                        titleFormat: 'YYYY年MMMDD日 dddd'
-                    }
-                },
-                monthNames: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
-                monthNamesShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
-                dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-                dayNamesShort: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-                slotDuration: '00:30:00',
-                minTime: '00:00',
-                maxTime: '24:00',
-                locale: "zh-cn",
-                editable: true, //是否允许修改事件
-                selectable: false,//是否允许用户单击或者拖拽日历中的天和时间隙
-                eventLimit: false, // 限制一天中显示的事件数，默认false
-                allDaySlot: false, //是否显示allDay
-                displayEventEnd: false,//是否显示结束时间
-                allDayText: '全天',
-                navLinks: false, //允许天/周名称是否可点击
-                defaultView: "month", //显示默认视图
-                eventClick: this.eventClick, //点击事件
-                dayClick: this.dayClick, //点击日程表上面某一天
-                eventRender: this.eventRender
-
-            }
+            currYear: new Date().getFullYear(),
+            months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            cnMonths: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
+            cnWeeks: ['日', '一', '二', '三', '四', '五', '六'],
+            tab: 'year',
+            currMonth: new Date().getMonth() + 1
         }
     },
     methods: {
-        changeDate () {
-            this.$refs.calendar.fireMethod('gotoDate', this.selectDate)
+        allDate (month) {
+            let result = []
+            let days = []
+            // 获取当前月份有多少天
+            const dayNum = new Date(this.currYear, month, 0).getDate()
+            // 获取当前月份第一天是周几
+            const firstDay = new Date(this.currYear, month - 1, 1).getDay()
+            if (firstDay !== 0) {
+                // 获取上个月有多少天
+                const preMonthDayNum = new Date(this.currYear, month - 1, 0).getDate()
+                // 上个月日期
+                for (let i = 0; i < firstDay; i++) {
+                    days.push({
+                        day: preMonthDayNum - firstDay + 1 + i,
+                        disabled: true
+                    })
+                }
+            }
+            // 当前月日期
+            for (let i = 0; i < dayNum; i++) {
+                days.push({
+                    day: i + 1,
+                    disabled: (firstDay + i + 1) % 7 == 0 || (firstDay + i) % 7 == 0
+                })
+            }
+            // 下个月日期
+            for (let i = 0; i < 42 - dayNum - firstDay; i++) {
+                days.push({
+                    day: i + 1,
+                    disabled: true
+                })
+            }
+            for (let i = 0; i < 6; i++) {
+                result.push(days.slice(i * 7, (i + 1) * 7))
+            }
+            return result
         },
-        // 点击事件
-        eventClick (event, jsEvent, pos) {
-            alert('eventClick', event, jsEvent, pos)
-        },
-        // 点击当天
-        dayClick (day, jsEvent) {
-            alert('dayClick', day, jsEvent)
-        },
-        eventRender: function (event, element) {
-            element.find('.fc-title').attr('title', event.title)
+        onShowMonth (month) {
+            this.tab = 'month'
+            this.currMonth = month
         }
     }
 }
 </script>
 <style lang="scss" scoped>
-.fullCalendarCont{
-    width: 90%;
-    background: #fff;
-    margin: 0 auto;
+.selection-area {
+    display: flex;
+    justify-content: center;
+}
+.title {
+    font-size: 36px;
+}
+.calendar_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 1040px;
+}
+.month-wrapper {
+    width: 24%;
+}
+.month-title {
+    margin-top: 40px;
+    margin-bottom: 10px;
+    color: #d45755;
+    font-size: 20px;
+}
+.date-title-wrapper {
+    display: flex;
+}
+.date-title {
+    width: 40px;
+    text-align: center;
+}
+.date-content-wrapper {
+    display: flex;
+}
+.date-content {
+    margin-top: 10px;
+    width: 40px;
+    text-align: center;
+}
+.disabled {
+    color: #ccc;
+}
+.month-date-title {
+    margin-top: 40px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    width: 14%;
+    text-align: right;
+    border-bottom: 1px solid #ccc;
+}
+.month-date-content-wrapper {
+    display: flex;
+    border-right: 1px solid #ccc;
+}
+.month-date-content {
+    padding-top: 10px;
+    padding-right: 10px;
+    height: 100px;
+    width: 14%;
+    text-align: right;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 </style>
