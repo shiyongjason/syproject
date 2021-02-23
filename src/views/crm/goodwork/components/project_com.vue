@@ -123,7 +123,7 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                <OssFileHosJoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='2' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                <OssFileHosJoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='20' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
                 </OssFileHosJoyUpload>
             </el-form-item>
         </el-form>
