@@ -4,6 +4,7 @@
 
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
+import { ossAliyun, ossOldBucket } from '@/api/config'
 
 export default {
     name: 'imageAddToken',
@@ -21,6 +22,9 @@ export default {
     methods: {
         async handle () {
             this.fileUrlAddToken = await OssFileUtils.getUrl(this.fileUrl)
+            if (this.fileUrlAddToken.indexOf(ossOldBucket + '.') === -1) {
+                this.fileUrlAddToken = ossAliyun + this.fileUrlAddToken.replace(OssFileUtils.hostReg, '')
+            }
             window.open(this.fileUrlAddToken)
         }
     },
