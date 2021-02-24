@@ -3,7 +3,7 @@
         <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <el-tab-pane label="信用详情" name="1"></el-tab-pane>
-                <el-tab-pane label="授信资料清单" name="2" ></el-tab-pane>
+                <el-tab-pane label="授信资料清单" name="2"></el-tab-pane>
             </el-tabs>
             <div class="fullbg" v-if="showPacking">
                 <div class="fullbg-img">
@@ -71,10 +71,10 @@
                                         <span class="posrtv">
                                             <template v-if="jtem&&jtem.fileUrl">
                                                 <i class="el-icon-document"></i>
-<!--                                                <a :href="jtem.fileUrl" target="_blank">-->
-<!--                                                    <font>{{jtem.fileName}}</font>-->
-<!--                                                </a>-->
-                                                <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main"/>
+                                                <!--                                                <a :href="jtem.fileUrl" target="_blank">-->
+                                                <!--                                                    <font>{{jtem.fileName}}</font>-->
+                                                <!--                                                </a>-->
+                                                <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main" />
                                             </template>
                                         </span>
                                     </p>
@@ -82,13 +82,13 @@
                                     <p>
                                         <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
                                         <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
-<!--                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"-->
-<!--                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">-->
-<!--                                            下载-->
-<!--                                        </a>-->
-<!--                                       -->
-<!--                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>-->
-                                        <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn"/>
+                                        <!--                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"-->
+                                        <!--                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">-->
+                                        <!--                                            下载-->
+                                        <!--                                        </a>-->
+                                        <!--                                       -->
+                                        <!--                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>-->
+                                        <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn" />
                                     </p>
                                 </div>
                                 <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
@@ -608,7 +608,7 @@ export default {
             this.isDownLoad = true
             this.showPacking = true
             // console.log(interfaceUrl + `memeber/api/credit-document/download/${this.companyId}/${this.activeName}/detail`)
-            const { data } = await downLoadZip({ companyId: this.companyId, activeName: this.activeName })
+            const { data } = await downLoadZip({ companyId: this.companyId, activeName: 1 })
             console.log(data)
             this.showPacking = false
             window.location.href = data
