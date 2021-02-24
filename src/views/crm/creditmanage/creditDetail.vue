@@ -95,7 +95,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import elImageAddToken from '@/components/elImageAddToken'
 
 import moment from 'moment'
-import OssFileUtils from '@/utils/OssFileUtils'
+
 const _reqRiskCheckProjectDoc = {
     projectId: '', // 工程项目id
     riskCheckProjectDocPoList: [],
@@ -140,20 +140,6 @@ export default {
         ...mapActions({
             findCreditRecords: 'creditManage/findCreditRecords'
         }),
-        srcList (item, index) {
-            if (item.riskCheckDocTemplateSamplePos) {
-                const res = item.riskCheckDocTemplateSamplePos.filter((item, index) => {
-                    const key = encodeURI(new URL(item.fileUrl).pathname).replace(/\W/g, '') + index
-                    OssFileUtils.Event.listen(async function (item) {
-                        item.fileUrl = await OssFileUtils.getUrl(item.fileUrl)
-                    }, key, item)
-                    return item
-                })
-                console.log(res)
-                return res.length > 0 && [res[index].fileUrl]
-            }
-            return []
-        },
         formatMoment (val) {
             if (!val) return ''
             return moment(val).format('YYYY-MM-DD HH:mm:ss')

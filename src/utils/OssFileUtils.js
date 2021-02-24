@@ -71,6 +71,7 @@ export default {
                 })
             )
             result.name = result.name.slice(result.name.lastIndexOf('/') + 1)
+            result.url = decodeURIComponent(result.url)
         } catch (e) {
             result = ''
         }
