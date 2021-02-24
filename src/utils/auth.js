@@ -1,7 +1,7 @@
 // import { deepCopy } from '@/utils/utils'
 import { cloneDeep } from 'lodash'
 
-const makeMenusReal  = (Route, Data) =>  {
+const makeMenusReal = (Route, Data) => {
     const tempRoute = cloneDeep(Route)
     const result = tempRoute.filter(value => {
         if (value.path === '') {
