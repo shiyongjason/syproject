@@ -87,6 +87,15 @@
                                     {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
                                 </p>
                             </template>
+                            <p>
+                                  <el-form-item label="下游合作方式：" prop="supplierPaymentMethod">
+                                    <el-radio-group v-model="formData.supplierPaymentMethod">
+                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
+                                            {{item.value}}
+                                        </el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </p>
                         </template>
                         <template v-if="formData.checkPass === 'noPass'">
                             <el-form-item label="审核备注" prop="approvalRemark">

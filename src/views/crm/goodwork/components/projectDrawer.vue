@@ -9,11 +9,11 @@
                     </template>
                 </template>
             </el-tabs>
-            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
+            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
             <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
             <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
             <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
-            <ProjectOrderTab  v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
+            <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
             <div class="drawer-footer">
                 <div class="drawer-button">
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
@@ -541,7 +541,7 @@ export default {
     width: 100%;
     z-index: 11;
 }
-.el-textarea /deep/.el-input__count{
+.el-textarea /deep/.el-input__count {
     bottom: -45px;
 }
 </style>

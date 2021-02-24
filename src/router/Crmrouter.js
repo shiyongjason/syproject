@@ -340,6 +340,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/holiday/index.vue')
+            },
+            {
+                path: 'holidaylist',
+                name: 'holidaylist',
+                meta: {
+                    title: '节假日管理',
+                    tagName: '节假日管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/holiday/daylist.vue')
             }
         ]
     }
