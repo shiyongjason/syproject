@@ -1,79 +1,79 @@
 <template>
     <div class="drawer-wrap">
-        <el-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
-            <div class="drawer-content">
-                <div class="drawer-cont" v-if="modelType==1">
-                    <div class="drawer-cont_top">
-                        <img :src="wxUserForm.avatar?wxUserForm.avatar:require('../../../../assets/images/hosjoy_logo48@2x.png')" alt="">
-                        {{wxUserForm.name||'-'}}
-                    </div>
-                    <div class="drawer-cont_text">
-                        <h3 class="drawer-cont_text-tit">注册信息</h3>
-                        <div class="drawer-cont_text-info">是否注册：{{wxUserForm.register?'是':'否'}}</div>
-                        <div class="drawer-cont_text-info">注册账号：<span>{{wxUserForm.mobile||'-'}}</span></div>
-                    </div>
-                    <div class="drawer-cont_text">
-                        <h3 class="drawer-cont_text-tit">基本信息</h3>
-                        <div class="drawer-cont_text-info">性别：{{wxUserForm.gender==1?'男':wxUserForm.gender==0?'女':'-'}}</div>
-                        <div class="drawer-cont_text-info">电话：<i v-for="(item,index) in wxUserForm.remarkMobile" :key="index">{{item}}</i> <em v-if="wxUserForm.remarkMobile.length==0">-</em></div>
-                        <div class="drawer-cont_text-info">添加人：{{wxUserForm.psnname||'-'}}</div>
-                        <div class="drawer-cont_text-info">添加时间：{{wxUserForm.createTime|formatterTimes}}</div>
-                        <div class="drawer-cont_text-info">类型：{{wxUserForm.type==1?'微信':"企业微信"}}</div>
-                        <div class="drawer-cont_text-info">企业：{{wxUserForm.corpFullName||'-'}}</div>
-                    </div>
-                    <div class="drawer-cont_text">
-                        <h3 class="drawer-cont_text-tit">标签</h3>
-                        <div v-for="(item,index) in wxUserForm.tagList" :key="index">
-                            <div class="drawer-cont_text-info">{{item.groupName}}：<i>{{item.tagName}}</i></div>
+        <h-drawer :title="modelType==1?'客户详情':'数据分析'" :visible.sync="drawer" direction='rtl' size='40%' :wrapperClosable="false" :beforeClose="handleClose">
+            <template #connect>
+                <div class="drawer-content">
+                    <div class="drawer-cont" v-if="modelType==1">
+                        <div class="drawer-cont_top">
+                            <img :src="wxUserForm.avatar?wxUserForm.avatar:require('../../../../assets/images/hosjoy_logo48@2x.png')" alt="">
+                            {{wxUserForm.name||'-'}}
+                        </div>
+                        <div class="drawer-cont_text">
+                            <h3 class="drawer-cont_text-tit">注册信息</h3>
+                            <div class="drawer-cont_text-info">是否注册：{{wxUserForm.register?'是':'否'}}</div>
+                            <div class="drawer-cont_text-info">注册账号：<span>{{wxUserForm.mobile||'-'}}</span></div>
+                        </div>
+                        <div class="drawer-cont_text">
+                            <h3 class="drawer-cont_text-tit">基本信息</h3>
+                            <div class="drawer-cont_text-info">性别：{{wxUserForm.gender==1?'男':wxUserForm.gender==0?'女':'-'}}</div>
+                            <div class="drawer-cont_text-info">电话：<i v-for="(item,index) in wxUserForm.remarkMobile" :key="index">{{item}}</i> <em v-if="wxUserForm.remarkMobile.length==0">-</em></div>
+                            <div class="drawer-cont_text-info">添加人：{{wxUserForm.psnname||'-'}}</div>
+                            <div class="drawer-cont_text-info">添加时间：{{wxUserForm.createTime|formatterTimes}}</div>
+                            <div class="drawer-cont_text-info">类型：{{wxUserForm.type==1?'微信':"企业微信"}}</div>
+                            <div class="drawer-cont_text-info">企业：{{wxUserForm.corpFullName||'-'}}</div>
+                        </div>
+                        <div class="drawer-cont_text">
+                            <h3 class="drawer-cont_text-tit">标签</h3>
+                            <div v-for="(item,index) in wxUserForm.tagList" :key="index">
+                                <div class="drawer-cont_text-info">{{item.groupName}}：<i>{{item.tagName}}</i></div>
 
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="drawer-table" v-if="modelType==2">
-                    <div class="drawer-table_search">
-                        <div class="drawer-table_search-title">添加时间：</div>
-                        <div class="drawer-table_search-input">
-                            <el-date-picker v-model="modelParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                            </el-date-picker>
-                            <span>-</span>
-                            <el-date-picker v-model="modelParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                            </el-date-picker>
-                        </div>
+                    <div class="drawer-table" v-if="modelType==2">
+                        <div class="drawer-table_search">
+                            <div class="drawer-table_search-title">添加时间：</div>
+                            <div class="drawer-table_search-input">
+                                <el-date-picker v-model="modelParams.minCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                                </el-date-picker>
+                                <span>-</span>
+                                <el-date-picker v-model="modelParams.maxCreateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                                </el-date-picker>
+                            </div>
 
-                    </div>
-                     <h-button type='primary' @click="onFindallPage()">查询</h-button>
+                        </div>
+                        <h-button type='primary' @click="onFindallPage()">查询</h-button>
                         <h-button @click="onRest">重置</h-button>
-                    <h3>数据</h3>
+                        <h3>数据</h3>
 
-                    <div class="drawer-table_row">
-                        <div class="drawer-table_col"><b>{{staticInfo.memberNum|fundMoney}}</b>
-                            <p>企业微信客户数（个）</p>
+                        <div class="drawer-table_row">
+                            <div class="drawer-table_col"><b>{{staticInfo.memberNum|fundMoney}}</b>
+                                <p>企业微信客户数（个）</p>
+                            </div>
+                            <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
+                                <p>注册用户（个）</p>
+                            </div>
+                            <div class="drawer-table_col"><b> {{this.$multipliedBy(staticInfo.conversionRate, 100)}}</b>
+                                <p>注册转化率（%）</p>
+                            </div>
                         </div>
-                        <div class="drawer-table_col"><b>{{staticInfo.registerMemberNum}}</b>
-                            <p>注册用户（个）</p>
-                        </div>
-                        <div class="drawer-table_col"><b> {{this.$multipliedBy(staticInfo.conversionRate, 100)}}</b>
-                            <p>注册转化率（%）</p>
-                        </div>
-                    </div>
-                    <h-button type='assist' @click="onExport">导出数据分析</h-button>
-                    <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
-                        <el-tab-pane label="按分部" name="first"></el-tab-pane>
-                        <el-tab-pane label="按员工" name="second"></el-tab-pane>
-                    </el-tabs>
-                    <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
+                        <h-button type='assist' @click="onExport">导出数据分析</h-button>
+                        <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                            <el-tab-pane label="按分部" name="first"></el-tab-pane>
+                            <el-tab-pane label="按员工" name="second"></el-tab-pane>
+                        </el-tabs>
+                        <!-- <basicTable :tableLabel="tableLabel" :tableData="tableData" :pagination='pagination' @onCurrentChange='handleCurrentChange' @onSizeChange='handleSizeChange' isShowIndex>
                     </basicTable> -->
-                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total"
-                        @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
-                    </hosJoyTable>
-                </div>
-                <div class="drawer-footer">
-                    <div class="drawer-button">
-                        <h-button @click="drawer=false">取 消</h-button>
+                        <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="modelParams.pageNumber" :pageSize.sync="modelParams.pageSize" :total="paginationInfo.total" @pagination="()=>onFindallPage()" actionWidth='300' :isAction=false :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' isSimpleTable :prev-local-name="'v3.5.0'" :localName="'v3.5.1'">
+                        </hosJoyTable>
                     </div>
                 </div>
-            </div>
-        </el-drawer>
+            </template>
+            <template #btn>
+                <h-button @click="drawer=false">取 消</h-button>
+            </template>
+        </h-drawer>
+
     </div>
 </template>
 <script>
@@ -84,6 +84,11 @@ export default {
     name: 'userOrdepart',
     data () {
         return {
+            options: {
+                direction: 'rtl',
+                size: '40%',
+                wrapperClosable: false
+            },
             drawer: false,
             activeName: 'first',
             modelParams: {
@@ -275,7 +280,7 @@ export default {
     overflow-y: scroll;
 }
 .drawer-content {
-    padding: 0 20px 100px 20px;
+    padding-bottom: 100px;
     .drawer-cont {
         &_top {
             display: flex;
@@ -362,7 +367,8 @@ export default {
 /deep/ .el-tabs {
     margin-top: 15px;
 }
-/deep/.el-date-editor.el-input, .el-date-editor.el-input__inner{
-    width:180px;
+/deep/.el-date-editor.el-input,
+.el-date-editor.el-input__inner {
+    width: 180px;
 }
 </style>
