@@ -41,8 +41,8 @@ export default {
             accept: '.xlsx,.xls',
             loading: false,
             headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                'refreshToken': localStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             }
         }
     },

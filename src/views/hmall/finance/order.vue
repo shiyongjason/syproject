@@ -192,7 +192,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         onSizeChange (val) {

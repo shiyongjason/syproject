@@ -311,13 +311,18 @@ async function getMenu (to, next, isMakeIndex, query) {
 router.beforeEach(async (to, from, next) => {
     let isFirst = store.state.isFirst
     const isLogin = to.name === 'login'
+    const token = localStorage.getItem('token')
     let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+    if (!userInfo && token) {
+        userInfo = jwtDecode(token)
+        sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+    }
     // 非/login下需要验证
     if (!isLogin) {
         // 提供第三方凭条跳转内部系统
         const query = to.query
         if (to.path === '/redirect' && query.sale === 'hosjoy') {
-            sessionStorage.setItem('token', query.access_token)
+            localStorage.setItem('token', query.access_token)
             sessionStorage.setItem('userInfo', JSON.stringify(jwtDecode(query.access_token)))
             await getMenu(to, next, true, query)
         } else {
@@ -355,7 +360,7 @@ router.beforeEach(async (to, from, next) => {
     // TODO 获取B2b token 项目路径 hmall（重新获取token）
     if (to.path.indexOf('b2b') > 0 || to.path.indexOf('paymentCentral') > 0) {
         // 登录token带到请求的头部中，用于校验登录状态
-        const token = sessionStorage.getItem('tokenB2b')
+        const token = localStorage.getItem('tokenB2b')
         if (token) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + token
         } else {
@@ -370,7 +375,7 @@ router.beforeEach(async (to, from, next) => {
                 'client_secret': 'boss',
                 'scope': 'boss'
             }))
-            sessionStorage.setItem('tokenB2b', data.access_token)
+            localStorage.setItem('tokenB2b', data.access_token)
             axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
         }
     }

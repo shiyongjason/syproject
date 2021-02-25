@@ -77,7 +77,7 @@ export default {
                         signCode: this.form.signCode
                     })
                     sessionStorage.removeItem('userInfo')
-                    sessionStorage.removeItem('token')
+                    localStorage.removeItem('token')
                     this.$router.push('/login')
                 }
             })

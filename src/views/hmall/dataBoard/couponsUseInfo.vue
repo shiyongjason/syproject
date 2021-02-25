@@ -115,7 +115,7 @@ export default {
                 window.location = B2bUrl + 'ops/api/coupon/statistics/use-detail/page/export?merchantName=' + this.queryParams.merchantName +
                     '&createStartTime=' + this.queryParams.createStartTime +
                     '&createEndTime=' + this.queryParams.createEndTime +
-                    '&access_token=' + sessionStorage.getItem('tokenB2b')
+                    '&access_token=' + localStorage.getItem('tokenB2b')
             }
         },
         onSizeChange (val) {
