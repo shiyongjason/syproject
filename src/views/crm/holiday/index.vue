@@ -75,6 +75,7 @@
 <script>
 import { getYearHoliday, setHoliday } from './api/index'
 export default {
+    name: 'fullcalendar',
     data () {
         return {
             dialogVisible: false,
@@ -166,10 +167,12 @@ export default {
             }
         },
         onClickSet (obj) {
-            this._curObj = obj
-            this.currDay = obj.day
-            this.workvalue = obj.isWorking
-            this.dialogVisible = true
+            if (this.$route.query.type == 'edit') {
+                this._curObj = obj
+                this.currDay = obj.day
+                this.workvalue = obj.isWorking
+                this.dialogVisible = true
+            }
         },
         async onCloseSet () {
             // 点击获取最新的月视图数据

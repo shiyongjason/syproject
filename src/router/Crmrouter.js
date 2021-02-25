@@ -337,7 +337,8 @@ export default [
                     title: '好橙工fullcalendar',
                     tagName: '好橙工fullcalendar',
                     isMenu: false,
-                    icon: ''
+                    icon: '',
+                    showMenuAs: '/goodwork/holidaylist'
                 },
                 component: () => import('@/views/crm/holiday/index.vue')
             },

@@ -11,14 +11,15 @@
                     isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onLookDetail(scope.data.row)">查看详情</h-button>
-                        <h-button table @click="onEdit">修订记录</h-button>
-                        <h-button table>修改</h-button>
+                        <h-button table @click="onRevise(scope.data.row)">修订记录</h-button>
+                        <h-button table @click="onEdit(scope.data.row)">修改</h-button>
                     </template>
                 </hosJoyTable>
             </div>
             <h-drawer title="维护记录" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
                 <template #connect>
-                    123
+                    <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="drawerLabel" :data="draweData" :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="drawrPaginationInfo.total" @pagination="onGetResive">
+                    </hosJoyTable>
                 </template>
             </h-drawer>
         </div>
@@ -26,7 +27,7 @@
 </template>
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { getHolidayList, getHolidayMax } from './api/index'
+import { getHolidayList, getHolidayMax, getHolidaRevise } from './api/index'
 export default {
     components: { hosJoyTable },
     data () {
@@ -37,27 +38,38 @@ export default {
                 wrapperClosable: false
             },
             drawer: false,
-            queryParams: {},
             tableData: [],
             paginationInfo: {},
             yearArr: [],
             tableLabel: [
                 { label: '年份', prop: 'year', width: '150', showOverflowTooltip: true },
-                { label: '工作日天数（天）', prop: "workingDayNum", width: '150', showOverflowTooltip: true },
+                { label: '工作日天数（天）', prop: 'workingDayNum', width: '150', showOverflowTooltip: true },
                 { label: '非工作日天数（天）', prop: 'holidayNum', width: '150', showOverflowTooltip: true },
                 // { label: '维护版本', prop: '', width: '150', showOverflowTooltip: true },
                 { label: '最近维护人', prop: 'updateBy', width: '150', showOverflowTooltip: true },
                 { label: '维护时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true }
             ],
             queryParams: {
-                "pageNumber": 0,
-                "pageSize": 0,
-                "sort": {
-                    "property": "string",
-                    "direction": "ASC"
-                }
+                'pageNumber': 0,
+                'pageSize': 10
             },
-            maxYear: ''
+            maxYear: '',
+            drawerParams: {
+                'pageNumber': 1,
+                'pageSize': 10
+            },
+            draweData: [],
+            drawerYear: '',
+            drawerLabel: [
+                { label: '年份', prop: 'year', width: '', showOverflowTooltip: true },
+                { label: '维护人', prop: 'createBy', width: '', showOverflowTooltip: true },
+                { label: '维护时间', prop: 'createTime', width: '', showOverflowTooltip: true },
+                { label: '维护记录', prop: 'operationDetails', width: '150', showOverflowTooltip: true },
+            ],
+            drawrPaginationInfo: {
+
+            }
+
         }
     },
     methods: {
@@ -79,7 +91,27 @@ export default {
             this.maxYear = data
         },
         onAddYear () {
-            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: this.maxYear + 1 } })
+            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: this.maxYear + 1, type: 'edit' } })
+        },
+        onEdit () {
+            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: this.maxYear + 1, type: 'edit' } })
+        },
+        onRevise (val) {
+            this.drawer = true
+            this.drawerYear = val.year
+            this.onGetResive(val)
+        },
+        handleClose () {
+            this.drawer = false
+        },
+        async onGetResive (val) {
+            const { data } = await getHolidaRevise({ year: this.drawerYear, params: this.drawerParams })
+            this.draweData = data.records
+            this.drawrPaginationInfo = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         }
     },
     mounted () {
