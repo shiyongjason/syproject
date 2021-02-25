@@ -16,7 +16,7 @@
             <el-form-item label="采购明细表：">
                 <div class="info-img-group">
                     <span :key="item.key" class="img-box"  v-for="item in enterReceiptDetail.detailed">
-                        <imageAddToken :file-url="item.url" />
+                        <imageAddToken :file-url="item.fileUrl" />
                     </span>
                 </div>
             </el-form-item>

@@ -11,7 +11,8 @@ export default {
     props: {
         fileUrl: {
             type: String,
-            required: true
+            required: false,
+            default: ''
         }
     },
     data () {
@@ -22,6 +23,8 @@ export default {
     methods: {
         async handle () {
             this.fileUrlAddToken = await OssFileUtils.getUrl(this.fileUrl)
+            console.log(this.fileUrl)
+            console.log(this.fileUrlAddToken)
             if (this.fileUrlAddToken.indexOf(ossOldBucket + '.') === -1) {
                 this.fileUrlAddToken = ossAliyun + this.fileUrlAddToken.replace(OssFileUtils.hostReg, '')
             }
