@@ -10,3 +10,15 @@ export const getCheckHistory = (params) => axios.get('/project/api/contract-appr
 
 // 查询对比合同内容
 export const getDiffApi = (params) => axios.get('/project/api/contract-approval/compare', { params })
+// 废止合同
+export const getAbolish = (params) => axios.post('/project/api/contracts/abolish', params)
+// 合同审批
+export const approveContracts = (params) => axios.post('/project/api/contract-approval/approval', params)
+// 合同驳回
+export const rejectContracts = (params) => axios.post('/project/api/contract-approval/reject', params)
+// 提交修订
+export const submitApprove = (params) => axios.post('/project/api/contracts/submit-approve', params)
+
+
+
+

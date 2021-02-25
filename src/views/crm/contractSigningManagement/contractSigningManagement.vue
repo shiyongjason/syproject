@@ -99,13 +99,15 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
             </div>
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
-                actionWidth='275' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
-                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)">分财审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row,1)">分财审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row,2)">风控审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row,3)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
+                    <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.abolished==0">废止</h-button>
+
                 </template>
             </hosJoyTable>
         </div>
@@ -163,7 +165,8 @@ import {
     contractStatic,
     getCheckHistory,
     getDiffApi,
-    contractTypesNotConfirm
+    contractTypesNotConfirm,
+    getAbolish
 } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 // import { clearCache, newCache } from '@/utils/index'
@@ -256,6 +259,20 @@ export default {
             findCreditManager: 'creditManage/findCreditManager',
             findCreditPage: 'creditManage/findCreditPage'
         }),
+        onAbolished (val) {
+            this.$confirm('确定废止该合同吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await getAbolish({
+                    'contractId': val.id,
+                    'phone': this.userInfo.phoneNumber
+                })
+                this.searchList()
+            }).catch(() => {
+            })
+        },
         async getDiff (item) {
             const { lastContentId, currentContentId } = JSON.parse(item)
             const { data } = await getDiffApi({
@@ -388,11 +405,11 @@ export default {
         },
         approveContract (item) {
             // 这里根据 是否为 模板合同 来进入上传页面
-            console.log('----')
-            if (true) {
-                this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, contractTypeId: item.contractTypeId } })
+            // 1：有模板 2：无模板
+            if (item.contractSignType == 2) {
+                this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, role: val } })
             } else {
-                this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
+                this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, role: item.contractTypeId } })
             }
         },
         async getcontractTypes () {

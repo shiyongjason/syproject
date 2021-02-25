@@ -199,7 +199,7 @@ export default {
     },
     methods: {
         onApproveRecords (val) {
-            thid.drawerPur = true
+            this.drawerPur = true
         },
         goProjectDetail (row) {
             let routeUrl = this.$router.resolve({
