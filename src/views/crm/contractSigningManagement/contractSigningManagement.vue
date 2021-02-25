@@ -409,7 +409,7 @@ export default {
             if (item.contractSignType == 2) {
                 this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, role: val } })
             } else {
-                this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, role: item.contractTypeId } })
+                this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
             }
         },
         async getcontractTypes () {
