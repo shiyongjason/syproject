@@ -266,7 +266,7 @@ export default {
             for (let key in this.queryParams) {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
-            url += 'access_token=' + sessionStorage.getItem('token')
+            url += 'access_token=' + localStorage.getItem('token')
             location.href = B2bUrl + 'payment/api/boss/service-fee/withdraws/export?' + url
         },
         handleCurrentChange (val) {

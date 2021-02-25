@@ -1,43 +1,50 @@
 <template>
     <div class="page-body">
         <div class="page-body-bg">
-            <div class="login-window">
-                <div class="title">
-                    <img src="../../assets/images/hosjoy_logo48@2x.png" alt="logo">
-                    好享家运营后台
-                </div>
-                <div class="login-form">
-                    <iframe :src="src" ref="iframe" style="display:none"></iframe>
-                    <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
-                        <el-form-item prop="username">
-                            <span class="form-icon">
-                                <i class="iconfont hosjoy_account"></i>
-                            </span>
-                            <el-input v-model="loginForm.username" placeholder="请输入您的手机号码" maxlength="11"></el-input>
-                        </el-form-item>
-                        <el-form-item prop="password">
-                            <span class="form-icon">
-                                <i class="iconfont hosjoy_password"></i>
-                            </span>
-                            <el-input v-model.trim="loginForm.password" :type="passwordType? 'password' : 'text'" placeholder="请输入您的密码"></el-input>
-                            <span class="form-icon-end" @click="passwordType = !passwordType">
-                                <i class="iconfont" :class="passwordType? 'hosjoy_eye_close' : 'hosjoy_eye'"></i>
-                            </span>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button
-                                name="hosjoy-color"
-                                @click="onLogin"
-                                :disabled="!checked"
-                                v-loading.fullscreen.lock="$store.state.loading"
-                                element-loading-text="处理中" element-loading-spinner="el-icon-loading"
-                                element-loading-background="rgba(0, 0, 0, 0.5)"
-                            >登录</el-button>
-                        </el-form-item>
-                    </el-form>
+            <el-row>
+                <el-col :xs="0" :sm="3" :md="4" :lg="6" :xl="8">&nbsp;</el-col>
+                <el-col :xs="24" :sm="18" :md="16" :lg="12" :xl="8">
+                    <div class="login-window">
+                        <div class="title">
+                            <img src="../../assets/images/hosjoy_logo48@2x.png" alt="logo" class="hidden-xs-only">
+                            好享家运营后台
+                        </div>
+                        <div class="login-form">
+                            <iframe :src="src" ref="iframe" style="display:none"></iframe>
+                            <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
+                                <el-form-item prop="username">
+                                    <span class="form-icon">
+                                        <i class="iconfont hosjoy_account"></i>
+                                    </span>
+                                    <el-input v-model="loginForm.username" placeholder="请输入您的手机号码" maxlength="11"></el-input>
+                                </el-form-item>
+                                <el-form-item prop="password">
+                                    <span class="form-icon">
+                                        <i class="iconfont hosjoy_password"></i>
+                                    </span>
+                                    <el-input v-model.trim="loginForm.password" :type="passwordType? 'password' : 'text'" placeholder="请输入您的密码"></el-input>
+                                    <span class="form-icon-end" @click="passwordType = !passwordType">
+                                        <i class="iconfont" :class="passwordType? 'hosjoy_eye_close' : 'hosjoy_eye'"></i>
+                                    </span>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button
+                                        name="hosjoy-color"
+                                        @click="onLogin"
+                                        :disabled="!checked"
+                                        v-loading.fullscreen.lock="$store.state.loading"
+                                        element-loading-text="处理中" element-loading-spinner="el-icon-loading"
+                                        element-loading-background="rgba(0, 0, 0, 0.5)"
+                                    >登录</el-button>
+                                </el-form-item>
+                            </el-form>
 
-                </div>
-            </div>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :xs="0" :sm="3" :md="4" :lg="6" :xl="8"></el-col>
+            </el-row>
+
         </div>
     </div>
 </template>
@@ -90,8 +97,8 @@ export default {
                     const { data } = await login(this.loginForm)
                     const userInfo = jwtDecode(data.access_token)
                     this.userInfo = jwtDecode(data.access_token)
-                    sessionStorage.setItem('token', data.access_token)
-                    sessionStorage.setItem('refreshToken', data.refresh_token)
+                    localStorage.setItem('token', data.access_token)
+                    localStorage.setItem('refreshToken', data.refresh_token)
                     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
                     this.setUserInfo(userInfo)
                     tracking({
@@ -157,7 +164,7 @@ export default {
         })
     },
     mounted () {
-        sessionStorage.removeItem('token')
+        localStorage.removeItem('token')
         this.tagUpdate([])
         // 获取iframe 对象
         this.iframeWin = this.$refs.iframe.contentWindow
@@ -179,7 +186,6 @@ export default {
     left: 0;
     width: 100%;
     height: 100%;
-    min-width: 1280px;
     z-index: -10;
     background-image: url("../../assets/images/login_bg@2x.png");
     background-size: cover;
@@ -192,22 +198,21 @@ export default {
 }
 .login-window {
     position: absolute;
-    top: 50%;
-    margin-left: -240px;
-    margin-top: -240px;
-    width: 480px;
+    top: 50vh;
+    left: 50%;
+    width: px2rem(350);
     background: $whiteColor;
     z-index: 1;
-    left: 50%;
-    padding: 70px;
+    padding: px2rem(42);
     box-sizing: border-box;
     border-radius: 4px;
+    transform: translate(-50%, -50%);
 }
 .title {
     text-align: center;
     color: #000000;
-    font-size: 28px;
-    line-height: 48px;
+    font-size: px2rem(28);
+    line-height: px2rem(48);
     img {
         margin-right: 16px;
         width: 48px;

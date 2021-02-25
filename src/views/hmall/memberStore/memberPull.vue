@@ -136,7 +136,7 @@ export default {
                 url += (key + '=' + this.queryParams[key] + '&')
             }
             // console.log(url)
-            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' + url + 'access_token=' + sessionStorage.getItem('tokenB2b')
+            location.href = this.B2bUrl + 'merchant/api/company/boss/recommended/export?' + url + 'access_token=' + localStorage.getItem('tokenB2b')
         },
         async getRecomendboss () {
             const { data } = await getRecomendboss(this.queryParams)

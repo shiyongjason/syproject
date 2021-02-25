@@ -34,7 +34,7 @@ export default {
                 window.open(`${iframeUrl}default.html#/index`)
             }
             if (type === 'jinyun') {
-                let token = sessionStorage.getItem('token')
+                let token = localStorage.getItem('token')
                 if (token) {
                     token = 'Bearer ' + token
                 }

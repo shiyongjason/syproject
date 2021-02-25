@@ -74,7 +74,7 @@ export default {
         })
     },
     beforeMount () {
-        let token = sessionStorage.getItem('token')
+        let token = localStorage.getItem('token')
         if (token) {
             token = 'Bearer ' + token
         }
