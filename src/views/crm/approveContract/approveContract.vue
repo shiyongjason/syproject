@@ -933,6 +933,12 @@ export default {
                     'createBy': this.userInfo.employeeName,
                     'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                 })
+                if (operatorType && operatorType == 3) {
+                    this.$message({
+                        message: `当前修改已保存`,
+                        type: 'success'
+                    })
+                }
                 this.init(() => {
                     this.domBindMethods()
                 })
