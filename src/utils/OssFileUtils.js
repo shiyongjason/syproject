@@ -82,7 +82,6 @@ export default {
      * @returns {Promise<string>}
      */
     async getUrl (url) {
-        // 以前的老数据不处理
         if (url && url.indexOf(ossOldBucket + '.') > -1) {
             return url
         }
