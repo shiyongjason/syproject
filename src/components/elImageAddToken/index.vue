@@ -4,6 +4,7 @@
 
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
+import Image403 from '@/assets/images/img_403@2x.png'
 
 export default {
     name: 'index',
@@ -20,11 +21,17 @@ export default {
     },
     data () {
         return {
-            tokenUrl: ''
+            tokenUrl: Image403
         }
     },
     async mounted () {
         this.tokenUrl = await OssFileUtils.getUrl(this.fileUrl)
+    },
+    watch: {
+        async fileUrl () {
+            this.tokenUrl = await OssFileUtils.getUrl(this.fileUrl)
+            console.log(this.tokenUrl)
+        }
     },
     methods: {
         clickHandler () {
