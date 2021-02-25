@@ -37,7 +37,7 @@
                         </span>
                         <p class="content">
                             <span class="img-box" v-for="subItem in item.payVouchers" :key="subItem.fileUrl" >
-                                <imageAddToken :file-url="subItem.url" />
+                                <imageAddToken :file-url="subItem.fileUrl" />
                             </span>
                         </p>
                     </div>
