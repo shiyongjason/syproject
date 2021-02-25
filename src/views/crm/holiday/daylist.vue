@@ -3,13 +3,7 @@
         <div class="page-body B2b">
             <div class="page-body-cont">
                 <div class="query-cont__row">
-                    <el-dropdown split-button type="primary" @click="handleClick">
-                        新增节假日计划
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item v-for="(item,index) in yearArr" :key="item">黄金糕</el-dropdown-item>
-
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                    <h-button type="primary" @click="onAddYear">新增节假日计划</h-button>
                 </div>
             </div>
             <div class="page-body-cont">
@@ -17,28 +11,39 @@
                     isAction :isActionFixed='tableData&&tableData.length>0'>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onLookDetail(scope.data.row)">查看详情</h-button>
-                        <h-button table>修订记录</h-button>
+                        <h-button table @click="onEdit">修订记录</h-button>
                         <h-button table>修改</h-button>
                     </template>
                 </hosJoyTable>
             </div>
+            <h-drawer title="维护记录" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
+                <template #connect>
+                    123
+                </template>
+            </h-drawer>
         </div>
     </div>
 </template>
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
-import { getHolidayList } from './api/index'
+import { getHolidayList, getHolidayMax } from './api/index'
 export default {
     components: { hosJoyTable },
     data () {
         return {
+            options: {
+                direction: 'rtl',
+                size: '40%',
+                wrapperClosable: false
+            },
+            drawer: false,
             queryParams: {},
             tableData: [],
             paginationInfo: {},
             yearArr: [],
             tableLabel: [
                 { label: '年份', prop: 'year', width: '150', showOverflowTooltip: true },
-                { label: '工作日天数（天）', prop: 'workingDayNum', width: '150', showOverflowTooltip: true },
+                { label: '工作日天数（天）', prop: "workingDayNum", width: '150', showOverflowTooltip: true },
                 { label: '非工作日天数（天）', prop: 'holidayNum', width: '150', showOverflowTooltip: true },
                 // { label: '维护版本', prop: '', width: '150', showOverflowTooltip: true },
                 { label: '最近维护人', prop: 'updateBy', width: '150', showOverflowTooltip: true },
@@ -51,7 +56,8 @@ export default {
                     "property": "string",
                     "direction": "ASC"
                 }
-            }
+            },
+            maxYear: ''
         }
     },
     methods: {
@@ -64,12 +70,21 @@ export default {
                 total: data.total
             }
         },
-        onLookDetail(val){
+        onLookDetail (val) {
             console.log(val)
+            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: val.year } })
+        },
+        async onGetMax () {
+            const { data } = await getHolidayMax()
+            this.maxYear = data
+        },
+        onAddYear () {
+            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: this.maxYear + 1 } })
         }
     },
     mounted () {
         this.searchList()
+        this.onGetMax()
     }
 }
 </script>

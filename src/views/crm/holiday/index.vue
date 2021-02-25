@@ -2,7 +2,7 @@
     <div class="page-body">
         <div class="page-body-cont">
             <div class="update-area">
-                <i>年份：</i>{{2021}}   <i>维护版本：</i>v1.0.1    <i>维护人：</i>{{鲁肃}}   <i>维护时间：</i>2021-02-05 10:42:58}}
+                <!-- <i>年份：</i>{{2021}}   <i>维护版本：</i>v1.0.1    <i>维护人：</i>{{鲁肃}}   <i>维护时间：</i>2021-02-05 10:42:58}} -->
             </div>
             <div class="selection-area">
                 <el-radio-group v-model="tab" style="margin-bottom: 20px;" @change="onChange">
@@ -24,8 +24,6 @@
                                 <div v-for="obj in cnWeeks" :key="obj" class="date-title">{{obj}}</div>
                             </div>
                             <div v-for="(arr, index) in newYearMonth" :key="index" class="date-content-wrapper">
-
-
                                 <div v-for="obj in arr" :key="obj.day" :class="{'date-content': true, 'disabled':  obj.disabled, 'isWorking':obj.isWorking}">
                                     {{obj.day}}
                                 </div>
@@ -39,7 +37,6 @@
                                 <div v-for="(obj,oindex) in cnWeeks" :key="oindex" class="date-title">{{obj}}</div>
                             </div>
                             <div v-for="(arr, aindex) in item" :key="aindex" class="date-content-wrapper">
-
                                 <div v-for="obj in arr" :key="obj.day" :class="{'date-content': true, 'disabled':  obj.disabled, 'isWorking':obj.isWorking}">
                                     {{obj.day}}
                                 </div>
@@ -82,12 +79,12 @@ export default {
         return {
             dialogVisible: false,
             workvalue: false,
-            currYear: new Date().getFullYear(),
+            currYear: this.$route.query.year,
             months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             cnMonths: ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'],
             cnWeeks: ['日', '一', '二', '三', '四', '五', '六'],
             tab: 'year',
-            currMonth: new Date().getMonth() + 1,
+            currMonth: new Date().getMonth(),
             currDay: '',
             currWork: [4, 8, 10, 25, 30],
             detalHoliday: {},
@@ -160,14 +157,13 @@ export default {
             return arr.indexOf(day + 1) > -1
         },
         async onDealHoliday () {
-            this.newYearMonth=[]
-            const { data } = await getYearHoliday()
+            this.newYearMonth = []
+            const { data } = await getYearHoliday(this.currYear)
             this.detalHoliday = data
             for (var obj in this.detalHoliday) {
                 // this.newYearMonth=[...this.allDate(obj && obj.split('-')[1])]
                 this.newYearMonth.push(this.allDate(obj && obj.split('-')[1]))
             }
-
         },
         onClickSet (obj) {
             this._curObj = obj
@@ -180,7 +176,7 @@ export default {
             let _week = this.newMonthWeek
             _week.map(item => {
                 item.map(jtem => {
-                    if (jtem.day == this.currDay && jtem.hasOwnProperty("isWorking")) {
+                    if (jtem.day == this.currDay && jtem.hasOwnProperty('isWorking')) {
                         this.$set(jtem, 'isWorking', this.workvalue)
                         console.log('===', jtem, jtem.day)
                         // this.$set(_week[0], 2, { day: this.currDay, isWorking: true})
@@ -196,7 +192,7 @@ export default {
             this.$message({
                 message: '当前日期设置完成',
                 type: 'success'
-            });
+            })
             this.onDealHoliday()
             console.log(this.workvalue, _week, this.currYear, this.currMonth, this.currDay)
         }

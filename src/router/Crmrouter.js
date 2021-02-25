@@ -336,7 +336,7 @@ export default [
                 meta: {
                     title: '好橙工fullcalendar',
                     tagName: '好橙工fullcalendar',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/crm/holiday/index.vue')
