@@ -16,7 +16,7 @@
                     </template>
                 </hosJoyTable>
             </div>
-            <h-drawer title="维护记录" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
+            <h-drawer title="维护记录" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' :wrapperClosable="false">
                 <template #connect>
                     <hosJoyTable isShowIndex ref="hosjoyTable" align="center" border stripe showPagination :column="drawerLabel" :data="draweData" :pageNumber.sync="drawerParams.pageNumber" :pageSize.sync="drawerParams.pageSize" :total="drawrPaginationInfo.total" @pagination="onGetResive">
                     </hosJoyTable>
@@ -34,7 +34,7 @@ export default {
         return {
             options: {
                 direction: 'rtl',
-                size: '40%',
+                size: '50%',
                 wrapperClosable: false
             },
             drawer: false,
@@ -47,7 +47,7 @@ export default {
                 { label: '非工作日天数（天）', prop: 'holidayNum', width: '150', showOverflowTooltip: true },
                 // { label: '维护版本', prop: '', width: '150', showOverflowTooltip: true },
                 { label: '最近维护人', prop: 'updateBy', width: '150', showOverflowTooltip: true },
-                { label: '维护时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true }
+                { label: '维护时间', prop: 'updateTime', width: '150', displayAs: 'YYYY-MM-DD HH:mm', showOverflowTooltip: true }
             ],
             queryParams: {
                 'pageNumber': 0,
@@ -62,9 +62,9 @@ export default {
             drawerYear: '',
             drawerLabel: [
                 { label: '年份', prop: 'year', width: '', showOverflowTooltip: true },
+                { label: '维护记录', prop: 'operationDetails', width: '200', showOverflowTooltip: true },
                 { label: '维护人', prop: 'createBy', width: '', showOverflowTooltip: true },
-                { label: '维护时间', prop: 'createTime', width: '', showOverflowTooltip: true },
-                { label: '维护记录', prop: 'operationDetails', width: '150', showOverflowTooltip: true },
+                { label: '维护时间', prop: 'createTime', width: '', displayAs: 'YYYY-MM-DD HH:mm', showOverflowTooltip: true }
             ],
             drawrPaginationInfo: {
 
@@ -93,8 +93,8 @@ export default {
         onAddYear () {
             this.$router.push({ path: '/goodwork/fullcalendar', query: { year: this.maxYear + 1, type: 'edit' } })
         },
-        onEdit () {
-            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: this.maxYear + 1, type: 'edit' } })
+        onEdit (val) {
+            this.$router.push({ path: '/goodwork/fullcalendar', query: { year: val.year, type: 'edit' } })
         },
         onRevise (val) {
             this.drawer = true

@@ -352,6 +352,17 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/holiday/daylist.vue')
+            },
+            {
+                path: 'noTempApprove',
+                name: 'noTempApprove',
+                meta: {
+                    title: '分财(风控/法务)审核',
+                    tagName: '分财(风控/法务)审核',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/contractSigningManagement/noTempApprove.vue')
             }
         ]
     }

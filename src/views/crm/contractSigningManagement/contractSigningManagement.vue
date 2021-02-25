@@ -11,7 +11,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">企业名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.contractNoOrName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -184,6 +184,7 @@ const _queryParams = {
     contractNoOrName: '',
     authCode: '',
     jobNumber: '',
+    companyName: '',
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
@@ -217,7 +218,7 @@ export default {
             queryParams: JSON.parse(JSON.stringify(_queryParams)),
             tableLabel: [
                 { label: '合同编号', prop: 'contractNo', width: '150' },
-                { label: '企业名称', prop: 'contractNo', width: '150' },
+                { label: '企业名称', prop: 'supplierCompanyName', width: '150' },
                 { label: '合同名称', prop: 'contractName', width: '280' },
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
@@ -386,7 +387,13 @@ export default {
             this.getContractStatic()
         },
         approveContract (item) {
-            this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
+            // 这里根据 是否为 模板合同 来进入上传页面
+            console.log('----')
+            if (true) {
+                this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, contractTypeId: item.contractTypeId } })
+            } else {
+                this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
+            }
         },
         async getcontractTypes () {
             const { data } = await contractTypesNotConfirm()
