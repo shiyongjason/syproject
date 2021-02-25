@@ -9,6 +9,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.contractNoOrName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable=true>
@@ -112,7 +118,7 @@
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
                 <template v-else v-for="(item,index) in historyList">
-                    <div class="history-css-flex"  :key="index">
+                    <div class="history-css-flex" :key="index">
                         <!-- signStatus==6下一步 -->
                         <div v-if="item.signStatus==6" class="history-css-left">
                             <span class="name">{{item.operator}} </span>
@@ -155,7 +161,7 @@
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="approvalRemark" v-if="item.approvalRemark"  :key="index+'approvalRemark'">
+                    <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
                         {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
                     </div>
                 </template>
@@ -225,6 +231,7 @@ export default {
             queryParams: JSON.parse(JSON.stringify(_queryParams)),
             tableLabel: [
                 { label: '合同编号', prop: 'contractNo', width: '150' },
+                { label: '企业名称', prop: 'contractNo', width: '150' },
                 { label: '合同名称', prop: 'contractName', width: '280' },
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
@@ -500,7 +507,7 @@ export default {
         padding-right: 20px;
         box-sizing: border-box;
     }
-    .approvalRemark{
+    .approvalRemark {
         font-size: 14px;
         color: #f00;
     }

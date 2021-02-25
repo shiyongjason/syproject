@@ -1,8 +1,11 @@
 <template>
     <div class="page-body">
         <div class="page-body-cont">
+            <div class="update-area">
+                <i>年份：</i>{{2021}}   <i>维护版本：</i>v1.0.1    <i>维护人：</i>{{鲁肃}}   <i>维护时间：</i>2021-02-05 10:42:58}}
+            </div>
             <div class="selection-area">
-                <el-radio-group v-model="tab" style="margin-bottom: 20px;">
+                <el-radio-group v-model="tab" style="margin-bottom: 20px;" @change="onChange">
                     <el-radio-button label="month">月</el-radio-button>
                     <el-radio-button label="year">年</el-radio-button>
                 </el-radio-group>
@@ -14,13 +17,29 @@
             <div v-if="tab === 'year'">
                 <div class="title">{{currYear}}年</div>
                 <ul class="calendar_wrapper">
-                    <li v-for="item in months" :key="item" class="month-wrapper" @dblclick="onShowMonth(item)">
-                        <div class="month-title">{{cnMonths[item - 1]}}月</div>
-                        <div class="month-content">
+                    <!-- <li v-for="item in months" :key="item" class="month-wrapper" @dblclick="onShowMonth(item)">
+                        <div class="month-title">{{cnMonths[item - 1]}}月</div> -->
+                    <!-- <div class="month-content">
                             <div class="date-title-wrapper">
                                 <div v-for="obj in cnWeeks" :key="obj" class="date-title">{{obj}}</div>
                             </div>
-                            <div v-for="(arr, index) in allDate(item)" :key="index" class="date-content-wrapper">
+                            <div v-for="(arr, index) in newYearMonth" :key="index" class="date-content-wrapper">
+
+
+                                <div v-for="obj in arr" :key="obj.day" :class="{'date-content': true, 'disabled':  obj.disabled, 'isWorking':obj.isWorking}">
+                                    {{obj.day}}
+                                </div>
+                            </div>
+                        </div> -->
+                    <!-- </li> -->
+                    <li v-for="(item,index) in newYearMonth" :key="index" class="month-wrapper" @dblclick="onShowMonth(item,index)">
+                        <div class="month-title">{{cnMonths[index]}}月</div>
+                        <div class="month-content">
+                            <div class="date-title-wrapper">
+                                <div v-for="(obj,oindex) in cnWeeks" :key="oindex" class="date-title">{{obj}}</div>
+                            </div>
+                            <div v-for="(arr, aindex) in item" :key="aindex" class="date-content-wrapper">
+
                                 <div v-for="obj in arr" :key="obj.day" :class="{'date-content': true, 'disabled':  obj.disabled, 'isWorking':obj.isWorking}">
                                     {{obj.day}}
                                 </div>
@@ -35,9 +54,10 @@
                     <div class="date-title-wrapper">
                         <div v-for="obj in cnWeeks" :key="obj" class="month-date-title">周{{obj}}</div>
                     </div>
-                    <div v-for="(arr, index) in allDate(currMonth)" :key="index" class="month-date-content-wrapper">
+                    <div v-for="(arr, index) in newMonthWeek" :key="index" class="month-date-content-wrapper">
                         <div v-for="obj in arr" :key="obj.day" :disabled=obj.disabled :class="{'month-date-content': true, 'disabled':  obj.disabled,'isWorking':obj.isWorking}" @click="onClickSet(obj)">
                             {{obj.day}}日
+                            <p v-if="obj.isWorking" style="text-align:left;background:#f5ece6;padding-left:10px">非工作日</p>
                         </div>
                     </div>
                 </div>
@@ -56,7 +76,7 @@
     </div>
 </template>
 <script>
-import { getYearHoliday } from './api/index'
+import { getYearHoliday, setHoliday } from './api/index'
 export default {
     data () {
         return {
@@ -70,12 +90,20 @@ export default {
             currMonth: new Date().getMonth() + 1,
             currDay: '',
             currWork: [4, 8, 10, 25, 30],
-            detalHoliday: ''
+            detalHoliday: {},
+            newYearMonth: [],
+            newMonthWeek: []
         }
     },
     methods: {
         handleClose () {
             this.dialogVisible = false
+        },
+        onChange (val) {
+            if (val == 'month') {
+                this.newMonthWeek = this.allDate(this.currMonth || 1)
+            }
+            console.log(this.newMonthWeek)
         },
         allDate (month) {
             let result = []
@@ -114,9 +142,12 @@ export default {
             }
             return result
         },
-        onShowMonth (month) {
+        onShowMonth (val, index) {
+            console.log(val)
             this.tab = 'month'
-            this.currMonth = month
+            this.currMonth = index + 1
+            //
+            this.newMonthWeek = this.allDate(this.currMonth)
         },
         isWorking (month, day) {
             // console.log('当前天',month,this.detalHoliday[`${this.currYear}-${month}`])
@@ -129,38 +160,45 @@ export default {
             return arr.indexOf(day + 1) > -1
         },
         async onDealHoliday () {
+            this.newYearMonth=[]
             const { data } = await getYearHoliday()
             this.detalHoliday = data
-            console.log(Object.keys(data))
-            // for(let i in data){
-            //     console.log('==',data[i])
-            //     for(let n=0;n<data[i].length;n++){
+            for (var obj in this.detalHoliday) {
+                // this.newYearMonth=[...this.allDate(obj && obj.split('-')[1])]
+                this.newYearMonth.push(this.allDate(obj && obj.split('-')[1]))
+            }
 
-            //         console.log('====',data[i][n])
-            //     }
-            // }
         },
         onClickSet (obj) {
-            console.log(obj)
             this._curObj = obj
             this.currDay = obj.day
             this.workvalue = obj.isWorking
             this.dialogVisible = true
         },
-        onCloseSet () {
-            let _week = this.allDate(this.currMonth)
+        async onCloseSet () {
+            // 点击获取最新的月视图数据
+            let _week = this.newMonthWeek
             _week.map(item => {
                 item.map(jtem => {
                     if (jtem.day == this.currDay && jtem.hasOwnProperty("isWorking")) {
-                        jtem.isWorking = this.workvalue
-                        console.log(jtem.day)
-                        this.$set(_week[0], 2, this.workvalue)
+                        this.$set(jtem, 'isWorking', this.workvalue)
+                        console.log('===', jtem, jtem.day)
+                        // this.$set(_week[0], 2, { day: this.currDay, isWorking: true})
                     }
                 })
             })
             this.dialogVisible = false
-            this.$forceUpdate()
-            console.log(this.workvalue, this.allDate(this.currMonth), this.currYear, this.currMonth, this.currDay)
+            this.newMonthWeek = _week
+            await setHoliday({
+                date: this.currYear + '-' + (this.currMonth < 10 ? '0' + this.currMonth : this.currMonth) + '-' + (this.currDay < 10 ? '0' + this.currDay : this.currDay),
+                isHoliday: this.workvalue
+            })
+            this.$message({
+                message: '当前日期设置完成',
+                type: 'success'
+            });
+            this.onDealHoliday()
+            console.log(this.workvalue, _week, this.currYear, this.currMonth, this.currDay)
         }
     },
     mounted () {
