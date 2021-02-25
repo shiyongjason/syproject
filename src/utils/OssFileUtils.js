@@ -121,8 +121,7 @@ export default {
             delete params.process
         }
         try {
-            // URL兼容性 {@link https://developer.mozilla.org/en-US/docs/Web/API/URL/URL}
-            result = await ossUtil.signatureUrl(new URL(url).pathname, params)
+            result = await ossUtil.signatureUrl(url.replace(this.hostReg, ''), params)
         } catch (e) {
             result = ''
         }
