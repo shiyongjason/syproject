@@ -9,7 +9,7 @@ function generateBaseUrl () {
 }
 
 const REFRESH_TOKEN_TIME = 1000 * 60 * 30
-// todo 60 * 60 * 2
+
 let FILE_TIMEOUT_SECOND = 60 * 30
 // 如果接口失败了一次本次加载其他调用方法不会触发getOssSTS接口
 let serverResponseError = false
