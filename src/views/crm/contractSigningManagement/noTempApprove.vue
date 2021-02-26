@@ -8,7 +8,7 @@
                 <p>这个合同.jpg</p>
                 <p>这个合同.jpg</p>
                 <div class="contract-flex_bot">
-                    <h-button type="primary">驳回</h-button>
+                    <h-button type="primary" @click="onResive">驳回</h-button>
                 </div>
             </div>
             <div class="contract-flex">
@@ -17,12 +17,29 @@
                         <h-button type="primary">上传合同</h-button>
                     </hosjoyUpload>
                 </div>
-                <div class="contract-flex_preview">这个合同.jpg</div>
-                <div class="contract-flex_preview">这个合同.jpg</div>
+                {{contractList}}
+                <div v-for="(item,index) in contractList" :key="index" class="contract-flex_preview">{{item.fieldName}}
+                    <div>预览</div>
+                    <div>下载</div>
+                </div>
+
                 <div class="contract-flex_bot">
                     <h-button type="primary" @click="onSubmitApprove">提交修订</h-button>
                 </div>
             </div>
+            <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+                <span>提交后，即分财(风控/法务)审核通过，确定此操作吗？</span>
+                <span>驳回后，即分财(风控/法务)审核不通过，确定此操作吗？</span>
+                <el-form :model="form" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="意见" prop="approval_Remark">
+                        <el-input type="textarea" :rows="2" v-model="approval_Remark" maxlength="100"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitMsg">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -30,6 +47,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { mapState } from 'vuex'
+import { submitApprove, rejectContracts } from './api/index'
 export default {
     name: 'noTemp',
     components: { hosjoyUpload },
@@ -50,6 +68,12 @@ export default {
                 "approvalRemark": '',
                 'picUrls': [
                 ]
+            },
+            dialogVisible: false,
+            rules: {
+                approval_Remark: [
+                    { required: true, message: '123123', trigger: 'blur' }
+                ],
             }
         }
     },
@@ -57,16 +81,48 @@ export default {
         handleSuccessCb (row) {
             console.log(row)
         },
-        onSubmitApprove () {
-            this.form.approvalRemark = this.approval_Remark
-            this.form.approver = this.userInfo.employeeName
-            this.contractList.map(item => {
-                this.form.picUrls.push({
-                    picUrl: item.fileUrl,
-                    picName: item.fileName
-                })
+        onResive () {
+            this.dialogVisible = true
+        },
+        handleClose () {
+            this.dialogVisible = false
+        },
+        onSubmitMsg () {
+
+            const parms = {
+                'contractId': this.$route.query.id,
+                'approver': this.userInfo.employeeName,
+                "approverRole": this.$route.query.role,
+                "approvalRemark": this.approval_Remark,
+            }
+            this.$refs.ruleForm.validate(async (valid) => {
+                if (valid) {
+                    await rejectContracts(this.form)
+
+                } else {
+
+                }
             })
-            console.log(this.form)
+        },
+        async onSubmitApprove () {
+            this.dialogVisible = true
+            // this.form.approver = this.userInfo.employeeName
+            // this.contractList.map(item => {
+            //     this.form.picUrls.push({
+            //         picUrl: item.fileUrl,
+            //         picName: item.fileName
+            //     })
+            // })
+            // this.$refs.ruleForm.validate(async (valid) => {
+            //     if (valid) {
+            //         await submitApprove(this.form)
+            //         this.$router.push('/goodwork/contractSigningManagement')
+            //         console.log(this.form)
+            //     } else {
+
+            //     }
+            // })
+
         }
     },
     computed: {
@@ -93,6 +149,10 @@ export default {
     &_bot {
         display: flex;
         justify-content: flex-end;
+    }
+    &_preview {
+        display: flex;
+        justify-content: center;
     }
 }
 </style>

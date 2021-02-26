@@ -145,6 +145,12 @@
                                     <font>{{item.operationContent}}</font>
                                 </span>
                             </template>
+                            <template v-if="item.attachDocs.length>0">
+                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex">
+                                    <p style="color: #ff7a45;">{{obj.fileName}}</p>
+                                    <p style="color: #ff7a45;">备注：{{item.approvalRemark}}</p>
+                                </div>
+                            </template>
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
@@ -403,7 +409,7 @@ export default {
             }
             this.getContractStatic()
         },
-        approveContract (item) {
+        approveContract (item, val) {
             // 这里根据 是否为 模板合同 来进入上传页面
             // 1：有模板 2：无模板
             if (item.contractSignType == 2) {

@@ -17,7 +17,7 @@
                             <span class="label">采购明细表：</span>
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
-                                    <span class="img-box" :key="item.url"  v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderDetail.paymentDetail">
                                         <img :src="item.url" alt="" @click="goDetail(item.url)">
                                     </span>
                                 </template>
@@ -68,11 +68,21 @@
                                     </el-radio-group>
                                 </el-form-item>
                             </p>
+
+                            <p>
+                                <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
+                                    <el-radio-group v-model="formData.dealerCooperationMethod">
+                                        <el-radio :key="item.key" :label="item.key" v-for="item in dealerList">
+                                            {{item.value}}
+                                        </el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </p>
                             <template v-if="formData.supplierPaymentType">
                                 <p>
                                     <span>经销商预付款：</span>
                                     {{downPaymentAmount | fundMoneyHasTail}}元
-                                    <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit">
+                                    <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
                                 </p>
                                 <p>
                                     <span>剩余货款：</span>
@@ -87,21 +97,8 @@
                                     {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
                                 </p>
                             </template>
-                            <p>
-                                  <el-form-item label="下游合作方式：" prop="supplierPaymentMethod">
-                                    <el-radio-group v-model="formData.supplierPaymentMethod">
-                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
-                                            {{item.value}}
-                                        </el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                            </p>
                         </template>
-                        <template v-if="formData.checkPass === 'noPass'">
-                            <el-form-item label="审核备注" prop="approvalRemark">
-                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
-                            </el-form-item>
-                        </template>
+
                     </div>
                     <div class="col-filed">
                         <div class="info-title">项目信息</div>
@@ -235,6 +232,7 @@ export default {
                 freeInterestType: '',
                 terms: ''
             },
+            dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             rules: {
                 checkPass: [
                     { required: true, message: '请选择审核结果' }
@@ -250,6 +248,9 @@ export default {
                 ],
                 supplierPaymentMethod: [
                     { required: true, message: '请选择上游货款方式' }
+                ],
+                dealerCooperationMethod: [
+                    { required: true, message: '请选择下游合作方式' }
                 ]
             },
             downPaymentAmount: '-'
@@ -330,7 +331,7 @@ export default {
                 await this.getComputedValue()
                 this.downPaymentAmount = this.formData.downPaymentAmount
                 this.editAmountVisible = false
-            } catch (e) {}
+            } catch (e) { }
         },
         clearForm () {
             this.formData = {
@@ -381,7 +382,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.payment-dialog{
+.payment-dialog {
     /deep/ .el-dialog__body {
         max-height: 480px;
         padding: 0 20px 20px;
@@ -389,21 +390,21 @@ export default {
         overflow-y: scroll;
     }
 }
-.info-content{
+.info-content {
     padding-top: 20px;
     padding-bottom: 20px;
     .info-title {
-        color: #FF7A45;
+        color: #ff7a45;
         font-weight: 600;
     }
     .row-filed {
         display: flex;
-        .col-filed{
+        .col-filed {
             width: 50%;
             box-sizing: border-box;
             padding-right: 20px;
         }
-        p{
+        p {
             padding: 10px 0;
         }
     }
@@ -428,21 +429,21 @@ export default {
 }
 .rate-row {
     display: flex;
-    span.label{
+    span.label {
         padding-right: 5px;
         padding-left: 5px;
     }
 }
 .edit-amount-dialog {
-    /deep/.el-dialog__body{
+    /deep/.el-dialog__body {
         min-height: 100px;
     }
 }
 .payment-dialog {
-    /deep/.el-form-item__content{
+    /deep/.el-form-item__content {
         line-height: 20px;
     }
-    /deep/.el-form-item__label{
+    /deep/.el-form-item__label {
         line-height: 20px;
     }
 }
@@ -450,7 +451,7 @@ export default {
     height: 100px;
     display: flex;
     align-items: center;
-    .el-input{
+    .el-input {
         margin-left: 10px;
     }
 }
