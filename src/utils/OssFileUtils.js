@@ -56,15 +56,48 @@ const initOssSTS = (function () {
         return client
     }
 })()
-
+/**
+ * 文件名规则注意事项
+ * 上传：
+ * 【2020年公户流水%#￥@%&&（）（——+】 这种文件名在企业微信自带的浏览器打开会展示编码乱字符文件名，导致下载失败
+ * 为了解决兼容性问题，屏蔽上传文件名规则，所以改成了，上传去时候除了特殊符号的 /[^\w\u4e00-\u9fa5.]/g
+ * 在文件名所有都是特殊字符的情况下，会随机生成一个字符串的文件名
+ * 下载、预览：
+ * 数据库有 "https://XXX/%E6%B5%8B%E8%AF%95%2698%EF%BC%89%EF%BC%88%23%40%EF%BF%A5.%2C%27%3B%5D%5B.jpg"老数据，
+ * 阿里云访问的时候如果是特殊字符必须编码访问，其他中文类型等的文件名可以直接访问。
+ * 为了解决老数据问题，鉴权时先解码，后鉴权的操作
+ */
+const generateFileName = (filename, isRandomName) => {
+    const suffix = filename.slice(filename.lastIndexOf('.'))
+    let resultName = ''
+    if (isRandomName) {
+        resultName = generateFileNameByUUID() + suffix
+    } else {
+        let orRandomName = false
+        try {
+            decodeURIComponent(filename)
+        } catch (e) {
+            orRandomName = true
+        }
+        if (orRandomName) {
+            // eslint-disable-next-line no-useless-escape
+            resultName = filename.replace(/[^\w\u4e00-\u9fa5\.\+\-\（\）\(\)\[\]\{\}]/g, '_')
+            if (resultName.length <= 0) {
+                resultName = generateFileNameByUUID() + suffix
+            }
+        } else {
+            resultName = `${filename}`
+        }
+    }
+    return `${generateBaseUrl() + resultName}`
+}
 export default {
     async uploadFile (file, isRandomName = false) {
         let result
-        const suffix = file.name.slice(file.name.lastIndexOf('.'))
         const ossUtil = await initOssSTS()
         try {
             result = await ossUtil.put(
-                generateBaseUrl() + (isRandomName ? generateFileNameByUUID() + suffix : file.name),
+                generateFileName(file.name, isRandomName),
                 new Blob([file], {
                     type: file.type,
                     size: file.size
