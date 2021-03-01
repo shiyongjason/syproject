@@ -675,3 +675,10 @@ export function getCloudMerchantProductOrderList (params) {
 export function getCloudMerchantProductOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/order/detail', { params })
 }
+
+// 获取抢购活动信息
+export function getMerchantPurchase (params) {
+    //TODO
+    // 后续增加地址
+    return axios.get(iotUrl + '/mall/boss', { params })
+}

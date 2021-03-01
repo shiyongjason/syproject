@@ -254,6 +254,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberActive.vue')
+                    },
+                    {
+                        path: 'merchantPurchase',
+                        name: 'comfortcloudMemberPurchase',
+                        meta: {
+                            title: '限时抢购',
+                            tagName: '限时抢购',
+                            parentName: '活动管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantPurchase.vue')
                     }
                 ]
             }

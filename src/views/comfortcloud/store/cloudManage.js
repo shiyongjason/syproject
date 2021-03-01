@@ -93,7 +93,8 @@ const state = {
     cloudMerchantProductOrderList: [],
     cloudMerchantProductOrderPagination: {},
     cloudMerchantProductOrderDetail: {},
-    cloudMerchantProductOrderTotal: {}
+    cloudMerchantProductOrderTotal: {},
+    cloudMerchantActivityPurchaseData: {}
 }
 
 const getters = {
@@ -196,7 +197,8 @@ const getters = {
     cloudMerchantProductOrderList: state => state.cloudMerchantProductOrderList,
     cloudMerchantProductOrderPagination: state => state.cloudMerchantProductOrderPagination,
     cloudMerchantProductOrderDetail: state => state.cloudMerchantProductOrderDetail,
-    cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal
+    cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
+    cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData
 }
 
 const mutations = {
@@ -461,6 +463,9 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_TOTAL] (state, payload) {
         state.cloudMerchantProductOrderTotal = payload
+    },
+    [types.GET_CLOUD_MERCHANT_ACTIVITY_PURCHASE_DATA] (state, payload) {
+        state.cloudMerchantActivityPurchaseData = payload
     }
 }
 
@@ -489,6 +494,10 @@ const actions = {
     async getmerchantActiveData ({ commit }, params) {
         const { data } = await Api.merchantActive(params)
         commit(types.MERCHANT_ACTIVE_DATA, data)
+    },
+    async getMerchantPurchaseData ({ commit }, params) {
+        const { data } = await Api.getMerchantPurchase(params)
+        commit(types.GET_CLOUD_MERCHANT_ACTIVITY_PURCHASE_DATA, data)
     },
     async findMerchantMemberInvitationRegistersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationRegistersituation(params)
