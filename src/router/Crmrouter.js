@@ -334,8 +334,8 @@ export default [
                 path: 'fullcalendar',
                 name: 'fullcalendar',
                 meta: {
-                    title: '好橙工fullcalendar',
-                    tagName: '好橙工fullcalendar',
+                    title: '节假日管理',
+                    tagName: '节假日管理',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/holidaylist'
