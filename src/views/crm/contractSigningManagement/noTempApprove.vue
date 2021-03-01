@@ -66,8 +66,8 @@ export default {
             form: {
                 'contractId': this.$route.query.id,
                 'approver': '',
-                "approverRole": this.$route.query.role,
-                "approvalRemark": '',
+                'approverRole': this.$route.query.role,
+                'approvalRemark': '',
                 'picUrls': [
                 ]
             },
@@ -98,47 +98,49 @@ export default {
             this.contractList = this.contractList.splice(1, index)
         },
         onSubmitMsg () {
-            // 驳回合同
-            const parms = {
-                'contractId': this.$route.query.id,
-                'approver': this.userInfo.employeeName,
-                "approverRole": this.$route.query.role,
-                "approvalRemark": this.form.approvalRemark,
-            }
-            // rejectContracts(parms)
-            this.$refs.ruleForm.validate(async (valid) => {
-                if (valid) {
-                    await rejectContracts(this.form)
-                    this.$message({
-                        message: '当前合同已被驳回！',
-                        type: 'success'
-                    });
-                    this.$router.push('/goodwork/contractSigningManagement')
-                } else {
-
+            if (this.type == 1) {
+                // 驳回合同
+                const parms = {
+                    'contractId': this.$route.query.id,
+                    'approver': this.userInfo.employeeName,
+                    'approverRole': this.$route.query.role,
+                    'approvalRemark': this.form.approvalRemark
                 }
-            })
+                // rejectContracts(parms)
+                this.$refs.ruleForm.validate(async (valid) => {
+                    if (valid) {
+                        await rejectContracts(parms)
+                        this.$message({
+                            message: '当前合同已被驳回！',
+                            type: 'success'
+                        })
+                        this.$router.push('/goodwork/contractSigningManagement')
+                    } else {
+
+                    }
+                })
+            } else {
+                this.form.approver = this.userInfo.employeeName
+                this.contractList.map(item => {
+                    this.form.picUrls.push({
+                        picUrl: item.fileUrl,
+                        picName: item.fileName
+                    })
+                })
+                this.$refs.ruleForm.validate(async (valid) => {
+                    if (valid) {
+                        await submitApprove(this.form)
+                        this.$router.push('/goodwork/contractSigningManagement')
+                        console.log(this.form)
+                    } else {
+
+                    }
+                })
+            }
         },
         async onSubmitApprove () {
             this.type = 2
             this.dialogVisible = true
-            // this.form.approver = this.userInfo.employeeName
-            // this.contractList.map(item => {
-            //     this.form.picUrls.push({
-            //         picUrl: item.fileUrl,
-            //         picName: item.fileName
-            //     })
-            // })
-            // this.$refs.ruleForm.validate(async (valid) => {
-            //     if (valid) {
-            //         await submitApprove(this.form)
-            //         this.$router.push('/goodwork/contractSigningManagement')
-            //         console.log(this.form)
-            //     } else {
-
-            //     }
-            // })
-
         }
     },
     computed: {
