@@ -100,9 +100,9 @@
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='45%' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
                 <div class="seal_records" v-for="(item,index) in editHistory" :key="index">
-                    <div class="seal_records-tit"><em>{{item.operator}}</em>{{item.operationName}}{{item.operationContent}}</div>
-                    <div class="seal_records-remark">审核备注：{{item.approvalRemark}}</div>
-                    <a target='_blank'>这是一个文件</a>
+                    <div class="seal_records-tit">审批人：<em>{{item.operator}}</em></div>
+                    <div>{{item.operationName}}{{item.operationContent}}</div>
+                    <div class="seal_records-remark">备注：{{item.approvalRemark}}</div>
                 </div>
             </template>
         </h-drawer>
@@ -292,6 +292,7 @@ export default {
     cursor: pointer;
 }
 .seal_records {
+    margin-bottom: 10px;
     &-tit {
         em {
             font-style: normal;
