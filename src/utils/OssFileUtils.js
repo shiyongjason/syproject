@@ -81,7 +81,7 @@ const generateFileName = (filename, isRandomName) => {
         }
         if (orRandomName) {
             // eslint-disable-next-line no-useless-escape
-            resultName = filename.replace(/[^\w\u4e00-\u9fa5\.\+\-\（\）\(\)\[\]\{\}]/g, '_')
+            resultName = filename.replace(/[^\w\u4e00-\u9fa5\.\+\-\uFF08\uFF09\(\)\[\]\{\}]/g, '_')
             if (resultName.length <= 0) {
                 resultName = generateFileNameByUUID() + suffix
             }
