@@ -699,8 +699,12 @@ export default {
             this.$emit('openLookReceiptDetail', params)
         },
         async getPaymentOrderDetail () {
-            const { data } = await getPaymentOrderDetail(this.row.id)
-            this.paymentOrderDetail = data
+            if (this.row.id) {
+                const { data } = await getPaymentOrderDetail(this.row.id)
+                this.paymentOrderDetail = data
+            }
+            // const { data } = await getPaymentOrderDetail(this.row.id)
+            // this.paymentOrderDetail = data
         }
     },
     watch: {
