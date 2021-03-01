@@ -18,6 +18,12 @@ export const approveContracts = (params) => axios.post('/project/api/contract-ap
 export const rejectContracts = (params) => axios.post('/project/api/contract-approval/reject', params)
 // 提交修订
 export const submitApprove = (params) => axios.post('/project/api/contracts/submit-approve', params)
+// 查看无模板合同
+export const getNoTempContracts = (params) => axios.get(`/project/api/contracts/contract-pics/${params}`)
+// 下载无模板合同
+export const downNoTempContracts = (params) => axios.get(`/project/api/contracts/download/${params}`)
+
+
 
 
 

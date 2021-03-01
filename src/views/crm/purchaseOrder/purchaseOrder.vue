@@ -99,9 +99,9 @@
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='45%' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
-                <div class="seal_records">
-                    <div class="seal_records-tit"><em>施勇</em>提交了修订合同</div>
-                    <div class="seal_records-remark">审核备注：这是一个备注</div>
+                <div class="seal_records" v-for="(item,index) in editHistory" :key="index">
+                    <div class="seal_records-tit"><em>{{item.operator}}</em>{{item.operationName}}{{item.operationContent}}</div>
+                    <div class="seal_records-remark">审核备注：{{item.approvalRemark}}</div>
                     <a target='_blank'>这是一个文件</a>
                 </div>
             </template>
@@ -207,7 +207,7 @@ export default {
             this.drawerPur = true
             const { data } = await getSeals(val.id)
             console.log(data)
-            this.editHistory = data.editHistory
+            this.editHistory = data
         },
         goProjectDetail (row) {
             let routeUrl = this.$router.resolve({

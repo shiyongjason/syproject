@@ -3,10 +3,9 @@
         <div class="page-body-cont">
             <div class="contract-flex">
                 <div>
-                    <h-button type="primary">下载原始合同</h-button>
+                    <h-button type="primary" @click="onDownZip">下载原始合同</h-button>
                 </div>
-                <p>这个合同.jpg</p>
-                <p>这个合同.jpg</p>
+                <p v-for="(item,index) in contractArr" :key="index">合同：{{item.picName}}</p>
                 <div class="contract-flex_bot">
                     <h-button type="primary" @click="onResive">驳回合同</h-button>
                 </div>
@@ -42,6 +41,15 @@
                     <el-button type="primary" @click="onSubmitMsg">确 定</el-button>
                 </span>
             </el-dialog>
+            <div class="fullbg" v-if="showPacking">
+                <div class="fullbg-img">
+                    <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                    <p>
+                        <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                        <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -49,7 +57,7 @@
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { mapState } from 'vuex'
-import { submitApprove, rejectContracts } from './api/index'
+import { submitApprove, rejectContracts, getNoTempContracts, downNoTempContracts } from './api/index'
 export default {
     name: 'noTemp',
     components: { hosjoyUpload },
@@ -77,13 +85,19 @@ export default {
                     { required: true, message: '请输入意见' }
                 ]
             },
-            type: 1
+            type: 1,
+            contractArr: [],
+            showPacking: false
         }
     },
     watch: {
 
     },
     methods: {
+        async onGetNoTempContracts () {
+            const { data } = await getNoTempContracts(this.$route.query.id)
+            this.contractArr = data
+        },
         handleSuccessCb (row) {
             console.log(row)
         },
@@ -141,6 +155,13 @@ export default {
         async onSubmitApprove () {
             this.type = 2
             this.dialogVisible = true
+        },
+        async onDownZip () {
+            this.showPacking = true
+            const { data } = await downNoTempContracts(this.$route.query.id)
+            console.log(data)
+            this.showPacking = false
+            window.location.href = data
         }
     },
     computed: {
@@ -149,11 +170,37 @@ export default {
         })
     },
     mounted () {
-
+        this.onGetNoTempContracts()
     }
 }
 </script>
 <style lang="scss" scoped>
+.fullbg {
+    background-color: #211f1f;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    .fullbg-img {
+        width: 377px;
+        position: absolute;
+        text-align: center;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%);
+        p {
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
 .contract-flex {
     margin-bottom: 10px;
     display: flex;
