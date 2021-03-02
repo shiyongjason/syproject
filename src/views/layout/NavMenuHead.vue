@@ -6,7 +6,7 @@
             </div>
             <div class="head-logo-name">好享家运营后台</div>
         </div>
-        <div class="user-info flr">
+        <div class="user-info flr hidden-xs-only">
             <div class="user-info-select">
                 <el-dropdown trigger="click" @command="handleCommand" class="hand">
                         <span class="el-dropdown-link">
@@ -40,6 +40,7 @@ export default {
         handleCommand (command) {
             if (command === 'exit') {
                 // TODO 清除所有缓存
+                localStorage.clear()
                 sessionStorage.clear()
                 window.location.href = '/login'
                 // this.$router.push('/login')

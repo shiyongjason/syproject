@@ -589,7 +589,7 @@ export default {
         },
         exportTabTotal () {
             const { ...params } = this.queryParamsProductTotal
-            params.access_token = '' || sessionStorage.getItem('token')
+            params.access_token = '' || localStorage.getItem('token')
             if (params.categoryId.length > 0) {
                 params.categoryId = params.categoryId[params.categoryId.length - 1]
             } else {
@@ -608,12 +608,12 @@ export default {
                 params.isParentOrder = 1
                 params.isSplit = 0
             }
-            params.access_token = '' || sessionStorage.getItem('token')
+            params.access_token = '' || localStorage.getItem('token')
             location.href = exportTabOrder(params)
         },
         exportTabReceivables () {
             const { ...params } = this.queryParamsReceivables
-            params.access_token = '' || sessionStorage.getItem('token')
+            params.access_token = '' || localStorage.getItem('token')
             location.href = exportTabReceivables(params)
         },
         onSizeChange (val, source) {
