@@ -18,8 +18,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList"
-                                       :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -44,23 +43,20 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期"
-                                        :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期"
-                                        :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
-                            <el-option :label="item.value" :value="item.key"
-                                       v-for="item in PurchaseOrderDict.status.list" :key="item.key"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in PurchaseOrderDict.status.list" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -76,10 +72,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderPagination.total }}
                 项， 采购单总金额：<b>{{ purchaseOrderPagination.amount | fundMoney }}</b>元
             </el-tag>
-            <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination"
-                        @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
-                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200
-                        :isShowIndex='true'>
+            <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="projectNo" slot-scope="scope">
                     <span class="colblue" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
                 </template>
@@ -90,13 +83,11 @@
                     <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)"
-                              v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
+                    <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
                               hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM)">
                         确认采购单
                     </h-button>
-                    <h-button @click="openDialog(dialogStatus.changeEnter.status, scope.data.row)"
-                              v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status &&
+                    <h-button @click="openDialog(dialogStatus.changeEnter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status &&
                               hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM_CHANGE)" table>确认变更
                     </h-button>
                     <h-button table @click="openDetail(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PURCHASE_ORDER_SEE_DETAIL)">查看详情
@@ -104,12 +95,8 @@
                 </template>
             </basicTable>
         </div>
-        <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent'
-                             @openDialog="openDialog" ref="drawerDetail"
-                             :row="purchaseOrderRow"></purchaseOrderDrawer>
-        <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus"
-                             @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams"
-                             ref="dialog"></purchaseOrderDialog>
+        <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
+        <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
     </div>
 </template>
 
@@ -135,6 +122,8 @@ export default {
                 projectNo: '',
                 status: '',
                 pageNumber: 1,
+                startTime: '',
+                endTime: '',
                 pageSize: 10,
                 'sort.property': null,
                 'sort.direction': null
@@ -167,24 +156,13 @@ export default {
         purchaseOrderDialog
     },
     computed: {
-        pickerOptionsStart () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startTime,
+                endTime: this.queryParams.endTime
             }
         },
         ...mapState({
@@ -205,6 +183,12 @@ export default {
         }
     },
     methods: {
+        onStartChange (val) {
+            this.queryParams.startTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.endTime = val
+        },
         goProjectDetail (row) {
             let routeUrl = this.$router.resolve({
                 path: '/goodwork/projectlist',

@@ -53,11 +53,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">信用到期时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
+                        <!-- <el-date-picker v-model="queryParams.minEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.maxEndTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -80,8 +82,7 @@
             </div>
 
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"
-            :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
@@ -95,7 +96,7 @@
                     {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-1].value:'待提交'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
                     <h-button table @click="onEditproject(scope.data.row)" v-if="(scope.data.row.documentStatus==4||!scope.data.row.documentStatus||scope.data.row.documentStatus==1)&&hosAuthCheck(auths.CRM_CREDIT_ZL)">上传资料</h-button>
                     <h-button table @click="onLookproject(scope.data.row)" v-if="(scope.data.row.documentStatus==2||scope.data.row.documentStatus==3)&&hosAuthCheck(auths.CRM_CREDIT_LOOK)">查看资料</h-button>
                 </template>
@@ -197,26 +198,35 @@ export default {
             creditdata: 'creditManage/creditdata'
 
         }),
-        pickerOptionsMax () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxEndTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsMin () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minEndTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                type: 'date',
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                startTime: this.queryParams.minEndTime,
+                endTime: this.queryParams.maxEndTime
             }
         }
+        // pickerOptionsMax () {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = this.queryParams.maxEndTime
+        //             if (beginDateVal) {
+        //                 return time.getTime() > new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
+        // pickerOptionsMin () {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = this.queryParams.minEndTime
+        //             if (beginDateVal) {
+        //                 return time.getTime() < new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // }
     },
     async mounted () {
         this.onGetbranch()
@@ -230,6 +240,12 @@ export default {
             findCreditManager: 'creditManage/findCreditManager',
             findCreditPage: 'creditManage/findCreditPage'
         }),
+        onStartChange (val) {
+            this.queryParams.minEndTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.maxEndTime = val
+        },
         onRest () {
             this.queryParams = { ...this.copyParms }
             this.searchList()
