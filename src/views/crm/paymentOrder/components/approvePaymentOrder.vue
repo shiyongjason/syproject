@@ -307,8 +307,12 @@ export default {
             this.formData.downPaymentAmount = this.downPaymentAmount
             this.editAmountVisible = true
         },
-        onChangeDealer () {
-            this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+        onChangeDealer (val) {
+            if (val == 2) {
+                this.downPaymentAmount = this.paymentDetail.payOrderDetail.applyAmount
+            } else {
+                this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
+            }
         },
         async onCancelAmount () {
             // this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
@@ -357,6 +361,7 @@ export default {
         onReceived () {
             this.$refs.form.validate(async (value, rules) => {
                 if (value) {
+                    this.formData.downPaymentAmount = this.downPaymentAmount
                     this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
                     if (this.formData.checkPass === 'pass') {
                         await updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
