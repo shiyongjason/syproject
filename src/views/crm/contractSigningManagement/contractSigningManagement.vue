@@ -50,23 +50,26 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">发起时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
+                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker type="datetime" :editable="false" v-model="queryParams.createEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('createStartTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
-            </div>
-            <div class="query-cont__row">
+
                 <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
+                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('updateStartTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartUpdate" :end-change="onEndUpdate" :options="updateOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -112,7 +115,7 @@
             <div class="history-css">
                 <div v-if="historyList&&historyList.length==0">暂无数据</div>
                 <template v-else v-for="(item,index) in historyList">
-                    <div class="history-css-flex"  :key="index">
+                    <div class="history-css-flex" :key="index">
                         <!-- signStatus==6下一步 -->
                         <div v-if="item.signStatus==6" class="history-css-left">
                             <span class="name">{{item.operator}} </span>
@@ -155,7 +158,7 @@
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="approvalRemark" v-if="item.approvalRemark"  :key="index+'approvalRemark'">
+                    <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
                         {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
                     </div>
                 </template>
@@ -254,7 +257,25 @@ export default {
         }),
         ...mapGetters({
             crmdepList: 'crmmanage/crmdepList'
-        })
+        }),
+        options () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.createStartTime,
+                endTime: this.queryParams.createEndTime
+            }
+        },
+        updateOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.updateStartTime,
+                endTime: this.queryParams.updateEndTime
+            }
+        }
     },
     methods: {
         ...mapActions({
@@ -262,6 +283,18 @@ export default {
             findCreditManager: 'creditManage/findCreditManager',
             findCreditPage: 'creditManage/findCreditPage'
         }),
+        onStartChange (val) {
+            this.queryParams.createStartTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.createEndTime = val
+        },
+        onStartUpdate (val) {
+            this.queryParams.updateStartTime = val
+        },
+        onEndUpdate (val) {
+            this.queryParams.updateEndTime = val
+        },
         async getDiff (item) {
             const { lastContentId, currentContentId } = JSON.parse(item)
             const { data } = await getDiffApi({
@@ -500,7 +533,7 @@ export default {
         padding-right: 20px;
         box-sizing: border-box;
     }
-    .approvalRemark{
+    .approvalRemark {
         font-size: 14px;
         color: #f00;
     }
