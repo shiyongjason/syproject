@@ -244,7 +244,8 @@ export default {
     methods: {
         fundsDialogClose () {
             this.fundsDialogVisible = false
-            this.drawer = false
+            // this.drawer = false
+            this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
             this.findPaymentOrderList(this.queryParamsUseQuery)
         },
         handleSizeChange (val) {

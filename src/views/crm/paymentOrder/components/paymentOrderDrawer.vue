@@ -107,8 +107,8 @@
                                 <span class="label">采购明细表：</span>
                                 <p class="content">
                                     <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
-                                        <span class="img-box" @click="goDetail(item.url)" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
-                                            <img :src="item.url" alt="">
+                                        <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                            <imageAddToken :file-url="item.url" />
                                         </span>
                                     </template>
                                 </p>
@@ -468,6 +468,7 @@ import PaymentOrderDict from '../paymentOrderDict'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'paymentOrderDrawer',
@@ -526,7 +527,7 @@ export default {
 
         }
     },
-    components: {},
+    components: { imageAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -673,8 +674,12 @@ export default {
             this.$emit('openLookReceiptDetail', params)
         },
         async getPaymentOrderDetail () {
-            const { data } = await getPaymentOrderDetail(this.row.id)
-            this.paymentOrderDetail = data
+            if (this.row.id) {
+                const { data } = await getPaymentOrderDetail(this.row.id)
+                this.paymentOrderDetail = data
+            }
+            // const { data } = await getPaymentOrderDetail(this.row.id)
+            // this.paymentOrderDetail = data
         }
     },
     watch: {

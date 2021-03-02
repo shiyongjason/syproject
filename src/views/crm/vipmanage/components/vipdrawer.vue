@@ -73,8 +73,8 @@
                     <el-input type="textarea" v-model="vipForm.remark" maxlength="200" show-word-limit :rows="6"></el-input>
                 </el-form-item>
                 <el-form-item label="附件：" prop="" ref="projectUpload">
-                    <hosjoyUpload v-model="vipForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
-                    </hosjoyUpload>
+                    <OssFileHosjoyUpload v-model="vipForm.projectUpload" accept='.jpeg,.jpg,.png,.xls,.xlsx,.pdf,.docx,.doc,.ppt' :fileSize='2' :fileNum='9' :action='action' :uploadParameters='uploadParameters'>
+                    </OssFileHosjoyUpload>
                     <p>2M以内，支持png、jpg，jpeg，pdf，excel、word、ppt等格式</p>
                 </el-form-item>
             </el-form>
@@ -87,7 +87,7 @@
 </template>
 <script>
 import moment from 'moment'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { mapActions, mapGetters } from 'vuex'
 import { postCompanyvip, putCompanyvip } from '../api/index'
@@ -187,7 +187,7 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload
     },
     watch: {
         'stateN' (val) {

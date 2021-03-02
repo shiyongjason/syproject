@@ -18,7 +18,7 @@
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
                                     <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderDetail.paymentDetail">
-                                        <img :src="item.url" alt="" @click="goDetail(item.url)">
+                                        <imageAddToken :file-url="item.url" />
                                     </span>
                                 </template>
                             </p>
@@ -136,7 +136,7 @@
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
                                     <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderPoDetail.poDetail">
-                                        <img :src="item.url" alt="" @click="goDetail(item.url)">
+                                        <imageAddToken :file-url="item.url" />
                                     </span>
                                 </template>
                             </p>
@@ -194,9 +194,13 @@
 import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComputedValue } from '@/views/crm/paymentOrder/api'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'approvePaymentOrder',
+    components: {
+        imageAddToken
+    },
     props: {
         isOpen: {
             type: Boolean,

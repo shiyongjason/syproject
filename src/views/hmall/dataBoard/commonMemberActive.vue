@@ -180,7 +180,7 @@ export default {
                     '&leaveEndTime=' + this.queryParams.leaveEndTime +
                     '&spuCode=' + this.queryParams.spuCode +
                     '&spuName=' + this.queryParams.spuName +
-                    '&access_token=' + sessionStorage.getItem('token')
+                    '&access_token=' + localStorage.getItem('token')
             }
         },
         onSizeChange (val) {

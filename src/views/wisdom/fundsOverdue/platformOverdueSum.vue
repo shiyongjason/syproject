@@ -76,8 +76,8 @@ export default {
             platformOverdueSumExport: PLATFORM_OVERDUE_SUM_EXPORT,
             platformOverdueSumImport: PLATFORM_OVERDUE_SUM_IMPORT,
             headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                'refreshToken': localStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             accept: '.xlsx,.xls',
             loading: false,

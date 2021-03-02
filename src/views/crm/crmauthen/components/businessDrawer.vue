@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap">
-        <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose"  direction='rtl' size='50%' :wrapperClosable="false">
+        <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName">
                     <el-tab-pane label="功能管理" name="first">
@@ -207,10 +207,40 @@
                                 </el-form-item>
                                 <el-form-item label="营业执照：">
                                     <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
-                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.businessLicensePhoto" :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
-                                        </el-image>
+                                        <elImageAddToken v-if="authenticationDetail.businessLicensePhoto" :file-url="authenticationDetail.businessLicensePhoto" />
                                     </div>
                                     <span v-else>-</span>
+                                </el-form-item>
+                                <el-form-item label="法人身份证：">
+                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
+                                        <elImageAddToken v-if="authenticationDetail.certPhotoA" :file-url="authenticationDetail.certPhotoA" />
+                                        <elImageAddToken v-if="authenticationDetail.certPhotoB" :file-url="authenticationDetail.certPhotoB" />
+                                    </div>
+                                    <span v-else>-</span>
+                                </el-form-item>
+                                <el-form-item label="认证结果：">
+                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>
+                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>
+                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>
+                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>
+                                    <p v-else>-</p>
+                                </el-form-item>
+                                <el-form-item label="认证方式：">
+                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>
+                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>
+                                    <p v-else>-</p>
+                                </el-form-item>
+                                <el-form-item label="关联/认证时间：">
+                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>
+                                    <p v-else>-</p>
+                                </el-form-item>
+                                <el-form-item label="关联/认证人：">
+
+                                    <span v-if="authenticationDetail.authenticationBy">
+                                        {{authenticationDetail.authenticationBy}}
+                                    </span>
+                                    <span v-else>-</span>
+
                                 </el-form-item>
                                 <el-form-item label="法人身份证：">
                                     <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
@@ -332,6 +362,8 @@ import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMe
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
 import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
+import OssFileUtils from '@/utils/OssFileUtils'
+import elImageAddToken from '@/components/elImageAddToken'
 
 export default {
     name: 'businessdrawer',
@@ -432,7 +464,8 @@ export default {
         }
     },
     components: {
-        HAutocomplete
+        HAutocomplete,
+        elImageAddToken
     },
     computed: {
         ...mapState({
@@ -469,6 +502,15 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        srcList (collect) {
+            async function temp () {
+                for (let collectElement of collect) {
+                    collectElement = await OssFileUtils.getUrl(collectElement)
+                }
+            }
+            temp()
+            return collect
+        },
         onChangeCheckbox (b, key) {
             if (!b) {
                 this.businessType[key] = ''

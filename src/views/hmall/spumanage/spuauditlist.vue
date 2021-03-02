@@ -249,7 +249,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + this.queryParams[key] + '&')
                 }
-                location.href = B2bUrl + 'product/api/spu/boss/audit-page/export?access_token=' + sessionStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'product/api/spu/boss/audit-page/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         // 只有待审核状态的商品才可以选中批量审核
