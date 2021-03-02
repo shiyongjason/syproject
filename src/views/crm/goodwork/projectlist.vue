@@ -216,22 +216,7 @@ export default {
     name: 'projectlist',
     data () {
         return {
-            options: {
-                valueFormat: 'yyyy-MM-dd HH:mm',
-                format: 'yyyy-MM-dd HH:mm',
-                type: 'datetime',
-                defaultTime: ''
-            },
-            borrowOptions: {
-                valueFormat: 'yyyy-MM-dd',
-                format: 'yyyy-MM-dd',
-                type: 'date'
-            },
-            signOptions: {
-                valueFormat: 'yyyy-MM-dd',
-                format: 'yyyy-MM-dd',
-                type: 'date'
-            },
+
             Auths,
             projectstatus: 0, // 项目状态字段
             categoryIdArr: [],
@@ -251,6 +236,8 @@ export default {
                 deviceCategory: '', // 设备品类
                 minEstimatedLoanTime: '', // 最小预估借款时间
                 maxEstimatedLoanTime: '', // 最小预估借款时间
+                minEstimateSignTime: '',
+                maxEstimateSignTime: '',
                 statusList: '',
                 projectName: '',
                 projectNo: '',
@@ -354,6 +341,33 @@ export default {
         projectDrawer, hosJoyTable
     },
     computed: {
+        options () {
+            return {
+                valueFormat: 'yyyy-MM-dd HH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.minSubmitTime,
+                endTime: this.queryParams.maxSubmitTime
+            }
+        },
+        borrowOptions () {
+            return {
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                type: 'date',
+                startTime: this.queryParams.minEstimatedLoanTime,
+                endTime: this.queryParams.maxEstimatedLoanTime
+            }
+        },
+        signOptions () {
+            return {
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                type: 'date',
+                startTime: this.queryParams.minEstimateSignTime,
+                endTime: this.queryParams.maxEstimateSignTime
+            }
+        },
         // pickerOptionsStart () {
         //     return {
         //         disabledDate: (time) => {
@@ -404,7 +418,7 @@ export default {
             findPunchlist: 'crmmanage/findPunchlist'
         }),
         onStartChange (val) {
-            this.queryParams.minUpdateTime = val
+            this.queryParams.minSubmitTime = val
         },
         onEndChange (val) {
             this.queryParams.maxSubmitTime = val
@@ -547,13 +561,11 @@ export default {
             if (this.$route.query.detail) {
                 this.queryParams.projectNo = ''
             }
-
             this.status = []
             this.typeArr = []
             this.deviceCategoryChange = []
             this.upstreamSupplierTypeChange = []
             console.log(this.queryParams)
-            this.$set(this.queryParams, 'minSubmitTime', '')
             this.searchList()
         },
         handleSizeChange (val) {
