@@ -55,7 +55,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">是否签署确认函：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.sign" placeholder="请选择" multiple :clearable=true>
+                        <el-select v-model="queryParams.sign" placeholder="请选择" :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in signList" :key="item.key"></el-option>
                         </el-select>
                     </div>
@@ -236,8 +236,8 @@ export default {
             return {
                 ...this.queryParams,
                 status: this.queryParams.status.join(','),
-                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                jobNumber: this.userInfo.jobNumber
+                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                // jobNumber: this.userInfo.jobNumber
             }
         }
     },

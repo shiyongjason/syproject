@@ -16,4 +16,4 @@ export const updatePurchaseOrderChangeConfirmStatus = (params) => axios.put(`/pr
 // 采购单确认
 export const updatePurchaseOrderConfirmStatus = (params) => axios.put(`/project/api/purchase-orders/boss/confirm`, params)
 // 采购单确认
-export const getSeals = (params) => axios.get(`/project/api/contract-approval/1347460631505707009/seal-approval-history`, params)
+export const getSeals = (params) => axios.get(`/project/api/contract-approval/${params}/seal-approval-history`, params)

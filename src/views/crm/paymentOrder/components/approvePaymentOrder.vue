@@ -71,7 +71,7 @@
 
                             <p>
                                 <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
-                                    <el-radio-group v-model="formData.dealerCooperationMethod">
+                                    <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
                                         <el-radio :key="item.key" :label="item.key" v-for="item in dealerList">
                                             {{item.value}}
                                         </el-radio>
@@ -84,15 +84,15 @@
                                     {{downPaymentAmount | fundMoneyHasTail}}元
                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
                                 </p>
-                                <p>
+                                <p v-show="formData.dealerCooperationMethod==1">
                                     <span>剩余货款：</span>
                                     {{ serviceFee.arrearAmount | fundMoneyHasTail}}元
                                 </p>
-                                <p>
+                                <p v-show="formData.dealerCooperationMethod==1">
                                     <span>预计服务费总额：</span>
                                     {{ serviceFee.feeAmount | fundMoneyHasTail}}元
                                 </p>
-                                <p>
+                                <p v-show="formData.dealerCooperationMethod==1">
                                     <span>预计每期服务费：</span>
                                     {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
                                 </p>
@@ -306,6 +306,9 @@ export default {
         openEdit () {
             this.formData.downPaymentAmount = this.downPaymentAmount
             this.editAmountVisible = true
+        },
+        onChangeDealer () {
+            this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
         },
         async onCancelAmount () {
             // this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
