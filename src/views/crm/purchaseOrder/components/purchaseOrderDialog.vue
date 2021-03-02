@@ -15,7 +15,7 @@
                             <p class="content">
                                 <template v-if="dialogDetail.poInfo && dialogDetail.poInfo.poDetail">
                                     <span class="img-box" :key="item.url" @click="goDetail(item.url)"  v-for="item in dialogDetail.poInfo.poDetail">
-                                        <img :src="item.url" class="info-img"  alt="">
+                                        <imageAddToken :file-url="item.url" class="info-img"/>
                                     </span>
                                 </template>
                             </p>
@@ -79,8 +79,7 @@
                             <td>{{ item.fieldName | attributeComputed(purchaseOrderDict.fileName.list)}}</td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.originalValue))">
-                                    <img :src="item.url" :key="item.url" alt=""
-                                         v-for="item in checkedIsJson(item.originalValue)" class="info-img" @click="goDetail(item.url)">
+                                    <imageAddToken :file-url="item.fileUrl"  v-for="item in checkedIsJson(item.originalValue)"  :key="item.url" class="info-img" />
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
@@ -93,8 +92,7 @@
                             </td>
                             <td>
                                 <template v-if="Array.isArray(checkedIsJson(item.changedValue))">
-                                    <img :src="item.url" :key="item.url" alt=""
-                                         v-for="item in checkedIsJson(item.changedValue)" class="info-img" @click="goDetail(item.url)">
+                                    <imageAddToken :file-url="item.fileUrl"  v-for="item in checkedIsJson(item.changedValue)"  :key="item.url" class="info-img"/>
                                 </template>
                                 <template v-else>
                                     <template v-if="item.fieldName === 'purch_order_purch_batch'">
@@ -240,8 +238,12 @@ import PurchaseOrderDict from '../purchaseOrderDict'
 import filters from '@/utils/filters'
 import { mapState } from 'vuex'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
+import imageAddToken from '@/components/imageAddToken'
 export default {
     name: 'purchaseOrderChangeDialog',
+    components: {
+        imageAddToken
+    },
     props: {
         isOpen: {
             type: Boolean,

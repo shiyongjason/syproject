@@ -272,8 +272,8 @@ export default {
                 limit: 1,
                 autoUpload: false,
                 headers: { // todo I'm need a config file
-                    refreshToken: sessionStorage.getItem('refreshToken'),
-                    token: `Bearer ` + sessionStorage.getItem('token'),
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    token: `Bearer ` + localStorage.getItem('token'),
                     AccessKeyId: '5ksbfewexbfc'
                 },
                 data: {
@@ -376,8 +376,8 @@ export default {
                 data: formdata,
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    refreshToken: sessionStorage.getItem('refreshToken'),
-                    token: `Bearer ` + sessionStorage.getItem('token'),
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    token: `Bearer ` + localStorage.getItem('token'),
                     AccessKeyId: '5ksbfewexbfc'
                 }
             }).then(response => {

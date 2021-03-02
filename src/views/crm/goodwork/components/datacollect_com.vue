@@ -42,27 +42,20 @@
                                     <span class="posrtv">
                                         <template v-if="item&&item.fileUrl">
                                             <i class="el-icon-document"></i>
-                                            <a :href="item.fileUrl" target="_blank">
-                                                <font>{{item.fileName}}</font>
-                                            </a>
+                                            <downloadFileAddToken isPreview :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName" is-type="main"/>
                                         </template>
                                     </span>
                                 </div>
                                 <div> {{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
                                 <div>
-                                    <!-- <font class="fileItemDownLoad" v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(item.fileUrl, item.fileName)">下载</font> -->
-                                    <a class="fileItemDownLoad" :href="item.fileUrl+'?response-content-type=application/octet-stream'" :download="item.fileName"
-                                        v-if="item.fileName.toLowerCase().indexOf('.png') != -1||item.fileName.toLowerCase().indexOf('.jpg') != -1||item.fileName.toLowerCase().indexOf('.jpeg') != -1">
-                                        下载
-                                    </a>
-                                    <font v-else><a class='fileItemDownLoad' :href="item.fileUrl" target='_blank'>下载</a></font>
+                                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="'下载'" is-type="btn"/>
                                 </div>
 
                             </div>
-                            <hosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
+                            <OssFileHosjoyUpload v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100 :limit=100 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
                                 style="margin:10px 0 0 5px">
                                 <el-button type="primary">上 传</el-button>
-                            </hosjoyUpload>
+                            </OssFileHosjoyUpload>
                         </div>
 
                     </el-form-item>
@@ -170,11 +163,11 @@
 <script>
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { refuseDoc, submitProjectdoc, checkTemplatedoc, getProjectLevels, setProjectLevels } from '../api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { handleImgDownload } from '../../projectInformation/utils'
-import { ccpBaseUrl } from '@/api/config'
+import { ccpBaseUrl, ossBucket, ossRegion, ossOldBucket } from '@/api/config'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
     name: 'datacollectcom',
     props: {
@@ -194,12 +187,15 @@ export default {
             default: null
         }
     },
+    components: {
+        OssFileHosjoyUpload,
+        downloadFileAddToken
+    },
     data () {
         return {
             // 经销商信息
             projectLevels: {},
             Auths,
-            handleImgDownload,
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
@@ -259,11 +255,14 @@ export default {
                 serviceCharge: '',
                 levels: ''
             },
-            isDownLoad: false
+            isDownLoad: false,
+            powerLimitObj: {
+                ossOldBucket,
+                ossRegion,
+                ossBucket,
+                ossUrl: 'http://192.168.20.168:30300/oss/credentials' // interfaceUrl+
+            }
         }
-    },
-    components: {
-        hosjoyUpload
     },
     computed: {
         ...mapState({
@@ -409,7 +408,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.fullbg{
+.fullbg {
     background-color: #211f1f;
     width: 100%;
     height: 100%;
@@ -418,14 +417,14 @@ export default {
     position: fixed;
     top: 0;
     z-index: 9999;
-    .fullbg-img{
+    .fullbg-img {
         width: 377px;
         position: absolute;
         text-align: center;
         top: 50%;
         left: 50%;
         transform: translateX(-50%);
-        p{
+        p {
             color: #fff;
             font-size: 18px;
             text-align: center;

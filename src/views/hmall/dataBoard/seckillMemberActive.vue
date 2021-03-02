@@ -180,7 +180,7 @@ export default {
                     '&leaveEndTime=' + this.queryParams.leaveEndTime +
                     '&skuCode=' + this.queryParams.skuCode +
                     '&skuName=' + this.queryParams.skuName +
-                    '&access_token=' + sessionStorage.getItem('token')
+                    '&access_token=' + localStorage.getItem('token')
             }
         },
         onSizeChange (val) {

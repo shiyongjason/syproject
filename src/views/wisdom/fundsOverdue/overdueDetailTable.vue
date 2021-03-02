@@ -102,8 +102,8 @@ export default {
                 ]
             },
             headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                'refreshToken': localStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             accept: '.xlsx,.xls',
             loading: false,

@@ -168,12 +168,12 @@ export default {
                 if (this.tabName == 'spike') {
                     window.location = B2bUrl + 'ops/openapi/spike/bi/export?startTime=' + this.queryParams.startTime +
                         '&endTime=' + this.queryParams.endTime +
-                        '&access_token=' + sessionStorage.getItem('tokenB2b')
+                        '&access_token=' + localStorage.getItem('tokenB2b')
                 } else if (this.tabName == 'special') {
                     window.location = B2bUrl + 'ops/openapi/bi/theme-activity/export?startTime=' + this.queryParams.startTime +
                         '&endTime=' + this.queryParams.endTime +
                         '&merchantName=' + this.queryParams.merchantName +
-                        '&access_token=' + sessionStorage.getItem('tokenB2b')
+                        '&access_token=' + localStorage.getItem('tokenB2b')
                 }
             }
         },
@@ -183,10 +183,10 @@ export default {
             } else {
                 if (this.tabName == 'spike') {
                     window.location = B2bUrl + 'order/api/bi/activity/export?spikeId=' + this.queryParamsInfo.spikeId +
-                        '&access_token=' + sessionStorage.getItem('tokenB2b')
+                        '&access_token=' + localStorage.getItem('tokenB2b')
                 } else if (this.tabName == 'special') {
                     window.location = interfaceUrl + 'ets/api/b2b/bi/theme-activities/export?id=' + this.queryParamsInfo.id +
-                        '&access_token=' + sessionStorage.getItem('token')
+                        '&access_token=' + localStorage.getItem('token')
                 }
             }
         },

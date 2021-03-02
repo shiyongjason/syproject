@@ -24,8 +24,8 @@
                             到货验收单：
                         </span>
                         <p class="content">
-                            <span class="img-box"  @click="goDetail(subItem.fileUrl)" :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers">
-                                <img :src="subItem.fileUrl" alt="">
+                            <span class="img-box" :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers">
+                                <imageAddToken :file-url="subItem.fileUrl"/>
                             </span>
                         </p>
                     </div>
@@ -42,9 +42,13 @@
 </template>
 <script>
 import { getConfirmReceiptMoreDetail } from '@/views/crm/paymentOrder/api'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'lookReceiptDetail',
+    components: {
+        imageAddToken
+    },
     props: {
         isOpen: {
             type: Boolean,

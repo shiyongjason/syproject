@@ -18,8 +18,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList"
-                                       :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -44,14 +43,10 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期"
-                                        :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime"
-                                        value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期"
-                                        :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
@@ -59,8 +54,7 @@
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status" placeholder="请选择" multiple :clearable=true>
-                            <el-option :label="item.value" :value="item.key"
-                                       v-for="item in PurchaseOrderDict.status.list" :key="item.key"></el-option>
+                            <el-option :label="item.value" :value="item.key" v-for="item in PurchaseOrderDict.status.list" :key="item.key"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -76,10 +70,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ purchaseOrderPagination.total }}
                 项， 采购单总金额：<b>{{ purchaseOrderPagination.amount | fundMoney }}</b>元
             </el-tag>
-            <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination"
-                        @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange"
-                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200
-                        :isShowIndex='true'>
+            <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350 :isShowIndex='true'>
                 <template slot="projectNo" slot-scope="scope">
                     <span class="colblue" @click="goProjectDetail(scope.data.row)"> {{ scope.data.row.projectNo }}</span>
                 </template>
@@ -90,26 +81,31 @@
                     <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)"
-                              v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
+                    <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
                               hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM)">
                         确认采购单
                     </h-button>
-                    <h-button @click="openDialog(dialogStatus.changeEnter.status, scope.data.row)"
-                              v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status &&
+                    <h-button @click="openDialog(dialogStatus.changeEnter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status &&
                               hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM_CHANGE)" table>确认变更
                     </h-button>
                     <h-button table @click="openDetail(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PURCHASE_ORDER_SEE_DETAIL)">查看详情
                     </h-button>
+                    <h-button table @click="onApproveRecords(scope.data.row)">审批记录
+                    </h-button>
                 </template>
             </basicTable>
         </div>
-        <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent'
-                             @openDialog="openDialog" ref="drawerDetail"
-                             :row="purchaseOrderRow"></purchaseOrderDrawer>
-        <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus"
-                             @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams"
-                             ref="dialog"></purchaseOrderDialog>
+        <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
+        <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
+        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='45%' :wrapperClosable="false" :beforeClose="handleClose">
+            <template #connect>
+                <div class="seal_records" v-for="(item,index) in editHistory" :key="index">
+                    <div class="seal_records-tit">审批人：<em>{{item.operator}}</em></div>
+                    <div>{{item.operationName}}{{item.operationContent}}</div>
+                    <div class="seal_records-remark">备注：{{item.approvalRemark}}</div>
+                </div>
+            </template>
+        </h-drawer>
     </div>
 </template>
 
@@ -120,11 +116,12 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
-
+import { getSeals } from './api/index'
 export default {
     name: 'purchaseOrder',
     data () {
         return {
+            drawerPur: false,
             Auths,
             queryParams: {
                 purchaseOrderNo: '',
@@ -159,7 +156,8 @@ export default {
             isOpen: false,
             openStatus: PurchaseOrderDialogStatus.enter.status,
             purchaseOrderRow: {},
-            purchaseOrderDialogParams: {}
+            purchaseOrderDialogParams: {},
+            editHistory: []
         }
     },
     components: {
@@ -205,6 +203,12 @@ export default {
         }
     },
     methods: {
+        async onApproveRecords (val) {
+            this.drawerPur = true
+            const { data } = await getSeals(val.id)
+            console.log(data)
+            this.editHistory = data
+        },
         goProjectDetail (row) {
             let routeUrl = this.$router.resolve({
                 path: '/goodwork/projectlist',
@@ -258,7 +262,10 @@ export default {
         ...mapActions({
             findPurchaseList: 'crmPurchaseOrder/findPurchaseList',
             findCrmdeplist: 'crmmanage/findCrmdeplist'
-        })
+        }),
+        handleClose () {
+            this.drawerPur = false
+        }
     },
     async mounted () {
         this.queryParamsTemp = { ...this.queryParams }
@@ -276,12 +283,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='scss'>
 .eltagtop {
     margin-bottom: 10px;
 }
 .colblue {
     color: #50b7f7;
     cursor: pointer;
+}
+.seal_records {
+    margin-bottom: 10px;
+    &-tit {
+        em {
+            font-style: normal;
+            color: #2196f3;
+        }
+    }
+    &-remark {
+        color: #f00;
+    }
 }
 </style>

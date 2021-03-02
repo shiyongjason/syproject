@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import jwtDecode from 'jwt-decode'
 import mutations from './mutations'
 import actions from './action'
 import dueDiligence from '@/views/bestonline/store/index'
@@ -35,12 +36,18 @@ import contractTemp from '@/views/crm/contractTemp/store/index'
 
 Vue.use(Vuex)
 
-const userInfo = sessionStorage.getItem('userInfo')
+const token = localStorage.getItem('token')
+let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
+if (!userInfo && token) {
+    userInfo = jwtDecode(token)
+    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+}
+// const userInfo = sessionStorage.getItem('userInfo')
 // const userdata = sessionStorage.getItem('user_data')
 const store = new Vuex.Store({
     state: {
         'loading': false,
-        'userInfo': userInfo ? JSON.parse(userInfo) : {},
+        'userInfo': userInfo || {},
         'tagsList': sessionStorage.getItem('tagsList') ? JSON.parse(sessionStorage.getItem('tagsList')) : [],
         'isSaving': false,
         'isFirst': true,
@@ -49,10 +56,10 @@ const store = new Vuex.Store({
         'cachedInclude': [],
         'cachedExclude': [],
         'devDepList': [],
-        platformData: [], // Boss后台统一权限 平台公司list
-        regionList: [], // 大区列表
-        branchList: [], // 分部列表
-        areaList: [] // 区域列表
+        'platformData': [], // Boss后台统一权限 平台公司list
+        'regionList': [], // 大区列表
+        'branchList': [], // 分部列表
+        'areaList': [] // 区域列表
     },
     mutations,
     actions: actions,
