@@ -1,5 +1,5 @@
 <template>
-    <div class="collect-wrap">
+    <div class="collect-wrap">1
         <div class="fullbg" v-if="showPacking">
             <div class="fullbg-img">
                 <img
@@ -56,9 +56,7 @@
                                 <span class="posrtv">
                                     <template v-if="jtem&&jtem.fileUrl">
                                         <i class="el-icon-document"></i>
-                                        <a :href="jtem.fileUrl" target="_blank">
-                                            <font>{{ jtem.fileName }}</font>
-                                        </a>
+                                        <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main"/>
                                     </template>
                                 </span>
                             </div>
@@ -66,24 +64,16 @@
                             <div>
                                 <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}"
                                       v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)">删除</font>
-                                <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
-                                <a class="fileItemDownLoad"
-                                   :href="jtem.fileUrl+'?response-content-type=application/octet-stream'"
-                                   :download="jtem.fileName"
-                                   v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">
-                                    下载
-                                </a>
-                                <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl"
-                                                target='_blank'>下载</a></font>
+                                <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="'下载'" is-type="btn"/>
                             </div>
                         </div>
-                        <hosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)"
+                        <OssFileHosjoyUpload v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)"
                                       v-model="obj.riskCheckProjectDocPos" :showPreView=false :fileSize=20 :fileNum=100
                                       :limit=100 :action='action' :uploadParameters='uploadParameters'
                                       @successCb="()=>{handleSuccessCb(obj)}"
                                       style="margin:10px 0 0 5px">
                           <el-button type="primary">上 传</el-button>
-                        </hosjoyUpload>
+                        </OssFileHosjoyUpload>
                     </el-form-item>
                 </template>
             </div>
@@ -205,10 +195,10 @@
 <script>
 import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { submitProjectdoc, saveProjectdoc, updateFinalStatus, putProjectDetail } from '../api/index'
-import { handleImgDownload } from '../../projectInformation/utils'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 
 export default {
     name: 'approvecom',
@@ -236,7 +226,8 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload,
+        downloadFileAddToken
     },
     data () {
         function validateNumber (r, v, callback) {
@@ -254,7 +245,6 @@ export default {
         return {
             Auths,
             moment,
-            handleImgDownload,
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
@@ -791,5 +781,8 @@ export default {
 .star {
     color: red;
     font-size: 14px;
+}
+.download {
+    cursor: pointer;
 }
 </style>

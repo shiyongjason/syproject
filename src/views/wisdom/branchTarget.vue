@@ -66,8 +66,8 @@ export default {
             importAuth: AUTH_WIXDOM_BRANCH_TARGET_BULK_IMPORT,
             downTemplateAuth: AUTH_WIXDOM_BRANCH_TARGET_DOWN_TEMPLATE,
             headersData: {
-                'refreshToken': sessionStorage.getItem('refreshToken'),
-                'Authorization': 'Bearer ' + sessionStorage.getItem('token')
+                'refreshToken': localStorage.getItem('refreshToken'),
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             queryParams: {
                 pageSize: 10,

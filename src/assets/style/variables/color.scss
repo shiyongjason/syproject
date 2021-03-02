@@ -24,3 +24,8 @@ $grayLight: #ccc;
 $blackColor: #262626;
 // 浅黑色
 $blackLight: #333;
+
+@function px2rem($px) {
+    @return ($px/14) * 1rem
+}
+  
