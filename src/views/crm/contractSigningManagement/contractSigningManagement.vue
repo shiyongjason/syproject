@@ -106,7 +106,7 @@
                     <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row,3)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
-                    <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.abolished==0">废止</h-button>
+                    <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.abolished==0 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
 
                 </template>
             </hosJoyTable>

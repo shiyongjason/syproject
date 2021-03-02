@@ -3,7 +3,7 @@
         <div class="page-body B2b">
             <div class="page-body-cont">
                 <div class="query-cont__row">
-                    <h-button type="primary" @click="onAddYear">新增节假日计划</h-button>
+                    <h-button type="primary" @click="onAddYear" v-if="hosAuthCheck(Auths.HOLIDAY_ADD)">新增节假日计划</h-button>
                 </div>
             </div>
             <div class="page-body-cont">
@@ -12,7 +12,7 @@
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onLookDetail(scope.data.row)">查看详情</h-button>
                         <h-button table @click="onRevise(scope.data.row)">修订记录</h-button>
-                        <h-button table @click="onEdit(scope.data.row)">修改</h-button>
+                        <h-button table @click="onEdit(scope.data.row)" v-if="hosAuthCheck(Auths.HOLIDAY_EDIT)">修改</h-button>
                     </template>
                 </hosJoyTable>
             </div>
@@ -28,11 +28,13 @@
 <script>
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { getHolidayList, getHolidayMax, getHolidaRevise } from './api/index'
+import * as Auths from '@/utils/auth_const'
 export default {
     components: { hosJoyTable },
     name: 'holiday',
     data () {
         return {
+            Auths,
             options: {
                 direction: 'rtl',
                 size: '50%',
