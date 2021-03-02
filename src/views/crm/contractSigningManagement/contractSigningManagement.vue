@@ -475,6 +475,9 @@ export default {
     text-align: center;
     border-radius: 6px;
 }
+.history-css-flex {
+    margin-bottom: 10px;
+}
 .contentdrawerbox {
     /deep/ .el-drawer__header {
         border-bottom: 1px solid #eee;
@@ -491,6 +494,7 @@ export default {
             justify-content: space-between;
             margin-top: 15px;
             align-items: baseline;
+            margin-bottom: 8px;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;
