@@ -16,7 +16,7 @@
                         <h-button type="primary">上传合同</h-button>
                     </hosjoyUpload>
                 </div>
-                <div class="contract-flex_tips">（请先点击上方“下载原始合同”，下载后在本地进行编辑修订，修订完成后在此上传，上传格式为.doc/.xlsx/.pdf等格式)</div>
+                <div class="contract-flex_tips">（请先点击上方“下载原始合同”，下载后在本地进行编辑修订，修订完成后在此上传，上传格式为.docx/.xlsx/.pdf等格式)</div>
                 <div v-for="(item,index) in contractList" :key="index" class="contract-flex_preview">
                     <div class="preview_name">合同：</div>
                     {{item.fileName}}
