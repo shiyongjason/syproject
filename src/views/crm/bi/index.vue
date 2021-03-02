@@ -8,11 +8,10 @@
             </div>
         </div>
         <div v-if="biToken && showBI">
-            <div class="back-menu hidden-sm-and-up"  @click="onBackMenu">返回菜单</div>
+            <div class="back-menu hidden-sm-and-up" @click="onBackMenu">返回菜单</div>
             <div class="hidden-height hidden-sm-and-up"></div>
             <iframe :src="biUrl" frameborder="0" style="width: 100%; height: 100vh"></iframe>
         </div>
-        
     </div>
 </template>
 
