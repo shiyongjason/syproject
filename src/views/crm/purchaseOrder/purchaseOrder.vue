@@ -81,13 +81,13 @@
                     <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
+                    <!-- <h-button table @click="openDialog(dialogStatus.enter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[1].key === scope.data.row.status &&
                               hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM)">
                         确认采购单
                     </h-button>
                     <h-button @click="openDialog(dialogStatus.changeEnter.status, scope.data.row)" v-if="PurchaseOrderDict.status.list[2].key === scope.data.row.status &&
                               hosAuthCheck(Auths.CRM_PURCHASE_ORDER_CONFIRM_CHANGE)" table>确认变更
-                    </h-button>
+                    </h-button> -->
                     <h-button table @click="openDetail(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PURCHASE_ORDER_SEE_DETAIL)">查看详情
                     </h-button>
                     <h-button table @click="onApproveRecords(scope.data.row)">审批记录
