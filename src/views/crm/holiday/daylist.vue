@@ -30,6 +30,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { getHolidayList, getHolidayMax, getHolidaRevise } from './api/index'
 export default {
     components: { hosJoyTable },
+    name: 'holiday',
     data () {
         return {
             options: {
