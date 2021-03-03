@@ -112,7 +112,7 @@
             </hosJoyTable>
         </div>
 
-        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='550px' :beforeClose="() => drawerVisible=false">
+        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='550px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <template #connect>
                 <div slot="title">审核记录</div>
                 <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
@@ -145,7 +145,7 @@
                                     <font>{{item.operationContent}}</font>
                                 </span>
                             </template>
-                            <template v-if="item.attachDocs.length>0">
+                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
                                 <div v-for="(obj,oindex) in item.attachDocs" :key="oindex">
                                     <p style="color: #ff7a45;">{{obj.fileName}}</p>
                                     <p style="color: #ff7a45;">备注：{{item.approvalRemark}}</p>
@@ -477,6 +477,22 @@ export default {
 }
 .history-css-flex {
     margin-bottom: 10px;
+}
+.name {
+    color: #169bd5;
+}
+.operationcontent-css {
+    font {
+        color: #ff7a45;
+        margin: 0 4px;
+    }
+}
+.history-css-right {
+    flex: 0 0 198px;
+    font-size: 13px;
+    color: #a7a5a5;
+    margin-left: 10px;
+    text-align: right;
 }
 .contentdrawerbox {
     /deep/ .el-drawer__header {
