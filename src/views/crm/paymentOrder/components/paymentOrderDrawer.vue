@@ -188,6 +188,14 @@
                                             paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
                                         }}
                                         </p>
+
+                                    </div>
+                                    <div class="row-filed">
+                                        <p class="col-filed col-33">
+                                            <span class="label">下游合作方式：</span>{{
+                                            paymentOrderDetail.payOrderDetail.dealerCooperationMethod==2?'代收代付': paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1?'垫资代采':'-'
+                                        }}
+                                        </p>
                                     </div>
                                     <div class="row-filed">
                                         <p class="col-filed col-50">
