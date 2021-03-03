@@ -184,10 +184,10 @@
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                                 驳回原因：{{item.remark || '-'}}
                                             </p>
-                                            <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
+                                            <!-- <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
                                                         item.changeResult !== PurchaseOrderDict.changeResult.list[1].key">
                                                 <h-button table @click="purchaseOrderChangeConfirm">确认变更</h-button>
-                                            </p>
+                                            </p> -->
                                             <p v-else>
                                                 <h-button table @click="purchaseOrderWatchConfirm(item.id)">查看变更</h-button>
                                             </p>
@@ -255,9 +255,9 @@
 
                     <div class="drawer-footer">
                         <div class="drawer-button">
-                            <h-button type="assist" @click="purchaseOrderConfirm" v-if="purchaseOrderDetail.purchaseOrder.status === PurchaseOrderDict.status.list[1].key">
+                            <!-- <h-button type="assist" @click="purchaseOrderConfirm" v-if="purchaseOrderDetail.purchaseOrder.status === PurchaseOrderDict.status.list[1].key">
                                 确认采购单
-                            </h-button>
+                            </h-button> -->
                             <!--                        <h-button type="primary">审核通过</h-button>-->
                             <h-button type="default" @click="handleClose">取消</h-button>
                         </div>
