@@ -55,7 +55,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">是否签署确认函：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.sign" placeholder="请选择" multiple :clearable=true>
+                        <el-select v-model="queryParams.sign" placeholder="请选择" :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in signList" :key="item.key"></el-option>
                         </el-select>
                     </div>
@@ -64,7 +64,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">合作方式：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.dealerCooperationMethod" placeholder="请选择" multiple :clearable=true>
+                        <el-select v-model="queryParams.dealerCooperationMethod" placeholder="请选择" :clearable=true>
                             <el-option :label="item.value" :value="item.key" v-for="item in dealerList" :key="item.key"></el-option>
                         </el-select>
                     </div>
