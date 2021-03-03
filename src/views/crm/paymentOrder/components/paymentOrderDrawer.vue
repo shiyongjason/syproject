@@ -2,7 +2,7 @@
     <div class="drawer-wrap">
         <!-- <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false> -->
-        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='65%' :wrapperClosable="false" :beforeClose="handleClose">
+        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='65%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
             <template #connect>
                 <div class="drawer-content">
                     <div class="info-content">
@@ -701,6 +701,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/deep/.el-drawer__wrapper {
+    z-index: 1000 !important;
+}
 .info-content {
     padding: 0 20px;
     .project {
