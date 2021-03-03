@@ -2,7 +2,7 @@
     <div class="drawer-wrap">
         <!-- <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false> -->
-        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='65%' :wrapperClosable="false" :beforeClose="handleClose">
+        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='65%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
             <template #connect>
                 <div class="drawer-content">
                     <div class="info-content">
@@ -186,6 +186,14 @@
                                         <p class="col-filed col-33">
                                             <span class="label">上游货款方式：</span>{{
                                             paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
+                                        }}
+                                        </p>
+
+                                    </div>
+                                    <div class="row-filed">
+                                        <p class="col-filed col-33">
+                                            <span class="label">下游合作方式：</span>{{
+                                            paymentOrderDetail.payOrderDetail.dealerCooperationMethod==2?'代收代付': paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1?'垫资代采':'-'
                                         }}
                                         </p>
                                     </div>
@@ -693,6 +701,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+/deep/.el-drawer__wrapper {
+    z-index: 1000 !important;
+}
 .info-content {
     padding: 0 20px;
     .project {
