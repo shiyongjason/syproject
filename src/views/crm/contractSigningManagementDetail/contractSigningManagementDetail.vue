@@ -55,7 +55,11 @@ export default {
     async mounted () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.res = data
-        this.res._attachementList = this.res.attachementList && this.res.attachementList.filter(val => (val.picUrl.indexOf('.docx') < 0 || val.picUrl.indexOf('.pdf') < 0 || val.picUrl.indexOf('.xlsx') < 0))
+        this.res._attachementList = this.res.attachementList && this.res.attachementList.filter(val => {
+            if (val.picUrl.indexOf('.docx') < 0 && val.picUrl.indexOf('.pdf') < 0 && val.picUrl.indexOf('.xlsx') < 0) {
+                return val
+            }
+        })
         console.log('==', this.res._attachementList)
         if (!this.res.contractUrl && (!this.res.attachementList || this.res.attachementList.length == 0)) {
             this.vHtml = data.contractContent
