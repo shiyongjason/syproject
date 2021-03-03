@@ -255,9 +255,9 @@
 
                     <div class="drawer-footer">
                         <div class="drawer-button">
-                            <h-button type="assist" @click="purchaseOrderConfirm" v-if="purchaseOrderDetail.purchaseOrder.status === PurchaseOrderDict.status.list[1].key">
+                            <!-- <h-button type="assist" @click="purchaseOrderConfirm" v-if="purchaseOrderDetail.purchaseOrder.status === PurchaseOrderDict.status.list[1].key">
                                 确认采购单
-                            </h-button>
+                            </h-button> -->
                             <!--                        <h-button type="primary">审核通过</h-button>-->
                             <h-button type="default" @click="handleClose">取消</h-button>
                         </div>
