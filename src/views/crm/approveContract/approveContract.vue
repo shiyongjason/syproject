@@ -100,7 +100,7 @@
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="approvalRemark" v-if="item.approvalRemark"  :key="index+'approvalRemark'">
+                    <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
                         {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
                     </div>
                 </template>
@@ -266,7 +266,13 @@ export default {
             },
             contractDocument: '',
             contractAfterApi: '',
-            keyValIncontract: []
+            keyValIncontract: [],
+            // 只能选择当前时间之后的时间
+            pickerOptions: {
+                disabledDate: (time) => {
+                    return time.getTime() < Date.now() - 1 * 24 * 3600 * 1000
+                }
+            }
 
         }
     },
@@ -295,8 +301,8 @@ export default {
             if (paramKey == 'dealer_controller_phone' || paramKey == 'dealer_controller_phone_spouse' || paramKey == 'supplier_account_number' || paramKey == 'hosjoy_account_number' || paramKey == 'regulatory_account_number' || paramKey == 'dealer_controller_postal_code' || paramKey == 'dealer_controller_postal_code_spouse') {
                 return 'isAllNum'
             }
-            // 元 %
-            if (unit) {
+            // 元 % 带小数
+            if (unit || paramKey == 'vip_next_year_discount') {
                 return 'isNum'
             }
             return 'elInput'
@@ -381,7 +387,9 @@ export default {
                                 disabled: !this.currentKey.modify,
                                 style: this.currentKey.unit ? { width: '250px' } : '',
                                 innerHtml: this.currentKey.unit || '',
-                                maxlength: this.currentKey.maxLength || ''
+                                maxlength: this.currentKey.maxLength || '',
+                                decimal: this.currentKey.decimal || '',
+                                calculationRules: this.currentKey.calculationRules || ''// 最大值
                             },
                             on: {
                                 input: (val) => { this.currentKey.paramValue = val.trim() }
@@ -499,6 +507,23 @@ export default {
                                 console.log(this.$refs['zoomImage'])
                                 this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
                             }
+                        }
+                    }
+                },
+                // 年份选择器
+                10: {
+                    elDatePicker: {
+                        bind: {
+                            value: this.currentKey.paramValue,
+                            type: 'year',
+                            disabled: !this.currentKey.modify,
+                            placeholder: '选择年份',
+                            valueFormat: 'yyyy',
+                            style: { width: '250px' },
+                            pickerOptions: this.pickerOptions
+                        },
+                        on: {
+                            input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
                 }
@@ -625,7 +650,7 @@ export default {
                 }
             })
         },
-        async  goBack () {
+        async goBack () {
             this.dealSaveContent(3)
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
@@ -920,6 +945,7 @@ export default {
         },
         editorOnInit () {
             console.log('编辑器初始化完成domBindMethods')
+
             this.domBindMethods()
         },
         onKeyUp () {
@@ -931,6 +957,7 @@ export default {
         domBindMethods (flag = '') {
             this.$nextTick(() => {
                 this.firstKsy = this.contractFieldsList[0].paramKey
+                console.log('我走了这里', this.contractDocument)
                 if (!this.currentKey) {
                     // 保存后不会更新左侧字段
                     this.currentKey = this.contractFieldsList.filter(item => item.paramKey === this.firstKsy)[0]
@@ -1050,6 +1077,24 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
+            // this.$nextTick(() => {
+            //     setTimeout(() => {
+            //     // 这里去给table赋值 style
+            //         console.log('==', document.getElementsByTagName('table'))
+            //         let tableobj = document.getElementsByTagName('table')
+
+            //         console.log(111, tableobj, Array.from(tableobj).length)
+            //         Array.from(tableobj).map(item => {
+            //             console.log(item.getElementsByTagName('tr'))
+            //             Array.from(item.getElementsByTagName('tr')).map(jtem => {
+            //                 jtem.style.border = '1px solid #333'
+            //             })
+            //             Array.from(item.getElementsByTagName('td')).map(jtem => {
+            //                 jtem.style.border = '1px solid #333'
+            //             })
+            //         })
+            //     }, 2000)
+            // })
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             if (this.detailRes.contractStatus == 6) {
@@ -1089,7 +1134,15 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.approvalRemark{
+/deep/.approvalcontract-content table td {
+    // border: 1px solid #ccc;
+    // border-right: 1px solid #ccc;
+
+}
+/deep/ .mce-item-table:not([border]) td {
+    //  border: 1px solid #333 !important;
+}
+.approvalRemark {
     font-size: 14px;
     color: #f00;
 }
@@ -1444,25 +1497,24 @@ export default {
         // margin-bottom:10px
     }
 }
-.vsList{
+.vsList {
     padding: 20px;
     box-sizing: border-box;
     overflow-y: scroll;
     height: calc(100vh - 150px);
-    p{
-       color: #ff7a45;
-       display: flex;
-       margin-bottom: 10px;
-       cursor: pointer;
-       img{
-           width: 20px;
-           height: 20px;
-           margin-right: 5px;
-
-       }
+    p {
+        color: #ff7a45;
+        display: flex;
+        margin-bottom: 10px;
+        cursor: pointer;
+        img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
     }
 }
-.vsdrawercss{
+.vsdrawercss {
     /deep/.history-bttom-css {
         border-top: 1px solid #eee;
         padding-top: 10px;
