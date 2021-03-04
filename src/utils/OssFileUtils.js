@@ -143,6 +143,9 @@ export default {
     async getImageSelfStyle (url, process) {
         let result
         if (url && url.indexOf(ossOldBucket + '.') > -1) {
+            if (url.indexOf('image/auto-orient') > -1) {
+                return `${url},${process}`
+            }
             return `${url}?x-oss-process=${process}`
         }
         const ossUtil = await initOssSTS()
