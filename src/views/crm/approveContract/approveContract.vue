@@ -137,16 +137,20 @@
                                 </component>
                             </el-form-item>
                         </el-form> -->
-                        <!-- else -->
-                        <p class="setarea-key">{{currentKey.paramName}}：</p>
-                        <p style="display: flex;justify-content: space-between;align-items: center;">
-                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
-                                <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-                                    <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
-                                        <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-                                    </component>
-                                </el-form-item>
-                            </el-form>
+                    <!-- else -->
+                    <p class="setarea-key">{{currentKey.paramName}}：</p>
+                    <p style="display: flex;justify-content: space-between;align-items: center;">
+                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
+                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
+                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                    <!--  -->
+                                    <template v-if="value.slotRender" slot-scope="scope">
+                                        <comRender :scope="scope" :render="value.slotRender"></comRender>
+                                    </template>
+                                </component>
+                            </el-form-item>
+                        </el-form>
 
                             <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
                                 accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
@@ -200,16 +204,18 @@ import isNum from './components/isNum'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
+import comRender from './comRender'
 // api:https://www.tiny.cloud/docs/integrations/vue/
 // http://tinymce.ax-z.cn/general/basic-setup.php
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
+    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender },
     data () {
         return {
+            TYCList: [], // 天眼查数据
             contentvsDataVisible: false,
             contentvsDataList: [],
             flag: true,
@@ -355,6 +361,9 @@ export default {
         editorDrawerClose (done) {
             if (this.imgArr && this.imgArr.length > 0) {
                 this.imgArr = []
+            }
+            if (this.TYCList.length > 0) {
+                this.TYCList = []
             }
             done()
         },
@@ -533,10 +542,52 @@ export default {
                             input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
+                },
+                // 天眼查搜索
+                11: {
+                    elSelect: {
+                        bind: {
+                            value: this.currentKey.paramValue,
+                            filterable: true,
+                            remote: true,
+                            placeholder: '请输入搜索关键词',
+                            // allowCreate: true,//是否允许用户创建新条目
+                            // loading: false
+                            remoteMethod: this.remoteMethod, // 远程搜索方法
+                            defaultFirstOption: true, // 在输入框按下回车，选择第一个匹配项
+                            style: { width: '450px' }
+                        },
+                        slotRender: (scope) => {
+                            console.log('scope: ', scope)
+                            return (this.TYCList.map((item, index) => {
+                                return (
+                                    <el-option key={item.id} value={item.name} label={item.name}>
+                                        {item.name}
+                                    </el-option>
+                                )
+                            })
+                            )
+                        },
+                        on: {
+                            input: (val) => {
+                                this.currentKey.paramValue = val
+                                console.log('xxxxxxx', val)
+                            }
+                        }
+                    }
                 }
 
             }
             return comObj[this.currentKey.inputStyle]
+        },
+        async remoteMethod (val) {
+            console.log('remoteMethod', val)
+            // 天眼查查询
+            const { data } = await getTYCList({ word: val })
+            if (data) {
+                this.TYCList = data.items
+            }
+            this.currentKey.paramValue = val
         },
         handleCommand (command) {
             this.currentKey = command
