@@ -63,7 +63,7 @@
                 <el-form-item label-width="0px" v-for="(item,index) in form.seckillActivityList" :key="index">
                     <el-col :span="12">
                         <el-form-item label="商品名称：">
-                            <el-input v-model="item.productName"></el-input>
+                            <el-input :value="shopStatus(item)"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -283,6 +283,12 @@ export default {
         },
         addClassifyMerchants: function () {
             this.form.seckillActivityList.push({ productId: '', productName: '', seckillPrice: '' })
+        },
+        shopStatus (item) {
+            if (item.status === 30) {
+                return '(已下架)' + item.productName
+            }
+            return item.productName
         },
         remoteMethod: async function (query) {
             if (query !== '') {
