@@ -203,11 +203,11 @@
                                             paymentOrderDetail.payOrderDetail.downPaymentAmount | fundMoneyHasTail
                                         }}元
                                         </p>
-                                        <p class="col-filed col-50">
+                                        <p class="col-filed col-50" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1">
                                             <span class="label">剩余货款：</span> {{ paymentOrderDetail.payOrderDetail.arrearAmount  | fundMoneyHasTail }}元
                                         </p>
                                     </div>
-                                    <div class="row-filed">
+                                    <div class="row-filed" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1">
                                         <p class="col-filed col-50">
                                             <span class="label">预计服务费总额：</span> {{ paymentOrderDetail.payOrderDetail.feeAmount  | fundMoneyHasTail }}元
                                         </p>
@@ -217,7 +217,7 @@
                                         }}元
                                         </p>
                                     </div>
-                                    <div class="row-filed confirm-server">
+                                    <div class="row-filed confirm-server" v-if="paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1">
                                         《订单及服务费确认函》： <span class="info-status-words">{{
                                         paymentOrderDetail.payOrderDetail.orderLetterStatus | attributeComputed(PaymentOrderDict.orderLetterStatus.list)
                                     }}</span>
