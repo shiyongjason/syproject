@@ -1,12 +1,12 @@
 <template>
     <div>
         <!-- 元 -->
-        <el-input v-if="innerHtml=='元'" :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,1000000000)}" @blur="onBlur">
+        <el-input v-if="innerHtml.indexOf('元') != -1" :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,calculationRules)}" @blur="onBlur">
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
         <!-- %.. -->
         <!-- <el-input v-else  :value="money(value)" v-inputMAX="100"  v-bind="$attrs" @input="onInput" @blur="onBlur"> -->
-        <el-input v-else  :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,100)}" @blur="onBlur">
+        <el-input v-else  :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,calculationRules)}" @blur="onBlur">
 
             <template slot="append" v-if="innerHtml">{{innerHtml}}</template>
         </el-input>
@@ -15,7 +15,7 @@
 
 <script>
 export default {
-    props: ['value', 'innerHtml', 'format', 'paramKey'],
+    props: ['value', 'innerHtml', 'format', 'paramKey', 'decimal', 'calculationRules'],
     computed: {
         inputModelComputed: {
             get () {
@@ -49,7 +49,8 @@ export default {
             }
         },
         onInput (val, max) {
-            let num = this.isNum(val, 2)
+            console.log('max: ', max)
+            let num = this.isNum(val, this.decimal)
             if (num && num.length > 0 && num == '.') {
                 num = ''
             }
@@ -62,15 +63,15 @@ export default {
             console.log('num: ', num)
             if (max) {
                 if (Number(num) > max) {
-                    if (this.innerHtml == '元') {
+                    if (this.innerHtml.indexOf('元') != -1) {
                         this.$message({
-                            message: `金额最大不能超过${this.money(max)}`,
+                            message: `最大不能超过${this.money(max)}${this.innerHtml}`,
                             type: 'error'
                         })
                         return
                     } else {
                         this.$message({
-                            message: `最大不能超过${max}`,
+                            message: `最大不能超过${max}${this.innerHtml}`,
                             type: 'error'
                         })
                         return

@@ -123,8 +123,8 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="附件：" prop="projectUpload" ref="projectUpload">
-                <hosjoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='2' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
-                </hosjoyUpload>
+                <OssFileHosJoyUpload v-model="projectForm.projectUpload" accept='.jpeg,.jpg,.png,.BMP,.pdf,.xls,.xlsx,.zip,.rar' :fileSize='20' :fileNum='20' :action='action' @successCb="onBackUpload()" :uploadParameters='uploadParameters'>
+                </OssFileHosJoyUpload>
             </el-form-item>
         </el-form>
         <el-dialog title="设置" :visible.sync="dialogVisible" width="30%" :before-close="()=>{dialogVisible = false}" :close-on-click-modal=false :modal=false>
@@ -149,7 +149,7 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosJoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import { putProjectDetail, saveCreditLevel } from './../api/index'
 import { PROCESS_LIST, TYPE_LIST, DEVICE_LIST, UPSTREAM_LIST, NEW_STATUS_TYPE, CREDITLEVEL } from '../../const'
@@ -162,7 +162,7 @@ export default {
         }
     },
     components: {
-        hosjoyUpload
+        OssFileHosJoyUpload
     },
     data () {
         return {

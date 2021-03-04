@@ -134,7 +134,7 @@ export default {
             }
             // console.log(url)
             location.href = B2bUrl + 'payment/api/accounts/offline-payment-white-list/export?' +
-                url + 'access_token=' + sessionStorage.getItem('tokenB2b')
+                url + 'access_token=' + localStorage.getItem('tokenB2b')
         }
     }
 }

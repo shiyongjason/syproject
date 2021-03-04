@@ -1,10 +1,9 @@
 // import { deepCopy } from '@/utils/utils'
 import { cloneDeep } from 'lodash'
-// 根据后端返回的URI，生成router
-export const makeMenus = (Route, Data) => {
-    // const tempRoute = deepCopy(Route)
+
+const makeMenusReal = (Route, Data) => {
     const tempRoute = cloneDeep(Route)
-    return tempRoute.filter(value => {
+    const result = tempRoute.filter(value => {
         if (value.path === '') {
             return true
         }
@@ -12,10 +11,24 @@ export const makeMenus = (Route, Data) => {
         // [{url:url,authCode:authCoe}] 匹配 val
         const hasAuth = Data.filter(val => val.url == value.path).length > 0
         if (value.children) {
-            value.children = makeMenus(value.children, Data)
+            value.children = makeMenusReal(value.children, Data)
         }
         return hasAuth
     })
+    return result
+}
+
+// 根据后端返回的URI，生成router
+export const makeMenus = (Route, Data) => {
+    const result = makeMenusReal(Route, Data)
+    result.push({
+        path: '*',
+        meta: {
+            isMenu: false
+        },
+        redirect: '/403'
+    })
+    return result
 }
 
 // 拍平后端返回的权限数据

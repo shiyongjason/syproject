@@ -1,6 +1,5 @@
 <template>
     <div class="project-wrap">
-
         <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
             <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
                 <template v-for="item in tabs">
@@ -65,9 +64,9 @@
                 </el-form-item>
 
                 <div style="margin-top:5px">附件：</div>
-                <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                <OssFileHosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
                     <!-- <el-button type="primary">上 传</el-button> -->
-                </hosjoyUpload>
+                </OssFileHosjoyUpload>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="onColseSignOrLoan">取消</h-button>
@@ -85,7 +84,7 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 
 export default {
@@ -100,7 +99,7 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom, hosjoyUpload, ProjectOrderTab
+        projectCom, datacolCom, approveCom, OssFileHosjoyUpload, ProjectOrderTab
     },
     data () {
         return {

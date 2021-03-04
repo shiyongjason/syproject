@@ -168,9 +168,11 @@
                             <span v-for="(item,index) in getAttachment(item.attachment)" :key="index" class="posrtv">
                                 <template v-if="item&&item.fileUrl">
                                     <i class="el-icon-document"></i>
-                                    <a :href="item.fileUrl" target="_blank">
-                                        <font>{{item.fileName}}</font>
-                                    </a>
+                                    <downloadFileAddToken isPreview
+                                                          :file-name="item.fileName"
+                                                          :file-url="item.fileUrl"
+                                                          :a-link-words="item.fileName"
+                                                          is-type="main" />
                                 </template>
                             </span>
                         </el-card>
@@ -195,7 +197,6 @@
     </div>
 </template>
 <script>
-// import { findProducts, findBossSource, changeSpustatus, getBrands } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import filters from '@/utils/filters.js'
@@ -204,6 +205,7 @@ import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { TYPE_LIST, PROCESS_LIST, STATUS_LIST, DEVICE_LIST, UPSTREAM_LIST } from '../const'
 import * as Auths from '@/utils/auth_const'
 import { interfaceUrl } from '@/api/config'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
     name: 'projectlist',
     data () {
@@ -327,7 +329,7 @@ export default {
         }
     },
     components: {
-        projectDrawer, hosJoyTable
+        projectDrawer, hosJoyTable, downloadFileAddToken
     },
     computed: {
         pickerOptionsStart () {
