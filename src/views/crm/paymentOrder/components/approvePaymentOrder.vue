@@ -78,7 +78,7 @@
                                     </el-radio-group>
                                 </el-form-item>
                             </p>
-                            <template v-if="formData.supplierPaymentType">
+                            <template v-if="formData.dealerCooperationMethod">
                                 <p>
                                     <span>经销商预付款：</span>
                                     {{downPaymentAmount | fundMoneyHasTail}}元
