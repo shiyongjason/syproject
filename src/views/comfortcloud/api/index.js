@@ -675,3 +675,23 @@ export function getCloudMerchantProductOrderList (params) {
 export function getCloudMerchantProductOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/order/detail', { params })
 }
+
+// 获取抢购活动信息
+export function getMerchantPurchase (params) {
+    return axios.get(iotUrl + '/mall/boss/seckill-activity', { params })
+}
+
+// 新建抢购活动
+export function createMerchantPurchase (params) {
+    return axios.post(iotUrl + '/mall/boss/seckill-activity', params)
+}
+
+// 获取某个抢购活动信息
+export function getMerchantPurchaseDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/seckill-activity/' + params.id)
+}
+
+// 失效某个抢购活动
+export function disableMerchantPurchase (params) {
+    return axios.put(iotUrl + '/mall/boss/seckill-activity', params)
+}
