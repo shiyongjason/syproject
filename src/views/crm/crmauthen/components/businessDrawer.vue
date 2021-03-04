@@ -201,8 +201,7 @@
                             <el-form-item label="企业名称：">
                                 <p> {{authenticationDetail.corporationName ? authenticationDetail.corporationName : '-'}}</p>
                             </el-form-item>
-                            <el-form-item label="统一社会信用代码：">
-                                <p> {{authenticationDetail.unifiedSocialCreditCode ? authenticationDetail.unifiedSocialCreditCode : '-'}}</p>
+                            <el-form-item label="统一社会信用代码：">                                <p> {{authenticationDetail.unifiedSocialCreditCode ? authenticationDetail.unifiedSocialCreditCode : '-'}}</p>
                             </el-form-item>
                             <el-form-item label="法人姓名：">
                                 <p> {{authenticationDetail.legalPersonName ? authenticationDetail.legalPersonName : '-'}}</p>
@@ -212,17 +211,14 @@
                             </el-form-item>
                             <el-form-item label="营业执照：">
                                 <div class="people-id" v-if="authenticationDetail.businessLicensePhoto">
-                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.businessLicensePhoto" :preview-src-list="[authenticationDetail.businessLicensePhoto]" v-if="authenticationDetail.businessLicensePhoto">
-                                    </el-image>
+                                    <elImageAddToken v-if="authenticationDetail.businessLicensePhoto" :file-url="authenticationDetail.businessLicensePhoto"/>
                                 </div>
                                 <span v-else>-</span>
                             </el-form-item>
                             <el-form-item label="法人身份证：">
                                 <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">
-                                    <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">
-                                    </el-image>
-                                    <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">
-                                    </el-image>
+                                    <elImageAddToken v-if="authenticationDetail.certPhotoA" :file-url="authenticationDetail.certPhotoA"/>
+                                    <elImageAddToken v-if="authenticationDetail.certPhotoB" :file-url="authenticationDetail.certPhotoB"/>
                                 </div>
                                 <span v-else>-</span>
                             </el-form-item>
@@ -325,6 +321,8 @@ import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMe
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
 import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
+import OssFileUtils from '@/utils/OssFileUtils'
+import elImageAddToken from '@/components/elImageAddToken'
 
 export default {
     name: 'businessdrawer',
@@ -420,7 +418,8 @@ export default {
         }
     },
     components: {
-        HAutocomplete
+        HAutocomplete,
+        elImageAddToken
     },
     computed: {
         ...mapState({
@@ -457,6 +456,15 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        srcList (collect) {
+            async function temp () {
+                for (let collectElement of collect) {
+                    collectElement = await OssFileUtils.getUrl(collectElement)
+                }
+            }
+            temp()
+            return collect
+        },
         onChangeCheckbox (b, key) {
             if (!b) {
                 this.businessType[key] = ''

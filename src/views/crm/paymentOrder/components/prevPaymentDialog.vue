@@ -38,14 +38,14 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="上传上游支付凭证：" prop="payVouchers">
-                <hosjoyUpload
+                <OssFileHosjoyUpload
                               v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=9
                               :limit=9 :action='action' :uploadParameters='uploadParameters'
                               style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
-                </hosjoyUpload>
+                </OssFileHosjoyUpload>
                 <p class="tips">支持扩展名：jpg.png...</p>
             </el-form-item>
         </el-form>
@@ -58,14 +58,14 @@
 
 <script>
 import { getPrevPayDetail, updatePrevPayPass } from '@/views/crm/paymentOrder/api'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 
 export default {
     name: 'prevPaymentDialog',
     components: {
-        hosjoyUpload
+        OssFileHosjoyUpload
     },
     props: {
         isOpen: {

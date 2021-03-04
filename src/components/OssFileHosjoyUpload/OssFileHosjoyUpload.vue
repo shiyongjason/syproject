@@ -9,7 +9,7 @@
                             <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
                         </div>
                     </div>
-                    <!-- TODO:在tab切换存在一开始有数据，图片渲染不出来情况 暂时父组件用v-if控制-->
+                    <!-- TODO: 这块功能还未涉及到，已经更新了对应代码 没有场景用到，可能会有bug-->
                     <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
                         <img :src="pdfbase">
                     </div>
@@ -22,7 +22,8 @@
                     <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.doc') != -1||(item.fileUrl).indexOf('.docx') != -1||(item.fileUrl).indexOf('.word') != -1">
                         <img :src="worldbase">
                     </div>
-                    <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
+<!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
+                    <elImageAddToken  v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
                 </div>
             </template>
         </template>
@@ -30,9 +31,10 @@
             <span v-for="(item,index) in fileList" :key="index" class="posrtv">
                 <template v-if="item&&item.fileUrl">
                     <i class="el-icon-document"></i>
-                    <a :href="item.fileUrl" target="_blank">
-                        <font>{{item.fileName}}</font>
-                    </a>
+<!--                    <a src="item.fileUrl" target="_blank">-->
+<!--                        <font>{{item.fileName}}</font>-->
+<!--                    </a>-->
+                    <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
                     <div class="abs">
                         <i class="el-icon-circle-close" @click="remove(index)"></i>
                     </div>
@@ -40,8 +42,8 @@
             </span>
         </template>
         <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
-            <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
-                :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError'>
+            <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
+                       :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
                 <!-- 默认插槽 -->
                 <slot>
                     <div class="default-upload">
@@ -54,8 +56,6 @@
                 </slot>
                 <!-- 提示说明文字 -->
                 <slot name="tip"></slot>
-                <!-- 上传进度 -->
-                <!-- <el-progress v-if="progressFlag&&showProgress" type="dashboard" :percentage="uploadPercent" :width='110' :stroke-width="5" color="#FF7A45" class="uploadprogress"></el-progress> -->
             </el-upload>
 
         </div>
@@ -70,8 +70,11 @@
 </template>
 
 <script>
+import OssFileUtils from '@/utils/OssFileUtils'
+import elImageAddToken from '@/components/elImageAddToken'
+import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
-    name: 'HosJoyUpload',
+    name: 'OssFileHosjoyUpload',
     props: {
         value: Array, // 双向绑定的list
         limit: { type: Number, default: 1000 }, // 最大允许上传个数，勿用
@@ -80,17 +83,17 @@ export default {
         uploadParameters: { type: Object, default () { return {} } }, // 上传时附带的额外参数同el-upload 的 data
         showPreView: { type: Boolean, default: true }, // 是否展示上传的图片
         showFileList: { type: Boolean, default: false }, // 是否显示已上传文件列表
-        action: { type: String, default: '' }, // 上传的地址
+        // action: { type: String, default: '' }, // 上传的地址
         fileSize: { type: Number, default: 100 }, // 限制文件大小
         showAsFileName: { type: Boolean, default: false }, // 文件名形式显示
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
         accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' } // 上传的类型
-
     },
-    // components: { hosjoyListPreView },
+    components: { elImageAddToken, downloadFileAddToken },
     data () {
         return {
+            successFileTemp: {},
             isBeyond: true,
             haveslot: false,
             deleteVisible: false,
@@ -128,33 +131,23 @@ export default {
             this.progressFlag = true
             this.uploadPercent = Math.floor(event.percent)
         },
-        handleSuccess (response, file, fileList) {
+        async handleSuccess (response, file, fileList) {
             let obj = {
-                fileName: response.data.fileName,
-                fileUrl: response.data.accessUrl
+                fileName: this.successFileTemp.name,
+                fileUrl: this.successFileTemp.url
             }
-            if (typeof obj === 'object') {
-                setTimeout(() => {
-                    let temp = []
-                    temp.push(obj)
-                    // fix add 'empty'
-                    temp.filter(item => {
-                        return (typeof item === 'object')
-                    })
-                    temp.map(item => {
-                        if (this.fileList.length < this.fileNum) {
-                            this.fileList.push(item)
-                        } else {
-                            this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
-                        }
-                    })
-                    this.uploadPercent = 100
-                    this.progressFlag = false
-                    this.loading = false
-                    this.$emit('successCb')
-                    this.$emit('successArg', obj)
-                }, 500)
-            }
+            setTimeout(() => {
+                if (this.fileList.length < this.fileNum) {
+                    this.fileList.push(obj)
+                } else {
+                    this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
+                }
+                this.uploadPercent = 100
+                this.progressFlag = false
+                this.loading = false
+                this.$emit('successCb')
+                this.$emit('successArg', obj)
+            }, 500)
         },
         doRemove () {
             this.fileList.splice(this.index, 1)
@@ -176,21 +169,14 @@ export default {
             this.$message.error(`最大允许上传个数：${this.limit}`)
         },
         handleCheckedSize (files, fileList) {
-            this.isBeyond = true
-            // 判断是否符合要求
-            if (files.size / (1024 * 1024) < this.fileSize) {
-                this.isBeyond = false
-            } else {
-                this.isBeyond = true
-            }
+            this.isBeyond = files.size / (1024 * 1024) >= this.fileSize
         },
         getFileType (file) {
             let startIndex = file.lastIndexOf('.')
-            if (startIndex != -1) {
+            if (startIndex !== -1) {
                 return file.substring(startIndex + 1, file.length).toLowerCase()
-            } else {
-                return ''
             }
+            return ''
         },
         beforeAvatarUpload (file) {
             let arr = this.accept.split(',')
@@ -207,22 +193,27 @@ export default {
                 return false
             }
         },
-        open (index, item = null) {
+        async open (index, item = null) {
             if ((item.fileName).indexOf('.png') > -1 || (item.fileName).indexOf('.jpg') > -1 || (item.fileName).indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
-                this.previewSrcList = tempArr.map(item => {
-                    return item.fileUrl
-                })
+                for (let tempArrElement of tempArr) {
+                    tempArrElement = await OssFileUtils.getUrl(tempArrElement.fileUrl)
+                }
+                this.previewSrcList = tempArr
                 const pre = this.$refs[`preview_${index}`]
                 if (pre && pre[0]) {
                     pre[0].clickHandler()
                 }
             } else {
-                window.open(item.fileUrl)
+                let url = await OssFileUtils.getUrl(item.fileUrl)
+                window.open(url)
             }
+        },
+        async uploadFile (params) {
+            this.successFileTemp = await OssFileUtils.uploadFile(params.file)
         }
     },
     mounted () {
@@ -233,7 +224,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped lang="scss">
 /deep/.el-loading-spinner .circular {
     width: 33px;
     height: 33px;
