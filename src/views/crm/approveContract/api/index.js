@@ -9,7 +9,10 @@ export const approvalContent = (params) => axios.post('/project/api/contract-app
 //
 export const getCheckHistory = (params) => axios.get('/project/api/contract-approval/check-history', { params })
 // 查询对比合同内容
-export const getDiffApi = (params) => axios.get('/project/api/contract-approval/compare', { params })
+export const getDiffApi = (params) => axios.get('/project/api/contract-approval/compare')
 
 // 查询对比合同内容
 export const getPurchaseOrderList = (params) => axios.get(`/project/api/purchase-order-contracts/list`, { params })
+
+// 天眼查列表搜索
+export const getTYCList = (params) => axios.get(`/memeber/api/tianyancha/searches`, { params })
