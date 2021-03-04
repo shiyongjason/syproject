@@ -97,10 +97,13 @@
         </div>
         <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
-        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='45%' :wrapperClosable="false" :beforeClose="handleClose">
+        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
                 <div class="seal_records" v-for="(item,index) in editHistory" :key="index">
-                    <div class="seal_records-tit">审批人：<em>{{item.operator}}</em></div>
+                    <div class="seal_records-tit">
+                        <div>审批人：<em>{{item.operator}}</em></div>
+                        <div class="seal_records-times">{{moment(item.operationTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
+                    </div>
                     <div>{{item.operationName}}{{item.operationContent}}</div>
                     <div class="seal_records-remark">备注：{{item.approvalRemark}}</div>
                 </div>
@@ -117,12 +120,14 @@ import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import { getSeals } from './api/index'
+import moment from 'moment'
 export default {
     name: 'purchaseOrder',
     data () {
         return {
             drawerPur: false,
             Auths,
+            moment,
             queryParams: {
                 purchaseOrderNo: '',
                 poName: '',
@@ -294,6 +299,8 @@ export default {
 .seal_records {
     margin-bottom: 10px;
     &-tit {
+        display: flex;
+        justify-content: space-between;
         em {
             font-style: normal;
             color: #2196f3;
