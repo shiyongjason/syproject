@@ -99,14 +99,19 @@
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
+                <h4 class="purchaseName">采购单钉钉审批流程 <div style="color:#ff7a45">{{purchaseName}}</div>
+                </h4>
                 <div class="seal_records" v-for="(item,index) in editHistory" :key="index">
                     <div class="seal_records-tit">
-                        <div>审批人：<em>{{item.operator}}</em></div>
+                        <div><em>{{item.operator}}</em>
+                            <div>{{item.operationName}}{{item.operationContent}}</div>
+                        </div>
                         <div class="seal_records-times">{{moment(item.operationTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
                     </div>
-                    <div>{{item.operationName}}{{item.operationContent}}</div>
+
                     <div class="seal_records-remark">备注：{{item.approvalRemark}}</div>
                 </div>
+                <div v-if="editHistory.length==0">暂无审批记录</div>
             </template>
         </h-drawer>
     </div>
@@ -162,7 +167,8 @@ export default {
             openStatus: PurchaseOrderDialogStatus.enter.status,
             purchaseOrderRow: {},
             purchaseOrderDialogParams: {},
-            editHistory: []
+            editHistory: [],
+            purchaseName: ''
         }
     },
     components: {
@@ -210,6 +216,7 @@ export default {
     methods: {
         async onApproveRecords (val) {
             this.drawerPur = true
+            this.purchaseName = val.poName
             const { data } = await getSeals(val.id)
             console.log(data)
             this.editHistory = data
@@ -289,6 +296,9 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+.purchaseName {
+    margin-bottom: 20px;
+}
 .eltagtop {
     margin-bottom: 10px;
 }
