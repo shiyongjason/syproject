@@ -106,13 +106,13 @@
                     <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row,3)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
-                    <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.abolished==0">废止</h-button>
+                    <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
 
                 </template>
             </hosJoyTable>
         </div>
 
-        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='550px' :beforeClose="() => drawerVisible=false">
+        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='550px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <template #connect>
                 <div slot="title">审核记录</div>
                 <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
@@ -144,6 +144,12 @@
                                 <span class="operationcontent-css">
                                     <font>{{item.operationContent}}</font>
                                 </span>
+                            </template>
+                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
+                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex">
+                                    <p style="color: #ff7a45;">{{obj.fileName}}</p>
+                                    <p style="color: #ff7a45;">备注：{{item.approvalRemark}}</p>
+                                </div>
                             </template>
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
@@ -191,7 +197,7 @@ const _queryParams = {
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
-const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }]
+const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
 export default {
     name: 'contractSigningManagement',
     components: { hosJoyTable, diffDialog },
@@ -403,7 +409,7 @@ export default {
             }
             this.getContractStatic()
         },
-        approveContract (item) {
+        approveContract (item, val) {
             // 这里根据 是否为 模板合同 来进入上传页面
             // 1：有模板 2：无模板
             if (item.contractSignType == 2) {
@@ -469,6 +475,25 @@ export default {
     text-align: center;
     border-radius: 6px;
 }
+.history-css-flex {
+    margin-bottom: 10px;
+}
+.name {
+    color: #169bd5;
+}
+.operationcontent-css {
+    font {
+        color: #ff7a45;
+        margin: 0 4px;
+    }
+}
+.history-css-right {
+    flex: 0 0 198px;
+    font-size: 13px;
+    color: #a7a5a5;
+    margin-left: 10px;
+    text-align: right;
+}
 .contentdrawerbox {
     /deep/ .el-drawer__header {
         border-bottom: 1px solid #eee;
@@ -485,6 +510,7 @@ export default {
             justify-content: space-between;
             margin-top: 15px;
             align-items: baseline;
+            margin-bottom: 8px;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;

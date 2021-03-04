@@ -6,14 +6,14 @@
             <NavMenuHead @editPassword="editPasswordShow" />
         </el-header>
         <el-container class="container clearfix">
-            <el-aside class="aside" :class="isCollapse?'close':'open'">
+            <el-aside class="aside" :class="isCollapse?'close hidden-xs-only':'open hidden-xs-only'">
                 <NavMenuAside @back-event="menuBack" />
             </el-aside>
             <el-main class="content" v-loading="loading" element-loading-text="处理中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.5)">
-                <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container">
+                <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container hidden-xs-only">
                     <H-tags></H-tags>
                 </div>
-                <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container__height"></div>
+                <div :class="isCollapse?'minLeft':'maxLeft'" class="tabs-container__height hidden-xs-only"></div>
                 <keep-alive :include="cachedInclude" :exclude="cachedExclude">
                     <router-view></router-view>
                 </keep-alive>

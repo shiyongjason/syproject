@@ -34,14 +34,14 @@ let requestLoading = 0
 axios.interceptors.request.use(
     (config) => {
         requestLoading++
-        const refreshToken = sessionStorage.getItem('refreshToken')
+        const refreshToken = localStorage.getItem('refreshToken')
         // 如果是B2b请求 token不一样
         if (config.url.indexOf(B2bUrl) != -1) {
-            const token = sessionStorage.getItem('tokenB2b')
+            const token = localStorage.getItem('tokenB2b')
             token && (config.headers['Authorization'] = `Bearer ${token}`)
             refreshToken && (config.headers['Refresh-Token'] = `${refreshToken}`)
         } else {
-            const token = sessionStorage.getItem('token')
+            const token = localStorage.getItem('token')
             token && (config.headers['Authorization'] = `Bearer ${token}`)
             refreshToken && (config.headers['RefreshToken'] = `${refreshToken}`)
         }
@@ -62,8 +62,8 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     (response) => {
         requestLoading--
-        response.headers.new_access_token && sessionStorage.setItem('token', response.headers.new_access_token)
-        response.headers.new_refresh_token && sessionStorage.setItem('refreshToken', response.headers.new_refresh_token)
+        response.headers.new_access_token && localStorage.setItem('token', response.headers.new_access_token)
+        response.headers.new_refresh_token && localStorage.setItem('refreshToken', response.headers.new_refresh_token)
         cancelRequst(response.config)// 请求响应后，把已经完成的请求从requestArr中移除
         // TODO 处理 老boss用户不存在不提示错误直接进入首页
         const config = response.config

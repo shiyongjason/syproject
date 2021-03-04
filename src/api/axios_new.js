@@ -9,7 +9,7 @@ const instance = axios.create({
 })
 instance.interceptors.request.use(async function (config) {
     // 登录token带到请求的头部中，用于校验登录状态
-    const token = sessionStorage.getItem('tokenB2b')
+    const token = localStorage.getItem('tokenB2b')
     if (token) {
         config.headers['Authorization'] = 'Bearer ' + token
     } else {
@@ -24,10 +24,10 @@ instance.interceptors.request.use(async function (config) {
             'client_secret': 'boss',
             'scope': 'boss'
         }))
-        sessionStorage.setItem('tokenB2b', data.access_token)
+        localStorage.setItem('tokenB2b', data.access_token)
         config.headers['Authorization'] = 'Bearer ' + data.access_token
     }
-    const refreshToken = sessionStorage.getItem('refreshToken')
+    const refreshToken = localStorage.getItem('refreshToken')
     token && (config.headers['Authorization'] = `Bearer ${token}`)
     refreshToken && (config.headers['Refresh-Token'] = `${refreshToken}`)
     // 以下两个字段是用于埋点的

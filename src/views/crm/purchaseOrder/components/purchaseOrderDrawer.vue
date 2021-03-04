@@ -164,10 +164,10 @@
                                             <p v-if="item.changeResult === PurchaseOrderDict.changeResult.list[1].key">
                                                 驳回原因：{{item.remark || '-'}}
                                             </p>
-                                            <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
+                                            <!-- <p v-if="item.changeResult !== PurchaseOrderDict.changeResult.list[0].key &&
                                                         item.changeResult !== PurchaseOrderDict.changeResult.list[1].key">
                                                 <h-button table @click="purchaseOrderChangeConfirm">确认变更</h-button>
-                                            </p>
+                                            </p> -->
                                             <p v-else>
                                                 <h-button table @click="purchaseOrderWatchConfirm(item.id)">查看变更</h-button>
                                             </p>
@@ -235,9 +235,9 @@
 
                     <div class="drawer-footer">
                         <div class="drawer-button">
-                            <h-button type="assist" @click="purchaseOrderConfirm" v-if="purchaseOrderDetail.purchaseOrder.status === PurchaseOrderDict.status.list[1].key">
+                            <!-- <h-button type="assist" @click="purchaseOrderConfirm" v-if="purchaseOrderDetail.purchaseOrder.status === PurchaseOrderDict.status.list[1].key">
                                 确认采购单
-                            </h-button>
+                            </h-button> -->
                             <!--                        <h-button type="primary">审核通过</h-button>-->
                             <h-button type="default" @click="handleClose">取消</h-button>
                         </div>
@@ -258,6 +258,7 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
+import imageAddToken from '@/components/imageAddToken'
 export default {
     name: 'purchaseOrderDrawer',
     props: {
@@ -289,7 +290,7 @@ export default {
             PaymentOrderDict
         }
     },
-    components: { PureCollapseTr },
+    components: { PureCollapseTr, imageAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -355,6 +356,7 @@ export default {
             font-weight: 400;
             cursor: default;
             line-height: 15px;
+            width: 100%;
         }
     }
 

@@ -93,7 +93,7 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ossBucket = 'hosjoy-private'
-        ossOldBucket = 'hosjoy-oss'
+        ossOldBucket = 'hosjoy-hbp'
         ossRegion = 'oss-cn-hangzhou'
         ossAliyun = 'https://oss-aliyun.hosjoy.com/'
         break
@@ -109,7 +109,7 @@ switch (env) {
         iotUrl = 'https://iot.hosjoy.com'
         iotZsUrl = 'https://iot-proxy.hosjoy.com'
         ossBucket = 'hosjoy-private'
-        ossOldBucket = 'hosjoy-oss'
+        ossOldBucket = 'hosjoy-hbp'
         ossRegion = 'oss-cn-hangzhou'
         ossAliyun = 'https://oss-aliyun.hosjoy.com/'
         break

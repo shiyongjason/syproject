@@ -1,5 +1,8 @@
 <template>
     <div class="project-wrap">
+
+        <!-- <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
+             -->
         <h-drawer title="项目详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
@@ -12,71 +15,47 @@
                 <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
                 <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
                 <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
-                <approveCom ref="finalCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+                <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+                <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
+
+                <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
+                    <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
+                        <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核' && status !== 3">
+                            <el-radio-group v-model="statusForm.result">
+                                <el-radio :label=1>通过</el-radio>
+                                <el-radio :label=0>不通过</el-radio>
+                                <el-radio :label=2>退回</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态' && status !== 3">
+                            <el-radio-group v-model="statusForm.afterStatus">
+                                <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="说明：" prop="remark">
+                            <el-input type="textarea" placeholder="请输入说明" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <h-button @click="dialogVisible = false">取消</h-button>
+                        <h-button type="primary" @click="onUpdateAudit">{{status === 3? '确定关闭' : '确定'}}</h-button>
+                    </span>
+                </el-dialog>
             </template>
             <template #btn>
-                <div class="drawer-footer">
-                    <div class="drawer-button">
-                        <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
-                            <h-button @click="onCallBack()">打回补充</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_SHENPI)&&status==2">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_APPROVED)&&status==12&&activeName==='2'&&form.docAfterStatus==2">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN)&&status==4&&activeName==='3'">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FINAL)&&status==11&&activeName==='4'">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_QIANYUE)&&status==6">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_FANGKUAN)&&status==7">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_HUIKUAN)&&status==8">
-                            <h-button type="assist" @click="onAuditstatus(statusList[status-1])">{{status&&statusList[status-1][status]}}</h-button>
-                        </template>
-                        <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_CHOINGZHI)">
-                            <h-button type="create" v-if="isShowRest(statusList[status-1])" @click="onReststatus(status)">重置状态</h-button>
-                        </template>
-                        <h-button @click="cancelForm">取消</h-button>
-                        <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11)" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
-                    </div>
-
+                <div class="drawer-button">
+                    <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
+                        <h-button @click="onCallBack()">打回补充</h-button>
+                    </template>
+                    <template v-for="(item, index) in operateBtnList">
+                        <h-button type="assist" @click="onAuditstatus(status)" :key="index" v-if="item.isShow">{{item.name}}</h-button>
+                    </template>
+                    <h-button @click="cancelForm">取消</h-button>
+                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11) && activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
                 </div>
             </template>
         </h-drawer>
-        <!-- <el-drawer title="" :visible.sync="drawer" :with-header="false" direction="rtl" size='40%' :before-close="handleClose" :wrapperClosable=false>
-        </el-drawer> -->
-        <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
-            <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
-                <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核'">
-                    <el-radio-group v-model="statusForm.result">
-                        <el-radio :label=1>通过</el-radio>
-                        <el-radio :label=0>不通过</el-radio>
-                        <el-radio :label=2>退回</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="重置为：" prop="afterStatus" v-if="aduitTitle=='重置状态'">
-                    <el-radio-group v-model="statusForm.afterStatus">
-                        <el-radio :label=item.key v-for="item in statusType" :key="item.key">{{item.value}}</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="说明：" prop="remark">
-                    <el-input type="textarea" placeholder="请输入说明" v-model.trim="statusForm.remark" maxlength="200" :rows="5" show-word-limit></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <h-button @click="dialogVisible = false">取消</h-button>
-                <h-button type="primary" @click="onUpdateAudit">确定</h-button>
-            </span>
-        </el-dialog>
         <!-- 签约和放款使用弹窗 -->
         <el-dialog :title="signOrLoanVisibleTitle" :visible.sync="signOrLoanVisible" width="35%" :before-close="onColseSignOrLoan" :modal=false :close-on-click-modal=false>
             <el-form ref="signOrLoanDialog" :model="signOrLoanForm" :rules="signOrLoanRules" label-width="100px" class="el-dialog__form">
@@ -91,9 +70,9 @@
                 </el-form-item>
 
                 <div style="margin-top:5px">附件：</div>
-                <hosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
+                <OssFileHosjoyUpload v-model="signOrLoanForm.attachment" :fileSize=20 :fileNum=100 :limit=15 :action='action' :uploadParameters='uploadParameters' style="margin:0px 0 20px 5px">
                     <!-- <el-button type="primary">上 传</el-button> -->
-                </hosjoyUpload>
+                </OssFileHosjoyUpload>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="onColseSignOrLoan">取消</h-button>
@@ -111,7 +90,7 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
 import { updateAudit, saveStatus, signAudit, downLoadZip } from '../api/index'
 import { NEW_STATUS_TYPE } from '../../const'
-import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl } from '@/api/config'
 
 export default {
@@ -126,15 +105,10 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom, hosjoyUpload, ProjectOrderTab
+        projectCom, datacolCom, approveCom, OssFileHosjoyUpload, ProjectOrderTab
     },
     data () {
         return {
-            options: {
-                direction: 'rtl',
-                size: '40%',
-                wrapperClosable: false
-            },
             showPacking: null,
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
@@ -161,7 +135,6 @@ export default {
                 { key: '5', value: '项目采购单' }
             ],
             activeName: '1',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '材料审核' }, { 4: '立项结果提交' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }, { 11: '终审结果提交' }, { 12: '材料审核' }], // 这个地方最好机动 不然不好控制权限
             newstatusType: NEW_STATUS_TYPE,
             dialogVisible: false,
             aduitTitle: '',

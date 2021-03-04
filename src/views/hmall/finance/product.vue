@@ -225,7 +225,7 @@ export default {
             for (let key in this.queryParams) {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
-            url += 'access_token=' + sessionStorage.getItem('token')
+            url += 'access_token=' + localStorage.getItem('token')
             location.href = B2bUrl + 'order/api/boss/orders/finance-products/export?' + url
         },
         async findProductCategoryAsync () {

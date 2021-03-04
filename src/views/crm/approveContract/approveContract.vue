@@ -49,74 +49,76 @@
                 <el-button type="primary" @click="onSure">确定{{dialog.title}}</el-button>
             </span>
         </el-dialog>
-        <el-drawer class="contentdrawerbox" size="550px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
-            <div slot="title">审核记录</div>
-            <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-            <div style="text-align: center;font-size: 18px;">{{detailRes.contractStatus == 2?'待分财审核':detailRes.contractStatus == 4?'待风控审核':detailRes.contractStatus == 6?'待法务审核':''}}</div>
-            <div class="history-css">
-                <div v-if="historyList&&historyList.length==0">暂无数据</div>
-                <template v-else v-for="(item,index) in historyList">
-                    <div class="history-css-flex" :key="index">
-                        <!-- signStatus==6下一步 -->
-                        <div v-if="item.signStatus==6" class="history-css-left">
-                            <span class="name">{{item.operator}} </span>
-                            <span style="">{{item.operationName}} </span>
-                            <span class="operationcontent-css">
-                                <font>{{item.operationContent}}</font>
-                            </span>
-                        </div>
-                        <div v-else class="history-css-left">
-                            <span class="name">{{item.operator}} </span>
-                            <span>{{item.operationName}}</span>
-                            <template v-if="item.operationName == '编辑了'">
-                                <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
-                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                    从<font>
-                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
-                                            :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
-                                    </font>
-                                    变为<font>
-                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
-                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
-                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
-                                        </template>
-                                        <template v-else>
-                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                        </template>
-                                    </font>
-                                </span>
-                                <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
-                            </template>
-                            <template v-else-if="item.operationName == '修订了'">
-                                <font style="margin: 0 4px;">合同</font>
-                                <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
-                            </template>
-                            <template v-else>
+        <h-drawer class="contentdrawerbox" size="600px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
+            <template #connect>
+                <div slot="title">审核记录</div>
+                <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
+                <div style="text-align: center;font-size: 18px;">{{detailRes.contractStatus == 2?'待分财审核':detailRes.contractStatus == 4?'待风控审核':detailRes.contractStatus == 6?'待法务审核':''}}</div>
+                <div class="history-css">
+                    <div v-if="historyList&&historyList.length==0">暂无数据</div>
+                    <template v-else v-for="(item,index) in historyList">
+                        <div class="history-css-flex" :key="index">
+                            <!-- signStatus==6下一步 -->
+                            <div v-if="item.signStatus==6" class="history-css-left">
+                                <span class="name">{{item.operator}} </span>
+                                <span style="">{{item.operationName}} </span>
                                 <span class="operationcontent-css">
                                     <font>{{item.operationContent}}</font>
                                 </span>
-                            </template>
+                            </div>
+                            <div v-else class="history-css-left">
+                                <span class="name">{{item.operator}} </span>
+                                <span>{{item.operationName}}</span>
+                                <template v-if="item.operationName == '编辑了'">
+                                    <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
+                                        <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                        从<font>
+                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                                :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                        </font>
+                                        变为<font>
+                                            <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
+                                            <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                                <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                                    :preview-src-list="[imgItem.fileUrl]"></el-image>
+                                            </template>
+                                            <template v-else>
+                                                <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                            </template>
+                                        </font>
+                                    </span>
+                                    <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                                </template>
+                                <template v-else-if="item.operationName == '修订了'">
+                                    <font style="margin: 0 4px;">合同</font>
+                                    <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                                </template>
+                                <template v-else>
+                                    <span class="operationcontent-css">
+                                        <font>{{item.operationContent}}</font>
+                                    </span>
+                                </template>
+                            </div>
+                            <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                         </div>
-                        <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
-                    </div>
-                    <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
-                        {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
-                    </div>
-                </template>
-
-            </div>
-            <div class="history-bttom">
+                        <div class="approvalRemark" v-if="item.approvalRemark" :key="index+'approvalRemark'">
+                            {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template #btn>
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
-            <div class="approvalcontract-layout-left">
-                <h1>字段/自定义合同条款修订</h1>
-                <div class="setarea" v-if="currentKey">
-                    <!-- v-if 法务 detailRes.contractStatus == 6-->
-                    <!-- <template>
+        <h-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+            <template #connect>
+                <div class="approvalcontract-layout-left">
+                    <h1>字段/自定义合同条款修订</h1>
+                    <div class="setarea" v-if="currentKey">
+                        <!-- v-if 法务 detailRes.contractStatus == 6-->
+                        <!-- <template>
                             <el-dropdown @command="handleCommand">
                                 <span class="el-dropdown-link">
                                     {{currentKey.paramName}}<i class="el-icon-arrow-down el-icon--right"></i> ：
@@ -128,7 +130,7 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </template> -->
-                    <!-- <el-form :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                        <!-- <el-form :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                             <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                 <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
                                     <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
@@ -150,23 +152,24 @@
                             </el-form-item>
                         </el-form>
 
-                        <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
-                            accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
-                            <i class="el-icon-upload"></i>
-                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
-                            <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
-                        </hosjoyUpload>
-                    </p>
-                    <h-button v-if="currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
-                    <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
+                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
+                                accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
+                                <i class="el-icon-upload"></i>
+                                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
+                                <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
+                            </hosjoyUpload>
+                        </p>
+                        <h-button v-if="currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
+                        <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
+                    </div>
+                    <div class="tips">
+                        <div><b>注意事项：</b></div>
+                        <p>1、点击保存，则会记录修订记录，并保存为最新的合同文档；</p>
+                        <p>2、暂不审核，不会撤销字段修订记录；</p>
+                    </div>
                 </div>
-                <div class="tips">
-                    <div><b>注意事项：</b></div>
-                    <p>1、点击保存，则会记录修订记录，并保存为最新的合同文档；</p>
-                    <p>2、暂不审核，不会撤销字段修订记录；</p>
-                </div>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
         <el-dialog title="关联的采购单" :visible.sync="contentvsVisible" width="600px" class="contentvsbox">
             <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsPurchaseOrder(item)">
                 <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/163503360/a954aef4-b308-4043-b4b1-fea72116bd89.png' />
@@ -177,15 +180,19 @@
                 <el-button type="primary" @click="contentvsVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
-            <div class="vsList" v-if="contentvsDataList&&contentvsDataList.length>0">
-                <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
-            </div>
-            <div class="vsList" v-else>暂无数据</div>
-            <div class="history-bttom-css">
+        <h-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+            <template #connect>
+                <div class="vsList" v-if="contentvsDataList&&contentvsDataList.length>0">
+                    <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
+                </div>
+                <div class="vsList" v-else>暂无数据</div>
+                <div class="history-bttom-css">
+                </div>
+            </template>
+            <template #btn>
                 <h-button type="primary" @click="closevsdrawer">好的</h-button>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
     </div>
 </template>
 <script>
@@ -1194,7 +1201,6 @@ export default {
 /deep/.approvalcontract-content table td {
     // border: 1px solid #ccc;
     // border-right: 1px solid #ccc;
-
 }
 /deep/ .mce-item-table:not([border]) td {
     //  border: 1px solid #333 !important;

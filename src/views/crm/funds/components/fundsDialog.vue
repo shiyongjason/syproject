@@ -4,8 +4,8 @@
             <div class="row-filed info-img-group">
                 <span class="label">支付凭证：</span>
                 <p class="content">
-                    <span class="img-box" @click="goDetail(item.fileUrl)" :key="item.docId" v-for="item in dialogDetail.attachDocList">
-                         <img  :src="item.fileUrl" alt="">
+                    <span class="img-box" :key="item.fileUrl" v-for="item in dialogDetail.attachDocList">
+                        <imageAddToken :file-url="item.fileUrl" />
                     </span>
                 </p>
             </div>
@@ -35,9 +35,13 @@ import {
     updateServiceUnPay
 } from '../api'
 import { mapState } from 'vuex'
+import imageAddToken from '@/components/imageAddToken'
 
 export default {
     name: 'fundsDialog',
+    components: {
+        imageAddToken
+    },
     props: {
         isOpen: {
             type: Boolean,

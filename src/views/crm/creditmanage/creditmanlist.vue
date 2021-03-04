@@ -342,4 +342,7 @@ export default {
         padding: 10px;
     }
 }
+.oss-sts-download {
+    cursor: pointer;
+}
 </style>
