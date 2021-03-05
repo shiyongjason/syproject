@@ -112,7 +112,7 @@
             </hosJoyTable>
         </div>
 
-        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='550px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
+        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <template #connect>
                 <div slot="title">审核记录</div>
                 <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
@@ -273,7 +273,8 @@ export default {
             }).then(async () => {
                 await getAbolish({
                     'contractId': val.id,
-                    'phone': this.userInfo.phoneNumber
+                    'phone': this.userInfo.phoneNumber,
+                    'createBy': this.userInfo.employeeName
                 })
                 this.searchList()
             }).catch(() => {
@@ -501,7 +502,6 @@ export default {
         font-size: 18px;
     }
     /deep/.history-css {
-        padding: 0 20px;
         box-sizing: border-box;
         height: calc(100vh - 190px);
         overflow-y: scroll;
