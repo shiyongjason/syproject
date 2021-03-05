@@ -213,7 +213,7 @@ export default {
                     let beginDateVal = this.queryParams.startCreateTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000
+                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000 + 1000
                         )
                     }
                 }
@@ -237,7 +237,7 @@ export default {
                     let beginDateVal = this.form.startTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000
+                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000 + 1000
                         )
                     }
                 }
