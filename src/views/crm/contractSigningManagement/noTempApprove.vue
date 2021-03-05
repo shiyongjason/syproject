@@ -120,7 +120,6 @@ export default {
                     'approverRole': this.$route.query.role,
                     'approvalRemark': this.form.approvalRemark
                 }
-                // rejectContracts(parms)
                 this.$refs.ruleForm.validate(async (valid) => {
                     if (valid) {
                         await rejectContracts(parms)
