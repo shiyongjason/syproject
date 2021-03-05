@@ -201,7 +201,6 @@ const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财�
 export default {
     name: 'contractSigningManagement',
     components: { hosJoyTable, diffDialog },
-
     data () {
         return {
             options: {
