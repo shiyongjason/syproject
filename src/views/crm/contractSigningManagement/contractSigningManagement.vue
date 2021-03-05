@@ -149,7 +149,6 @@
                             <template v-if="item.attachDocs&&item.attachDocs.length>0">
                                 <div v-for="(obj,oindex) in item.attachDocs" :key="oindex">
                                     <p style="color: #ff7a45;">{{obj.fileName}}</p>
-
                                 </div>
                             </template>
                             <div style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
