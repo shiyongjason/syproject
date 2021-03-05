@@ -124,6 +124,7 @@
                         <div class="history-css-left">
                             <span class="name">{{item.operator}} </span>
                             <span>{{item.operationName}}</span>
+
                             <template v-if="item.operationName == '编辑了'">
                                 <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
                                     <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
@@ -148,9 +149,10 @@
                             <template v-if="item.attachDocs&&item.attachDocs.length>0">
                                 <div v-for="(obj,oindex) in item.attachDocs" :key="oindex">
                                     <p style="color: #ff7a45;">{{obj.fileName}}</p>
-                                    <p style="color: #ff7a45;">备注：{{item.approvalRemark}}</p>
+
                                 </div>
                             </template>
+                            <div style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
