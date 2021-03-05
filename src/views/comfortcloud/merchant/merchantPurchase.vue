@@ -213,7 +213,7 @@ export default {
                     let beginDateVal = this.queryParams.startCreateTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000 + 1000
                         )
                     }
                 }
@@ -222,10 +222,10 @@ export default {
         purchaseOptionsStart () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.form.startTime
+                    let beginDateVal = this.form.endTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            time.getTime() > new Date(beginDateVal).getTime()
                         )
                     }
                 }
@@ -237,7 +237,7 @@ export default {
                     let beginDateVal = this.form.startTime
                     if (beginDateVal) {
                         return (
-                            time.getTime() < new Date(beginDateVal).getTime()
+                            time.getTime() < new Date(beginDateVal).getTime() - 24 * 60 * 60 * 1000 + 1000
                         )
                     }
                 }

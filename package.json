@@ -16,7 +16,7 @@
     "@sentry/browser": "^5.21.1",
     "@sentry/integrations": "^5.21.1",
     "@tinymce/tinymce-vue": "^3.2.6",
-    "ali-oss": "^6.11.2",
+    "ali-oss": "^6.13.2",
     "app-info-parser": "^0.3.5",
     "bignumber.js": "^9.0.0",
     "blueimp-md5": "^2.18.0",
