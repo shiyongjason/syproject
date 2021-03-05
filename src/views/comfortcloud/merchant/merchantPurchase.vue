@@ -170,7 +170,7 @@ export default {
             ],
             rules: {
                 seckillName: [
-                    { required: true, message: '请输入主营产品名称', trigger: 'blur' }
+                    { required: true, message: '请输入活动名称', trigger: 'blur' }
                 ],
                 startTime: [
                     { required: true, message: '请选择活动开始时间', trigger: 'change' }
