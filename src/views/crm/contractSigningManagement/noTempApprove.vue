@@ -23,7 +23,6 @@
                     <a class="preview_btn" :href="item.fileUrl" target='_blank'>预览</a>
                     <div class="preview_btn" @click="onDelect(index)">删除</div>
                 </div>
-
                 <div class="contract-flex_bot">
                     <h-button type="primary" @click="onSubmitApprove" :disabled='contractList.length<1'>提交修订</h-button>
                 </div>
