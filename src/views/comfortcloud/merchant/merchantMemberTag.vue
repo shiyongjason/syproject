@@ -34,11 +34,13 @@
                         <el-button type="primary" @click="onAddTagName">新增标签</el-button>
                     </el-form-item>
 
-                    <div class="query-cont-row" v-for="(item,index) in form.tagDetailBos" :key="index">
-                        <el-form-item label="" :prop="'tagDetailBos.' + index" :rules="rules.value">
-                            <el-input v-model="form.tagDetailBos[index]" width='150'></el-input>
-                        </el-form-item>
-                        <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveName(index) }">删除</el-button>
+                    <div class="query-cont-row edit-tags">
+                        <div class="edit-tags-row" v-for="(item,index) in form.tagDetailBos" :key="index">
+                            <el-form-item label-width="0" label="" :prop="'tagDetailBos.' + index" :rules="rules.value">
+                                <el-input v-model="form.tagDetailBos[index]" width='80'></el-input>
+                            </el-form-item>
+                            <el-button style="align-self: flex-start;margin-left: 20px;margin-right: 20px" type="primary" @click="()=> { onRemoveName(index) }">删除</el-button>
+                        </div>
                     </div>
                 </el-form>
             </div>
@@ -52,6 +54,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { addCloudMerchantTag, deleteCloudMerchantTag, modifyCloudMerchantTag } from '../api'
+import { deepCopy } from '../../../utils/utils'
 
 export default {
     name: 'merchantMemberTag',
@@ -148,7 +151,7 @@ export default {
             })
         },
         onEdit (val) {
-            this.form = val
+            this.form = deepCopy(val)
             if (this.$refs.form) {
                 this.$refs.form.clearValidate()
             }
@@ -199,4 +202,18 @@ export default {
     /deep/.el-dialog__body {
         padding-top: 10px;
     }
+
+    .edit-tags {
+        display: flex;
+        flex-direction: row;
+        flex-wrap:  wrap;
+    }
+
+    .edit-tags-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        flex-direction: row;
+    }
+
 </style>
