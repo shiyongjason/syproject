@@ -6,26 +6,18 @@
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
                 <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="onAddTag()">+ 新建会员标签</el-button>
+                    <el-button type="primary" class="ml20" @click="onAddTag()">+ 新增会员标签</el-button>
                 </div>
             </div>
         </div>
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="title" slot-scope="scope">
-                    <p @click="onShowHome(scope.data.row)" class="colred">{{scope.data.row.title}}</p>
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantTaglist" :isShowIndex='true' @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="tagDetailBos" slot-scope="scope">
+                    <div class="tag-container">
+                        <el-tag class="tag" v-for="item in scope.data.row.tagDetailBos" :key="item">{{item}}</el-tag>
+                    </div>
                 </template>
-                <template slot="effectived" slot-scope="scope">
-                    <span :class="scope.data.row.effectived==='1'?'colred':''">{{scope.data.row.effectived==='1'?'已生效':'未生效'}}</span>
-                </template>
-                <template slot="showedTemp" slot-scope="scope">
-                    <!--                    scope.data.row.showed -->
-                    <el-switch
-                        v-model="scope.data.row.showedTemp"
-                        @change="updateCloudActive(scope.data.row)"
-                        active-color="#13ce66">
-                    </el-switch>
-                </template>
+
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
@@ -35,16 +27,16 @@
         <el-dialog title="标签编辑" :modal-append-to-body=false :append-to-body=false :close-on-click-modal='false' :visible.sync="detailDialogVisible" width="50%">
             <div class='dialogLayout'>
                 <el-form label-position="right" :rules="rules" ref="form" label-width="100px" :model="form">
-                    <el-form-item label="标签类别" prop="category">
-                        <el-input v-model="form.category" width='150'></el-input>
+                    <el-form-item label="标签类别" prop="tagCategory">
+                        <el-input v-model="form.tagCategory" width='150'></el-input>
                     </el-form-item>
-                    <el-form-item label="标签名称" prop="names">
+                    <el-form-item label="标签名称" prop="tagDetailBos">
                         <el-button type="primary" @click="onAddTagName">新增标签</el-button>
                     </el-form-item>
 
-                    <div class="query-cont-row" v-for="(item,index) in form.names" :key="index">
-                        <el-form-item label="" :prop="'names.' + index + '.value'" :rules="rules.value">
-                            <el-input v-model="item.value" width='150'></el-input>
+                    <div class="query-cont-row" v-for="(item,index) in form.tagDetailBos" :key="index">
+                        <el-form-item label="" :prop="'tagDetailBos.' + index" :rules="rules.value">
+                            <el-input v-model="form.tagDetailBos[index]" width='150'></el-input>
                         </el-form-item>
                         <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveName(index) }">删除</el-button>
                     </div>
@@ -59,33 +51,28 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { addCloudMerchantTag, deleteCloudMerchantTag, modifyCloudMerchantTag } from '../api'
 
 export default {
     name: 'merchantMemberTag',
     data () {
         return {
-            queryParams: {
-                pageNumber: 1,
-                pageSize: 10
-            },
-            searchParams: {},
-            tableData: [],
             tableLabel: [
-                { label: '创建时间', prop: 'title' },
-                { label: '创建人', prop: 'createTime' },
-                { label: '标签类别', prop: 'effectiveTime' },
-                { label: '标签名称', prop: 'effectived' }
+                { label: '创建时间', prop: 'createTime' },
+                { label: '创建人', prop: 'creator' },
+                { label: '标签类别', prop: 'tagCategory' },
+                { label: '标签名称', prop: 'tagDetailBos', width: '600px' }
             ],
             detailDialogVisible: false,
             form: {
-                category: '',
-                names: []
+                tagCategory: '',
+                tagDetailBos: []
             },
             rules: {
-                category: [
+                tagCategory: [
                     { required: true, message: '请输入标签类型', trigger: 'blur' }
                 ],
-                names: [{ required: true, message: '标签不能为空', trigger: 'change' }],
+                tagDetailBos: [{ required: true, message: '标签不能为空', trigger: 'change' }],
                 value: [{ required: true, message: '标签不能为空', trigger: 'change' }]
             },
             loading: true
@@ -96,7 +83,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            cloudTaglist: 'cloudTaglist'
+            cloudMerchantTaglist: 'cloudMerchantTaglist'
         })
     },
     mounted () {
@@ -104,18 +91,10 @@ export default {
     },
     methods: {
         ...mapActions({
-            findcloudTagList: 'findcloudTagList'
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
         }),
         async onQuery () {
-            this.tableData = []
-            await this.findcloudTagList(this.searchParams)
-
-            this.tableData = this.cloudTaglist.records
-            this.pagination = {
-                pageNumber: this.cloudTaglist.current,
-                pageSize: this.cloudTaglist.size,
-                total: this.cloudTaglist.total
-            }
+            await this.findCloudMerchantTaglist()
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -130,17 +109,17 @@ export default {
             this.onQuery()
         },
         onAddTag () {
-            this.form = { category: '', names: [] }
+            this.form = { tagCategory: '', tagDetailBos: [] }
             if (this.$refs.form) {
                 this.$refs.form.clearValidate()
             }
             this.detailDialogVisible = true
         },
         onAddTagName () {
-            this.form.names.push({ value: '' })
+            this.form.tagDetailBos.push('')
         },
         onRemoveName (index) {
-            this.form.names.splice(index, 1)
+            this.form.tagDetailBos.splice(index, 1)
         },
         onCancle () {
             if (this.$refs.form) {
@@ -151,21 +130,13 @@ export default {
         onSure () {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    console.log(this.form)
-                    // const params = {
-                    //     status: false,
-                    //     versionAddress: '-',
-                    //     ...this.dueForm
-                    // }
-                    // console.log(params)
-                    // if (params.id) {
-                    //     params.status = false
-                    //     params.updateUid = this.userInfo.jobNumber
-                    //     await editAppVersionDetail(params)
-                    // } else {
-                    //     params.createUid = this.userInfo.jobNumber
-                    //     await addAppVersion(params)
-                    // }
+                    let params = { ...this.form, operator: this.userInfo.employeeName }
+                    console.log(params)
+                    if (params.id) {
+                        await modifyCloudMerchantTag(params)
+                    } else {
+                        await addCloudMerchantTag(params)
+                    }
                     if (this.$refs.form) {
                         this.$refs.form.clearValidate()
                     }
@@ -189,7 +160,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                // await deleteTag(val.id)
+                await deleteCloudMerchantTag({ id: val.id, operator: this.userInfo.employeeName })
                 this.$message({
                     message: '删除成功！',
                     type: 'success'
@@ -213,6 +184,18 @@ export default {
         color: #ff7a45;
         cursor: pointer;
     }
+
+    .tag-container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap:  wrap;
+        justify-content: flex-start;
+    }
+
+    .el-tag.tag {
+        margin: 5px;
+    }
+
     /deep/.el-dialog__body {
         padding-top: 10px;
     }

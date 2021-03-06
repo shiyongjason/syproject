@@ -94,7 +94,8 @@ const state = {
     cloudMerchantProductOrderPagination: {},
     cloudMerchantProductOrderDetail: {},
     cloudMerchantProductOrderTotal: {},
-    cloudMerchantActivityPurchaseData: {}
+    cloudMerchantActivityPurchaseData: {},
+    cloudMerchantTaglist: []
 }
 
 const getters = {
@@ -198,7 +199,8 @@ const getters = {
     cloudMerchantProductOrderPagination: state => state.cloudMerchantProductOrderPagination,
     cloudMerchantProductOrderDetail: state => state.cloudMerchantProductOrderDetail,
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
-    cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData
+    cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
+    cloudMerchantTaglist: state => state.cloudMerchantTaglist
 }
 
 const mutations = {
@@ -466,6 +468,9 @@ const mutations = {
     },
     [types.GET_CLOUD_MERCHANT_ACTIVITY_PURCHASE_DATA] (state, payload) {
         state.cloudMerchantActivityPurchaseData = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
+        state.cloudMerchantTaglist = payload
     }
 }
 
@@ -864,6 +869,10 @@ const actions = {
     async findCloudMerchantProductOrderDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantProductOrderDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_DETAIL, data)
+    },
+    async findCloudMerchantTaglist ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantTaglist(params)
+        commit(cloud.GET_CLOUD_MERCHANT_TAG_LIST, data)
     }
 }
 export default {

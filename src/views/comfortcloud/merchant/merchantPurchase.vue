@@ -166,7 +166,7 @@ export default {
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '开始时间', prop: 'startTime', formatters: 'dateTime' },
                 { label: '结束时间', prop: 'endTime', formatters: 'dateTime' },
-                { label: '活动状态', prop: 'status' },
+                { label: '活动状态', prop: 'status' }
             ],
             rules: {
                 seckillName: [
@@ -185,7 +185,7 @@ export default {
                     { required: true, message: '请设置抢购价', trigger: 'blur' },
                     { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ]
-            },
+            }
         }
     },
     computed: {
@@ -306,7 +306,6 @@ export default {
                             break
                         }
                     }
-
                 }
             } else {
                 this.options = []

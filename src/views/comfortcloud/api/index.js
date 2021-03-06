@@ -695,3 +695,23 @@ export function getMerchantPurchaseDetail (params) {
 export function disableMerchantPurchase (params) {
     return axios.put(iotUrl + '/mall/boss/seckill-activity', params)
 }
+
+// 标签接口
+export function getCloudMerchantTaglist () {
+    return axios.get(iotUrl + '/mall/boss/tag/all')
+}
+
+// 新增标签
+export function addCloudMerchantTag (params) {
+    return axios.post(iotUrl + '/mall/boss/tag', params)
+}
+
+// 修改标签
+export function modifyCloudMerchantTag (params) {
+    return axios.put(iotUrl + '/mall/boss/tag', params)
+}
+
+// 删除标签
+export function deleteCloudMerchantTag (params) {
+    return axios.delete(iotUrl + '/mall/boss/tag', { data: params })
+}
