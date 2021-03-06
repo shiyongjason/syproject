@@ -31,17 +31,16 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">手动标签：</div>
-                    <div class="query-col-input" @click="showDliag">
+                    <div class="query-col-input hand" @click="showDliag">
                         <el-input v-model="queryParams.manualTags" readonly placeholder="不限" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">自动标签：</div>
                     <div class="flex-wrap-cont">
-                        <!-- <el-select v-model="queryParams.source" style="width: 100%">
-                                                        <el-option label="全部" value=""></el-option>
-
-                        </el-select> -->
+                        <el-select v-model="queryParams.autoTags" multiple collapse-tags style="width: 100%">
+                            <el-option v-for="item in queryParams.autoTags" :key="item.tag" :label="item.tag" :value="item.tag"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -73,7 +72,7 @@
                 </div>
             </div>
 
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :action-min-width="200">
                 <template slot="provinceName" slot-scope="scope">
                     {{ scope.data.row.provinceName + scope.data.row.cityName }}
                 </template>
@@ -93,11 +92,11 @@
                 <div v-for="item in tagJiaShuju" :key="item.title">
                     <h1>{{item.title}}</h1>
                     <div class="tag-cont">
-                        <span class="tag" v-for="(tag,index) in item.tags" :key="tag" @click="selectTag(index)">{{tag}}</span>
+                        <span class="tag hand" v-for="(tag,index) in item.tags" :key="tag" @click="selectTag(index)">{{tag}}</span>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="editCancel()">取消</el-button>
+                    <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
             </el-dialog>
@@ -232,6 +231,9 @@ export default {
         showDliag () {
             this.dialogVisible = true
         },
+        tagCancel () {
+            this.dialogVisible = false
+        },
         onEdit (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
         },
@@ -280,6 +282,14 @@ export default {
             text-align: right;
         }
     }
+}
+
+.hand {
+    cursor: pointer;
+}
+
+.orangeBtn {
+    margin: 5px 0;
 }
 
 .query-cont-col-area {
