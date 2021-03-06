@@ -6,6 +6,7 @@ import * as Api from '@/views/comfortcloud/api'
 const state = {
     iotmemberData: {},
     iotmerchantmemberData: {},
+    iotmerchantExternalMemberData: {},
     iotmerchantmemberDataPagination: {},
     iotmerchantDistributorPagination: {},
     iotmerchantDistributorData: {},
@@ -101,6 +102,7 @@ const state = {
 const getters = {
     iotmemberData: state => state.iotmemberData,
     iotmerchantmemberData: state => state.iotmerchantmemberData,
+    iotmerchantExternalMemberData: state => state.iotmerchantExternalMemberData,
     iotmerchantmemberTotalData: state => state.iotmerchantmemberTotalData,
     iotmerchantDistributorData: state => state.iotmerchantDistributorData,
     iotmerchantRewardData: state => state.iotmerchantRewardData,
@@ -209,6 +211,9 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_DATA] (state, payload) {
         state.iotmerchantmemberData = payload
+    },
+    [types.MERCHANT_EXTERNAL_MEMBERS_DATA] (state, payload) {
+        state.iotmerchantExternalMemberData = payload
     },
     [types.MERCHANT_MEMBERS_DATA_LIST_PAGINATION] (state, payload) {
         state.iotmerchantmemberDataPagination = payload
@@ -491,6 +496,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findMerchantExternalMembersituation ({ commit }, params) {
+        const { data } = await Api.getMerchantExernalMembersituation(params)
+        commit(types.MERCHANT_EXTERNAL_MEMBERS_DATA, data)
     },
     async getmerchantRewardData ({ commit }, params) {
         const { data } = await Api.merchantReward(params)
