@@ -12,26 +12,36 @@
                     <div class="flex-wrap-title">会员来源：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.source" style="width: 100%">
-                            <el-option label="单分享" value="1"></el-option>
-                            <el-option label="好橙工" value="2"></el-option>
-                            <el-option label="平台1.0" value="3"></el-option>
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="单分享" value="B2b"></el-option>
+                            <el-option label="好橙工" value="hcg"></el-option>
+                            <!-- <el-option label="平台1.0" value="3"></el-option> -->
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">注册时间： </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">会员标签：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.phone" placeholder="不限" maxlength="50"></el-input>
+                    <div class="query-col-title">手动标签：</div>
+                    <div class="query-col-input" @click="showDliag">
+                        <el-input v-model="queryParams.manualTags" readonly placeholder="不限" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">自动标签：</div>
+                    <div class="flex-wrap-cont">
+                        <!-- <el-select v-model="queryParams.source" style="width: 100%">
+                                                        <el-option label="全部" value=""></el-option>
+
+                        </el-select> -->
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -64,7 +74,19 @@
             </div>
 
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-
+                <template slot="provinceName" slot-scope="scope">
+                    {{ scope.data.row.provinceName + scope.data.row.cityName }}
+                </template>
+                <template slot="isAppletUser" slot-scope="scope">
+                    {{ scope.data.row.isAppletUser ? '是' : '否' }}
+                </template>
+                <template slot="manualTags" slot-scope="scope">
+                    {{ scope.data.row.manualTags !== null ? scope.data.row.manualTags.join(',') : '--' }}
+                </template>
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn" @click="onPurchaseActive(scope.data.row)">查看订单</el-button>
+                    <el-button class="orangeBtn" @click="onPurchaseActive(scope.data.row)">会员详情</el-button>
+                </template>
             </basicTable>
 
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
@@ -85,7 +107,7 @@
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { clearCache, newCache } from '../../../utils'
+
 export default {
     name: 'comfortcloudExternalMemeber',
     data () {
@@ -94,12 +116,14 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: this.$route.query.phone,
-                source: "1",
+                source: '',
                 provinceId: '',
                 cityId: '',
                 countryId: '',
-                endRegisterTime: '',
-                startRegisterTime: ''
+                startTime: '',
+                endTime: '',
+                manualTags: [],
+                autoTags: []
             },
             tableData: [],
             provinceList: [],
@@ -110,19 +134,22 @@ export default {
                 total: 0
             },
             tableLabel: [
-                // { label: '会员账号', prop: 'phone' },
-                // { label: '会员昵称', prop: 'nickName' },
-                // { label: '会员类型', prop: 'merchantType' },
-                // { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
-                // { label: '注册来源', prop: 'source' },
-                // { label: '推荐人会员账号', prop: 'invitePhone' },
-                // { label: '推荐人会员编号', prop: 'inviteUuid' },
-                // { label: '购买订单数', prop: 'orderCount' },
-                // { label: '购买订单金额', prop: 'orderAmount' },
-                // { label: '邀请会员数量', prop: 'registerCount' },
-                // { label: '邀请成交订单数', prop: 'rewardCount' },
-                // { label: '邀请成交金额', prop: 'payAmountTotal' },
-                // { label: '奖励金额', prop: 'rewardAmountTotal' }
+                { label: '会员来源', prop: 'source' },
+                { label: '企业名称', prop: 'companyName', width: '100px' },
+                { label: '认证状态', prop: 'authenticationStatus' },
+                { label: '会员角色', prop: 'role' },
+                { label: '会员账号', prop: 'phone', width: '100px' },
+                { label: '会员昵称', prop: 'nickName' },
+                { label: '经营区域', prop: 'provinceName', width: '100px' },
+                { label: '门店地址', prop: 'storeAddress' },
+                { label: '所属分部', prop: 'department' },
+                { label: '主营品牌', prop: 'mainBrand' },
+                { label: '主营品类', prop: 'mainCategory' },
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime', width: '150px' },
+                { label: '销售顾问姓名', prop: 'saleName' },
+                { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
+                { label: '是否注册享钱', prop: 'isAppletUser' },
+                { label: '手动标签', prop: 'manualTags' }
             ],
             tagJiaShuju: [
                 { 'title': '公司职位', 'tags': ['123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231'] },
@@ -138,13 +165,12 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            merchantmemberData: 'iotmerchantmemberData',
-            merchantmemberTotalData: 'iotmerchantmemberTotalData'
+            merchantExernalMemberData: 'iotmerchantExternalMemberData',
         }),
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
-                    let endDateVal = this.queryParams.endRegisterTime
+                    let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
                         return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
                     }
@@ -154,7 +180,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: time => {
-                    let beginDateVal = this.queryParams.startRegisterTime
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
@@ -187,18 +213,16 @@ export default {
 
     methods: {
         ...mapActions({
-            findMerchantMembersituation: 'findMerchantMembersituation',
-            iotmerchantmemberDataPagination: 'iotmerchantmemberDataPagination',
-            findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation'
+            findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
         }),
         async onQuery () {
-            await this.findMerchantMembersituation(this.searchParams)
-            await this.findMerchantMemberTotalsituation(this.searchParams)
-            this.tableData = this.merchantmemberData.records
+            await this.findMerchantExternalMembersituation(this.searchParams)
+            console.log('waibuxushui', this.merchantExernalMemberData)
+            this.tableData = this.merchantExernalMemberData.records
             this.pagination = {
-                pageNumber: this.merchantmemberData.current,
-                pageSize: this.merchantmemberData.size,
-                total: this.merchantmemberData.total
+                pageNumber: this.merchantExernalMemberData.current,
+                pageSize: this.merchantExernalMemberData.size,
+                total: this.merchantExernalMemberData.total
             }
         },
         onSearch () {

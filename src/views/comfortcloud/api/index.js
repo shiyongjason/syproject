@@ -41,6 +41,10 @@ export function getMembersituation (params) {
 export function getMerchantMembersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/manage`, { params })
 }
+// 外部蓄水会员列表分页查询
+export function getMerchantExernalMembersituation (params) {
+    return axios.get(iotUrl + `/mall/boss/out-member`, { params })
+}
 // 奖励管理
 export function merchantReward (params) {
     return axios.get(iotUrl + `/mall/boss/wx/reward/manage`, { params })
