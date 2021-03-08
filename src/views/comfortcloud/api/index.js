@@ -674,8 +674,16 @@ export function getLikeMerchantList (params) {
 export function getCloudMerchantProductOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/order', { params })
 }
+// 获取微信订单列表
+export function getCloudMerchantProductOutOrderList (params) {
+    return axios.get(iotUrl + '/mall/boss/out-order/page', { params })
+}
 
 // 获取微信订单详情
+export function getCloudMerchantProductOutOrderDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/out-order/orderNo', { params })
+}
+// 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/order/detail', { params })
 }

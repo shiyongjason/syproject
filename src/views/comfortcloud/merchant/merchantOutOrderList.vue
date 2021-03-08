@@ -9,9 +9,18 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">订单号：</div>
-                    <div class="query-col-input">
-                        <el-input v-model="queryParams.orderId" placeholder="请输入订单号"></el-input>
+                    <div class="flex-wrap-title">订单状态：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.orderStatus" style="width: 100%">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="未付款" value=10></el-option>
+                            <el-option label="待发货" value=20></el-option>
+                            <el-option label="待收货" value=30></el-option>
+                            <el-option label="已完成" value=40></el-option>
+                            <el-option label="退款中" value=60></el-option>
+                            <el-option label="已关闭" value=50></el-option>
+                            <el-option label="已退款" value=70></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -20,15 +29,24 @@
                         <el-input v-model="queryParams.productName" placeholder="请输入商品名称"></el-input>
                     </div>
                 </div>
-
                 <div class="query-cont-col">
                     <div class="query-col-title">下单时间： </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startOrderTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endOrderTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="flex-wrap-title">是否含舒适云产品：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.isShy" style="width: 100%">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="是" value=true></el-option>
+                            <el-option label="否" value=false></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -37,16 +55,19 @@
                     </div>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">
-                已筛选 {{cloudMerchantProductOrderPagination.total}} 项；
-                累计成交订单: {{cloudMerchantProductOrderTotal.totalOrderCount}}笔；
-                累计销售件数: {{cloudMerchantProductOrderTotal.totalProductCount}}单；
-                累计成交金额:{{cloudMerchantProductOrderTotal.totalOrderAmount}}元
-            </el-tag>
+<!--            <el-tag size="medium" class="eltagtop">-->
+<!--                已筛选 {{cloudMerchantProductOutOrderPagination.total}} 项；-->
+<!--                累计成交订单: {{cloudMerchantProductOutOrderTotal.totalOrderCount}}笔；-->
+<!--                累计销售件数: {{cloudMerchantProductOutOrderTotal.totalProductCount}}单；-->
+<!--                累计成交金额:{{cloudMerchantProductOutOrderTotal.totalOrderAmount}}元-->
+<!--            </el-tag>-->
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOrderList" :isShowIndex='false' :pagination="cloudMerchantProductOrderPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="status" slot-scope="scope">
-                    {{orderStatusDesc(scope.data.row.status)}}
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOutOrderList" :isShowIndex='false' :pagination="cloudMerchantProductOutOrderPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="payMethod" slot-scope="scope">
+                    {{orderPayDesc(scope.data.row.payMethod)}}
+                </template>
+                <template slot="orderStatus" slot-scope="scope">
+                    {{orderStatusDesc(scope.data.row.orderStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
@@ -62,7 +83,7 @@
                     总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
                 </p>
                 <h1 style="padding-top: 20px">商品明细</h1>
-                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
+                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOutOrderDetail" :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
         </div>
@@ -78,30 +99,26 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: this.$route.query.phone,
-                orderId: '',
+                orderStatus: '',
                 productName: '',
-                startTime: '',
-                endTime: ''
+                startOrderTime: '',
+                endOrderTime: '',
+                isShy: ''
             },
             searchParams: {},
             tableData: [],
             tableLabel: [
                 { label: '订单来源', prop: 'source' },
-                { label: '订单号', prop: 'orderId' },
+                { label: '订单号', prop: 'orderNo' },
                 { label: '下单时间', prop: 'orderTime', formatters: 'dateTime' },
-                { label: '订单状态', prop: 'status' },
+                { label: '订单状态', prop: 'orderStatus' },
                 { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
-                { label: '收件人姓名', prop: 'consigneeName' },
-                { label: '收件人地址', prop: 'consigneeAddress' },
-                { label: '收件人手机', prop: 'consigneePhone' },
-                { label: '订单实际支付金额', prop: 'payAmount', formatters: 'money' },
-                { label: '订单运费', prop: 'freight' },
-                { label: '订单件数', prop: 'orderProductCount' },
+                { label: '销售顾问', prop: 'salerName' },
+                { label: '销售顾问手机号', prop: 'salerPhone' },
+                { label: '订单实际支付金额', prop: 'finalTotalAmount', formatters: 'money' },
                 { label: '支付方式', prop: 'payMethod' },
-                { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
-                { label: '物流公司', prop: 'deliveryName' },
-                { label: '快递单号', prop: 'waybillId' }
+                { label: '支付时间', prop: 'payTime', formatters: 'dateTime' }
             ],
             prouctDetailTableLabel: [
                 { label: '商品ID', prop: 'productId' },
@@ -120,10 +137,10 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            cloudMerchantProductOrderList: 'cloudMerchantProductOrderList',
-            cloudMerchantProductOrderPagination: 'cloudMerchantProductOrderPagination',
-            cloudMerchantProductOrderDetail: 'cloudMerchantProductOrderDetail',
-            cloudMerchantProductOrderTotal: 'cloudMerchantProductOrderTotal'
+            cloudMerchantProductOutOrderList: 'cloudMerchantProductOutOrderList',
+            cloudMerchantProductOutOrderPagination: 'cloudMerchantProductOutOrderPagination',
+            cloudMerchantProductOutOrderDetail: 'cloudMerchantProductOutOrderDetail',
+            // cloudMerchantProductOutOrderTotal: 'cloudMerchantProductOutOrderTotal'
         }),
         pickerOptionsStart () {
             return {
@@ -154,11 +171,11 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCloudMerchantProductOrderList: 'findCloudMerchantProductOrderList',
-            findCloudMerchantProductOrderDetail: 'findCloudMerchantProductOrderDetail'
+            findCloudMerchantProductOutOrderList: 'findCloudMerchantProductOutOrderList',
+            findCloudMerchantProductOutOrderDetail: 'findCloudMerchantProductOutOrderDetail'
         }),
         async onQuery () {
-            await this.findCloudMerchantProductOrderList(this.searchParams)
+            await this.findCloudMerchantProductOutOrderList(this.searchParams)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -174,7 +191,7 @@ export default {
         },
         async onDetail (val) {
             this.focusDetailOrder = val
-            await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
+            await this.findCloudMerchantProductOutOrderDetail({ orderNo: val.orderNo })
             this.detailDialogVisible = true
         },
         orderStatusDesc (status) {
@@ -184,12 +201,25 @@ export default {
                 return '待发货'
             } else if (status == 30) {
                 return '待收货'
-            } else if (status == 100) {
+            } else if (status == 40) {
                 return '已完成'
-            } else if (status == 200) {
-                return '已退货退款'
-            } else if (status == 250) {
-                return '已取消'
+            } else if (status == 50) {
+                return '已关闭'
+            } else if (status == 60) {
+                return '退款中'
+            } else if (status == 70) {
+                return '已退款'
+            }
+            return status
+        },
+        orderPayDesc (status) {
+            console.log(status)
+            if (status === '1') {
+                return '账期支付'
+            } else if (status === '2') {
+                return '线下支付'
+            } else if (status === '4') {
+                return '在线支付'
             }
             return status
         }

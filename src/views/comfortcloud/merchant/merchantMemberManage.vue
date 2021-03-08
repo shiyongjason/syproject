@@ -51,6 +51,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
+                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">变更推荐人</el-button>
                 </template>
             </basicTable>
             </div>
@@ -79,8 +80,12 @@ export default {
                 total: 0
             },
             tableLabel: [
+                { label: '企业名称', prop: 'phone' },
                 { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
+                { label: '经营区域', prop: 'nickName' },
+                { label: '主营品牌', prop: 'nickName' },
+                { label: '主营品类', prop: 'nickName' },
                 { label: '会员类型', prop: 'merchantType' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '注册来源', prop: 'source' },
@@ -91,7 +96,8 @@ export default {
                 { label: '邀请会员数量', prop: 'registerCount' },
                 { label: '邀请成交订单数', prop: 'rewardCount' },
                 { label: '邀请成交金额', prop: 'payAmountTotal' },
-                { label: '奖励金额', prop: 'rewardAmountTotal' }
+                { label: '奖励金额', prop: 'rewardAmountTotal' },
+                { label: '会员标签', prop: 'userTags' }
             ],
             dialogVisible: false
         }
