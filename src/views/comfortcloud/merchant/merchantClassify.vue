@@ -277,8 +277,4 @@ export default {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-/deep/ .edit-dialog .el-dialog__body {
-    min-height: 60px;
-}
 </style>
