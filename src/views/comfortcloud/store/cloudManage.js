@@ -92,8 +92,11 @@ const state = {
     cloudMerchantClassifyList: [],
     cloudMerchantClassifyListPagination: {},
     cloudMerchantProductOrderList: [],
+    cloudMerchantProductOutOrderList: [],
     cloudMerchantProductOrderPagination: {},
+    cloudMerchantProductOutOrderPagination: {},
     cloudMerchantProductOrderDetail: {},
+    cloudMerchantProductOutOrderDetail: {},
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
     cloudMerchantTaglist: []
@@ -198,8 +201,11 @@ const getters = {
     cloudMerchantClassifyList: state => state.cloudMerchantClassifyList,
     cloudMerchantClassifyListPagination: state => state.cloudMerchantClassifyListPagination,
     cloudMerchantProductOrderList: state => state.cloudMerchantProductOrderList,
+    cloudMerchantProductOutOrderList: state => state.cloudMerchantProductOutOrderList,
     cloudMerchantProductOrderPagination: state => state.cloudMerchantProductOrderPagination,
+    cloudMerchantProductOutOrderPagination: state => state.cloudMerchantProductOrderPagination,
     cloudMerchantProductOrderDetail: state => state.cloudMerchantProductOrderDetail,
+    cloudMerchantProductOutOrderDetail: state => state.cloudMerchantProductOutOrderDetail,
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
     cloudMerchantTaglist: state => state.cloudMerchantTaglist
@@ -462,11 +468,20 @@ const mutations = {
     [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_LIST] (state, payload) {
         state.cloudMerchantProductOrderList = payload
     },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST] (state, payload) {
+        state.cloudMerchantProductOutOrderList = payload
+    },
     [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantProductOrderPagination = payload
     },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantProductOutOrderPagination = payload
+    },
     [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_DETAIL] (state, payload) {
         state.cloudMerchantProductOrderDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_DETAIL] (state, payload) {
+        state.cloudMerchantProductOutOrderDetail = payload
     },
     [cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_TOTAL] (state, payload) {
         state.cloudMerchantProductOrderTotal = payload
@@ -875,9 +890,23 @@ const actions = {
         })
         commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_TOTAL, data.orderTotal)
     },
+    async findCloudMerchantProductOutOrderList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProductOutOrderList(params)
+        console.log(data)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
     async findCloudMerchantProductOrderDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantProductOrderDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_ORDER_DETAIL, data)
+    },
+    async findCloudMerchantProductOutOrderDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProductOutOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_DETAIL, data)
     },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)
