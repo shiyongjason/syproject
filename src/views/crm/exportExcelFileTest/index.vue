@@ -34,6 +34,7 @@
             </div>
         </div>
         <div class="page-body-cont">
+            {{fileTablePagination}}
             <basicTable :tableData="fileTableList" :tableLabel="tableLabel" :pagination="fileTablePagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
@@ -64,7 +65,7 @@ export default {
                 { label: '表英文名称', prop: 'tableNameEn' },
                 { label: '文件名', prop: 'fileName' },
                 { label: '操作人', prop: 'createBy' },
-                { label: '创建时间', prop: 'createTime' }
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' }
             ],
             fileTablePagination: {
                 amount: 0,
@@ -100,6 +101,7 @@ export default {
             this.$message.success(`导入成功`)
             this.progressFlag = false
             this.loading = false
+            this.getExcelTableTableList({ ...this.queryParams, pageNumber: 1 })
         },
         doRemove () {
             this.fileList.splice(this.index, 1)
@@ -163,10 +165,9 @@ export default {
             const { data } = await getExcelTableTableList(params)
             this.fileTableList = data.records
             this.fileTablePagination = {
-                amount: data.records,
-                total: 0,
-                pageSize: 10,
-                pageNumber: 1
+                total: data.total,
+                pageSize: data.size,
+                pageNumber: data.current
             }
         },
         onReset () {
