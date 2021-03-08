@@ -97,13 +97,21 @@
         </div>
         <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
-        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='45%' :wrapperClosable="false" :beforeClose="handleClose">
+        <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
             <template #connect>
+                <h4 class="purchaseName">采购单钉钉审批流程 <div style="color:#ff7a45">{{purchaseName}}</div>
+                </h4>
                 <div class="seal_records" v-for="(item,index) in editHistory" :key="index">
-                    <div class="seal_records-tit">审批人：<em>{{item.operator}}</em></div>
-                    <div>{{item.operationName}}{{item.operationContent}}</div>
+                    <div class="seal_records-tit">
+                        <div><em>{{item.operator}}</em>
+                            <div>{{item.operationName}}{{item.operationContent}}</div>
+                        </div>
+                        <div class="seal_records-times">{{moment(item.operationTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
+                    </div>
+
                     <div class="seal_records-remark">备注：{{item.approvalRemark}}</div>
                 </div>
+                <div v-if="editHistory.length==0">暂无审批记录</div>
             </template>
         </h-drawer>
     </div>
@@ -117,12 +125,14 @@ import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import { getSeals } from './api/index'
+import moment from 'moment'
 export default {
     name: 'purchaseOrder',
     data () {
         return {
             drawerPur: false,
             Auths,
+            moment,
             queryParams: {
                 purchaseOrderNo: '',
                 poName: '',
@@ -157,7 +167,8 @@ export default {
             openStatus: PurchaseOrderDialogStatus.enter.status,
             purchaseOrderRow: {},
             purchaseOrderDialogParams: {},
-            editHistory: []
+            editHistory: [],
+            purchaseName: ''
         }
     },
     components: {
@@ -205,6 +216,7 @@ export default {
     methods: {
         async onApproveRecords (val) {
             this.drawerPur = true
+            this.purchaseName = val.poName
             const { data } = await getSeals(val.id)
             console.log(data)
             this.editHistory = data
@@ -284,6 +296,9 @@ export default {
 </script>
 
 <style scoped lang='scss'>
+.purchaseName {
+    margin-bottom: 20px;
+}
 .eltagtop {
     margin-bottom: 10px;
 }
@@ -294,6 +309,8 @@ export default {
 .seal_records {
     margin-bottom: 10px;
     &-tit {
+        display: flex;
+        justify-content: space-between;
         em {
             font-style: normal;
             color: #2196f3;

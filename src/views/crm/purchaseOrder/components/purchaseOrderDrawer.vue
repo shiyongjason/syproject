@@ -49,26 +49,6 @@
                                 <p class="col-filed">
                                     提交时间：{{ purchaseOrderDetail.purchaseOrder.submitTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                 </p>
-                                <template v-if="purchaseOrderDetail.poInfo">
-                                    <p class="col-filed">
-                                        经销商预付款比例： {{ purchaseOrderDetail.poInfo.prePercent }}%
-                                    </p>
-                                    <p class="col-filed">
-                                        剩余货款支付周期： {{ purchaseOrderDetail.poInfo.restPaymentPeriod }}个月
-                                    </p>
-                                </template>
-                            </div>
-                            <div class="row-filed" v-if="purchaseOrderDetail.poInfo">
-                                <div class="col-filed info-img-group">
-                                    <span class="label">
-                                        采购明细表：
-                                    </span>
-                                    <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
-                                        <span class="img-box" :key="item.url" v-for="item in purchaseOrderDetail.poInfo.poDetail">
-                                            <imageAddToken :fileUrl="item.url" class="info-img" />
-                                        </span>
-                                    </p>
-                                </div>
                             </div>
                             <template v-if="purchaseOrderDetail.purchaseOrder && purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[1].key">
                                 <div class="row-filed">

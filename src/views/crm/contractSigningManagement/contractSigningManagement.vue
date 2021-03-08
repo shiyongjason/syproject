@@ -107,12 +107,11 @@
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
-
                 </template>
             </hosJoyTable>
         </div>
 
-        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='550px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
+        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
             <template #connect>
                 <div slot="title">审核记录</div>
                 <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
@@ -124,6 +123,7 @@
                         <div class="history-css-left">
                             <span class="name">{{item.operator}} </span>
                             <span>{{item.operationName}}</span>
+
                             <template v-if="item.operationName == '编辑了'">
                                 <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
                                     <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
@@ -145,10 +145,10 @@
                                     <font>{{item.operationContent}}</font>
                                 </span>
                             </template>
+                            <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
                             <template v-if="item.attachDocs&&item.attachDocs.length>0">
-                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex">
-                                    <p style="color: #ff7a45;">{{obj.fileName}}</p>
-                                    <p style="color: #ff7a45;">备注：{{item.approvalRemark}}</p>
+                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
+                                    <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
                                 </div>
                             </template>
                         </div>
@@ -197,11 +197,10 @@ const _queryParams = {
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
-const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '废止' }]
+const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
 export default {
     name: 'contractSigningManagement',
     components: { hosJoyTable, diffDialog },
-
     data () {
         return {
             options: {
@@ -273,7 +272,8 @@ export default {
             }).then(async () => {
                 await getAbolish({
                     'contractId': val.id,
-                    'phone': this.userInfo.phoneNumber
+                    'phone': this.userInfo.phoneNumber,
+                    'createBy': this.userInfo.employeeName
                 })
                 this.searchList()
             }).catch(() => {
@@ -501,7 +501,6 @@ export default {
         font-size: 18px;
     }
     /deep/.history-css {
-        padding: 0 20px;
         box-sizing: border-box;
         height: calc(100vh - 190px);
         overflow-y: scroll;
