@@ -31,9 +31,11 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">手动标签：</div>
-                    <div class="query-col-input hand" @click="showDliag">
-                        <el-input v-model="queryParams.manualTags" readonly placeholder="不限" maxlength="50"></el-input>
+                    <div class="query-col-cont">
+                        <el-select v-model="queryParams.manualTags" multiple style="width: 100%">
+                        </el-select>
                     </div>
+                    <div class="click-tap hand" @click.stop="showQueryTagSelector()"></div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">自动标签：</div>
@@ -66,9 +68,6 @@
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                     </div>
-                    <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="showDliag">弹窗测试</el-button>
-                    </div>
                 </div>
             </div>
 
@@ -80,19 +79,22 @@
                     {{ scope.data.row.isAppletUser ? '是' : '否' }}
                 </template>
                 <template slot="manualTags" slot-scope="scope">
-                    {{ scope.data.row.manualTags !== null ? scope.data.row.manualTags.join(',') : '--' }}
+                    <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.manualTags !== null">
+                        <el-tag class="tag" v-for="item in scope.data.row.manualTags" :key="item">{{item}}</el-tag>
+                    </div>
+                    <div class="hand" @click="showDliag(scope.data.row)" v-else>--</div>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onPurchaseActive(scope.data.row)">查看订单</el-button>
-                    <el-button class="orangeBtn" @click="onPurchaseActive(scope.data.row)">会员详情</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看订单</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">会员详情</el-button>
                 </template>
             </basicTable>
 
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
-                <div v-for="item in tagJiaShuju" :key="item.title">
-                    <h1>{{item.title}}</h1>
+                <div v-for="item in cloudMerchantTaglist" :key="item.id">
+                    <h1>{{item.tagCategory}}</h1>
                     <div class="tag-cont">
-                        <span class="tag hand" v-for="(tag,index) in item.tags" :key="tag" @click="selectTag(index)">{{tag}}</span>
+                        <span :class="tagSelect(tag)" v-for="tag in item.tagDetailBos" :key="tag" @click="addTag(tag)">{{tag}}</span>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
@@ -105,6 +107,7 @@
 </template>
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
+import { addMemberTag, editMemberTag } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -114,7 +117,7 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: this.$route.query.phone,
+                phone: '',
                 source: '',
                 provinceId: '',
                 cityId: '',
@@ -124,7 +127,10 @@ export default {
                 manualTags: [],
                 autoTags: []
             },
+            setTagUser: {},
+            isQueryOperation: false,
             tableData: [],
+            tagStringList: [],
             provinceList: [],
             cityList: [],
             pagination: {
@@ -150,12 +156,6 @@ export default {
                 { label: '是否注册享钱', prop: 'isAppletUser' },
                 { label: '手动标签', prop: 'manualTags' }
             ],
-            tagJiaShuju: [
-                { 'title': '公司职位', 'tags': ['123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231'] },
-                { 'title': '主营产品', 'tags': ['哈哈哈', '嗯嗯', '好好'] },
-                { 'title': '是否有意向', 'tags': ['FJFJ', 'DFDF', 'GWG'] },
-                { 'title': '东西好不好', 'tags': ['一二三', '四五六', '七八九'] },
-            ],
             dialogVisible: false
         }
     },
@@ -165,7 +165,22 @@ export default {
         }),
         ...mapGetters({
             merchantExernalMemberData: 'iotmerchantExternalMemberData',
+            cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
+        tagSelect () {
+            return function (tag) {
+                let selectTag = false
+                let datas = this.isQueryOperation ? this.queryParams.manualTags : this.tagStringList
+                for (let j = 0; j < datas.length; j++) {
+                    const element = datas[j]
+                    if (tag === element) {
+                        selectTag = true
+                        break
+                    }
+                }
+                return selectTag ? 'select hand' : 'unselect hand'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -213,10 +228,10 @@ export default {
     methods: {
         ...mapActions({
             findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
         }),
         async onQuery () {
             await this.findMerchantExternalMembersituation(this.searchParams)
-            console.log('waibuxushui', this.merchantExernalMemberData)
             this.tableData = this.merchantExernalMemberData.records
             this.pagination = {
                 pageNumber: this.merchantExernalMemberData.current,
@@ -228,14 +243,42 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        showDliag () {
+        async showDliag (val) {
+            this.isQueryOperation = false
+            if (val !== undefined) {
+                this.setTagUser = val
+                this.tagStringList = val.manualTags ? val.manualTags : []
+            }
+            await this.findCloudMerchantTaglist()
             this.dialogVisible = true
         },
-        tagCancel () {
-            this.dialogVisible = false
+        async showQueryTagSelector () {
+            this.isQueryOperation = true
+            await this.findCloudMerchantTaglist()
+            this.dialogVisible = true
         },
-        onEdit (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
+        async editConform () {
+            if (this.isQueryOperation) {
+                if (this.tagStringList.length > 0) {
+                    await addMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': this.tagStringList })
+                    this.onQuery()
+                }
+            } else {
+                this.queryParams.manualTags = this.tagStringList ? [...this.tagStringList] : []
+            }
+            this.clearData()
+        },
+        tagCancel () {
+            this.clearData()
+        },
+        clearData () {
+            this.tagStringList = []
+            this.dialogVisible = false
+            this.setTagUser = {}
+            this.isQueryOperation = false
+        },
+        onDetail (val) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: val })
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -261,8 +304,25 @@ export default {
         onArea (key) {
             this.queryParams.countryId = key
         },
-        selectTag (index) {
-            console.log(index)
+        addTag (tag) {
+            let selectTag = false
+            let index = 0
+            let datas = this.isQueryOperation ? this.queryParams.manualTags : this.tagStringList
+            for (let j = 0; j < datas.length; j++) {
+                const element = datas[j]
+                if (tag === element) {
+                    index = j
+                    selectTag = true
+                    break
+                }
+            }
+            if (selectTag) {
+                // 存在则删除
+                datas.splice(index, 1)
+            } else {
+                // 不存在则添加
+                datas.push(tag)
+            }
         }
     }
 }
@@ -285,7 +345,7 @@ export default {
 }
 
 .hand {
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .orangeBtn {
@@ -312,12 +372,43 @@ export default {
     flex-wrap: wrap;
 }
 
-.tag {
+.unselect {
     display: inline-block;
     padding: 5px 10px;
     margin: 10px;
-    border: 1px solid #ff7a45;
+    border: 1px solid #606266;
     border-radius: 5px;
+}
+
+.select {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px;
+    background-color: #ff7a45;
+    border: 1px solid #ff7a45;
+    color: white;
+    border-radius: 5px;
+}
+.tag-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.click-tap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.el-tag.tag {
+    margin: 5px;
 }
 .colred {
     color: #ff7a45;

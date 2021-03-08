@@ -719,3 +719,13 @@ export function modifyCloudMerchantTag (params) {
 export function deleteCloudMerchantTag (params) {
     return axios.delete(iotUrl + '/mall/boss/tag', { data: params })
 }
+
+// 给用户新增标签
+export function addMemberTag (params) {
+    return axios.post(iotUrl + '/mall/boss/user-tag', params)
+}
+
+// 编辑用户标签
+export function editMemberTag (params) {
+    return axios.put(iotUrl + '/mall/boss/user-tag', params)
+}
