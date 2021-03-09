@@ -93,6 +93,14 @@ export function updateInvitationDetail (params) {
 export function sendReward (params) {
     return axios.post(iotUrl + `/mall/boss/wx/reward/send`, params)
 }
+// 修改推荐人
+export function recommendChange (params) {
+    return axios.put(iotUrl + `/mall/boss/user/change-invite-user`, params)
+}
+// 修改销售顾问
+export function salerChange (params) {
+    return axios.post(iotUrl + `/mall/boss/out-order/order-saler`, params)
+}
 // 修改企业信息备注
 export function updateCompanyInfo (params) {
     return axios.post(iotUrl + `/mall/boss/company`, params)
@@ -681,7 +689,7 @@ export function getCloudMerchantProductOutOrderList (params) {
 
 // 获取微信订单详情
 export function getCloudMerchantProductOutOrderDetail (params) {
-    return axios.get(iotUrl + '/mall/boss/out-order/orderNo', { params })
+    return axios.get(iotUrl + '/mall/boss/out-order/' + params.orderNo)
 }
 // 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {

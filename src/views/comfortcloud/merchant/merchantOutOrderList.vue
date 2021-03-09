@@ -55,35 +55,55 @@
                     </div>
                 </div>
             </div>
-<!--            <el-tag size="medium" class="eltagtop">-->
-<!--                已筛选 {{cloudMerchantProductOutOrderPagination.total}} 项；-->
-<!--                累计成交订单: {{cloudMerchantProductOutOrderTotal.totalOrderCount}}笔；-->
-<!--                累计销售件数: {{cloudMerchantProductOutOrderTotal.totalProductCount}}单；-->
-<!--                累计成交金额:{{cloudMerchantProductOutOrderTotal.totalOrderAmount}}元-->
-<!--            </el-tag>-->
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOutOrderList" :isShowIndex='false' :pagination="cloudMerchantProductOutOrderPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOutOrderList.records" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="payMethod" slot-scope="scope">
                     {{orderPayDesc(scope.data.row.payMethod)}}
                 </template>
                 <template slot="orderStatus" slot-scope="scope">
                     {{orderStatusDesc(scope.data.row.orderStatus)}}
                 </template>
+                <template slot="salerName" slot-scope="scope">
+                    <p @click="onEditSaler(scope.data.row)" class="colred">
+                        {{scope.data.row.salerName}}</p>
+                </template>
+                <template slot="salerPhone" slot-scope="scope">
+                    <p @click="onEditSaler(scope.data.row)" class="colred">
+                        {{scope.data.row.salerPhone}}</p>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
             </basicTable>
-
-            <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
+            <el-dialog title="销售顾问变更" :modal-append-to-body=false :append-to-body=false
+                       :visible.sync="salerDialogVisible" width="50%">
+                <div >
+                    <div class="query-col-title">销售顾问姓名：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="salerData.salerName" placeholder="请输入姓名" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div >
+                    <div class="query-col-title">销售顾问手机号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="salerData.salerPhone" placeholder="请输入手机号" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="onSalerChange(0)">取消</el-button>
+                <el-button type="primary" @click="onSalerChange(1)">确认</el-button>
+            </span>
+            </el-dialog>
+            <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="30%">
                 <h1 style="padding-bottom: 10px">订单信息</h1>
-                <p style="line-height: 25px">商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
-                    订单运费 ￥{{focusDetailOrder.freight}}<br>
-                    优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
-                    商品改价 -￥{{focusDetailOrder.changePrice}}<br>
-                    总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
+                <p style="line-height: 25px">订单原始总金额 ￥{{cloudMerchantProductOutOrderDetail.totalAmount}} <br>
+                    折扣总金额 ￥{{cloudMerchantProductOutOrderDetail.discountAmount}}<br>
+                    佣金总金额 -￥{{cloudMerchantProductOutOrderDetail.commissionAmount}}<br>
+                    返利总金额 -￥{{cloudMerchantProductOutOrderDetail.rebateAmount}}<br>
+                    总{{cloudMerchantProductOutOrderDetail.buyNumber}}件，实付金额￥{{cloudMerchantProductOutOrderDetail.finalTotalAmount}}
                 </p>
                 <h1 style="padding-top: 20px">商品明细</h1>
-                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOutOrderDetail" :isShowIndex='false'>
+                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOutOrderDetail.products" :pagination="paginationDetail" :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
         </div>
@@ -91,6 +111,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { salerChange } from '../api'
 export default {
     name: 'merchantOutOrderList',
     data () {
@@ -107,6 +128,17 @@ export default {
             },
             searchParams: {},
             tableData: [],
+            pagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            paginationDetail: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+
             tableLabel: [
                 { label: '订单来源', prop: 'source' },
                 { label: '订单号', prop: 'orderNo' },
@@ -121,15 +153,19 @@ export default {
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' }
             ],
             prouctDetailTableLabel: [
-                { label: '商品ID', prop: 'productId' },
+                { label: '商品编码', prop: 'productCode' },
+                { label: '商品来源', prop: 'companyName' },
+                { label: '品牌', prop: 'brandName' },
                 { label: '商品名称', prop: 'productName' },
-                { label: '商品规格', prop: 'wxSpecification' },
-                { label: '商品价格（元）', prop: 'productPrice' },
-                { label: '商品数量（件）', prop: 'productCount' }
+                { label: '销售价格（元）', prop: 'price' },
+                { label: '实付金额（元）', prop: 'finalTotalAmount' },
+                { label: '商品数量（件）', prop: 'quantity' }
             ],
             prouctDetailTableData: [],
             detailDialogVisible: false,
-            focusDetailOrder: {}
+            salerDialogVisible: false,
+            focusDetailOrder: {},
+            salerData: {}
         }
     },
     computed: {
@@ -138,8 +174,7 @@ export default {
         }),
         ...mapGetters({
             cloudMerchantProductOutOrderList: 'cloudMerchantProductOutOrderList',
-            cloudMerchantProductOutOrderPagination: 'cloudMerchantProductOutOrderPagination',
-            cloudMerchantProductOutOrderDetail: 'cloudMerchantProductOutOrderDetail',
+            cloudMerchantProductOutOrderDetail: 'cloudMerchantProductOutOrderDetail'
             // cloudMerchantProductOutOrderTotal: 'cloudMerchantProductOutOrderTotal'
         }),
         pickerOptionsStart () {
@@ -176,6 +211,11 @@ export default {
         }),
         async onQuery () {
             await this.findCloudMerchantProductOutOrderList(this.searchParams)
+            this.pagination = {
+                pageNumber: this.cloudMerchantProductOutOrderList.current,
+                pageSize: this.cloudMerchantProductOutOrderList.size,
+                total: this.cloudMerchantProductOutOrderList.total
+            }
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -192,6 +232,11 @@ export default {
         async onDetail (val) {
             this.focusDetailOrder = val
             await this.findCloudMerchantProductOutOrderDetail({ orderNo: val.orderNo })
+            this.paginationDetail = {
+                pageNumber: this.cloudMerchantProductOutOrderDetail.current,
+                pageSize: this.cloudMerchantProductOutOrderDetail.size,
+                total: this.cloudMerchantProductOutOrderDetail.total
+            }
             this.detailDialogVisible = true
         },
         orderStatusDesc (status) {
@@ -211,6 +256,21 @@ export default {
                 return '已退款'
             }
             return status
+        },
+        onEditSaler (val) {
+            this.salerDialogVisible = true
+            this.salerData = val
+        },
+        async onSalerChange (val) {
+            this.salerDialogVisible = false
+            if (val === 1) {
+                await salerChange({
+                    orderNo: this.salerData.orderNo,
+                    salerName: this.salerData.salerName,
+                    salerPhone: this.salerData.salerPhone,
+                    operator: this.userInfo.employeeName })
+                this.onQuery()
+            }
         },
         orderPayDesc (status) {
             console.log(status)
