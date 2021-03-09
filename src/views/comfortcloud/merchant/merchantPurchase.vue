@@ -306,7 +306,6 @@ export default {
                             break
                         }
                     }
-
                 }
             } else {
                 this.options = []
