@@ -99,6 +99,7 @@ const state = {
     cloudMerchantProductOutOrderDetail: {},
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
+    cloudMerchantmemberInvitationOutOrderData: {},
     cloudMerchantTaglist: []
 }
 
@@ -208,6 +209,7 @@ const getters = {
     cloudMerchantProductOutOrderDetail: state => state.cloudMerchantProductOutOrderDetail,
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
+    cloudMerchantmemberInvitationOutOrderData: state => state.cloudMerchantmemberInvitationOutOrderData,
     cloudMerchantTaglist: state => state.cloudMerchantTaglist
 }
 
@@ -488,6 +490,9 @@ const mutations = {
     },
     [types.GET_CLOUD_MERCHANT_ACTIVITY_PURCHASE_DATA] (state, payload) {
         state.cloudMerchantActivityPurchaseData = payload
+    },
+    [types.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA] (state, payload) {
+        state.cloudMerchantmemberInvitationOutOrderData = payload
     },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
         state.cloudMerchantTaglist = payload
@@ -907,6 +912,10 @@ const actions = {
     async findCloudMerchantProductOutOrderDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantProductOutOrderDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_DETAIL, data)
+    },
+    async findMerchantMemberInvitationOutOrdersituation ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationOutOrdersituation(params)
+        commit(types.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
     },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)

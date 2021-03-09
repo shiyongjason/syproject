@@ -258,7 +258,7 @@ export default {
             this.dialogVisible = true
         },
         async editConform () {
-            if (this.isQueryOperation) {
+            if (!this.isQueryOperation) {
                 if (this.tagStringList.length > 0) {
                     await addMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': this.tagStringList })
                     this.onQuery()

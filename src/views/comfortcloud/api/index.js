@@ -737,3 +737,13 @@ export function addMemberTag (params) {
 export function editMemberTag (params) {
     return axios.put(iotUrl + '/mall/boss/user-tag', params)
 }
+
+// 获取外部蓄水客户购买记录
+export function getMerchantMemberInvitationOutOrdersituation (params) {
+    return axios.get(iotUrl + '/mall/boss/user/out/order', { params })
+}
+
+// 获取外部蓄水客户购买记录统计
+export function getMerchantMemberInvitationOutOrdersTotal (params) {
+    return axios.get(iotUrl + '/mall/boss/user/out/order-total', { params })
+}
