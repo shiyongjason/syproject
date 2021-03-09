@@ -811,7 +811,8 @@ export default {
                         console.log('旧图', this.oldImg)
                         fieldOriginalContent = this.oldImg
                         item.paramValue.map((img, i) => {
-                            if (img.fileUrl === this.oldImg) {
+                            // ?x-oss-process=image/auto-orient,1  页面上的图片有些在crm加了这个属性，而服务器的没有，导致了用===查找不到
+                            if (img.fileUrl === this.oldImg || this.oldImg.indexOf(img.fileUrl) != -1) {
                                 console.log('i: ', i)
                                 let a = JSON.parse(JSON.stringify(item.paramValue))
                                 a.splice(i, 1, ...this.imgArr)
@@ -822,6 +823,7 @@ export default {
                 }
             })
             console.log('contractFieldsList', contractFieldsList)
+            // return
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -901,7 +903,7 @@ export default {
                                 Array.from(img).map(d => {
                                     console.log('d: ', d)
                                     let dData = item.paramValue.filter(pv => {
-                                        if (pv && pv.fileUrl === d.src) {
+                                        if (pv && (pv.fileUrl === d.src || d.src.indexOf(pv.fileUrl) != -1)) {
                                             return true
                                         }
                                     })
