@@ -109,7 +109,7 @@
                         <div class="seal_records-times">{{moment(item.operationTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
                     </div>
 
-                    <div class="seal_records-remark">备注：{{item.approvalRemark}}</div>
+                    <div class="seal_records-remark" v-if="item.approvalRemark">备注：{{item.approvalRemark}}</div>
                 </div>
                 <div v-if="editHistory.length==0">暂无审批记录</div>
             </template>
