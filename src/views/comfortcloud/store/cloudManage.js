@@ -919,6 +919,12 @@ const actions = {
     },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)
+        for (let i = 0; i < data.length; i++) {
+            let element = data[i]
+            for (let j = 0; j < element.tagDetailBos.length; j++) {
+                element.tagDetailBos[j] = element.tagDetailBos[j]['tagName']
+            }
+        }
         commit(cloud.GET_CLOUD_MERCHANT_TAG_LIST, data)
     }
 }
