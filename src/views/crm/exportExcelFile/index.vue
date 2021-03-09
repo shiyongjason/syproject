@@ -34,7 +34,6 @@
             </div>
         </div>
         <div class="page-body-cont">
-            {{fileTablePagination}}
             <basicTable :tableData="fileTableList" :tableLabel="tableLabel" :pagination="fileTablePagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false" :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
