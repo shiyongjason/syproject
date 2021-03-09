@@ -394,8 +394,8 @@ export default [
                 component: () => import('@/views/crm/contractSigningManagement/noTempApprove.vue')
             },
             {
-                path: 'exportExcelFileTest',
-                name: 'exportExcelFileTest',
+                path: 'exportExcelFile',
+                name: 'exportExcelFile',
                 meta: {
                     title: 'excel导入',
                     tagName: 'excel导入',
@@ -403,7 +403,7 @@ export default [
                     isMenu: true,
                     icon: ''
                 },
-                component: () => import('@/views/crm/exportExcelFileTest/index.vue')
+                component: () => import('@/views/crm/exportExcelFile/index.vue')
             }
         ]
     }
