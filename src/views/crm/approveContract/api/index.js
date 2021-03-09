@@ -13,3 +13,6 @@ export const getDiffApi = (params) => axios.get('/project/api/contract-approval/
 
 // 查询对比合同内容
 export const getPurchaseOrderList = (params) => axios.get(`/project/api/purchase-order-contracts/list`, { params })
+
+// 天眼查列表搜索
+export const getTYCList = (params) => axios.get(`/memeber/api/tianyancha/searches`, { params })
