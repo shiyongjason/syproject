@@ -491,7 +491,7 @@ const mutations = {
     [types.GET_CLOUD_MERCHANT_ACTIVITY_PURCHASE_DATA] (state, payload) {
         state.cloudMerchantActivityPurchaseData = payload
     },
-    [types.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA] (state, payload) {
+    [cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA] (state, payload) {
         state.cloudMerchantmemberInvitationOutOrderData = payload
     },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
@@ -915,7 +915,7 @@ const actions = {
     },
     async findMerchantMemberInvitationOutOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOutOrdersituation(params)
-        commit(types.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
+        commit(cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
     },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)

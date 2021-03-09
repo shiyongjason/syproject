@@ -103,7 +103,6 @@ export default {
         ...mapGetters({
             merchantmemberInvitationOutOrderData: 'cloudMerchantmemberInvitationOutOrderData',
             cloudMerchantTaglist: 'cloudMerchantTaglist'
-
         }),
         enterpriseInfoData () {
             return {
