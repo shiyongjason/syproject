@@ -19,13 +19,15 @@
             </div>
             <div class="query-cont__row">
                 <div class="query-cont-col">
+                    <div class="query-col__label">请选择数据源：</div>
                     <div class="query-col__input">
-                        <el-select v-model="uploadParams.tableNameEn" placeholder="请选择表名称上传">
+                        <el-select clearable v-model="uploadParams.tableNameEn" placeholder="请选择表名称上传">
                             <el-option v-for="item in nameList" :key="item.tableNameEn" :label="item.tableNameCh" :value="item.tableNameEn"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <el-button size="small" type="default" @click="downloadFile">下载模板数据源</el-button>
                     <el-upload ref="elUpload" v-model="fileList" :multiple='false' :name="'file'" :data='uploadParams' :showFileList='false' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
                                :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept="accept" :on-error='handleError'>
                         <el-button size="small" type="primary">excel导入</el-button>
@@ -46,6 +48,7 @@
 <script>
 import { interfaceUrl } from '@/api/config.js'
 import { getExcelLabelList, getExcelTableTableList } from './api/index'
+import { ossDownload } from '@/utils/utils'
 export default {
     name: 'exportExcelFileTest',
     data () {
@@ -62,6 +65,7 @@ export default {
             fileTableList: [],
             tableLabel: [
                 { label: '表英文名称', prop: 'tableNameEn' },
+                { label: '表中文名称', prop: 'tableNameCh' },
                 { label: '文件名', prop: 'fileName' },
                 { label: '操作人', prop: 'createBy' },
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' }
@@ -174,6 +178,17 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 tableNameEn: ''
+            }
+        },
+        downloadFile () {
+            if (this.uploadParams.tableNameEn) {
+                this.nameList.forEach(value => {
+                    if (value.tableNameEn === this.uploadParams.tableNameEn) {
+                        ossDownload(value.templateExcelUrl, value.templateExcelExcel || '未知.xlsx')
+                    }
+                })
+            } else {
+                this.$message.error('请先选择数据源')
             }
         }
     },
