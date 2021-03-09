@@ -360,8 +360,28 @@ router.beforeEach(async (to, from, next) => {
     // TODO 获取B2b token 项目路径 hmall（重新获取token）
     if (to.path.indexOf('b2b') > 0 || to.path.indexOf('paymentCentral') > 0) {
         // 登录token带到请求的头部中，用于校验登录状态
-        const token = localStorage.getItem('tokenB2b')
-        if (token) {
+
+        // 临时解决BOSS登陆B2B菜单报错问题，待优化
+
+        const newInstance = axios.create({
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        const { data } = await newInstance.post(B2bUrl + 'uaa/oauth/token', qs.stringify({
+            'grant_type': 'client_credentials',
+            'client_id': 'boss',
+            'client_secret': 'boss',
+            'scope': 'boss'
+        }))
+
+        console.log(data)
+        localStorage.setItem('tokenB2b', data.access_token)
+        axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
+
+        // const token = localStorage.getItem('tokenB2b')
+
+        /*if (token) {
             axios.defaults.headers['Authorization'] = 'Bearer ' + token
         } else {
             const newInstance = axios.create({
@@ -375,9 +395,11 @@ router.beforeEach(async (to, from, next) => {
                 'client_secret': 'boss',
                 'scope': 'boss'
             }))
+
+            console.log(data)
             localStorage.setItem('tokenB2b', data.access_token)
             axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
-        }
+        }*/
     }
     // 获取数据权限
     const authPath = to && to.path.split('/')
