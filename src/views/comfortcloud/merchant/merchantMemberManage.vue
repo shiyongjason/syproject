@@ -19,12 +19,16 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">注册时间： </div>
+                    <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime"
+                                        value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期"
+                                        :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime"
+                                        value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期"
+                                        :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -35,32 +39,60 @@
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">
-                  已筛选 {{merchantmemberData.total}} 项；
-                  累计注册: {{merchantmemberTotalData.registerCount}}个；
-                  累计邀请成交订单: {{merchantmemberTotalData.rewardCount}}单；
-                  累计邀请成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
-                  累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
+                已筛选 {{merchantmemberData.total}} 项；
+                累计注册: {{merchantmemberTotalData.registerCount}}个；
+                累计邀请成交订单: {{merchantmemberTotalData.rewardCount}}单；
+                累计邀请成交金额:{{merchantmemberTotalData.payAmountTotal}}元；
+                累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
             </el-tag>
             <!-- 表格使用老毕的组件 -->
-        <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
+                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
+                        :isAction="true">
                 <template slot="source" slot-scope="scope">
                     {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
                 </template>
-            <template slot="merchantType" slot-scope="scope">
+                <template slot="merchantType" slot-scope="scope">
                     {{setMerchantType(scope.data.row)}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">变更推荐人</el-button>
+                    <el-button class="orangeBtn" @click="onRecommendPerson(scope.data.row)">变更推荐人</el-button>
                 </template>
             </basicTable>
-            </div>
+            <el-dialog title="变更推荐人" :modal-append-to-body=false :append-to-body=false
+                       :visible.sync="recommendDialogVisible" width="50%">
+                <h1 style="padding-bottom: 10px">订单信息</h1>
+                <h1 style="padding-top: 20px">变更后，该会员将绑定在新的推荐人/无推荐人状态，请确认准确后变更</h1>
+                <div >
+                    <p>注册来源</p>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="recommendData.source" style="width: 100%">
+                            <el-option label="自主注册" value=1></el-option>
+                            <el-option label="好友推荐" value=2></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div  v-show="recommendData.source==='2'">
+                    <div class="query-col-title">推荐人会员账号：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="recommendData.phone" placeholder="请输入手机号" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                <el-button @click="onRecommendChange(0)">取消</el-button>
+                <el-button type="primary" @click="onRecommendChange(1)">确认</el-button>
+            </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
+import { recommendChange } from '../api'
+
 export default {
     name: 'comfortcloudMembermanage',
     data () {
@@ -99,7 +131,8 @@ export default {
                 { label: '奖励金额', prop: 'rewardAmountTotal' },
                 { label: '会员标签', prop: 'userTags' }
             ],
-            dialogVisible: false
+            recommendDialogVisible: false,
+            recommendData: {}
         }
     },
     computed: {
@@ -174,6 +207,21 @@ export default {
         onEdit (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
         },
+        async onRecommendPerson (val) {
+            this.recommendDialogVisible = true
+            this.recommendData = val
+        },
+        async onRecommendChange (val) {
+            this.recommendDialogVisible = false
+            if (val === 1) {
+                await recommendChange({
+                    uuid: this.recommendData.uuid,
+                    changeType: this.recommendData.source,
+                    phone: this.recommendData.phone,
+                    operator: this.userInfo.employeeName })
+                this.onQuery()
+            }
+        },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
             this.onQuery(this.searchParams)
@@ -203,32 +251,40 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.spanflex {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 10px;
-    span {
-        flex: 1;
-        &:first-child {
-            font-size: 16px;
-        }
-        &:last-child {
-            text-align: right;
+    .spanflex {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 10px;
+
+        span {
+            flex: 1;
+
+            &:first-child {
+                font-size: 16px;
+            }
+
+            &:last-child {
+                text-align: right;
+            }
         }
     }
-}
-.topTitle{
-    margin-right: 2rem;
-    font-weight:bold;
-}
-.colred {
-    color: #ff7a45;
-    cursor: pointer;
-}.topColred {
-    color: #ff7a45;
-    cursor: pointer;
-}
-/deep/.el-dialog__body {
-    padding-top: 10px;
-}
+
+    .topTitle {
+        margin-right: 2rem;
+        font-weight: bold;
+    }
+
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+
+    .topColred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+
+    /deep/ .el-dialog__body {
+        padding-top: 10px;
+    }
 </style>

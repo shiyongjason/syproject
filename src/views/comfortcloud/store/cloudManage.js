@@ -893,7 +893,7 @@ const actions = {
     async findCloudMerchantProductOutOrderList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantProductOutOrderList(params)
         console.log(data)
-        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST, data)
         commit(cloud.GET_CLOUD_MERCHANT_PRODUCT_OUT_ORDER_LIST_PAGINATION, {
             pageNumber: data.current,
             pageSize: data.size,
