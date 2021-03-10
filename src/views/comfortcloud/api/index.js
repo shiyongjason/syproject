@@ -650,7 +650,7 @@ export function editDistributorName (params) {
 
 // 获取主营产品分类
 export function getMerchantClassifyList (params) {
-    return axios.get(iotUrl + '/mall/boss/main-product', params)
+    return axios.get(iotUrl + '/mall/boss/main-product', { params })
 }
 
 // 编辑主营产品分类
@@ -754,4 +754,24 @@ export function getMerchantMemberInvitationOutOrdersituation (params) {
 // 获取外部蓄水客户购买记录统计
 export function getMerchantMemberInvitationOutOrdersTotal (params) {
     return axios.get(iotUrl + '/mall/boss/user/out/order-total', { params })
+}
+
+// 按会员标签新增商品匹配关系
+export function addMerchantClassifyByTag (params) {
+    return axios.post(iotUrl + '/mall/boss/main-product/tag-product', params)
+}
+
+// 按会员标签修改商品匹配关系
+export function modifyMerchantClassifyByTag (params) {
+    return axios.put(iotUrl + '/mall/boss/main-product/tag-product', params)
+}
+
+// 删除会员标签和商品匹配关系
+export function deleteMerchantClassifyByTag (params) {
+    return axios.delete(iotUrl + '/mall/boss/main-product/tag-product/' + params.batchNo + '/' + params.operator)
+}
+
+// 获取会员标签和商品匹配关系
+export function getMerchantClassifyByTag (params) {
+    return axios.get(iotUrl + '/mall/boss/main-product/tag-edit-info', { params })
 }

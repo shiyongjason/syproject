@@ -3,16 +3,29 @@
         <div class="page-body-cont query-cont spanflex">
             <span>一键匹配智能辅材</span>
         </div>
-        <div class="page-body-cont query-cont">
-            <div class="query-cont-col">
-                <div class="query-col-title">
-                    <el-button type="primary" class="ml20" @click="addClassify">新增智能辅材匹配关系</el-button>
+
+        <div class="page-body-cont query-cont" >
+            <el-popover
+                placement="right"
+                width="200"
+                trigger="hover">
+                <div class="popover-btn" @click="addClassifyByProduct">按主营产品</div>
+                <div class="popover-btn" @click="addClassifyByMember">按会员标签</div>
+
+                <div class="query-cont-col" slot="reference">
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" >新增智能辅材匹配关系</el-button>
+                    </div>
                 </div>
-            </div>
+            </el-popover>
+
         </div>
 
         <div class="page-body-cont">
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantClassifyList" :isShowIndex='true' :pagination="cloudMerchantClassifyListPagination" :isAction="true" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+                <template slot="type" slot-scope="scope">
+                    <span>{{scope.data.row.type === 1 ? '按主营产品' : '按会员标签'}}</span>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">查看匹配商品</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
@@ -41,6 +54,37 @@
                 <el-button type="primary" @click="submitAddForm" :loading="isAdding">确 定</el-button>
             </span>
         </el-dialog>
+        <el-dialog width="600px" :title="isEdith?'匹配商品编辑':'新增匹配商品'" :visible.sync="addByTagDialogVisible" :close-on-click-modal="false" :before-close="onCloseAddByTagDialog">
+            <el-form :model="form" :rules="rules" ref="addByTagForm" label-width="90px" label-position="left">
+                <el-form-item label="选择会员标签（需至少选择一个标签）" label-width="300px">
+                </el-form-item>
+
+                <el-form-item label="手动标签：">
+                    <el-select v-model="addByTagForm.manualTags" multiple >
+                        <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory" :label="group.tagCategory">
+                            <el-option v-for="item in group.tagDetailBos" :key="item" :label="item" :value="item"></el-option>
+                        </el-option-group>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="自动标签：" >
+                    <el-select v-model="addByTagForm.autoTags" multiple>
+                        <el-option v-for="item in allAutoTags" :key="item" :label="item" :value="item"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="推荐搭配产品（同一个产品仅需维护一次匹配关系）" required label-width="400px"></el-form-item>
+                <el-form-item label="商品名称：" v-for="(item,index) in addByTagForm.mainProductList" :key="index">
+                    <el-select v-model="item.productName" @change='selectItem(item)' placeholder="输入已上架的商品名称" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
+                        <el-option v-for="items in options" :key="items.productId" :label="items.productName" :value="items.productName">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="cancelAddByTagClick">取 消</el-button>
+                <el-button type="primary" @click="submitAddByTagForm" :loading="isAdding">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -52,7 +96,11 @@ import {
     editMerchantClassifyList,
     addMerchantClassifyList,
     deleteMerchantClassifyList,
-    getMerchantClassifyOfCategoryList
+    getMerchantClassifyOfCategoryList,
+    getDictionary,
+    addMerchantClassifyByTag,
+    modifyMerchantClassifyByTag,
+    getMerchantClassifyByTag, deleteMerchantClassifyByTag
 } from '../api'
 
 export default {
@@ -72,7 +120,8 @@ export default {
             options: [],
             isEdith: false, // 是否是新增
             tableLabel: [
-                { label: '主营产品', prop: 'mainCategoryName' }
+                { label: '匹配类型', prop: 'type' },
+                { label: '匹配内容', prop: 'mainCategoryName' }
             ],
             dialogAddVisible: false,
             isAdding: false,
@@ -84,30 +133,30 @@ export default {
                     { required: true, message: '请选择商品', trigger: 'change' }
                 ]
             },
-            focusRowData: null,
-            dialogSellingPointsVisible: false,
-            sellingPointsForm: {
-                sellingPoints: ''
+            addByTagDialogVisible: false,
+            addByTagForm: {
+                manualTags: [],
+                autoTags: [],
+                mainProductList: [{}]
             },
-
-            dialogDiscountPriceVisible: false,
-            discountPriceForm: {
-                discountPrice: ''
-            },
-            discountPriceFormRules: {
-                discountPrice: [
-                    { required: true, message: '请输入特惠价', trigger: 'blur' }
-                ]
-            }
+            allAutoTags: []
         }
     },
-    mounted () {
+    async mounted () {
         this.queryList(this.queryParams)
+        this.findCloudMerchantTaglist()
+        const { data } = await getDictionary({
+            item: 'out_store_water_member_auto_tag'
+        })
+        this.allAutoTags = data.data.map((v) => {
+            return v.dataValue
+        })
     },
     computed: {
         ...mapGetters({
             cloudMerchantClassifyList: 'cloudMerchantClassifyList',
-            cloudMerchantClassifyListPagination: 'cloudMerchantClassifyListPagination'
+            cloudMerchantClassifyListPagination: 'cloudMerchantClassifyListPagination',
+            cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
         ...mapState({
             userInfo: state => state.userInfo
@@ -115,22 +164,43 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCloudMerchantClassifyList: 'findCloudMerchantClassifyList'
+            findCloudMerchantClassifyList: 'findCloudMerchantClassifyList',
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
         }),
-        addClassify: function () {
+        addClassifyByProduct: function () {
             this.isEdith = false
             this.clearAddFormData()
             this.dialogAddVisible = true
         },
+        addClassifyByMember: function () {
+            this.isEdith = false
+            this.clearAddByMemberTagFromData()
+            this.addByTagDialogVisible = true
+        },
         checkClassify: async function (item) {
-            this.isEdith = true
-            this.clearAddFormData()
-            const mainProductList = await getMerchantClassifyOfCategoryList({ mainCategoryId: item.id })
-            this.form.mainCategoryName = item.mainCategoryName
-            this.form.id = item.id
-            this.form.mainProductList = mainProductList.data
-            console.log(this.form, '查看列表')
-            this.dialogAddVisible = true
+            if (item.type === 1) {
+                this.isEdith = true
+                this.clearAddFormData()
+                const mainProductList = await getMerchantClassifyOfCategoryList({ mainCategoryId: item.id })
+                this.form.mainCategoryName = item.mainCategoryName
+                this.form.id = item.id
+                this.form.mainProductList = mainProductList.data
+                console.log(this.form, '查看列表')
+                this.dialogAddVisible = true
+            } else if (item.type === 2) {
+                this.isEdith = true
+                this.clearAddByMemberTagFromData()
+                const classfyInfo = await getMerchantClassifyByTag({ batchNo: item.batchNo })
+                console.log(classfyInfo)
+                this.addByTagForm = {
+                    batchNo: item.batchNo,
+                    mainProductList: classfyInfo.data.productList,
+                    manualTags: classfyInfo.data.manualTagList.map((v) => v.tagName),
+                    autoTags: classfyInfo.data.autoTagList.map((v) => v.tagName)
+                }
+                console.log(this.addByTagForm)
+                this.addByTagDialogVisible = true
+            }
         },
         addClassifyMerchants: function () {
             this.form.mainProductList.push({ productId: '', productName: '' })
@@ -185,10 +255,17 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await deleteMerchantClassifyList({
-                    id: data.id,
-                    operateUserName: this.userInfo.employeeName
-                })
+                if (data.type === 1) {
+                    await deleteMerchantClassifyList({
+                        id: data.id,
+                        operateUserName: this.userInfo.employeeName
+                    })
+                } else {
+                    await deleteMerchantClassifyByTag({
+                        batchNo: data.batchNo,
+                        operator: this.userInfo.employeeName
+                    })
+                }
                 this.$message.success('删除成功')
                 this.queryList(this.queryParams)
             }).finally(null)
@@ -254,27 +331,111 @@ export default {
             this.queryList(this.queryParams)
             this.clearAddFormData()
             this.dialogAddVisible = false
+        },
+        clearAddByMemberTagFromData () {
+            if (this.$refs['addByTagForm']) {
+                this.$refs['addByTagForm'].clearValidate()
+                this.addByTagForm = {
+                    manualTags: [],
+                    autoTags: [],
+                    mainProductList: [{}]
+                }
+            }
+        },
+        onCloseAddByTagDialog () {
+            this.clearAddByMemberTagFromData()
+            this.addByTagDialogVisible = false
+        },
+        cancelAddByTagClick () {
+            this.clearAddByMemberTagFromData()
+            this.addByTagDialogVisible = false
+        },
+        async submitAddByTagForm () {
+            if (this.isAdding) {
+                return
+            }
+
+            if (this.addByTagForm.manualTags.length === 0 && this.addByTagForm.autoTags.length === 0) {
+                this.$message.error('请至少选择一个手动标签或自动标签')
+                return
+            }
+
+            if (this.addByTagForm.mainProductList[0].productId == null) {
+                this.$message.error('请选择搭配产品')
+                return
+            }
+            this.isAdding = true
+            try {
+                await this.sendAddByTagClassify()
+                this.isAdding = false
+            } catch (e) {
+                this.isAdding = false
+            }
+        },
+        async sendAddByTagClassify () {
+            let params = { operator: this.userInfo.employeeName,
+                mainProductList: this.addByTagForm.mainProductList
+            }
+
+            let manualTags = this.addByTagForm.manualTags.map((v) => {
+                return { tagType: 2,
+                    tagName: v,
+                    tagId: 0
+                }
+            })
+            let autoTags = this.addByTagForm.autoTags.map((v) => {
+                return { tagType: 1,
+                    tagName: v,
+                    tagId: 0
+                }
+            })
+
+            params.tagList = manualTags.concat(autoTags)
+
+            if (this.isEdith) {
+                params.batchNo = this.addByTagForm.batchNo
+
+                await modifyMerchantClassifyByTag(params)
+                this.$message({
+                    message: '编辑成功！',
+                    type: 'success'
+                })
+            } else {
+                await addMerchantClassifyByTag(params)
+                this.$message({
+                    message: '添加成功！',
+                    type: 'success'
+                })
+            }
+            this.queryList(this.queryParams)
+            this.clearAddByMemberTagFromData()
+            this.addByTagDialogVisible = false
         }
     }
 }
 </script>
 
-<style scoped>
-.upload-tips {
-    font-size: 12px;
-    color: #999;
-    display: flex;
-    align-items: center;
-    height: 80px;
-    padding-left: 10px;
-}
+<style scoped lang="scss">
+
 .spanflex {
     font-size: 16px;
     padding-bottom: 10px;
 }
 
-.address {
-    overflow: hidden;
-    text-overflow: ellipsis;
+.popover-btn {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    text-align: center;
+
+    &:hover {
+        background-color: $hosjoyColorHover;
+        color: white;
+    }
 }
+
+/deep/.el-form .el-input:not(:first-child) {
+    margin-left: 0px;
+}
+
 </style>
