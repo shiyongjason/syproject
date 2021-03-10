@@ -112,7 +112,7 @@
             </template>
         </h-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <h-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <h-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer"  size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <template #connect>
                 <div class="approvalcontract-layout-left">
                     <h1>字段/自定义合同条款修订</h1>
@@ -728,8 +728,13 @@ export default {
                 //
                 this.contractFieldsList.map((d, i) => {
                     if (d.paramKey === this.currentKey.paramKey) {
+                        // 筛选出不是选中的图片
                         let dData = d.paramValue.filter(pv => {
-                            if (pv && pv.fileUrl !== this.currentKey.paramValue) {
+                            let currentKeyParamValue = this.currentKey.paramValue
+                            if (this.currentKey.paramValue.indexOf('?x-oss-process=image/auto-orient,1') != -1) {
+                                currentKeyParamValue = currentKeyParamValue.split('?x-oss-process=image/auto-orient,1')[0]
+                            }
+                            if (pv && pv.fileUrl !== currentKeyParamValue) {
                                 return true
                             }
                         })
@@ -810,6 +815,9 @@ export default {
                     } else {
                         console.log('旧图', this.oldImg)
                         fieldOriginalContent = this.oldImg
+                        if (!Array.isArray(item.paramValue)) {
+                            return
+                        }
                         item.paramValue.map((img, i) => {
                             // ?x-oss-process=image/auto-orient,1  页面上的图片有些在crm加了这个属性，而服务器的没有，导致了用===查找不到
                             if (img.fileUrl === this.oldImg || this.oldImg.indexOf(img.fileUrl) != -1) {
@@ -902,6 +910,9 @@ export default {
                                 console.log('有图片xxxxx', item.paramValue)
                                 Array.from(img).map(d => {
                                     console.log('d: ', d)
+                                    if (!Array.isArray(item.paramValue)) {
+                                        return
+                                    }
                                     let dData = item.paramValue.filter(pv => {
                                         if (pv && (pv.fileUrl === d.src || d.src.indexOf(pv.fileUrl) != -1)) {
                                             return true

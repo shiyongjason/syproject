@@ -38,6 +38,7 @@ axios.interceptors.request.use(
         // 如果是B2b请求 token不一样
         if (config.url.indexOf(B2bUrl) != -1) {
             const token = localStorage.getItem('tokenB2b')
+            const refreshToken = localStorage.getItem('refreshTokenB2b')
             token && (config.headers['Authorization'] = `Bearer ${token}`)
             refreshToken && (config.headers['Refresh-Token'] = `${refreshToken}`)
         } else {
