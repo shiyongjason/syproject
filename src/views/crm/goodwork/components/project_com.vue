@@ -81,7 +81,7 @@
                 </el-form-item>
             </el-form-item>
             <el-form-item label="上游接受付款的周期：" prop="upstreamPromiseMonth">
-                <el-input-number v-model="projectForm.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
+                <el-input-number v-model="projectForm.upstreamPromiseMonth" controls-position="right" @change="handleChange" :min="3" :max="6"></el-input-number>
                 个月
             </el-form-item>
             <el-form-item label="预估借款时间：" prop="estimatedLoanTime">
