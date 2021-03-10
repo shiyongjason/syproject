@@ -112,7 +112,7 @@
             </template>
         </h-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <h-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <h-drawer title="编辑字段" :visible.sync="editorDrawer" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <template #connect>
                 <div class="approvalcontract-layout-left">
                     <h1>字段/自定义合同条款修订</h1>
@@ -137,20 +137,20 @@
                                 </component>
                             </el-form-item>
                         </el-form> -->
-                    <!-- else -->
-                    <p class="setarea-key">{{currentKey.paramName}}：</p>
-                    <p style="display: flex;justify-content: space-between;align-items: center;">
-                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
-                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
-                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-                                    <!--  -->
-                                    <template v-if="value.slotRender" slot-scope="scope">
-                                        <comRender :scope="scope" :render="value.slotRender"></comRender>
-                                    </template>
-                                </component>
-                            </el-form-item>
-                        </el-form>
+                        <!-- else -->
+                        <p class="setarea-key">{{currentKey.paramName}}：</p>
+                        <p style="display: flex;justify-content: space-between;align-items: center;">
+                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
+                                <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+                                    <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
+                                        <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                        <!--  -->
+                                        <template v-if="value.slotRender" slot-scope="scope">
+                                            <comRender :scope="scope" :render="value.slotRender"></comRender>
+                                        </template>
+                                    </component>
+                                </el-form-item>
+                            </el-form>
 
                             <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
                                 accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
@@ -169,6 +169,7 @@
                     </div>
                 </div>
             </template>
+            <template #btn></template>
         </h-drawer>
         <el-dialog title="关联的采购单" :visible.sync="contentvsVisible" width="600px" class="contentvsbox">
             <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsPurchaseOrder(item)">
