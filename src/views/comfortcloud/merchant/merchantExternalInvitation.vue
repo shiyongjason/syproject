@@ -6,14 +6,14 @@
         <div class="page-body-cont-top ">
             <!-- <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)"> -->
             <div class="top-box">
-                <span>{{decodeURIComponent(this.$route.query.nickName)}} </span>
+                <span>{{decodeURIComponent(this.$route.query.nickName ? this.$route.query.nickName :this.$route.query.companyName)}} </span>
                 <span>手机号 ：{{this.$route.query.phone}} </span>
             </div>
             <div class="top-box-right">
-                <span style="margin-left: 1rem">注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}} </span>
-                <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='hcg'?'  好橙工':'  单分享APP'}}</span>
-                <span style="margin-left: 1rem">会员角色： {{this.$route.query.role}}</span>
-                <span style="margin-left: 1rem">会员角色： <span class="choice-tag" @click="showDliag()"> {{showTag}} </span></span>
+                <span style="margin-left: 1rem;margin-bottom:10px">注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}} </span>
+                <span style="margin-left: 1rem;margin-bottom:10px">注册来源： {{this.$route.query.source==='hcg'?'  好橙工':'  单分享APP'}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">会员角色： {{this.$route.query.role}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">会员标签： <span class="choice-tag" @click="showDliag()"> {{showTag}} </span></span>
             </div>
         </div>
         <div class="page-body-cont query-cont">
@@ -55,6 +55,7 @@
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
+                    <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
                     <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
@@ -64,7 +65,7 @@
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getMerchantMemberInvitationOutOrdersTotal } from '../api'
+import { getMerchantMemberInvitationOutOrdersTotal, addMemberTag, editMemberTag } from '../api'
 
 export default {
     name: 'merchantExternalInvitation',
@@ -131,13 +132,17 @@ export default {
             }
         },
         showTag () {
-            return this.tagStringList.join(',')
+            if (this.tagStringList.length > 0) {
+                return this.tagStringList.join(',')
+            } else {
+                return '--'
+            }
         }
     },
     mounted () {
         this.onSearch()
-        // this.tagStringList = this.$route.query.manualTags ? this.$route.query.manualTags : []
-        this.tagStringList = ['空调地暖面板YG-3329', '水地暖智控面板YH-3305']
+        this.tagStringList = this.$route.query.manualTags ? this.$route.query.manualTags : []
+        // this.tagStringList = ['空调地暖面板YG-3329', '水地暖智控面板YH-3305']
     },
     methods: {
         ...mapActions({
@@ -155,7 +160,7 @@ export default {
             }
         },
         async onTotal () {
-            const data = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
+            const { data } = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
             this.tableBuyTotalData = data
         },
         async showDliag (val) {
@@ -164,7 +169,18 @@ export default {
         },
         async editConform () {
             if (this.tagStringList.length > 0) {
-                await addMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': this.tagStringList })
+                // 这里因为后台需要传递tagid 所以要加上再传递
+                let tagMapList = []
+                for (let i = 0; i < this.tagStringList.length; i++) {
+                    const element = this.tagStringList[i]
+                    tagMapList.push({ 'tagId': '', 'tagName': element })
+                }
+
+                if (this.$route.query.manualTags) {
+                    await editMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
+                } else {
+                    await addMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
+                }
                 this.onQuery()
             }
             this.clearData()
@@ -172,8 +188,10 @@ export default {
         tagCancel () {
             this.clearData()
         },
-        clearData () {
+        tagCancelSelect () {
             this.tagStringList = []
+        },
+        clearData () {
             this.dialogVisible = false
         },
         onSearch () {
@@ -191,6 +209,26 @@ export default {
         },
         handleClick (tab, event) {
             this.tabIndex = tab.index
+        },
+        addTag (tag) {
+            let selectTag = false
+            let index = 0
+            let datas = this.tagStringList
+            for (let j = 0; j < datas.length; j++) {
+                const element = datas[j]
+                if (tag === element) {
+                    index = j
+                    selectTag = true
+                    break
+                }
+            }
+            if (selectTag) {
+                // 存在则删除
+                datas.splice(index, 1)
+            } else {
+                // 不存在则添加
+                datas.push(tag)
+            }
         }
     }
 }
@@ -223,6 +261,13 @@ export default {
 .choice-tag {
     color: #ff7a45;
     cursor: pointer;
+}
+.unselect {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px;
+    border: 1px solid #606266;
+    border-radius: 5px;
 }
 .select {
     display: inline-block;

@@ -11,37 +11,11 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">会员来源：</div>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="queryParams.source" style="width: 100%">
+                        <el-select v-model="queryParams.source">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="单分享" value="B2b"></el-option>
                             <el-option label="好橙工" value="hcg"></el-option>
                             <!-- <el-option label="平台1.0" value="3"></el-option> -->
-                        </el-select>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">注册时间： </div>
-                    <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
-                        </el-date-picker>
-                    </div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">手动标签：</div>
-                    <div class="query-col-cont">
-                        <el-select v-model="queryParams.manualTags" multiple style="width: 100%">
-                        </el-select>
-                    </div>
-                    <div class="click-tap hand" @click.stop="showQueryTagSelector()"></div>
-                </div>
-                <div class="query-cont-col">
-                    <div class="query-col-title">自动标签：</div>
-                    <div class="flex-wrap-cont">
-                        <el-select v-model="queryParams.autoTags" multiple collapse-tags style="width: 100%">
-                            <el-option v-for="item in queryParams.autoTags" :key="item.tag" :label="item.tag" :value="item.tag"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -64,6 +38,42 @@
                         </el-select>
                     </div>
                 </div>
+
+                <div class="query-cont-col">
+                    <div class="query-col-title">手动标签：</div>
+                    <div class="query-col-cont">
+                        <el-select v-model="queryParams.manualTags" multiple>
+                            <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory" :label="group.tagCategory">
+                                <el-option v-for="item in group.tagDetailBos" :key="item" :label="item" :value="item">
+                                </el-option>
+                            </el-option-group>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">自动标签：</div>
+                    <div class="flex-wrap-cont">
+                        <el-select v-model="queryParams.autoTags" multiple collapse-tags>
+                            <!-- <el-option v-for="item in queryParams.autoTags" :key="item.tag" :label="item.tag" :value="item.tag"></el-option> -->
+                            <el-option label="买过采暖产品" value="1"></el-option>
+                            <el-option label="买过新风产品" value="2"></el-option>
+                            <el-option label="买过空调主材" value="3"></el-option>
+                            <el-option label="买过空调辅材" value="4"></el-option>
+                            <el-option label="买过智能产品" value="5"></el-option>
+                            <el-option label="买过舒适云产品" value="6"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">注册时间： </div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        </el-date-picker>
+                        <span class="ml10">-</span>
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        </el-date-picker>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
@@ -78,11 +88,18 @@
                 <template slot="isAppletUser" slot-scope="scope">
                     {{ scope.data.row.isAppletUser ? '是' : '否' }}
                 </template>
+                <template slot="autoTag" slot-scope="scope">
+                    <!-- {{ scope.data.row.isAppletUser ? '是' : '否' }} -->
+                    <!-- {{autoTag(scope.data.row.autoTag)}} -->
+                    <div class="tag-container">
+                        <el-tag class="tag" size="mini" v-for="tag in autoTag(scope.data.row.autoTag)" :key='tag'>{{tag}}</el-tag>
+                    </div>
+                </template>
                 <template slot="manualTags" slot-scope="scope">
                     <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.manualTags !== null">
                         <el-tag class="tag" v-for="item in scope.data.row.manualTags" :key="item">{{item}}</el-tag>
                     </div>
-                    <div class="hand" @click="showDliag(scope.data.row)" v-else>--</div>
+                    <div class="hand" @click="showDliag(scope.data.row)" v-else>-</div>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看订单</el-button>
@@ -98,6 +115,7 @@
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
+                    <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
                     <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
@@ -128,7 +146,6 @@ export default {
                 autoTags: []
             },
             setTagUser: {},
-            isQueryOperation: false,
             tableData: [],
             tagStringList: [],
             provinceList: [],
@@ -154,7 +171,8 @@ export default {
                 { label: '销售顾问姓名', prop: 'saleName' },
                 { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
-                { label: '手动标签', prop: 'manualTags' }
+                { label: '手动标签', prop: 'manualTags', width: '150px' },
+                { label: '自动标签', prop: 'autoTag', width: '150px' }
             ],
             dialogVisible: false
         }
@@ -167,10 +185,39 @@ export default {
             merchantExernalMemberData: 'iotmerchantExternalMemberData',
             cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
+        autoTag () {
+            return function (tags) {
+                if (tags && tags.length > 0) {
+                    let auto = tags.split(',')
+                    let newAuto = []
+                    for (let i = 0; i < auto.length; i++) {
+                        const element = auto[i]
+                        if (element.length > 0) {
+                            if (element === '1') {
+                                newAuto.push('买过采暖产品')
+                            } else if (element === '2') {
+                                newAuto.push('买过新风产品')
+                            } else if (element === '3') {
+                                newAuto.push('买过空调主材')
+                            } else if (element === '4') {
+                                newAuto.push('买过空调辅材')
+                            } else if (element === '5') {
+                                newAuto.push('买过智能产品')
+                            } else if (element === '6') {
+                                newAuto.push('买过舒适云产品')
+                            }
+                        }
+                    }
+                    return newAuto
+                } else {
+                    return []
+                }
+            }
+        },
         tagSelect () {
             return function (tag) {
                 let selectTag = false
-                let datas = this.isQueryOperation ? this.queryParams.manualTags : this.tagStringList
+                let datas = this.tagStringList
                 for (let j = 0; j < datas.length; j++) {
                     const element = datas[j]
                     if (tag === element) {
@@ -220,6 +267,7 @@ export default {
     mounted () {
         this.onSearch()
         this.getAreacode()
+        this.queryTags()
     },
     activated () {
         this.onQuery()
@@ -239,43 +287,49 @@ export default {
                 total: this.merchantExernalMemberData.total
             }
         },
+        async queryTags () {
+            await this.findCloudMerchantTaglist()
+        },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
         async showDliag (val) {
-            this.isQueryOperation = false
             if (val !== undefined) {
                 this.setTagUser = val
                 this.tagStringList = val.manualTags ? val.manualTags : []
             }
-            await this.findCloudMerchantTaglist()
-            this.dialogVisible = true
-        },
-        async showQueryTagSelector () {
-            this.isQueryOperation = true
-            await this.findCloudMerchantTaglist()
+            this.queryTags()
             this.dialogVisible = true
         },
         async editConform () {
-            if (!this.isQueryOperation) {
-                if (this.tagStringList.length > 0) {
-                    await addMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': this.tagStringList })
-                    this.onQuery()
+            if (this.tagStringList.length > 0) {
+                // 这里因为后台需要传递tagid 所以要加上再传递
+                let tagMapList = []
+                for (let i = 0; i < this.tagStringList.length; i++) {
+                    const element = this.tagStringList[i]
+                    tagMapList.push({ 'tagId': '', 'tagName': element })
                 }
-            } else {
-                this.queryParams.manualTags = this.tagStringList ? [...this.tagStringList] : []
+                if (this.setTagUser.manualTags) {
+                    // 已经存在过 则是编辑
+                    await editMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': tagMapList })
+                } else {
+                    await addMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': tagMapList })
+                }
+                this.onQuery()
             }
             this.clearData()
         },
         tagCancel () {
             this.clearData()
         },
+        tagCancelSelect () {
+            this.tagStringList = []
+        },
         clearData () {
             this.tagStringList = []
             this.dialogVisible = false
             this.setTagUser = {}
-            this.isQueryOperation = false
         },
         onDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: val })
@@ -307,7 +361,7 @@ export default {
         addTag (tag) {
             let selectTag = false
             let index = 0
-            let datas = this.isQueryOperation ? this.queryParams.manualTags : this.tagStringList
+            let datas = this.tagStringList
             for (let j = 0; j < datas.length; j++) {
                 const element = datas[j]
                 if (tag === element) {
@@ -397,17 +451,7 @@ export default {
     flex-wrap: wrap;
     justify-content: flex-start;
 }
-
-.click-tap {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 10;
-}
-
-.el-tag.tag {
+.tag {
     margin: 5px;
 }
 .colred {
