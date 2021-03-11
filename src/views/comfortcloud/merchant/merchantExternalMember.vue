@@ -15,7 +15,6 @@
                             <el-option label="全部" value=""></el-option>
                             <el-option label="单分享" value="B2b"></el-option>
                             <el-option label="好橙工" value="hcg"></el-option>
-                            <!-- <el-option label="平台1.0" value="3"></el-option> -->
                         </el-select>
                     </div>
                 </div>
@@ -54,7 +53,6 @@
                     <div class="query-col-title">自动标签：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.autoTags" multiple collapse-tags>
-                            <!-- <el-option v-for="item in queryParams.autoTags" :key="item.tag" :label="item.tag" :value="item.tag"></el-option> -->
                             <el-option label="买过采暖产品" value="1"></el-option>
                             <el-option label="买过新风产品" value="2"></el-option>
                             <el-option label="买过空调主材" value="3"></el-option>
@@ -89,8 +87,6 @@
                     {{ scope.data.row.isAppletUser ? '是' : '否' }}
                 </template>
                 <template slot="autoTag" slot-scope="scope">
-                    <!-- {{ scope.data.row.isAppletUser ? '是' : '否' }} -->
-                    <!-- {{autoTag(scope.data.row.autoTag)}} -->
                     <div class="tag-container">
                         <el-tag class="tag" size="mini" v-for="tag in autoTag(scope.data.row.autoTag)" :key='tag'>{{tag}}</el-tag>
                     </div>
@@ -102,7 +98,7 @@
                     <div class="hand" @click="showDliag(scope.data.row)" v-else>-</div>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看订单</el-button>
+                    <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">会员详情</el-button>
                 </template>
             </basicTable>
@@ -171,7 +167,7 @@ export default {
                 { label: '销售顾问姓名', prop: 'saleName' },
                 { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
-                { label: '手动标签', prop: 'manualTags', width: '150px' },
+                { label: '手动标签', prop: 'manualTags', width: '200px' },
                 { label: '自动标签', prop: 'autoTag', width: '150px' }
             ],
             dialogVisible: false
@@ -297,7 +293,7 @@ export default {
         async showDliag (val) {
             if (val !== undefined) {
                 this.setTagUser = val
-                this.tagStringList = val.manualTags ? val.manualTags : []
+                this.tagStringList = val.manualTags ? [...val.manualTags] : []
             }
             this.queryTags()
             this.dialogVisible = true
@@ -333,6 +329,9 @@ export default {
         },
         onDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: val })
+        },
+        onOrderList (val) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList', query: { 'phone': val.phone } })
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
