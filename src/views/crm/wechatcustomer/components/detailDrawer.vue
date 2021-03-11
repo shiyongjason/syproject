@@ -16,7 +16,7 @@
                         <div class="drawer-cont_text">
                             <h3 class="drawer-cont_text-tit">基本信息</h3>
                             <div class="drawer-cont_text-info">性别：{{wxUserForm.gender==1?'男':wxUserForm.gender==0?'女':'-'}}</div>
-                            <div class="drawer-cont_text-info">电话：<i v-for="(item,index) in wxUserForm.remarkMobile" :key="index">{{item}}</i> <em v-if="wxUserForm.remarkMobile.length==0">-</em></div>
+                            <div class="drawer-cont_text-info">电话：<i v-for="(item,index) in wxUserForm.remarkMobile" :key="index">{{item}}</i> <em v-if="wxUserForm.remarkMobile&&wxUserForm.remarkMobile.length==0">-</em></div>
                             <div class="drawer-cont_text-info">添加人：{{wxUserForm.psnname||'-'}}</div>
                             <div class="drawer-cont_text-info">添加时间：{{wxUserForm.createTime|formatterTimes}}</div>
                             <div class="drawer-cont_text-info">类型：{{wxUserForm.type==1?'微信':"企业微信"}}</div>
