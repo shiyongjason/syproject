@@ -67,8 +67,8 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="自动标签：" >
-                    <el-select v-model="addByTagForm.autoTags" multiple>
-                        <el-option v-for="item in allAutoTags" :key="item" :label="item" :value="item"></el-option>
+                    <el-select v-model="addByTagForm.autoTags" value-key="tagId" multiple>
+                        <el-option v-for="item in allAutoTags" :key="item.tagId" :label="item.tagName" :value="item"></el-option>
                     </el-select>
                 </el-form-item>
 
@@ -149,7 +149,11 @@ export default {
             item: 'out_store_water_member_auto_tag'
         })
         this.allAutoTags = data.data.map((v) => {
-            return v.dataValue
+            return {
+                tagType: 1,
+                tagId: parseInt(v.dataKey),
+                tagName: v.dataValue
+            }
         })
     },
     computed: {
@@ -196,9 +200,10 @@ export default {
                     batchNo: item.batchNo,
                     mainProductList: classfyInfo.data.productList,
                     manualTags: classfyInfo.data.manualTagList.map((v) => v.tagName),
-                    autoTags: classfyInfo.data.autoTagList.map((v) => v.tagName)
+                    autoTags: classfyInfo.data.autoTagList
                 }
                 console.log(this.addByTagForm)
+                console.log(this.allAutoTags)
                 this.addByTagDialogVisible = true
             }
         },
@@ -383,12 +388,7 @@ export default {
                     tagId: 0
                 }
             })
-            let autoTags = this.addByTagForm.autoTags.map((v) => {
-                return { tagType: 1,
-                    tagName: v,
-                    tagId: 0
-                }
-            })
+            let autoTags = this.addByTagForm.autoTags
 
             params.tagList = manualTags.concat(autoTags)
 
