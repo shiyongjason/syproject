@@ -33,10 +33,10 @@
                         </template>
                     </basicTable>
                     <p>
-                        最近维护时间：{{this.creditPage.updateTime?moment(this.creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
+                        最近维护时间：{{creditPage.updateTime?moment(creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
                     </p>
                     <p>
-                        最近维护人：{{this.creditPage.updateBy||'-'}}（{{this.creditPage.updateByMobile||'-'}}）
+                        最近维护人：{{creditPage.updateBy||'-'}}（{{creditPage.updateByMobile||'-'}}）
                     </p>
                 </div>
                 <div class="collect-wrapbox" v-if="activeName=='2'">
