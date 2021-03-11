@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <el-button size="small" type="default" @click="downloadFile">下载模板数据源</el-button>
+                    <el-button size="small" type="default" @click="downloadFile">下载EXCEL模板</el-button>
                     <el-upload ref="elUpload" v-model="fileList" :multiple='false' :name="'file'" :data='uploadParams' :showFileList='false' :action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
                                :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept="accept" :on-error='handleError'>
                         <el-button size="small" type="primary">excel导入</el-button>
