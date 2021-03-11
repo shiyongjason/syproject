@@ -31,17 +31,10 @@
                         <el-input v-model="form.tagCategory" width='150'></el-input>
                     </el-form-item>
                     <el-form-item label="标签名称" prop="tagDetailBos">
-                        <el-button type="primary" @click="onAddTagName">新增标签</el-button>
+                        <el-tag :key="tag" v-for="(tag,index) in form.tagDetailBos" closable :disable-transitions="false" @close="onRemoveName(index)">{{tag}}</el-tag>
+                        <el-input class="input-new-tag" v-if="inputTagVisible" v-model="inputTagValue" ref="saveTagInput" size="small" @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm" />
+                        <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 新标签</el-button>
                     </el-form-item>
-
-                    <div class="query-cont-row edit-tags">
-                        <div class="edit-tags-row" v-for="(item,index) in form.tagDetailBos" :key="index">
-                            <el-form-item label-width="0" label="" :prop="'tagDetailBos.' + index" :rules="rules.value">
-                                <el-input v-model="form.tagDetailBos[index]" width='80'></el-input>
-                            </el-form-item>
-                            <el-button style="align-self: flex-start;margin-left: 20px;margin-right: 20px" type="primary" @click="()=> { onRemoveName(index) }">删除</el-button>
-                        </div>
-                    </div>
                 </el-form>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -75,10 +68,11 @@ export default {
                 tagCategory: [
                     { required: true, message: '请输入标签类型', trigger: 'blur' }
                 ],
-                tagDetailBos: [{ required: true, message: '标签不能为空', trigger: 'change' }],
-                value: [{ required: true, message: '标签不能为空', trigger: 'change' }]
+                tagDetailBos: [{ required: true, message: '标签不能为空', trigger: 'blur' }]
             },
-            loading: true
+            loading: true,
+            inputTagVisible: false,
+            inputTagValue: ''
         }
     },
     computed: {
@@ -118,8 +112,22 @@ export default {
             }
             this.detailDialogVisible = true
         },
-        onAddTagName () {
-            this.form.tagDetailBos.push('')
+        handleClose (tag) {
+            this.form.tagDetailBos.splice(this.form.tagDetailBos.indexOf(tag), 1)
+        },
+
+        showInput () {
+            this.inputTagVisible = true
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput.$refs.input.focus()
+            })
+        },
+        handleInputConfirm () {
+            if (this.inputTagValue) {
+                this.form.tagDetailBos.push(this.inputTagValue)
+            }
+            this.inputTagVisible = false
+            this.inputTagValue = ''
         },
         onRemoveName (index) {
             this.form.tagDetailBos.splice(index, 1)
@@ -214,6 +222,22 @@ export default {
         align-items: center;
         justify-content: flex-start;
         flex-direction: row;
+    }
+
+    .el-tag {
+        margin-right: 10px;
+    }
+    .button-new-tag {
+        margin-left: 10px;
+        height: 32px;
+        line-height: 32px;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .input-new-tag {
+        width: 120px;
+        margin-left: 10px;
+        vertical-align: bottom;
     }
 
 </style>

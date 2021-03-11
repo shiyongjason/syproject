@@ -30,12 +30,16 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">下单时间： </div>
+                    <div class="query-col-title">下单时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startOrderTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startOrderTime" type="datetime"
+                                        value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期"
+                                        :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endOrderTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endOrderTime" type="datetime"
+                                        value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期"
+                                        :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -56,7 +60,10 @@
                 </div>
             </div>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOutOrderList.records" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel"
+                        :tableData="cloudMerchantProductOutOrderList.records" :isShowIndex='false'
+                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
+                        :isAction="true">
                 <template slot="payMethod" slot-scope="scope">
                     {{orderPayDesc(scope.data.row.payMethod)}}
                 </template>
@@ -77,13 +84,13 @@
             </basicTable>
             <el-dialog title="销售顾问变更" :modal-append-to-body=false :append-to-body=false
                        :visible.sync="salerDialogVisible" width="50%">
-                <div >
+                <div>
                     <div class="query-col-title">销售顾问姓名：</div>
                     <div class="query-col-input">
                         <el-input v-model="salerData.salerName" placeholder="请输入姓名" maxlength="50"></el-input>
                     </div>
                 </div>
-                <div >
+                <div>
                     <div class="query-col-title">销售顾问手机号：</div>
                     <div class="query-col-input">
                         <el-input v-model="salerData.salerPhone" placeholder="请输入手机号" maxlength="50"></el-input>
@@ -94,7 +101,8 @@
                 <el-button type="primary" @click="onSalerChange(1)">确认</el-button>
             </span>
             </el-dialog>
-            <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="30%">
+            <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false
+                       :visible.sync="detailDialogVisible" width="30%">
                 <h1 style="padding-bottom: 10px">订单信息</h1>
                 <p style="line-height: 25px">订单原始总金额 ￥{{cloudMerchantProductOutOrderDetail.totalAmount}} <br>
                     折扣总金额 ￥{{cloudMerchantProductOutOrderDetail.discountAmount}}<br>
@@ -103,7 +111,9 @@
                     总{{cloudMerchantProductOutOrderDetail.buyNumber}}件，实付金额￥{{cloudMerchantProductOutOrderDetail.finalTotalAmount}}
                 </p>
                 <h1 style="padding-top: 20px">商品明细</h1>
-                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOutOrderDetail.products" :pagination="paginationDetail" :isShowIndex='false'>
+                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel"
+                            :tableData="cloudMerchantProductOutOrderDetail.products" :pagination="paginationDetail"
+                            :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
         </div>
@@ -112,6 +122,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { salerChange } from '../api'
+
 export default {
     name: 'merchantOutOrderList',
     data () {
@@ -175,7 +186,6 @@ export default {
         ...mapGetters({
             cloudMerchantProductOutOrderList: 'cloudMerchantProductOutOrderList',
             cloudMerchantProductOutOrderDetail: 'cloudMerchantProductOutOrderDetail'
-            // cloudMerchantProductOutOrderTotal: 'cloudMerchantProductOutOrderTotal'
         }),
         pickerOptionsStart () {
             return {
@@ -210,7 +220,15 @@ export default {
             findCloudMerchantProductOutOrderDetail: 'findCloudMerchantProductOutOrderDetail'
         }),
         async onQuery () {
+            if (this.searchParams.startOrderTime) {
+                this.searchParams.startOrderTime = this.searchParams.startOrderTime.replace('T', ' ')
+                console.log(this.searchParams.startOrderTime)
+            }
+            if (this.searchParams.endOrderTime) {
+                this.searchParams.endOrderTime = this.searchParams.endOrderTime.replace('T', ' ')
+            }
             await this.findCloudMerchantProductOutOrderList(this.searchParams)
+
             this.pagination = {
                 pageNumber: this.cloudMerchantProductOutOrderList.current,
                 pageSize: this.cloudMerchantProductOutOrderList.size,
@@ -240,19 +258,19 @@ export default {
             this.detailDialogVisible = true
         },
         orderStatusDesc (status) {
-            if (status == 10) {
+            if (status === 10) {
                 return '待付款'
-            } else if (status == 20) {
+            } else if (status === 20) {
                 return '待发货'
-            } else if (status == 30) {
+            } else if (status === 30) {
                 return '待收货'
-            } else if (status == 40) {
+            } else if (status === 40) {
                 return '已完成'
-            } else if (status == 50) {
+            } else if (status === 50) {
                 return '已关闭'
-            } else if (status == 60) {
+            } else if (status === 60) {
                 return '退款中'
-            } else if (status == 70) {
+            } else if (status === 70) {
                 return '已退款'
             }
             return status
@@ -268,12 +286,12 @@ export default {
                     orderNo: this.salerData.orderNo,
                     salerName: this.salerData.salerName,
                     salerPhone: this.salerData.salerPhone,
-                    operator: this.userInfo.employeeName })
+                    operator: this.userInfo.employeeName
+                })
                 this.onQuery()
             }
         },
         orderPayDesc (status) {
-            console.log(status)
             if (status === '1') {
                 return '账期支付'
             } else if (status === '2') {
@@ -292,28 +310,36 @@ export default {
         display: flex;
         justify-content: space-between;
         padding-bottom: 10px;
+
         span {
             flex: 1;
+
             &:first-child {
                 font-size: 16px;
             }
+
             &:last-child {
                 text-align: right;
             }
         }
     }
-    .topTitle{
+
+    .topTitle {
         margin-right: 2rem;
-        font-weight:bold;
+        font-weight: bold;
     }
+
     .colred {
         color: #ff7a45;
         cursor: pointer;
-    }.topColred {
-         color: #ff7a45;
-         cursor: pointer;
-     }
-    /deep/.el-dialog__body {
+    }
+
+    .topColred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
+
+    /deep/ .el-dialog__body {
         padding-top: 10px;
     }
 </style>
