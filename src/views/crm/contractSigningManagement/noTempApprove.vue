@@ -109,7 +109,9 @@ export default {
             this.dialogVisible = false
         },
         onDelect (index) {
-            this.contractList = this.contractList.splice(1, index)
+            console.log(index)
+            this.contractList.splice(index, 1)
+            console.log(this.contractList)
         },
         onSubmitMsg () {
             if (this.type == 1) {
