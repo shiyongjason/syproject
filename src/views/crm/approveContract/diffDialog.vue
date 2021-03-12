@@ -60,6 +60,9 @@ export default {
                 if (item.dataset && item.dataset.mceSrc) {
                     item.removeAttribute('data-mce-src')
                 }
+                if (item.dataset && item.dataset.mceSelected) {
+                    item.removeAttribute('data-mce-selected')
+                }
             })
             Array.from(spanList2).map(item => {
                 if (item.dataset && item.dataset.mceStyle) {
@@ -67,6 +70,9 @@ export default {
                 }
                 if (item.dataset && item.dataset.mceSrc) {
                     item.removeAttribute('data-mce-src')
+                }
+                if (item.dataset && item.dataset.mceSelected) {
+                    item.removeAttribute('data-mce-selected')
                 }
             })
             cb && cb()
