@@ -112,13 +112,12 @@
             </template>
         </h-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <h-drawer title="编辑字段" :visible.sync="editorDrawer" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
-            <template #connect>
-                <div class="approvalcontract-layout-left">
-                    <h1>字段/自定义合同条款修订</h1>
-                    <div class="setarea" v-if="currentKey">
-                        <!-- v-if 法务 detailRes.contractStatus == 6-->
-                        <!-- <template>
+        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+            <div class="approvalcontract-layout-left">
+                <h1>字段/自定义合同条款修订</h1>
+                <div class="setarea" v-if="currentKey">
+                    <!-- v-if 法务 detailRes.contractStatus == 6-->
+                    <!-- <template>
                             <el-dropdown @command="handleCommand">
                                 <span class="el-dropdown-link">
                                     {{currentKey.paramName}}<i class="el-icon-arrow-down el-icon--right"></i> ：
@@ -130,47 +129,45 @@
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </template> -->
-                        <!-- <el-form :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <!-- <el-form :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                             <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                 <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
                                     <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
                                 </component>
                             </el-form-item>
                         </el-form> -->
-                        <!-- else -->
-                        <p class="setarea-key">{{currentKey.paramName}}：</p>
-                        <p style="display: flex;justify-content: space-between;align-items: center;">
-                            <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
-                                <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
-                                    <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
-                                        <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
-                                        <!--  -->
-                                        <template v-if="value.slotRender" slot-scope="scope">
-                                            <comRender :scope="scope" :render="value.slotRender"></comRender>
-                                        </template>
-                                    </component>
-                                </el-form-item>
-                            </el-form>
+                    <!-- else -->
+                    <p class="setarea-key">{{currentKey.paramName}}：</p>
+                    <p style="display: flex;justify-content: space-between;align-items: center;">
+                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
+                            <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
+                                <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
+                                    <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                    <!--  -->
+                                    <template v-if="value.slotRender" slot-scope="scope">
+                                        <comRender :scope="scope" :render="value.slotRender"></comRender>
+                                    </template>
+                                </component>
+                            </el-form-item>
+                        </el-form>
 
-                            <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
-                                accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
-                                <i class="el-icon-upload"></i>
-                                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
-                                <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
-                            </hosjoyUpload>
-                        </p>
-                        <h-button v-if="currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
-                        <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
-                    </div>
-                    <div class="tips">
-                        <div><b>注意事项：</b></div>
-                        <p>1、点击保存，则会记录修订记录，并保存为最新的合同文档；</p>
-                        <p>2、暂不审核，不会撤销字段修订记录；</p>
-                    </div>
+                        <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
+                            accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
+                            <i class="el-icon-upload"></i>
+                            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
+                            <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
+                        </hosjoyUpload>
+                    </p>
+                    <h-button v-if="currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
+                    <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
                 </div>
-            </template>
-            <template #btn></template>
-        </h-drawer>
+                <div class="tips">
+                    <div><b>注意事项：</b></div>
+                    <p>1、点击保存，则会记录修订记录，并保存为最新的合同文档；</p>
+                    <p>2、暂不审核，不会撤销字段修订记录；</p>
+                </div>
+            </div>
+        </el-drawer>
         <el-dialog title="关联的采购单" :visible.sync="contentvsVisible" width="600px" class="contentvsbox">
             <div v-for="(item,index) in contentvsData" :key="index+'vs'" class="contentvsData-item" @click="onClickVsPurchaseOrder(item)">
                 <img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/163503360/a954aef4-b308-4043-b4b1-fea72116bd89.png' />
