@@ -36,9 +36,6 @@
                         </el-select>
                     </div>
                 </div>
-
-            </div>
-            <div class="query-cont__row">
                 <div class="query-cont__col">
                     <div class="query-col__label">状态：</div>
                     <div class="query-col__input">
