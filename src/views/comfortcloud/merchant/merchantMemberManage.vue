@@ -55,6 +55,12 @@
                 <template slot="merchantType" slot-scope="scope">
                     {{setMerchantType(scope.data.row)}}
                 </template>
+                <template slot="userTags" slot-scope="scope">
+                    <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.userTags !== null">
+                        <el-tag class="tag" v-for="item in scope.data.row.userTags.split(',')" :key="item">{{item}}</el-tag>
+                    </div>
+                    <div class="hand" @click="showDliag(scope.data.row)" v-else>-</div>
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
                     <el-button class="orangeBtn" @click="onRecommendPerson(scope.data.row)">变更推荐人</el-button>
@@ -84,6 +90,19 @@
                 <el-button type="primary" @click="onRecommendChange(1)">确认</el-button>
             </span>
             </el-dialog>
+            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
+                <div v-for="item in cloudMerchantTaglist" :key="item.id">
+                    <h1>{{item.tagCategory}}</h1>
+                    <div class="tag-cont">
+                        <span :class="tagSelect(tag)" v-for="tag in item.tagDetailBos" :key="tag" @click="addTag(tag)">{{tag}}</span>
+                    </div>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
+                    <el-button @click="tagCancel()">取消</el-button>
+                    <el-button type="primary" @click="editConform()">确认</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -91,7 +110,7 @@
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
-import { recommendChange } from '../api'
+import { addMemberTag, editMemberTag, recommendChange } from '../api'
 
 export default {
     name: 'comfortcloudMembermanage',
@@ -111,6 +130,9 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            setTagUser: {},
+            tagStringList: [],
+            dialogVisible: false,
             tableLabel: [
                 { label: '企业名称', prop: 'phone' },
                 { label: '会员账号', prop: 'phone' },
@@ -129,7 +151,7 @@ export default {
                 { label: '邀请成交订单数', prop: 'rewardCount' },
                 { label: '邀请成交金额', prop: 'payAmountTotal' },
                 { label: '奖励金额', prop: 'rewardAmountTotal' },
-                { label: '会员标签', prop: 'userTags' }
+                { label: '会员标签', prop: 'userTags', width: '200px' }
             ],
             recommendDialogVisible: false,
             recommendData: {}
@@ -141,8 +163,24 @@ export default {
         }),
         ...mapGetters({
             merchantmemberData: 'iotmerchantmemberData',
-            merchantmemberTotalData: 'iotmerchantmemberTotalData'
+            merchantmemberTotalData: 'iotmerchantmemberTotalData',
+            cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
+        tagSelect () {
+            return function (tag) {
+                let selectTag = false
+                let datas = this.tagStringList
+                console.log('datas' + datas)
+                for (let j = 0; j < datas.length; j++) {
+                    const element = datas[j]
+                    if (tag === element) {
+                        selectTag = true
+                        break
+                    }
+                }
+                return selectTag ? 'select hand' : 'unselect hand'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -188,7 +226,8 @@ export default {
         ...mapActions({
             findMerchantMembersituation: 'findMerchantMembersituation',
             iotmerchantmemberDataPagination: 'iotmerchantmemberDataPagination',
-            findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation'
+            findMerchantMemberTotalsituation: 'findMerchantMemberTotalsituation',
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
         }),
         async onQuery () {
             await this.findMerchantMembersituation(this.searchParams)
@@ -200,9 +239,69 @@ export default {
                 total: this.merchantmemberData.total
             }
         },
+        async queryTags () {
+            await this.findCloudMerchantTaglist()
+        },
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
+        },
+        async showDliag (val) {
+            if (val !== undefined) {
+                this.setTagUser = val
+                this.tagStringList = val.userTags ? [...val.userTags.split(',')] : []
+            }
+            this.queryTags()
+            this.dialogVisible = true
+        },
+        async editConform () {
+            if (this.tagStringList.length > 0) {
+                // 这里因为后台需要传递tagid 所以要加上再传递
+                let tagMapList = []
+                for (let i = 0; i < this.tagStringList.length; i++) {
+                    const element = this.tagStringList[i]
+                    tagMapList.push({ 'tagId': '', 'tagName': element })
+                }
+                if (this.setTagUser.manualTags) {
+                    // 已经存在过 则是编辑
+                    await editMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': tagMapList })
+                } else {
+                    await addMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': tagMapList })
+                }
+                this.onQuery()
+            }
+            this.clearData()
+        },
+        tagCancel () {
+            this.clearData()
+        },
+        tagCancelSelect () {
+            this.tagStringList = []
+        },
+        clearData () {
+            this.tagStringList = []
+            this.dialogVisible = false
+            this.setTagUser = {}
+        },
+        addTag (tag) {
+            let selectTag = false
+            let index = 0
+            let datas = this.tagStringList
+            for (let j = 0; j < datas.length; j++) {
+                const element = datas[j]
+                if (tag === element) {
+                    index = j
+                    selectTag = true
+                    break
+                }
+            }
+            if (selectTag) {
+                // 存在则删除
+                datas.splice(index, 1)
+            } else {
+                // 不存在则添加
+                datas.push(tag)
+            }
         },
         onEdit (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
@@ -273,12 +372,48 @@ export default {
         margin-right: 2rem;
         font-weight: bold;
     }
-
+    .orangeBtn {
+        margin: 5px 0;
+    }
     .colred {
         color: #ff7a45;
         cursor: pointer;
     }
+    .tag-cont {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 
+    .unselect {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        border: 1px solid #606266;
+        border-radius: 5px;
+    }
+
+    .select {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        background-color: #ff7a45;
+        border: 1px solid #ff7a45;
+        color: white;
+        border-radius: 5px;
+    }
+    .tag-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .tag {
+        margin: 5px;
+    }
     .topColred {
         color: #ff7a45;
         cursor: pointer;

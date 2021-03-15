@@ -19,8 +19,11 @@
                 </template>
 
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
+                    <div v-if="scope.data.$index < cloudMerchantTaglist.length - 1">
+                        <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
+                        <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
+                    </div>
+                    <div v-else>默认标签不可修改</div>
                 </template>
             </basicTable>
         </div>
@@ -130,7 +133,17 @@ export default {
             this.inputTagValue = ''
         },
         onRemoveName (index) {
-            this.form.tagDetailBos.splice(index, 1)
+            if (this.form.id) {
+                this.$confirm('删除后，已添加到客户信息的标签也会一起删除，请确认是否继续删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    this.form.tagDetailBos.splice(index, 1)
+                })
+            } else {
+                this.form.tagDetailBos.splice(index, 1)
+            }
         },
         onCancle () {
             if (this.$refs.form) {
