@@ -477,7 +477,8 @@ export default {
         next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract' || to.name == 'noTemp') {
+        console.log('to: ', to)
+        if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract' || to.name == 'noTempApprove') {
             //
         } else {
             clearCache('contractSigningManagement')
