@@ -84,12 +84,14 @@
                     {{ scope.data.row.provinceName + scope.data.row.cityName }}
                 </template>
                 <template slot="isAppletUser" slot-scope="scope">
-                    {{ scope.data.row.isAppletUser ? '是' : '否' }}
+                    <div class="hand" v-if="scope.data.row.isAppletUser" @click="checkMember(scope.data.row)">是</div>
+                    <div v-else>否</div>
                 </template>
                 <template slot="autoTag" slot-scope="scope">
-                    <div class="tag-container">
+                    <div class="tag-container" v-if="autoTag(scope.data.row.autoTag).length > 0">
                         <el-tag class="tag" size="mini" v-for="tag in autoTag(scope.data.row.autoTag)" :key='tag'>{{tag}}</el-tag>
                     </div>
+                    <div v-else>-</div>
                 </template>
                 <template slot="manualTags" slot-scope="scope">
                     <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.manualTags !== null">
@@ -98,8 +100,11 @@
                     <div class="hand" @click="showDliag(scope.data.row)" v-else>-</div>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
-                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">会员详情</el-button>
+                    <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
+                        <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
+                        <el-button class="orangeBtn" @click="onDetail(scope.data.row)">会员详情</el-button>
+                    </div>
+                    <div v-else>-</div>
                 </template>
             </basicTable>
 
@@ -326,6 +331,9 @@ export default {
             this.tagStringList = []
             this.dialogVisible = false
             this.setTagUser = {}
+        },
+        checkMember (val) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { 'phone': val.phone } })
         },
         onDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: val })
