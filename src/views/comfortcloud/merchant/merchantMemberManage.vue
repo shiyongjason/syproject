@@ -142,6 +142,7 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag, recommendChange } from '../api'
 import { getChiness } from '../../hmall/membership/api'
+import { CATEGORY_MAP } from '../../bestonline/apply/const'
 
 export default {
     name: 'comfortcloudMembermanage',
@@ -332,7 +333,7 @@ export default {
                     const element = this.tagStringList[i]
                     tagMapList.push({ 'tagId': '', 'tagName': element })
                 }
-                if (this.setTagUser.manualTags) {
+                if (this.setTagUser.userTags) {
                     // 已经存在过 则是编辑
                     await editMemberTag({ 'phone': this.setTagUser.phone, 'tagNames': tagMapList })
                 } else {
