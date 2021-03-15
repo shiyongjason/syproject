@@ -19,8 +19,11 @@
                 </template>
 
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
+                    <div v-if="scope.data.$index < cloudMerchantTaglist.length - 1">
+                        <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
+                        <el-button class="orangeBtn" @click="onDeleteAct(scope.data.row)">删除</el-button>
+                    </div>
+                    <div v-else>默认标签不可修改</div>
                 </template>
             </basicTable>
         </div>
