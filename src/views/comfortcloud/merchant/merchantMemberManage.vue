@@ -33,6 +33,36 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">经营区域：</div>
+                    <div class="query-cont-col-area">
+                        <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
+                            <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
+                            </el-option>
+                        </el-select>
+                        <span class="ml10 mr10">-</span>
+                        <el-select v-model="queryParams.cityId" @change="onCity" placeholder="市" :clearable=true>
+                            <el-option v-for="item in getCity" :key="item.id" :label="item.name" :value="item.cityId">
+                            </el-option>
+                        </el-select>
+                        <span class="ml10 mr10">-</span>
+                        <el-select v-model="queryParams.countryId" placeholder="区" :clearable=true>
+                            <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">手动标签：</div>
+                    <div class="query-col-cont">
+                        <el-select v-model="queryParams.manualTags" multiple>
+                            <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory" :label="group.tagCategory">
+                                <el-option v-for="item in group.tagDetailBos" :key="item" :label="item" :value="item">
+                                </el-option>
+                            </el-option-group>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                     </div>
@@ -69,9 +99,9 @@
             <el-dialog title="变更推荐人" :modal-append-to-body=false :append-to-body=false
                        :visible.sync="recommendDialogVisible" width="50%">
                 <h1 style="padding-bottom: 10px">订单信息</h1>
-                <h1 style="padding-top: 20px">变更后，该会员将绑定在新的推荐人/无推荐人状态，请确认准确后变更</h1>
+                <h1 style="padding-top: 10px">变更后，该会员将绑定在新的推荐人/无推荐人状态，请确认准确后变更</h1>
                 <div >
-                    <p>注册来源</p>
+                    <h1 style="padding-top: 20px">注册来源</h1>
                     <div class="flex-wrap-cont">
                         <el-select v-model="recommendData.source" style="width: 100%">
                             <el-option label="自主注册" value=1></el-option>
@@ -111,6 +141,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag, recommendChange } from '../api'
+import { getChiness } from '../../hmall/membership/api'
 
 export default {
     name: 'comfortcloudMembermanage',
@@ -121,7 +152,11 @@ export default {
                 pageSize: 10,
                 phone: this.$route.query.phone,
                 endRegisterTime: '',
-                startRegisterTime: ''
+                provinceId: '',
+                cityId: '',
+                countryId: '',
+                startRegisterTime: '',
+                manualTags: []
             },
             searchParams: {},
             tableData: [],
@@ -132,6 +167,8 @@ export default {
             },
             setTagUser: {},
             tagStringList: [],
+            provinceList: [],
+            cityList: [],
             dialogVisible: false,
             tableLabel: [
                 { label: '企业名称', prop: 'phone' },
@@ -181,6 +218,21 @@ export default {
                 return selectTag ? 'select hand' : 'unselect hand'
             }
         },
+        getCity () {
+            const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
+            if (province.length > 0) {
+                this.cityList = province[0].cities
+                return this.cityList
+            }
+            return []
+        },
+        getCountry () {
+            const city = this.cityList.filter(item => item.cityId == this.queryParams.cityId)
+            if (city.length > 0) {
+                return city[0].countries
+            }
+            return []
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -207,6 +259,8 @@ export default {
     mounted () {
         // this.tableData = [{ productN: '123' }]
         this.onSearch()
+        this.getAreacode()
+        this.queryTags()
     },
     activated () {
         this.onQuery()
@@ -253,6 +307,22 @@ export default {
             }
             this.queryTags()
             this.dialogVisible = true
+        },
+        async getAreacode () {
+            const { data } = await getChiness()
+            this.provinceList = data
+        },
+        onProvince (key) {
+            this.queryParams.provinceId = key
+            this.queryParams.cityId = ''
+            this.queryParams.countryId = ''
+        },
+        onCity (key) {
+            this.queryParams.cityId = key
+            console.log(key)
+        },
+        onArea (key) {
+            this.queryParams.countryId = key
         },
         async editConform () {
             if (this.tagStringList.length > 0) {
@@ -393,7 +463,14 @@ export default {
         border: 1px solid #606266;
         border-radius: 5px;
     }
-
+    .query-cont-col-area {
+        position: relative;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-right: 24px;
+    }
     .select {
         display: inline-block;
         padding: 5px 10px;
