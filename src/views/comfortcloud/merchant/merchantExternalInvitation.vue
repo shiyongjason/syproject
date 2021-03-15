@@ -6,13 +6,13 @@
         <div class="page-body-cont-top ">
             <!-- <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)"> -->
             <div class="top-box">
-                <span>{{decodeURIComponent(this.$route.query.nickName ? this.$route.query.nickName :this.$route.query.companyName)}} </span>
-                <span>手机号 ：{{this.$route.query.phone}} </span>
+                <span>{{decodeURIComponent(enterpriseInfoData.nickName ? enterpriseInfoData.nickName :enterpriseInfoData.companyName)}} </span>
+                <span>手机号 ：{{enterpriseInfoData.phone}} </span>
             </div>
             <div class="top-box-right">
-                <span style="margin-left: 1rem;margin-bottom:10px">注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}} </span>
-                <span style="margin-left: 1rem;margin-bottom:10px">注册来源： {{this.$route.query.source==='hcg'?'  好橙工':'  单分享APP'}}</span>
-                <span style="margin-left: 1rem;margin-bottom:10px">会员角色： {{this.$route.query.role}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">注册时间： {{new Date(decodeURIComponent(enterpriseInfoData.createTime)).toLocaleString()}} </span>
+                <span style="margin-left: 1rem;margin-bottom:10px">注册来源： {{enterpriseInfoData.source==='hcg'?'  好橙工':'  单分享APP'}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">会员角色： {{enterpriseInfoData.role}}</span>
                 <span style="margin-left: 1rem;margin-bottom:10px">会员标签： <span class="choice-tag" @click="showDliag()"> {{showTag}} </span></span>
             </div>
         </div>
@@ -26,7 +26,6 @@
                         累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
                     </el-tag>
                     <div class="page-body-cont">
-                        <!-- 表格使用老毕的组件 -->
                         <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
@@ -37,9 +36,9 @@
                 <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="1">
                     <div class="page-body-cont-enterprise-info">
                         <span style="margin-bottom: 20px">公司名称： {{enterpriseInfoData.companyName}} </span>
-                        <span style="margin-bottom: 20px">联系地址： {{enterpriseInfoData.contactAddress}}</span>
-                        <span style="margin-bottom: 20px">联系人姓名： {{enterpriseInfoData.contactUser}}</span>
-                        <span style="margin-bottom: 20px">联系电话： {{enterpriseInfoData.contactNumber}}</span>
+                        <span style="margin-bottom: 20px">联系地址： {{constructAddress}}</span>
+                        <span style="margin-bottom: 20px">联系人姓名： {{enterpriseInfoData.nickName}}</span>
+                        <span style="margin-bottom: 20px">联系电话： {{enterpriseInfoData.phone}}</span>
                         <span style="margin-bottom: 20px">认证状态： {{enterpriseInfoData.authenticationStatus}}</span>
                         <span style="margin-bottom: 20px">经营类型：{{enterpriseInfoData.role}}</span>
                         <span style="margin-bottom: 20px">主营业务：{{enterpriseInfoData.mainCategory}}</span>
@@ -83,6 +82,7 @@ export default {
             },
             tabIndex: 0,
             tableBuyTotalData: {},
+            enterpriseInfoData: {},
             tagStringList: [],
             dialogVisible: false,
             tableBuyLabel: [
@@ -103,19 +103,16 @@ export default {
         }),
         ...mapGetters({
             merchantmemberInvitationOutOrderData: 'cloudMerchantmemberInvitationOutOrderData',
+            merchantExernalMemberData: 'iotmerchantExternalMemberData',
             cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
-        enterpriseInfoData () {
-            return {
-                companyName: this.$route.query.companyName,
-                contactUser: this.$route.query.nickName,
-                contactAddress: this.$route.query.storeAddress,
-                contactNumber: this.$route.query.phone,
-                role: this.$route.query.role,
-                mainCategory: this.$route.query.mainCategory,
-                mainBrand: this.$route.query.mainBrand,
-                authenticationStatus: this.$route.query.authenticationStatus
-            }
+        constructAddress () {
+            let provinceName = this.enterpriseInfoData.provinceName ? this.enterpriseInfoData.provinceName : ''
+            let cityName = this.enterpriseInfoData.cityName ? this.enterpriseInfoData.cityName : ''
+            let countryName = this.enterpriseInfoData.countryName ? this.enterpriseInfoData.countryName : ''
+            let storeAddress = this.enterpriseInfoData.storeAddress ? this.enterpriseInfoData.storeAddress : ''
+
+            return provinceName + cityName + countryName + storeAddress
         },
         tagSelect () {
             return function (tag) {
@@ -133,6 +130,7 @@ export default {
         },
         showTag () {
             if (this.tagStringList.length > 0) {
+                console.log(this.tagStringList, this.$route.query.manualTags, '啥情况')
                 return this.tagStringList.join(',')
             } else {
                 return '--'
@@ -141,12 +139,15 @@ export default {
     },
     mounted () {
         this.onSearch()
-        this.tagStringList = this.$route.query.manualTags ? this.$route.query.manualTags : []
         // this.tagStringList = ['空调地暖面板YG-3329', '水地暖智控面板YH-3305']
+    },
+    activated () {
+        console.log('这个是啥时候嗲用呢')
     },
     methods: {
         ...mapActions({
             findMerchantMemberInvitationOutOrdersituation: 'findMerchantMemberInvitationOutOrdersituation',
+            findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
             findCloudMerchantTaglist: 'findCloudMerchantTaglist'
 
         }),
@@ -162,6 +163,13 @@ export default {
         async onTotal () {
             const { data } = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
             this.tableBuyTotalData = data
+        },
+        async memberInfo () {
+            await this.findMerchantExternalMembersituation({ 'phone': this.$route.query.phone })
+            if (this.merchantExernalMemberData.records.length > 0) {
+                this.enterpriseInfoData = this.merchantExernalMemberData.records[0]
+            }
+            this.tagStringList = this.enterpriseInfoData.manualTags ? this.enterpriseInfoData.manualTags : []
         },
         async showDliag (val) {
             await this.findCloudMerchantTaglist()
@@ -198,6 +206,7 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
             this.onTotal()
+            this.memberInfo()
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
