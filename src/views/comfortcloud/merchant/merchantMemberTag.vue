@@ -130,7 +130,17 @@ export default {
             this.inputTagValue = ''
         },
         onRemoveName (index) {
-            this.form.tagDetailBos.splice(index, 1)
+            if (this.form.id) {
+                this.$confirm('删除后，已添加到客户信息的标签也会一起删除，请确认是否继续删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(async () => {
+                    this.form.tagDetailBos.splice(index, 1)
+                })
+            } else {
+                this.form.tagDetailBos.splice(index, 1)
+            }
         },
         onCancle () {
             if (this.$refs.form) {
