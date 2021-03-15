@@ -83,7 +83,7 @@ export function getMerchantMemberInvitationOrdersituation (params) {
 }
 // 经销商会员总数查询
 export function getMerchantMemberTotalsituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/count`, { params })
+    return axios.post(iotUrl + `/mall/wx/user/boss/count`, { params })
 }
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {

@@ -183,6 +183,7 @@
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
+                 <el-button @click="addNewTag()">新增标签</el-button>
                     <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
                     <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
@@ -680,6 +681,10 @@ export default {
                 // 不存在则添加
                 datas.push(tag)
             }
+        },
+        addNewTag () {
+            this.clearData()
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberTag' })
         },
         goToDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: { phone: this.$route.query.phone } })
