@@ -9,6 +9,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">企业名称：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.companyName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable=true>
@@ -93,44 +99,55 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
             </div>
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
-                actionWidth='275' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
-                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row)">分财审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row)">风控审核</h-button>
-                    <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row)">法务审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row,1)">分财审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row,2)">风控审核</h-button>
+                    <h-button v-if="scope.data.row.contractStatus===6&&hosAuthCheck(Auths.CRM_CONTRACT_LEGAL)" table @click="approveContract(scope.data.row,3)">法务审核</h-button>
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
+                    <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
                 </template>
             </hosJoyTable>
         </div>
-        <!---->
-        <el-drawer class="contentdrawerbox" size="550px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
-            <div slot="title">审核记录</div>
-            <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
-            <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
-            <div class="history-css">
-                <div v-if="historyList&&historyList.length==0">暂无数据</div>
-                <template v-else v-for="(item,index) in historyList">
-                    <div class="history-css-flex"  :key="index">
-                        <!-- signStatus==6下一步 -->
-                        <div v-if="item.signStatus==6" class="history-css-left">
-                            <span class="name">{{item.operator}} </span>
-                            <span style="">{{item.operationName}} </span>
-                            <span class="operationcontent-css">
-                                <font>{{item.operationContent}}</font>
-                            </span>
-                        </div>
-                        <div v-else class="history-css-left">
+
+        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
+            <template #connect>
+                <div slot="title">审核记录</div>
+                <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
+                <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
+                <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
+                <div class="history-css">
+                    <div v-if="historyList&&historyList.length==0">暂无数据</div>
+                    <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
+                        <div class="history-css-left">
                             <span class="name">{{item.operator}} </span>
                             <span>{{item.operationName}}</span>
                             <template v-if="item.operationName == '编辑了'">
+                                <!-- <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                    从<font>
+
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent" :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent]"></el-image>
+                                    </font>
+                                    变为<font>
+                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
+                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
+                                        </template>
+                                        <template v-else>
+                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                        </template>
+                                    </font>
+                                </span> -->
                                 <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
                                     <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                    从<el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
-                                        :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
-                                    变为
-                                    <font>
+                                    从<font>
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                            :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                    </font>
+                                    变为<font>
                                         <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
                                         <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
                                             <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
@@ -152,18 +169,21 @@
                                     <font>{{item.operationContent}}</font>
                                 </span>
                             </template>
+                            <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
+                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
+                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
+                                    <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
+                                </div>
+                            </template>
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
-                    <div class="approvalRemark" v-if="item.approvalRemark"  :key="index+'approvalRemark'">
-                        {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
-                    </div>
-                </template>
-            </div>
-            <div class="history-bttom">
+                </div>
+            </template>
+            <template #btn>
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
     </div>
 </template>
@@ -175,10 +195,11 @@ import {
     contractStatic,
     getCheckHistory,
     getDiffApi,
-    contractTypesNotConfirm
+    contractTypesNotConfirm,
+    getAbolish
 } from './api/index'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { clearCache, newCache } from '@/utils/index'
+// import { clearCache, newCache } from '@/utils/index'
 import * as Auths from '@/utils/auth_const'
 
 const _queryParams = {
@@ -196,16 +217,20 @@ const _queryParams = {
     contractNoOrName: '',
     authCode: '',
     jobNumber: '',
+    companyName: '',
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
-const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }]
+const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
 export default {
     name: 'contractSigningManagement',
     components: { hosJoyTable, diffDialog },
-
     data () {
         return {
+            options: {
+                'wrapperClosable': false,
+                size: '550px'
+            },
             Auths,
             emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             detailRes: {},
@@ -225,6 +250,7 @@ export default {
             queryParams: JSON.parse(JSON.stringify(_queryParams)),
             tableLabel: [
                 { label: '合同编号', prop: 'contractNo', width: '150' },
+                { label: '企业名称', prop: 'supplierCompanyName', width: '150' },
                 { label: '合同名称', prop: 'contractName', width: '280' },
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
@@ -262,6 +288,21 @@ export default {
             findCreditManager: 'creditManage/findCreditManager',
             findCreditPage: 'creditManage/findCreditPage'
         }),
+        onAbolished (val) {
+            this.$confirm('确定废止该合同吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await getAbolish({
+                    'contractId': val.id,
+                    'phone': this.userInfo.phoneNumber,
+                    'createBy': this.userInfo.employeeName
+                })
+                this.searchList()
+            }).catch(() => {
+            })
+        },
         async getDiff (item) {
             const { lastContentId, currentContentId } = JSON.parse(item)
             const { data } = await getDiffApi({
@@ -392,8 +433,14 @@ export default {
             }
             this.getContractStatic()
         },
-        approveContract (item) {
-            this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
+        approveContract (item, val) {
+            // 这里根据 是否为 模板合同 来进入上传页面
+            // 1：有模板 2：无模板
+            if (item.contractSignType == 2) {
+                this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, role: val } })
+            } else {
+                this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })
+            }
         },
         async getcontractTypes () {
             const { data } = await contractTypesNotConfirm()
@@ -424,19 +471,19 @@ export default {
         this.getcontractTypes()
         await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '' })
         this.branchArr = this.crmdepList
-    },
-    beforeRouteEnter (to, from, next) {
-        newCache('contractSigningManagement')
-        next()
-    },
-    beforeRouteLeave (to, from, next) {
-        if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract') {
-            //
-        } else {
-            clearCache('contractSigningManagement')
-        }
-        next()
     }
+    // beforeRouteEnter (to, from, next) {
+    //     newCache('contractSigningManagement')
+    //     next()
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name == 'contractSigningManagementDetail' || to.name == 'approveContract') {
+    //         //
+    //     } else {
+    //         clearCache('contractSigningManagement')
+    //     }
+    //     next()
+    // }
 }
 </script>
 <style scoped lang="scss">
@@ -452,6 +499,25 @@ export default {
     text-align: center;
     border-radius: 6px;
 }
+.history-css-flex {
+    margin-bottom: 10px;
+}
+.name {
+    color: #169bd5;
+}
+.operationcontent-css {
+    font {
+        color: #ff7a45;
+        margin: 0 4px;
+    }
+}
+.history-css-right {
+    flex: 0 0 198px;
+    font-size: 13px;
+    color: #a7a5a5;
+    margin-left: 10px;
+    text-align: right;
+}
 .contentdrawerbox {
     /deep/ .el-drawer__header {
         border-bottom: 1px solid #eee;
@@ -459,7 +525,6 @@ export default {
         font-size: 18px;
     }
     /deep/.history-css {
-        padding: 0 20px;
         box-sizing: border-box;
         height: calc(100vh - 190px);
         overflow-y: scroll;
@@ -468,6 +533,7 @@ export default {
             justify-content: space-between;
             margin-top: 15px;
             align-items: baseline;
+            margin-bottom: 8px;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;
@@ -499,10 +565,6 @@ export default {
         text-align: right;
         padding-right: 20px;
         box-sizing: border-box;
-    }
-    .approvalRemark{
-        font-size: 14px;
-        color: #f00;
     }
 }
 </style>

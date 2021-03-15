@@ -47,7 +47,7 @@ if (!userInfo && token) {
 const store = new Vuex.Store({
     state: {
         'loading': false,
-        'userInfo': userInfo ? userInfo : {},
+        'userInfo': userInfo || {},
         'tagsList': sessionStorage.getItem('tagsList') ? JSON.parse(sessionStorage.getItem('tagsList')) : [],
         'isSaving': false,
         'isFirst': true,
@@ -56,10 +56,10 @@ const store = new Vuex.Store({
         'cachedInclude': [],
         'cachedExclude': [],
         'devDepList': [],
-        platformData: [], // Boss后台统一权限 平台公司list
-        regionList: [], // 大区列表
-        branchList: [], // 分部列表
-        areaList: [] // 区域列表
+        'platformData': [], // Boss后台统一权限 平台公司list
+        'regionList': [], // 大区列表
+        'branchList': [], // 分部列表
+        'areaList': [] // 区域列表
     },
     mutations,
     actions: actions,

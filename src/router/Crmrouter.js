@@ -16,6 +16,7 @@ export default [
                 meta: {
                     title: '好橙工项目',
                     tagName: '好橙工项目',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -27,6 +28,7 @@ export default [
                 meta: {
                     title: '企业管理',
                     tagName: '企业管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -38,6 +40,7 @@ export default [
                 meta: {
                     title: '好橙工台账',
                     tagName: '好橙工台账',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -49,6 +52,7 @@ export default [
                 meta: {
                     title: '好橙工VIP申请列表',
                     tagName: '好橙工VIP申请列表',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -60,6 +64,7 @@ export default [
                 meta: {
                     title: '好橙工VIP管理列表',
                     tagName: '好橙工VIP管理列表',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -71,6 +76,7 @@ export default [
                 meta: {
                     title: '好橙工信用管理列表',
                     tagName: '好橙工信用管理列表',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -82,6 +88,7 @@ export default [
                 meta: {
                     title: '授信材料上传',
                     tagName: '授信材料上传',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: ''
                 },
@@ -93,6 +100,7 @@ export default [
                 meta: {
                     title: '授信材料',
                     tagName: '授信材料',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: ''
                 },
@@ -104,6 +112,7 @@ export default [
                 meta: {
                     title: '材料清单配置',
                     tagName: '材料清单配置',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -115,6 +124,7 @@ export default [
                 meta: {
                     title: '材料清单配置详情',
                     tagName: '材料清单配置详情',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/datatemp'
@@ -138,6 +148,7 @@ export default [
                 meta: {
                     title: '好橙工项目资料详情',
                     tagName: '好橙工项目资料详情',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/projectlist'
@@ -151,6 +162,7 @@ export default [
                 meta: {
                     title: '好橙工项目资料详情',
                     tagName: '好橙工项目资料详情',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/projectInformationList'
@@ -163,6 +175,7 @@ export default [
                 meta: {
                     title: '企业微信客户管理',
                     tagName: '企业微信客户管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/wechatList'
@@ -175,6 +188,7 @@ export default [
                 meta: {
                     title: '推荐官管理',
                     tagName: '推荐官管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/recommender'
@@ -188,6 +202,7 @@ export default [
                 meta: {
                     title: '奖励管理',
                     tagName: '奖励管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/awardManage'
@@ -202,6 +217,7 @@ export default [
                 meta: {
                     title: '采购单管理',
                     tagName: '采购单管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/purchaseOrder'
@@ -215,6 +231,7 @@ export default [
                 meta: {
                     title: '支付单管理',
                     tagName: '支付单管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/paymentOrder'
@@ -228,6 +245,7 @@ export default [
                 meta: {
                     title: '账单管理',
                     tagName: '账单管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/funds'
@@ -241,6 +259,7 @@ export default [
                 meta: {
                     title: '合同模板管理',
                     tagName: '合同模板管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: '',
                     showMenuAs: '/goodwork/contractlist'
@@ -254,6 +273,7 @@ export default [
                 meta: {
                     title: '合同编辑',
                     tagName: '合同编辑',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/contractTemp'
@@ -266,6 +286,7 @@ export default [
                 meta: {
                     title: '合同详情',
                     tagName: '合同详情',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/contractDetail'
@@ -279,6 +300,7 @@ export default [
                 meta: {
                     title: '合同签署管理',
                     tagName: '合同签署管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -290,6 +312,7 @@ export default [
                 meta: {
                     title: '合同签署管理详情',
                     tagName: '合同详情',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/contractSigningManagement'
@@ -302,6 +325,7 @@ export default [
                 meta: {
                     title: '审核合同',
                     tagName: '审核合同',
+                    parentName: '好橙工',
                     isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/contractSigningManagement'
@@ -314,6 +338,7 @@ export default [
                 meta: {
                     title: 'CA认证管理',
                     tagName: 'CA认证管理',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
@@ -325,10 +350,60 @@ export default [
                 meta: {
                     title: '好橙工BI',
                     tagName: '好橙工BI',
+                    parentName: '好橙工',
                     isMenu: true,
                     icon: ''
                 },
                 component: () => import('@/views/crm/bi/index.vue')
+            },
+            {
+                path: 'fullcalendar',
+                name: 'fullcalendar',
+                meta: {
+                    title: '节假日管理',
+                    tagName: '节假日管理',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/holidaylist'
+                },
+                component: () => import('@/views/crm/holiday/index.vue')
+            },
+            {
+                path: 'holidaylist',
+                name: 'holidaylist',
+                meta: {
+                    title: '节假日管理',
+                    tagName: '节假日管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/holiday/daylist.vue')
+            },
+            {
+                path: 'noTempApprove',
+                name: 'noTempApprove',
+                meta: {
+                    title: '分财(风控/法务)审核',
+                    tagName: '分财(风控/法务)审核',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/contractSigningManagement/noTempApprove.vue')
+            },
+            {
+                path: 'exportExcelFile',
+                name: 'exportExcelFile',
+                meta: {
+                    title: 'excel导入',
+                    tagName: 'excel导入',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/exportExcelFile/index.vue')
             }
         ]
     }
