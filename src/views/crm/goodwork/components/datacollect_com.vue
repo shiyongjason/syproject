@@ -408,7 +408,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.fullbg{
+.fullbg {
     background-color: #211f1f;
     width: 100%;
     height: 100%;
@@ -417,14 +417,14 @@ export default {
     position: fixed;
     top: 0;
     z-index: 9999;
-    .fullbg-img{
+    .fullbg-img {
         width: 377px;
         position: absolute;
         text-align: center;
         top: 50%;
         left: 50%;
         transform: translateX(-50%);
-        p{
+        p {
             color: #fff;
             font-size: 18px;
             text-align: center;

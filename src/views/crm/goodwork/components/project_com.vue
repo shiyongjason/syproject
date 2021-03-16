@@ -92,7 +92,7 @@
                 <el-input v-model="projectForm.predictLoanAmount" placeholder="请输入预估赊销金额" maxlength="18" v-isNum:2="form.predictLoanAmount"> <template slot="append">￥</template></el-input>
             </el-form-item>
             <el-form-item label="预估赊销周期：" prop="loanMonth">
-                <el-input-number v-model="projectForm.loanMonth" controls-position="right" @change="handleChange" :min="1" :max="6"></el-input-number>
+                <el-input-number v-model="projectForm.loanMonth" controls-position="right" @change="handleChange" :min="3" :max="6"></el-input-number>
                 个月
             </el-form-item>
             <el-form-item label="工程项目回款方式：" prop="loanPayTypeRate">

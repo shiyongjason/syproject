@@ -1,113 +1,115 @@
 <template>
     <div class="projectRecord">
-        <el-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
-            <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
-                <el-tab-pane label="信用详情" name="1"></el-tab-pane>
-                <el-tab-pane label="授信资料清单" name="2"></el-tab-pane>
-            </el-tabs>
-            <div class="fullbg" v-if="showPacking">
-                <div class="fullbg-img">
-                    <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+        <h-drawer title="信用详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
+            <template #connect>
+
+                <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
+                    <el-tab-pane label="信用详情" name="1"></el-tab-pane>
+                    <el-tab-pane label="授信资料清单" name="2"></el-tab-pane>
+                </el-tabs>
+                <div class="fullbg" v-if="showPacking">
+                    <div class="fullbg-img">
+                        <img src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20201027/01791ef9-5a1f-4e26-8b52-d6ab69548e3b.png" width="100px">
+                        <p>
+                            <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
+                            <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                        </p>
+                    </div>
+                </div>
+                <div class="drawer-wrap" v-if="activeName=='1'">
+                    <div class="drawer-wrap_title">{{companyName}}</div>
+                    <div class="drawer-wrap_btn">
+                        <div class="drawer-wrap_btn-flex">信用详情</div>
+                    </div>
+                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
+                        <template slot="endTime" slot-scope="scope">
+                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
+                        </template>
+                        <template slot="status" slot-scope="scope">
+                            <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
+                        </template>
+                        <template slot="action" slot-scope="scope">
+                            <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
+                        </template>
+                    </basicTable>
                     <p>
-                        <i class="el-icon-loading" style="font-size:23px;margin-right:3px"></i>
-                        <font>文件打包中，请耐心等待，请勿关闭页面...</font>
+                        最近维护时间：{{creditPage.updateTime?moment(creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
+                    </p>
+                    <p>
+                        最近维护人：{{creditPage.updateBy||'-'}}（{{creditPage.updateByMobile||'-'}}）
                     </p>
                 </div>
-            </div>
-            <div class="drawer-wrap" v-if="activeName=='1'">
-                <div class="drawer-wrap_title">{{companyName}}</div>
-                <div class="drawer-wrap_btn">
-                    <div class="drawer-wrap_btn-flex">信用详情</div>
-                </div>
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=100 :isShowIndex='true' :maxHeight=500>
-                    <template slot="endTime" slot-scope="scope">
-                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.endTime?moment(scope.data.row.endTime).format('YYYY-MM-DD'):'-'}}</span>
-                    </template>
-                    <template slot="status" slot-scope="scope">
-                        <span :class="scope.data.row.status?'colgry':'colred'">{{scope.data.row.status==true?'正常':scope.data.row.status==false?'过期':'-'}}</span>
-                    </template>
-                    <template slot="action" slot-scope="scope">
-                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_CREDIT_SET)">设置信用评级</h-button>
-                    </template>
-                </basicTable>
-                <p>
-                    最近维护时间：{{this.creditPage.updateTime?moment(this.creditPage.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
-                </p>
-                <p>
-                    最近维护人：{{this.creditPage.updateBy||'-'}}（{{this.creditPage.updateByMobile||'-'}}）
-                </p>
-            </div>
-            <div class="collect-wrapbox" v-if="activeName=='2'">
-                <el-form ref="approveForm" class="demo-ruleForm">
-                    <div class="collect-wrapbox_btnflex">
-                        <p>
-                            <h-button table @click="onClickRecord">打回记录</h-button>
-                        </p>
-                        <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
-                            <!-- <p> -->
-                            <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
-                            <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
-                            <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
-                            <span v-if="showPacking!=null&&!showPacking">打包完成</span>
-                        </p>
-                    </div>
-                    <div class="collect-main" v-for="item in approveForm" :key="item.firstCatagoryId">
-                        <div class="collect-title">{{item.firstCatagoryName}}
+                <div class="collect-wrapbox" v-if="activeName=='2'">
+                    <el-form ref="approveForm" class="demo-ruleForm">
+                        <div class="collect-wrapbox_btnflex">
+                            <p>
+                                <h-button table @click="onClickRecord">打回记录</h-button>
+                            </p>
+                            <p v-if="hosAuthCheck(auths.CRM_XY_DOWN)">
+                                <!-- <p> -->
+                                <h-button table @click="onDownzip" v-if="showPacking==null">一键下载</h-button>
+                                <!-- <span v-if="isDownLoad">正在下载中，请稍后</span> -->
+                                <span v-if="showPacking!=null&&showPacking">文件打包中，请稍等</span>
+                                <span v-if="showPacking!=null&&!showPacking">打包完成</span>
+                            </p>
                         </div>
-                        <template v-for="obj in item.respRiskCheckDocTemplateList">
-                            <el-form-item label="" prop="type" :key="'item'+obj.templateId">
-                                <div class="collect-boxflex">
-                                    <div v-if="documentStatus!=3&&documentStatus!=4">
-                                        <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
+                        <div class="collect-main" v-for="item in approveForm" :key="item.firstCatagoryId">
+                            <div class="collect-title">{{item.firstCatagoryName}}
+                            </div>
+                            <template v-for="obj in item.respRiskCheckDocTemplateList">
+                                <el-form-item label="" prop="type" :key="'item'+obj.templateId">
+                                    <div class="collect-boxflex">
+                                        <div v-if="documentStatus!=3&&documentStatus!=4">
+                                            <el-checkbox label="" name="type" size="medium" v-model="obj.callback" :disabled=obj.refuse></el-checkbox>
+                                        </div>
+                                        <div class="collect-boxtxt">
+                                            <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call" v-if="obj.refuse">已打回，待分部补充</span></h3>
+                                            <p>备注：{{obj.remark?obj.remark:'-'}}</p>
+                                            <p>规定格式：{{obj.formatName}}</p>
+                                        </div>
                                     </div>
-                                    <div class="collect-boxtxt">
-                                        <h3><i v-if="obj.mondatoryFlag">*</i>{{obj.secondCatagoryName}}<span class="collect-call" v-if="obj.refuse">已打回，待分部补充</span></h3>
-                                        <p>备注：{{obj.remark?obj.remark:'-'}}</p>
-                                        <p>规定格式：{{obj.formatName}}</p>
+                                    <div class="upload-file_list" v-for="(jtem,index) in obj.creditDocuments" :key="index">
+                                        <p>
+                                            <span class="posrtv">
+                                                <template v-if="jtem&&jtem.fileUrl">
+                                                    <i class="el-icon-document"></i>
+                                                    <!--                                                <a :href="jtem.fileUrl" target="_blank">-->
+                                                    <!--                                                    <font>{{jtem.fileName}}</font>-->
+                                                    <!--                                                </a>-->
+                                                    <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main" />
+                                                </template>
+                                            </span>
+                                        </p>
+                                        <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                                        <p>
+                                            <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
+                                            <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
+                                            <!--                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"-->
+                                            <!--                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">-->
+                                            <!--                                            下载-->
+                                            <!--                                        </a>-->
+                                            <!--                                       -->
+                                            <!--                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>-->
+                                            <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn" />
+                                        </p>
                                     </div>
-                                </div>
-                                <div class="upload-file_list" v-for="(jtem,index) in obj.creditDocuments" :key="index">
-                                    <p>
-                                        <span class="posrtv">
-                                            <template v-if="jtem&&jtem.fileUrl">
-                                                <i class="el-icon-document"></i>
-                                                <!--                                                <a :href="jtem.fileUrl" target="_blank">-->
-                                                <!--                                                    <font>{{jtem.fileName}}</font>-->
-                                                <!--                                                </a>-->
-                                                <downloadFileAddToken isPreview :file-name="jtem.fileName" :file-url="jtem.fileUrl" :a-link-words="jtem.fileName" is-type="main" />
-                                            </template>
-                                        </span>
-                                    </p>
-                                    <p>{{moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                                    <p>
-                                        <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}" v-if="(documentStatus!=3)">删除</font>
-                                        <!-- <font class="fileItemDownLoad" v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1" @click="handleImgDownload(jtem.fileUrl, jtem.fileName)">下载</font> -->
-                                        <!--                                        <a class="fileItemDownLoad" :href="jtem.fileUrl+'?response-content-type=application/octet-stream'" :download="jtem.fileName"-->
-                                        <!--                                            v-if="jtem.fileName.toLowerCase().indexOf('.png') != -1||jtem.fileName.toLowerCase().indexOf('.jpg') != -1||jtem.fileName.toLowerCase().indexOf('.jpeg') != -1">-->
-                                        <!--                                            下载-->
-                                        <!--                                        </a>-->
-                                        <!--                                       -->
-                                        <!--                                        <font v-else><a class='fileItemDownLoad' :href="jtem.fileUrl" target='_blank'>下载</a></font>-->
-                                        <downloadFileAddToken :file-name="jtem.fileName" :file-url="jtem.fileUrl" a-link-words="下载" is-type="btn" />
-                                    </p>
-                                </div>
-                                <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}" style="margin:10px 0 0 5px">
-                                    <el-button type="primary">上 传</el-button>
-                                </OssFileHosjoyUpload>
-                            </el-form-item>
-                        </template>
-                    </div>
-                </el-form>
-            </div>
-            <div class="drawer-footer">
-                <div class="drawer-button">
-                    <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
-                    <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
-                    <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
-                    <h-button @click="handleClose">取消</h-button>
+                                    <OssFileHosjoyUpload v-model="obj.creditDocuments" :showPreView=false :fileSize='200' :fileNum='50' :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(obj)}" @successArg="(val)=>{handleSuccessArg(val)}"
+                                        style="margin:10px 0 0 5px">
+                                        <el-button type="primary">上 传</el-button>
+                                    </OssFileHosjoyUpload>
+                                </el-form-item>
+                            </template>
+                        </div>
+                    </el-form>
                 </div>
-            </div>
-        </el-drawer>
+            </template>
+            <template #btn>
+                <h-button type="assist" @click="onCallback" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">打回补充</h-button>
+                <h-button type="primary" @click="onOnlyCredit" v-if="activeName==2&&(documentStatus!=1&&documentStatus!=3&&documentStatus!=4)">审核通过</h-button>
+                <!-- <h-button type="primary" @click="onOnlyCredit">审核通过</h-button> -->
+                <h-button @click="handleClose">取消</h-button>
+            </template>
+        </h-drawer>
         <el-dialog title="设置" :visible.sync="dialogVisible" width="40%" :before-close="onCloseDrawer" :close-on-click-modal=false>
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm el-dialog__form">
                 <el-form-item label="企业名称：">

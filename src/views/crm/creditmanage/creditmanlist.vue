@@ -80,8 +80,7 @@
             </div>
 
             <el-tag size="medium" class="eltagtop">已筛选 {{creditdata.total||0}} 项</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"
-            :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=200 :isShowIndex='true'>
                 <template slot="companyName" slot-scope="scope">
                     <span @click="onLinkCom(scope.data.row)" class="colblue">{{scope.data.row.companyName}}</span>
                 </template>
@@ -95,7 +94,7 @@
                     {{scope.data.row.documentStatus>0?matelist[scope.data.row.documentStatus-1].value:'待提交'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                     <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onDrawerinfo(scope.data.row)" v-if="hosAuthCheck(auths.CRM_CREDIT_DETAIL)">查看详情</h-button>
                     <h-button table @click="onEditproject(scope.data.row)" v-if="(scope.data.row.documentStatus==4||!scope.data.row.documentStatus||scope.data.row.documentStatus==1)&&hosAuthCheck(auths.CRM_CREDIT_ZL)">上传资料</h-button>
                     <h-button table @click="onLookproject(scope.data.row)" v-if="(scope.data.row.documentStatus==2||scope.data.row.documentStatus==3)&&hosAuthCheck(auths.CRM_CREDIT_LOOK)">查看资料</h-button>
                 </template>

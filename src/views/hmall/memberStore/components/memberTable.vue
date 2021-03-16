@@ -38,8 +38,8 @@
             <el-pagination class="el-page" background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="paginationData.pageNumber" :page-sizes="[10,20,30,40,50]" layout="total, sizes, prev, pager, next, jumper" :onQuery="onQuery" :total="paginationData.totalElements">
             </el-pagination>
         </div>
-        <el-drawer :title="drawer.title" :visible.sync="drawer.drawer" direction="rtl" size='60%' :before-close="handleClose">
-            <div class="drawer">
+        <h-drawer :title="drawer.title" :visible.sync="drawer.drawer" direction="rtl" size='60%' :beforeClose="handleClose">
+            <template #connect>
                 <el-form :model="memberDetails" :rules="rules" :inline="true" ref="memberDetails" label-width="150px">
                     <h3>一、基本信息</h3>
                     <div class="baseStyle">
@@ -154,8 +154,8 @@
                         </div>
                     </template>
                 </el-form>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
     </div>
 </template>
 
@@ -184,6 +184,10 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: "rtl",
+                size: '60%'
+            },
             type: [],
             dialogParams: {
                 show: false,

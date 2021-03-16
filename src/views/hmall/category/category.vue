@@ -52,9 +52,11 @@
                 </el-form-item>
             </el-form>
         </el-dialog>
-        <el-drawer class="page-body-drawer" title="参数详情" :visible.sync="setVisible" :before-close="closeDialog" direction="rtl" size='900px'>
-            <setParameters ref="setting" :categoryId="current.id" />
-        </el-drawer>
+        <h-drawer title="参数详情" :visible.sync="setVisible" :beforeClose="closeDialog" direction='rtl' size='900px'>
+            <template #connect>
+                <setParameters ref="setting" :categoryId="current.id" />
+            </template>
+        </h-drawer>
     </div>
 </template>
 
@@ -73,6 +75,10 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: 'rtl',
+                size: '900px'
+            },
             data: [],
             columns: [
                 {

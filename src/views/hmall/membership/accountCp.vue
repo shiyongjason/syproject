@@ -1,24 +1,7 @@
 <template>
     <div class="drawer-wrap" v-if="account">
-        <el-drawer title="账号详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='50%' :before-close="handleClose">
-            <!-- <div class="container" v-for="(item,index) in account" :key="index">
-                <div class="con-box">
-                    <span>企业名称：</span>
-                    <span>{{item.companyName}}</span>
-                </div>
-                <div class="con-box" v-if="item.merchantAccountType">
-                    <span>大B账号类型：</span>
-                    <span><i>{{item.merchantAccountType}}</i></span>
-                </div>
-                <div class="con-box" v-if="item.memberAccountType">
-                    <span>小b账号类型：</span>
-                    <span><i>{{item.memberAccountType}}</i></span>
-                </div>
-            </div> -->
-            <!-- <div class="con-box" v-if="account.length==0">
-                <div style="display: flex;flex: 1;justify-content: center;">暂无企业</div>
-            </div> -->
-            <div class="container">
+        <h-drawer title="账号详情" :visible.sync="drawer" direction='rtl' size='50%' :beforeClose="handleClose">
+            <template #connect>
                 <div class="account-top">
                     <div class="account-topimg"><img :src="account.avatarUrl?account.avatarUrl:'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20200409/73cd7f43-41c6-4493-a517-13d2d8c8d024.png'" /></div>
                     <div>
@@ -65,8 +48,8 @@
                 <div class="account-box" v-if="account.wxUserList&&account.wxUserList.length==0">
                     <p>暂无关联的用户</p>
                 </div>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
     </div>
 </template>
 <script>
@@ -82,6 +65,10 @@ export default {
     },
     data () {
         return {
+            options: {
+                direction: 'rtl',
+                size: '50%'
+            },
             account: {
                 b2bCompanyList: [],
                 crmCompanyList: [],

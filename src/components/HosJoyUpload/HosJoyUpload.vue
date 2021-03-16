@@ -193,6 +193,8 @@ export default {
             }
         },
         beforeAvatarUpload (file) {
+            // eslint-disable-next-line no-useless-escape
+            // file.name = file.name.replace(/[^\w\u4e00-\u9fa5\.\+\-\uFF08\uFF09\(\)\[\]\{\}]/g, '_')
             let arr = this.accept.split(',')
             let flag = false
             arr.map(item => {

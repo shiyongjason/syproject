@@ -103,16 +103,18 @@
             <basicTable :tableLabel="tableLabel_four" :tableData="tableData_four" :pagination="pagination_four" @onSizeChange="onSizeChange_four" @onCurrentChange="onCurrentChange_four">
             </basicTable>
         </div>
-        <el-drawer class="page-body-drawer" title="详情" :visible.sync="drawer" size='640px'>
-            <basicTable :tableLabel="tableLabel_info" :tableData="tableData_info" :pagination="pagination_info" @onSizeChange="onSizeChange_info" @onCurrentChange="onCurrentChange_info">
-                <template slot="action" slot-scope="scope">
-                    <h-button table @click="onSeeInfo(scope.data.row)">查看详情</h-button>
-                </template>
-            </basicTable>
-            <div class="drawer-footer">
+        <h-drawer title="详情" :visible.sync="drawer" size='640px'>
+            <template #connect>
+                <basicTable :tableLabel="tableLabel_info" :tableData="tableData_info" :pagination="pagination_info" @onSizeChange="onSizeChange_info" @onCurrentChange="onCurrentChange_info">
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onSeeInfo(scope.data.row)">查看详情</h-button>
+                    </template>
+                </basicTable>
+            </template>
+            <template #btn>
                 <h-button @click="drawer = false">关闭</h-button>
-            </div>
-        </el-drawer>
+            </template>
+        </h-drawer>
     </div>
 </template>
 <script>
@@ -122,6 +124,9 @@ export default {
     name: 'searchDataList',
     data () {
         return {
+            options: {
+                size: '640px'
+            },
             drawer: false,
             queryParams_one: {
                 source: '',

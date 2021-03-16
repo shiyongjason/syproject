@@ -11,7 +11,7 @@
             </div>
             <iframe id="ifra" v-if="res.contractUrl" :src='res.contractUrl' width='100%' height='1000px' frameborder="0"></iframe>
             <div class="el-image-css" v-else-if="res.attachementList&&res.attachementList.length>0&&res.contractSignType==2">
-                <el-image  v-for="(item,index) in res.attachementList" :key="index" fit="contain" ref="zoomImage"  :src="item.picUrl" :preview-src-list="[item.picUrl]"></el-image>
+                <el-image v-for="(item,index) in res._attachementList" :key="index" fit="contain" ref="zoomImage" :src="item.picUrl" :preview-src-list="[item.picUrl]"></el-image>
             </div>
             <div v-html="vHtml" v-else-if="vHtml" class='approvalcontract-content-layout-css'></div>
             <div v-else-if="res.contractSignType==2">线下合同</div>
@@ -55,6 +55,12 @@ export default {
     async mounted () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.res = data
+        this.res._attachementList = this.res.attachementList && this.res.attachementList.filter(val => {
+            if (val.picUrl.indexOf('.docx') < 0 && val.picUrl.indexOf('.pdf') < 0 && val.picUrl.indexOf('.xlsx') < 0) {
+                return val
+            }
+        })
+        console.log('==', this.res._attachementList)
         if (!this.res.contractUrl && (!this.res.attachementList || this.res.attachementList.length == 0)) {
             this.vHtml = data.contractContent
             if (this.vHtml) {
@@ -179,9 +185,9 @@ export default {
         }
     }
 }
-.el-image-css{
+.el-image-css {
     width: 1000px;
-    margin:0 auto;
-     text-align: center;
+    margin: 0 auto;
+    text-align: center;
 }
 </style>
