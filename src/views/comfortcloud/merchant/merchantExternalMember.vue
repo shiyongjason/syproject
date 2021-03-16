@@ -80,8 +80,11 @@
             </div>
 
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :action-min-width="200">
+                <template slot="source" slot-scope="scope">
+                    {{ sourceName(scope.data.row.source) }}
+                </template>
                 <template slot="provinceName" slot-scope="scope">
-                    {{ scope.data.row.provinceName + scope.data.row.cityName }}
+                    {{ scope.data.row.provinceName + scope.data.row.cityName +scope.data.row.countryName }}
                 </template>
                 <template slot="isAppletUser" slot-scope="scope">
                     <div class="hand" v-if="scope.data.row.isAppletUser" @click="checkMember(scope.data.row)">是</div>
@@ -97,7 +100,7 @@
                     <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.manualTags !== null">
                         <el-tag class="tag" v-for="item in scope.data.row.manualTags" :key="item">{{item}}</el-tag>
                     </div>
-                    <div class="hand" @click="showDliag(scope.data.row)" v-else>-</div>
+                    <div class="hand colred" @click="showDliag(scope.data.row)" v-else>新增标签</div>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
@@ -116,7 +119,7 @@
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                    <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
+                    <el-button @click="addNewTag()">新增标签</el-button>
                     <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
@@ -229,6 +232,16 @@ export default {
                 return selectTag ? 'select hand' : 'unselect hand'
             }
         },
+        sourceName () {
+            return function (val) {
+                if (val === 'B2b') {
+                    return '单分享'
+                } else if (val === 'hcg') {
+                    return '好橙工'
+                }
+                return ''
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -324,8 +337,9 @@ export default {
         tagCancel () {
             this.clearData()
         },
-        tagCancelSelect () {
-            this.tagStringList = []
+        addNewTag () {
+            this.clearData()
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberTag' })
         },
         clearData () {
             this.tagStringList = []
