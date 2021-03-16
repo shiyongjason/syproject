@@ -6,11 +6,11 @@
         <div class="page-body-cont-top ">
             <img style="height: 4rem " :src="decodeURIComponent(this.$route.query.avatarUrl)">
             <div class="top-box">
-                <span>{{decodeURIComponent(this.$route.query.nickName)}}  </span>
-                <span>手机号 ：{{this.$route.query.phone}}  </span>
+                <span>{{decodeURIComponent(this.$route.query.nickName)}} </span>
+                <span>手机号 ：{{this.$route.query.phone}} </span>
             </div>
             <div class="top-box-right">
-                <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}}  </span>
+                <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}} </span>
                 <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
                 <span style="margin-left: 1rem">会员编号： {{this.$route.query.uuid}}</span>
                 <span style="margin-left: 1rem;margin-bottom:10px">会员标签： <span class="choice-tag" @click="showDliag()"> {{showTag}} </span></span>
@@ -27,9 +27,7 @@
                     </el-tag>
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
-                                    :pagination="paginationBuy"
-                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="paginationBuy" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
                             </template>
@@ -39,18 +37,14 @@
                 <el-tab-pane label="已注册" name="1">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true'
-                                    :pagination="paginationRegister"
-                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                        <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true' :pagination="paginationRegister" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="已成交" name="2">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true'
-                                    :pagination="paginationDone"
-                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true' :pagination="paginationDone" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
 
                                 <p @click="onEditMoney(scope.data.row)" class="colred">
@@ -70,15 +64,13 @@
                 <el-tab-pane label="会员变更记录" name="3">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false'
-                                    :pagination="paginationChange"
-                                    @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false' :pagination="paginationChange" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="4">
                     <div class="page-body-cont-enterprise-info" v-if="this.enterpriseInfoData.id!=null">
-                        <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}}  </span>
+                        <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}} </span>
                         <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
                         <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
                         <span style="margin-bottom: 20px">联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
@@ -86,18 +78,12 @@
                         <div class="page-body-cont-top-no-left">
                             <span>主营业务:</span>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
-                                <el-tag style="margin-left: 20px"
-                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
-                                        :key="tag"
-                                        :type="tag.type">
+                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon" :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
                             </div>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
-                                <el-tag style="margin-left: 20px"
-                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn"
-                                        :key="tag"
-                                        :type="tag.type">
+                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn" :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
                             </div>
@@ -105,29 +91,17 @@
                         <div class="page-body-cont-top-no-left">
                             <span>主营品牌:</span>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
-                                <el-tag style="margin-left: 20px"
-                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
-                                        :key="tag"
-                                        :type="tag.type">
+                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon" :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
-                                <el-tag style="margin-left: 20px"
-                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn"
-                                        :key="tag"
-                                        :type="tag.type">
+                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn" :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
                             </div>
                         </div>
                         <div class="page-body-cont-top-no-align-items">
                             <span>备注:</span>
-                            <el-input class="textarea"
-                                      type="textarea"
-                                      maxlength=500
-                                      :rows="10"
-                                      placeholder="请输入内容"
-                                      @blur="updateCompanyInfoRemark"
-                                      v-model="enterpriseInfoData.remark">
+                            <el-input class="textarea" type="textarea" maxlength=500 :rows="10" placeholder="请输入内容" @blur="updateCompanyInfoRemark" v-model="enterpriseInfoData.remark">
                             </el-input>
                         </div>
                     </div>
@@ -137,15 +111,8 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px"
-                   :close-on-click-modal="false" :before-close="onCloseDialog">
-            <el-upload
-                class="upload-fault"
-                ref="upload"
-                :file-list="fileList"
-                :on-success="uploadSuccess"
-                :on-error="uploadError"
-                :before-upload="beforeAvatarUpload" v-bind="uploadData">
+        <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照订单明细模板内容导入数据，否则可能会出现导入异常</p>
@@ -163,17 +130,13 @@
                 </div>
             </el-dialog>
         </el-dialog>
-        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
-                   :close-on-click-modal="false" >
-            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth"
-                            clear-icon=""
-                            type="month" value-format='yyyy-MM'
-                            placeholder="" :picker-options="pickerOptionsStart">
+        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px" :close-on-click-modal="false">
+            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month" value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
             </el-date-picker>
             <span slot="footer" class="dialog-footer">
-                    <el-button @click="editMonth(0)">取消</el-button>
-                    <el-button type="primary" @click="editMonth(1)">确认</el-button>
-                </span>
+                <el-button @click="editMonth(0)">取消</el-button>
+                <el-button type="primary" @click="editMonth(1)">确认</el-button>
+            </span>
         </el-dialog>
         <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="tagVisible" width="50%">
             <div v-for="item in cloudMerchantTaglist" :key="item.id">
@@ -183,11 +146,11 @@
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
-                 <el-button @click="addNewTag()">新增标签</el-button>
-                    <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
-                    <el-button @click="tagCancel()">取消</el-button>
-                    <el-button type="primary" @click="editConform()">确认</el-button>
-                </span>
+                <el-button @click="addNewTag()">新增标签</el-button>
+                <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
+                <el-button @click="tagCancel()">取消</el-button>
+                <el-button type="primary" @click="editConform()">确认</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -336,7 +299,6 @@ export default {
         },
         showTag () {
             if (this.tagStringList.length > 0) {
-                console.log(this.tagStringList, this.$route.query.userTags, '啥情况')
                 return this.tagStringList.join(',')
             } else {
                 return '--'
@@ -425,7 +387,7 @@ export default {
             this.tagVisible = true
         },
         async editConform () {
-            if (this.tagStringList.length > 0) {
+            if (this.tagStringList) {
                 // 这里因为后台需要传递tagid 所以要加上再传递
                 let tagMapList = []
                 for (let i = 0; i < this.tagStringList.length; i++) {
@@ -702,167 +664,160 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-    .spanflex {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 10px;
+.spanflex {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
 
-        span {
-            flex: 1;
+    span {
+        flex: 1;
 
-            &:first-child {
-                font-size: 16px;
-            }
+        &:first-child {
+            font-size: 16px;
+        }
 
-            &:last-child {
-                text-align: right;
-            }
+        &:last-child {
+            text-align: right;
         }
     }
-    .tag-cont {
-        display: flex;
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
+}
+.tag-cont {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 
-    .unselect {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 10px;
-        border: 1px solid #606266;
-        border-radius: 5px;
-    }
+.unselect {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px;
+    border: 1px solid #606266;
+    border-radius: 5px;
+}
 
-    .select {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 10px;
-        background-color: #ff7a45;
-        border: 1px solid #ff7a45;
-        color: white;
-        border-radius: 5px;
-    }
-    .tag-container {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-    .tag {
-        margin: 5px;
-    }
-    .choice-tag {
-        color: #ff7a45;
-        cursor: pointer;
-    }
-    .colred {
-        color: #ff7a45;
-        cursor: pointer;
-    }
-    .tag-cont {
-        display: flex;
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-    /deep/ .el-dialog__body {
-        padding-top: 10px;
-    }
+.select {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px;
+    background-color: #ff7a45;
+    border: 1px solid #ff7a45;
+    color: white;
+    border-radius: 5px;
+}
+.tag-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.tag {
+    margin: 5px;
+}
+.choice-tag {
+    color: #ff7a45;
+    cursor: pointer;
+}
+.colred {
+    color: #ff7a45;
+    cursor: pointer;
+}
+.tag-cont {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+/deep/ .el-dialog__body {
+    padding-top: 10px;
+}
 
-    .uploadTips {
-        font-size: 16px;
-        display: inline-block;
-        margin: 5px;
-    }
+.uploadTips {
+    font-size: 16px;
+    display: inline-block;
+    margin: 5px;
+}
 
-    .top-box {
-        width: auto;
-        margin-left: 1rem;
-        display: flex;
-        flex-direction: column;
-        height: 4rem;
-        justify-content: space-between;
-        background: #ffffff;
-    }
+.top-box {
+    width: auto;
+    margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    height: 4rem;
+    justify-content: space-between;
+    background: #ffffff;
+}
 
-    .top-box-right {
-        width: auto;
-        margin-left: 3rem;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        background: #ffffff;
-    }
+.top-box-right {
+    width: auto;
+    margin-left: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    background: #ffffff;
+}
 
-    .page-body-cont-top {
-        display: flex;
-        justify-content: flex-start;
-        flex-direction: row;
-        align-content: flex-start;
-        padding: 20px 24px;
-        background: $whiteColor;
+.page-body-cont-top {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-content: flex-start;
+    padding: 20px 24px;
+    background: $whiteColor;
+}
 
-    }
+.page-body-cont-top-no-left {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-content: flex-start;
+    padding-top: 20px;
+    background: $whiteColor;
+    align-items: center;
+}
 
-    .page-body-cont-top-no-left {
-        display: flex;
-        justify-content: flex-start;
-        flex-direction: row;
-        align-content: flex-start;
-        padding-top: 20px;
-        background: $whiteColor;
-        align-items: center;
+.page-body-cont-top-no-align-items {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-content: flex-start;
+    padding-top: 20px;
+    background: $whiteColor;
+}
 
-    }
+.page-body-cont-enterprise-info {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    align-content: flex-start;
+    padding: 20px 24px;
+    background: $whiteColor;
+}
 
-    .page-body-cont-top-no-align-items {
-        display: flex;
-        justify-content: flex-start;
-        flex-direction: row;
-        align-content: flex-start;
-        padding-top: 20px;
-        background: $whiteColor;
+.textarea {
+    width: 800px;
+    padding-left: 40px;
+    background: $whiteColor;
+}
 
-    }
+.page-body-cont-enterprise {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    background: $whiteColor;
+}
 
-    .page-body-cont-enterprise-info {
-        display: flex;
-        justify-content: flex-start;
-        flex-direction: column;
-        align-content: flex-start;
-        padding: 20px 24px;
-        background: $whiteColor;
-
-    }
-
-    .textarea {
-        width: 800px;
-        padding-left: 40px;
-        background: $whiteColor;
-
-    }
-
-    .page-body-cont-enterprise {
-        display: flex;
-        width: 100%;
-        align-items: center;
-        background: $whiteColor;
-
-    }
-
-    .page-body-cont-enterprise-info-empty {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        text-align: center;
-        color: #888888;
-        flex-direction: column;
-        align-content: center;
-        padding: 40px 200px 40px 200px;
-        background: $whiteColor;
-
-    }
+.page-body-cont-enterprise-info-empty {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+    color: #888888;
+    flex-direction: column;
+    align-content: center;
+    padding: 40px 200px 40px 200px;
+    background: $whiteColor;
+}
 </style>
