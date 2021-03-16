@@ -227,7 +227,7 @@ export default [
                             title: '客户详情',
                             tagName: '客户详情',
                             parentName: '会员管理',
-                            isMenu: true,
+                            isMenu: false,
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantExternalInvitation.vue')
