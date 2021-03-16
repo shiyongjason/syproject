@@ -13,13 +13,9 @@
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.orderStatus" style="width: 100%">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="未付款" value=10></el-option>
                             <el-option label="待发货" value=20></el-option>
                             <el-option label="待收货" value=30></el-option>
                             <el-option label="已完成" value=40></el-option>
-                            <el-option label="退款中" value=60></el-option>
-                            <el-option label="已关闭" value=50></el-option>
-                            <el-option label="已退款" value=70></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -87,7 +83,7 @@
                 <div>
                     <div class="query-col-title">销售顾问姓名：</div>
                     <div class="query-col-input">
-                        <el-input v-model="salerData.salerName" placeholder="请输入姓名" maxlength="50"></el-input>
+                        <el-input  v-model="salerData.salerName"  placeholder="请输入姓名" maxlength="16"></el-input>
                     </div>
                 </div>
                 <div>
