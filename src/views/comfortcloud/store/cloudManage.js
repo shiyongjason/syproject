@@ -549,11 +549,11 @@ const actions = {
     async findMerchantMemberInvitationChangesituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationChangesituation(params)
         commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA, data)
-        commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA_LIST_PAGINATION, {
-            pageNumber: data.pages,
-            pageSize: data.size,
-            total: data.total
-        })
+        // commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA_LIST_PAGINATION, {
+        //     pageNumber: data.pages,
+        //     pageSize: data.size,
+        //     total: data.total
+        // })
     },
     async findMerchantMemberInvitationBuy ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationBuy(params)

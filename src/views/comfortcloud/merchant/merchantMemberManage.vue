@@ -89,7 +89,7 @@
                     <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.userTags !== null">
                         <el-tag class="tag" v-for="item in scope.data.row.userTags.split(',')" :key="item">{{item}}</el-tag>
                     </div>
-                    <div class="hand" @click="showDliag(scope.data.row)" v-else>-</div>
+                    <div class="hand" @click="showDliag(scope.data.row)" v-else>添加标签</div>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
