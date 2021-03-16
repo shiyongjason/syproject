@@ -130,7 +130,6 @@ export default {
         },
         showTag () {
             if (this.tagStringList.length > 0) {
-                console.log(this.tagStringList, this.$route.query.manualTags, '啥情况')
                 return this.tagStringList.join(',')
             } else {
                 return '--'
@@ -140,9 +139,6 @@ export default {
     mounted () {
         this.onSearch()
         // this.tagStringList = ['空调地暖面板YG-3329', '水地暖智控面板YH-3305']
-    },
-    activated () {
-        console.log('这个是啥时候嗲用呢')
     },
     methods: {
         ...mapActions({
@@ -176,7 +172,7 @@ export default {
             this.dialogVisible = true
         },
         async editConform () {
-            if (this.tagStringList.length > 0) {
+            if (this.tagStringList) {
                 // 这里因为后台需要传递tagid 所以要加上再传递
                 let tagMapList = []
                 for (let i = 0; i < this.tagStringList.length; i++) {
