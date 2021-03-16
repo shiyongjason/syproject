@@ -1,30 +1,23 @@
 <template>
     <div class="project-wrap">
-        <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
-            <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
-                <template v-for="item in tabs">
-                    <template v-if='isShowTab(item.key,status)'>
-                        <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
+
+        <!-- <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
+             -->
+        <h-drawer title="项目详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
+            <template #connect>
+                <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
+                    <template v-for="item in tabs">
+                        <template v-if='isShowTab(item.key,status)'>
+                            <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
+                        </template>
                     </template>
-                </template>
-            </el-tabs>
-            <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback  v-if="activeName==='1'"></projectCom>
-            <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
-            <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
-            <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
-            <ProjectOrderTab  v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
-            <div class="drawer-footer">
-                <div class="drawer-button">
-                    <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
-                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
-                        <h-button @click="onCallBack()">打回补充</h-button>
-                    </template>
-                    <template v-for="(item, index) in operateBtnList">
-                        <h-button type="assist" @click="onAuditstatus(status)" :key="index" v-if="item.isShow">{{item.name}}</h-button>
-                    </template>
-                    <h-button @click="cancelForm">取消</h-button>
-                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11) && activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
-                </div>
+                </el-tabs>
+                <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
+                <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
+                <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
+                <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+                <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
+
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
                     <el-form ref="statusForm" :model="statusForm" :rules="statusRules" label-width="100px">
                         <el-form-item :label="aduitTitle+'结果：'" prop="result" v-if="aduitTitle=='审核' && status !== 3">
@@ -48,8 +41,21 @@
                         <h-button type="primary" @click="onUpdateAudit">{{status === 3? '确定关闭' : '确定'}}</h-button>
                     </span>
                 </el-dialog>
-            </div>
-        </el-drawer>
+            </template>
+            <template #btn>
+                <div class="drawer-button">
+                    <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
+                    <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
+                        <h-button @click="onCallBack()">打回补充</h-button>
+                    </template>
+                    <template v-for="(item, index) in operateBtnList">
+                        <h-button type="assist" @click="onAuditstatus(status)" :key="index" v-if="item.isShow">{{item.name}}</h-button>
+                    </template>
+                    <h-button @click="cancelForm">取消</h-button>
+                    <h-button v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BAOCUN)&&activeName!=='2'&&!(activeName=='3'&&status!=4)&&!(activeName=='4'&&status!=11) && activeName!=='5'" type="primary" @click="onSaveproject(activeName)" :loading="loading">{{ loading ? '提交中 ...' : '保存' }}</h-button>
+                </div>
+            </template>
+        </h-drawer>
         <!-- 签约和放款使用弹窗 -->
         <el-dialog :title="signOrLoanVisibleTitle" :visible.sync="signOrLoanVisible" width="35%" :before-close="onColseSignOrLoan" :modal=false :close-on-click-modal=false>
             <el-form ref="signOrLoanDialog" :model="signOrLoanForm" :rules="signOrLoanRules" label-width="100px" class="el-dialog__form">
@@ -540,7 +546,7 @@ export default {
     width: 100%;
     z-index: 11;
 }
-.el-textarea /deep/.el-input__count{
+.el-textarea /deep/.el-input__count {
     bottom: -45px;
 }
 </style>

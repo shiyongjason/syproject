@@ -31,10 +31,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!--  item  一级菜单
+                            <!--
+                                  item  一级菜单
                                   itema 二级菜单
                                   itemb 三级菜单
-                                  itemc 四级菜单-->
+                                  itemc 四级菜单
+                            -->
                             <template v-for="(item, index) in tableList">
                                 <template v-for="(itema, indexa) in item.childAuthList">
                                     <template v-for="(itemb, indexb) in itema.childAuthList">
@@ -217,6 +219,7 @@ export default {
         },
         handleRouterData (data, uid) {
             data.map(i => {
+                // 添加唯一的uid标识
                 if (i.path) {
                     i.uid = uid + i.path
                 } else {
@@ -228,12 +231,15 @@ export default {
             })
         },
         async init () {
+            // 接口返回的路由
             const { data } = await getAuth()
             var copyData = JSON.parse(JSON.stringify(data))
+            // 处理前端的路由数据
             this.handleRouterData(routerMapping, '')
+            // 处理库里的路由数据
             this.handleData(copyData, '')
-            // console.log('resultData: ', copyData)
-            // console.log('routerMapping: ', routerMapping)
+            console.log('resultData: ', copyData)
+            console.log('routerMapping: ', routerMapping)
             this.tableList = this.handlerTableList(copyData, 0)
         },
         // 计算table合并行数
@@ -248,14 +254,17 @@ export default {
         },
         handleData (data, uid) {
             data.map(i => {
+                // 添加唯一uid标识
                 i.uid = uid + i.authUri
                 if (i.childAuthList.length === 0) {
+                    // 处理每一级菜单下面的敏感操作
                     i.authTypes = this.compare(i.authTypes)
                 } else {
                     this.handleData(i.childAuthList, i.uid + '/')
                 }
             })
         },
+        // 对每一级菜单下的authTypes进行统一处理
         compare (authTypes) {
             const arr = [
                 { id: '', authType: 0 },
@@ -305,6 +314,7 @@ export default {
                 return item
             })
         },
+        // 添加菜单确认按钮
         onAddMenuSure (formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
@@ -312,6 +322,7 @@ export default {
                 }
             })
         },
+        // 编辑菜单
         onEdit (lev, it, parent) {
             this.form.authName = it.authName
             this.form.authUri = it.authUri
@@ -324,6 +335,7 @@ export default {
             this.title = `编辑${lev}级菜单`
             this.dialogSeedVisible = true
         },
+        // 添加菜单
         popupMenu (lev, parent, item) {
             // 初始化
             this.$set(this.form, 'authName', '')
@@ -361,6 +373,7 @@ export default {
             this.dialogSeedVisible = true
         },
         // 根据uid循环找到本地路由与表中路由不同，限制页面选择
+        // 如果库中已添加则不可再次选择添加
         findDiffent (localRouter, originRouter) {
             localRouter.forEach(li => {
                 const result = originRouter.findIndex(ri => li.uid === ri.uid)
@@ -371,6 +384,7 @@ export default {
                 }
             })
         },
+        // 根据uid获取子菜单
         getChidlren (uid) {
             var hasFound = false // 表示是否有找到uid
             var result = null
@@ -433,6 +447,7 @@ export default {
             this.$message.success(`保存成功`)
             this.init()
         },
+        // 配置敏感数据
         onShowFieldConfig (item) {
             // 初始化
             this.list = [{}]

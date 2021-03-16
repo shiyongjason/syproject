@@ -143,7 +143,11 @@ export default {
     async getImageSelfStyle (url, process) {
         let result
         if (url && url.indexOf(ossOldBucket + '.') > -1) {
-            return `${url}?x-oss-process=${process}`
+            let _url = this.translateFileNameIsOk(url)
+            if (_url.indexOf('image/auto-orient') > -1) {
+                return `${_url},${process}`
+            }
+            return `${_url}?x-oss-process=${process}`
         }
         const ossUtil = await initOssSTS()
         const params = {
@@ -159,6 +163,18 @@ export default {
             result = ''
         }
         return result
+    },
+    translateFileNameIsOk (url) { // hack 特殊的文件名_
+        let urlTemp = url.split('/')
+        let filename = urlTemp.pop()
+        let decodeUrl
+        try {
+            decodeUrl = decodeURIComponent(filename)
+        } catch (e) {
+            decodeUrl = filename
+        }
+        urlTemp.push(encodeURIComponent(decodeUrl))
+        return urlTemp.join('/')
     },
     // eslint-disable-next-line
     hostReg: /^((http:\/\/)|(https:\/\/))?([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\/)/g
