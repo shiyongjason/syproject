@@ -135,7 +135,6 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag, recommendChange } from '../api'
 import { getChiness } from '../../hmall/membership/api'
-import { CATEGORY_MAP } from '../../bestonline/apply/const'
 
 export default {
     name: 'comfortcloudMembermanage',

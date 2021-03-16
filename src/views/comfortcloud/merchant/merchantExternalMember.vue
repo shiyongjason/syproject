@@ -129,6 +129,7 @@
 </template>
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
+import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
@@ -286,7 +287,16 @@ export default {
     activated () {
         this.onQuery()
     },
-
+    beforeRouteEnter (to, from, next) {
+        newCache('comfortcloudExternalMemeber')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'merchantExternalInvitation' && to.name != 'merchantOutOrderList') {
+            clearCache('comfortcloudExternalMemeber')
+        }
+        next()
+    },
     methods: {
         ...mapActions({
             findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
