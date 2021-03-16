@@ -316,6 +316,7 @@ export default {
             merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData',
             merchantmemberInvitationBuy: 'iotmerchantmemberInvitationBuy',
             merchantmemberInvitationTotal: 'iotmerchantmemberInvitationTotal',
+            merchantmemberData: 'iotmerchantmemberData',
             cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
 
@@ -335,7 +336,7 @@ export default {
         },
         showTag () {
             if (this.tagStringList.length > 0) {
-                console.log(this.tagStringList, this.$route.query.manualTags, '啥情况')
+                console.log(this.tagStringList, this.$route.query.userTags, '啥情况')
                 return this.tagStringList.join(',')
             } else {
                 return '--'
@@ -373,7 +374,8 @@ export default {
             findMerchantMemberEnterpriseInfo: 'findMerchantMemberEnterpriseInfo',
             findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation',
-            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist',
+            findMerchantMembersituation: 'findMerchantMembersituation'
         }),
 
         async onQuery () {
@@ -385,7 +387,6 @@ export default {
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
-            this.tagStringList = this.enterpriseInfoData.manualTags ? this.enterpriseInfoData.manualTags : []
             this.tableChangeData = this.merchantmemberInvitationChangeData
             this.tableBuyData = this.merchantmemberInvitationBuy.records
             this.tableBuyTotalData = this.merchantmemberInvitationTotal
@@ -412,6 +413,13 @@ export default {
                 total: this.merchantmemberInvitationChangeData.total
             }
         },
+        async memberInfo () {
+            await this.findMerchantMembersituation({ 'phone': this.$route.query.phone })
+            if (this.merchantmemberData.records.length > 0) {
+                this.enterpriseInfoData = this.merchantmemberData.records[0]
+            }
+            this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
+        },
         async showDliag (val) {
             await this.findCloudMerchantTaglist()
             this.tagVisible = true
@@ -424,8 +432,7 @@ export default {
                     const element = this.tagStringList[i]
                     tagMapList.push({ 'tagId': '', 'tagName': element })
                 }
-
-                if (this.$route.query.manualTags) {
+                if (this.$route.query.userTags) {
                     await editMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
                 } else {
                     await addMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
@@ -492,6 +499,7 @@ export default {
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
+            this.memberInfo()
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
