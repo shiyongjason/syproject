@@ -21,14 +21,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime"
-                                        value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期"
-                                        :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime"
-                                        value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期"
-                                        :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endRegisterTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -76,9 +72,7 @@
                 累计奖励:{{merchantmemberTotalData.rewardAmountTotal}}元；
             </el-tag>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
-                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
-                        :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="source" slot-scope="scope">
                     {{scope.data.row.source==='1'?'自主注册':'好友推荐'}}
                 </template>
@@ -96,11 +90,10 @@
                     <el-button class="orangeBtn" @click="onRecommendPerson(scope.data.row)">变更推荐人</el-button>
                 </template>
             </basicTable>
-            <el-dialog title="变更推荐人" :modal-append-to-body=false :append-to-body=false
-                       :visible.sync="recommendDialogVisible" width="50%">
+            <el-dialog title="变更推荐人" :modal-append-to-body=false :append-to-body=false :visible.sync="recommendDialogVisible" width="50%">
                 <h1 style="padding-bottom: 10px">订单信息</h1>
                 <h1 style="padding-top: 10px">变更后，该会员将绑定在新的推荐人/无推荐人状态，请确认准确后变更</h1>
-                <div >
+                <div>
                     <h1 style="padding-top: 20px">注册来源</h1>
                     <div class="flex-wrap-cont">
                         <el-select v-model="recommendData.source" style="width: 100%">
@@ -109,16 +102,16 @@
                         </el-select>
                     </div>
                 </div>
-                <div  v-show="recommendData.source==='2'">
+                <div v-show="recommendData.source==='2'">
                     <div class="query-col-title">推荐人会员账号：</div>
                     <div class="query-col-input">
                         <el-input v-model="recommendData.phone" placeholder="请输入手机号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="onRecommendChange(0)">取消</el-button>
-                <el-button type="primary" @click="onRecommendChange(1)">确认</el-button>
-            </span>
+                    <el-button @click="onRecommendChange(0)">取消</el-button>
+                    <el-button type="primary" @click="onRecommendChange(1)">确认</el-button>
+                </span>
             </el-dialog>
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
@@ -326,7 +319,7 @@ export default {
             this.queryParams.countryId = key
         },
         async editConform () {
-            if (this.tagStringList.length > 0) {
+            if (this.tagStringList) {
                 // 这里因为后台需要传递tagid 所以要加上再传递
                 let tagMapList = []
                 for (let i = 0; i < this.tagStringList.length; i++) {
@@ -388,7 +381,8 @@ export default {
                     uuid: this.recommendData.uuid,
                     changeType: this.recommendData.source,
                     phone: this.recommendData.phone,
-                    operator: this.userInfo.employeeName })
+                    operator: this.userInfo.employeeName
+                })
                 this.onQuery()
             }
         },
@@ -421,83 +415,83 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-    .spanflex {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 10px;
+.spanflex {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
 
-        span {
-            flex: 1;
+    span {
+        flex: 1;
 
-            &:first-child {
-                font-size: 16px;
-            }
+        &:first-child {
+            font-size: 16px;
+        }
 
-            &:last-child {
-                text-align: right;
-            }
+        &:last-child {
+            text-align: right;
         }
     }
+}
 
-    .topTitle {
-        margin-right: 2rem;
-        font-weight: bold;
-    }
-    .orangeBtn {
-        margin: 5px 0;
-    }
-    .colred {
-        color: #ff7a45;
-        cursor: pointer;
-    }
-    .tag-cont {
-        display: flex;
-        width: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
+.topTitle {
+    margin-right: 2rem;
+    font-weight: bold;
+}
+.orangeBtn {
+    margin: 5px 0;
+}
+.colred {
+    color: #ff7a45;
+    cursor: pointer;
+}
+.tag-cont {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
 
-    .unselect {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 10px;
-        border: 1px solid #606266;
-        border-radius: 5px;
-    }
-    .query-cont-col-area {
-        position: relative;
-        display: inline-flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        margin-right: 24px;
-    }
-    .select {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 10px;
-        background-color: #ff7a45;
-        border: 1px solid #ff7a45;
-        color: white;
-        border-radius: 5px;
-    }
-    .tag-container {
-        display: flex;
-        width: 100%;
-        height: 100%;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-    }
-    .tag {
-        margin: 5px;
-    }
-    .topColred {
-        color: #ff7a45;
-        cursor: pointer;
-    }
+.unselect {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px;
+    border: 1px solid #606266;
+    border-radius: 5px;
+}
+.query-cont-col-area {
+    position: relative;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 24px;
+}
+.select {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 10px;
+    background-color: #ff7a45;
+    border: 1px solid #ff7a45;
+    color: white;
+    border-radius: 5px;
+}
+.tag-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.tag {
+    margin: 5px;
+}
+.topColred {
+    color: #ff7a45;
+    cursor: pointer;
+}
 
-    /deep/ .el-dialog__body {
-        padding-top: 10px;
-    }
+/deep/ .el-dialog__body {
+    padding-top: 10px;
+}
 </style>
