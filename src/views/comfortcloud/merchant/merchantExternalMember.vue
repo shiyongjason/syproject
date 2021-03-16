@@ -100,7 +100,7 @@
                     <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.manualTags !== null">
                         <el-tag class="tag" v-for="item in scope.data.row.manualTags" :key="item">{{item}}</el-tag>
                     </div>
-                    <div class="hand colred" @click="showDliag(scope.data.row)" v-else>新增标签</div>
+                    <div class="hand colred" @click="showDliag(scope.data.row)" v-else>添加标签</div>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
@@ -129,6 +129,7 @@
 </template>
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
+import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
@@ -286,7 +287,16 @@ export default {
     activated () {
         this.onQuery()
     },
-
+    beforeRouteEnter (to, from, next) {
+        newCache('comfortcloudExternalMemeber')
+        next()
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'merchantExternalInvitation' && to.name != 'merchantOutOrderList') {
+            clearCache('comfortcloudExternalMemeber')
+        }
+        next()
+    },
     methods: {
         ...mapActions({
             findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
