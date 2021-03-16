@@ -91,21 +91,20 @@
                 </template>
             </basicTable>
             <el-dialog title="变更推荐人" :modal-append-to-body=false :append-to-body=false :visible.sync="recommendDialogVisible" width="50%">
-                <h1 style="padding-bottom: 10px">订单信息</h1>
                 <h1 style="padding-top: 10px">变更后，该会员将绑定在新的推荐人/无推荐人状态，请确认准确后变更</h1>
                 <div>
                     <h1 style="padding-top: 20px">注册来源</h1>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="recommendData.source" style="width: 100%">
+                        <el-select v-model="recommendData.source" >
                             <el-option label="自主注册" value=1></el-option>
                             <el-option label="好友推荐" value=2></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div v-show="recommendData.source==='2'">
-                    <div class="query-col-title">推荐人会员账号：</div>
+                    <h1 style="padding-top: 20px">推荐人账号：</h1>
                     <div class="query-col-input">
-                        <el-input v-model="recommendData.phone" placeholder="请输入手机号" maxlength="50"></el-input>
+                        <el-input  v-model="recommendData.invitePhone" placeholder="请输入手机号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
