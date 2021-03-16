@@ -39,7 +39,11 @@ export function getMembersituation (params) {
 }
 // 经销商会员列表分页查询
 export function getMerchantMembersituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/manage`, { params })
+    return axios.post(iotUrl + `/mall/wx/user/boss/manage`, { params })
+}
+// 外部蓄水会员列表分页查询
+export function getMerchantExernalMembersituation (params) {
+    return axios.post(iotUrl + `/mall/boss/out-member`, params)
 }
 // 奖励管理
 export function merchantReward (params) {
@@ -79,7 +83,7 @@ export function getMerchantMemberInvitationOrdersituation (params) {
 }
 // 经销商会员总数查询
 export function getMerchantMemberTotalsituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/count`, { params })
+    return axios.post(iotUrl + `/mall/wx/user/boss/count`, { params })
 }
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
@@ -88,6 +92,14 @@ export function updateInvitationDetail (params) {
 // 奖励发放
 export function sendReward (params) {
     return axios.post(iotUrl + `/mall/boss/wx/reward/send`, params)
+}
+// 修改推荐人
+export function recommendChange (params) {
+    return axios.put(iotUrl + `/mall/boss/user/change-invite-user`, params)
+}
+// 修改销售顾问
+export function salerChange (params) {
+    return axios.post(iotUrl + `/mall/boss/out-order/order-saler`, params)
 }
 // 修改企业信息备注
 export function updateCompanyInfo (params) {
@@ -638,7 +650,7 @@ export function editDistributorName (params) {
 
 // 获取主营产品分类
 export function getMerchantClassifyList (params) {
-    return axios.get(iotUrl + '/mall/boss/main-product', params)
+    return axios.get(iotUrl + '/mall/boss/main-product', { params })
 }
 
 // 编辑主营产品分类
@@ -670,8 +682,16 @@ export function getLikeMerchantList (params) {
 export function getCloudMerchantProductOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/order', { params })
 }
+// 获取微信订单列表
+export function getCloudMerchantProductOutOrderList (params) {
+    return axios.get(iotUrl + '/mall/boss/out-order/page', { params })
+}
 
 // 获取微信订单详情
+export function getCloudMerchantProductOutOrderDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/out-order/' + params.orderNo)
+}
+// 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/order/detail', { params })
 }
@@ -694,4 +714,64 @@ export function getMerchantPurchaseDetail (params) {
 // 失效某个抢购活动
 export function disableMerchantPurchase (params) {
     return axios.put(iotUrl + '/mall/boss/seckill-activity', params)
+}
+
+// 标签接口
+export function getCloudMerchantTaglist () {
+    return axios.get(iotUrl + '/mall/boss/tag/all')
+}
+
+// 新增标签
+export function addCloudMerchantTag (params) {
+    return axios.post(iotUrl + '/mall/boss/tag', params)
+}
+
+// 修改标签
+export function modifyCloudMerchantTag (params) {
+    return axios.put(iotUrl + '/mall/boss/tag', params)
+}
+
+// 删除标签
+export function deleteCloudMerchantTag (params) {
+    return axios.delete(iotUrl + '/mall/boss/tag', { data: params })
+}
+
+// 给用户新增标签
+export function addMemberTag (params) {
+    return axios.post(iotUrl + '/mall/boss/user-tag', params)
+}
+
+// 编辑用户标签
+export function editMemberTag (params) {
+    return axios.put(iotUrl + '/mall/boss/user-tag', params)
+}
+
+// 获取外部蓄水客户购买记录
+export function getMerchantMemberInvitationOutOrdersituation (params) {
+    return axios.get(iotUrl + '/mall/boss/user/out/order', { params })
+}
+
+// 获取外部蓄水客户购买记录统计
+export function getMerchantMemberInvitationOutOrdersTotal (params) {
+    return axios.get(iotUrl + '/mall/boss/user/out/order-total', { params })
+}
+
+// 按会员标签新增商品匹配关系
+export function addMerchantClassifyByTag (params) {
+    return axios.post(iotUrl + '/mall/boss/main-product/tag-product', params)
+}
+
+// 按会员标签修改商品匹配关系
+export function modifyMerchantClassifyByTag (params) {
+    return axios.put(iotUrl + '/mall/boss/main-product/tag-product', params)
+}
+
+// 删除会员标签和商品匹配关系
+export function deleteMerchantClassifyByTag (params) {
+    return axios.delete(iotUrl + '/mall/boss/main-product/tag-product/' + params.batchNo + '/' + params.operator)
+}
+
+// 获取会员标签和商品匹配关系
+export function getMerchantClassifyByTag (params) {
+    return axios.get(iotUrl + '/mall/boss/main-product/tag-edit-info', { params })
 }
