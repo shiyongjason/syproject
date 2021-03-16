@@ -137,6 +137,17 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOrderList.vue')
+                    }, {
+                        path: 'merchantOutOrderList',
+                        name: 'merchantOutOrderList',
+                        meta: {
+                            title: '外部订单列表',
+                            tagName: '外部订单列表',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantOutOrderList.vue')
                     }
                 ]
             },
@@ -160,7 +171,8 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberManage.vue')
-                    }, {
+                    },
+                    {
                         path: 'merchantDistributionManage',
                         name: 'merchantDistributionManage',
                         meta: {
@@ -195,6 +207,42 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberReward.vue')
+                    },
+                    {
+                        path: 'merchantExternalMember',
+                        name: 'merchantExternalMember',
+                        meta: {
+                            title: '外部蓄水客户',
+                            tagName: '外部蓄水客户',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantExternalMember.vue')
+                    },
+                    {
+                        path: 'merchantExternalInvitation',
+                        name: 'merchantExternalInvitation',
+                        meta: {
+                            title: '客户详情',
+                            tagName: '客户详情',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantExternalInvitation.vue')
+                    },
+                    {
+                        path: 'merchantMemberTag',
+                        name: 'merchantMemberTag',
+                        meta: {
+                            title: '会员标签',
+                            tagName: '会员标签',
+                            parentName: '会员管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberTag.vue')
                     }
                 ]
             },
@@ -218,6 +266,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantMemberActive.vue')
+                    },
+                    {
+                        path: 'merchantPurchase',
+                        name: 'comfortcloudMemberPurchase',
+                        meta: {
+                            title: '限时抢购',
+                            tagName: '限时抢购',
+                            parentName: '活动管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantPurchase.vue')
                     }
                 ]
             }

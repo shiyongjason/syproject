@@ -29,19 +29,11 @@
                 <el-input placeholder="请输入" v-model="formData.payAmount" maxlength="50" v-isNegative:2="formData.payAmount"></el-input>
             </el-form-item>
             <el-form-item label="支付日期：" prop="payDate">
-                <el-date-picker
-                    v-model="formData.payDate"
-                    value-format="yyyy-MM-dd"
-                    format="yyyy-MM-dd"
-                    type="date"
-                    placeholder="选择日期">
+                <el-date-picker v-model="formData.payDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="选择日期">
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="上传上游支付凭证：" prop="payVouchers">
-                <OssFileHosjoyUpload
-                              v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=9
-                              :limit=9 :action='action' :uploadParameters='uploadParameters'
-                              style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
+                <OssFileHosjoyUpload v-model="formData.payVouchers" :showPreView=true :fileSize=20 :fileNum=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
@@ -50,9 +42,9 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-                <h-button @click="onCancel">取消</h-button>
-                <h-button type="primary" @click="onEnterPay">确认支付</h-button>
-            </div>
+            <h-button @click="onCancel">取消</h-button>
+            <h-button type="primary" @click="onEnterPay">确认支付</h-button>
+        </div>
     </el-dialog>
 </template>
 
@@ -130,6 +122,7 @@ export default {
             this.$refs.form.clearValidate()
             this.clearForm()
             this.$emit('onClose')
+            this.formData.payVouchers = []
         },
         onEnterPay () {
             this.$refs.form.validate(async (value, rules) => {
@@ -139,6 +132,7 @@ export default {
                         ...this.params
                     }
                     await updatePrevPayPass(params)
+                    this.formData.payVouchers = []
                     this.$emit('onCloseDialogAndQueryDetail', 'prevPaymentVisible')
                 } else {
                     this.$nextTick(() => {
@@ -154,10 +148,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
-/deep/.el-form-item__label{
+/deep/.el-form-item__label {
     line-height: 20px;
 }
-/deep/.el-form-item__content{
+/deep/.el-form-item__content {
     line-height: 20px;
 }
 .prev-payment-dialog {
@@ -166,5 +160,4 @@ export default {
 .tips {
     padding: 5px;
 }
-
 </style>

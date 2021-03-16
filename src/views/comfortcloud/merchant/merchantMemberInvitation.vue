@@ -13,6 +13,7 @@
                 <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}}  </span>
                 <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
                 <span style="margin-left: 1rem">会员编号： {{this.$route.query.uuid}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">会员标签： <span class="choice-tag" @click="showDliag()"> {{showTag}} </span></span>
             </div>
         </div>
         <div class="page-body-cont query-cont">
@@ -163,7 +164,7 @@
             </el-dialog>
         </el-dialog>
         <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
-                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+                   :close-on-click-modal="false" >
             <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth"
                             clear-icon=""
                             type="month" value-format='yyyy-MM'
@@ -174,11 +175,31 @@
                     <el-button type="primary" @click="editMonth(1)">确认</el-button>
                 </span>
         </el-dialog>
+        <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="tagVisible" width="50%">
+            <div v-for="item in cloudMerchantTaglist" :key="item.id">
+                <h1>{{item.tagCategory}}</h1>
+                <div class="tag-cont">
+                    <span :class="tagSelect(tag)" v-for="tag in item.tagDetailBos" :key="tag" @click="addTag(tag)">{{tag}}</span>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                 <el-button @click="addNewTag()">新增标签</el-button>
+                    <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
+                    <el-button @click="tagCancel()">取消</el-button>
+                    <el-button type="primary" @click="editConform()">确认</el-button>
+                </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { delInvitationOrder, downloadQuestionTemp, updateInvitationDetail, updateCompanyInfo } from '../api'
+import {
+    delInvitationOrder,
+    downloadQuestionTemp,
+    updateInvitationDetail,
+    updateCompanyInfo,
+    editMemberTag, addMemberTag
+} from '../api'
 import { iotUrl } from '@/api/config'
 import axios from 'axios'
 
@@ -191,6 +212,7 @@ export default {
                 pageSize: 10,
                 uuid: this.$route.query.uuid
             },
+            tagStringList: [],
             updateMonthShow: false,
             updateIndexData: {},
             searchParams: {},
@@ -210,6 +232,7 @@ export default {
                 pageSize: 10,
                 total: 0
             },
+            tagVisible: false,
             textarea: '',
             paginationRegister: {
                 pageNumber: 1,
@@ -292,8 +315,32 @@ export default {
             merchantmemberInvitationOrderData: 'iotmerchantmemberInvitationOrderData',
             merchantmemberInvitationChangeData: 'iotmerchantmemberInvitationChangeData',
             merchantmemberInvitationBuy: 'iotmerchantmemberInvitationBuy',
-            merchantmemberInvitationTotal: 'iotmerchantmemberInvitationTotal'
+            merchantmemberInvitationTotal: 'iotmerchantmemberInvitationTotal',
+            cloudMerchantTaglist: 'cloudMerchantTaglist'
         }),
+
+        tagSelect () {
+            return function (tag) {
+                let selectTag = false
+                let datas = this.tagStringList
+                for (let j = 0; j < datas.length; j++) {
+                    const element = datas[j]
+                    if (tag === element) {
+                        selectTag = true
+                        break
+                    }
+                }
+                return selectTag ? 'select hand' : 'unselect hand'
+            }
+        },
+        showTag () {
+            if (this.tagStringList.length > 0) {
+                console.log(this.tagStringList, this.$route.query.manualTags, '啥情况')
+                return this.tagStringList.join(',')
+            } else {
+                return '--'
+            }
+        },
         pickerOptionsStart () {
             return {
                 disabledDate: time => {
@@ -325,8 +372,10 @@ export default {
             findMerchantMemberInvitationBuyTotalsituation: 'findMerchantMemberInvitationBuyTotal',
             findMerchantMemberEnterpriseInfo: 'findMerchantMemberEnterpriseInfo',
             findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
-            findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation'
+            findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation',
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
         }),
+
         async onQuery () {
             await this.findMerchantMemberInvitationRegistersituation(this.searchParams)
             await this.findMerchantMemberInvitationBuy(this.searchParams)
@@ -336,6 +385,7 @@ export default {
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
+            this.tagStringList = this.enterpriseInfoData.manualTags ? this.enterpriseInfoData.manualTags : []
             this.tableChangeData = this.merchantmemberInvitationChangeData
             this.tableBuyData = this.merchantmemberInvitationBuy.records
             this.tableBuyTotalData = this.merchantmemberInvitationTotal
@@ -361,6 +411,38 @@ export default {
                 pageSize: this.merchantmemberInvitationChangeData.size,
                 total: this.merchantmemberInvitationChangeData.total
             }
+        },
+        async showDliag (val) {
+            await this.findCloudMerchantTaglist()
+            this.tagVisible = true
+        },
+        async editConform () {
+            if (this.tagStringList.length > 0) {
+                // 这里因为后台需要传递tagid 所以要加上再传递
+                let tagMapList = []
+                for (let i = 0; i < this.tagStringList.length; i++) {
+                    const element = this.tagStringList[i]
+                    tagMapList.push({ 'tagId': '', 'tagName': element })
+                }
+
+                if (this.$route.query.manualTags) {
+                    await editMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
+                } else {
+                    await addMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
+                }
+                this.onQuery()
+            }
+            this.clearData()
+        },
+        tagCancel () {
+            this.clearData()
+        },
+        tagCancelSelect () {
+            this.tagStringList = []
+        },
+
+        clearData () {
+            this.tagVisible = false
         },
         uploadFile (param) {
             console.log('response')
@@ -580,6 +662,30 @@ export default {
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
         },
+        addTag (tag) {
+            let selectTag = false
+            let index = 0
+            let datas = this.tagStringList
+            for (let j = 0; j < datas.length; j++) {
+                const element = datas[j]
+                if (tag === element) {
+                    index = j
+                    selectTag = true
+                    break
+                }
+            }
+            if (selectTag) {
+                // 存在则删除
+                datas.splice(index, 1)
+            } else {
+                // 不存在则添加
+                datas.push(tag)
+            }
+        },
+        addNewTag () {
+            this.clearData()
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberTag' })
+        },
         goToDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: { phone: this.$route.query.phone } })
         }
@@ -605,12 +711,55 @@ export default {
             }
         }
     }
+    .tag-cont {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 
+    .unselect {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        border: 1px solid #606266;
+        border-radius: 5px;
+    }
+
+    .select {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        background-color: #ff7a45;
+        border: 1px solid #ff7a45;
+        color: white;
+        border-radius: 5px;
+    }
+    .tag-container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    .tag {
+        margin: 5px;
+    }
+    .choice-tag {
+        color: #ff7a45;
+        cursor: pointer;
+    }
     .colred {
         color: #ff7a45;
         cursor: pointer;
     }
-
+    .tag-cont {
+        display: flex;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
     /deep/ .el-dialog__body {
         padding-top: 10px;
     }

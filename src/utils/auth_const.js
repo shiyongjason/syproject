@@ -222,6 +222,7 @@ export const CRM_SERVICE_FUND_CONFIRM = 109511 // 服务费账单-支付确认
 export const CRM_PREV_PAYMENT_DETAIL = 109512 // 查看上游支付明细
 export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
 export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
+
 // 好程工 资金
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支付确认
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_SEE = 109516 // 首付款账单-查看凭证
@@ -268,6 +269,11 @@ export const CRM_CONTRACT_ADD = 120005
 export const CRM_CONTRACT_FIN = 120011
 export const CRM_CONTRACT_RISK = 120012
 export const CRM_CONTRACT_LEGAL = 120013
+export const CRM_CONTRACT_ABOLISH = 120015
 
 // 合同模板确认函筛选项控制
 export const CONTRACTLIST_TYPE_AUTH = 5111115
+
+// 节假日管理
+export const HOLIDAY_ADD = 800081
+export const HOLIDAY_EDIT = 800082

@@ -49,7 +49,7 @@
                 <el-button type="primary" @click="onSure">确定{{dialog.title}}</el-button>
             </span>
         </el-dialog>
-        <el-drawer class="contentdrawerbox" size="550px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
+        <el-drawer class="contentdrawerbox" size="600px" :visible.sync="drawerVisible" :with-header="false" :wrapperClosable='false'>
             <div slot="title">审核记录</div>
             <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
             <div style="text-align: center;font-size: 18px;">{{detailRes.contractStatus == 2?'待分财审核':detailRes.contractStatus == 4?'待风控审核':detailRes.contractStatus == 6?'待法务审核':''}}</div>
@@ -104,14 +104,13 @@
                         {{item.operatorType==1&&(item.operationName=='审核通过了'||item.operationName=='审核拒绝了')?'审批备注':'备注'}}：{{item.approvalRemark}}
                     </div>
                 </template>
-
             </div>
             <div class="history-bttom">
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :with-header="false" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="approvalcontract-layout-left">
                 <h1>字段/自定义合同条款修订</h1>
                 <div class="setarea" v-if="currentKey">
@@ -142,6 +141,10 @@
                             <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                 <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
                                     <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
+                                    <!--  -->
+                                    <template v-if="value.slotRender" slot-scope="scope">
+                                        <comRender :scope="scope" :render="value.slotRender"></comRender>
+                                    </template>
                                 </component>
                             </el-form-item>
                         </el-form>
@@ -173,7 +176,7 @@
                 <el-button type="primary" @click="contentvsVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" :with-header="false" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible"  size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="vsList" v-if="contentvsDataList&&contentvsDataList.length>0">
                 <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
             </div>
@@ -193,16 +196,18 @@ import isNum from './components/isNum'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
-import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList } from './api/index'
+import { contractKeyValue, getContractsContent, saveContent, approvalContent, getCheckHistory, getDiffApi, getPurchaseOrderList, getTYCList } from './api/index'
 import { ccpBaseUrl } from '@/api/config'
 import Editor from '@tinymce/tinymce-vue'
+import comRender from './comRender'
 // api:https://www.tiny.cloud/docs/integrations/vue/
 // http://tinymce.ax-z.cn/general/basic-setup.php
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor },
+    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender },
     data () {
         return {
+            TYCList: [], // 天眼查数据
             contentvsDataVisible: false,
             contentvsDataList: [],
             flag: true,
@@ -348,6 +353,9 @@ export default {
         editorDrawerClose (done) {
             if (this.imgArr && this.imgArr.length > 0) {
                 this.imgArr = []
+            }
+            if (this.TYCList.length > 0) {
+                this.TYCList = []
             }
             done()
         },
@@ -526,10 +534,52 @@ export default {
                             input: (val) => { this.currentKey.paramValue = val }
                         }
                     }
+                },
+                // 天眼查搜索
+                11: {
+                    elSelect: {
+                        bind: {
+                            value: this.currentKey.paramValue,
+                            filterable: true,
+                            remote: true,
+                            placeholder: '请输入搜索关键词',
+                            // allowCreate: true,//是否允许用户创建新条目
+                            // loading: false
+                            remoteMethod: this.remoteMethod, // 远程搜索方法
+                            defaultFirstOption: true, // 在输入框按下回车，选择第一个匹配项
+                            style: { width: '450px' }
+                        },
+                        slotRender: (scope) => {
+                            console.log('scope: ', scope)
+                            return (this.TYCList.map((item, index) => {
+                                return (
+                                    <el-option key={item.id} value={item.name} label={item.name}>
+                                        {item.name}
+                                    </el-option>
+                                )
+                            })
+                            )
+                        },
+                        on: {
+                            input: (val) => {
+                                this.currentKey.paramValue = val
+                                console.log('xxxxxxx', val)
+                            }
+                        }
+                    }
                 }
 
             }
             return comObj[this.currentKey.inputStyle]
+        },
+        async remoteMethod (val) {
+            console.log('remoteMethod', val)
+            // 天眼查查询
+            const { data } = await getTYCList({ word: val })
+            if (data) {
+                this.TYCList = data.items
+            }
+            this.currentKey.paramValue = val
         },
         handleCommand (command) {
             this.currentKey = command
@@ -670,8 +720,13 @@ export default {
                 //
                 this.contractFieldsList.map((d, i) => {
                     if (d.paramKey === this.currentKey.paramKey) {
+                        // 筛选出不是选中的图片
                         let dData = d.paramValue.filter(pv => {
-                            if (pv && pv.fileUrl !== this.currentKey.paramValue) {
+                            let currentKeyParamValue = this.currentKey.paramValue
+                            if (this.currentKey.paramValue.indexOf('?x-oss-process=image/auto-orient,1') != -1) {
+                                currentKeyParamValue = currentKeyParamValue.split('?x-oss-process=image/auto-orient,1')[0]
+                            }
+                            if (pv && pv.fileUrl !== currentKeyParamValue) {
                                 return true
                             }
                         })
@@ -752,8 +807,12 @@ export default {
                     } else {
                         console.log('旧图', this.oldImg)
                         fieldOriginalContent = this.oldImg
+                        if (!Array.isArray(item.paramValue)) {
+                            return
+                        }
                         item.paramValue.map((img, i) => {
-                            if (img.fileUrl === this.oldImg) {
+                            // ?x-oss-process=image/auto-orient,1  页面上的图片有些在crm加了这个属性，而服务器的没有，导致了用===查找不到
+                            if (img.fileUrl === this.oldImg || this.oldImg.indexOf(img.fileUrl) != -1) {
                                 console.log('i: ', i)
                                 let a = JSON.parse(JSON.stringify(item.paramValue))
                                 a.splice(i, 1, ...this.imgArr)
@@ -764,6 +823,7 @@ export default {
                 }
             })
             console.log('contractFieldsList', contractFieldsList)
+            // return
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -842,8 +902,11 @@ export default {
                                 console.log('有图片xxxxx', item.paramValue)
                                 Array.from(img).map(d => {
                                     console.log('d: ', d)
+                                    if (!Array.isArray(item.paramValue)) {
+                                        return
+                                    }
                                     let dData = item.paramValue.filter(pv => {
-                                        if (pv && pv.fileUrl === d.src) {
+                                        if (pv && (pv.fileUrl === d.src || d.src.indexOf(pv.fileUrl) != -1)) {
                                             return true
                                         }
                                     })
@@ -933,6 +996,12 @@ export default {
                     'createBy': this.userInfo.employeeName,
                     'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                 })
+                if (operatorType && operatorType == 3) {
+                    this.$message({
+                        message: `当前修改已保存`,
+                        type: 'success'
+                    })
+                }
                 this.init(() => {
                     this.domBindMethods()
                 })
@@ -1137,7 +1206,6 @@ export default {
 /deep/.approvalcontract-content table td {
     // border: 1px solid #ccc;
     // border-right: 1px solid #ccc;
-
 }
 /deep/ .mce-item-table:not([border]) td {
     //  border: 1px solid #333 !important;
@@ -1324,7 +1392,7 @@ export default {
     /deep/.history-css {
         padding: 0 20px;
         box-sizing: border-box;
-        height: calc(100vh - 190px);
+        height: calc(100vh - 110px);
         overflow-y: scroll;
         .history-css-flex {
             display: flex;
