@@ -51,7 +51,9 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
+                        <h-button type="primary" @click="onSearch">查询</h-button>
+                        <h-button @click="onReset">重置</h-button>
+<!--                        <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>-->
                     </div>
                 </div>
             </div>
@@ -60,6 +62,9 @@
                         :tableData="cloudMerchantProductOutOrderList.records" :isShowIndex='false'
                         :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
                         :isAction="true">
+                <template slot="source" slot-scope="scope">
+                    {{scope.data.row.source==='B2b'?'单分享':scope.data.row.source}}
+                </template>
                 <template slot="payMethod" slot-scope="scope">
                     {{orderPayDesc(scope.data.row.payMethod)}}
                 </template>
@@ -68,11 +73,11 @@
                 </template>
                 <template slot="salerName" slot-scope="scope">
                     <p @click="onEditSaler(scope.data.row)" class="colred">
-                        {{scope.data.row.salerName}}</p>
+                        {{scope.data.row.salerName?scope.data.row.salerName:'--'}}</p>
                 </template>
                 <template slot="salerPhone" slot-scope="scope">
                     <p @click="onEditSaler(scope.data.row)" class="colred">
-                        {{scope.data.row.salerPhone}}</p>
+                        {{scope.data.row.salerPhone?scope.data.row.salerPhone:'--'}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
@@ -252,6 +257,15 @@ export default {
                 total: this.cloudMerchantProductOutOrderDetail.total
             }
             this.detailDialogVisible = true
+        },
+        onReset () {
+            this.$set(this.queryParams, 'phone', '')
+            this.$set(this.queryParams, 'orderStatus', '')
+            this.$set(this.queryParams, 'productName', '')
+            this.$set(this.queryParams, 'startOrderTime', '')
+            this.$set(this.queryParams, 'endOrderTime', '')
+            this.$set(this.queryParams, 'isShy', '')
+            this.onSearch()
         },
         orderStatusDesc (status) {
             if (status === 10) {
