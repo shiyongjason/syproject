@@ -39,7 +39,7 @@ export function getMembersituation (params) {
 }
 // 经销商会员列表分页查询
 export function getMerchantMembersituation (params) {
-    return axios.post(iotUrl + `/mall/wx/user/boss/manage`, { params })
+    return axios.post(iotUrl + `/mall/wx/user/boss/manage`, params)
 }
 // 外部蓄水会员列表分页查询
 export function getMerchantExernalMembersituation (params) {
@@ -83,7 +83,7 @@ export function getMerchantMemberInvitationOrdersituation (params) {
 }
 // 经销商会员总数查询
 export function getMerchantMemberTotalsituation (params) {
-    return axios.post(iotUrl + `/mall/wx/user/boss/count`, { params })
+    return axios.post(iotUrl + `/mall/wx/user/boss/count`, params)
 }
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
