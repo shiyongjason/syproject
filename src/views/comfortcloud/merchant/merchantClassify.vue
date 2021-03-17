@@ -195,10 +195,10 @@ export default {
                 this.isEdith = true
                 this.clearAddByMemberTagFromData()
                 const classfyInfo = await getMerchantClassifyByTag({ batchNo: item.batchNo })
-                console.log(classfyInfo)
+
                 this.addByTagForm = {
                     batchNo: item.batchNo,
-                    mainProductList: classfyInfo.data.productList,
+                    mainProductList: classfyInfo.data.productList.length > 0 ? classfyInfo.data.productList : [{}], // 如果商品下架，mainProductList为空，则新建一个空元素
                     manualTags: classfyInfo.data.manualTagList.map((v) => v.tagName),
                     autoTags: classfyInfo.data.autoTagList
                 }
