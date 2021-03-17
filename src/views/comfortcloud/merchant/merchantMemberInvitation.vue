@@ -71,7 +71,8 @@
                 <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="4">
                     <div class="page-body-cont-enterprise-info" v-if="this.enterpriseInfoData.id!=null">
                         <span style="margin-bottom: 20px">公司名称： {{this.enterpriseInfoData.companyName}} </span>
-                        <span style="margin-bottom: 20px">联系地址： {{this.enterpriseInfoData.contactAddress}}</span>
+                        <span style="margin-bottom: 20px">经营区域： {{this.enterpriseInfoData.provinceName+this.enterpriseInfoData.cityName+this.enterpriseInfoData.countryName}}</span>
+                        <span style="margin-bottom: 20px">门店地址： {{this.enterpriseInfoData.contactAddress}}</span>
                         <span style="margin-bottom: 20px">联系人姓名： {{this.enterpriseInfoData.contactUser}}</span>
                         <span style="margin-bottom: 20px">联系电话： {{this.enterpriseInfoData.contactNumber}}</span>
                         <span>经营类型：{{this.enterpriseInfoData.businessType===1? '零售商':this.enterpriseInfoData.businessType===2? '工程商':''}}</span>
@@ -405,6 +406,9 @@ export default {
         },
         tagCancel () {
             this.clearData()
+            this.tagStringList = this.$route.query.userTags ? this.$route.query.userTags.split(',') : []
+
+            console.log(this.tagStringList)
         },
         tagCancelSelect () {
             this.tagStringList = []
