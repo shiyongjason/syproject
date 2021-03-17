@@ -10,9 +10,9 @@
                 <span>手机号 ：{{this.$route.query.phone}} </span>
             </div>
             <div class="top-box-right">
-                <span>注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}} </span>
-                <span style="margin-left: 1rem">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
-                <span style="margin-left: 1rem">会员编号： {{this.$route.query.uuid}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">注册时间： {{new Date(decodeURIComponent(this.$route.query.createTime)).toLocaleString()}} </span>
+                <span style="margin-left: 1rem;margin-bottom:10px">注册来源： {{this.$route.query.source==='1'?'  自主注册':'  好友推荐'}}</span>
+                <span style="margin-left: 1rem;margin-bottom:10px">会员编号： {{this.$route.query.uuid}}</span>
                 <span style="margin-left: 1rem;margin-bottom:10px">会员标签： <span class="choice-tag" @click="showDliag()"> {{showTag}} </span></span>
             </div>
         </div>
@@ -758,7 +758,7 @@ export default {
     width: auto;
     margin-left: 3rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-end;
     background: #ffffff;
 }
