@@ -35,8 +35,10 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-cont-col-area">
-                        <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
-                            <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
+                        <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省"
+                                   :clearable=true>
+                            <el-option v-for="item in provinceList" :key="item.id" :label="item.name"
+                                       :value="item.provinceId">
                             </el-option>
                         </el-select>
                         <span class="ml10 mr10">-</span>
@@ -46,7 +48,8 @@
                         </el-select>
                         <span class="ml10 mr10">-</span>
                         <el-select v-model="queryParams.countryId" placeholder="区" :clearable=true>
-                            <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
+                            <el-option v-for="item in getCountry" :key="item.id" :label="item.name"
+                                       :value="item.countryId">
                             </el-option>
                         </el-select>
                     </div>
@@ -55,7 +58,8 @@
                     <div class="query-col-title">手动标签：</div>
                     <div class="query-col-cont">
                         <el-select v-model="queryParams.manualTags" multiple>
-                            <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory" :label="group.tagCategory">
+                            <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory"
+                                             :label="group.tagCategory">
                                 <el-option v-for="item in group.tagDetailBos" :key="item" :label="item" :value="item">
                                 </el-option>
                             </el-option-group>
@@ -86,10 +90,12 @@
                     {{setMerchantType(scope.data.row)}}
                 </template>
                 <template slot="userTags" slot-scope="scope">
-                    <div class="tag-container hand" @click="showDliag(scope.data.row)" v-if="scope.data.row.userTags !== null">
-                        <el-tag class="tag" v-for="item in scope.data.row.userTags.split(',')" :key="item">{{item}}</el-tag>
+                    <div class="tag-container hand" @click="showDliag(scope.data.row)"
+                         v-if="scope.data.row.userTags !== null">
+                        <el-tag class="tag" v-for="item in scope.data.row.userTags.split(',')" :key="item">{{item}}
+                        </el-tag>
                     </div>
-                    <div class="hand" @click="showDliag(scope.data.row)" v-else>添加标签</div>
+                    <div class="hand colred" @click="showDliag(scope.data.row)" v-else>添加标签</div>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">查看详情</el-button>
@@ -98,29 +104,29 @@
             </basicTable>
             <el-dialog title="变更推荐人" :modal-append-to-body=false :append-to-body=false
                        :visible.sync="recommendDialogVisible" width="50%">
-                <h1 style="padding-bottom: 10px">订单信息</h1>
                 <h1 style="padding-top: 10px">变更后，该会员将绑定在新的推荐人/无推荐人状态，请确认准确后变更</h1>
-                <div >
+                <div>
                     <h1 style="padding-top: 20px">注册来源</h1>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="recommendData.source" style="width: 100%">
+                        <el-select v-model="recommendData.source">
                             <el-option label="自主注册" value=1></el-option>
                             <el-option label="好友推荐" value=2></el-option>
                         </el-select>
                     </div>
                 </div>
-                <div  v-show="recommendData.source==='2'">
-                    <div class="query-col-title">推荐人会员账号：</div>
+                <div v-show="recommendData.source==='2'">
+                    <h1 style="padding-top: 20px">推荐人账号：</h1>
                     <div class="query-col-input">
-                        <el-input v-model="recommendData.phone" placeholder="请输入手机号" maxlength="50"></el-input>
+                        <el-input v-model="recommendData.invitePhone" placeholder="请输入手机号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
-                <el-button @click="onRecommendChange(0)">取消</el-button>
-                <el-button type="primary" @click="onRecommendChange(1)">确认</el-button>
-            </span>
+                    <el-button @click="onRecommendChange(0)">取消</el-button>
+                    <el-button :disabled="recommendData.source==='2'&&!recommendData.invitePhone" type="primary" @click="onRecommendChange(1)">确认</el-button>
+                </span>
             </el-dialog>
-            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
+            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible"
+                       width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
                     <h1>{{item.tagCategory}}</h1>
                     <div class="tag-cont">
@@ -128,6 +134,7 @@
                     </div>
                 </div>
                 <span slot="footer" class="dialog-footer">
+                     <el-button @click="addNewTag()">新增标签</el-button>
                     <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
                     <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
@@ -142,7 +149,6 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag, recommendChange } from '../api'
 import { getChiness } from '../../hmall/membership/api'
-import { CATEGORY_MAP } from '../../bestonline/apply/const'
 
 export default {
     name: 'comfortcloudMembermanage',
@@ -208,7 +214,6 @@ export default {
             return function (tag) {
                 let selectTag = false
                 let datas = this.tagStringList
-                console.log('datas' + datas)
                 for (let j = 0; j < datas.length; j++) {
                     const element = datas[j]
                     if (tag === element) {
@@ -326,7 +331,7 @@ export default {
             this.queryParams.countryId = key
         },
         async editConform () {
-            if (this.tagStringList.length > 0) {
+            if (this.tagStringList) {
                 // 这里因为后台需要传递tagid 所以要加上再传递
                 let tagMapList = []
                 for (let i = 0; i < this.tagStringList.length; i++) {
@@ -374,12 +379,16 @@ export default {
                 datas.push(tag)
             }
         },
+        addNewTag () {
+            this.clearData()
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberTag' })
+        },
         onEdit (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberInvitation', query: val })
         },
         async onRecommendPerson (val) {
             this.recommendDialogVisible = true
-            this.recommendData = val
+            this.recommendData = Object.assign({}, val)
         },
         async onRecommendChange (val) {
             this.recommendDialogVisible = false
@@ -387,8 +396,9 @@ export default {
                 await recommendChange({
                     uuid: this.recommendData.uuid,
                     changeType: this.recommendData.source,
-                    phone: this.recommendData.phone,
-                    operator: this.userInfo.employeeName })
+                    phone: this.recommendData.invitePhone,
+                    operator: this.userInfo.employeeName
+                })
                 this.onQuery()
             }
         },
@@ -443,13 +453,16 @@ export default {
         margin-right: 2rem;
         font-weight: bold;
     }
+
     .orangeBtn {
         margin: 5px 0;
     }
+
     .colred {
         color: #ff7a45;
         cursor: pointer;
     }
+
     .tag-cont {
         display: flex;
         width: 100%;
@@ -464,6 +477,7 @@ export default {
         border: 1px solid #606266;
         border-radius: 5px;
     }
+
     .query-cont-col-area {
         position: relative;
         display: inline-flex;
@@ -472,6 +486,7 @@ export default {
         align-items: center;
         margin-right: 24px;
     }
+
     .select {
         display: inline-block;
         padding: 5px 10px;
@@ -481,6 +496,7 @@ export default {
         color: white;
         border-radius: 5px;
     }
+
     .tag-container {
         display: flex;
         width: 100%;
@@ -489,9 +505,11 @@ export default {
         flex-wrap: wrap;
         justify-content: flex-start;
     }
+
     .tag {
         margin: 5px;
     }
+
     .topColred {
         color: #ff7a45;
         cursor: pointer;
