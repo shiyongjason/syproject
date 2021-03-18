@@ -266,8 +266,7 @@ export default {
         getCity () {
             const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
             if (province.length > 0) {
-                this.cityList = province[0].cities
-                return this.cityList
+                return province[0].cities
             }
             return []
         },
@@ -277,6 +276,14 @@ export default {
                 return city[0].countries
             }
             return []
+        }
+    },
+    watch: {
+        getCity: {
+            deep: true,
+            handler: function (newVal) {
+                this.cityList = newVal
+            }
         }
     },
     mounted () {
