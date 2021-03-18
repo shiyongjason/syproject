@@ -102,7 +102,7 @@ Vue.prototype.$multipliedBy = (num1, num2, ...others) => {
 Vue.mixin({
     methods: {
         hosAuthCheck (id) {
-            const auth = sessionStorage.getItem('authResourceKeys')
+            const auth: any = sessionStorage.getItem('authResourceKeys')
             return auth.includes(id)
         }
     }

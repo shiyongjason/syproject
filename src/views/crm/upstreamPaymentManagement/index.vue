@@ -51,6 +51,7 @@ export default class UpstreamPaymentManagement extends Vue {
         }
 
         const a = obj?.a // undefined, 如果没有"?"可就报错喽
+        console.log('a: ', a)
         // 等价于
         // const a = (obj === null || undefined === obj) ? undefined : obj.a
         const baz = obj?.foo?.bar?.baz // 42

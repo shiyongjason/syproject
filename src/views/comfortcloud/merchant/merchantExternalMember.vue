@@ -94,7 +94,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: this.$route.query.phone,
-                source: "1",
+                source: '1',
                 provinceId: '',
                 cityId: '',
                 countryId: '',
@@ -128,7 +128,7 @@ export default {
                 { 'title': '公司职位', 'tags': ['123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231', '123123', '1231231', '131231'] },
                 { 'title': '主营产品', 'tags': ['哈哈哈', '嗯嗯', '好好'] },
                 { 'title': '是否有意向', 'tags': ['FJFJ', 'DFDF', 'GWG'] },
-                { 'title': '东西好不好', 'tags': ['一二三', '四五六', '七八九'] },
+                { 'title': '东西好不好', 'tags': ['一二三', '四五六', '七八九'] }
             ],
             dialogVisible: false
         }
@@ -164,6 +164,7 @@ export default {
         getCity () {
             const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
             if (province.length > 0) {
+                // eslint-disable-next-line vue/no-side-effects-in-computed-properties
                 this.cityList = province[0].cities
                 return this.cityList
             }
