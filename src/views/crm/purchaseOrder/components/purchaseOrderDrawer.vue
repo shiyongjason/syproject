@@ -258,7 +258,7 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
-import imageAddToken from '@/components/imageAddToken'
+// import imageAddToken from '@/components/imageAddToken'
 export default {
     name: 'purchaseOrderDrawer',
     props: {
@@ -290,7 +290,7 @@ export default {
             PaymentOrderDict
         }
     },
-    components: { PureCollapseTr, imageAddToken },
+    components: { PureCollapseTr },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
