@@ -103,7 +103,7 @@
             </span>
             </el-dialog>
             <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false
-                       :visible.sync="detailDialogVisible" width="30%">
+                       :visible.sync="detailDialogVisible" width="50%">
                 <h1 style="padding-bottom: 10px">订单信息</h1>
                 <p style="line-height: 25px">订单原始总金额 ￥{{cloudMerchantProductOutOrderDetail.totalAmount}} <br>
                     折扣总金额 ￥{{cloudMerchantProductOutOrderDetail.discountAmount}}<br>
