@@ -225,15 +225,15 @@ export default {
             }
         },
         getCity () {
-            const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
+            const province = this.provinceList.filter(item => item.provinceId === this.queryParams.provinceId)
             if (province.length > 0) {
-                this.cityList = province[0].cities
-                return this.cityList
+                // this.cityList = province[0].cities
+                return province[0].cities
             }
             return []
         },
         getCountry () {
-            const city = this.cityList.filter(item => item.cityId == this.queryParams.cityId)
+            const city = this.cityList.filter(item => item.cityId === this.queryParams.cityId)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -259,6 +259,14 @@ export default {
                     }
                     // return time.getTime() <= Date.now() - 8.64e7
                 }
+            }
+        }
+    },
+    watch: {
+        getCity: {
+            deep: true,
+            handler: function (newVal) {
+                this.cityList = newVal
             }
         }
     },
