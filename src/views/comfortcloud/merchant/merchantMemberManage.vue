@@ -334,7 +334,7 @@ export default {
         },
         onCity (key) {
             this.queryParams.cityId = key
-            console.log(key)
+            this.queryParams.countryId = ''
         },
         onArea (key) {
             this.queryParams.countryId = key
