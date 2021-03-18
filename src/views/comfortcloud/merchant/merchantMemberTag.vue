@@ -126,8 +126,8 @@ export default {
             })
         },
         handleInputConfirm () {
-            if (this.inputTagValue) {
-                this.form.tagDetailBos.push(this.inputTagValue)
+            if (this.inputTagValue.trim()) {
+                this.form.tagDetailBos.push(this.inputTagValue.trim())
             }
             this.inputTagVisible = false
             this.inputTagValue = ''
