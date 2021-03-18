@@ -106,7 +106,7 @@ axios.interceptors.response.use(
         } else {
             const data = error.response.data
             let message = '服务器响应错误：' + error
-            // 处理特殊
+            // 处理特殊1
             const config = error.response.config
             const specialHandle = responseErrorUrl.filter(item => item.method === config.method && config.url.indexOf(item.url) > -1)
             if (specialHandle.length > 0) {
