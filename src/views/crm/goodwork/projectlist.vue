@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <!-- <div class="query-cont__col">
-                    <div class="query-col__label">项目编号：</div>
+                    <div class="query-col__label">项目编号1：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
