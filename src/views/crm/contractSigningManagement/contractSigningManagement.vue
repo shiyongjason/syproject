@@ -226,10 +226,6 @@ export default {
     components: { hosJoyTable, diffDialog },
     data () {
         return {
-            options: {
-                'wrapperClosable': false,
-                size: '550px'
-            },
             Auths,
             emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             detailRes: {},

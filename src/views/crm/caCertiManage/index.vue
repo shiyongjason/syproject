@@ -113,10 +113,6 @@ export default {
     name: 'caCertiManage',
     data () {
         return {
-            options: {
-                direction: 'rtl',
-                size: '400px'
-            },
             activeName: 'personage',
             copyParms: {},
             queryParams: {
