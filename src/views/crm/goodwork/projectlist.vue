@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <!-- <div class="query-cont__col">
-                    <div class="query-col__label">项目编号：</div>
+                    <div class="query-col__label">项目编号1：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
                     </div>
@@ -168,11 +168,7 @@
                             <span v-for="(item,index) in getAttachment(item.attachment)" :key="index" class="posrtv">
                                 <template v-if="item&&item.fileUrl">
                                     <i class="el-icon-document"></i>
-                                    <downloadFileAddToken isPreview
-                                                          :file-name="item.fileName"
-                                                          :file-url="item.fileUrl"
-                                                          :a-link-words="item.fileName"
-                                                          is-type="main" />
+                                    <downloadFileAddToken isPreview :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName" is-type="main" />
                                 </template>
                             </span>
                         </el-card>
