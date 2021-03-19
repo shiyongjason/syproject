@@ -188,7 +188,9 @@ export default {
                     sortable: 'custom'
                 },
                 { label: '支付成功时间', prop: 'paidTime', width: '150', formatters: 'dateTime' },
-                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTime' }
+                { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTime' },
+                { label: '（应还3日前)邮件状态', prop: 'updateTime', width: '150', formatters: 'dateTime' },
+                { label: '（应还当日)邮件状态', prop: 'updateTime', width: '150', formatters: 'dateTime' }
             ]
             // FundsDict repaymentTypeArrays类型
             if (this.queryParams.repaymentTypeArrays === '1') {

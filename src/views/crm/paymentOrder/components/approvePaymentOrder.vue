@@ -1,19 +1,40 @@
 <template>
     <div>
         <el-dialog ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
-            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form">
+            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form" label-width="140px">
                 <div class="row-filed">
                     <div class="col-filed">
                         <div class="info-title">上游支付申请信息</div>
-                        <p>
-                            <span class="label">申请支付金额：</span>
+
+                        <el-form-item label="申请支付金额：">
                             {{ paymentDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
-                        </p>
-                        <p>
-                            <span class="label">上游供应商：</span>
+                        </el-form-item>
+
+                        <el-form-item label="上游供应商：">
                             {{ paymentDetail.payOrderDetail.supplierCompanyName || '-'  }}
-                        </p>
-                        <div class="info-img-group">
+                        </el-form-item>
+
+                        <!-- 添加 -->
+
+                        <el-form-item label="银行联行号：">
+                            <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="供应商开户行名称：">
+                            <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="供应商银行账号：">
+                            <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                        </el-form-item>
+
+                        <el-form-item label="期望上游支付日期：">
+                            2021-8-9
+                        </el-form-item>
+                        <el-form-item label="上游支付方式：">
+                            银行承兑
+                        </el-form-item>
+                        <!-- <div class="info-img-group">
                             <span class="label">采购明细表：</span>
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
@@ -22,15 +43,22 @@
                                     </span>
                                 </template>
                             </p>
-                        </div>
-                        <p>
-                            <span>最迟发货日期：</span>
+                        </div> -->
+                        <el-form-item label="采购明细表：">
+                            <div class="info-img-group content">
+                                <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                        <imageAddToken :file-url="item.url" />
+                                    </span>
+                                </template>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="最迟发货日期：">
                             {{ paymentDetail.payOrderDetail.lastGoodsDate || '-' }}
-                        </p>
-                        <p>
-                            <span>收货地址：</span>
+                        </el-form-item>
+                        <el-form-item label="收货地址：">
                             {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
-                        </p>
+                        </el-form-item>
                         <div class="info-title">审核信息</div>
                         <p>
                             <el-form-item prop="checkPass" label="审核结果：">
@@ -79,19 +107,17 @@
                                 </el-form-item>
                             </p>
                             <template v-if="formData.dealerCooperationMethod">
-                                <p>
-                                    <span>经销商预付款：</span>
+                                <el-form-item label="经销商预付款：">
                                     {{downPaymentAmount | fundMoneyHasTail}}元
                                     <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
-                                </p>
-                                <p v-show="formData.dealerCooperationMethod==1">
-                                    <span>剩余货款：</span>
+                                </el-form-item>
+
+                                <el-form-item label="剩余货款：" v-show="formData.dealerCooperationMethod==1">
                                     {{ serviceFee.arrearAmount | fundMoneyHasTail}}元
-                                </p>
-                                <p v-show="formData.dealerCooperationMethod==1">
-                                    <span>预计服务费总额：</span>
+                                </el-form-item>
+                                <el-form-item label="预计服务费总额：" v-show="formData.dealerCooperationMethod==1">
                                     {{ serviceFee.feeAmount | fundMoneyHasTail}}元
-                                </p>
+                                </el-form-item>
                                 <p v-show="formData.dealerCooperationMethod==1">
                                     <span>预计每期服务费：</span>
                                     {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
@@ -456,10 +482,10 @@ export default {
 }
 .payment-dialog {
     /deep/.el-form-item__content {
-        line-height: 20px;
+        // line-height: 20px;
     }
     /deep/.el-form-item__label {
-        line-height: 20px;
+        // line-height: 20px;
     }
 }
 .edit-amount {
@@ -472,6 +498,22 @@ export default {
 }
 .info-img-group {
     display: flex;
+    span {
+        display: flex;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 12px;
+        margin-right: 12px;
+        cursor: pointer;
+        border: 1px solid #e5e5e5;
+        box-sizing: border-box;
+    }
+    img {
+        display: block;
+        margin: auto;
+        max-height: 78px;
+        max-width: 78px;
+    }
     .content {
         display: flex;
         flex-wrap: wrap;
