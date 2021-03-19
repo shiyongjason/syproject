@@ -221,6 +221,18 @@ export default [
                         component: () => import('@/views/comfortcloud/merchant/merchantExternalMember.vue')
                     },
                     {
+                        path: 'merchantExternalInvitation',
+                        name: 'merchantExternalInvitation',
+                        meta: {
+                            title: '客户详情',
+                            tagName: '客户详情',
+                            parentName: '会员管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantExternalInvitation.vue')
+                    },
+                    {
                         path: 'merchantMemberTag',
                         name: 'merchantMemberTag',
                         meta: {
