@@ -4,11 +4,11 @@ export interface tableLabelItem {
     /** 对应列内容的字段名 */
     prop: string,
     /** 对应列的宽度 */
-    width: string,
+    width?: string,
     /** 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 */
     minWidth?: string,
     /** 自定义列写法 */
-    render?: (h?: any, scope?: any) => JSX.Element | string,
+    render?: (h?: any, scope?: any) => any,
     /** 自定义插槽[{prop: 'ceshi',label: '测试slot',slot: 'ceshi'}]
      * <template slot="ceshi" slot-scope="scope">...
      **/
