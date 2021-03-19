@@ -37,11 +37,13 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.endApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -204,24 +206,13 @@ export default {
         }
     },
     computed: {
-        pickerOptionsStart () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endApplyDate
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startApplyDate
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startApplyDate,
+                endTime: this.queryParams.endApplyDate
             }
         },
         ...mapState({
@@ -242,6 +233,12 @@ export default {
         }
     },
     methods: {
+        onStartChange (val) {
+            this.queryParams.startApplyDate = val
+        },
+        onEndChange (val) {
+            this.queryParams.endApplyDate = val
+        },
         fundsDialogClose () {
             this.fundsDialogVisible = false
             this.$refs.paymentOrderDrawer.getPaymentOrderDetail()

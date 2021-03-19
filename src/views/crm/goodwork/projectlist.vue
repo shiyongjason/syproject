@@ -17,11 +17,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">项目提交时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -93,22 +95,28 @@
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">预估借款时间：</div>
-                    <div class="query-col__input">
+                    <!-- <div class="query-col__input">
                         <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.maxEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimatedLoanTime)">
                         </el-date-picker>
+                    </div> -->
+                    <div class="query-col__input">
+                        <HDatePicker :start-change="onStartBorrow" :end-change="onEndBorrow" :options="borrowOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">预估签约时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimateSignTime)">
+                        <!-- <el-date-picker v-model="queryParams.minEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimateSignTime)">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.maxEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimateSignTime)">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStarSign" :end-change="onEndSign" :options="signOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -210,6 +218,7 @@ export default {
     name: 'projectlist',
     data () {
         return {
+
             Auths,
             projectstatus: 0, // 项目状态字段
             categoryIdArr: [],
@@ -229,6 +238,8 @@ export default {
                 deviceCategory: '', // 设备品类
                 minEstimatedLoanTime: '', // 最小预估借款时间
                 maxEstimatedLoanTime: '', // 最小预估借款时间
+                minEstimateSignTime: '',
+                maxEstimateSignTime: '',
                 statusList: '',
                 projectName: '',
                 projectNo: '',
@@ -332,26 +343,53 @@ export default {
         projectDrawer, hosJoyTable, downloadFileAddToken
     },
     computed: {
-        pickerOptionsStart () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.maxSubmitTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
+                valueFormat: 'yyyy-MM-dd HH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.minSubmitTime,
+                endTime: this.queryParams.maxSubmitTime
             }
         },
-        pickerOptionsEnd () {
+        borrowOptions () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.minSubmitTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                type: 'date',
+                startTime: this.queryParams.minEstimatedLoanTime,
+                endTime: this.queryParams.maxEstimatedLoanTime
             }
         },
+        signOptions () {
+            return {
+                valueFormat: 'yyyy-MM-dd',
+                format: 'yyyy-MM-dd',
+                type: 'date',
+                startTime: this.queryParams.minEstimateSignTime,
+                endTime: this.queryParams.maxEstimateSignTime
+            }
+        },
+        // pickerOptionsStart () {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = this.queryParams.maxSubmitTime
+        //             if (beginDateVal) {
+        //                 return time.getTime() > new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
+        // pickerOptionsEnd () {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = this.queryParams.minSubmitTime
+        //             if (beginDateVal) {
+        //                 return time.getTime() < new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -381,6 +419,24 @@ export default {
             findProjectrecord: 'crmmanage/findProjectrecord',
             findPunchlist: 'crmmanage/findPunchlist'
         }),
+        onStartChange (val) {
+            this.queryParams.minSubmitTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.maxSubmitTime = val
+        },
+        onStartBorrow (val) {
+            this.queryParams.minEstimatedLoanTime = val
+        },
+        onEndBorrow (val) {
+            this.queryParams.maxEstimatedLoanTime = val
+        },
+        onStarSign (val) {
+            this.queryParams.minEstimateSignTime = val
+        },
+        onEndSign (val) {
+            this.queryParams.maxEstimateSignTime = val
+        },
         onEditproject (row) {
             this.$router.push({ path: '/goodwork/informationDetail', query: { projectId: row.id, status: row.status, docAfterStatus: row.docAfterStatus } })
         },
@@ -431,26 +487,26 @@ export default {
                 window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
-        pickerOptionsMax (val) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = val
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsMin (val) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = val
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
+        // pickerOptionsMax (val) {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = val
+        //             if (beginDateVal) {
+        //                 return time.getTime() > new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
+        // pickerOptionsMin (val) {
+        //     return {
+        //         disabledDate: (time) => {
+        //             let beginDateVal = val
+        //             if (beginDateVal) {
+        //                 return time.getTime() < new Date(beginDateVal).getTime()
+        //             }
+        //         }
+        //     }
+        // },
         getStatusList (key, docProgress) {
             const map = STATUS_LIST.reduce((res, item) => {
                 res[item.key] = item
@@ -511,6 +567,7 @@ export default {
             this.typeArr = []
             this.deviceCategoryChange = []
             this.upstreamSupplierTypeChange = []
+            console.log(this.queryParams)
             this.searchList()
         },
         handleSizeChange (val) {
