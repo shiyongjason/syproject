@@ -1,4 +1,5 @@
 import Vue, { VNode } from 'vue'
+import { tableLabelItem } from './components/HosJoyTable/tableLabelItem'
 
 declare global {
   namespace JSX {
@@ -12,7 +13,7 @@ declare global {
   }
 
     /** 好橙工通用类型 */
-    namespace CommonInterface {
+    namespace HCGCommonInterface {
         /** 所属分部 */
         interface Branch {
             /** 机构id */
@@ -27,4 +28,6 @@ declare global {
             pkFatherDept?: string
         }
     }
+
+    type tableLabelProps = Array<tableLabelItem>
 }
