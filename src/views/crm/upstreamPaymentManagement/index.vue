@@ -88,10 +88,9 @@
                 <el-tag size="medium" class="tag_top">已筛选 3 项</el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
-                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action">
-                    <h-button table>查看</h-button>
+                    <h-button table>查看详情</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -102,6 +101,7 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+import { CreateElement } from 'vue'
 
 @Component({
     name: 'UpstreamPaymentManagement',
@@ -114,7 +114,7 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any[] = [{ orderNo: '222' }]
+    tableData:any[] = [{ orderNo: '222222', orderNoxx: 'fuck', createTime: '2021-03-19 09:57:42' }]
     queryParams = {
         dealer: '',
         orderNum: '',
@@ -138,29 +138,40 @@ export default class UpstreamPaymentManagement extends Vue {
         }
     }
 
-    tableLabel:tableLabelProps=[
-        { label: '支付的编号', prop: 'orderNo' },
-        { label: '所属分部', prop: 'orderNo' },
-        { label: '经销商', prop: 'orderNo', width: '150' },
-        { label: '上游供应商', prop: 'orderNo' },
-        { label: '项目名称', prop: 'orderNo' },
+    tableLabel:tableLabelProps = [
+        { label: '支付单编号', prop: 'orderNo', width: '100' },
+        { label: '所属分部', prop: 'orderNo', width: '150' },
+        { label: '经销商', prop: 'orderNo', width: '150', resizable: true },
+        { label: '上游供应商', prop: 'orderNo', width: '150' },
+        { label: '项目名称', prop: 'orderNoxx', minWidth: '200' },
         { label: '采购单金额', prop: 'orderNo', displayAs: 'money' },
         {
             label: '出票状态/出票次数',
             prop: 'orderNo',
-            render: (h, scope) => this.onRenderLabel(h, scope)
-        }
+            width: '150',
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderLabel(h, scope)
+        },
+        {
+            label: '已支付金额/应支付总额（元）',
+            prop: 'orderNo',
+            width: '210',
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderLabel(h, scope)
+        },
+        { label: '剩余应支付金额（元）', prop: 'orderNo', width: '150', displayAs: 'money' },
+        { label: '首付款确认时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '期望上游支付日期', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD' },
+        { label: '上游支付方式', prop: 'orderNo', width: '150', dicData: [{ value: 1, label: '银行承兑' }, { value: 2, label: '银行转账' }] }
+
     ]
 
-    onRenderLabel (h, scope) {
-        console.log('scope: ', scope.row.orderNo)
+    onRenderLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
         return <span>对对对{scope.row.orderNo}</span>
     }
 
-    onStartChange (val:string) {
+    onStartChange (val:string): void {
         this.queryParams.createStartTime = val
     }
-    onEndChange (val:string) {
+    onEndChange (val:string): void {
         this.queryParams.createEndTime = val
     }
 
@@ -169,6 +180,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     sortChange (e) {
+        console.log('e: ', e)
         if (e.prop == 'createTime' && e.order == null) {}
     }
 
