@@ -48,6 +48,9 @@
                 <template slot="status" slot-scope="scope">
                     {{orderStatusDesc(scope.data.row.status)}}
                 </template>
+                <template slot="consigneeAddress" slot-scope="scope">
+                    {{addressDesc(scope.data.row)}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                 </template>
@@ -192,6 +195,17 @@ export default {
                 return '已取消'
             }
             return status
+        },
+        addressDesc (val) {
+            let address = ''
+            if (val.consigneeAddress.search(val.consigneeProvinceName) === -1) {
+                address += val.consigneeProvinceName
+            } if (val.consigneeAddress.search(val.consigneeCityName) === -1) {
+                address += val.consigneeCityName
+            } if (val.consigneeAddress.search(val.consigneeCountyName) === -1) {
+                address += val.consigneeCountyName
+            }
+            return (address += val.consigneeAddress)
         }
     }
 }
