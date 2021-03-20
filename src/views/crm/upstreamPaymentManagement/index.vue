@@ -12,7 +12,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable='true'>
-                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.crmDeptCode" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 3 项</el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
+            <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
                 actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action">
                     <h-button table>查看</h-button>
@@ -98,7 +98,7 @@
     </div>
 </template>
 
-<script lang='ts'>
+<script lang='tsx'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
@@ -114,7 +114,7 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any[] = []
+    tableData:any[] = [{ orderNo: '222' }]
     queryParams = {
         dealer: '',
         orderNum: '',
@@ -141,20 +141,21 @@ export default class UpstreamPaymentManagement extends Vue {
     tableLabel:tableLabelProps=[
         { label: '支付的编号', prop: 'orderNo' },
         { label: '所属分部', prop: 'orderNo' },
-        { label: '经销商', prop: 'orderNo' },
+        { label: '经销商', prop: 'orderNo', width: '150' },
         { label: '上游供应商', prop: 'orderNo' },
         { label: '项目名称', prop: 'orderNo' },
         { label: '采购单金额', prop: 'orderNo', displayAs: 'money' },
-        { label: '项目名称', prop: 'orderNo' },
         {
-            label: '项目名称',
-            prop: 'orderNo'
-        },
-        {
-            label: '项目名称',
-            prop: 'orderNo'
+            label: '出票状态/出票次数',
+            prop: 'orderNo',
+            render: (h, scope) => this.onRenderLabel(h, scope)
         }
     ]
+
+    onRenderLabel (h, scope) {
+        console.log('scope: ', scope.row.orderNo)
+        return <span>对对对{scope.row.orderNo}</span>
+    }
 
     onStartChange (val:string) {
         this.queryParams.createStartTime = val
