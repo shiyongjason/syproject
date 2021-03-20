@@ -60,14 +60,14 @@
                             {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
                         </el-form-item>
                         <div class="info-title">审核信息</div>
-                        <p>
-                            <el-form-item prop="checkPass" label="审核结果：">
-                                <el-radio-group v-model="formData.checkPass">
-                                    <el-radio label="pass">通过</el-radio>
-                                    <el-radio label="noPass">不通过</el-radio>
-                                </el-radio-group>
-                            </el-form-item>
-                        </p>
+
+                        <el-form-item prop="checkPass" label="审核结果：">
+                            <el-radio-group v-model="formData.checkPass">
+                                <el-radio label="pass">通过</el-radio>
+                                <el-radio label="noPass">不通过</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+
                         <template v-if="formData.checkPass === 'pass'">
                             <p>
                                 <el-form-item label="应收账款质押：" prop="accountReceivablePledgeType">
