@@ -110,6 +110,17 @@
                     </div>
 
                 </el-tab-pane>
+                <el-tab-pane label="沟通记录" name="5">
+                    <el-button type="primary" class="ml20" @click="onAddConnectRecord()">+ 新增记录</el-button>
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="connectTableLabel" :tableData="connectTableData" :isShowIndex='false' :isAction="true">
+                            <template slot="action" slot-scope="scope">
+                                <el-button class="orangeBtn" @click="onConnectRecordEdit(scope.data.row)">编辑</el-button>
+                                <el-button class="orangeBtn" @click="onConnectRecordDelete(scope.data.row)">删除</el-button>
+                            </template>
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
             </el-tabs>
         </div>
         <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
@@ -151,6 +162,21 @@
                 <el-button @click="tagCancelSelect()">清除已选中的标签</el-button>
                 <el-button @click="tagCancel()">取消</el-button>
                 <el-button type="primary" @click="editConform()">确认</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="connectRecordDialogVisible" width="50%">
+            <el-form ref="connectRecordForm" :model="connectRecordForm" :rules="connectRecordFormRules" label-width="110px">
+                <el-form-item label="沟通日期：" prop="createTime">
+                    <el-date-picker type="date" v-model="connectRecordForm.createTime" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
+                    </el-date-picker>
+                </el-form-item>
+                <el-form-item label="沟通结果：" prop="result">
+                    <el-input v-model="connectRecordForm.result" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="500"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onConnectRecordCancel()">取消</el-button>
+                <el-button type="primary" @click="onConnectRecordConfirm()">确认</el-button>
             </span>
         </el-dialog>
     </div>
@@ -266,6 +292,20 @@ export default {
                 data: {
                     operateUserName: ''
                 }
+            },
+            connectTableLabel: [
+                { label: '沟通日期', prop: 'createTime', formatters: 'dateTime' },
+                { label: '沟通结果', prop: 'result' }
+            ],
+            connectRecordDialogVisible: false,
+            connectRecordForm: [],
+            connectRecordFormRules: {
+                createTime: [
+                    { required: true, message: '请选择沟通日期', trigger: 'blur' }
+                ],
+                result: [
+                    { required: true, message: '请输入沟通结果', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -662,6 +702,52 @@ export default {
         },
         goToDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: { phone: this.$route.query.phone } })
+        },
+        clearConnectRecordForm () {
+            if (this.$refs['connectRecordForm']) {
+                this.$refs['connectRecordForm'].clearValidate()
+                this.connectRecordForm = {
+                    time: '',
+                    result: ''
+                }
+            }
+        },
+        onAddConnectRecord () {
+            this.clearConnectRecordForm()
+            this.connectRecordDialogVisible = true
+        },
+        onConnectRecordEdit (data) {
+            this.connectRecordForm = data
+            this.connectRecordDialogVisible = true
+        },
+        onConnectRecordDelete (data) {
+            this.$confirm(`删除后将无法恢复，请确认该条沟通记录要删除。`, '沟通记录删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                // await delete
+                // await this.query()
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => { })
+        },
+        onConnectRecordCancel () {
+            this.clearConnectRecordForm()
+            this.connectRecordDialogVisible = false
+        },
+        onConnectRecordConfirm () {
+            this.$refs['connectRecordForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        this.connectRecordDialogVisible = false
+                        this.clearConnectRecordForm()
+                    } catch (e) {
+                    }
+                }
+            })
         }
     }
 }
