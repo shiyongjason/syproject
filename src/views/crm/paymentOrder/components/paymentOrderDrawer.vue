@@ -341,7 +341,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
 <!--                            1）支付订单及服务费确认函状态不是未签约 2）首付款信息存在   3)支付单未关闭-->
                             <template v-else>
                                 <template
-                                    v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[0].key && paymentOrderDetail.respFundResults.downpaymentFund && !paymentOrderDetail.payOrderDetail.closeReasonCode">
+                                    v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[0].key && paymentOrderDetail.respFundResults.downpaymentFund && (!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode  >=PaymentOrderDict.closeReasonCode.list[2].key)">
                                     <template v-if="PaymentOrderDict.status.list[1].key  <= paymentOrderDetail.payOrderDetail.status">
                                         <div class="row-filed">
                                             <p class="col-filed">

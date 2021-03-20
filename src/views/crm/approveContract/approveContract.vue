@@ -176,7 +176,7 @@
                 <el-button type="primary" @click="contentvsVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible"  size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer class="vsdrawercss" title="合同对比" :visible.sync="contentvsDataVisible" size='580px' :before-close='vsdrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="vsList" v-if="contentvsDataList&&contentvsDataList.length>0">
                 <p v-for="(item,index) in contentvsDataList" :key="index+'合同对比'" @click="onClickVsItem(item)"><img src='https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210122/164437043/a333f54b-7a2c-4316-a419-9146c6386bce.png' />{{item.contractName}}</p>
             </div>
@@ -476,8 +476,8 @@ export default {
                             value: Number(this.currentKey.paramValue),
                             step: 1,
                             max: 6,
-                            min: 1,
-                            marks: { 1: '1个月', 2: '2个月', 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' },
+                            min: 3,
+                            marks: { 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' },
                             style: { marginBottom: '30px' }
                         },
                         on: {
