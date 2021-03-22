@@ -35,6 +35,9 @@
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                     </div>
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onImport">导入订单</el-button>
+                    </div>
                 </div>
             </div>
             <el-tag size="medium" class="eltagtop">
@@ -68,11 +71,43 @@
                 <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
+            <el-dialog title="导入第三方订单明细" :visible.sync="importDialogVisible" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseImprtDialog">
+                <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+                    <el-button type="primary" slot="trigger">选择本地文件</el-button>
+                    <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
+                    <p slot="tip" class="el-upload__tip">2.请按照设备出库模板内容导入数据，否则可能会出现导入异常</p>
+                </el-upload>
+                <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
+                <div class="downloadExcel">
+                    <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
+                </div>
+                <div style="color: red">{{errMessage}}</div>
+                <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
+            </span>
+                <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>
+                    <div>
+                        <span class="uploadTips">上传数据：{{errorData.count}}条</span>
+                    </div>
+                    <div>
+                        <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>
+                    </div>
+                    <div>
+                        <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>
+                    </div>
+                    <div class="basic-table">
+                        <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>
+                        </basicTable>
+                    </div>
+                </el-dialog>
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { iotUrl } from '@/api/config'
+
 export default {
     name: 'merchantOrderList',
     data () {
@@ -115,7 +150,30 @@ export default {
             ],
             prouctDetailTableData: [],
             detailDialogVisible: false,
-            focusDetailOrder: {}
+            focusDetailOrder: {},
+            importDialogVisible: false,
+            uploadData: {
+                accept: '.xlsx,.xls',
+                action: `${iotUrl}/api/outbound/import`,
+                limit: 1,
+                autoUpload: false,
+                headers: {
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    token: `Bearer ` + localStorage.getItem('token'),
+                    AccessKeyId: '5ksbfewexbfc'
+                },
+                data: {
+                    operateUserName: ''
+                }
+            },
+            fileList: [],
+            errorShow: false,
+            errorData: {
+                failList: []
+            },
+            errMessage: '',
+            errTableLabel: [],
+            loading: false
         }
     },
     computed: {
@@ -206,6 +264,76 @@ export default {
                 address += val.consigneeCountyName
             }
             return (address += val.consigneeAddress)
+        },
+        onImport () {
+            this.importDialogVisible = true
+        },
+        hasFile () {
+            return this.$refs.upload.uploadFiles.length > 0
+        },
+        onCloseImprtDialog () {
+            if (this.hasFile()) {
+                this.$confirm('是否确定取消选中的文件', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$refs.upload.clearFiles()
+                    this.importDialogVisible = false
+                    this.$message({
+                        type: 'success',
+                        message: '已取消选中的文件!'
+                    })
+                }).catch(() => { })
+            } else {
+                this.$refs.upload.clearFiles()
+                this.importDialogVisible = false
+            }
+        },
+        beforeAvatarUpload (file) {
+            const isLt10M = file.size / (1024 * 1024 * 10) < 1
+            const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
+            if (!isCsv) {
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件只能是 excel 格式!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+            }
+            if (!isLt10M) {
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件大小不能超过 10MB!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+            }
+            return isCsv && isLt10M
+        },
+        uploadError () {
+            console.log(1)
+            this.$refs.upload.clearFiles()
+            this.$message.error('文件上传失败，请重试！')
+            this.loading = false
+        },
+        uploadSuccess (response) {
+            console.log(response)
+            this.$refs.upload.clearFiles()
+            this.loading = false
+            if (response.code === 200) {
+                this.errorData = response.data
+                this.errorShow = true
+                this.onQuery(this.searchParams)
+            } else {
+                this.$message.error(response.message)
+            }
         }
     }
 }
