@@ -1,7 +1,8 @@
 import Vue, { VNode } from 'vue'
-import { tableLabelItem } from './components/HosJoyTable/tableLabelItem'
 
+import { tableLabelItem } from './components/HosJoyTable/tableLabelItem'
 declare global {
+
   namespace JSX {
     // tslint:disable no-empty-interface
     interface Element extends VNode { }
@@ -12,6 +13,12 @@ declare global {
     }
   }
 
+    interface TableRenderParam {
+        row: any,
+        column?: any,
+        $index?: number,
+        [k: string]: any
+    }
     /** 好橙工通用类型 */
     namespace HCGCommonInterface {
         /** 所属分部 */
@@ -30,4 +37,5 @@ declare global {
     }
 
     type tableLabelProps = Array<tableLabelItem>
+
 }
