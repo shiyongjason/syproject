@@ -41,7 +41,7 @@ export function getMembersituation (params) {
 export function getMerchantMembersituation (params) {
     return axios.post(iotUrl + `/mall/wx/user/boss/manage`, params)
 }
-// 外部蓄水会员列表分页查询
+// 销售线索管理会员列表分页查询
 export function getMerchantExernalMembersituation (params) {
     return axios.post(iotUrl + `/mall/boss/out-member`, params)
 }
@@ -746,12 +746,12 @@ export function editMemberTag (params) {
     return axios.put(iotUrl + '/mall/boss/user-tag', params)
 }
 
-// 获取外部蓄水客户购买记录
+// 获取销售线索管理购买记录
 export function getMerchantMemberInvitationOutOrdersituation (params) {
     return axios.get(iotUrl + '/mall/boss/user/out/order', { params })
 }
 
-// 获取外部蓄水客户购买记录统计
+// 获取销售线索管理购买记录统计
 export function getMerchantMemberInvitationOutOrdersTotal (params) {
     return axios.get(iotUrl + '/mall/boss/user/out/order-total', { params })
 }

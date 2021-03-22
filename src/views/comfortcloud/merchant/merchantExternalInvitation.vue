@@ -45,6 +45,19 @@
                         <span style="margin-bottom: 20px">主营品牌：{{enterpriseInfoData.mainBrand}}</span>
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="沟通记录" name="2">
+                    <div class="query-cont-col ml20">
+                        <el-button type="primary" @click="communicate">+新增记录</el-button>
+                    </div>
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="action" slot-scope="scope">
+                                <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
+                            </template>
+                        </basicTable>
+                    </div>
+
+                </el-tab-pane>
             </el-tabs>
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
@@ -55,6 +68,26 @@
                 </div>
                 <span slot="footer" class="dialog-footer">
                     <el-button @click="addNewTag()">新增标签</el-button>
+                    <el-button @click="tagCancel()">取消</el-button>
+                    <el-button type="primary" @click="editConform()">确认</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="沟通内容" :modal-append-to-body=false :append-to-body=false :visible.sync="communicateDialog" width="50%">
+                <div class="query-cont-row">
+                    <div class="query-col-title">沟通日期： </div>
+                    <div class="query-col-input">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        </el-date-picker>
+                    </div>
+                </div>
+                <div class="query-cont-row" style="margin-top:20px">
+                    <div class="query-col-title">沟通结果： </div>
+                    <div class="query-col-input">
+                        <el-input type="textarea" style="width:500px" :rows="5" placeholder="请输入内容" v-model="textarea">
+                        </el-input>
+                    </div>
+                </div>
+                <span slot="footer" class="dialog-footer">
                     <el-button @click="tagCancel()">取消</el-button>
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
@@ -80,11 +113,12 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            tabIndex: 0,
+            tabIndex: this.$route.query.index,
             tableBuyTotalData: {},
             enterpriseInfoData: {},
             tagStringList: [],
             dialogVisible: false,
+            communicateDialog: false,
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
                 { label: '型号', prop: 'specificationName', width: '220px' },
@@ -188,6 +222,9 @@ export default {
                 this.onQuery()
             }
             this.clearData()
+        },
+        communicate () {
+            this.communicateDialog = true
         },
         goToDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList', query: { 'phone': this.queryParams.phone } })

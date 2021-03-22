@@ -74,6 +74,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onInput">新增客户线索</el-button>
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                     </div>
                 </div>
@@ -105,12 +106,32 @@
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
                         <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
-                        <el-button class="orangeBtn" @click="onDetail(scope.data.row)">会员详情</el-button>
+                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
+                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,2)">沟通记录</el-button>
+                        <el-button class="orangeBtn" @click="deleteData(scope.data.row)">删除</el-button>
                     </div>
                     <div v-else>-</div>
                 </template>
             </basicTable>
-
+            <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+                <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+                    <el-button type="primary" slot="trigger">选择本地文件</el-button>
+                    <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
+                    <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
+                </el-upload>
+                <div class="downloadExcel">
+                    <a href="/excelTemplate/奖励明细模板.xls" download="奖励明细模板.xls">下载奖励明细模板</a>
+                </div>
+                <div style="color: red">{{errMessage}}</div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
+                </span>
+                <el-dialog width="800px" title="上传结果" :visible.sync="errorShow" append-to-body>
+                    <div>
+                        <span class="uploadTips">上传成功</span>
+                    </div>
+                </el-dialog>
+            </el-dialog>
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
                     <h1>{{item.tagCategory}}</h1>
@@ -132,6 +153,7 @@ import { getChiness } from '../../hmall/membership/api/index'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { iotUrl } from '@/api/config'
 
 export default {
     name: 'comfortcloudExternalMemeber',
@@ -151,6 +173,25 @@ export default {
                 autoTags: []
             },
             setTagUser: {},
+            errMessage: '',
+            loading: false,
+            uploadShow: false,
+            fileList: [],
+            errorShow: false,
+            uploadData: {
+                accept: '.xlsx,.xls',
+                action: `${iotUrl}/mall/boss/wx/reward/import`,
+                limit: 1,
+                autoUpload: false,
+                headers: {
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    token: `Bearer ` + localStorage.getItem('token'),
+                    AccessKeyId: '5ksbfewexbfc'
+                },
+                data: {
+                    operateUserName: ''
+                }
+            },
             tableData: [],
             tagStringList: [],
             provinceList: [],
@@ -366,8 +407,103 @@ export default {
         checkMember (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { 'phone': val.phone } })
         },
-        onDetail (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: val })
+        onDetail (val, index) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'index': index } })
+        },
+        deleteData (val) {
+
+        },
+        onInput () {
+            this.uploadShow = true
+        },
+        async onImport () {
+            if (this.loading) return
+            this.loading = true
+            if (this.hasFile()) {
+                this.uploadData.data.operateUserName = this.userInfo.employeeName
+                try {
+                    await this.$refs.upload.submit()
+                } catch (e) {
+                }
+            } else {
+                this.$message.error('请选择上传的文件')
+                this.loading = false
+            }
+        },
+        onDownload () {
+            downloadQuestionTemp()
+        },
+        beforeAvatarUpload (file) {
+            const isLt10M = file.size / (1024 * 1024 * 10) < 1
+            // const isCsv = file.type === 'application/vnd.ms-excel'
+            const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
+            if (!isCsv) {
+                // this.$message.error('上传文件只能是 excel 格式!')
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件只能是 excel 格式!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+            }
+            if (!isLt10M) {
+                // this.$message.error('上传文件大小不能超过 10MB!')
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件大小不能超过 10MB!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+            }
+            return isCsv && isLt10M
+        },
+        uploadError (response) {
+            const res = response
+            console.log(JSON.parse(res.message).detail)
+            this.$refs.upload.clearFiles()
+            this.$message.error(JSON.parse(res.message).detail)
+            this.loading = false
+        },
+        uploadSuccess (response) {
+            this.$refs.upload.clearFiles()
+            this.onQuery(this.searchParams)
+            this.errorData = response.data
+            this.uploadShow = false
+            this.$message.success('文件上传成功')
+            this.loading = false
+        },
+        onCloseDialog () {
+            if (this.hasFile()) {
+                this.$confirm('是否确定取消选中的文件', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$refs.upload.clearFiles()
+                    this.uploadShow = false
+                    this.$message({
+                        type: 'success',
+                        message: '已取消选中的文件!'
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '已取消删除'
+                    })
+                })
+            } else {
+                this.$refs.upload.clearFiles()
+                this.uploadShow = false
+            }
+        },
+        hasFile () {
+            return this.$refs.upload.uploadFiles.length > 0
         },
         onOrderList (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList', query: { 'phone': val.phone } })
@@ -441,7 +577,8 @@ export default {
 }
 
 .orangeBtn {
-    margin: 5px 0;
+    padding: 5px;
+    margin: 5px;
 }
 
 .query-cont-col-area {

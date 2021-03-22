@@ -212,8 +212,8 @@ export default [
                         path: 'merchantExternalMember',
                         name: 'merchantExternalMember',
                         meta: {
-                            title: '外部蓄水客户',
-                            tagName: '外部蓄水客户',
+                            title: '销售线索管理',
+                            tagName: '销售线索管理',
                             parentName: '会员管理',
                             isMenu: true,
                             icon: ''
