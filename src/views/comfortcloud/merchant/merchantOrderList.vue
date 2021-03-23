@@ -337,7 +337,7 @@ export default {
             this.$message.error(JSON.parse(res.message).detail)
             this.loading = false
         },
-        uploadSuccess (response) {
+        uploadSuccess () {
             this.$refs.upload.clearFiles()
             this.loading = false
             // this.errorData = response.data

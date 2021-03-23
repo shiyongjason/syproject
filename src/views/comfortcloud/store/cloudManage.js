@@ -100,7 +100,9 @@ const state = {
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
     cloudMerchantmemberInvitationOutOrderData: {},
-    cloudMerchantTaglist: []
+    cloudMerchantTaglist: [],
+    cloudMerchantMemberCommunicationList: [],
+    cloudMerchantMemberCommunicationListPagination: {}
 }
 
 const getters = {
@@ -210,7 +212,9 @@ const getters = {
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
     cloudMerchantmemberInvitationOutOrderData: state => state.cloudMerchantmemberInvitationOutOrderData,
-    cloudMerchantTaglist: state => state.cloudMerchantTaglist
+    cloudMerchantTaglist: state => state.cloudMerchantTaglist,
+    cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
+    cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination
 }
 
 const mutations = {
@@ -496,6 +500,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
         state.cloudMerchantTaglist = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST] (state, payload) {
+        state.cloudMerchantMemberCommunicationList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantMemberCommunicationListPagination = payload
     }
 }
 
@@ -926,6 +936,16 @@ const actions = {
             }
         }
         commit(cloud.GET_CLOUD_MERCHANT_TAG_LIST, data)
+    },
+    async findCloudMerchantMemberCommunicationList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantMemberCommunicationList(params)
+
+        commit(cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
     }
 }
 export default {

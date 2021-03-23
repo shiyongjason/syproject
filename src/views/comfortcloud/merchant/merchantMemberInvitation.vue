@@ -111,12 +111,12 @@
 
                 </el-tab-pane>
                 <el-tab-pane label="沟通记录" name="5">
-                    <el-button type="primary" class="ml20" @click="onAddConnectRecord()">+ 新增记录</el-button>
+                    <el-button type="primary" class="ml20" @click="onAddCommunicationRecord()">+ 新增记录</el-button>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="connectTableLabel" :tableData="connectTableData" :isShowIndex='false' :isAction="true">
+                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList"  :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true">
                             <template slot="action" slot-scope="scope">
-                                <el-button class="orangeBtn" @click="onConnectRecordEdit(scope.data.row)">编辑</el-button>
-                                <el-button class="orangeBtn" @click="onConnectRecordDelete(scope.data.row)">删除</el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
                             </template>
                         </basicTable>
                     </div>
@@ -164,19 +164,19 @@
                 <el-button type="primary" @click="editConform()">确认</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="connectRecordDialogVisible" width="50%">
-            <el-form ref="connectRecordForm" :model="connectRecordForm" :rules="connectRecordFormRules" label-width="110px">
+        <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%">
+            <el-form ref="communicationRecordForm" :model="communicationRecordForm" :rules="communicationRecordFormRules" label-width="110px">
                 <el-form-item label="沟通日期：" prop="createTime">
-                    <el-date-picker type="date" v-model="connectRecordForm.createTime" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
+                    <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="沟通结果：" prop="result">
-                    <el-input v-model="connectRecordForm.result" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="500"></el-input>
+                    <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="500"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="onConnectRecordCancel()">取消</el-button>
-                <el-button type="primary" @click="onConnectRecordConfirm()">确认</el-button>
+                <el-button @click="onCommunicationRecordCancel()">取消</el-button>
+                <el-button type="primary" @click="onCommunicationRecordConfirm()">确认</el-button>
             </span>
         </el-dialog>
     </div>
@@ -188,7 +188,11 @@ import {
     downloadQuestionTemp,
     updateInvitationDetail,
     updateCompanyInfo,
-    editMemberTag, addMemberTag
+    editMemberTag,
+    addMemberTag,
+    deleteCloudMerchantMemberCommunication,
+    modifyCloudMerchantMemberCommunication,
+    postCloudMerchantMemberCommunication
 } from '../api'
 import { iotUrl } from '@/api/config'
 import axios from 'axios'
@@ -293,17 +297,20 @@ export default {
                     operateUserName: ''
                 }
             },
-            connectTableLabel: [
-                { label: '沟通日期', prop: 'createTime', formatters: 'dateTime' },
-                { label: '沟通结果', prop: 'result' }
+            communicationTableLabel: [
+                { label: '沟通日期', prop: 'communicationDate', formatters: 'date' },
+                { label: '沟通结果', prop: 'communicationResult' }
             ],
-            connectRecordDialogVisible: false,
-            connectRecordForm: [],
-            connectRecordFormRules: {
-                createTime: [
+            communicationRecordDialogVisible: false,
+            communicationRecordForm: {
+                communicationDate: '',
+                communicationResult: ''
+            },
+            communicationRecordFormRules: {
+                communicationDate: [
                     { required: true, message: '请选择沟通日期', trigger: 'blur' }
                 ],
-                result: [
+                communicationResult: [
                     { required: true, message: '请输入沟通结果', trigger: 'blur' }
                 ]
             }
@@ -321,7 +328,9 @@ export default {
             merchantmemberInvitationBuy: 'iotmerchantmemberInvitationBuy',
             merchantmemberInvitationTotal: 'iotmerchantmemberInvitationTotal',
             merchantmemberData: 'iotmerchantmemberData',
-            cloudMerchantTaglist: 'cloudMerchantTaglist'
+            cloudMerchantTaglist: 'cloudMerchantTaglist',
+            cloudMerchantMemberCommunicationList: 'cloudMerchantMemberCommunicationList',
+            cloudMerchantMemberCommunicationListPagination: 'cloudMerchantMemberCommunicationListPagination'
         }),
 
         tagSelect () {
@@ -378,7 +387,8 @@ export default {
             findMerchantMemberInvitationChangesituation: 'findMerchantMemberInvitationChangesituation',
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation',
             findCloudMerchantTaglist: 'findCloudMerchantTaglist',
-            findMerchantMembersituation: 'findMerchantMembersituation'
+            findMerchantMembersituation: 'findMerchantMembersituation',
+            findCloudMerchantMemberCommunicationList: 'findCloudMerchantMemberCommunicationList'
         }),
 
         async onQuery () {
@@ -388,6 +398,8 @@ export default {
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
+            await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
             this.tableChangeData = this.merchantmemberInvitationChangeData
@@ -703,47 +715,57 @@ export default {
         goToDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: { phone: this.$route.query.phone } })
         },
-        clearConnectRecordForm () {
-            if (this.$refs['connectRecordForm']) {
-                this.$refs['connectRecordForm'].clearValidate()
-                this.connectRecordForm = {
-                    time: '',
-                    result: ''
+        clearCommunicationRecordForm () {
+            if (this.$refs['communicationRecordForm']) {
+                this.$refs['communicationRecordForm'].clearValidate()
+                this.communicationRecordForm = {
+                    communicationDate: '',
+                    communicationResult: ''
                 }
             }
         },
-        onAddConnectRecord () {
-            this.clearConnectRecordForm()
-            this.connectRecordDialogVisible = true
+        onAddCommunicationRecord () {
+            this.clearCommunicationRecordForm()
+            this.communicationRecordDialogVisible = true
         },
-        onConnectRecordEdit (data) {
-            this.connectRecordForm = data
-            this.connectRecordDialogVisible = true
+        onCommunicationRecordEdit (data) {
+            this.communicationRecordForm = data
+            this.communicationRecordDialogVisible = true
         },
-        onConnectRecordDelete (data) {
+        onCommunicationRecordDelete (data) {
             this.$confirm(`删除后将无法恢复，请确认该条沟通记录要删除。`, '沟通记录删除确认', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                // await delete
-                // await this.query()
+                let params = { ...data }
+                params.operator = this.userInfo.employeeName
+                await deleteCloudMerchantMemberCommunication(params)
+                await this.findCloudMerchantMemberCommunicationList(this.searchParams)
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
                 })
             }).catch(() => { })
         },
-        onConnectRecordCancel () {
-            this.clearConnectRecordForm()
-            this.connectRecordDialogVisible = false
+        onCommunicationRecordCancel () {
+            this.clearCommunicationRecordForm()
+            this.communicationRecordDialogVisible = false
         },
-        onConnectRecordConfirm () {
-            this.$refs['connectRecordForm'].validate(async (valid) => {
+        onCommunicationRecordConfirm () {
+            this.$refs['communicationRecordForm'].validate(async (valid) => {
                 if (valid) {
                     try {
-                        this.connectRecordDialogVisible = false
-                        this.clearConnectRecordForm()
+                        this.communicationRecordForm.phone = this.$route.query.phone
+                        this.communicationRecordForm.operator = this.userInfo.employeeName
+                        if (this.communicationRecordForm.id) {
+                            await modifyCloudMerchantMemberCommunication(this.communicationRecordForm)
+                        } else {
+                            await postCloudMerchantMemberCommunication(this.communicationRecordForm)
+                        }
+                        this.communicationRecordDialogVisible = false
+                        this.clearCommunicationRecordForm()
+                        await this.findCloudMerchantMemberCommunicationList(this.searchParams)
                     } catch (e) {
                     }
                 }

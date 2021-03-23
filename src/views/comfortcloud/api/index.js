@@ -775,3 +775,23 @@ export function deleteMerchantClassifyByTag (params) {
 export function getMerchantClassifyByTag (params) {
     return axios.get(iotUrl + '/mall/boss/main-product/tag-edit-info', { params })
 }
+
+// 获取沟通记录列表
+export function getCloudMerchantMemberCommunicationList (params) {
+    return axios.get(iotUrl + '/mall/boss/member-communication', { params })
+}
+
+// 新增沟通记录
+export function postCloudMerchantMemberCommunication (params) {
+    return axios.post(iotUrl + '/mall/boss/member-communication', params)
+}
+
+// 修改沟通记录
+export function modifyCloudMerchantMemberCommunication (params) {
+    return axios.put(iotUrl + '/mall/boss/member-communication', params)
+}
+
+// 删除沟通记录
+export function deleteCloudMerchantMemberCommunication (params) {
+    return axios.delete(iotUrl + '/mall/boss/member-communication', { data: params })
+}
