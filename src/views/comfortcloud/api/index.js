@@ -798,4 +798,3 @@ export function deleteCloudMerchantMemberCommunication (params) {
 
 // 获取bi看板数据token
 export const findBiToken = (params) => axios.get('/rms/bi/ali/token', { params })
-
