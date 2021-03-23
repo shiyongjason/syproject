@@ -35,7 +35,7 @@ declare global {
             pkFatherDept?: string
         }
     }
-
+    /** hosJoyTable column属性 */
     type tableLabelProps = Array<tableLabelItem>
 
 }

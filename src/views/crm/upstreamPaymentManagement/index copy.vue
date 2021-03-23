@@ -96,78 +96,10 @@
 
         </div>
         <el-drawer class="editordrawerbox" title="待支付" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
-            <div class="drawer-content">
-                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
-                    <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation></loanHandoverInformation>
-                    </el-tab-pane>
-                    <el-tab-pane label="上游支付信息" name="second">
-                        <upstreamPaymentInformation></upstreamPaymentInformation>
-                    </el-tab-pane>
-                </el-tabs>
-            </div>
-            <div class="drawer-content-footer">
-                <h-button style="margin-top:20px" type="primary" @click="() => this.isOpen = true">立即上游支付</h-button>
+            <div class="">
+
             </div>
         </el-drawer>
-        <el-dialog :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="800px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
-            <div class="dialog-ctx">
-                <el-form :model="dialogFormData" :rules="rules" label-width="150px" ref="form">
-                    <el-form-item label="经销商：">
-                        {{ prevPaymentDetail.companyName }}
-                    </el-form-item>
-                    <el-form-item label="项目：">
-                        {{ prevPaymentDetail.projectName }}
-                    </el-form-item>
-                    <el-form-item label="分部：">
-                        {{ prevPaymentDetail.deptName }}
-                    </el-form-item>
-                    <el-form-item label="剩余应上游支付：">
-                        {{ prevPaymentDetail.surplusAmount | fundMoneyHasTail }}元
-                    </el-form-item>
-                    <el-form-item label="上游供应商：">
-                        {{ prevPaymentDetail.supplierCompanyName }}
-                    </el-form-item>
-                    <el-form-item label="上游支付形式：">
-                        {{ prevPaymentDetail.supplierPaymentType }}
-                    </el-form-item>
-                    <el-form-item label="上游货款方式：">
-                        {{ prevPaymentDetail.supplierPaymentMethod }}
-                    </el-form-item>
-                    <el-form-item label="收货进度：">
-                        {{prevPaymentDetail.goodsProgress}}%
-                    </el-form-item>
-                    <el-form-item label="采购单货款明细：">
-                        <!-- srcList: ['https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg','https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'] -->
-                       <el-image style="width: 100px; height: 100px;margin-right:10px" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :preview-src-list="srcList"></el-image>
-                    </el-form-item>
-                    <el-form-item label="支付单货款明细：">
-                        <!-- srcList: ['https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg','https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'] -->
-                       <el-image style="width: 100px; height: 100px;margin-right:10px" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :preview-src-list="srcList"></el-image>
-                    </el-form-item>
-                    <el-form-item label="本次支付金额：" prop="payAmount">
-                        <el-input placeholder="请输入" v-model="dialogFormData.payAmount" maxlength="50" v-isNegative:2="dialogFormData.payAmount"></el-input>
-                    </el-form-item>
-                    <el-form-item label="支付日期：" prop="payDate">
-                        <el-date-picker v-model="dialogFormData.payDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="选择日期">
-                        </el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="上传上游支付凭证：" prop="payVouchers">
-                        <OssFileHosjoyUpload v-model="dialogFormData.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :action='action' :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
-                            <div class="a-line">
-                                <h-button>上传文件</h-button>
-                            </div>
-                        </OssFileHosjoyUpload>
-                        <p class="tips">支持扩展名：jpg.png.pdf...</p>
-                    </el-form-item>
-                </el-form>
-            </div>
-
-            <div slot="footer" class="dialog-footer">
-                <h-button @click="onCancel">取消</h-button>
-                <h-button type="primary" @click="onEnterPay">确认支付</h-button>
-            </div>
-        </el-dialog>
     </div>
 </template>
 
@@ -177,36 +109,20 @@ import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import { contractSigningList } from '../contractSigningManagement/api'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit } from '@/decorator/index'
-import { ccpBaseUrl } from '@/api/config'
 @Component({
     name: 'UpstreamPaymentManagement',
     components: {
-        hosJoyTable,
-        loanHandoverInformation,
-        upstreamPaymentInformation,
-        OssFileHosjoyUpload
+        hosJoyTable
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
-    $refs!: {
-        form: HTMLFormElement
-    }
-     action=ccpBaseUrl + 'common/files/upload-old'
-     uploadParameters= {
-         updateUid: '',
-         reservedName: false
-     }
     page = {
         sizes: [10, 20, 50, 100],
         total: 0
     }
     tableData:any[] = [{ orderNo: '222222', orderNoxx: 'fuck', createTime: '2021-03-19 09:57:42' }]
-    editorDrawer:boolean=true
-    isOpen:boolean=true
+    editorDrawer:boolean=false
     queryParams = {
         dealer: '',
         orderNum: '',
@@ -216,24 +132,6 @@ export default class UpstreamPaymentManagement extends Vue {
         pageSize: 10,
         pageNumber: 1
     }
-    dialogFormData={
-        payAmount: '',
-        payDate: '',
-        payVouchers: []
-    }
-    rules= {
-        payAmount: [
-            { required: true, message: '请输入本次支付金额', trigger: 'blur' }
-        ],
-        payDate: [
-            { required: true, message: '请选择支付日期', trigger: 'blur' }
-        ],
-        payVouchers: [
-            { required: true, message: '请上传上游支付凭证' }
-        ]
-    }
-    activeName:string='loanHandoverInformation'
-    prevPaymentDetail={}
 
     @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
@@ -284,18 +182,10 @@ export default class UpstreamPaymentManagement extends Vue {
     onEndChange (val:string): void {
         this.queryParams.createEndTime = val
     }
-    handleTabClick (tab, event): void {
-        console.log('tab: ', tab)
-    }
-
-    @handleSubmit()
-    onEnterPay () {
-        console.log('onEnterPay')
-    }
 
     @measure
     @handleSubmit()
-    async getList (val = 22): Promise<void> {
+    async getList (val = 22) {
         const { data } = await contractSigningList({
             pageSize: 10,
             pageNumber: 1,
@@ -325,18 +215,6 @@ export default class UpstreamPaymentManagement extends Vue {
     editorDrawerClose (done:Function): void {
         // if
         done()
-    }
-    onCancel (): void {
-        this.isOpen = false
-        this.$refs.form.clearValidate()
-        this.clearForm()
-    }
-    clearForm () {
-        this.dialogFormData = {
-            payAmount: '',
-            payDate: '',
-            payVouchers: []
-        }
     }
 
     async mounted () {

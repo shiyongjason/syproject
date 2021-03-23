@@ -15,9 +15,10 @@ export interface tableLabelItem extends Partial<ElTableColumn> {
     minWidth?: string,
     /** 自定义列写法 */
     render?: TableRenderFunc,
-    /** 自定义插槽[{prop: 'ceshi',label: '测试slot',slot: 'ceshi'}]
-     * <template slot="ceshi" slot-scope="scope">...
-     **/
+    /**
+     * 自定义插槽 [{prop: 'ceshi' , label: '测试插槽', slot : 'ceshi'}]
+     * @template 《template slot="ceshi" slot-scope="scope"》
+    */
     slot?: string,
     /** 金额、日期格式化 */
     displayAs?: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'money',
