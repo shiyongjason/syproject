@@ -23,6 +23,12 @@
                 </div>
             </div>
             <div class="query-cont-col">
+                <div class="query-col-title">手机号：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.phone" maxlength="50" placeholder="输入手机号" clearable></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
                 <div class="query-col-title">城市：</div>
                 <div class="query-cont-col-area">
                     <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
@@ -111,6 +117,7 @@ export default {
                 cityId: '',
                 categoryId: '',
                 pageNumber: 1,
+                phone: '',
                 pageSize: 10
             },
             statistics: {

@@ -46,6 +46,7 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList"
                         :pagination="cloudMerchantOrderListPagination" @onCurrentChange='onCurrentChange'
+                        is-action="true"
                         isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
                     {{ scope.data.row.level === 1 ? '一级': '二级' }}
@@ -58,6 +59,11 @@
                 </template>
                 <template slot="status" slot-scope="scope">
                     {{payStatus(scope.data.row.status)}}
+                </template>
+                <template slot="action">
+                    <el-button class="orangeBtn" >查看代理信息</el-button>
+                    <el-button class="orangeBtn" >编辑</el-button>
+                    <el-button class="orangeBtn" >删除</el-button>
                 </template>
             </basicTable>
         </div>
