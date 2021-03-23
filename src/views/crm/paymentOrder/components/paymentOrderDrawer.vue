@@ -2,7 +2,7 @@
     <div class="drawer-wrap">
         <!-- <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false> -->
-        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='65%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
+        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='60%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
             <template #connect>
                 <div class="drawer-content">
                     <div class="info-content">
@@ -114,6 +114,32 @@
                                 </p>
                             </div>
                         </div>
+                        <!-- 新增 -->
+                        <div class="row-filed">
+                            <p class="col-filed col-25">
+                                <span class="label">供应商联行号：</span>
+                                111111111
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">供应商开户行名称：</span>
+                                121323
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">供应商银行账号：</span>
+                                12132311
+                            </p>
+                            <p class="col-filed col-25">
+                                <span class="label">期望上游支付日期：</span>
+                                1213231111
+                            </p>
+
+                        </div>
+                        <div class="row-filed">
+                            <p class="col-filed col-25">
+                                <span class="label">特殊说明：</span>
+                                1213231111
+                            </p>
+                        </div>
                         <div class="row-filed">
                             <p class="col-filed">
                                 <span class="label">申请时间：</span>
@@ -172,28 +198,63 @@
                                 <!--                            && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key-->
                                 <template v-if="(!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode >= PaymentOrderDict.closeReasonCode.list[1].key)">
                                     <div class="row-filed">
-                                        <p class="col-filed col-33">
+                                        <p class="col-filed col-25">
                                             <span class="label">应收账款质押：</span>{{
                                             paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
                                         }}
                                         </p>
-                                        <p class="col-filed col-33">
+                                        <p class="col-filed col-25">
                                             <span class="label">上游支付方式：</span>
                                             {{
                                             paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list)
                                         }}
                                         </p>
-                                        <p class="col-filed col-33">
+                                        <p class="col-filed col-25">
                                             <span class="label">上游货款方式：</span>{{
                                             paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
                                         }}
                                         </p>
-
-                                    </div>
-                                    <div class="row-filed">
-                                        <p class="col-filed col-33">
+                                        <p class="col-filed col-25">
                                             <span class="label">下游合作方式：</span>{{
                                             paymentOrderDetail.payOrderDetail.dealerCooperationMethod==2?'代收代付': paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1?'垫资代采':'-'
+                                        }}
+                                        </p>
+                                    </div>
+                                    <div class="row-filed">
+                                        <!-- 新增 -->
+                                        <div class="col-filed info-img-group">
+                                            <span class="label">网银盾照片：</span>
+                                            <p class="content">
+                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
+                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                                        <imageAddToken :file-url="item.url" />
+                                                    </span>
+                                                </template>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row-filed">
+                                        <!-- 新增 -->
+                                        <div class="col-filed info-img-group">
+                                            <span class="label">共管户截图：</span>
+                                            <p class="content">
+                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
+                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                                        <imageAddToken :file-url="item.url" />
+                                                    </span>
+                                                </template>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="row-filed">
+                                        <p class="col-filed col-25">
+                                            <span class="label">质押信息：</span>{{
+                                            paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
+                                        }}
+                                        </p>
+                                        <p class="col-filed col-25">
+                                            <span class="label">OA审批编号：</span>{{
+                                            paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
                                         }}
                                         </p>
                                     </div>
@@ -335,10 +396,10 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                 </template>
                             </template>
                             <!-- 支付单待审核 -->
-<!--                            订单及服务费确认函状态：orderLetterStatus 0： 未签约 1： 未签约 2： 客户已拒签-->
-<!--                           downpaymentFund：  首付款支付-->
-<!--                           closeReasonCode 支付单关闭原因： 1： 支付单审核不通过 2： 用户拒签订单及服务费确认函 3： 用户主动取消-->
-<!--                            1）支付订单及服务费确认函状态不是未签约 2）首付款信息存在   3)支付单未关闭-->
+                            <!--                            订单及服务费确认函状态：orderLetterStatus 0： 未签约 1： 未签约 2： 客户已拒签-->
+                            <!--                           downpaymentFund：  首付款支付-->
+                            <!--                           closeReasonCode 支付单关闭原因： 1： 支付单审核不通过 2： 用户拒签订单及服务费确认函 3： 用户主动取消-->
+                            <!--                            1）支付订单及服务费确认函状态不是未签约 2）首付款信息存在   3)支付单未关闭-->
                             <template v-else>
                                 <template
                                     v-if="paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[0].key && paymentOrderDetail.respFundResults.downpaymentFund && (!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode  >=PaymentOrderDict.closeReasonCode.list[2].key)">
@@ -367,10 +428,10 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                 </template>
                                             </p>
                                             <p class="col-filed col-40 need-center">
-                                            <span class="label">
-                                                支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template
-                                                v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：</span>
+                                                <span class="label">
+                                                    支付<template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template
+                                                        v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
+                                                        v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：</span>
                                                 <template v-if="paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">
                                                     {{ paymentOrderDetail.respFundResults.downpaymentFund.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                                 </template>
@@ -385,11 +446,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                     </h-button>
                                                 </template>
                                                 <template v-else>
-                                                <span class="info-status ml-20">
-                                                    {{
+                                                    <span class="info-status ml-20">
+                                                        {{
                                                         paymentOrderDetail.respFundResults.downpaymentFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                                     }}
-                                                </span>
+                                                    </span>
                                                 </template>
                                             </p>
                                         </div>
@@ -419,11 +480,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                 </p>
                                                 <div class="col-filed col-40 service-pay-time need-center">
                                                     <p class="mr-50">
-                                                    <span class="label">
-                                                        <!--                                                换行有空格-->
-                                                        支付<template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template v-else-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                        v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：
-                                                    </span><template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">{{ item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</template>
+                                                        <span class="label">
+                                                            <!--                                                换行有空格-->
+                                                            支付<template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template><template v-else-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
+                                                                v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">取消</template>时间：
+                                                        </span><template v-if="item.paymentFlag === PaymentOrderDict.paymentFlag.list[4].key">{{ item.updateTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</template>
                                                         <template v-else>
                                                             {{ item.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                                         </template>
@@ -436,11 +497,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                         </h-button>
                                                     </template>
                                                     <template v-else>
-                                                    <span class="info-status">
-                                                        {{
+                                                        <span class="info-status">
+                                                            {{
                                                             item.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                                         }}
-                                                    </span>
+                                                        </span>
                                                     </template>
                                                 </div>
                                             </div>
@@ -524,8 +585,8 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                     </template>
                                                 </p>
                                                 <p class="col-filed col-50 resp-fund-results">
-                                                <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
-                                                    v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>时间：</span>
+                                                    <span class="label">支付<template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key">成功</template><template
+                                                            v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[3].key">失败</template>时间：</span>
                                                     {{ paymentOrderDetail.respFundResults.arrearFund.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                                                     <template v-if="paymentOrderDetail.respFundResults.arrearFund.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key">
                                                         <h-button table v-if="hosAuthCheck(Auths.CRM_ARREAR_FUND_CONFIRM)" @click="openFundsDialog(paymentOrderDetail.respFundResults.arrearFund.id,FundsDict.repaymentTypeArrays.list[2].key)">
@@ -535,11 +596,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                         </h-button>
                                                     </template>
                                                     <template v-else>
-                                                    <span class="info-status">
-                                                        {{
+                                                        <span class="info-status">
+                                                            {{
                                                             paymentOrderDetail.respFundResults.arrearFund.paymentFlag | attributeComputed(PaymentOrderDict.paymentFlag.list)
                                                         }}
-                                                    </span>
+                                                        </span>
                                                     </template>
                                                 </p>
                                             </div>
