@@ -100,6 +100,10 @@
                                 </el-tag>
                             </div>
                         </div>
+                        <div class="page-body-cont-top-no-left">
+                            <span>员工信息:</span>
+
+                        </div>
                         <div class="page-body-cont-top-no-align-items">
                             <span>备注:</span>
                             <el-input class="textarea" type="textarea" maxlength=500 :rows="10" placeholder="请输入内容" @blur="updateCompanyInfoRemark" v-model="enterpriseInfoData.remark">

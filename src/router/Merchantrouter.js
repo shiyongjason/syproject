@@ -90,6 +90,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOrder.vue')
+                    },
+                    {
+                        path: 'merchantAgencyOrderEdit',
+                        name: 'merchantAgencyOrderEdit',
+                        meta: {
+                            title: '代理订单',
+                            tagName: '代理订单',
+                            parentName: '经销商管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantAgencyOrderEdit.vue')
                     }
                 ]
             },
