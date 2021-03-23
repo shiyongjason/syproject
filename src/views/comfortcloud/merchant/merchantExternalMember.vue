@@ -117,18 +117,35 @@
                 <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                     <el-button type="primary" slot="trigger">选择本地文件</el-button>
                     <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                    <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
+                    <p slot="tip" class="el-upload__tip">2.请按照客户线索模板内容导入数据，否则可能会出现导入异常</p>
                 </el-upload>
+                <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
                 <div class="downloadExcel">
-                    <a href="/excelTemplate/奖励明细模板.xls" download="奖励明细模板.xls">下载奖励明细模板</a>
+                    <a href="/excelTemplate/客户线索模板.xls" download="客户线索模板.xls">下载客户线索模板</a>
                 </div>
                 <div style="color: red">{{errMessage}}</div>
                 <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
                 </span>
-                <el-dialog width="800px" title="上传结果" :visible.sync="errorShow" append-to-body>
+
+                <!-- <el-dialog width="800px" title="上传结果" :visible.sync="errorShow" append-to-body>
                     <div>
                         <span class="uploadTips">上传成功</span>
+                    </div>
+                </el-dialog> -->
+                <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>
+                    <div>
+                        <span class="uploadTips">上传数据：{{errorData.count}}条</span>
+                    </div>
+                    <div>
+                        <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>
+                    </div>
+                    <div>
+                        <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>
+                    </div>
+                    <div class="basic-table">
+                        <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>
+                        </basicTable>
                     </div>
                 </el-dialog>
             </el-dialog>
@@ -178,9 +195,12 @@ export default {
             uploadShow: false,
             fileList: [],
             errorShow: false,
+            errorData: {
+                failList: []
+            },
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/mall/boss/wx/reward/import`,
+                action: `${iotUrl}/mall/boss/out-member/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: {
@@ -217,8 +237,24 @@ export default {
                 { label: '销售顾问姓名', prop: 'saleName' },
                 { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
+                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'dateTime', width: '150px' },
                 { label: '手动标签', prop: 'manualTags', width: '200px' },
                 { label: '自动标签', prop: 'autoTag', width: '150px' }
+            ],
+            errTableLabel: [
+                { label: '企业名称', prop: 'companyName' },
+                { label: '会员账号', prop: 'phone' },
+                { label: '会员昵称', prop: 'nickName' },
+                { label: '所在省份', prop: 'provinceName' },
+                { label: '所在城市', prop: 'cityName' },
+                { label: '所在区县', prop: 'countryName' },
+                { label: '详细地址', prop: 'storeAddress' },
+                { label: '主营品类', prop: 'mainCategory' },
+                { label: '主营品牌', prop: 'mainBrand' },
+                { label: '所属分部', prop: 'department' },
+                { label: '销售顾问姓名', prop: 'saleName' },
+                { label: '销售顾问手机号', prop: 'salePhone' },
+                { label: '失败原因', prop: 'error' }
             ],
             dialogVisible: false
         }
@@ -430,9 +466,6 @@ export default {
                 this.loading = false
             }
         },
-        onDownload () {
-            downloadQuestionTemp()
-        },
         beforeAvatarUpload (file) {
             const isLt10M = file.size / (1024 * 1024 * 10) < 1
             // const isCsv = file.type === 'application/vnd.ms-excel'
@@ -464,6 +497,7 @@ export default {
             return isCsv && isLt10M
         },
         uploadError (response) {
+            console.log(response, 'error')
             const res = response
             console.log(JSON.parse(res.message).detail)
             this.$refs.upload.clearFiles()
@@ -471,12 +505,12 @@ export default {
             this.loading = false
         },
         uploadSuccess (response) {
+            console.log(response, 'success')
             this.$refs.upload.clearFiles()
-            this.onQuery(this.searchParams)
-            this.errorData = response.data
-            this.uploadShow = false
-            this.$message.success('文件上传成功')
             this.loading = false
+            this.errorData = response
+            this.errorShow = true
+            this.onQuery(this.searchParams)
         },
         onCloseDialog () {
             if (this.hasFile()) {
