@@ -36,7 +36,7 @@
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                     </div>
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onImport">导入订单</el-button>
+                        <el-button type="primary" class="ml20" @click="onImportOrder">导入订单</el-button>
                     </div>
                 </div>
             </div>
@@ -76,30 +76,31 @@
                     <el-button type="primary" slot="trigger">选择本地文件</el-button>
                     <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                     <p slot="tip" class="el-upload__tip">2.请按照设备出库模板内容导入数据，否则可能会出现导入异常</p>
+                    <p slot="tip" class="el-upload__tip">3.在模版中完成内容填写后，请将表格内已输入的内容复制到新的Excel中再进行导入</p>
                 </el-upload>
                 <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
                 <div class="downloadExcel">
-                    <a href="/excelTemplate/出库管理导入模板.xls" download="出库管理导入模板.xls">下载出库管理导入模板</a>
+                    <a href="/excelTemplate/订单模板.xls" download="订单模板.xls">订单模板</a>
                 </div>
-                <div style="color: red">{{errMessage}}</div>
+<!--                <div style="color: red">{{errMessage}}</div>-->
                 <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
-                <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>
-                    <div>
-                        <span class="uploadTips">上传数据：{{errorData.count}}条</span>
-                    </div>
-                    <div>
-                        <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>
-                    </div>
-                    <div>
-                        <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>
-                    </div>
-                    <div class="basic-table">
-                        <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>
-                        </basicTable>
-                    </div>
-                </el-dialog>
+<!--                <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>-->
+<!--                    <div>-->
+<!--                        <span class="uploadTips">上传数据：{{errorData.count}}条</span>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>-->
+<!--                    </div>-->
+<!--                    <div class="basic-table">-->
+<!--                        <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>-->
+<!--                        </basicTable>-->
+<!--                    </div>-->
+<!--                </el-dialog>-->
             </el-dialog>
         </div>
     </div>
@@ -154,7 +155,7 @@ export default {
             importDialogVisible: false,
             uploadData: {
                 accept: '.xlsx,.xls',
-                action: `${iotUrl}/api/outbound/import`,
+                action: `${iotUrl}/mall/boss/order/import`,
                 limit: 1,
                 autoUpload: false,
                 headers: {
@@ -265,8 +266,21 @@ export default {
             }
             return (address += val.consigneeAddress)
         },
-        onImport () {
+        onImportOrder () {
             this.importDialogVisible = true
+        },
+        async onImport () {
+            if (this.loading) return
+            this.loading = true
+            if (this.hasFile()) {
+                this.uploadData.data.operateUserName = this.userInfo.employeeName
+                try {
+                    await this.$refs.upload.submit()
+                } catch (e) { }
+            } else {
+                this.$message.error('请选择上传的文件')
+                this.loading = false
+            }
         },
         hasFile () {
             return this.$refs.upload.uploadFiles.length > 0
@@ -317,23 +331,20 @@ export default {
             }
             return isCsv && isLt10M
         },
-        uploadError () {
-            console.log(1)
+        uploadError (res) {
+            console.log(JSON.parse(res.message).detail)
             this.$refs.upload.clearFiles()
-            this.$message.error('文件上传失败，请重试！')
+            this.$message.error(JSON.parse(res.message).detail)
             this.loading = false
         },
         uploadSuccess (response) {
-            console.log(response)
             this.$refs.upload.clearFiles()
             this.loading = false
-            if (response.code === 200) {
-                this.errorData = response.data
-                this.errorShow = true
-                this.onQuery(this.searchParams)
-            } else {
-                this.$message.error(response.message)
-            }
+            // this.errorData = response.data
+            // this.errorShow = true
+            this.importDialogVisible = false
+            this.onQuery(this.searchParams)
+            this.$message.success('上传成功')
         }
     }
 }
