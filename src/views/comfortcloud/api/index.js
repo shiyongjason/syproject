@@ -776,7 +776,6 @@ export function getMerchantClassifyByTag (params) {
     return axios.get(iotUrl + '/mall/boss/main-product/tag-edit-info', { params })
 }
 
-<<<<<<< HEAD
 // 获取沟通记录列表
 export function getCloudMerchantMemberCommunicationList (params) {
     return axios.get(iotUrl + '/mall/boss/member-communication', { params })
