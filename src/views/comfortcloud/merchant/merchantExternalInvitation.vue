@@ -76,7 +76,7 @@
                 <div class="query-cont-row">
                     <div class="query-col-title">沟通日期： </div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="选择日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                     </div>
                 </div>

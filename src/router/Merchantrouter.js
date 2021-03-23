@@ -12,6 +12,29 @@ export default [
         component: Layout,
         children: [
             {
+                path: 'businessData',
+                meta: {
+                    title: '经营数据看板',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'businessBI',
+                        name: 'businessBI',
+                        meta: {
+                            title: '经营BI',
+                            tagName: '经营BI',
+                            parentName: '经营数据看板',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/businessData/businessBI.vue')
+                    }
+                ]
+            },
+            {
                 path: 'merchantManage',
                 meta: {
                     title: '经销商管理',
