@@ -24,12 +24,12 @@
                 <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
-                <OssFileHosjoyUpload v-model="formData.reqAttachDocs" :showPreView=true :fileSize=50 :fileNum=9 :limit=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
+                <OssFileHosjoyUpload v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=9 :limit=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
                 </OssFileHosjoyUpload>
-                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传9个文件，单个文件限制50M</p>
+                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传9个文件，单个文件限制20M</p>
             </el-form-item>
             <el-form-item label="收货备注：">
                 <el-input type="textarea" v-model="formData.goodsRemark" maxlength="200"></el-input>
