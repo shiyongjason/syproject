@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">支付单号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.orderNum" placeholder="请输入支付单号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.paymentOrderNo" placeholder="请输入支付单号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -19,13 +19,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">经销商：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="请输入经销商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.companyName" maxlength="20" placeholder="请输入经销商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">上游出票方式：</div>
+                    <div class="query-col__label">上游支付方式：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.dealer" placeholder="请选择">
+                        <el-select v-model="queryParams.supplierPaymentType" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
                             <el-option label="银行承兑" :value="1"></el-option>
                             <el-option label="银行转账" :value="2"></el-option>
@@ -35,35 +35,35 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">上游供应商：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
+                        <el-input type="text" v-model="queryParams.supplierCompanyName" maxlength="20" placeholder="请输入上游供应商名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="请输入项目名称"></el-input>
+                        <el-input type="text" v-model="queryParams.projectName" maxlength="20" placeholder="请输入项目名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">出票状态：</div>
+                    <div class="query-col__label">支付状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.dealer" placeholder="请选择">
+                        <el-select v-model="queryParams.paymentStatus" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="待出票" :value="1"></el-option>
-                            <el-option label="部分出票" :value="2"></el-option>
+                            <el-option label="待支付" :value="1"></el-option>
+                            <el-option label="部分支付" :value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">剩余待支付金额（元）：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-model="queryParams.startNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
                         <span class="ml10 mr10">-</span>
-                        <el-input type="text" v-model="queryParams.dealer" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-model="queryParams.endNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">期望出票日期：</div>
+                    <div class="query-col__label">期望上游支付日期：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options"></HDatePicker>
                     </div>
@@ -71,15 +71,15 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">首付款确认时间：</div>
                     <div class="query-col__input">
-                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options"></HDatePicker>
+                        <HDatePicker :start-change="onStartChangePaidTime" :end-change="onEndChangePaidTime" :options="optionsByPaid"></HDatePicker>
                     </div>
                 </div>
 
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="()=>getList()">
+                    <h-button type="primary" @click="getList">
                         查询
                     </h-button>
-                    <h-button>
+                    <h-button @click="onReset">
                         重置
                     </h-button>
                 </div>
@@ -89,8 +89,8 @@
             </div>
             <!-- end search bar -->
             <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
-                <template #action>
-                    <h-button table>查看详情</h-button>
+                <template #action="slotProps">
+                    <h-button table @click="viewDetail(slotProps.data.row)">查看详情</h-button>
                 </template>
             </hosJoyTable>
 
@@ -182,6 +182,15 @@ import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' /
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit } from '@/decorator/index'
 import { ccpBaseUrl } from '@/api/config'
+import { getUpStreamPaymentApi } from './api/index'
+import { ReqUpStreamPaymentQuery } from '@/interface/hbp-project'
+import filters from '@/utils/filters'
+enum RouteNames {
+    Home = 'home',
+    List = 'list',
+    Detail = 'detail'
+}
+
 @Component({
     name: 'UpstreamPaymentManagement',
     components: {
@@ -195,8 +204,9 @@ export default class UpstreamPaymentManagement extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-     action=ccpBaseUrl + 'common/files/upload-old'
-     uploadParameters= {
+    srcList:string[] = []
+     action = ccpBaseUrl + 'common/files/upload-old'
+     uploadParameters = {
          updateUid: '',
          reservedName: false
      }
@@ -204,17 +214,31 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any[] = [{ orderNo: '222222', orderNoxx: 'fuck', createTime: '2021-03-19 09:57:42' }]
-    editorDrawer:boolean=true
-    isOpen:boolean=true
-    queryParams = {
-        dealer: '',
-        orderNum: '',
-        subsectionCode: '',
-        createStartTime: '',
-        createEndTime: '',
+    tableData:any[] = []
+    editorDrawer:boolean = false
+    isOpen:boolean = false
+    _queryParams={}
+    queryParams:ReqUpStreamPaymentQuery = {
+        pageNumber: 1,
         pageSize: 10,
-        pageNumber: 1
+        paymentOrderNo: '',
+        deptName: '',
+        companyName: '',
+        supplierPaymentType: '',
+        supplierCompanyName: '',
+        projectName: '',
+        paymentStatus: '',
+        startNoPayAmount: '',
+        endNoPayAmount: '',
+        startDownPaymentConfirmTime: '',
+        endDownPaymentConfirmTime: '',
+        startExpectSupplierPaymentDate: '',
+        endExpectSupplierPaymentDate: '',
+        authCode: '',
+        jobNumber: '',
+        subsectionCode: '',
+        'sort.property': null,
+        'sort.direction': null
     }
     dialogFormData={
         payAmount: '',
@@ -243,46 +267,65 @@ export default class UpstreamPaymentManagement extends Vue {
             type: 'date',
             valueFormat: 'yyyy-MM-dd',
             format: 'yyyy-MM-dd',
-            startTime: this.queryParams.createStartTime,
-            endTime: this.queryParams.createEndTime
+            startTime: this.queryParams.startExpectSupplierPaymentDate,
+            endTime: this.queryParams.endExpectSupplierPaymentDate
+        }
+    }
+    get optionsByPaid () {
+        return {
+            type: 'date',
+            valueFormat: 'yyyy-MM-dd',
+            format: 'yyyy-MM-dd',
+            startTime: this.queryParams.startDownPaymentConfirmTime,
+            endTime: this.queryParams.endDownPaymentConfirmTime
         }
     }
 
     tableLabel:tableLabelProps = [
-        { label: '支付单编号', prop: 'orderNo', width: '100' },
-        { label: '所属分部', prop: 'orderNo', width: '150' },
-        { label: '经销商', prop: 'orderNo', width: '150', resizable: true },
-        { label: '上游供应商', prop: 'orderNo', width: '150' },
-        { label: '项目名称', prop: 'orderNoxx', minWidth: '200' },
-        { label: '采购单金额', prop: 'orderNo', displayAs: 'money' },
+        { label: '支付单编号', prop: 'paymentOrderNo', width: '100' },
+        { label: '所属分部', prop: 'deptName', width: '130' },
+        { label: '经销商', prop: 'companyName', width: '150', resizable: true },
+        { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
+        { label: '项目名称', prop: 'projectName', minWidth: '200' },
+        { label: '采购单金额', prop: 'poAmount', width: '160', displayAs: 'money' },
         {
-            label: '出票状态/出票次数',
-            prop: 'orderNo',
+            label: '支付状态/支付次数',
             width: '150',
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderLabel(h, scope)
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderPaymentLabel(h, scope)
         },
         {
             label: '已支付金额/应支付总额（元）',
-            prop: 'orderNo',
             width: '210',
-            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderLabel(h, scope)
+            render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderPaidAmountLabel(h, scope)
         },
-        { label: '剩余应支付金额（元）', prop: 'orderNo', width: '150', displayAs: 'money' },
-        { label: '首付款确认时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
-        { label: '期望上游支付日期', prop: 'createTime', width: '160', displayAs: 'YYYY-MM-DD' },
-        { label: '上游支付方式', prop: 'orderNo', width: '150', dicData: [{ value: 1, label: '银行承兑' }, { value: 2, label: '银行转账' }] }
+        { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
+        { label: '首付款确认时间', prop: 'downPaymentConfirmTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
+        { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转帐' }, { value: 2, label: '银行承兑' }] }
 
     ]
 
-    onRenderLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
-        return <span>对对对{scope.row.orderNo}</span>
+    onRenderPaymentLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
+        return <span>{scope.row.paymentStatus}/{scope.row.paymentNumber}</span>
+    }
+    onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
+        return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
+    }
+    viewDetail (id) {
+        this.editorDrawer = true
     }
 
-    onStartChange (val:string): void {
-        this.queryParams.createStartTime = val
+    onStartChange (val): void {
+        this.queryParams.startExpectSupplierPaymentDate = val
     }
-    onEndChange (val:string): void {
-        this.queryParams.createEndTime = val
+    onEndChange (val): void {
+        this.queryParams.endExpectSupplierPaymentDate = val
+    }
+    onStartChangePaidTime (val) {
+        this.queryParams.startDownPaymentConfirmTime = val
+    }
+    onEndChangePaidTime (val) {
+        this.queryParams.endDownPaymentConfirmTime = val
     }
     handleTabClick (tab, event): void {
         console.log('tab: ', tab)
@@ -295,33 +338,23 @@ export default class UpstreamPaymentManagement extends Vue {
 
     @measure
     @handleSubmit()
-    async getList (val = 22): Promise<void> {
-        const { data } = await contractSigningList({
-            pageSize: 10,
-            pageNumber: 1,
-            contractTypeIdArrays: '',
-            contractStatusArrays: '',
-            projectName: '',
-            createStartTime: '',
-            createEndTime: '',
-            updateStartTime: '',
-            updateEndTime: '',
-            createBy: '',
-            subsectionCode: '',
-            contractNoOrName: '',
-            authCode: '',
-            jobNumber: '',
-            companyName: '',
-            createTimeOrder: null, // asc 或 desc
-            updateTimeOrder: null// asc 或 desc
-        })
-        console.log('data: ', data)
+    async getList (): Promise<void> {
+        const { data } = await getUpStreamPaymentApi(this.queryParams)
+        // this.tableData = data.records!
+        this.tableData = data.records || []
     }
 
     sortChange (e) {
-        console.log('e: ', e)
-        if (e.prop == 'createTime' && e.order == null) {}
+        if (e.order) {
+            this.queryParams['sort.property'] = e.prop + ''
+            this.queryParams['sort.direction'] = e.order === 'ascending' ? 'ASC' : 'DESC'
+        } else {
+            this.queryParams['sort.property'] = null
+            this.queryParams['sort.direction'] = null
+        }
+        this.getList()
     }
+
     editorDrawerClose (done:Function): void {
         // if
         done()
@@ -338,8 +371,22 @@ export default class UpstreamPaymentManagement extends Vue {
             payVouchers: []
         }
     }
+    onReset () {
+        this.queryParams = JSON.parse(JSON.stringify(this._queryParams))
+        this.getList()
+    }
 
     async mounted () {
+        this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
+        let AUTHCODE = sessionStorage.getItem('authCode') || ''
+        this.queryParams.authCode = AUTHCODE ? JSON.parse(AUTHCODE) : ''
+        this.queryParams.jobNumber = this.userInfo.jobNumber
+
+        console.log(' RouteNames.List', { name: RouteNames.List })
+        this.getList()
+        // data.records!.forEach(item => {
+        //     console.log('item', item)
+        // })
         // this.searchList(this.page)
         // console.log(this.userInfo)
         // await this.findCrmdeplist({

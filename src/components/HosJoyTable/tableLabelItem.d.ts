@@ -8,7 +8,7 @@ export interface tableLabelItem extends Partial<ElTableColumn> {
     /** 显示的标题 */
     label: string,
     /** 对应列内容的字段名 */
-    prop: string,
+    prop?: string,
     /** 对应列的宽度 */
     width?: string,
     /** 对应列的最小宽度，与 width 的区别是 width 是固定的，min-width 会把剩余宽度按比例分配给设置了 min-width 的列 */
@@ -21,7 +21,7 @@ export interface tableLabelItem extends Partial<ElTableColumn> {
     */
     slot?: string,
     /** 金额、日期格式化 */
-    displayAs?: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'money',
+    displayAs?: 'YYYY-MM-DD HH:mm:ss' | 'YYYY-MM-DD' | 'YYYY年MM月DD日 HH时mm分ss秒' | 'YYYY年MM月DD日' | 'money',
     /** 字典 Ex: [ { value : 1,label : '是' } ] 比如后端返回1，那表格展示中文'是'  */
     dicData?: { value: any; label: any; }[],
     /** 该列是否可以排序，如果设置为 'custom'，则代表用户希望远程排序，需要监听 Table 的 sort-change 事件 */
