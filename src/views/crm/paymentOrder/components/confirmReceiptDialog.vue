@@ -29,7 +29,7 @@
                         <h-button>上传文件</h-button>
                     </div>
                 </OssFileHosjoyUpload>
-                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传9个文件，单个文件限制50M</p>
+                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传9个文件，单个文件限制20M</p>
             </el-form-item>
             <el-form-item label="收货备注：">
                 <el-input type="textarea" v-model="formData.goodsRemark" maxlength="200"></el-input>
