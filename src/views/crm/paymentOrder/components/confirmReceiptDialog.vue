@@ -24,7 +24,7 @@
                 <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
-                <OssFileHosjoyUpload v-model="formData.reqAttachDocs" :showPreView=true :fileSize=50 :fileNum=9 :limit=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
+                <OssFileHosjoyUpload v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=9 :limit=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
