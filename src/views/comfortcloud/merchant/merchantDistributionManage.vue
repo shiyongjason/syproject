@@ -47,8 +47,8 @@
                 <template slot="updateTime" slot-scope="scope">
                     {{scope.data.row.status===0?'--':scope.data.row.status===1?parseUpdateTime(scope.data.row):'--'}}
                 </template>
-                <template slot="switchStatus" slot-scope="scope">
-                    <el-switch v-model="scope.data.row.switchStatus" />
+                <template slot="quotationPermission" slot-scope="scope">
+                    <el-switch v-model="scope.data.row.quotationPermission" @change='onChangeQuotationPermission(scope.data.row)' />
                 </template>
                 <template slot="action" slot-scope="scope">
                     <p class="colred title" @click="onEdit(scope.data.row)">
@@ -92,7 +92,7 @@
 <script>
 // import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { updateDistribution, editDistributorName } from '../api'
+import { updateDistribution, editDistributorName, changeQuotationPermission } from '../api'
 import moment from 'moment'
 
 export default {
@@ -122,7 +122,7 @@ export default {
                 { label: '分销员姓名', prop: 'name' },
                 { label: '审核通过时间', prop: 'updateTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' },
-                { label: '产品报价单权限', prop: 'switchStatus' }
+                { label: '产品报价单权限', prop: 'quotationPermission' }
             ],
             rightsDialogVisible: false,
             editDialogVisible: false,
@@ -204,6 +204,13 @@ export default {
         },
         parseUpdateTime (val) {
             return moment(val.updateTime).format('YYYY-MM-DD HH:mm')
+        },
+        onChangeQuotationPermission (val) {
+            console.log(val)
+            changeQuotationPermission({
+                id: val.id,
+                quotationPermission: val.quotationPermission ? 1 : 0
+            })
         }
     }
 }

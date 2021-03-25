@@ -798,3 +798,6 @@ export function deleteCloudMerchantMemberCommunication (params) {
 
 // 获取bi看板数据token
 export const findBiToken = (params) => axios.get('/rms/bi/ali/token', { params })
+
+// 分销员报价单开关
+export const changeQuotationPermission = (params) => axios.put(iotUrl + '/mall/boss/distributor/quotation_permission', params)

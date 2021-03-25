@@ -403,7 +403,7 @@ export default {
             await this.findMerchantMemberInvitationOrdersituation(this.searchParams)
             await this.findMerchantMemberInvitationChangesituation(this.$route.query.unionId)
             await this.findMerchantMemberEnterpriseInfo(this.$route.query.unionId)
-            await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+            await this.requestMemberCommunicationList()
 
             this.tableRegisterData = this.merchantmemberInvitationRegisterData.records
             this.enterpriseInfoData = this.merchantmemberEnterpriseInfo
@@ -439,6 +439,10 @@ export default {
                 this.enterpriseInfoData = this.merchantmemberData.records[0]
             }
             this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
+        },
+        async requestMemberCommunicationList() {
+            await this.findCloudMerchantMemberCommunicationList({...this.searchParams, phone: this.$route.query.phone})
+
         },
         async showDliag (val) {
             await this.findCloudMerchantTaglist()
@@ -746,7 +750,7 @@ export default {
                 let params = { ...data }
                 params.operator = this.userInfo.employeeName
                 await deleteCloudMerchantMemberCommunication(params)
-                await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+                await this.requestMemberCommunicationList()
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -770,7 +774,7 @@ export default {
                         }
                         this.communicationRecordDialogVisible = false
                         this.clearCommunicationRecordForm()
-                        await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+                        await this.requestMemberCommunicationList()
                     } catch (e) {
                     }
                 }
