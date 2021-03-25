@@ -109,7 +109,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl } from '@/api/config'
-import {deleteThirdOrder} from "../api";
+import { deleteThirdOrder } from '../api'
 
 export default {
     name: 'merchantOrderList',
@@ -241,7 +241,7 @@ export default {
             await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
             this.detailDialogVisible = true
         },
-        onDelete(val) {
+        onDelete (val) {
             this.$confirm('请确认是否继续删除？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
