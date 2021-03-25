@@ -45,6 +45,10 @@ export function getMerchantMembersituation (params) {
 export function getMerchantExernalMembersituation (params) {
     return axios.post(iotUrl + `/mall/boss/out-member`, params)
 }
+// 删除第三方销售线索数据
+export function deleteThirdExernalMembersituation (phone) {
+    return axios.delete(iotUrl + `/mall/boss/out-member/third/${phone}`)
+}
 // 奖励管理
 export function merchantReward (params) {
     return axios.get(iotUrl + `/mall/boss/wx/reward/manage`, { params })

@@ -169,7 +169,7 @@
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
 import { clearCache, newCache } from '../../../utils'
-import { addMemberTag, editMemberTag } from '../api'
+import { addMemberTag, editMemberTag, deleteThirdExernalMembersituation } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl } from '@/api/config'
 
@@ -449,8 +449,10 @@ export default {
         onDetail (val, index) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'index': index } })
         },
-        deleteData (val) {
-
+        async deleteData (val) {
+            console.log(val)
+            await deleteThirdExernalMembersituation(val.phone)
+            this.onQuery()
         },
         onInput () {
             this.uploadShow = true

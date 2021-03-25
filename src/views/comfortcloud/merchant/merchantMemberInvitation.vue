@@ -117,7 +117,7 @@
                 <el-tab-pane label="沟通记录" name="5">
                     <el-button type="primary" class="ml20" @click="onAddCommunicationRecord()">+ 新增记录</el-button>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList"  :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true">
+                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true">
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
                                 <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
@@ -440,8 +440,8 @@ export default {
             }
             this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
         },
-        async requestMemberCommunicationList() {
-            await this.findCloudMerchantMemberCommunicationList({...this.searchParams, phone: this.$route.query.phone})
+        async requestMemberCommunicationList () {
+            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
 
         },
         async showDliag (val) {
