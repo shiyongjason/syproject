@@ -15,6 +15,7 @@
                             <el-option label="全部" value=""></el-option>
                             <el-option label="单分享" value="B2b"></el-option>
                             <el-option label="好橙工" value="hcg"></el-option>
+                            <el-option label="第三方渠道" value="third"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -108,9 +109,9 @@
                         <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
                         <el-button class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
                         <el-button class="orangeBtn" @click="onDetail(scope.data.row,2)">沟通记录</el-button>
-                        <el-button class="orangeBtn" @click="deleteData(scope.data.row)">删除</el-button>
                     </div>
                     <div v-else>-</div>
+                    <el-button v-if="scope.data.row.source==='third'" class="orangeBtn" @click="deleteData(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
             <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
@@ -222,7 +223,7 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '会员来源', prop: 'source' },
+                { label: '会员来源', prop: 'source', width: '100px' },
                 { label: '企业名称', prop: 'companyName', width: '100px' },
                 { label: '认证状态', prop: 'authenticationStatus' },
                 { label: '会员角色', prop: 'role' },
@@ -316,6 +317,8 @@ export default {
                     return '单分享'
                 } else if (val === 'hcg') {
                     return '好橙工'
+                } else if (val === 'third') {
+                    return '第三方渠道'
                 }
                 return ''
             }
