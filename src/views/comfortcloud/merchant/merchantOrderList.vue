@@ -56,6 +56,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
+                    <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
 
@@ -108,6 +109,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl } from '@/api/config'
+import {deleteThirdOrder} from "../api";
 
 export default {
     name: 'merchantOrderList',
@@ -238,6 +240,19 @@ export default {
             this.focusDetailOrder = val
             await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
             this.detailDialogVisible = true
+        },
+        onDelete(val) {
+            this.$confirm('请确认是否继续删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteThirdOrder({
+                    orderId: val.orderId
+                })
+                this.$message.success('删除成功')
+                this.onQuery(this.searchParams)
+            })
         },
         orderStatusDesc (status) {
             if (status == 10) {

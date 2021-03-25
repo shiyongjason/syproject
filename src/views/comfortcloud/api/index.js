@@ -801,3 +801,6 @@ export const findBiToken = (params) => axios.get('/rms/bi/ali/token', { params }
 
 // 分销员报价单开关
 export const changeQuotationPermission = (params) => axios.put(iotUrl + '/mall/boss/distributor/quotation_permission', params)
+
+// 删除外部订单
+export const deleteThirdOrder = params => axios.delete(iotUrl + '/mall/boss/order/third/' + params.orderId)
