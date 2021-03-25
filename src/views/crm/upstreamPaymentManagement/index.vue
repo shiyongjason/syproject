@@ -12,7 +12,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select placeholder="请选择" v-model="queryParams.subsectionCode" :clearable='true'>
-                            <el-option :label="item.crmDeptCode" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
+                            <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
             <!-- end search bar -->
             <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
-                    <h-button table @click="viewDetail(slotProps.data.row)">查看详情</h-button>
+                    <h-button table @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
                 </template>
             </hosJoyTable>
 
@@ -99,14 +99,14 @@
             <div class="drawer-content">
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='respLoanHandoverInfo' :userInfo='userInfo'></loanHandoverInformation>
                     </el-tab-pane>
-                    <el-tab-pane label="上游支付信息" name="second">
+                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation">
                         <upstreamPaymentInformation></upstreamPaymentInformation>
                     </el-tab-pane>
                 </el-tabs>
             </div>
-            <div class="drawer-content-footer">
+            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation'">
                 <h-button style="margin-top:20px" type="primary" @click="() => this.isOpen = true">立即上游支付</h-button>
             </div>
         </el-drawer>
@@ -175,22 +175,19 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
-import { contractSigningList } from '../contractSigningManagement/api'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit } from '@/decorator/index'
 import { ccpBaseUrl } from '@/api/config'
-import { getUpStreamPaymentApi } from './api/index'
-import { ReqUpStreamPaymentQuery } from '@/interface/hbp-project'
+import { getUpStreamPaymentApi, getLoanHandoverInfoApi } from './api/index'
+import { ReqUpStreamPaymentQuery, RespLoanHandoverInfo } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-enum RouteNames {
-    Home = 'home',
-    List = 'list',
-    Detail = 'detail'
-}
 
+interface Query extends ReqUpStreamPaymentQuery{
+    [key:string]:any
+}
 @Component({
     name: 'UpstreamPaymentManagement',
     components: {
@@ -217,8 +214,9 @@ export default class UpstreamPaymentManagement extends Vue {
     tableData:any[] = []
     editorDrawer:boolean = false
     isOpen:boolean = false
+    isReady:boolean = false
     _queryParams={}
-    queryParams:ReqUpStreamPaymentQuery = {
+    queryParams: Query = {
         pageNumber: 1,
         pageSize: 10,
         paymentOrderNo: '',
@@ -257,6 +255,7 @@ export default class UpstreamPaymentManagement extends Vue {
         ]
     }
     activeName:string='loanHandoverInformation'
+    respLoanHandoverInfo:RespLoanHandoverInfo | string = ''
     prevPaymentDetail={}
 
     @State('userInfo') userInfo: any
@@ -311,7 +310,11 @@ export default class UpstreamPaymentManagement extends Vue {
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
         return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
     }
-    viewDetail (id) {
+    async viewDetail (paymentOrderId) {
+        console.log('paymentOrderId: ', paymentOrderId)
+        const { data } = await getLoanHandoverInfoApi(paymentOrderId)
+        console.log('data: ', data)
+        this.respLoanHandoverInfo = data
         this.editorDrawer = true
     }
 
@@ -333,7 +336,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     @handleSubmit()
     onEnterPay () {
-        console.log('onEnterPay')
+        console.log('onEnterPay', this)
     }
 
     @measure
@@ -357,6 +360,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     editorDrawerClose (done:Function): void {
         // if
+        this.isReady = false
         done()
     }
     onCancel (): void {
@@ -377,26 +381,25 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async mounted () {
+        // console.log('this', this.$plus)
         this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
         let AUTHCODE = sessionStorage.getItem('authCode') || ''
         this.queryParams.authCode = AUTHCODE ? JSON.parse(AUTHCODE) : ''
         this.queryParams.jobNumber = this.userInfo.jobNumber
-
-        console.log(' RouteNames.List', { name: RouteNames.List })
         this.getList()
         // data.records!.forEach(item => {
         //     console.log('item', item)
         // })
         // this.searchList(this.page)
         // console.log(this.userInfo)
-        // await this.findCrmdeplist({
-        //     deptType: 'F',
-        //     pkDeptDoc: this.userInfo.pkDeptDoc,
-        //     jobNumber: this.userInfo.jobNumber,
-        //     authCode: sessionStorage.getItem('authCode')
-        //         ? JSON.parse(sessionStorage.getItem('authCode') || '')
-        //         : ''
-        // })
+        await this.findCrmdeplist({
+            deptType: 'F',
+            pkDeptDoc: this.userInfo.pkDeptDoc,
+            jobNumber: this.userInfo.jobNumber,
+            authCode: sessionStorage.getItem('authCode')
+                ? JSON.parse(sessionStorage.getItem('authCode') || '')
+                : ''
+        })
     }
 }
 </script>

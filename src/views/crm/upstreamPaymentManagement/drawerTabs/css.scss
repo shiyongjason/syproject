@@ -29,6 +29,7 @@
 }
 .info-layout{
     display: flex;
+    flex-wrap: wrap;
         &-item{
             margin:10px 10px 0 0;
             flex: 1;

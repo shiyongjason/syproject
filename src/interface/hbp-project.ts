@@ -1,11 +1,11 @@
 
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrder
 */
 export interface ReqPurchaseOrder {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -57,10 +57,10 @@ export interface ReqPurchaseOrder {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqPurchaseOrder
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
      * 状态：1-待提交;2-采购单待确认;3-变更待确认;4-采购中;5-采购单完成;6-采购单关闭
@@ -134,14 +134,13 @@ export interface ReqPurchaseOrder {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderConfirm
 */
 export interface ReqPurchaseOrderConfirm {
-    
+
     /**
      * 采购订单主键Id
      * @type {number | string}
@@ -172,14 +171,13 @@ export interface ReqPurchaseOrderConfirm {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderContract
 */
 export interface ReqPurchaseOrderContract {
-    
+
     /**
      * 关联id
      * @type {number | string}
@@ -224,14 +222,13 @@ export interface ReqPurchaseOrderContract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContract
 */
 export interface ReqContract {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -367,14 +364,13 @@ export interface ReqContract {
 
 }
 
-
 /**
 * 合同文件附件集合
 * @export
 * @interface ReqPicture
 */
 export interface ReqPicture {
-    
+
     /**
      * 图片id
      * @type {number | string}
@@ -398,14 +394,13 @@ export interface ReqPicture {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface Contract
 */
 export interface Contract {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -569,14 +564,13 @@ export interface Contract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqVipContract
 */
 export interface ReqVipContract {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -656,14 +650,13 @@ export interface ReqVipContract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContract
 */
 export interface RespContract {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -904,14 +897,13 @@ export interface RespContract {
 
 }
 
-
 /**
 * 线下合同附件
 * @export
 * @interface RespPicture
 */
 export interface RespPicture {
-    
+
     /**
      * 图片id
      * @type {number | string}
@@ -935,14 +927,13 @@ export interface RespPicture {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqTemplateContractOffLineUpdate
 */
 export interface ReqTemplateContractOffLineUpdate {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -973,14 +964,13 @@ export interface ReqTemplateContractOffLineUpdate {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractTemplate
 */
 export interface ReqContractTemplate {
-    
+
     /**
      * 模板id(修改时传)
      * @type {number | string}
@@ -1060,14 +1050,13 @@ export interface ReqContractTemplate {
 
 }
 
-
 /**
 * 属性参数（json对象数组）
 * @export
 * @interface ReqParam
 */
 export interface ReqParam {
-    
+
     /**
      * 参数id
      * @type {number | string}
@@ -1098,14 +1087,13 @@ export interface ReqParam {
 
 }
 
-
 /**
 * 签署方设置（json对象数组）
 * @export
 * @interface ReqTemplateSigner
 */
 export interface ReqTemplateSigner {
-    
+
     /**
      * 类型：1平台，2签署方
      * @type {number | string}
@@ -1171,14 +1159,13 @@ export interface ReqTemplateSigner {
 
 }
 
-
 /**
 * 上游支付凭证列表
 * @export
 * @interface PayVoucher
 */
 export interface PayVoucher {
-    
+
     /**
      * 上游支付凭证文件路径url
      * @type {string}
@@ -1195,14 +1182,13 @@ export interface PayVoucher {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqSupplierSubmit
 */
 export interface ReqSupplierSubmit {
-    
+
     /**
      * 上游支付Id
      * @type {number | string}
@@ -1226,10 +1212,10 @@ export interface ReqSupplierSubmit {
 
     /**
      * 上游支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqSupplierSubmit
      */
-    payAmount?: number
+    payAmount?: number | string
 
     /**
      * 上游支付日期
@@ -1245,16 +1231,22 @@ export interface ReqSupplierSubmit {
      */
     payVouchers?: Array<PayVoucher>
 
+    /**
+     * 支付银行
+     * @type {string}
+     * @memberof ReqSupplierSubmit
+     */
+    paymentBank?: string
+
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqUpPaymentLoanHandoverConfirm
 */
 export interface ReqUpPaymentLoanHandoverConfirm {
-    
+
     /**
      * 放款交接id
      * @type {number | string}
@@ -1271,14 +1263,13 @@ export interface ReqUpPaymentLoanHandoverConfirm {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqSealApproval
 */
 export interface ReqSealApproval {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -1337,14 +1328,13 @@ export interface ReqSealApproval {
 
 }
 
-
 /**
 * 表单详情列表
 * @export
 * @interface FormComponentValue
 */
 export interface FormComponentValue {
-    
+
     /**
      * 标签名
      * @type {string}
@@ -1382,14 +1372,13 @@ export interface FormComponentValue {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqDingCallbackApproval
 */
 export interface ReqDingCallbackApproval {
-    
+
     /**
      * 变更类型 1-代表审批节点任务变更 2-审批实例状态变更
      * @type {number | string}
@@ -1469,14 +1458,13 @@ export interface ReqDingCallbackApproval {
 
 }
 
-
 /**
 * 钉钉审核流水
 * @export
 * @interface ReqDingCallbackOperationRecord
 */
 export interface ReqDingCallbackOperationRecord {
-    
+
     /**
      * 操作人DingId
      * @type {string}
@@ -1530,14 +1518,13 @@ export interface ReqDingCallbackOperationRecord {
 
 }
 
-
 /**
 * 钉钉审核任务流水
 * @export
 * @interface ReqDingCallbackTask
 */
 export interface ReqDingCallbackTask {
-    
+
     /**
      * 处理人DingId
      * @type {string}
@@ -1610,14 +1597,13 @@ export interface ReqDingCallbackTask {
 
 }
 
-
 /**
 * 变更字段对比 注：发起类型是采购单变更提交才会传
 * @export
 * @interface PoChangeFields
 */
 export interface PoChangeFields {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -1690,14 +1676,13 @@ export interface PoChangeFields {
 
 }
 
-
 /**
 * 采购单采购信息 注：发起类型是采购单提交才会传
 * @export
 * @interface PoInfo
 */
 export interface PoInfo {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -1714,10 +1699,10 @@ export interface PoInfo {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof PoInfo
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
      * 采购批次
@@ -1742,10 +1727,10 @@ export interface PoInfo {
 
     /**
      * 经销商预付款比例
-     * @type {number}
+     * @type {number | string}
      * @memberof PoInfo
      */
-    prePercent?: number
+    prePercent?: number | string
 
     /**
      * 剩余货款支付周期
@@ -1840,14 +1825,13 @@ export interface PoInfo {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderDingInitApproval
 */
 export interface ReqPurchaseOrderDingInitApproval {
-    
+
     /**
      * 采购单id
      * @type {number | string}
@@ -1892,14 +1876,13 @@ export interface ReqPurchaseOrderDingInitApproval {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqDingInitApproval
 */
 export interface ReqDingInitApproval {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -1965,14 +1948,13 @@ export interface ReqDingInitApproval {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderPrompt
 */
 export interface RespPurchaseOrderPrompt {
-    
+
     /**
      * 采购单id
      * @type {number | string}
@@ -1981,7 +1963,7 @@ export interface RespPurchaseOrderPrompt {
     purchaseOrderId: number | string
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof RespPurchaseOrderPrompt
      */
@@ -1989,14 +1971,13 @@ export interface RespPurchaseOrderPrompt {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderSubmit
 */
 export interface ReqPurchaseOrderSubmit {
-    
+
     /**
      * 采购单主键id
      * @type {number | string}
@@ -2020,14 +2001,13 @@ export interface ReqPurchaseOrderSubmit {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderChange
 */
 export interface ReqPurchaseOrderChange {
-    
+
     /**
      * 采购单主键id
      * @type {number | string}
@@ -2058,14 +2038,13 @@ export interface ReqPurchaseOrderChange {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderContractSave
 */
 export interface ReqPurchaseOrderContractSave {
-    
+
     /**
      * 采购单id
      * @type {number | string}
@@ -2103,14 +2082,13 @@ export interface ReqPurchaseOrderContractSave {
 
 }
 
-
 /**
 * 支付凭证
 * @export
 * @interface ReqAttachDoc
 */
 export interface ReqAttachDoc {
-    
+
     /**
      * 附件地址
      * @type {string}
@@ -2127,14 +2105,13 @@ export interface ReqAttachDoc {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqServiceFeePayment
 */
 export interface ReqServiceFeePayment {
-    
+
     /**
      * 账单id
      * @type {number | string}
@@ -2165,21 +2142,20 @@ export interface ReqServiceFeePayment {
 
     /**
      * 支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqServiceFeePayment
      */
-    paidAmount?: number
+    paidAmount?: number | string
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqGoodsConfirm
 */
 export interface ReqGoodsConfirm {
-    
+
     /**
      * 支付单Id
      * @type {number | string}
@@ -2196,17 +2172,17 @@ export interface ReqGoodsConfirm {
 
     /**
      * 到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqGoodsConfirm
      */
-    goodsAmount?: number
+    goodsAmount?: number | string
 
     /**
      * 应到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqGoodsConfirm
      */
-    totalAmount?: number
+    totalAmount?: number | string
 
     /**
      * 备注
@@ -2238,14 +2214,13 @@ export interface ReqGoodsConfirm {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqConfirmPayment
 */
 export interface ReqConfirmPayment {
-    
+
     /**
      * 支付单id
      * @type {number | string}
@@ -2269,10 +2244,10 @@ export interface ReqConfirmPayment {
 
     /**
      * 支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqConfirmPayment
      */
-    paidAmount?: number
+    paidAmount?: number | string
 
     /**
      * 支付凭证
@@ -2290,14 +2265,13 @@ export interface ReqConfirmPayment {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundCancel
 */
 export interface ReqFundCancel {
-    
+
     /**
      * 支付单Id
      * @type {number | string}
@@ -2328,14 +2302,13 @@ export interface ReqFundCancel {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPaymentOrderApply
 */
 export interface ReqPaymentOrderApply {
-    
+
     /**
      * 项目Id
      * @type {number | string}
@@ -2387,10 +2360,10 @@ export interface ReqPaymentOrderApply {
 
     /**
      * 申请金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqPaymentOrderApply
      */
-    applyAmount?: number
+    applyAmount?: number | string
 
     /**
      * 创建人
@@ -2457,14 +2430,13 @@ export interface ReqPaymentOrderApply {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundUpdate
 */
 export interface ReqFundUpdate {
-    
+
     /**
      * 账单Id
      * @type {number | string}
@@ -2474,10 +2446,10 @@ export interface ReqFundUpdate {
 
     /**
      * 支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqFundUpdate
      */
-    paymentAmount?: number
+    paymentAmount?: number | string
 
     /**
      * 应支付日期
@@ -2495,14 +2467,13 @@ export interface ReqFundUpdate {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundGenerate
 */
 export interface ReqFundGenerate {
-    
+
     /**
      * 支付单
      * @type {number | string}
@@ -2512,24 +2483,24 @@ export interface ReqFundGenerate {
 
     /**
      * 总额款
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqFundGenerate
      */
-    totalAmount?: number
+    totalAmount?: number | string
 
     /**
      * 首付款
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqFundGenerate
      */
-    downpaymentAmount?: number
+    downpaymentAmount?: number | string
 
     /**
      * 费率
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqFundGenerate
      */
-    serviceFeeRate?: number
+    serviceFeeRate?: number | string
 
     /**
      * 申请日期
@@ -2561,14 +2532,13 @@ export interface ReqFundGenerate {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundConfirm
 */
 export interface ReqFundConfirm {
-    
+
     /**
      * 账单Id
      * @type {number | string}
@@ -2592,14 +2562,13 @@ export interface ReqFundConfirm {
 
 }
 
-
 /**
 * 凭证链接
 * @export
 * @interface AttachDoc
 */
 export interface AttachDoc {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -2672,14 +2641,13 @@ export interface AttachDoc {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFund
 */
 export interface ReqFund {
-    
+
     /**
      * 账单Id
      * @type {number | string}
@@ -2724,10 +2692,10 @@ export interface ReqFund {
 
     /**
      * 实际支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqFund
      */
-    paidAmount?: number
+    paidAmount?: number | string
 
     /**
      * 实际支付日期
@@ -2766,14 +2734,13 @@ export interface ReqFund {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractExport
 */
 export interface ReqContractExport {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -2797,14 +2764,13 @@ export interface ReqContractExport {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqOfflineContract
 */
 export interface ReqOfflineContract {
-    
+
     /**
      * 合同Id
      * @type {number | string}
@@ -2912,14 +2878,13 @@ export interface ReqOfflineContract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractSubmitApprove
 */
 export interface ReqContractSubmitApprove {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -2957,14 +2922,13 @@ export interface ReqContractSubmitApprove {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractUrlExport
 */
 export interface ReqContractUrlExport {
-    
+
     /**
      * 合同名称
      * @type {string}
@@ -2995,14 +2959,13 @@ export interface ReqContractUrlExport {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractAbolish
 */
 export interface ReqContractAbolish {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -3026,14 +2989,13 @@ export interface ReqContractAbolish {
 
 }
 
-
 /**
 * 签署人信息
 * @export
 * @interface ReqContractSign
 */
 export interface ReqContractSign {
-    
+
     /**
      * 合同签署id
      * @type {number | string}
@@ -3190,14 +3152,13 @@ export interface ReqContractSign {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractSignPerfect
 */
 export interface ReqContractSignPerfect {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -3221,14 +3182,13 @@ export interface ReqContractSignPerfect {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqInitiateContractSigning
 */
 export interface ReqInitiateContractSigning {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -3273,14 +3233,13 @@ export interface ReqInitiateContractSigning {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqConfirmationSign
 */
 export interface ReqConfirmationSign {
-    
+
     /**
      * 支付单id
      * @type {number | string}
@@ -3311,86 +3270,85 @@ export interface ReqConfirmationSign {
 
 }
 
-
 /**
 * 确认函合同模板版本
 * @export
 * @interface ContractTemplateVersion
 */
 export interface ContractTemplateVersion {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateVersion
      */
     id: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateVersion
      */
     templateId: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
     templateName: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
     versionNo: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
     content: string
 
     /**
-     * 
+     *
      * @type {Array<ReqParam>}
      * @memberof ContractTemplateVersion
      */
     param: Array<ReqParam>
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
     pdfUrl: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateVersion
      */
     recommendSigner: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
     createTime: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
     createBy: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateVersion
      */
@@ -3398,14 +3356,13 @@ export interface ContractTemplateVersion {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespConfirmation
 */
 export interface RespConfirmation {
-    
+
     /**
      * 签署链接
      * @type {string}
@@ -3414,7 +3371,7 @@ export interface RespConfirmation {
     signUrl: string
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof RespConfirmation
      */
@@ -3422,14 +3379,13 @@ export interface RespConfirmation {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractEditRecord
 */
 export interface ReqContractEditRecord {
-    
+
     /**
      * 合同编辑记录id
      * @type {number | string}
@@ -3509,14 +3465,13 @@ export interface ReqContractEditRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractReject
 */
 export interface ReqContractReject {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -3547,14 +3502,13 @@ export interface ReqContractReject {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractApproval
 */
 export interface ReqContractApproval {
-    
+
     /**
      * 合同审批id
      * @type {number | string}
@@ -3627,14 +3581,13 @@ export interface ReqContractApproval {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractRecord
 */
 export interface ReqContractRecord {
-    
+
     /**
      * 合同内容记录id
      * @type {number | string}
@@ -3679,14 +3632,13 @@ export interface ReqContractRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqRealStatus
 */
 export interface ReqRealStatus {
-    
+
     /**
      * 签署人CA账号id
      * @type {string}
@@ -3710,14 +3662,13 @@ export interface ReqRealStatus {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqExaminePass
 */
 export interface ReqExaminePass {
-    
+
     /**
      * 审核备注 ((备注信息： 上游出票备注：)纯文本编辑框，最多输入500个字符。)
      * @type {string}
@@ -3748,10 +3699,10 @@ export interface ReqExaminePass {
 
     /**
      * 首付款
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqExaminePass
      */
-    downPaymentAmount: number
+    downPaymentAmount: number | string
 
     /**
      * 采购单更新时间 （监测采购单）
@@ -3790,14 +3741,13 @@ export interface ReqExaminePass {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqExamineFail
 */
 export interface ReqExamineFail {
-    
+
     /**
      * 审核备注
      * @type {string}
@@ -3814,14 +3764,13 @@ export interface ReqExamineFail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPaymentOrderFundConfirm
 */
 export interface ReqPaymentOrderFundConfirm {
-    
+
     /**
      * 支付单id
      * @type {number | string}
@@ -3838,14 +3787,13 @@ export interface ReqPaymentOrderFundConfirm {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespSupplier
 */
 export interface RespSupplier {
-    
+
     /**
      * 上游支付方式:1-银行转帐;2-银行承兑
      * @type {number | string}
@@ -3862,17 +3810,17 @@ export interface RespSupplier {
 
     /**
      * 应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplier
      */
-    totalAmount: number
+    totalAmount: number | string
 
     /**
      * 已支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplier
      */
-    paidAmount: number
+    paidAmount: number | string
 
     /**
      * 支付明细
@@ -3883,13 +3831,12 @@ export interface RespSupplier {
 
     /**
      * 进度
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplier
      */
-    progress: number
+    progress: number | string
 
 }
-
 
 /**
 * 支付明细
@@ -3897,9 +3844,9 @@ export interface RespSupplier {
 * @interface RespSupplierDetail
 */
 export interface RespSupplierDetail {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof RespSupplierDetail
      */
@@ -3907,10 +3854,10 @@ export interface RespSupplierDetail {
 
     /**
      * 支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplierDetail
      */
-    payAmount?: number
+    payAmount?: number | string
 
     /**
      * 支付日期
@@ -3918,6 +3865,13 @@ export interface RespSupplierDetail {
      * @memberof RespSupplierDetail
      */
     payDate?: string
+
+    /**
+     * 支付银行
+     * @type {string}
+     * @memberof RespSupplierDetail
+     */
+    paymentBank?: string
 
     /**
      * 创建时间
@@ -3949,14 +3903,13 @@ export interface RespSupplierDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespSupplierInfo
 */
 export interface RespSupplierInfo {
-    
+
     /**
      * 项目名称
      * @type {string}
@@ -3980,24 +3933,24 @@ export interface RespSupplierInfo {
 
     /**
      * 应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplierInfo
      */
-    totalAmount: number
+    totalAmount: number | string
 
     /**
      * 剩余应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplierInfo
      */
-    surplusAmount: number
+    surplusAmount: number | string
 
     /**
      * 已支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespSupplierInfo
      */
-    paidAmount: number
+    paidAmount: number | string
 
     /**
      * 上游供应商名称
@@ -4029,14 +3982,13 @@ export interface RespSupplierInfo {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespLoanHandoverInfo
 */
 export interface RespLoanHandoverInfo {
-    
+
     /**
      * 项目名称
      * @type {string}
@@ -4067,24 +4019,24 @@ export interface RespLoanHandoverInfo {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespLoanHandoverInfo
      */
-    poAmount: number
+    poAmount: number | string
 
     /**
      * 剩余应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespLoanHandoverInfo
      */
-    noPayAmount: number
+    noPayAmount: number | string
 
     /**
      * 支付单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespLoanHandoverInfo
      */
-    applyAmount: number
+    applyAmount: number | string
 
     /**
      * 上游支付方式 1-银行转帐;2-银行承兑
@@ -4095,10 +4047,10 @@ export interface RespLoanHandoverInfo {
 
     /**
      * 首付款比例
-     * @type {number}
+     * @type {number | string}
      * @memberof RespLoanHandoverInfo
      */
-    prePercent: number
+    prePercent: number | string
 
     /**
      * 剩余货款支付周期
@@ -4165,14 +4117,13 @@ export interface RespLoanHandoverInfo {
 
 }
 
-
 /**
 * 放款交接确认信息
 * @export
 * @interface RespUpPaymentLoanHandover
 */
 export interface RespUpPaymentLoanHandover {
-    
+
     /**
      * 放款交接id
      * @type {number | string}
@@ -4231,14 +4182,13 @@ export interface RespUpPaymentLoanHandover {
 
 }
 
-
 /**
 * 放款交接属性字段
 * @export
 * @interface RespUpPaymentLoanHandoverParam
 */
 export interface RespUpPaymentLoanHandoverParam {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -4283,14 +4233,13 @@ export interface RespUpPaymentLoanHandoverParam {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqUpStreamPaymentQuery
 */
 export interface ReqUpStreamPaymentQuery {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -4356,17 +4305,17 @@ export interface ReqUpStreamPaymentQuery {
 
     /**
      * 剩余应支付金额起始金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqUpStreamPaymentQuery
      */
-    startNoPayAmount?: number
+    startNoPayAmount?: number | string
 
     /**
      * 剩余应支付金额结束金额
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqUpStreamPaymentQuery
      */
-    endNoPayAmount?: number
+    endNoPayAmount?: number | string
 
     /**
      * 首付款确认时间起始时间
@@ -4419,14 +4368,13 @@ export interface ReqUpStreamPaymentQuery {
 
 }
 
-
 /**
 * 排序规则
 * @export
 * @interface Sort
 */
 export interface Sort {
-    
+
     /**
      * 排序属性
      * @type {string}
@@ -4443,73 +4391,71 @@ export interface Sort {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespUpStreamPayment
 */
 export interface IPageRespUpStreamPayment {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespUpStreamPayment>}
-     * @memberof IPageRespUpStreamPayment
-     */
-    records: Array<RespUpStreamPayment>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespUpStreamPayment
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespUpStreamPayment
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespUpStreamPayment>}
+     * @memberof IPageRespUpStreamPayment
+     */
+    records: Array<RespUpStreamPayment>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespUpStreamPayment
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespUpStreamPayment
 */
 export interface RespUpStreamPayment {
-    
+
     /**
      * 支付单id
      * @type {number | string}
@@ -4554,13 +4500,13 @@ export interface RespUpStreamPayment {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUpStreamPayment
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
-     * 支付状态 1：待出票 2：部分出票 
+     * 支付状态 1：待出票 2：部分出票
      * @type {number | string}
      * @memberof RespUpStreamPayment
      */
@@ -4575,24 +4521,24 @@ export interface RespUpStreamPayment {
 
     /**
      * 已支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUpStreamPayment
      */
-    paidAmount?: number
+    paidAmount?: number | string
 
     /**
      * 应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUpStreamPayment
      */
-    totalAmount?: number
+    totalAmount?: number | string
 
     /**
      * 剩余应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUpStreamPayment
      */
-    noPayAmount?: number
+    noPayAmount?: number | string
 
     /**
      * 首付款确认时间
@@ -4617,14 +4563,13 @@ export interface RespUpStreamPayment {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespCrmPurchaseOrderDetail
 */
 export interface RespCrmPurchaseOrderDetail {
-    
+
     /**
      * 采购单id
      * @type {number | string}
@@ -4676,17 +4621,17 @@ export interface RespCrmPurchaseOrderDetail {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespCrmPurchaseOrderDetail
      */
-    poAmount: number
+    poAmount: number | string
 
     /**
      * 剩余采购额度
-     * @type {number}
+     * @type {number | string}
      * @memberof RespCrmPurchaseOrderDetail
      */
-    poBalance: number
+    poBalance: number | string
 
     /**
      * 最迟发货日期
@@ -4739,14 +4684,13 @@ export interface RespCrmPurchaseOrderDetail {
 
 }
 
-
 /**
 * 合同信息
 * @export
 * @interface RespCrmPurchaseOrderDetail$Contract
 */
 export interface RespCrmPurchaseOrderDetail$Contract {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -4791,14 +4735,13 @@ export interface RespCrmPurchaseOrderDetail$Contract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPoInfo
 */
 export interface RespPoInfo {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -4815,10 +4758,10 @@ export interface RespPoInfo {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPoInfo
      */
-    poAmount: number
+    poAmount: number | string
 
     /**
      * 采购批次
@@ -4843,10 +4786,10 @@ export interface RespPoInfo {
 
     /**
      * 经销商预付款比例
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPoInfo
      */
-    prePercent: number
+    prePercent: number | string
 
     /**
      * 剩余货款支付周期
@@ -4941,14 +4884,13 @@ export interface RespPoInfo {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderSubmit
 */
 export interface RespPurchaseOrderSubmit {
-    
+
     /**
      * 项目id
      * @type {number | string}
@@ -4979,14 +4921,13 @@ export interface RespPurchaseOrderSubmit {
 
 }
 
-
 /**
 * 待删除合同
 * @export
 * @interface RespPurchaseOrderSubmit$Contract
 */
 export interface RespPurchaseOrderSubmit$Contract {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -5031,14 +4972,13 @@ export interface RespPurchaseOrderSubmit$Contract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderChangeFields
 */
 export interface RespPurchaseOrderChangeFields {
-    
+
     /**
      * 业务字段
      * @type {string}
@@ -5075,7 +5015,7 @@ export interface RespPurchaseOrderChangeFields {
     unit?: string
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof RespPurchaseOrderChangeFields
      */
@@ -5083,14 +5023,13 @@ export interface RespPurchaseOrderChangeFields {
 
 }
 
-
 /**
 * 合同变更关系表
 * @export
 * @interface RespContractChangeRelationship
 */
 export interface RespContractChangeRelationship {
-    
+
     /**
      * 合同类别id
      * @type {number | string}
@@ -5121,14 +5060,13 @@ export interface RespContractChangeRelationship {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderChangeConfirmInfo
 */
 export interface RespPurchaseOrderChangeConfirmInfo {
-    
+
     /**
      * 项目id
      * @type {number | string}
@@ -5173,14 +5111,13 @@ export interface RespPurchaseOrderChangeConfirmInfo {
 
 }
 
-
 /**
 * 采购订单主信息
 * @export
 * @interface PurchaseOrder
 */
 export interface PurchaseOrder {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -5246,17 +5183,17 @@ export interface PurchaseOrder {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof PurchaseOrder
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
      * 剩余可支付额度
-     * @type {number}
+     * @type {number | string}
      * @memberof PurchaseOrder
      */
-    poBalance?: number
+    poBalance?: number | string
 
     /**
      * 状态：1-待提交;2-采购单待确认;3-变更待确认;4-采购中;5-采购单完成;6-采购单关闭
@@ -5379,14 +5316,13 @@ export interface PurchaseOrder {
 
 }
 
-
 /**
 * 合同信息
 * @export
 * @interface RespPurchaseOrderContract
 */
 export interface RespPurchaseOrderContract {
-    
+
     /**
      * 关联id
      * @type {number | string}
@@ -5550,14 +5486,13 @@ export interface RespPurchaseOrderContract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderCrm
 */
 export interface RespPurchaseOrderCrm {
-    
+
     /**
      * 合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -5567,14 +5502,13 @@ export interface RespPurchaseOrderCrm {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderCrmSearch
 */
 export interface ReqPurchaseOrderCrmSearch {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -5612,65 +5546,63 @@ export interface ReqPurchaseOrderCrmSearch {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespPurchaseOrderCrmPage
 */
 export interface IPageRespPurchaseOrderCrmPage {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespPurchaseOrderCrmPage>}
-     * @memberof IPageRespPurchaseOrderCrmPage
-     */
-    records: Array<RespPurchaseOrderCrmPage>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespPurchaseOrderCrmPage
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespPurchaseOrderCrmPage>}
+     * @memberof IPageRespPurchaseOrderCrmPage
+     */
+    records: Array<RespPurchaseOrderCrmPage>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespPurchaseOrderCrmPage
+     */
+    hitCount: boolean
 
 }
-
 
 /**
 * 合同份数
@@ -5678,7 +5610,7 @@ export interface IPageRespPurchaseOrderCrmPage {
 * @interface RespContractTypeNumber
 */
 export interface RespContractTypeNumber {
-    
+
     /**
      * 合同类型id
      * @type {number | string}
@@ -5702,14 +5634,13 @@ export interface RespContractTypeNumber {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderCrmPage
 */
 export interface RespPurchaseOrderCrmPage {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -5775,17 +5706,17 @@ export interface RespPurchaseOrderCrmPage {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPurchaseOrderCrmPage
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
      * 剩余采购额度
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPurchaseOrderCrmPage
      */
-    poBalance?: number
+    poBalance?: number | string
 
     /**
      * 状态：1-待提交;2-采购单待确认;3-变更待确认;4-采购中;5-采购单完成;6-采购单关闭
@@ -5915,14 +5846,13 @@ export interface RespPurchaseOrderCrmPage {
 
 }
 
-
 /**
 * 采购单变更记录
 * @export
 * @interface PoChange
 */
 export interface PoChange {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -6037,14 +5967,13 @@ export interface PoChange {
 
 }
 
-
 /**
 * 支付单
 * @export
 * @interface RespPayOrderDetail
 */
 export interface RespPayOrderDetail {
-    
+
     /**
      * id
      * @type {number | string}
@@ -6103,10 +6032,10 @@ export interface RespPayOrderDetail {
 
     /**
      * 申请金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderDetail
      */
-    applyAmount?: number
+    applyAmount?: number | string
 
     /**
      * 申请日期(时间)
@@ -6117,31 +6046,31 @@ export interface RespPayOrderDetail {
 
     /**
      * 首付款
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderDetail
      */
-    downPaymentAmount?: number
+    downPaymentAmount?: number | string
 
     /**
      * 剩余货款
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderDetail
      */
-    arrearAmount?: number
+    arrearAmount?: number | string
 
     /**
      * 服务费
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderDetail
      */
-    feeAmount?: number
+    feeAmount?: number | string
 
     /**
      * 每期服务费
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderDetail
      */
-    feeAmountPer?: number
+    feeAmountPer?: number | string
 
     /**
      * 还款方式：1-一次性还本付息； 默认1 (暂时用不到)
@@ -6367,14 +6296,13 @@ export interface RespPayOrderDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderInfo
 */
 export interface RespPurchaseOrderInfo {
-    
+
     /**
      * 采购单合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -6398,14 +6326,13 @@ export interface RespPurchaseOrderInfo {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderConfirm
 */
 export interface RespPurchaseOrderConfirm {
-    
+
     /**
      * 采购单合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -6415,14 +6342,13 @@ export interface RespPurchaseOrderConfirm {
 
 }
 
-
 /**
 * 采购单变更合同信息
 * @export
 * @interface RespPoChangeContract
 */
 export interface RespPoChangeContract {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -6523,14 +6449,13 @@ export interface RespPoChangeContract {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrderChangeConfirm
 */
 export interface RespPurchaseOrderChangeConfirm {
-    
+
     /**
      * 采购单变更字段内容信息
      * @type {Array<RespPurchaseOrderChangeFields>}
@@ -6547,14 +6472,13 @@ export interface RespPurchaseOrderChangeConfirm {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderSearch
 */
 export interface ReqPurchaseOrderSearch {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -6676,73 +6600,71 @@ export interface ReqPurchaseOrderSearch {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespPurchaseOrder
 */
 export interface IPageRespPurchaseOrder {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespPurchaseOrder>}
-     * @memberof IPageRespPurchaseOrder
-     */
-    records: Array<RespPurchaseOrder>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespPurchaseOrder
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespPurchaseOrder
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespPurchaseOrder>}
+     * @memberof IPageRespPurchaseOrder
+     */
+    records: Array<RespPurchaseOrder>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespPurchaseOrder
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPurchaseOrder
 */
 export interface RespPurchaseOrder {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -6808,17 +6730,17 @@ export interface RespPurchaseOrder {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPurchaseOrder
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
      * 剩余可采购额度
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPurchaseOrder
      */
-    poBalance?: number
+    poBalance?: number | string
 
     /**
      * 状态：1-待提交;2-采购单待确认;3-变更待确认;4-采购中;5-采购单完成;6-采购单关闭
@@ -6948,14 +6870,13 @@ export interface RespPurchaseOrder {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderAppletsSearch
 */
 export interface ReqPurchaseOrderAppletsSearch {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -6986,14 +6907,13 @@ export interface ReqPurchaseOrderAppletsSearch {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPurchaseOrderContractQuery
 */
 export interface ReqPurchaseOrderContractQuery {
-    
+
     /**
      * 采购单id
      * @type {number | string}
@@ -7059,14 +6979,13 @@ export interface ReqPurchaseOrderContractQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqBasePage
 */
 export interface ReqBasePage {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -7083,93 +7002,92 @@ export interface ReqBasePage {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqPaymentOrderQuery
 */
 export interface ReqPaymentOrderQuery {
-    
+
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     startApplyDate?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     endApplyDate?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     paymentOrderNo?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     purchaseOrderNo?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     purchaseOrderName?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     dealerCompanyName?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     deptName?: string
 
     /**
-     * 
+     *
      * @type {Array<number | string>}
      * @memberof ReqPaymentOrderQuery
      */
     status?: Array<number | string>
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ReqPaymentOrderQuery
      */
     userId?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ReqPaymentOrderQuery
      */
     companyId?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ReqPaymentOrderQuery
      */
     customerUserId?: string
 
     /**
-     * 
+     *
      * @type {Array<number | string>}
      * @memberof ReqPaymentOrderQuery
      */
@@ -7219,73 +7137,71 @@ export interface ReqPaymentOrderQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespPaymentOrders
 */
 export interface IPageRespPaymentOrders {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespPaymentOrders>}
-     * @memberof IPageRespPaymentOrders
-     */
-    records: Array<RespPaymentOrders>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespPaymentOrders
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespPaymentOrders
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespPaymentOrders>}
+     * @memberof IPageRespPaymentOrders
+     */
+    records: Array<RespPaymentOrders>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespPaymentOrders
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPaymentOrders
 */
 export interface RespPaymentOrders {
-    
+
     /**
      * 支付单id
      * @type {number | string}
@@ -7386,7 +7302,7 @@ export interface RespPaymentOrders {
 	 * 11-支付单完成;
 	 * 12-支付单关闭;
 	 * 13-支付单取消;
-	
+
      * @type {number | string}
      * @memberof RespPaymentOrders
      */
@@ -7422,14 +7338,13 @@ export interface RespPaymentOrders {
 
 }
 
-
 /**
 * 剩余货款账单明细
 * @export
 * @interface Fund
 */
 export interface Fund {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -7446,10 +7361,10 @@ export interface Fund {
 
     /**
      * 支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof Fund
      */
-    paymentAmount?: number
+    paymentAmount?: number | string
 
     /**
      * 还款类型：1-首付款；2-剩余货款；3-服务费；
@@ -7495,10 +7410,10 @@ export interface Fund {
 
     /**
      * 实际支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof Fund
      */
-    paidAmount?: number
+    paidAmount?: number | string
 
     /**
      * 实际支付日期
@@ -7556,8 +7471,21 @@ export interface Fund {
      */
     deleted?: boolean
 
-}
+    /**
+     * (应还3日前)邮件状态 1:待投递 2：已投递 3：投递失败
+     * @type {number | string}
+     * @memberof Fund
+     */
+    threeDayEmailStatus?: number | string
 
+    /**
+     * (应还当日) 1:待投递 2：已投递 3：投递失败
+     * @type {number | string}
+     * @memberof Fund
+     */
+    currDayEmailStatus?: number | string
+
+}
 
 /**
 * 账单列表
@@ -7565,7 +7493,7 @@ export interface Fund {
 * @interface RespFundDetailPage
 */
 export interface RespFundDetailPage {
-    
+
     /**
      * 服务费账单列表
      * @type {Array<Fund>}
@@ -7575,20 +7503,19 @@ export interface RespFundDetailPage {
 
     /**
      * 当前服务费合计
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundDetailPage
      */
-    totalServiceAmount: number
+    totalServiceAmount: number | string
 
     /**
      * 已成功支付服务费合计
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundDetailPage
      */
-    totalPaidAmount: number
+    totalPaidAmount: number | string
 
 }
-
 
 /**
 * 到货金额
@@ -7596,23 +7523,22 @@ export interface RespFundDetailPage {
 * @interface RespGoodsAmount
 */
 export interface RespGoodsAmount {
-    
+
     /**
      * 应到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoodsAmount
      */
-    totalAmount?: number
+    totalAmount?: number | string
 
     /**
      * 已到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoodsAmount
      */
-    goodsAmount?: number
+    goodsAmount?: number | string
 
 }
-
 
 /**
 * 采购单详情
@@ -7620,7 +7546,7 @@ export interface RespGoodsAmount {
 * @interface RespPayOrderPoDetail
 */
 export interface RespPayOrderPoDetail {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -7630,10 +7556,10 @@ export interface RespPayOrderPoDetail {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderPoDetail
      */
-    poAmount?: number
+    poAmount?: number | string
 
     /**
      * 采购批次
@@ -7658,10 +7584,10 @@ export interface RespPayOrderPoDetail {
 
     /**
      * 经销商预付款比例
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPayOrderPoDetail
      */
-    prePercent?: number
+    prePercent?: number | string
 
     /**
      * 剩余货款支付周期
@@ -7686,14 +7612,13 @@ export interface RespPayOrderPoDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPaymentOrderDetail
 */
 export interface RespPaymentOrderDetail {
-    
+
     /**
      * 上游可支付标识：0-不可支付，1-可支付
      * @type {number | string}
@@ -7752,14 +7677,13 @@ export interface RespPaymentOrderDetail {
 
 }
 
-
 /**
 * 项目信息
 * @export
 * @interface RespProjectInfo
 */
 export interface RespProjectInfo {
-    
+
     /**
      * 项目名称
      * @type {string}
@@ -7783,20 +7707,19 @@ export interface RespProjectInfo {
 
     /**
      * 银行承兑执行费率
-     * @type {number}
+     * @type {number | string}
      * @memberof RespProjectInfo
      */
-    acceptBankRate?: number
+    acceptBankRate?: number | string
 
     /**
      * 银行转账执行费率
-     * @type {number}
+     * @type {number | string}
      * @memberof RespProjectInfo
      */
-    transferBankRate?: number
+    transferBankRate?: number | string
 
 }
-
 
 /**
 * 上游支付金额
@@ -7804,23 +7727,22 @@ export interface RespProjectInfo {
 * @interface RespSupplierAmount
 */
 export interface RespSupplierAmount {
-    
-    /**
-     * 
-     * @type {number}
-     * @memberof RespSupplierAmount
-     */
-    totalAmount?: number
 
     /**
-     * 
-     * @type {number}
+     *
+     * @type {number | string}
      * @memberof RespSupplierAmount
      */
-    paidAmount?: number
+    totalAmount?: number | string
+
+    /**
+     *
+     * @type {number | string}
+     * @memberof RespSupplierAmount
+     */
+    paidAmount?: number | string
 
 }
-
 
 /**
 * 采购明细
@@ -7828,16 +7750,16 @@ export interface RespSupplierAmount {
 * @interface Detailed
 */
 export interface Detailed {
-    
+
     /**
-     * 
+     *
      * @type {string}
      * @memberof Detailed
      */
     fileUrl?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof Detailed
      */
@@ -7845,14 +7767,13 @@ export interface Detailed {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespGoodsInfo
 */
 export interface RespGoodsInfo {
-    
+
     /**
      * 货物id
      * @type {number | string}
@@ -7876,24 +7797,24 @@ export interface RespGoodsInfo {
 
     /**
      * 应到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoodsInfo
      */
-    totalAmount: number
+    totalAmount: number | string
 
     /**
      * 剩余金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoodsInfo
      */
-    surplusAmount: number
+    surplusAmount: number | string
 
     /**
      * 已到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoodsInfo
      */
-    goodsAmount: number
+    goodsAmount: number | string
 
     /**
      * 上游供应商名称
@@ -7911,23 +7832,22 @@ export interface RespGoodsInfo {
 
 }
 
-
 /**
 * 货物凭证
 * @export
 * @interface GoodsVoucher
 */
 export interface GoodsVoucher {
-    
+
     /**
-     * 
+     *
      * @type {string}
      * @memberof GoodsVoucher
      */
     fileUrl?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof GoodsVoucher
      */
@@ -7935,14 +7855,13 @@ export interface GoodsVoucher {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespGoods
 */
 export interface RespGoods {
-    
+
     /**
      * 货物id
      * @type {number | string}
@@ -7952,17 +7871,17 @@ export interface RespGoods {
 
     /**
      * 应到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoods
      */
-    totalAmount: number
+    totalAmount: number | string
 
     /**
      * 已到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoods
      */
-    goodsAmount: number
+    goodsAmount: number | string
 
     /**
      * 到货明细
@@ -7973,13 +7892,12 @@ export interface RespGoods {
 
     /**
      * 进度
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoods
      */
-    progress: number
+    progress: number | string
 
 }
-
 
 /**
 * 到货明细
@@ -7987,7 +7905,7 @@ export interface RespGoods {
 * @interface RespGoodsDetail
 */
 export interface RespGoodsDetail {
-    
+
     /**
      * 货物明细id
      * @type {number | string}
@@ -7997,10 +7915,10 @@ export interface RespGoodsDetail {
 
     /**
      * 到货金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespGoodsDetail
      */
-    goodsAmount?: number
+    goodsAmount?: number | string
 
     /**
      * 创建时间
@@ -8039,14 +7957,13 @@ export interface RespGoodsDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespAppPaymentOrder
 */
 export interface RespAppPaymentOrder {
-    
+
     /**
      * 支付单id
      * @type {number | string}
@@ -8098,10 +8015,10 @@ export interface RespAppPaymentOrder {
 
     /**
      * 采购单金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
-    poAmount: number
+    poAmount: number | string
 
     /**
      * 剩余货款支付id
@@ -8112,10 +8029,10 @@ export interface RespAppPaymentOrder {
 
     /**
      * 剩余货款
-     * @type {number}
+     * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
-    arrearAmount: number
+    arrearAmount: number | string
 
     /**
      * 剩余货款支付时间
@@ -8133,10 +8050,10 @@ export interface RespAppPaymentOrder {
 
     /**
      * 首付款
-     * @type {number}
+     * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
-    downPaymentAmount: number
+    downPaymentAmount: number | string
 
     /**
      * 首付款应支付时间
@@ -8147,10 +8064,10 @@ export interface RespAppPaymentOrder {
 
     /**
      * 经销商预付款比例
-     * @type {number}
+     * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
-    prePercent: number
+    prePercent: number | string
 
     /**
      * 剩余货款支付周期
@@ -8231,10 +8148,10 @@ export interface RespAppPaymentOrder {
 
     /**
      * 申请支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespAppPaymentOrder
      */
-    applyAmount: number
+    applyAmount: number | string
 
     /**
      * 采购单是否签署 true：已签署 false：未签署
@@ -8313,16 +8230,29 @@ export interface RespAppPaymentOrder {
      */
     specialRemark: string
 
+    /**
+     * 剩余应支付账单金额
+     * @type {number | string}
+     * @memberof RespAppPaymentOrder
+     */
+    noPayAmount: number | string
+
+    /**
+     * 最近应该支付日期
+     * @type {string}
+     * @memberof RespAppPaymentOrder
+     */
+    payableDate: string
+
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespUserCurMonFundStatic
 */
 export interface RespUserCurMonFundStatic {
-    
+
     /**
      * 当前月份
      * @type {number | string}
@@ -8332,10 +8262,10 @@ export interface RespUserCurMonFundStatic {
 
     /**
      * 首付款待支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUserCurMonFundStatic
      */
-    downPaymentAmount: number
+    downPaymentAmount: number | string
 
     /**
      * 首付款待支付笔数
@@ -8346,10 +8276,10 @@ export interface RespUserCurMonFundStatic {
 
     /**
      * 剩余货款待支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUserCurMonFundStatic
      */
-    arrearAmount: number
+    arrearAmount: number | string
 
     /**
      * 剩余货款待支付笔数
@@ -8360,10 +8290,10 @@ export interface RespUserCurMonFundStatic {
 
     /**
      * 服务费待支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespUserCurMonFundStatic
      */
-    feeAmount: number
+    feeAmount: number | string
 
     /**
      * 服务费待支付笔数
@@ -8388,14 +8318,13 @@ export interface RespUserCurMonFundStatic {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqServiceFeeQuery
 */
 export interface ReqServiceFeeQuery {
-    
+
     /**
      * 支付单
      * @type {number | string}
@@ -8405,24 +8334,24 @@ export interface ReqServiceFeeQuery {
 
     /**
      * 总额款
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqServiceFeeQuery
      */
-    totalAmount?: number
+    totalAmount?: number | string
 
     /**
      * 首付款
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqServiceFeeQuery
      */
-    downpaymentAmount?: number
+    downpaymentAmount?: number | string
 
     /**
      * 费率
-     * @type {number}
+     * @type {number | string}
      * @memberof ReqServiceFeeQuery
      */
-    serviceFeeRate?: number
+    serviceFeeRate?: number | string
 
     /**
      * 申请日期
@@ -8447,45 +8376,43 @@ export interface ReqServiceFeeQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespServiceFeeResult
 */
 export interface RespServiceFeeResult {
-    
+
     /**
      * 服务费
-     * @type {number}
+     * @type {number | string}
      * @memberof RespServiceFeeResult
      */
-    feeAmount: number
+    feeAmount: number | string
 
     /**
      * 每期服务费
-     * @type {number}
+     * @type {number | string}
      * @memberof RespServiceFeeResult
      */
-    feeAmountPer: number
+    feeAmountPer: number | string
 
     /**
      * 剩余货款
-     * @type {number}
+     * @type {number | string}
      * @memberof RespServiceFeeResult
      */
-    arrearAmount: number
+    arrearAmount: number | string
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundStatisticsQuery
 */
 export interface ReqFundStatisticsQuery {
-    
+
     /**
      * 支付单
      * @type {number | string}
@@ -8523,14 +8450,13 @@ export interface ReqFundStatisticsQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespFundStatisticsResult
 */
 export interface RespFundStatisticsResult {
-    
+
     /**
      * 统计月份
      * @type {string}
@@ -8540,24 +8466,24 @@ export interface RespFundStatisticsResult {
 
     /**
      * 首付款汇总额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundStatisticsResult
      */
-    totalDownpaymentAmount: number
+    totalDownpaymentAmount: number | string
 
     /**
      * 服务费汇总额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundStatisticsResult
      */
-    totalServiceFeeAmount: number
+    totalServiceFeeAmount: number | string
 
     /**
      * 剩余货款汇总额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundStatisticsResult
      */
-    totalArrearAmount: number
+    totalArrearAmount: number | string
 
     /**
      * 首付款笔数
@@ -8582,14 +8508,13 @@ export interface RespFundStatisticsResult {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundQuery
 */
 export interface ReqFundQuery {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -8767,73 +8692,71 @@ export interface ReqFundQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespFundResult
 */
 export interface IPageRespFundResult {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespFundResult>}
-     * @memberof IPageRespFundResult
-     */
-    records: Array<RespFundResult>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespFundResult
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespFundResult
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespFundResult>}
+     * @memberof IPageRespFundResult
+     */
+    records: Array<RespFundResult>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespFundResult
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespFundResult
 */
 export interface RespFundResult {
-    
+
     /**
      * 账单Id
      * @type {number | string}
@@ -8892,10 +8815,10 @@ export interface RespFundResult {
 
     /**
      * 实际支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundResult
      */
-    paidAmount: number
+    paidAmount: number | string
 
     /**
      * 实际支付日期
@@ -8927,10 +8850,10 @@ export interface RespFundResult {
 
     /**
      * 应支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundResult
      */
-    paymentAmount: number
+    paymentAmount: number | string
 
     /**
      * 应支付日期
@@ -9023,75 +8946,87 @@ export interface RespFundResult {
      */
     attachDocList: Array<AttachDoc>
 
+    /**
+     * (应还3日前)邮件状态 1:待投递 2：已投递 3：投递失败
+     * @type {number | string}
+     * @memberof RespFundResult
+     */
+    threeDayEmailStatus: number | string
+
+    /**
+     * (应还当日) 1:待投递 2：已投递 3：投递失败
+     * @type {number | string}
+     * @memberof RespFundResult
+     */
+    currDayEmailStatus: number | string
+
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespYear
 */
 export interface IPageRespYear {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespYear
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespYear
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespYear>}
-     * @memberof IPageRespYear
-     */
-    records: Array<RespYear>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespYear
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespYear
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespYear
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespYear
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespYear>}
+     * @memberof IPageRespYear
+     */
+    records: Array<RespYear>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespYear
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespYear
 */
 export interface RespYear {
-    
+
     /**
      * 年份
      * @type {number | string}
@@ -9129,14 +9064,13 @@ export interface RespYear {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface HolidayRecord
 */
 export interface HolidayRecord {
-    
+
     /**
      * id
      * @type {number | string}
@@ -9174,73 +9108,71 @@ export interface HolidayRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageHolidayRecord
 */
 export interface IPageHolidayRecord {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<HolidayRecord>}
-     * @memberof IPageHolidayRecord
-     */
-    records: Array<HolidayRecord>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageHolidayRecord
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageHolidayRecord
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<HolidayRecord>}
+     * @memberof IPageHolidayRecord
+     */
+    records: Array<HolidayRecord>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageHolidayRecord
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespCurrentMonthFundStatic
 */
 export interface RespCurrentMonthFundStatic {
-    
+
     /**
      * 当前月份
      * @type {number | string}
@@ -9257,14 +9189,13 @@ export interface RespCurrentMonthFundStatic {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespPaymentFundDetail
 */
 export interface RespPaymentFundDetail {
-    
+
     /**
      * 采购单名称
      * @type {string}
@@ -9288,24 +9219,24 @@ export interface RespPaymentFundDetail {
 
     /**
      * 已支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPaymentFundDetail
      */
-    payAmount: number
+    payAmount: number | string
 
     /**
      * 待支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPaymentFundDetail
      */
-    noPayAmount: number
+    noPayAmount: number | string
 
     /**
      * 支付进度
-     * @type {number}
+     * @type {number | string}
      * @memberof RespPaymentFundDetail
      */
-    payProcess: number
+    payProcess: number | string
 
     /**
      * 最近应支付日期
@@ -9323,14 +9254,13 @@ export interface RespPaymentFundDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundListQuery
 */
 export interface ReqFundListQuery {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -9431,14 +9361,13 @@ export interface ReqFundListQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundSimpleQuery
 */
 export interface ReqFundSimpleQuery {
-    
+
     /**
      * 账单Id
      * @type {number | string}
@@ -9455,14 +9384,13 @@ export interface ReqFundSimpleQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundAttachDetail
 */
 export interface ReqFundAttachDetail {
-    
+
     /**
      * 业务Id
      * @type {number | string}
@@ -9479,14 +9407,13 @@ export interface ReqFundAttachDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqFundMonthBill
 */
 export interface ReqFundMonthBill {
-    
+
     /**
      * 年月 格式：yyyy-MM
      * @type {string}
@@ -9503,14 +9430,13 @@ export interface ReqFundMonthBill {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespFundBill
 */
 export interface RespFundBill {
-    
+
     /**
      * 账单状态 1：无账单 2：进行中 3：已结清 4：已取消
      * @type {number | string}
@@ -9520,24 +9446,24 @@ export interface RespFundBill {
 
     /**
      * 账单总金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundBill
      */
-    totalAmount: number
+    totalAmount: number | string
 
     /**
      * 已支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundBill
      */
-    payAmount: number
+    payAmount: number | string
 
     /**
      * 待支付金额
-     * @type {number}
+     * @type {number | string}
      * @memberof RespFundBill
      */
-    noPayAmount: number
+    noPayAmount: number | string
 
     /**
      * 最近应支付日期
@@ -9555,14 +9481,13 @@ export interface RespFundBill {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractStatusStatic
 */
 export interface RespContractStatusStatic {
-    
+
     /**
      * 待分财审核数量
      * @type {number | string}
@@ -9586,14 +9511,13 @@ export interface RespContractStatusStatic {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractPageQuery
 */
 export interface ReqContractPageQuery {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -9729,73 +9653,71 @@ export interface ReqContractPageQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespContract
 */
 export interface IPageRespContract {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContract
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContract
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespContract>}
-     * @memberof IPageRespContract
-     */
-    records: Array<RespContract>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContract
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespContract
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespContract
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContract
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespContract>}
+     * @memberof IPageRespContract
+     */
+    records: Array<RespContract>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespContract
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqContractListQuery
 */
 export interface ReqContractListQuery {
-    
+
     /**
      * 合同名称
      * @type {string}
@@ -9833,14 +9755,13 @@ export interface ReqContractListQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractEditNumber
 */
 export interface RespContractEditNumber {
-    
+
     /**
      * 分财修订数量
      * @type {number | string}
@@ -9864,14 +9785,13 @@ export interface RespContractEditNumber {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ContractPic
 */
 export interface ContractPic {
-    
+
     /**
      * 主键id
      * @type {number | string}
@@ -9923,14 +9843,13 @@ export interface ContractPic {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqTemplateQuery
 */
 export interface ReqTemplateQuery {
-    
+
     /**
      * 合同类型权限 1：系统 2：业务
      * @type {number | string}
@@ -9961,73 +9880,71 @@ export interface ReqTemplateQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespContractTemplate
 */
 export interface IPageRespContractTemplate {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespContractTemplate>}
-     * @memberof IPageRespContractTemplate
-     */
-    records: Array<RespContractTemplate>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespContractTemplate
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespContractTemplate
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespContractTemplate>}
+     * @memberof IPageRespContractTemplate
+     */
+    records: Array<RespContractTemplate>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespContractTemplate
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractTemplate
 */
 export interface RespContractTemplate {
-    
+
     /**
      * 模板id
      * @type {number | string}
@@ -10100,14 +10017,13 @@ export interface RespContractTemplate {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractTemplateList
 */
 export interface RespContractTemplateList {
-    
+
     /**
      * id
      * @type {number | string}
@@ -10124,107 +10040,105 @@ export interface RespContractTemplateList {
 
 }
 
-
 /**
 * 签署方设置
 * @export
 * @interface ContractTemplateSigner
 */
 export interface ContractTemplateSigner {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateSigner
      */
     id?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateSigner
      */
     templateVersionId?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateSigner
      */
     type?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateSigner
      */
     signerType?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateSigner
      */
     signerName?: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateSigner
      */
     paramId?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateSigner
      */
     caId?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateSigner
      */
     paramGroupName?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateSigner
      */
     agent?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateSigner
      */
     signerDemand?: string
 
     /**
-     * 
+     *
      * @type {Array<string>}
      * @memberof ContractTemplateSigner
      */
     signatureParam?: Array<string>
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateSigner
      */
     createTime?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateSigner
      */
     createBy?: string
 
 }
-
 
 /**
 * 属性参数（json数组）
@@ -10232,163 +10146,163 @@ export interface ContractTemplateSigner {
 * @interface ContractTemplateTypeParam
 */
 export interface ContractTemplateTypeParam {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     id?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     paramKey?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     paramValue?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     paramName?: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     signerType?: number | string
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ContractTemplateTypeParam
      */
     required?: boolean
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ContractTemplateTypeParam
      */
     modify?: boolean
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof ContractTemplateTypeParam
      */
     have?: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     dataSources?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     calculationRules?: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     inputStyle?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     unit?: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     maxLength?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     groupName?: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     groupId?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     checkRule?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     checkNote?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     remark?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     describe?: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
     decimal?: number | string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     createTime?: string
 
     /**
-     * 
+     *
      * @type {string}
      * @memberof ContractTemplateTypeParam
      */
     createBy?: string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof ContractTemplateTypeParam
      */
@@ -10396,14 +10310,13 @@ export interface ContractTemplateTypeParam {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractTemplateInfo
 */
 export interface RespContractTemplateInfo {
-    
+
     /**
      * 模板id(修改时传)
      * @type {number | string}
@@ -10469,73 +10382,71 @@ export interface RespContractTemplateInfo {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespContractTemplateVersion
 */
 export interface IPageRespContractTemplateVersion {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespContractTemplateVersion>}
-     * @memberof IPageRespContractTemplateVersion
-     */
-    records: Array<RespContractTemplateVersion>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespContractTemplateVersion
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespContractTemplateVersion
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespContractTemplateVersion>}
+     * @memberof IPageRespContractTemplateVersion
+     */
+    records: Array<RespContractTemplateVersion>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespContractTemplateVersion
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractTemplateVersion
 */
 export interface RespContractTemplateVersion {
-    
+
     /**
      * 版本id
      * @type {number | string}
@@ -10573,14 +10484,13 @@ export interface RespContractTemplateVersion {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespTemplateVersionParam
 */
 export interface RespTemplateVersionParam {
-    
+
     /**
      * 内容
      * @type {string}
@@ -10597,14 +10507,13 @@ export interface RespTemplateVersionParam {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespTemplateStatus
 */
 export interface RespTemplateStatus {
-    
+
     /**
      * 状态0禁用，1启用
      * @type {number | string}
@@ -10621,14 +10530,13 @@ export interface RespTemplateStatus {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractTemplateType
 */
 export interface RespContractTemplateType {
-    
+
     /**
      * 类型id
      * @type {number | string}
@@ -10652,14 +10560,13 @@ export interface RespContractTemplateType {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractTemplateTypeParam
 */
 export interface RespContractTemplateTypeParam {
-    
+
     /**
      * 参数id
      * @type {string}
@@ -10804,14 +10711,13 @@ export interface RespContractTemplateTypeParam {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespConfirmationSignDetail
 */
 export interface RespConfirmationSignDetail {
-    
+
     /**
      * 签署链接
      * @type {string}
@@ -10827,14 +10733,14 @@ export interface RespConfirmationSignDetail {
     fundId: number | string
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof RespConfirmationSignDetail
      */
     sign: boolean
 
     /**
-     * 
+     *
      * @type {boolean}
      * @memberof RespConfirmationSignDetail
      */
@@ -10842,14 +10748,13 @@ export interface RespConfirmationSignDetail {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ContractSign
 */
 export interface ContractSign {
-    
+
     /**
      * 合同签署id
      * @type {number | string}
@@ -11027,14 +10932,13 @@ export interface ContractSign {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespConfirmationContractSign
 */
 export interface RespConfirmationContractSign {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -11128,14 +11032,13 @@ export interface RespConfirmationContractSign {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractCrmSignHistory
 */
 export interface RespContractCrmSignHistory {
-    
+
     /**
      * 操作人员
      * @type {string}
@@ -11257,14 +11160,13 @@ export interface RespContractCrmSignHistory {
 
 }
 
-
 /**
 * 合同编辑记录
 * @export
 * @interface RespContractSignHistory
 */
 export interface RespContractSignHistory {
-    
+
     /**
      * 操作人员
      * @type {string}
@@ -11365,14 +11267,13 @@ export interface RespContractSignHistory {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespCRMContractSignHistory
 */
 export interface RespCRMContractSignHistory {
-    
+
     /**
      * 审核记录
      * @type {Array<RespContractCrmSignHistory>}
@@ -11389,14 +11290,13 @@ export interface RespCRMContractSignHistory {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractRecord
 */
 export interface RespContractRecord {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -11455,14 +11355,13 @@ export interface RespContractRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqCompareContractRecord
 */
 export interface ReqCompareContractRecord {
-    
+
     /**
      * 最新合同内容记录id
      * @type {number | string}
@@ -11479,14 +11378,13 @@ export interface ReqCompareContractRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespCompareContractRecord
 */
 export interface RespCompareContractRecord {
-    
+
     /**
      * 当前合同内容
      * @type {string}
@@ -11503,14 +11401,13 @@ export interface RespCompareContractRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespContractCheckHistoryRecord
 */
 export interface RespContractCheckHistoryRecord {
-    
+
     /**
      * 合同id
      * @type {number | string}
@@ -11519,7 +11416,7 @@ export interface RespContractCheckHistoryRecord {
     contractId: number | string
 
     /**
-     * 
+     *
      * @type {Array<RespContractSignHistory>}
      * @memberof RespContractCheckHistoryRecord
      */
@@ -11527,14 +11424,13 @@ export interface RespContractCheckHistoryRecord {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqCaSealUrl
 */
 export interface ReqCaSealUrl {
-    
+
     /**
      * 账号Id
      * @type {string}
@@ -11558,14 +11454,13 @@ export interface ReqCaSealUrl {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface ReqCaQuery
 */
 export interface ReqCaQuery {
-    
+
     /**
      * 页码
      * @type {number | string}
@@ -11659,73 +11554,71 @@ export interface ReqCaQuery {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespCAOrg
 */
 export interface IPageRespCAOrg {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespCAOrg>}
-     * @memberof IPageRespCAOrg
-     */
-    records: Array<RespCAOrg>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespCAOrg
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespCAOrg
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespCAOrg>}
+     * @memberof IPageRespCAOrg
+     */
+    records: Array<RespCAOrg>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespCAOrg
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespCAOrg
 */
 export interface RespCAOrg {
-    
+
     /**
      * 企业CA认证id
      * @type {number | string}
@@ -11875,73 +11768,71 @@ export interface RespCAOrg {
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface IPageRespCAAccount
 */
 export interface IPageRespCAAccount {
-    
+
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
     current: number | string
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
     size: number | string
 
     /**
-     * 
-     * @type {Array<RespCAAccount>}
-     * @memberof IPageRespCAAccount
-     */
-    records: Array<RespCAAccount>
-
-    /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
-    pages: number | string
+    total: number | string
 
     /**
-     * 
-     * @type {boolean}
-     * @memberof IPageRespCAAccount
-     */
-    hitCount: boolean
-
-    /**
-     * 
+     *
      * @type {boolean}
      * @memberof IPageRespCAAccount
      */
     searchCount: boolean
 
     /**
-     * 
+     *
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
-    total: number | string
+    pages: number | string
+
+    /**
+     *
+     * @type {Array<RespCAAccount>}
+     * @memberof IPageRespCAAccount
+     */
+    records: Array<RespCAAccount>
+
+    /**
+     *
+     * @type {boolean}
+     * @memberof IPageRespCAAccount
+     */
+    hitCount: boolean
 
 }
 
-
 /**
-* 
+*
 * @export
 * @interface RespCAAccount
 */
 export interface RespCAAccount {
-    
+
     /**
      * CA认证id
      * @type {number | string}
