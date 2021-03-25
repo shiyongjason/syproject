@@ -18,8 +18,9 @@ var env = process.env.NODE_ENV === 'development'
     ? 'development' : (process.env.VUE_APP_TITLE === 'dev'
         ? 'dev' : process.env.VUE_APP_TITLE === 'test'
             ? 'test' : process.env.VUE_APP_TITLE === 'preview'
-                ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
-                    ? 'newtest' : 'production')
+                ? 'hcgtest' : process.env.VUE_APP_TITLE === 'hcgtest'
+                    ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
+                        ? 'newtest' : 'production')
 
 switch (env) {
     case 'development':
@@ -56,6 +57,21 @@ switch (env) {
         interfaceUrl = 'https://hbp-test.hosjoy.com/'
         ossUrl = 'https://route-test.hosjoy.com/'
         iframeUrl = 'https://crm-test.hosjoy.com/'
+        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
+        B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
+        fileUploadUrl = 'https://hbp-test.hosjoy.com/'
+        iotUrl = 'https://testiot.hosjoy.com:2286'
+        iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
+        ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
+        ossBucket = 'hosjoy-private-test'
+        ossOldBucket = 'hosjoy-oss-test'
+        ossRegion = 'oss-cn-hangzhou'
+        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
+        break
+    case 'hcgtest':
+        interfaceUrl = 'https://hbp-hcgtest.hosjoy.com/'
+        ossUrl = 'https://route-hcgtest.hosjoy.com/'
+        iframeUrl = 'https://crm-hcgtest.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         B2bUrl = 'https://b2b-gateway-test.hosjoy.com/'
         fileUploadUrl = 'https://hbp-test.hosjoy.com/'
