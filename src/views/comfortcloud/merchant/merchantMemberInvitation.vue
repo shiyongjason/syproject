@@ -27,7 +27,9 @@
                     </el-tag>
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="paginationBuy" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
+                                    :pagination="paginationBuy" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
                             </template>
@@ -37,14 +39,18 @@
                 <el-tab-pane label="已注册" name="1">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true' :pagination="paginationRegister" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                        <basicTable :tableLabel="tableRegisterLabel" :tableData="tableRegisterData" :isShowIndex='true'
+                                    :pagination="paginationRegister" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="已成交" name="2">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true' :pagination="paginationDone" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <basicTable :tableLabel="tableDoneLabel" :tableData="tableDoneData" :isShowIndex='true'
+                                    :pagination="paginationDone" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="rewardAmount" slot-scope="scope">
 
                                 <p @click="onEditMoney(scope.data.row)" class="colred">
@@ -64,7 +70,9 @@
                 <el-tab-pane label="会员变更记录" name="3">
                     <div class="page-body-cont">
                         <!-- 表格使用老毕的组件 -->
-                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false' :pagination="paginationChange" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="false">
+                        <basicTable :tableLabel="tableChangeList" :tableData="tableChangeData" :isShowIndex='false'
+                                    :pagination="paginationChange" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="false">
                         </basicTable>
                     </div>
                 </el-tab-pane>
@@ -79,12 +87,16 @@
                         <div class="page-body-cont-top-no-left">
                             <span>主营业务:</span>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
-                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon" :key="tag" :type="tag.type">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessCommon"
+                                        :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
                             </div>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
-                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn" :key="tag" :type="tag.type">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.businessOwn"
+                                        :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
                             </div>
@@ -92,21 +104,33 @@
                         <div class="page-body-cont-top-no-left">
                             <span>主营品牌:</span>
                             <div v-if="this.enterpriseInfoData.respCompanyCommonTagBO!=null">
-                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon" :key="tag" :type="tag.type">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsCommon"
+                                        :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
-                                <el-tag style="margin-left: 20px" v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn" :key="tag" :type="tag.type">
+                                <el-tag style="margin-left: 20px"
+                                        v-for="tag in this.enterpriseInfoData.respCompanyCommonTagBO.brandsOwn"
+                                        :key="tag" :type="tag.type">
                                     {{tag}}
                                 </el-tag>
                             </div>
                         </div>
                         <div class="page-body-cont-top-no-left">
                             <span>员工信息:</span>
-
+                            <basicTable :tableLabel="tableEmployeeLabel" :tableData="tableEmployeeData"
+                                        :isShowIndex='false' :pagination="paginationChange"
+                                        @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
+                                        :isAction="false">
+                                <template slot="role" slot-scope="scope">
+                                    {{scope.data.row.role===0?"管理员":"普通用户"}}
+                                </template>
+                            </basicTable>
                         </div>
                         <div class="page-body-cont-top-no-align-items">
                             <span>备注:</span>
-                            <el-input class="textarea" type="textarea" maxlength=500 :rows="10" placeholder="请输入内容" @blur="updateCompanyInfoRemark" v-model="enterpriseInfoData.remark">
+                            <el-input class="textarea" type="textarea" maxlength=500 :rows="10" placeholder="请输入内容"
+                                      @blur="updateCompanyInfoRemark" v-model="enterpriseInfoData.remark">
                             </el-input>
                         </div>
                     </div>
@@ -117,18 +141,25 @@
                 <el-tab-pane label="沟通记录" name="5">
                     <el-button type="primary" class="ml20" @click="onAddCommunicationRecord()">+ 新增记录</el-button>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true">
+                        <basicTable :tableLabel="communicationTableLabel"
+                                    :tableData="cloudMerchantMemberCommunicationList"
+                                    :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false'
+                                    :isAction="true">
                             <template slot="action" slot-scope="scope">
-                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
-                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑
+                                </el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除
+                                </el-button>
                             </template>
                         </basicTable>
                     </div>
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
-            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+        <el-dialog title="上传订单明细" :visible.sync="uploadShow" class="upload-show" width="800px"
+                   :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess"
+                       :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照订单明细模板内容导入数据，否则可能会出现导入异常</p>
@@ -146,15 +177,18 @@
                 </div>
             </el-dialog>
         </el-dialog>
-        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px" :close-on-click-modal="false">
-            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month" value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
+        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
+                   :close-on-click-modal="false">
+            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month"
+                            value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
             </el-date-picker>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editMonth(0)">取消</el-button>
                 <el-button type="primary" @click="editMonth(1)">确认</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="tagVisible" width="50%">
+        <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="tagVisible"
+                   width="50%">
             <div v-for="item in cloudMerchantTaglist" :key="item.id">
                 <h1>{{item.tagCategory}}</h1>
                 <div class="tag-cont">
@@ -168,14 +202,19 @@
                 <el-button type="primary" @click="editConform()">确认</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%">
-            <el-form ref="communicationRecordForm" :model="communicationRecordForm" :rules="communicationRecordFormRules" label-width="110px">
+        <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false
+                   :visible.sync="communicationRecordDialogVisible" width="50%">
+            <el-form ref="communicationRecordForm" :model="communicationRecordForm"
+                     :rules="communicationRecordFormRules" label-width="110px">
                 <el-form-item label="沟通日期：" prop="createTime">
-                    <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
+                    <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false
+                                    placeholder="沟通日期" value-format='yyyy-MM-dd'>
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="沟通结果：" prop="result">
-                    <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="500"></el-input>
+                    <el-input v-model="communicationRecordForm.communicationResult" type="textarea"
+                              :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%"
+                              show-word-limit maxlength="500"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -253,6 +292,12 @@ export default {
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
+            tableEmployeeLabel: [
+                { label: '角色', prop: 'role' },
+                { label: '员工微信昵称', prop: 'nickName', width: '220px' },
+                { label: '员工真实姓名', prop: 'remark', width: '220px' },
+                { label: '员工手机号', prop: 'phone' }
+            ],
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
                 { label: '型号', prop: 'specificationName', width: '220px' },
@@ -260,8 +305,7 @@ export default {
                 { label: '最近一次购买时间', prop: 'lastOrderTime', formatters: 'dateTime' },
                 { label: '累计购买订单数', prop: 'orderCount' },
                 { label: '累计购买件数', prop: 'productCount' },
-                { label: '累计购买金额', prop: 'orderAmount' },
-                { label: '预计补货时间', prop: 'replenishmentTime', formatters: 'dateTime' }
+                { label: '累计购买金额', prop: 'orderAmount' }
             ],
             tableChangeList: [
                 { label: '变更时间', prop: 'createTime', formatters: 'dateTime' },
@@ -334,6 +378,7 @@ export default {
             merchantmemberInvitationTotal: 'iotmerchantmemberInvitationTotal',
             merchantmemberData: 'iotmerchantmemberData',
             cloudMerchantTaglist: 'cloudMerchantTaglist',
+            companyEmployeeData: 'merchantCompanyEmployeeData',
             cloudMerchantMemberCommunicationList: 'cloudMerchantMemberCommunicationList',
             cloudMerchantMemberCommunicationListPagination: 'cloudMerchantMemberCommunicationListPagination'
         }),
@@ -393,6 +438,7 @@ export default {
             findMerchantMemberInvitationOrdersituation: 'findMerchantMemberInvitationOrdersituation',
             findCloudMerchantTaglist: 'findCloudMerchantTaglist',
             findMerchantMembersituation: 'findMerchantMembersituation',
+            findMerchantCompanyEmployee: 'findMerchantCompanyEmployee',
             findCloudMerchantMemberCommunicationList: 'findCloudMerchantMemberCommunicationList'
         }),
 
@@ -440,9 +486,9 @@ export default {
             }
             this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
         },
-        async requestMemberCommunicationList () {
-            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
-
+        async employeeData () {
+            await this.findMerchantCompanyEmployee({ 'companyCode ': this.$route.query.companyCode })
+            this.tableEmployeeData = this.companyEmployeeData
         },
         async showDliag (val) {
             await this.findCloudMerchantTaglist()
@@ -527,6 +573,7 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
             this.memberInfo()
+            this.employeeData()
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
@@ -722,7 +769,10 @@ export default {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberTag' })
         },
         goToDetail (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList', query: { phone: this.$route.query.phone } })
+            this.$router.push({
+                path: '/comfortCloudMerchant/merchantOrderManage/merchantOrderList',
+                query: { phone: this.$route.query.phone }
+            })
         },
         clearCommunicationRecordForm () {
             if (this.$refs['communicationRecordForm']) {
@@ -755,7 +805,8 @@ export default {
                     type: 'success',
                     message: '删除成功!'
                 })
-            }).catch(() => { })
+            }).catch(() => {
+            })
         },
         onCommunicationRecordCancel () {
             this.clearCommunicationRecordForm()
