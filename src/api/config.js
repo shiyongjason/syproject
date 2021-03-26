@@ -18,8 +18,8 @@ var env = process.env.NODE_ENV === 'development'
     ? 'development' : (process.env.VUE_APP_TITLE === 'dev'
         ? 'dev' : process.env.VUE_APP_TITLE === 'test'
             ? 'test' : process.env.VUE_APP_TITLE === 'preview'
-                ? 'hcgtest' : process.env.VUE_APP_TITLE === 'hcgtest'
-                    ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
+                ? 'preview' : process.env.VUE_APP_TITLE === 'hcgtest'
+                    ? 'hcgtest' : process.env.VUE_APP_TITLE === 'newtest'
                         ? 'newtest' : 'production')
 
 switch (env) {
