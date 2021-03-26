@@ -18,8 +18,7 @@ var env = process.env.NODE_ENV === 'development'
     ? 'development' : (process.env.VUE_APP_TITLE === 'dev'
         ? 'dev' : process.env.VUE_APP_TITLE === 'test'
             ? 'test' : process.env.VUE_APP_TITLE === 'preview'
-                ? 'preview' : process.env.VUE_APP_TITLE === 'newtest'
-                    ? 'newtest' : 'production')
+                ? 'preview' : 'production')
 
 switch (env) {
     case 'development':
@@ -62,21 +61,6 @@ switch (env) {
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ccpBaseUrl = 'https://ccp-test.hosjoy.com/'
-        ossBucket = 'hosjoy-private-test'
-        ossOldBucket = 'hosjoy-oss-test'
-        ossRegion = 'oss-cn-hangzhou'
-        ossAliyun = 'https://oss-aliyun-test.hosjoy.com/'
-        break
-    case 'newtest':
-        interfaceUrl = 'https://hbp-test245.hosjoy.com/'
-        ossUrl = 'https://route-test245.hosjoy.com/'
-        iframeUrl = 'https://crm-test.hosjoy.com/'
-        jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
-        B2bUrl = 'https://b2b-gateway-test245.hosjoy.com/'
-        fileUploadUrl = 'https://hbp-test245.hosjoy.com/'
-        iotUrl = 'https://testiot.hosjoy.com:2286'
-        iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
-        ccpBaseUrl = 'https://ccp-test245.hosjoy.com/'
         ossBucket = 'hosjoy-private-test'
         ossOldBucket = 'hosjoy-oss-test'
         ossRegion = 'oss-cn-hangzhou'
