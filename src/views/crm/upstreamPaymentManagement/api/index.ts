@@ -1,4 +1,4 @@
-import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo } from '@/interface/hbp-project'
+import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 /*
@@ -20,4 +20,8 @@ export const getLoanHandoverInfoApi: (paymentOrderId: string) => AxiosPromise<Re
 // 放款交接确认信息
 export const onConfirmApi: (params: ReqUpPaymentLoanHandoverConfirm) => AxiosPromise<void> = (params) => {
     return axios.post('/project/api/supplier-payments/confirm', params)
+}
+//
+export const getPayConfirmApi: (paymentOrderId: string) => AxiosPromise<RespSupplier> = (paymentOrderId) => {
+    return axios.get(`/project/api/supplier-payments/${paymentOrderId}`)
 }

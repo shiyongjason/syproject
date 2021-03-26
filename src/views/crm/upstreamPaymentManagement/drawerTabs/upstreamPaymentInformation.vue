@@ -1,11 +1,11 @@
 <template>
     <div class="tab-layout" :style="{'height':'calc(100vh - 210px)'}">
         <div class="upstreamPaymentInformation-info">
-            <div>应向上游支付：12,000,000元</div>
-            <div>已向上游支付：12,000,000元</div>
+            <div>应向上游支付：{{ data.totalAmount?filters.money(data.totalAmount,2)+' 元':'-'}}</div>
+            <div>已向上游支付：{{ data.paidAmount?filters.money(data.paidAmount,2)+' 元':'-'}}</div>
         </div>
-        <div class="upstreamPaymentInformation-item">
-            <div class="upstreamPaymentInformation-item-no">1</div>
+        <div class="upstreamPaymentInformation-item" v-for="(item,index) in data.supplierDetails" :key="item.id">
+            <div class="upstreamPaymentInformation-item-no">{{index+1}}</div>
             <div class="upstreamPaymentInformation-item-info">
                 <div class="upstreamPaymentInformation-item-info-item">
                     <div style="width:260px"><font style="flex:0 0 125px">本次上游支付(元)：</font><i>500900000</i></div>
@@ -45,15 +45,19 @@
 </template>
 <script lang='tsx'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
+import { RespSupplier } from '@/interface/hbp-project'
+import filters from '@/utils/filters'
 
 @Component({
-    name: 'loanHandoverInformation'
+    name: 'upstreamPaymentInformation'
 })
 export default class LoanHandoverInformation extends Vue {
-    @Prop({ default: '' }) readonly data:any
+    @Prop({ default: '' }) readonly data!:RespSupplier
+
+    filters=filters
 
     mounted () {
-        console.log(this.data)
+        // console.log(this.data)
     }
 }
 </script>

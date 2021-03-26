@@ -97,12 +97,13 @@
         </div>
         <el-drawer class="editordrawerbox" title="待支付" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
+                <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation v-if="editorDrawer" :data='respLoanHandoverInfo' :userInfo='userInfo'></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest'></loanHandoverInformation>
                     </el-tab-pane>
                     <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation">
-                        <upstreamPaymentInformation></upstreamPaymentInformation>
+                        <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -181,13 +182,19 @@ import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' /
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit } from '@/decorator/index'
 import { ccpBaseUrl } from '@/api/config'
-import { getUpStreamPaymentApi, getLoanHandoverInfoApi } from './api/index'
-import { ReqUpStreamPaymentQuery, RespLoanHandoverInfo } from '@/interface/hbp-project'
+import * as Api from './api/index'
+import { ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespUpStreamPayment } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
 
 interface Query extends ReqUpStreamPaymentQuery{
     [key:string]:any
 }
+// tab切对应的Api请求
+enum TabInfoApi {
+    loanHandoverInformation = 'getLoanHandoverInfoApi', // 获取放款交接信息API
+    upstreamPaymentInformation = 'getPayConfirmApi' // 上游支付查询信息API
+}
+
 @Component({
     name: 'UpstreamPaymentManagement',
     components: {
@@ -211,10 +218,11 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any[] = []
+    tableData:RespUpStreamPayment[] | [] = []
     editorDrawer:boolean = false
     isOpen:boolean = false
     isReady:boolean = false
+    paymentOrderId:string = ''
     _queryParams={}
     queryParams: Query = {
         pageNumber: 1,
@@ -255,7 +263,8 @@ export default class UpstreamPaymentManagement extends Vue {
         ]
     }
     activeName:string='loanHandoverInformation'
-    respLoanHandoverInfo:RespLoanHandoverInfo | string = ''
+    loanHandoverInformation:RespLoanHandoverInfo | string = ''
+    upstreamPaymentInformation=''
     prevPaymentDetail={}
 
     @State('userInfo') userInfo: any
@@ -310,11 +319,12 @@ export default class UpstreamPaymentManagement extends Vue {
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
         return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
     }
+
     async viewDetail (paymentOrderId) {
-        console.log('paymentOrderId: ', paymentOrderId)
-        const { data } = await getLoanHandoverInfoApi(paymentOrderId)
+        this.paymentOrderId = paymentOrderId
+        const { data } = await Api.getLoanHandoverInfoApi(paymentOrderId)
         console.log('data: ', data)
-        this.respLoanHandoverInfo = data
+        this.loanHandoverInformation = data
         this.editorDrawer = true
     }
 
@@ -331,19 +341,23 @@ export default class UpstreamPaymentManagement extends Vue {
         this.queryParams.endDownPaymentConfirmTime = val
     }
     handleTabClick (tab, event): void {
-        console.log('tab: ', tab)
+        this.onRequest()
     }
 
     @handleSubmit()
     onEnterPay () {
         console.log('onEnterPay', this)
     }
+    /** 对应tab切的响应请求 */
+    async onRequest () {
+        const { data } = await Api[TabInfoApi[this.activeName]](this.paymentOrderId)
+        this[this.activeName] = data
+    }
 
     @measure
     @handleSubmit()
-    async getList (): Promise<void> {
-        const { data } = await getUpStreamPaymentApi(this.queryParams)
-        // this.tableData = data.records!
+    async getList () {
+        const { data } = await Api.getUpStreamPaymentApi(this.queryParams)
         this.tableData = data.records || []
     }
 
@@ -361,6 +375,7 @@ export default class UpstreamPaymentManagement extends Vue {
     editorDrawerClose (done:Function): void {
         // if
         this.isReady = false
+        this.activeName = 'loanHandoverInformation'
         done()
     }
     onCancel (): void {
@@ -387,11 +402,6 @@ export default class UpstreamPaymentManagement extends Vue {
         this.queryParams.authCode = AUTHCODE ? JSON.parse(AUTHCODE) : ''
         this.queryParams.jobNumber = this.userInfo.jobNumber
         this.getList()
-        // data.records!.forEach(item => {
-        //     console.log('item', item)
-        // })
-        // this.searchList(this.page)
-        // console.log(this.userInfo)
         await this.findCrmdeplist({
             deptType: 'F',
             pkDeptDoc: this.userInfo.pkDeptDoc,

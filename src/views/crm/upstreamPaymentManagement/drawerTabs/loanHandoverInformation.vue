@@ -71,13 +71,14 @@
         <div class="info-layout">
             <template v-if="data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList">
                 <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList" :key="item.id">
-                    <el-checkbox :value='checkBox[data.upPaymentLoanHandoverList[2].status]' :true-label='1' :false-label='0' border @change="(val)=>onCheckBox(item.paramKey,val,data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList,index)">{{item.paramValue}}</el-checkbox>
+                    <el-checkbox :value='checkBox[item.paramKey]' :true-label='1' :false-label='0' border @change="(val)=>onCheckBox(item.paramKey,val,data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList,index)">{{item.paramValue}}</el-checkbox>
                 </span>
             </template>
         </div>
-        <h-button v-if="data.upPaymentLoanHandoverList[2].status==0" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[1].id)">确认信息</h-button>
+        <!-- 前置流程（资金部放款审核岗确认信息）完成后，展示「确认信息」。 -->
+        <h-button v-if="data.upPaymentLoanHandoverList[1].status==1&&data.upPaymentLoanHandoverList[2].status==0" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[2].id)">确认信息</h-button>
         <!-- 资金部放款操作岗确认后，下方展示「下载放款交接单」按钮，顶部展示出「上游支付信息」tab页签 -->
-        <div><h-button style="margin-top:20px" type="primary">下载放款交接单</h-button></div>
+        <div v-if="data.upPaymentLoanHandoverList[2].status==1"><h-button style="margin-top:20px" type="primary">下载放款交接单</h-button></div>
     </div>
 </template>
 <script lang='tsx'>
@@ -93,14 +94,24 @@ export default class LoanHandoverInformation extends Vue {
     @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
     @Prop({ default: '' }) readonly userInfo!:any
     filters=filters
-    checkBox={}
-    show=false
+
+    get checkBox () {
+        let res = {}
+        this.data.upPaymentLoanHandoverList.map(item => {
+            item.upPaymentLoanHandoverParamList!.map(jtem => {
+                jtem['status'] = item.status
+                res[jtem.paramKey!] = item.status
+            })
+        })
+        return res
+    }
 
     onCheckBox (key: any, val: any, list: any[] | any, index:number) {
         if (list[index].status == 1) {
+            console.log('checkBox', this.checkBox)
             return
         }
-        // 添加每个checkBox的paramKey，没值的初始化0
+        // 给每个checkBox添加paramKey，没值的初始化0
         list.map(item => {
             this.checkBox[item.paramKey] = this.checkBox[item.paramKey] || 0
         })
@@ -123,25 +134,13 @@ export default class LoanHandoverInformation extends Vue {
             }
         }
         if (temp) {
-            // await onConfirmApi({
-            //     upPaymentLoanHandoverId: id,
-            //     updateBy: this.userInfo.employeeName
-            // })
-            this.$message.success('操作成功~')
-        }
-    }
-
-    mounted () {
-        this.data.upPaymentLoanHandoverList.map(item => {
-            item.upPaymentLoanHandoverParamList!.map(jtem => {
-                jtem['status'] = item.status
-                this.checkBox[jtem.paramKey!] = item.status
+            await onConfirmApi({
+                upPaymentLoanHandoverId: id,
+                updateBy: this.userInfo.employeeName
             })
-        })
-        this.$nextTick(() => {
-            this.$forceUpdate()
-        })
-        console.log(' this.checkBox', this.checkBox)
+            this.$message.success('操作成功~')
+            this.$emit('requestAgain')
+        }
     }
 }
 </script>
