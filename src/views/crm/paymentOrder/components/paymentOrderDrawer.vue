@@ -118,26 +118,26 @@
                         <div class="row-filed">
                             <p class="col-filed col-25">
                                 <span class="label">供应商联行号：</span>
-                                111111111
+                                {{paymentOrderDetail.payOrderDetail.supplierBankNo}}
                             </p>
                             <p class="col-filed col-25">
                                 <span class="label">供应商开户行名称：</span>
-                                121323
+                                {{paymentOrderDetail.payOrderDetail.supplierAccountName}}
                             </p>
                             <p class="col-filed col-25">
                                 <span class="label">供应商银行账号：</span>
-                                12132311
+                                {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                             </p>
                             <p class="col-filed col-25">
                                 <span class="label">期望上游支付日期：</span>
-                                1213231111
+                                {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
                             </p>
 
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-25">
                                 <span class="label">特殊说明：</span>
-                                1213231111
+                                {{paymentOrderDetail.payOrderDetail.specialRemark}}
                             </p>
                         </div>
                         <div class="row-filed">
@@ -650,7 +650,7 @@ import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import imageAddToken from '@/components/imageAddToken'
-
+import moment from 'moment'
 export default {
     name: 'paymentOrderDrawer',
     props: {
@@ -666,6 +666,7 @@ export default {
     data () {
         return {
             Auths,
+            moment,
             activeNames: ['1'],
             tableData: [],
             tableLabel: [
