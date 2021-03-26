@@ -226,9 +226,9 @@ export default {
         queryParamsUseQuery () {
             return {
                 ...this.queryParams,
-                status: this.queryParams.status.join(','),
-                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                jobNumber: this.userInfo.jobNumber
+                status: this.queryParams.status.join(',')
+                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                // jobNumber: this.userInfo.jobNumber
             }
         }
     },

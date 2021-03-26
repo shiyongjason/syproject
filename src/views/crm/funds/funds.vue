@@ -93,6 +93,12 @@
                     <span class="colblue" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[2].key"> {{ scope.data.row.paidTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</span>
                     <span v-else>-</span>
                 </template>
+                <template slot="threeDayEmailStatus" slot-scope="scope">
+                    {{emailStatus[scope.data.row.threeDayEmailStatus]}}
+                </template>
+                <template slot="currDayEmailStatus" slot-scope="scope">
+                    {{emailStatus[scope.data.row.currDayEmailStatus]}}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
@@ -118,6 +124,7 @@ export default {
     data () {
         return {
             Auths,
+            emailStatus: { 1: '待投递', 2: '已投递', 3: '投递失败' },
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -189,8 +196,8 @@ export default {
                 },
                 { label: '支付成功时间', prop: 'paidTime', width: '150', formatters: 'dateTime' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTime' },
-                { label: '（应还3日前)邮件状态', prop: 'updateTime', width: '150', formatters: 'dateTime' },
-                { label: '（应还当日)邮件状态', prop: 'updateTime', width: '150', formatters: 'dateTime' }
+                { label: '（应还3日前)邮件状态', prop: 'threeDayEmailStatus', width: '150' },
+                { label: '（应还当日)邮件状态', prop: 'currDayEmailStatus', width: '150' }
             ]
             // FundsDict repaymentTypeArrays类型
             if (this.queryParams.repaymentTypeArrays === '1') {
