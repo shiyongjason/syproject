@@ -27,6 +27,10 @@
                     </el-tag>
                     <div class="page-body-cont">
                         <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="replenishmentTime" slot-scope="scope">
+                                <div v-if="scope.data.row.brandName === '舒适云'">{{scope.data.row.replenishmentTime | formatterTime}}</div>
+                                <div v-else>--</div>
+                            </template>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
                             </template>
@@ -122,7 +126,6 @@ export default {
             tagStringList: [],
             tableBuyData: [],
             dialogVisible: false,
-            communicationRecordDialogVisible: false,
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
                 { label: '型号', prop: 'specificationName', width: '220px' },
@@ -130,7 +133,8 @@ export default {
                 { label: '最近一次购买时间', prop: 'lastOrderTime', formatters: 'dateTime' },
                 { label: '累计购买订单数', prop: 'orderCount' },
                 { label: '累计购买件数', prop: 'productCount' },
-                { label: '累计购买金额', prop: 'orderAmount' }
+                { label: '累计购买金额', prop: 'orderAmount' },
+                { label: '预计补货时间', prop: 'replenishmentTime', formatters: 'dateTime' }
             ],
             communicationTableLabel: [
                 { label: '沟通日期', prop: 'communicationDate', formatters: 'date' },
