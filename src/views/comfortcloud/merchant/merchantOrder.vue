@@ -60,19 +60,25 @@
                 <template slot="status" slot-scope="scope">
                     {{payStatus(scope.data.row.status)}}
                 </template>
-                <template slot="action">
-                    <el-button class="orangeBtn" >查看代理信息</el-button>
+                <template slot="action" slot-scope="scope">
+                    <el-button class="orangeBtn"  @click="agentDetail(scope.data.row)">查看代理信息</el-button>
                     <el-button class="orangeBtn" >编辑</el-button>
-                    <el-button class="orangeBtn" >删除</el-button>
+                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
         </div>
+        <el-dialog title="查看代理信息" :modal-append-to-body=false :append-to-body=false :visible.sync="agentDetailVisible" width="50%">
+            <basicTable :tableLabel="tableLabelDetail" :tableData="cloudMerchantOrderDetail">
+
+            </basicTable>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 
 import { mapGetters, mapActions } from 'vuex'
+import { deleteAppVersion } from '../../appUpdate/api'
 
 export default {
     name: 'merchantOrder',
@@ -86,6 +92,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            agentDetailVisible: false,
             tableLabel: [
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'successTime', formatters: 'dateTime' },
@@ -99,7 +106,11 @@ export default {
                 { label: '代理级别', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
                 { label: '订单金额', prop: 'payAmount' },
-                { label: '订单状态', prop: 'status' }]
+                { label: '订单状态', prop: 'status' }],
+            tableLabelDetail: [
+                { label: '代理品类', prop: 'categoryName' },
+                { label: '代理型号', prop: 'specificationName' }
+            ]
         }
     },
     mounted () {
@@ -108,6 +119,7 @@ export default {
     computed: {
         ...mapGetters({
             cloudMerchantOrderList: 'cloudMerchantOrderList',
+            cloudMerchantOrderDetail: 'cloudMerchantOrderDetail',
             cloudMerchantOrderListPagination: 'cloudMerchantOrderListPagination'
         }),
         pickerOptionsStart () {
@@ -137,7 +149,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCloudMerchantOrderList: 'findCloudMerchantOrderList'
+            findCloudMerchantOrderList: 'findCloudMerchantOrderList',
+            findCloudMerchantOrderDetail: 'findCloudMerchantOrderDetail'
         }),
         onSearch: function () {
             this.queryParams.pageNumber = 1
@@ -153,6 +166,24 @@ export default {
         },
         queryList: function (params) {
             this.findCloudMerchantOrderList(params)
+        },
+        agentDetail: function (val) {
+            this.findCloudMerchantOrderDetail({ agentCode: val.agentCode })
+            this.agentDetailVisible = true
+        },
+        async onDelete (row) {
+            this.$confirm(`删除该订单后，该经销商的代理信息也将被删除，请确认是否继续删除？`, '删除代理订单', {
+                confirmButtonText: '确定删除',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                await deleteAppVersion(row.id)
+                this.$message({
+                    showClose: true,
+                    message: '删除成功',
+                    type: 'success'
+                })
+                this.onQuery()
+            })
         },
         payStatus: function (status) {
             if (status === 0) {

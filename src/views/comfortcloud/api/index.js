@@ -72,6 +72,9 @@ export function getMerchantMemberEnterpriseInfo (params) {
 // 经销商会员邀请注册列表分页查询
 export function getMerchantMemberInvitationChangesituation (params) {
     return axios.get(iotUrl + `/mall/boss/user/` + params)
+}// 经销商会员邀请注册列表分页查询
+export function getMerchantCompanyEmployee (params) {
+    return axios.post(iotUrl + `/mall/company/company-members/`, params)
 }
 // 经销商会员购买记录
 export function getMerchantMemberInvitationBuy (params) {
@@ -554,7 +557,11 @@ export function saveCloudMerchantAd (params) {
 
 // 招商订单列表
 export function getCloudMerchantOrderList (params) {
-    return axios.get(iotUrl + '/mall/boss/agent-sign/order-page', { params })
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-order-page', { params })
+}
+// 招商订单详情
+export function getCloudMerchantOrderDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/agent-detail', { params })
 }
 
 // 获取招商代理品类列表

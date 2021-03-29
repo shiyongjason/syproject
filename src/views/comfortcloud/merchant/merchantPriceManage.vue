@@ -13,7 +13,9 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantShopList" :pagination="cloudMerchantShopListPagination" :isAction="true" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantShopList"
+                        :pagination="cloudMerchantShopListPagination" :isAction="true"
+                        @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
                 <template slot="status" slot-scope="scope">
                     {{ shopStatus(scope.data.row.status) }}
                 </template>
@@ -22,19 +24,24 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
-                    <el-button class="orangeBtn" @click="onOpration(scope.data.row)">{{btnStatus(scope.data.row.status)}}</el-button>
+                    <el-button class="orangeBtn" @click="onOpration(scope.data.row)">
+                        {{btnStatus(scope.data.row.status)}}
+                    </el-button>
                 </template>
             </basicTable>
         </div>
 
-        <el-dialog width="1200px" title="新增商品" :visible.sync="dialogShopEdit" :close-on-click-modal="false" :before-close="onCloseDialog">
+        <el-dialog width="1200px" title="新增商品" :visible.sync="dialogShopEdit" :close-on-click-modal="false"
+                   :before-close="onCloseDialog">
             <el-form :model="form" :rules="rules" ref="form" label-width="140px">
                 <el-form-item label-width="0px">
                     <el-col :span="8">
                         <el-form-item label="归属品类：" prop="categoryId">
                             <el-select v-model="form.categoryId" @change="selectChanged">
                                 <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
+                                <el-option :label="item.categoryName" :value="item.categoryId"
+                                           v-for="item in cloudMerchantShopCategoryList"
+                                           :key="item.categoryId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -42,7 +49,9 @@
                         <el-form-item label="商品型号：" prop="specificationId">
                             <el-select v-model="form.specificationId">
                                 <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in cloudMerchantShopCategoryTypeList" :key="item.specificationId"></el-option>
+                                <el-option :label="item.specificationName" :value="item.specificationId"
+                                           v-for="item in cloudMerchantShopCategoryTypeList"
+                                           :key="item.specificationId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -53,46 +62,62 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="商品列表图：" prop="productIcon" ref='productIcon'>
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productIconUrl" ref="uploadImg" @back-event="productIcon" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productIconUrl" ref="uploadImg"
+                                  @back-event="productIcon" :imgW="80" :imgH="80"/>
                     <div class="upload-tips">
                         建议尺寸：172*172，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="productImg" ref="productImg">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg"
+                                  @back-event="productImg" :imgW="80" :imgH="80"/>
                     <div class="upload-tips">
                         建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item label="商品详情：" prop="productDetailImg" ref="productDetailImg">
-                    <SingleUpload sizeLimit='2M' :upload="uploadInfo" :imageUrl="productDetailImgUrl" ref="uploadImg" @back-event="productDetailImg" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='2M' :upload="uploadInfo" :imageUrl="productDetailImgUrl" ref="uploadImg"
+                                  @back-event="productDetailImg" :imgW="80" :imgH="80"/>
                     <div class="upload-tips">
                         建议尺寸：宽度不低于750px，图片大小2M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <h3>价格设置：</h3>
                 <el-form-item label-width="0px">
-                    <el-col>
+                    <el-col :span="6">
                         <el-form-item label="零售价：" prop="retailPrice">
-                            <el-input v-model="form.retailPrice" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                            <el-input v-model="form.retailPrice" style="width: 100px" maxlength="10"
+                                      placeholder="填写价格"></el-input>
+                            元
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="成本价：" prop="retailPrice">
+                            <el-input v-model="form.costPrice" style="width: 100px" maxlength="10"
+                                      placeholder="填写价格"></el-input>
+                            元
                         </el-form-item>
                     </el-col>
                 </el-form-item>
                 <el-form-item label-width="0px">
                     <el-col :span="6">
                         <el-form-item label="销售价：" prop="priceList[0].price">
-                            <el-input v-model="form.priceList[0].price" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                            <el-input v-model="form.priceList[0].price" style="width: 100px" maxlength="10"
+                                      placeholder="填写价格"></el-input>
+                            元
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="9">
                         <el-form-item label="商品ID：" prop="priceList[0].wxProductId">
-                            <el-input v-model.number="form.priceList[0].wxProductId" style="width: 230px" placeholder="输入和微信小店一致的商品ID"></el-input>
+                            <el-input v-model.number="form.priceList[0].wxProductId" style="width: 230px"
+                                      placeholder="输入和微信小店一致的商品ID"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="9">
                         <el-form-item label="商品链接：" prop="priceList[0].wxProductUrl">
-                            <el-input v-model="form.priceList[0].wxProductUrl" style="width: 230px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                            <el-input v-model="form.priceList[0].wxProductUrl" style="width: 230px"
+                                      placeholder="输入和微信小店一致的商品链接"></el-input>
                         </el-form-item>
                     </el-col>
 
@@ -101,44 +126,60 @@
 
                     <el-col :span="6">
                         <el-form-item label="二级经销商价格：" prop="priceList[2].price">
-                            <el-input v-model="form.priceList[2].price" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                            <el-input v-model="form.priceList[2].price" style="width: 100px" maxlength="10"
+                                      placeholder="填写价格"></el-input>
+                            元
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="9">
                         <el-form-item label="商品ID：" prop="priceList[2].wxProductId">
-                            <el-input v-model.number="form.priceList[2].wxProductId" style="width: 230px" placeholder="输入和微信小店一致的商品ID"></el-input>
+                            <el-input v-model.number="form.priceList[2].wxProductId" style="width: 230px"
+                                      placeholder="输入和微信小店一致的商品ID"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="9">
                         <el-form-item label="商品链接：" prop="priceList[2].wxProductUrl">
-                            <el-input v-model="form.priceList[2].wxProductUrl" style="width: 230px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                            <el-input v-model="form.priceList[2].wxProductUrl" style="width: 230px"
+                                      placeholder="输入和微信小店一致的商品链接"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
                 <el-form-item label-width="0px">
                     <el-col :span="6">
                         <el-form-item label="一级经销商价格：" prop="priceList[1].price">
-                            <el-input v-model="form.priceList[1].price" style="width: 100px" maxlength="10" placeholder="填写价格"></el-input> 元
+                            <el-input v-model="form.priceList[1].price" style="width: 100px" maxlength="10"
+                                      placeholder="填写价格"></el-input>
+                            元
                         </el-form-item>
                     </el-col>
 
                     <el-col :span="9">
                         <el-form-item label="商品ID：" prop="priceList[1].wxProductId">
-                            <el-input v-model.number="form.priceList[1].wxProductId" style="width: 230px" placeholder="输入和微信小店一致的商品ID"></el-input>
+                            <el-input v-model.number="form.priceList[1].wxProductId" style="width: 230px"
+                                      placeholder="输入和微信小店一致的商品ID"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="9">
                         <el-form-item label="商品链接：" prop="priceList[1].wxProductUrl">
-                            <el-input v-model="form.priceList[1].wxProductUrl" style="width: 230px" placeholder="输入和微信小店一致的商品链接"></el-input>
+                            <el-input v-model="form.priceList[1].wxProductUrl" style="width: 230px"
+                                      placeholder="输入和微信小店一致的商品链接"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="佣金设置：" prop="commissionRate">
-                    <el-input v-model="form.commissionRate" maxlength="10" style="width: 100px" placeholder="填写佣金比例">10</el-input> %
+                    <el-input v-model="form.commissionRate" maxlength="10" style="width: 100px" placeholder="填写佣金比例">
+                        10
+                    </el-input>
+                    %
                 </el-form-item>
                 <el-form-item label="推广话术：" prop="promotedTagline">
-                    <el-input v-model="form.promotedTagline" maxlength="100" :rows="2" type="textarea" placeholder="输入推荐话术，将展示在推广商品列表中，不超过100字符"/>
+                    <el-input v-model="form.promotedTagline" maxlength="100" :rows="2" type="textarea"
+                              placeholder="输入推荐话术，将展示在推广商品列表中，不超过100字符"/>
+                </el-form-item>
+                <el-form-item label="分享话术：" prop="promotedTagline">
+                    <el-input v-model="form.promotedTagline" maxlength="100" :rows="2" type="textarea"
+                              placeholder="输入分享话术，不超过100字符"/>
                 </el-form-item>
                 <div style="height : 20px"></div>
             </el-form>
@@ -175,6 +216,7 @@ export default {
                 productImg: '',
                 productDetailImg: '',
                 retailPrice: '',
+                costPrice: '',
                 commissionRate: '',
                 priceList: [{
                     id: '',
@@ -529,21 +571,22 @@ export default {
 </script>
 
 <style scoped>
-.upload-tips {
-    font-size: 12px;
-    color: #999;
-    display: flex;
-    align-items: center;
-    height: 80px;
-    padding-left: 10px;
-}
-.spanflex {
-    font-size: 16px;
-    padding-bottom: 10px;
-}
+    .upload-tips {
+        font-size: 12px;
+        color: #999;
+        display: flex;
+        align-items: center;
+        height: 80px;
+        padding-left: 10px;
+    }
 
-.address {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+    .spanflex {
+        font-size: 16px;
+        padding-bottom: 10px;
+    }
+
+    .address {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 </style>
