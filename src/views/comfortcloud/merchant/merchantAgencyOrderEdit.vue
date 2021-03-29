@@ -6,35 +6,25 @@
                     <h3>新增代理订单</h3>
                 </div>
                 <el-form-item label="代理商公司全称：" prop="companyName">
-                    <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入代理商公司全称" maxlength='50'
-                              class="newTitle"></el-input>
+                    <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入代理商公司全称" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="代理商联系人：" prop="contactUser">
-                    <el-input v-model.trim="form.contactUser" show-word-limit placeholder="请输入代理商联系人" maxlength='50'
-                              class="newTitle"></el-input>
+                    <el-input v-model.trim="form.contactUser" show-word-limit placeholder="请输入代理商联系人" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="代理商联系电话：" prop="contactNumber">
-                    <el-input v-model.trim="form.contactNumber" show-word-limit placeholder="请输入代理商联系电话" maxlength='50'
-                              class="newTitle"></el-input>
+                    <el-input v-model.trim="form.contactNumber" show-word-limit placeholder="请输入代理商联系电话" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <span>代理商注册享钱后，该手机号对应的企业代理信息将自动同步</span>
                 <el-form-item label="选择代理区域" prop="country">
                     <el-col :span="6">
                         <div class="query-col-input">
-                            <el-cascader placeholder="" :options="areaOptions" v-model="optarr" :clearable=true
-                                         :collapse-tags=true :show-all-levels="true"
-                                         ref="myCascader"
-                                         @change="cityChange"
-                                         :props="{ multiple: false ,value:'countryId',label:'name',children:'cities'}"
-                                         filterable>
+                            <el-cascader placeholder="" :options="areaOptions" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" ref="myCascader" @change="cityChange" :props="{ multiple: false ,value:'countryId',label:'name',children:'cities'}" filterable>
                             </el-cascader>
                         </div>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="详细地址：" prop="contactUser">
-                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入代理商联系人"
-                                      maxlength='50'
-                                      class="newTitle"></el-input>
+                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入代理商联系人" maxlength='50' class="newTitle"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -47,15 +37,12 @@
                 <el-form-item label="推荐搭配商品：">
                     <el-button type="primary" @click="addAgency">新增</el-button>
                 </el-form-item>
-                <el-form-item label="商品名称：" v-for="(item,index) in form.signSpecifications" :key="index"
-                              :rules="rules.productId">
+                <el-form-item label="商品名称：" v-for="(item,index) in form.signSpecifications" :key="index" :rules="rules.productId">
                     <el-col :span="8">
                         <el-form-item label="归属品类：">
                             <el-select v-model="item.categoryId" @change="selectChanged(item)">
                                 <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.categoryName" :value="item.categoryId"
-                                           v-for="item in cloudMerchantShopCategoryList"
-                                           :key="item.categoryId"></el-option>
+                                <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -63,10 +50,7 @@
                         <el-form-item label="商品型号：">
                             <el-select v-model="item.specificationId" @change="selectSpecificationIdChanged(item)">
                                 <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.specificationName" :value="item.specificationId"
-                                           v-for="item in item.categoryList"
-                                           :disabled="selectSpecificationDisabled(item)"
-                                           :key="item.specificationId"></el-option>
+                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in item.categoryList" :disabled="selectSpecificationDisabled(item)" :key="item.specificationId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -79,8 +63,7 @@
                     </el-col>
                     <el-col :span="3">
                         <el-form-item label="首批提货款：">
-                            <el-input v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款"
-                                      class="newTitle"></el-input>
+                            <el-input v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款" class="newTitle"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -95,14 +78,11 @@
                 </el-form-item>
                 <el-form-item label="代理押金支付时间">
                     <el-col :span="4" label-width="200px">
-                        <el-date-picker placeholder="选择日期" v-model="form.payTime"
-                                        style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss"
-                                        format="yyyy-MM-ddTHH:mm"></el-date-picker>
+                        <el-date-picker placeholder="选择日期" v-model="form.payTime" style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-ddTHH:mm"></el-date-picker>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="productImg" ref="productImg">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.productImg" ref="uploadImg"
-                                  @back-event="productImg" :imgW="80" :imgH="80"/>
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.productImg" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
                         建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
@@ -270,12 +250,7 @@ export default {
         async getAgentDetail (val) {
             await this.findCloudMerchantAgentOrderDetail({ agentCode: val })
             this.form = this.cloudMerchantAgentOrderDetail
-            this.optarr.push(this.form.provinceName)
-
-            this.optarr.push(this.form.cityName)
-
-            this.optarr.push(this.form.countryName)
-
+            this.optarr = [this.form.provinceId, this.form.cityId, this.form.countryId]
             this.form.signSpecifications.map(async (item) => {
                 await this.findCloudMerchantShopCategoryTypeList({ categoryId: item.categoryId })
                 let data = this.cloudMerchantShopCategoryTypeList
@@ -393,52 +368,52 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .page-body-title {
-        margin-bottom: 20px;
-    }
+.page-body-title {
+    margin-bottom: 20px;
+}
 
-    .upload-tips {
-        font-size: 12px;
-        color: #999;
-        display: flex;
-        align-items: center;
-        height: 100px;
-        margin-left: 10px;
-    }
+.upload-tips {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    height: 100px;
+    margin-left: 10px;
+}
 
-    /deep/ .avatar-uploader {
-        margin-right: 10px;
-    }
+/deep/ .avatar-uploader {
+    margin-right: 10px;
+}
 
-    .editor-wrap {
-        margin-top: 20px;
-    }
+.editor-wrap {
+    margin-top: 20px;
+}
 
-    /deep/ .el-dialog__wrapper {
-        // z-index: 99999 !important;
-    }
+/deep/ .el-dialog__wrapper {
+    // z-index: 99999 !important;
+}
 
-    /deep/ .newTitle {
-        width: 500px !important;
-    }
+/deep/ .newTitle {
+    width: 500px !important;
+}
 
-    .el-picker-panel {
-        z-index: 99999 !important;
-    }
+.el-picker-panel {
+    z-index: 99999 !important;
+}
 
-    /deep/ .w-e-text-container {
-        z-index: 40 !important;
-    }
+/deep/ .w-e-text-container {
+    z-index: 40 !important;
+}
 
-    /deep/ .w-e-menu {
-        z-index: 99 !important;
-    }
+/deep/ .w-e-menu {
+    z-index: 99 !important;
+}
 
-    /deep/ .editor-wrap {
-        margin-bottom: 23px !important;
-    }
+/deep/ .editor-wrap {
+    margin-bottom: 23px !important;
+}
 
-    /deep/ .w-e-toolbar {
-        z-index: 99 !important;
-    }
+/deep/ .w-e-toolbar {
+    z-index: 99 !important;
+}
 </style>
