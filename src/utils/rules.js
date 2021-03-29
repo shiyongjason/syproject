@@ -208,3 +208,12 @@ export const VerificationCode = (rule, value, callback) => {
     }
     callback()
 }
+
+// 大写字母和数字
+export const checkNumandEng = (rule, value, callback) => {
+    const Reg = /^[a-zA-Z\d]+$/
+    if (value && !(Reg.test(value))) {
+        return callback(new Error('只能输入数字和字母'))
+    }
+    callback()
+}
