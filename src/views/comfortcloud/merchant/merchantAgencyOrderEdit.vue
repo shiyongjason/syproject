@@ -19,17 +19,29 @@
                 </el-form-item>
                 <span>代理商注册享钱后，该手机号对应的企业代理信息将自动同步</span>
                 <el-form-item label="选择代理区域" prop="country">
-                    <div class="query-col-input">
-                        <el-cascader  placeholder="" :options="areaOptions" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true"
-                                     ref="myCascader"
-                                     @change="cityChange" :props="{ multiple: false ,value:'countryId',label:'name',children:'cities'}" filterable>
-                        </el-cascader>
-                    </div>
+                    <el-col :span="6">
+                        <div class="query-col-input">
+                            <el-cascader placeholder="" :options="areaOptions" v-model="optarr" :clearable=true
+                                         :collapse-tags=true :show-all-levels="true"
+                                         ref="myCascader"
+                                         @change="cityChange"
+                                         :props="{ multiple: false ,value:'countryId',label:'name',children:'cities'}"
+                                         filterable>
+                            </el-cascader>
+                        </div>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="详细地址：" prop="contactUser">
+                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入代理商联系人"
+                                      maxlength='50'
+                                      class="newTitle"></el-input>
+                        </el-form-item>
+                    </el-col>
                 </el-form-item>
                 <el-form-item label="代理等级" prop="region">
                     <el-select placeholder="请选择代理等级" v-model="form.level">
-                        <el-option label="一级" value="1"></el-option>
-                        <el-option label="二级" value="2"></el-option>
+                        <el-option label="一级" :value=1></el-option>
+                        <el-option label="二级" :value=2></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="推荐搭配商品：">
@@ -38,7 +50,7 @@
                 <el-form-item label="商品名称：" v-for="(item,index) in form.signSpecifications" :key="index"
                               :rules="rules.productId">
                     <el-col :span="8">
-                        <el-form-item label="归属品类：" >
+                        <el-form-item label="归属品类：">
                             <el-select v-model="item.categoryId" @change="selectChanged(item)">
                                 <el-option label="选择" value=""></el-option>
                                 <el-option :label="item.categoryName" :value="item.categoryId"
@@ -53,6 +65,7 @@
                                 <el-option label="选择" value=""></el-option>
                                 <el-option :label="item.specificationName" :value="item.specificationId"
                                            v-for="item in item.categoryList"
+                                           :disabled="selectSpecificationDisabled(item)"
                                            :key="item.specificationId"></el-option>
                             </el-select>
                         </el-form-item>
@@ -60,29 +73,43 @@
                     <el-button type="danger" style="margin-left:20px" @click="deleteClassifyMerchants(index)">删除
                     </el-button>
                 </el-form-item>
-                <el-form-item label="代理押金支付方式" prop="region" >
+                <el-form-item label="代理押金合计">
+                    <el-col :span="6">
+                        <span>代理押金 2000元</span>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-form-item label="首批提货款：">
+                            <el-input v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款"
+                                      class="newTitle"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="代理押金支付方式" prop="region">
                     <el-select placeholder="请选择支付方式" v-model="form.payMethod">
-                        <el-option label="现金" value="1"></el-option>
-                        <el-option label="支付宝" value="20"></el-option>
-                        <el-option label="微信" value="30"></el-option>
-                        <el-option label="银行转账" value="40"></el-option>
-                        <el-option label="其他" value="10"></el-option>
+                        <el-option label="现金" :value=1></el-option>
+                        <el-option label="支付宝" :value=20></el-option>
+                        <el-option label="微信" :value=30></el-option>
+                        <el-option label="银行转账" :value=40></el-option>
+                        <el-option label="其他" :value=10></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="代理押金支付时间">
                     <el-col :span="4" label-width="200px">
-                        <el-date-picker  placeholder="选择日期" v-model="form.payTime"
-                                        style="width: 100%;" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"></el-date-picker>
+                        <el-date-picker placeholder="选择日期" v-model="form.payTime"
+                                        style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss"
+                                        format="yyyy-MM-ddTHH:mm"></el-date-picker>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="商品主图：" prop="productImg" ref="productImg">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.productImg" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.productImg" ref="uploadImg"
+                                  @back-event="productImg" :imgW="80" :imgH="80"/>
                     <div class="upload-tips">
                         建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item style="text-align: center">
-                    <el-button type="primary" @click="onSaveAd()" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
+                    <el-button type="primary" @click="onSaveAd()" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}
+                    </el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
             </el-form>
@@ -94,11 +121,11 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { getLikeMerchantList } from '../api'
+import { saveManualAgent } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
-    name: 'merchantAdEdit',
+    name: 'merchantAgencyOrderEdit',
     data () {
         return {
             areaOptions: [],
@@ -123,7 +150,7 @@ export default {
                 operator: ''
             },
             options: [],
-            optarr: '',
+            optarr: [],
             categoryTypes: [],
             allCategorys: [],
             menus: [
@@ -162,14 +189,14 @@ export default {
                         }
 
                         const index = parseInt(rule.field.split('.')[1])
-                        const categoryId = this.form.categorys[index].categoryId
+                        const categoryId = this.form.signSpecifications[index].categoryId
                         const specificationId = value
 
-                        for (let i = 0; i < this.form.categorys.length; i++) {
+                        for (let i = 0; i < this.form.signSpecifications.length; i++) {
                             if (i === index) {
                                 continue
                             }
-                            let item = this.form.categorys[i]
+                            let item = this.form.signSpecifications[i]
                             if (item.categoryId === categoryId && item.specificationId === specificationId) {
                                 return callback(new Error('商品类型不能重复'))
                             }
@@ -192,6 +219,7 @@ export default {
         ...mapGetters({
             cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
             nestDdata: 'nestDdata',
+            cloudMerchantAgentOrderDetail: 'cloudMerchantAgentOrderDetail',
             cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
         uploadInfo () {
@@ -226,48 +254,33 @@ export default {
         await this.findCloudMerchantShopCategoryList()
         this.allCategorys = this.cloudMerchantShopCategoryList
 
-        if (this.$route.query.id) {
-            this.getAgentDetail(this.$route.query.id)
+        if (this.$route.query.agentCode) {
+            this.getAgentDetail(this.$route.query.agentCode)
         }
         this.getFindNest()
     },
     methods: {
         ...mapActions({
+            findCloudMerchantAgentOrderDetail: 'findCloudMerchantAgentOrderDetail',
             findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList',
             findNest: 'findNest'
         }),
 
-        async getAgentDetail (id) {
-            let categorys = []
-            let categoryTypes = []
+        async getAgentDetail (val) {
+            await this.findCloudMerchantAgentOrderDetail({ agentCode: val })
+            this.form = this.cloudMerchantAgentOrderDetail
+            this.optarr.push(this.form.provinceName)
 
-            // 判断merchantsCategory是否是json
-            if (this.cloudMerchantAdDetail.merchantsCategory.indexOf('{') !== -1) {
-                let merchantsCategory = JSON.parse(this.cloudMerchantAdDetail.merchantsCategory)
-                let keys = Object.keys(merchantsCategory)
+            this.optarr.push(this.form.cityName)
 
-                for (let i = 0; i < keys.length; i++) {
-                    let ids = merchantsCategory[keys[i]]
-                    for (let j = 0; j < ids.length; j++) {
-                        categorys.push({
-                            categoryId: parseInt(keys[i]),
-                            specificationId: parseInt(ids[j])
-                        })
+            this.optarr.push(this.form.countryName)
 
-                        await this.findCloudMerchantShopCategoryTypeList({ categoryId: keys[i] })
-                        categoryTypes.push(this.cloudMerchantShopCategoryTypeList)
-                    }
-                }
-            }
-
-            this.form = {
-                title: this.cloudMerchantAdDetail.title,
-                categorys: categorys,
-                content: this.cloudMerchantAdDetail.content
-            }
-            this.categoryTypes = categoryTypes
-            console.log(this.form)
+            this.form.signSpecifications.map(async (item) => {
+                await this.findCloudMerchantShopCategoryTypeList({ categoryId: item.categoryId })
+                let data = this.cloudMerchantShopCategoryTypeList
+                if (!item.categoryList) { item.categoryList = data }
+            })
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -275,25 +288,48 @@ export default {
         },
 
         addAgency: function () {
-            this.form.signSpecifications.push({ categoryId: '', categoryName: '', specificationId: '', specificationName: '', categoryList: [] })
+            this.form.signSpecifications.push({
+                categoryId: '',
+                categoryName: '',
+                specificationId: '',
+                signAmount: 1000,
+                specificationName: '',
+                categoryList: []
+            })
         },
         deleteClassifyMerchants: function (index) {
             this.form.signSpecifications.splice(index, 1)
         },
-        remoteMethod: async function (query) {
-            if (query !== '') {
-                this.loading = true
-                // 请求数据
-                this.loading = false
-                const merchantList = await getLikeMerchantList({ productName: query })
-                this.options = merchantList.data
-            } else {
-                this.options = []
-            }
-        },
         onSaveAd () {
-            this.loading = true
-            console.log(this.form)
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        console.log(this.form)
+                        this.form.totalAgentAmount = parseInt(this.form.prepayAmount) + 2000
+                        this.form.operator += this.userInfo.employeeName
+                        this.form.signSpecifications.map((item) => {
+                            item.signAmount = 1000
+                        })
+                        if (this.$route.query.agentCode) {
+                            this.form.agentCode = this.$route.query.agentCode
+                            await saveManualAgent(this.form)
+                            this.$message.success('修改成功')
+                        } else {
+                            await saveManualAgent(this.form)
+                            this.$message.success('保存成功')
+                        }
+
+                        // this.$router.push('/comfortCloudMerchant/merchantManage/merchantAd')
+                        this.loading = false
+                    } catch (error) {
+                        this.loading = false
+                        console.log('catch valid')
+                    }
+                } else {
+                    this.loading = false
+                    console.log('not valid')
+                }
+            })
         },
 
         handleClose () {
@@ -309,7 +345,7 @@ export default {
                 }
             })
             let data = this.cloudMerchantShopCategoryTypeList
-            item.categoryList = data
+            if (!item.categoryList) { item.categoryList = data }
         },
         selectSpecificationIdChanged (item) {
             this.cloudMerchantShopCategoryTypeList.find((value) => { // 这里的ClaOptions就是上面遍历的数据源
@@ -317,9 +353,21 @@ export default {
                     item.specificationName = value.specificationName
                 }
             })
+            this.form.signSpecifications.map((value, index) => {
+
+            })
         },
+        selectSpecificationDisabled (item) {
+            this.form.signSpecifications.map((value, index) => {
+                if (value.specificationId === item.specificationId) {
+                    return true
+                }
+            })
+            return false
+        },
+
         productImg (val) {
-            this.form.productImg = val.imageUrl
+            this.form.payCertificates.push(val.imageUrl)
         },
         async getFindNest () {
             await this.findNest()

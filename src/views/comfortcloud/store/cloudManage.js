@@ -79,6 +79,7 @@ const state = {
     cloudMerchantAdList: [],
     cloudMerchantAdListPagination: {},
     cloudMerchantAdDetail: {},
+    cloudMerchantAgentOrderDetail: {},
     cloudMerchantOrderList: [],
     cloudMerchantOrderDetail: [],
     cloudMerchantOrderListPagination: {},
@@ -189,6 +190,7 @@ const getters = {
     cloudMerchantAdList: state => state.cloudMerchantAdList,
     cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
     cloudMerchantAdDetail: state => state.cloudMerchantAdDetail,
+    cloudMerchantAgentOrderDetail: state => state.cloudMerchantAgentOrderDetail,
     cloudMerchantOrderList: state => state.cloudMerchantOrderList,
     cloudMerchantOrderDetail: state => state.cloudMerchantOrderDetail,
     cloudMerchantOrderListPagination: state => state.cloudMerchantOrderListPagination,
@@ -438,6 +440,9 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_AD_DETAIL] (state, payload) {
         state.cloudMerchantAdDetail = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_AGENCY_ORDER_DETAIL] (state, payload) {
+        state.cloudMerchantAgentOrderDetail = payload
     },
     [cloud.GET_CLOUD_MERCHANT_ORDER_LIST] (state, payload) {
         state.cloudMerchantOrderList = payload
@@ -840,6 +845,10 @@ const actions = {
     async getCloudMerchantAdDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAdDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data)
+    },
+    async findCloudMerchantAgentOrderDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAgentOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_AGENCY_ORDER_DETAIL, data)
     },
     async findCloudMerchantOrderList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantOrderList(params)

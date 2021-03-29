@@ -549,10 +549,18 @@ export function deleteCloudMerchantAd (params) {
 export function getCloudMerchantAdDetail (params) {
     return axios.get(iotUrl + '/mall/boss/merchants-advertising/' + params)
 }
+// 获取招商广告详情
+export function getCloudMerchantAgentOrderDetail (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/manual-agent/edit-info', { params })
+}
 
 // 招商广告保存
 export function saveCloudMerchantAd (params) {
     return axios.post(iotUrl + '/mall/boss/merchants-advertising', params)
+}
+// 代理订单保存
+export function saveManualAgent (params) {
+    return axios.post(iotUrl + '/mall/boss/agent-sign/manual-agent', params)
 }
 
 // 招商订单列表

@@ -38,6 +38,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
+                    <el-button type="primary" class="ml20" @click="onAdd">新增代理订单</el-button>
                 </div>
             </div>
         </div>
@@ -62,8 +63,8 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn"  @click="agentDetail(scope.data.row)">查看代理信息</el-button>
-                    <el-button class="orangeBtn" >编辑</el-button>
-                    <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.source===3"  @click="onEdit(scope.data.row)">编辑</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.source===3" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
         </div>
@@ -156,6 +157,9 @@ export default {
             this.queryParams.pageNumber = 1
             this.queryList(this.queryParams)
         },
+        onAdd: function () {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantManage/merchantAgencyOrderEdit' })
+        },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
             this.queryList(this.queryParams)
@@ -170,6 +174,9 @@ export default {
         agentDetail: function (val) {
             this.findCloudMerchantOrderDetail({ agentCode: val.agentCode })
             this.agentDetailVisible = true
+        },
+        onEdit: function (val) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantManage/merchantAgencyOrderEdit', query: val })
         },
         async onDelete (row) {
             this.$confirm(`删除该订单后，该经销商的代理信息也将被删除，请确认是否继续删除？`, '删除代理订单', {
