@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 3 项</el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
             </div>
             <!-- end search bar -->
             <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
@@ -97,7 +97,7 @@
         </div>
         <el-drawer class="editordrawerbox" title="待支付" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
-                <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
+                <!--TODO 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
                         <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest'></loanHandoverInformation>
@@ -107,13 +107,14 @@
                     </el-tab-pane>
                 </el-tabs>
             </div>
-            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation'">
-                <h-button style="margin-top:20px" type="primary" @click="() => this.isOpen = true">立即上游支付</h-button>
+            <!-- TODO 全部支付完隐藏按钮 -->
+            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount == upstreamPaymentInformation.paidAmount">
+                <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
         <el-dialog :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="800px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
             <div class="dialog-ctx">
-                <el-form :model="dialogFormData" :rules="rules" label-width="150px" ref="form">
+                <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="150px" ref="form">
                     <el-form-item label="经销商：">
                         {{ prevPaymentDetail.companyName }}
                     </el-form-item>
@@ -130,31 +131,33 @@
                         {{ prevPaymentDetail.supplierCompanyName }}
                     </el-form-item>
                     <el-form-item label="上游支付形式：">
-                        {{ prevPaymentDetail.supplierPaymentType }}
+                        {{paymentType.get(prevPaymentDetail.supplierPaymentType)}}
                     </el-form-item>
                     <el-form-item label="上游货款方式：">
-                        {{ prevPaymentDetail.supplierPaymentMethod }}
+                        {{supplierPaymentMethod.get(prevPaymentDetail.supplierPaymentMethod)}}
                     </el-form-item>
                     <el-form-item label="收货进度：">
                         {{prevPaymentDetail.goodsProgress}}%
                     </el-form-item>
                     <el-form-item label="采购单货款明细：">
-                        <!-- srcList: ['https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg','https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'] -->
-                       <el-image style="width: 100px; height: 100px;margin-right:10px" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :preview-src-list="srcList"></el-image>
+                        <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.poDetail" :key='index'></elImageAddToken>
                     </el-form-item>
                     <el-form-item label="支付单货款明细：">
-                        <!-- srcList: ['https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg','https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'] -->
-                       <el-image style="width: 100px; height: 100px;margin-right:10px" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :preview-src-list="srcList"></el-image>
+                       <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5; border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.paymentDetail" :key='index'></elImageAddToken>
+                    </el-form-item>
+                    <!-- 银行承兑 才展示 支付银行-->
+                    <el-form-item label="支付银行：" prop="paymentBank" v-if="prevPaymentDetail.supplierPaymentType == 2">
+                        <el-input placeholder="请输入支付银行" v-model="dialogFormData.paymentBank" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="本次支付金额：" prop="payAmount">
-                        <el-input placeholder="请输入" v-model="dialogFormData.payAmount" maxlength="50" v-isNegative:2="dialogFormData.payAmount"></el-input>
+                        <el-input placeholder="请输入" v-model="dialogFormData.payAmount" maxlength="50" v-isNum:2 v-inputMAX='prevPaymentDetail.surplusAmount'></el-input>
                     </el-form-item>
                     <el-form-item label="支付日期：" prop="payDate">
                         <el-date-picker v-model="dialogFormData.payDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="上传上游支付凭证：" prop="payVouchers">
-                        <OssFileHosjoyUpload v-model="dialogFormData.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :action='action' :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
+                        <OssFileHosjoyUpload v-model="dialogFormData.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>
                             </div>
@@ -178,18 +181,30 @@ import { State, namespace, Getter, Action } from 'vuex-class'
 import { CreateElement } from 'vue'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
+import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
-import { measure, handleSubmit } from '@/decorator/index'
+import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import { ccpBaseUrl } from '@/api/config'
 import * as Api from './api/index'
-import { ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespUpStreamPayment } from '@/interface/hbp-project'
+import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
+
+export const PAYMENTTYPE: Map<number | null | string, string> = new Map([
+    [null, '-'],
+    [1, '银行转帐'],
+    [2, '银行承兑']
+])
+export const SUPPLIERPAYMENTMETHOD: Map<number | null | string, string> = new Map([
+    [null, '-'],
+    [1, '先款后货'],
+    [2, '先货后款']
+])
 
 interface Query extends ReqUpStreamPaymentQuery{
     [key:string]:any
 }
-// tab切对应的Api请求
+/** tab切对应的Api请求 */
 enum TabInfoApi {
     loanHandoverInformation = 'getLoanHandoverInfoApi', // 获取放款交接信息API
     upstreamPaymentInformation = 'getPayConfirmApi' // 上游支付查询信息API
@@ -201,15 +216,14 @@ enum TabInfoApi {
         hosJoyTable,
         loanHandoverInformation,
         upstreamPaymentInformation,
-        OssFileHosjoyUpload
+        OssFileHosjoyUpload,
+        elImageAddToken
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
-    srcList:string[] = []
-     action = ccpBaseUrl + 'common/files/upload-old'
      uploadParameters = {
          updateUid: '',
          reservedName: false
@@ -218,12 +232,14 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
+    paymentType=PAYMENTTYPE
+    supplierPaymentMethod=SUPPLIERPAYMENTMETHOD
     tableData:RespUpStreamPayment[] | [] = []
     editorDrawer:boolean = false
     isOpen:boolean = false
     isReady:boolean = false
     paymentOrderId:string = ''
-    _queryParams={}
+    private _queryParams = {}
     queryParams: Query = {
         pageNumber: 1,
         pageSize: 10,
@@ -246,30 +262,51 @@ export default class UpstreamPaymentManagement extends Vue {
         'sort.property': null,
         'sort.direction': null
     }
-    dialogFormData={
+    private _dialogFormData = {}
+    dialogFormData:ReqSupplierSubmit={
+        id: '',
+        poId: '',
+        paymentOrderId: '',
         payAmount: '',
         payDate: '',
-        payVouchers: []
+        payVouchers: [],
+        paymentBank: ''
     }
-    rules= {
-        payAmount: [
-            { required: true, message: '请输入本次支付金额', trigger: 'blur' }
-        ],
-        payDate: [
-            { required: true, message: '请选择支付日期', trigger: 'blur' }
-        ],
-        payVouchers: [
-            { required: true, message: '请上传上游支付凭证' }
-        ]
-    }
+
     activeName:string='loanHandoverInformation'
     loanHandoverInformation:RespLoanHandoverInfo | string = ''
-    upstreamPaymentInformation=''
-    prevPaymentDetail={}
+    upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
+    prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
 
     @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
+
+    get formRules () {
+        let rules = {
+            payAmount: [
+                {
+                    required: true,
+                    validator: (rule, value, callback) => {
+                        if (value == 0) return callback(new Error('本次支付金额不能为 0'))
+                        return callback()
+                    },
+                    trigger: 'blur'
+                }
+            ],
+            payDate: [
+                { required: true, message: '请选择支付日期' }
+            ],
+            payVouchers: [
+                { required: true, message: '请上传上游支付凭证' }
+            ],
+            paymentBank: [
+                { required: true, message: '请输入支付银行', trigger: 'blur' }
+            ]
+        }
+        return rules
+    }
+
     get options () {
         return {
             type: 'date',
@@ -294,7 +331,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '所属分部', prop: 'deptName', width: '130' },
         { label: '经销商', prop: 'companyName', width: '150', resizable: true },
         { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
-        { label: '项目名称', prop: 'projectName', minWidth: '200' },
+        { label: '项目名称', prop: 'projectName', minWidth: '300' },
         { label: '采购单金额', prop: 'poAmount', width: '160', displayAs: 'money' },
         {
             label: '支付状态/支付次数',
@@ -344,10 +381,22 @@ export default class UpstreamPaymentManagement extends Vue {
         this.onRequest()
     }
 
+    @validateForm('form')
     @handleSubmit()
-    onEnterPay () {
-        console.log('onEnterPay', this)
+    async onEnterPay () {
+        //
+        this.dialogFormData = {
+            ...this.dialogFormData,
+            paymentOrderId: this.paymentOrderId,
+            poId: this.prevPaymentDetail.purchaseOrderId
+        }
+        console.log('this.dialogFormData: ', this.dialogFormData)
+        await Api.onSubmitPayments(this.dialogFormData)
+        this.$message.success('提交成功！')
+        await this.onRequest()
+        this.onCancel()
     }
+
     /** 对应tab切的响应请求 */
     async onRequest () {
         const { data } = await Api[TabInfoApi[this.activeName]](this.paymentOrderId)
@@ -355,10 +404,10 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     @measure
-    @handleSubmit()
     async getList () {
         const { data } = await Api.getUpStreamPaymentApi(this.queryParams)
         this.tableData = data.records || []
+        this.page.total = data.total as number
     }
 
     sortChange (e) {
@@ -370,6 +419,12 @@ export default class UpstreamPaymentManagement extends Vue {
             this.queryParams['sort.direction'] = null
         }
         this.getList()
+    }
+
+    async payInfoApi () {
+        const { data } = await Api.getPayInfoApi(this.paymentOrderId)
+        this.prevPaymentDetail = data
+        this.isOpen = true
     }
 
     editorDrawerClose (done:Function): void {
@@ -384,11 +439,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.clearForm()
     }
     clearForm () {
-        this.dialogFormData = {
-            payAmount: '',
-            payDate: '',
-            payVouchers: []
-        }
+        this.dialogFormData = JSON.parse(JSON.stringify(this._dialogFormData))
     }
     onReset () {
         this.queryParams = JSON.parse(JSON.stringify(this._queryParams))
@@ -396,8 +447,9 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async mounted () {
-        // console.log('this', this.$plus)
+        console.log('mounted')
         this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
+        this._dialogFormData = JSON.parse(JSON.stringify(this.dialogFormData))
         let AUTHCODE = sessionStorage.getItem('authCode') || ''
         this.queryParams.authCode = AUTHCODE ? JSON.parse(AUTHCODE) : ''
         this.queryParams.jobNumber = this.userInfo.jobNumber

@@ -4171,7 +4171,7 @@ export interface RespUpPaymentLoanHandover {
      * @type {string}
      * @memberof RespUpPaymentLoanHandover
      */
-    confirmDate?: string
+    confirmTime?: string
 
     /**
      * 放款交接属性字段
@@ -4414,10 +4414,10 @@ export interface IPageRespUpStreamPayment {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespUpStreamPayment>}
      * @memberof IPageRespUpStreamPayment
      */
-    total: number | string
+    records: Array<RespUpStreamPayment>
 
     /**
      *
@@ -4431,14 +4431,14 @@ export interface IPageRespUpStreamPayment {
      * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespUpStreamPayment>}
+     * @type {number | string}
      * @memberof IPageRespUpStreamPayment
      */
-    records: Array<RespUpStreamPayment>
+    pages: number | string
 
     /**
      *
@@ -5569,10 +5569,10 @@ export interface IPageRespPurchaseOrderCrmPage {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespPurchaseOrderCrmPage>}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    total: number | string
+    records: Array<RespPurchaseOrderCrmPage>
 
     /**
      *
@@ -5586,14 +5586,14 @@ export interface IPageRespPurchaseOrderCrmPage {
      * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespPurchaseOrderCrmPage>}
+     * @type {number | string}
      * @memberof IPageRespPurchaseOrderCrmPage
      */
-    records: Array<RespPurchaseOrderCrmPage>
+    pages: number | string
 
     /**
      *
@@ -6623,10 +6623,10 @@ export interface IPageRespPurchaseOrder {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespPurchaseOrder>}
      * @memberof IPageRespPurchaseOrder
      */
-    total: number | string
+    records: Array<RespPurchaseOrder>
 
     /**
      *
@@ -6640,14 +6640,14 @@ export interface IPageRespPurchaseOrder {
      * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespPurchaseOrder>}
+     * @type {number | string}
      * @memberof IPageRespPurchaseOrder
      */
-    records: Array<RespPurchaseOrder>
+    pages: number | string
 
     /**
      *
@@ -7160,10 +7160,10 @@ export interface IPageRespPaymentOrders {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespPaymentOrders>}
      * @memberof IPageRespPaymentOrders
      */
-    total: number | string
+    records: Array<RespPaymentOrders>
 
     /**
      *
@@ -7177,14 +7177,14 @@ export interface IPageRespPaymentOrders {
      * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespPaymentOrders>}
+     * @type {number | string}
      * @memberof IPageRespPaymentOrders
      */
-    records: Array<RespPaymentOrders>
+    pages: number | string
 
     /**
      *
@@ -7632,48 +7632,6 @@ export interface RespPaymentOrderDetail {
      * @memberof RespPaymentOrderDetail
      */
     goodsConfirmFlag: number | string
-
-    /**
-     * 银行联行号
-     * @type {string}
-     * @memberof RespPaymentOrderDetail
-     */
-    supplierBankNo: string
-
-    /**
-     * 供应商开户行名称
-     * @type {string}
-     * @memberof RespPaymentOrderDetail
-     */
-    supplierAccountName: string
-
-    /**
-     * 供应商银行账号
-     * @type {string}
-     * @memberof RespPaymentOrderDetail
-     */
-    supplierAccountNo: string
-
-    /**
-     * 上游支付方式:1-银行转帐;2-银行承兑
-     * @type {number | string}
-     * @memberof RespPaymentOrderDetail
-     */
-    supplierPaymentType: number | string
-
-    /**
-     * 期望上游支付日期
-     * @type {string}
-     * @memberof RespPaymentOrderDetail
-     */
-    expectSupplierPaymentDate: string
-
-    /**
-     * 特殊说明
-     * @type {string}
-     * @memberof RespPaymentOrderDetail
-     */
-    specialRemark: string
 
 }
 
@@ -8715,10 +8673,10 @@ export interface IPageRespFundResult {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespFundResult>}
      * @memberof IPageRespFundResult
      */
-    total: number | string
+    records: Array<RespFundResult>
 
     /**
      *
@@ -8732,14 +8690,14 @@ export interface IPageRespFundResult {
      * @type {number | string}
      * @memberof IPageRespFundResult
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespFundResult>}
+     * @type {number | string}
      * @memberof IPageRespFundResult
      */
-    records: Array<RespFundResult>
+    pages: number | string
 
     /**
      *
@@ -8985,10 +8943,10 @@ export interface IPageRespYear {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespYear>}
      * @memberof IPageRespYear
      */
-    total: number | string
+    records: Array<RespYear>
 
     /**
      *
@@ -9002,14 +8960,14 @@ export interface IPageRespYear {
      * @type {number | string}
      * @memberof IPageRespYear
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespYear>}
+     * @type {number | string}
      * @memberof IPageRespYear
      */
-    records: Array<RespYear>
+    pages: number | string
 
     /**
      *
@@ -9131,10 +9089,10 @@ export interface IPageHolidayRecord {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<HolidayRecord>}
      * @memberof IPageHolidayRecord
      */
-    total: number | string
+    records: Array<HolidayRecord>
 
     /**
      *
@@ -9148,14 +9106,14 @@ export interface IPageHolidayRecord {
      * @type {number | string}
      * @memberof IPageHolidayRecord
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<HolidayRecord>}
+     * @type {number | string}
      * @memberof IPageHolidayRecord
      */
-    records: Array<HolidayRecord>
+    pages: number | string
 
     /**
      *
@@ -9479,6 +9437,13 @@ export interface RespFundBill {
      */
     fundList: Array<Fund>
 
+    /**
+     * 支付进度
+     * @type {number | string}
+     * @memberof RespFundBill
+     */
+    payProcess: number | string
+
 }
 
 /**
@@ -9676,10 +9641,10 @@ export interface IPageRespContract {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespContract>}
      * @memberof IPageRespContract
      */
-    total: number | string
+    records: Array<RespContract>
 
     /**
      *
@@ -9693,14 +9658,14 @@ export interface IPageRespContract {
      * @type {number | string}
      * @memberof IPageRespContract
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespContract>}
+     * @type {number | string}
      * @memberof IPageRespContract
      */
-    records: Array<RespContract>
+    pages: number | string
 
     /**
      *
@@ -9903,10 +9868,10 @@ export interface IPageRespContractTemplate {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespContractTemplate>}
      * @memberof IPageRespContractTemplate
      */
-    total: number | string
+    records: Array<RespContractTemplate>
 
     /**
      *
@@ -9920,14 +9885,14 @@ export interface IPageRespContractTemplate {
      * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespContractTemplate>}
+     * @type {number | string}
      * @memberof IPageRespContractTemplate
      */
-    records: Array<RespContractTemplate>
+    pages: number | string
 
     /**
      *
@@ -10405,10 +10370,10 @@ export interface IPageRespContractTemplateVersion {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespContractTemplateVersion>}
      * @memberof IPageRespContractTemplateVersion
      */
-    total: number | string
+    records: Array<RespContractTemplateVersion>
 
     /**
      *
@@ -10422,14 +10387,14 @@ export interface IPageRespContractTemplateVersion {
      * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespContractTemplateVersion>}
+     * @type {number | string}
      * @memberof IPageRespContractTemplateVersion
      */
-    records: Array<RespContractTemplateVersion>
+    pages: number | string
 
     /**
      *
@@ -11577,10 +11542,10 @@ export interface IPageRespCAOrg {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespCAOrg>}
      * @memberof IPageRespCAOrg
      */
-    total: number | string
+    records: Array<RespCAOrg>
 
     /**
      *
@@ -11594,14 +11559,14 @@ export interface IPageRespCAOrg {
      * @type {number | string}
      * @memberof IPageRespCAOrg
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespCAOrg>}
+     * @type {number | string}
      * @memberof IPageRespCAOrg
      */
-    records: Array<RespCAOrg>
+    pages: number | string
 
     /**
      *
@@ -11791,10 +11756,10 @@ export interface IPageRespCAAccount {
 
     /**
      *
-     * @type {number | string}
+     * @type {Array<RespCAAccount>}
      * @memberof IPageRespCAAccount
      */
-    total: number | string
+    records: Array<RespCAAccount>
 
     /**
      *
@@ -11808,14 +11773,14 @@ export interface IPageRespCAAccount {
      * @type {number | string}
      * @memberof IPageRespCAAccount
      */
-    pages: number | string
+    total: number | string
 
     /**
      *
-     * @type {Array<RespCAAccount>}
+     * @type {number | string}
      * @memberof IPageRespCAAccount
      */
-    records: Array<RespCAAccount>
+    pages: number | string
 
     /**
      *
