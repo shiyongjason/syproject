@@ -133,7 +133,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import PaymentOrderDrawer from '@/views/crm/paymentOrder/components/paymentOrderDrawer'
+import PaymentOrderDrawer from './components/paymentOrderDrawer'
 import ApprovePaymentOrder from './components/approvePaymentOrder'
 import PrevPaymentDialog from './components/prevPaymentDialog'
 import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'

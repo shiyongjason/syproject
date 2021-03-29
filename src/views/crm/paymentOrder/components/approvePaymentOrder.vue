@@ -71,22 +71,24 @@
                         </el-form-item>
                         <!-- 添加 -->
                         <el-form-item label="银行联行号：">
-                            <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            <!-- <el-input type="text" v-model="" maxlength="200"></el-input> -->
+                            {{paymentDetail.payOrderDetail.supplierBankNo}}
                         </el-form-item>
 
                         <el-form-item label="供应商开户行名称：">
-                            <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            <!-- <el-input type="text" v-model="" maxlength="200"></el-input> -->
+                            {{paymentDetail.payOrderDetail.supplierAccountName}}
                         </el-form-item>
 
                         <el-form-item label="供应商银行账号：">
-                            <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            <!-- <el-input type="text" v-model="" maxlength="200"></el-input> -->
+                            {{paymentDetail.payOrderDetail.supplierAccountNo}}
                         </el-form-item>
-
                         <el-form-item label="期望上游支付日期：">
-                            2021-8-9
+                            {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
-                            银行承兑
+                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转帐;':'银行承兑'}}
                         </el-form-item>
                         <!-- <div class="info-img-group">
                             <span class="label">采购明细表：</span>
@@ -114,7 +116,7 @@
                             {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
                         </el-form-item>
                         <el-form-item label="特殊说明：">
-                            1111111111
+                            {{paymentDetail.payOrderDetail.specialRemark}}
                         </el-form-item>
                     </div>
                     <div class="col-filed">
@@ -148,29 +150,38 @@
                                     </el-radio>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="网银盾照片：">
+                            <el-form-item label="网银盾照片：" prop="shieldFiles">
                                 <div class="info-img-group content">
-                                    <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
-                                        <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                    <!-- <template v-if="formData.shieldFiles">
+                                        <span class="img-box" :key="item.url" v-for="item in formData.shieldFiles">
                                             <imageAddToken :file-url="item.url" />
                                         </span>
-                                    </template>
+                                    </template> -->
+                                    <hosjoyUpload v-model="formData.shieldFiles" :showPreView=true :fileSize=20 :fileNum=5 :action='action' accept='.jpg,.gif,.png' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(formData.shieldFiles)}" style="margin:10px 0 0 5px">
+                                        <el-button type="primary">上 传</el-button>
+                                    </hosjoyUpload>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="共管户截图：">
+                            <el-form-item label="共管户截图：" prop="managedFiles">
                                 <div class="info-img-group content">
-                                    <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
-                                        <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderDetail.paymentDetail">
+                                    <!-- <template>
+                                        <span class="img-box" :key="item.url" v-for="item in formData.managedFiles">
                                             <imageAddToken :file-url="item.url" />
                                         </span>
-                                    </template>
+                                    </template> -->
+                                    <hosjoyUpload v-model="formData.managedFiles" :showPreView=true :fileSize=20 :fileNum=5 :action='action' accept='.jpg,.gif,.png' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(formData.shieldFiles)}" style="margin:10px 0 0 5px">
+                                        <el-button type="primary">上 传</el-button>
+                                    </hosjoyUpload>
                                 </div>
                             </el-form-item>
-                            <el-form-item label="质押信息：">
-                                <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            <el-form-item label="质押信息：" prop="pledgeNo">
+                                <el-input type="text" v-model="formData.pledgeNo" maxlength="50"></el-input>
                             </el-form-item>
-                            <el-form-item label="OA审批编号：">
-                                <el-input type="text" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            <el-form-item label="OA审批编号：" prop="oaNo">
+                                <el-input type="text" v-model="formData.oaNo" maxlength="50"></el-input>
+                            </el-form-item>
+                            <el-form-item label="审核备注" prop="approvalRemark">
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>
                             <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
                                 <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
@@ -230,11 +241,14 @@ import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComput
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import imageAddToken from '@/components/imageAddToken'
-
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { ccpBaseUrl } from '@/api/config'
+import { checkNumandEng } from '@/utils/rules'
+import moment from 'moment'
 export default {
     name: 'approvePaymentOrder',
     components: {
-        imageAddToken
+        imageAddToken, hosjoyUpload
     },
     props: {
         isOpen: {
@@ -252,14 +266,23 @@ export default {
     },
     data () {
         return {
+            action: ccpBaseUrl + 'common/files/upload-old',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
             PurchaseOrderDict,
             formData: {
                 checkPass: '',
                 approvalRemark: '',
                 accountReceivablePledgeType: '',
-                supplierPaymentType: '',
+                // supplierPaymentType: '',
                 downPaymentAmount: '',
-                supplierPaymentMethod: ''
+                supplierPaymentMethod: '',
+                shieldFiles: [], // 网盾图片
+                managedFiles: [], // 共管账号
+                pledgeNo: '',
+                oaNo: ''
             },
             editAmountVisible: false,
             PaymentOrderDict,
@@ -282,20 +305,47 @@ export default {
                 accountReceivablePledgeType: [
                     { required: true, message: '请选择应收账款质押' }
                 ],
-                supplierPaymentType: [
-                    { required: true, message: '请选择上游支付方式' }
-                ],
                 supplierPaymentMethod: [
                     { required: true, message: '请选择上游货款方式' }
                 ],
                 dealerCooperationMethod: [
                     { required: true, message: '请选择下游合作方式' }
+                ],
+                pledgeNo: [
+                    { required: true, message: '请输入质押信息' },
+                    {
+                        validator: checkNumandEng, trigger: 'blur'
+                    }
+                ],
+                oaNo: [
+                    { required: true, message: '请输入OA审批编号' },
+                    {
+                        validator: checkNumandEng, trigger: 'blur'
+                    }
+                ],
+                shieldFiles: [
+                    { required: true, message: '请上传网银盾图片' }
+                ],
+                managedFiles: [
+                    { required: true, message: '请上传共管户截图' }
                 ]
             },
             downPaymentAmount: '-'
         }
     },
     watch: {
+        'formData.shieldFiles' (val) {
+            if (val.length > 0) {
+                console.log(val)
+                this.$refs.form.clearValidate(['shieldFiles'])
+            }
+        },
+        'formData.managedFiles' (val) {
+            if (val.length > 0) {
+                console.log(val)
+                this.$refs.form.clearValidate(['managedFiles'])
+            }
+        },
         isOpen (val) {
             if (val) {
                 this.serviceParams = {
@@ -312,29 +362,33 @@ export default {
                 })
             }
         },
-        'formData.supplierPaymentType' (val) {
-            if (val) {
-                let serviceFeeRate = ''
-                if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[0].key) {
-                    // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
-                    serviceFeeRate = this.paymentDetail.projectInfo.transferBankRate
-                }
-                if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[1].key) {
-                    // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
-                    serviceFeeRate = this.paymentDetail.projectInfo.acceptBankRate
-                }
-                this.serviceParams = {
-                    ...this.serviceParams,
-                    serviceFeeRate: serviceFeeRate
-                }
-                this.getComputedValue()
-            }
-        },
+        // 'formData.supplierPaymentType' (val) {
+        //     if (val) {
+        //         let serviceFeeRate = ''
+        //         if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[0].key) {
+        //             // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
+        //             serviceFeeRate = this.paymentDetail.projectInfo.transferBankRate
+        //         }
+        //         if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[1].key) {
+        //             // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
+        //             serviceFeeRate = this.paymentDetail.projectInfo.acceptBankRate
+        //         }
+        //         this.serviceParams = {
+        //             ...this.serviceParams,
+        //             serviceFeeRate: serviceFeeRate
+        //         }
+        //         this.getComputedValue()
+        //     }
+        // },
         'formData.checkPass' () {
             this.formData.approvalRemark = ''
             this.formData.accountReceivablePledgeType = ''
-            this.formData.supplierPaymentType = ''
+            // this.formData.supplierPaymentType = ''
             this.formData.supplierPaymentMethod = ''
+            this.formData.shieldFiles = []
+            this.formData.managedFiles = []
+            this.formData.pledgeNo = ''
+            this.formData.oaNo = ''
         }
     },
     methods: {
@@ -384,9 +438,11 @@ export default {
                 checkPass: '',
                 approvalRemark: '',
                 accountReceivablePledgeType: '',
-                supplierPaymentType: '',
+                // supplierPaymentType: '',
                 downPaymentAmount: '',
-                supplierPaymentMethod: ''
+                supplierPaymentMethod: '',
+                shieldFiles: [],
+                managedFiles: [] // 共管账号
             }
         },
         onCancel () {
@@ -396,6 +452,7 @@ export default {
         onReceived () {
             this.$refs.form.validate(async (value, rules) => {
                 if (value) {
+                    // this.formData.supplierPaymentType = 2
                     this.formData.downPaymentAmount = this.downPaymentAmount
                     this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
                     if (this.formData.checkPass === 'pass') {
@@ -423,12 +480,23 @@ export default {
         async getComputedValue () {
             const { data } = await getComputedValue(this.serviceParams)
             this.serviceFee = data
+        },
+        handleSuccessCb (row) {
+            console.log(row)
         }
     }
 }
 </script>
 
 <style scoped lang="scss">
+/deep/.default-pre-view-image {
+    width: 80px;
+    height: 80px;
+}
+/deep/.default-pre-view-mask {
+    width: 80px;
+    height: 80px;
+}
 .payment-dialog {
     /deep/ .el-dialog__body {
         max-height: 480px;
@@ -494,7 +562,7 @@ export default {
         // line-height: 20px;
     }
     /deep/ .el-dialog .el-form .el-form-item {
-        margin-bottom: 10px;
+        // margin-bottom: 10px;
     }
 }
 .edit-amount {
