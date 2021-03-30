@@ -32,6 +32,25 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">订单来源： </div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.source" clearable>
+                            <el-option label="全部" value="" />
+                            <el-option label="享钱" value="1" />
+                            <el-option label="第三方渠道" value="2" />
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">订单状态： </div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.status" clearable>
+                            <el-option v-for="item in statusOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
                     </div>
@@ -122,8 +141,36 @@ export default {
                 orderId: '',
                 productName: '',
                 startTime: '',
-                endTime: ''
+                endTime: '',
+                source: '',
+                status: ''
             },
+            statusOptions: [
+                {
+                    label: '待付款',
+                    value: 10
+                },
+                {
+                    label: '待发货',
+                    value: 20
+                },
+                {
+                    label: '待收货',
+                    value: 30
+                },
+                {
+                    label: '已完成',
+                    value: 100
+                },
+                {
+                    label: '已退货退款',
+                    value: 200
+                },
+                {
+                    label: '已取消',
+                    value: 250
+                }
+            ],
             searchParams: {},
             tableData: [],
             tableLabel: [
