@@ -53,23 +53,26 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">发起时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
+                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker type="datetime" :editable="false" v-model="queryParams.createEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('createStartTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
-            </div>
-            <div class="query-cont__row">
+
                 <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
+                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('updateStartTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartUpdate" :end-change="onEndUpdate" :options="updateOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -223,10 +226,6 @@ export default {
     components: { hosJoyTable, diffDialog },
     data () {
         return {
-            options: {
-                'wrapperClosable': false,
-                size: '550px'
-            },
             Auths,
             emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             detailRes: {},
@@ -276,7 +275,25 @@ export default {
         }),
         ...mapGetters({
             crmdepList: 'crmmanage/crmdepList'
-        })
+        }),
+        options () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.createStartTime,
+                endTime: this.queryParams.createEndTime
+            }
+        },
+        updateOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.updateStartTime,
+                endTime: this.queryParams.updateEndTime
+            }
+        }
     },
     methods: {
         ...mapActions({
@@ -298,6 +315,18 @@ export default {
                 this.searchList()
             }).catch(() => {
             })
+        },
+        onStartChange (val) {
+            this.queryParams.createStartTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.createEndTime = val
+        },
+        onStartUpdate (val) {
+            this.queryParams.updateStartTime = val
+        },
+        onEndUpdate (val) {
+            this.queryParams.updateEndTime = val
         },
         async getDiff (item) {
             const { lastContentId, currentContentId } = JSON.parse(item)
