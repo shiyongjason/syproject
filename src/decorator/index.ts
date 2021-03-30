@@ -13,12 +13,14 @@ export function measure (target, name, descriptor) {
 }
 /**
  * @Description 防止多次提交的装饰器
+ * errorCb 别写成箭头函数
  */
 export function handleSubmit (errorCb?: Function) {
     let isPending = false
     return function (target, name, descriptor) {
         const oldValue = descriptor.value
         descriptor.value = async function (...args: any[]) {
+            // console.log('args: ', ...args)
             if (isPending) return
             isPending = true
             try {
@@ -29,6 +31,31 @@ export function handleSubmit (errorCb?: Function) {
                 errorCb && errorCb.call(this, error, ...args)
                 isPending = false
             }
+        }
+        return descriptor
+    }
+}
+/**
+ * @Description 表单验证，跳到错误位置
+ * @param errorCb 校验失败的回调函数，别写成箭头函数
+ */
+export function validateForm (elFormName: string, beforeFunc?: Function, errorCb?: Function) {
+    return function (target, name, descriptor) {
+        const oldValue = descriptor.value
+        descriptor.value = async function (...args) {
+            beforeFunc && beforeFunc.call(this)
+            let r = this.$refs[elFormName].rules
+            this.$refs[elFormName].validate(async (value, r) => {
+                if (value) {
+                    await oldValue.call(this, ...args)
+                } else {
+                    this.$nextTick(() => {
+                        const dom = document.querySelector('.is-error')
+                        dom!.scrollIntoView()
+                        errorCb && errorCb.call(this, ...args)
+                    })
+                }
+            })
         }
         return descriptor
     }

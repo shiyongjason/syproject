@@ -10,13 +10,16 @@
             <div class="info-layout-item"><font style="flex: 0 0 70px">所属分部：</font><span>{{data.deptName}}</span></div>
         </div>
         <div class="info-layout">
-            <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>{{ data.poAmount?filters.money(data.poAmount,2)+' 元':'-'}}</span></div>
-            <div class="info-layout-item"><font style="flex: 0 0 100px">剩余货款金额：</font><span>{{ data.noPayAmount?filters.money(data.noPayAmount,2)+' 元':'-'}}</span></div>
+            <div class="info-layout-item"><font style="flex: 0 0 85px">采购单金额：</font><span>
+                {{ data.poAmount|fundMoneyHasTail}} 元</span></div>
+            <div class="info-layout-item"><font style="flex: 0 0 100px">剩余货款金额：</font><span>
+                {{ data.noPayAmount|fundMoneyHasTail}} 元</span></div>
         </div>
         <div class="info-layout">
-            <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>{{ data.applyAmount?filters.money(data.applyAmount,2)+' 元':'-'}}</span></div>
+            <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>
+                {{ data.applyAmount|fundMoneyHasTail}} 元</span></div>
             <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付形式：</font><span>
-                {{data.supplierPaymentType?'-':data.supplierPaymentType==1?'银行转帐':'银行承兑'}}
+                 {{paymentType.get(data.supplierPaymentType)}}
             </span></div>
         </div>
         <div class="info-layout">
@@ -28,7 +31,7 @@
             </div>
         </div>
         <!-- 货款申请信息 -->
-        <div class="tab-layout-title"><span></span>货款申请信息：<font>确认人：{{data.accountManager}}</font><font>确认时间：{{data.createTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>货款申请信息：<font>客户经理：{{data.accountManagers.length>0?data.accountManagers.toString():'-'}}</font><font>确认时间：{{data.createTime|formatterTime}}</font></div>
          <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 130px">供应商开户行名称：</font><span>{{data.supplierAccountName||'-'}}</span></div>
              <div class="info-layout-item"><font style="flex: 0 0 85px">银行联行号：</font><span>{{data.supplierBankNo||'-'}}</span></div>
@@ -41,7 +44,7 @@
              <div class="info-layout-item"><font style="flex: 0 0 70px">备注信息:</font><span>{{data.specialRemark||'-'}}</span></div>
          </div>
          <!-- 业财风控确认信息 -->
-        <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmDate">确认时间：{{data.upPaymentLoanHandoverList[0].confirmDate|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[0].confirmTime|formatterTime}}</font></div>
         <div class="info-layout">
             <template v-if="data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList">
                 <span class="info-layout-span" v-for="item in data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList" :key="item.id">
@@ -53,7 +56,7 @@
              <div class="info-layout-item"><font style="flex: 0 0 70px">审核备注:</font><span>{{data.upPaymentLoanHandoverList[0].remark||'-'}}</span></div>
          </div>
         <!-- 资金部放款审核岗确认信息 -->
-        <div class="tab-layout-title"><span></span>资金部放款审核岗确认信息：<font v-if="data.upPaymentLoanHandoverList[1].confirmBy">确认人：{{data.upPaymentLoanHandoverList[1].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[1].confirmDate">确认时间：{{data.upPaymentLoanHandoverList[1].confirmDate|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>资金部放款审核岗确认信息：<font v-if="data.upPaymentLoanHandoverList[1].confirmBy">确认人：{{data.upPaymentLoanHandoverList[1].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[1].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[1].confirmTime|formatterTime}}</font></div>
         <div class="info-layout">
             <template v-if="data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList">
                 <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList" :key="item.id">
@@ -61,12 +64,9 @@
                 </span>
             </template>
         </div>
-        <div class="info-layout">
-            <div class="info-layout-item"><font style="flex: 0 0 70px">审核备注:</font><span>{{data.upPaymentLoanHandoverList[1].remark||'-'}}</span></div>
-        </div>
         <h-button v-if="data.upPaymentLoanHandoverList[1].status==0" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[1].id)">确认信息</h-button>
         <!-- 资金部放款操作岗 -->
-        <div class="tab-layout-title"><span></span>资金部放款操作岗确认信息：<font v-if="data.upPaymentLoanHandoverList[2].confirmBy">确认人：{{data.upPaymentLoanHandoverList[2].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[2].confirmDate">确认时间：{{data.upPaymentLoanHandoverList[2].confirmDate|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>资金部放款操作岗确认信息：<font v-if="data.upPaymentLoanHandoverList[2].confirmBy">确认人：{{data.upPaymentLoanHandoverList[2].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[2].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[2].confirmTime|formatterTime}}</font></div>
 
         <div class="info-layout">
             <template v-if="data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList">
@@ -81,20 +81,18 @@
         <div v-if="data.upPaymentLoanHandoverList[2].status==1"><h-button style="margin-top:20px" type="primary">下载放款交接单</h-button></div>
     </div>
 </template>
-<script lang='tsx'>
+<script lang='ts'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { RespLoanHandoverInfo } from '@/interface/hbp-project'
 import { onConfirmApi } from '../api/index'
-import filters from '@/utils/filters'
-
+import { PAYMENTTYPE } from '../index.vue'
 @Component({
     name: 'loanHandoverInformation'
 })
 export default class LoanHandoverInformation extends Vue {
     @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
     @Prop({ default: '' }) readonly userInfo!:any
-    filters=filters
-
+    paymentType=PAYMENTTYPE
     get checkBox () {
         let res = {}
         this.data.upPaymentLoanHandoverList.map(item => {
@@ -106,7 +104,7 @@ export default class LoanHandoverInformation extends Vue {
         return res
     }
 
-    onCheckBox (key: any, val: any, list: any[] | any, index:number) {
+    onCheckBox (key: string | any, val: any, list: any[] | any, index:number) {
         if (list[index].status == 1) {
             console.log('checkBox', this.checkBox)
             return
@@ -116,6 +114,7 @@ export default class LoanHandoverInformation extends Vue {
             this.checkBox[item.paramKey] = this.checkBox[item.paramKey] || 0
         })
         this.checkBox[key] = val
+        this.$forceUpdate()
         console.log('checkBox', this.checkBox)
     }
 
