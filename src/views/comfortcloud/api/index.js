@@ -6,6 +6,7 @@ import qs from 'qs'
 export function findHomeGeneralSituation (params) {
     return axios.get(iotUrl + `/api/home-manage/general-situation`, { params })
 }
+
 // 家庭概况
 export function findEffectiveHome (params) {
     return axios.get(iotUrl + `/api/home-manage/general-situation`, { params })
@@ -15,6 +16,7 @@ export function findEffectiveHome (params) {
 export function findHomeGeneralDetails (homeId) {
     return axios.get(iotUrl + `/api/home-detail/${homeId}`)
 }
+
 // 房屋详情
 export function findHomeUserList (homeId) {
     return axios.get(iotUrl + `/api/home/users/${homeId}`)
@@ -28,6 +30,7 @@ export const getRealreport = (params) => {
 export const getHostoryreport = (params) => {
     return axios.get(iotUrl + '/uc/user/statistics/history/report', { params })
 }
+
 // 房间列表详情
 export function findRoomDetail (homeId) {
     return axios.get(iotUrl + `/api/home-manage/room-detail/${homeId}`)
@@ -37,82 +40,101 @@ export function findRoomDetail (homeId) {
 export function getMembersituation (params) {
     return axios.get(iotUrl + `/uc/user-manage/general-situation`, { params })
 }
+
 // 经销商会员列表分页查询
 export function getMerchantMembersituation (params) {
     return axios.post(iotUrl + `/mall/wx/user/boss/manage`, params)
 }
+
 // 销售线索管理会员列表分页查询
 export function getMerchantExernalMembersituation (params) {
     return axios.post(iotUrl + `/mall/boss/out-member`, params)
 }
+
 // 删除第三方销售线索数据
 export function deleteThirdExernalMembersituation (phone) {
     return axios.delete(iotUrl + `/mall/boss/out-member/third/${phone}`)
 }
+
 // 奖励管理
 export function merchantReward (params) {
     return axios.get(iotUrl + `/mall/boss/wx/reward/manage`, { params })
 }
+
 // 活动管理
 export function merchantActive (params) {
     return axios.get(iotUrl + `/mall/boss/shop-activity`, { params })
 }
+
 // 经销商分销员列表
 export function getMerchantMembersDistributor (params) {
     return axios.get(iotUrl + `/mall/boss/distributor`, { params })
 }
+
 // 经销商会员邀请注册列表分页查询
 export function getMerchantMemberInvitationRegistersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/registered/` + params.uuid, { params })
 }
+
 // 经销商会员企业信息
 export function getMerchantMemberEnterpriseInfo (params) {
     return axios.get(iotUrl + `/mall/boss/company/info/` + params)
 }
+
 // 经销商会员邀请注册列表分页查询
 export function getMerchantMemberInvitationChangesituation (params) {
     return axios.get(iotUrl + `/mall/boss/user/` + params)
 }// 经销商会员邀请注册列表分页查询
 export function getMerchantCompanyEmployee (params) {
     console.log(params)
-    return axios.get(iotUrl + `/mall/company/company-members/` + params)
+    return axios.get(iotUrl + `/mall/boss/company/company-members/` + params)
 }
+
 // 经销商会员购买记录
 export function getMerchantMemberInvitationBuy (params) {
     return axios.get(iotUrl + `/mall/boss/user/order/`, { params })
 }
+
 // 经销商会员购买记录
 export function getMerchantMemberInvitationBuyTotal (params) {
     return axios.get(iotUrl + `/mall/boss/user/order-total/`, { params })
 }
+
 // 经销商会员邀请成交列表分页查询
 export function getMerchantMemberInvitationOrdersituation (params) {
     return axios.get(iotUrl + `/mall/wx/user/boss/order/` + params.uuid, { params })
 }
+
 // 经销商会员总数查询
 export function getMerchantMemberTotalsituation (params) {
     return axios.post(iotUrl + `/mall/wx/user/boss/count`, params)
 }
+
 // 邀请详情订单修改
 export function updateInvitationDetail (params) {
     return axios.put(iotUrl + `/mall/boss/wx/reward`, params)
 }
+
 // 奖励发放
 export function sendReward (params) {
     return axios.post(iotUrl + `/mall/boss/wx/reward/send`, params)
 }
+
 // 修改推荐人
 export function recommendChange (params) {
     return axios.put(iotUrl + `/mall/boss/user/change-invite-user`, params)
 }
+
 // 修改销售顾问
 export function salerChange (params) {
     return axios.post(iotUrl + `/mall/boss/out-order/order-saler`, params)
 }
+
 // 修改企业信息备注
 export function updateCompanyInfo (params) {
     return axios.post(iotUrl + `/mall/boss/company`, params)
 }
+
 // 分销员审核订单修改
 export function updateDistribution (params) {
     return axios.post(iotUrl + `/mall/boss/distributor`, params)
@@ -123,19 +145,23 @@ export function delInvitationOrder (params) {
     console.log(params)
     return axios.delete(iotUrl + `/mall/boss/wx/reward/` + params.id, { params })
 }
+
 // 生效失效活动
 export function checkActiveStatus (params) {
     console.log(params)
     return axios.put(iotUrl + `/mall/boss/shop-activity`, params)
 }
+
 // 审核活动
 export function operationActiveStatus (params) {
     console.log(params)
     return axios.put(iotUrl + `/mall/boss/shop-activity/status`, params)
 }
+
 export function getMemberDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/login-detail`, { params })
 }
+
 export function getFamilyDetail (params) {
     return axios.get(iotUrl + `/uc/user-manage/home-info/${params}`)
 }
@@ -216,6 +242,7 @@ export function downloadQuestionTemp () {
 export function getCloudEquipmentErrorList (params) {
     return axios.get(iotUrl + `/api/device/breakdown`, { params })
 }
+
 // 下载故障模板
 export function downloadEquipmentErrorList () {
     axios.defaults.responseType = 'blob'
@@ -239,62 +266,77 @@ export function downloadEquipmentErrorList () {
         axios.defaults.responseType = 'json'
     })
 }
+
 // 设备故障字典
 export function getCloudDict (params) {
     return axios.get(iotUrl + `/uc/dictionary/search-by-item`, { params })
 }
+
 // 设备故障修改
 export function updateCloudEquipment (params) {
     return axios.put(iotUrl + `/api/device/breakdown`, params)
 }
+
 // 设备故障删除
 export function deleteCloudEquipment (params) {
     return axios.delete(iotUrl + `/api/device/breakdown`, { params })
 }
+
 // 智能玩法分页查询
 export function getCloudSmartPlayList (params) {
     return axios.get(iotUrl + `/api/intelligence-play`, { params })
 }
+
 // 新增智能玩法
 export function createCloudSmartPlay (params) {
     return axios.post(iotUrl + `/api/intelligence-play`, params)
 }
+
 // 编辑智能玩法
 export function updateCloudSmartPlay (params) {
     return axios.put(iotUrl + `/api/intelligence-play`, params)
 }
+
 // 删除智能玩法
 export function deleteCloudSmartPlay (params) {
     return axios.delete(iotUrl + `/api/intelligence-play`, { params })
 }
+
 // 智能玩法详情
 export function getCloudSmartPlayDetail (id) {
     return axios.get(iotUrl + `/api/intelligence-play/detail/${id}`)
 }
+
 // 消息推送列表
 export function getCloudSendMessageList (params) {
     return axios.get(iotUrl + `/api/push-message`, { params })
 }
+
 // 消息推送创建
 export function createCloudSendMessage (params) {
     return axios.post(iotUrl + `/api/push-message`, params)
 }
+
 // 消息推送更新
 export function updateCloudSendMessage (params) {
     return axios.put(iotUrl + `/api/push-message`, params)
 }
+
 // 消息推送删除
 export function deleteCloudSendMessage (params) {
     return axios.delete(iotUrl + `/api/push-message`, { params })
 }
+
 // 消息推送内容详情
 export function getCloudSendMessagePostDetail (id) {
     return axios.get(iotUrl + `/api/push-message/${id}`)
 }
+
 // 告警监控列表
 export function getCloudAlarmList (params) {
     return axios.get(iotUrl + `/api/device/upline-downline-alarm`, { params })
 }
+
 // 告警监控列表导出
 export function downloadCloudAlarmList (params) {
     axios.defaults.responseType = 'blob'
@@ -318,6 +360,7 @@ export function downloadCloudAlarmList (params) {
         axios.defaults.responseType = 'json'
     })
 }
+
 // 智能设备折线
 export function getCloudHistoryReport (params) {
     return axios.get(iotUrl + `/api/device/statistics/history/report`, { params })
@@ -326,87 +369,110 @@ export function getCloudHistoryReport (params) {
 export function getCloudRuntimeReport (params) {
     return axios.get(iotUrl + `/api/device/statistics/run-time/history/report`, { params })
 }
+
 export function getCloudNetworkReport (params) {
     return axios.get(iotUrl + `/api/device/network/boss/history/report`, { params })
 }
+
 export function getCloudDeviceCount (params) {
     return axios.get(iotUrl + `/api/device/statistics/count`, { params })
 }
+
 export function getCloudDeviceDetailList (params) {
     return axios.get(iotUrl + `/api/device/statistics/details`, { params })
 }
+
 export function getCloudHomeDetailList (params) {
     return axios.get(iotUrl + `/api/device/statistics/home/details`, { params })
 }
+
 export function getCloudHomeDetailSearchDict (params) {
     return axios.get(iotUrl + `/api/device/statistics/species`, { params })
 }
+
 export function getCloudNetworkDetailList (params) {
     return axios.get(iotUrl + `/api/device/network/boss/details`, { params })
 }
+
 export function getCloudNetworkModeTypeList (params) {
     return axios.get(iotUrl + `/api/device/network/species`, { params })
 }
+
 // 家庭明细分页查询
 export function getCloudHomeComfortReportList (params) {
     return axios.get(iotUrl + `/api/statistics/comfort/report`, { params })
 }
+
 // 舒适度场景统计报表
 export function getCloudHomeComfortStatisticsList (params) {
     return axios.get(iotUrl + `/api/statistics/comfort/statistics`, { params })
 }
+
 // 告警监控图表
 export function getCloudAlarmChart (params) {
     return axios.get(iotUrl + `/api/device/upline-downline-alarm/alarm-analysis`, { params })
 }
+
 // 消息推送 效果
 export function getCloudSendMessageDetailChart (params) {
     return axios.get(iotUrl + `/api/push-message/result/${params.id}`)
 }
+
 // 用户反馈列表
 export function getCloudUserFeedback (params) {
     return axios.get(iotUrl + `/uc/user/feedback-page`, { params })
 }
+
 // 舒适小百科列表 boss端
 export function getComfortEncyclopediaList (params) {
     return axios.get(iotUrl + `/api/comfy-encyclopedia/boss`, { params })
 }
+
 // 舒适小百科详情
 export function getComfortEncyclopediaDetail (articleId) {
     return axios.get(iotUrl + `/api/comfy-encyclopedia/${articleId}`)
 }
+
 // boss端新增一条舒适百科
 export function createCloudComfortEncyclopedia (params) {
     return axios.post(iotUrl + `/api/comfy-encyclopedia/boss`, params)
 }
+
 // boss端编辑一条舒适百科
 export function updateCloudComfortEncyclopedia (params) {
     return axios.put(iotUrl + `/api/comfy-encyclopedia/boss`, params)
 }
+
 // boss端删除一条舒适百科
 export function deleteCloudComfortEncyclopedia (params) {
     return axios.delete(iotUrl + `/api/comfy-encyclopedia/boss`, { data: params })
 }
+
 // 设备统计 空调
 export function getDeviceAirDetail (params) {
     return axios.get(iotUrl + `/api/device/statistics/home/air/details`, { params })
 }
+
 // 设备统计 地暖
 export function getDeviceFloorHeartDetail (params) {
     return axios.get(iotUrl + `/api/device/statistics/home/floor-heart/details`, { params })
 }
+
 // 设备统计 智能温控阀
 export function getDeviceTempCtlValveDetail (params) {
     return axios.get(iotUrl + `/api/device/statistics/home/temp-ctl-valve/details`, { params })
 }
+
 // 出库管理分页
 export function getOutboundList (params) {
     return axios.get(iotUrl + `/api/outbound`, { params })
 }
+
 // 删除出库管理
 export function deleteOutboundList (params) {
     return axios.delete(iotUrl + `/api/outbound`, { params })
 }
+
 // 出库管理导出
 export function downloadOutboundList (params) {
     axios.defaults.responseType = 'blob'
@@ -430,66 +496,82 @@ export function downloadOutboundList (params) {
         axios.defaults.responseType = 'json'
     })
 }
+
 // 闪屏页页面分页查询
 export function getSplashScreenList (params) {
     return axios.get(iotUrl + `/api/splash-screen`, { params })
 }
+
 // 弹窗广告分页查询
 export function getAdPopList (params) {
     return axios.get(iotUrl + `/api/pop-up`, { params })
 }
+
 // 闪屏删除
 export function deleteSplashScreen (params) {
     return axios.delete(iotUrl + `/api/splash-screen`, { params })
 }
+
 // 弹窗广告删除
 export function deleteAdPop (params) {
     return axios.delete(iotUrl + `/api/pop-up`, { params })
 }
+
 // 设置闪屏生效失效状态
 export function setSplashScreenStatus (params) {
     return axios.put(iotUrl + `/api/splash-screen/status?${qs.stringify(params)}`)
 }
+
 // 设置弹窗广告生效失效状态
 export function setAdPopStatus (params) {
     return axios.put(iotUrl + `/api/pop-up/status?${qs.stringify(params)}`)
 }
+
 // 新增闪屏页
 export function createSplashScreen (params) {
     return axios.post(iotUrl + `/api/splash-screen`, params)
 }
+
 // 新增弹窗广告
 export function createAdPop (params) {
     return axios.post(iotUrl + `/api/pop-up`, params)
 }
+
 // 编辑闪屏页
 export function updateSplashScreen (params) {
     return axios.put(iotUrl + `/api/splash-screen`, params)
 }
+
 // 编辑弹窗广告
 export function updateAdpop (params) {
     return axios.put(iotUrl + `/api/pop-up`, params)
 }
+
 // 闪屏详情
 export function getSplashScreenDetail (id) {
     return axios.get(iotUrl + `/api/splash-screen/detail/${id}`)
 }
+
 // 弹窗广告详情
 export function getAdPopDetail (id) {
     return axios.get(iotUrl + `/api/pop-up/detail/${id}`)
 }
+
 // 查询所有活动
 export function getAllActivity (params) {
     return axios.get(iotUrl + `/api/activity-center/all`, { params })
 }
+
 // 获取呼叫记录
 export function getCustomerService (params) {
     return axios.get(iotUrl + `/api/customer-service`, { params })
 }
+
 // 根据homeId获取家庭概况
 export function getHomeDetail (params) {
     return axios.get(iotUrl + `/api/home-manage/${params}`)
 }
+
 // 根据item查询字典
 export function getDictionary (params) {
     return axios.get(iotUrl + `/uc/dictionary/search-by-item`, { params })
@@ -550,10 +632,12 @@ export function deleteCloudMerchantAd (params) {
 export function getCloudMerchantAdDetail (params) {
     return axios.get(iotUrl + '/mall/boss/merchants-advertising/' + params)
 }
+
 // 获取招商广告详情
 export function getCloudMerchantAgentOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/manual-agent/edit-info', { params })
 }
+
 // 删除招商订单
 export function deleteCloudMerchantAgentOrderDetail (params) {
     return axios.delete(iotUrl + '/mall/boss/agent-sign/manual-agent', { params })
@@ -563,15 +647,17 @@ export function deleteCloudMerchantAgentOrderDetail (params) {
 export function saveCloudMerchantAd (params) {
     return axios.post(iotUrl + '/mall/boss/merchants-advertising', params)
 }
+
 // 代理订单保存
 export function saveManualAgent (params) {
-    return axios.post(iotUrl + '/mall/boss/agent-sign/manual-agent', params)
+    if (params.agentCode) { return axios.put(iotUrl + '/mall/boss/agent-sign/manual-agent', params) } else { return axios.post(iotUrl + '/mall/boss/agent-sign/manual-agent', params) }
 }
 
 // 招商订单列表
 export function getCloudMerchantOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/sign-order-page', { params })
 }
+
 // 招商订单详情
 export function getCloudMerchantOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/agent-detail', { params })
@@ -706,6 +792,7 @@ export function getLikeMerchantList (params) {
 export function getCloudMerchantProductOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/order', { params })
 }
+
 // 获取微信订单列表
 export function getCloudMerchantProductOutOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/out-order/page', { params })
@@ -715,6 +802,7 @@ export function getCloudMerchantProductOutOrderList (params) {
 export function getCloudMerchantProductOutOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/out-order/' + params.orderNo)
 }
+
 // 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/order/detail', { params })
