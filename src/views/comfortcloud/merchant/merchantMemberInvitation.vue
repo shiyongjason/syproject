@@ -774,6 +774,9 @@ export default {
                 query: { phone: this.$route.query.phone }
             })
         },
+        async requestMemberCommunicationList () {
+            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
+        },
         clearCommunicationRecordForm () {
             if (this.$refs['communicationRecordForm']) {
                 this.$refs['communicationRecordForm'].clearValidate()

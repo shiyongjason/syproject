@@ -209,7 +209,7 @@ export default {
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationOutOrdersituation(this.searchParams)
-            await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.enterpriseInfoData.phone })
             this.tableBuyData = this.merchantmemberInvitationOutOrderData.records
             this.pagination = {
                 pageNumber: this.merchantmemberInvitationOutOrderData.current,
@@ -276,7 +276,7 @@ export default {
                 let params = { ...data }
                 params.operator = this.userInfo.employeeName
                 await deleteCloudMerchantMemberCommunication(params)
-                await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+                await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.enterpriseInfoData.phone })
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -300,7 +300,7 @@ export default {
                         }
                         this.communicationRecordDialogVisible = false
                         this.clearCommunicationRecordForm()
-                        await this.findCloudMerchantMemberCommunicationList(this.searchParams)
+                        await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.enterpriseInfoData.phone })
                     } catch (e) {
                     }
                 }
