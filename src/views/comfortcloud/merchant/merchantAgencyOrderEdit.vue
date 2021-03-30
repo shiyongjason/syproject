@@ -5,17 +5,21 @@
                 <div class="page-body-title">
                     <h3>新增代理订单</h3>
                 </div>
+                <el-form-item label="代理商联系电话：" prop="contactNumber">
+                    <el-select v-model="form.contactNumber" @change='selectContactItem' placeholder="请输入代理商联系电话" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
+                        <el-option v-for="items in this.contactNumberOptions" :key="items.contactNumber" :label="items.contactNumber" :value="items">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="代理商公司全称：" prop="companyName">
                     <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入代理商公司全称" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
                 <el-form-item label="代理商联系人：" prop="contactUser">
                     <el-input v-model.trim="form.contactUser" show-word-limit placeholder="请输入代理商联系人" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-                <el-form-item label="代理商联系电话：" prop="contactNumber">
-                    <el-input v-model.trim="form.contactNumber" show-word-limit placeholder="请输入代理商联系电话" maxlength='50' class="newTitle"></el-input>
-                </el-form-item>
+
                 <span>代理商注册享钱后，该手机号对应的企业代理信息将自动同步</span>
-                <el-form-item label="选择代理区域" prop="country">
+                <el-form-item label="选择代理区域" prop="provinceName">
                     <el-col :span="6">
                         <div class="query-col-input">
                             <el-cascader placeholder="" :options="areaOptions" v-model="optarr" :clearable=true :collapse-tags=true :show-all-levels="true" ref="myCascader" @change="cityChange" :props="{ multiple: false ,value:'countryId',label:'name',children:'cities'}" filterable>
@@ -23,24 +27,24 @@
                         </div>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="详细地址：" prop="contactUser">
-                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入代理商联系人" maxlength='50' class="newTitle"></el-input>
+                        <el-form-item label="详细地址：" prop="contactAddress">
+                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入详细地址" maxlength='50' class="newTitle"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="代理等级" prop="region">
+                <el-form-item label="代理等级" prop="level">
                     <el-select placeholder="请选择代理等级" v-model="form.level">
                         <el-option label="一级" :value=1></el-option>
                         <el-option label="二级" :value=2></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="推荐搭配商品：">
+                <el-form-item label="推荐搭配商品：" prop="signSpecifications">
                     <el-button type="primary" @click="addAgency">新增</el-button>
                 </el-form-item>
                 <el-form-item label="商品名称：" v-for="(item,index) in form.signSpecifications" :key="index" :rules="rules.productId">
                     <el-col :span="8">
                         <el-form-item label="归属品类：">
-                            <el-select v-model="item.categoryId" @change="selectChanged(item)">
+                            <el-select v-model="item.categoryId" @change="selectChanged(item,index)">
                                 <el-option label="选择" value=""></el-option>
                                 <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
                             </el-select>
@@ -50,7 +54,7 @@
                         <el-form-item label="商品型号：">
                             <el-select v-model="item.specificationId" @change="selectSpecificationIdChanged(item)">
                                 <el-option label="选择" value=""></el-option>
-                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in item.categoryList" :disabled="selectSpecificationDisabled(item)" :key="item.specificationId"></el-option>
+                                <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryList[index]"  :key="item.specificationId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -67,7 +71,7 @@
                         </el-form-item>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="代理押金支付方式" prop="region">
+                <el-form-item label="代理押金支付方式" prop="payMethod">
                     <el-select placeholder="请选择支付方式" v-model="form.payMethod">
                         <el-option label="现金" :value=1></el-option>
                         <el-option label="支付宝" :value=20></el-option>
@@ -76,13 +80,13 @@
                         <el-option label="其他" :value=10></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="代理押金支付时间">
+                <el-form-item label="代理押金支付时间" prop="payTime">
                     <el-col :span="4" label-width="200px">
                         <el-date-picker placeholder="选择日期" v-model="form.payTime" style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-ddTHH:mm"></el-date-picker>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="商品主图：" prop="productImg" ref="productImg">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.productImg" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
+                <el-form-item label="商品主图：" prop="payCertificates" ref="productImg">
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
                         建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
@@ -129,9 +133,10 @@ export default {
                 signSpecifications: [],
                 operator: ''
             },
+            contactNumberOptions: [],
             options: [],
             optarr: [],
-            categoryTypes: [],
+            categoryList: [],
             allCategorys: [],
             menus: [
                 'head', // 标题
@@ -161,6 +166,12 @@ export default {
                     { required: true, message: '请输入联系人', trigger: 'change' }
                 ],
                 contactNumber: [{ required: true, message: '请输入联系人号码', trigger: 'change' }],
+                contactAddress: [{ required: true, message: '请输入联系地址', trigger: 'change' }],
+                provinceName: [{ required: true, message: '请输入地区', trigger: 'change' }],
+                level: [{ required: true, message: '请输入代理等级', trigger: 'change' }],
+                payMethod: [{ required: true, message: '请输入支付方式', trigger: 'change' }],
+                payTime: [{ required: true, message: '请输入支付时间', trigger: 'change' }],
+                payCertificates: [{ required: true, message: '请输入支付凭证', trigger: 'change' }],
                 type: [{
                     required: true,
                     validator: (rule, value, callback) => {
@@ -199,6 +210,7 @@ export default {
         ...mapGetters({
             cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
             nestDdata: 'nestDdata',
+            cloudMerchantList: 'cloudMerchantList',
             cloudMerchantAgentOrderDetail: 'cloudMerchantAgentOrderDetail',
             cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
@@ -228,6 +240,9 @@ export default {
                     return time.getTime() < Date.now() - 8.64e7
                 }
             }
+        },
+        productImgUrl () {
+            return this.form.payCertificates[0]
         }
     },
     async mounted () {
@@ -238,11 +253,13 @@ export default {
             this.getAgentDetail(this.$route.query.agentCode)
         }
         this.getFindNest()
+        this.categoryList = []
     },
     methods: {
         ...mapActions({
             findCloudMerchantAgentOrderDetail: 'findCloudMerchantAgentOrderDetail',
             findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
+            findCloudMerchantList: 'findCloudMerchantList',
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList',
             findNest: 'findNest'
         }),
@@ -251,14 +268,15 @@ export default {
             await this.findCloudMerchantAgentOrderDetail({ agentCode: val })
             this.form = this.cloudMerchantAgentOrderDetail
             this.optarr = [this.form.provinceId, this.form.cityId, this.form.countryId]
-            this.form.signSpecifications.map(async (item) => {
+            this.form.signSpecifications.map(async (item, index) => {
                 await this.findCloudMerchantShopCategoryTypeList({ categoryId: item.categoryId })
                 let data = this.cloudMerchantShopCategoryTypeList
-                if (!item.categoryList) { item.categoryList = data }
+                let list = [...this.categoryList]
+                list[index] = data
+                this.categoryList = list
             })
         },
         onBack () {
-            this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.go(-1)
         },
 
@@ -268,8 +286,7 @@ export default {
                 categoryName: '',
                 specificationId: '',
                 signAmount: 1000,
-                specificationName: '',
-                categoryList: []
+                specificationName: ''
             })
         },
         deleteClassifyMerchants: function (index) {
@@ -278,31 +295,32 @@ export default {
         onSaveAd () {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
-                    try {
-                        console.log(this.form)
-                        this.form.totalAgentAmount = parseInt(this.form.prepayAmount) + 2000
-                        this.form.operator += this.userInfo.employeeName
-                        this.form.signSpecifications.map((item) => {
-                            item.signAmount = 1000
-                        })
-                        if (this.$route.query.agentCode) {
-                            this.form.agentCode = this.$route.query.agentCode
-                            await saveManualAgent(this.form)
-                            this.$message.success('修改成功')
-                        } else {
-                            await saveManualAgent(this.form)
-                            this.$message.success('保存成功')
+                    this.$confirm(`维护代理订单后，该代理商即可享受价格优惠，请确认信息准确无误后再提交。`, '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消'
+                    }).then(async () => {
+                        try {
+                            this.form.totalAgentAmount = parseInt(this.form.prepayAmount) + 2000
+                            this.form.operator += this.userInfo.employeeName
+                            this.form.signSpecifications.map((item) => {
+                                item.signAmount = 1000
+                            })
+                            if (this.$route.query.agentCode) {
+                                this.form.agentCode = this.$route.query.agentCode
+                                await saveManualAgent(this.form)
+                                this.$message.success('修改成功')
+                            } else {
+                                await saveManualAgent(this.form)
+                                this.$message.success('保存成功')
+                            }
+                            this.loading = false
+                            this.$router.push({ path: '/comfortCloudMerchant/merchantManage/merchantOrder' })
+                        } catch (error) {
+                            this.loading = false
                         }
-
-                        // this.$router.push('/comfortCloudMerchant/merchantManage/merchantAd')
-                        this.loading = false
-                    } catch (error) {
-                        this.loading = false
-                        console.log('catch valid')
-                    }
+                    })
                 } else {
                     this.loading = false
-                    console.log('not valid')
                 }
             })
         },
@@ -310,7 +328,7 @@ export default {
         handleClose () {
             this.dialogVisible = false
         },
-        async selectChanged (item) {
+        async selectChanged (item, index) {
             item.specificationId = ''
             item.specificationName = ''
             await this.findCloudMerchantShopCategoryTypeList({ categoryId: item.categoryId })
@@ -320,7 +338,25 @@ export default {
                 }
             })
             let data = this.cloudMerchantShopCategoryTypeList
-            if (!item.categoryList) { item.categoryList = data }
+            let list = [...this.categoryList]
+            list[index] = data
+            this.categoryList = list
+        },
+        async selectContactItem (val) {
+            console.log(val)
+            this.form.countryId = val.countryId
+            this.form.countryName = val.countryName
+            this.form.cityId = val.cityId
+            this.form.provinceId = val.provinceId
+            this.form.provinceName = val.provinceName
+            this.form.contactAddress = val.contactAddress
+            this.form.contactUser = val.contactUser
+            this.form.companyName = val.companyName
+            this.optarr = [val.provinceId, val.cityId, val.countryId]
+        },
+        async remoteMethod (val) {
+            await this.findCloudMerchantList({ contactNumber: val, pageNumber: 1, pageSize: 1 })
+            this.contactNumberOptions = this.cloudMerchantList
         },
         selectSpecificationIdChanged (item) {
             this.cloudMerchantShopCategoryTypeList.find((value) => { // 这里的ClaOptions就是上面遍历的数据源

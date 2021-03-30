@@ -116,9 +116,9 @@
                                 </el-tag>
                             </div>
                         </div>
-                        <div class="page-body-cont-top-no-left">
-                            <span>员工信息:</span>
-                            <basicTable :tableLabel="tableEmployeeLabel" :tableData="tableEmployeeData"
+                        <div class="page-body-cont-top-no-align-items">
+                            <span>员工信息:  </span>
+                            <basicTable :tableLabel="tableEmployeeLabel" :tableData="this.tableEmployeeData"
                                         :isShowIndex='false' :pagination="paginationChange"
                                         @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
                                         :isAction="false">
@@ -296,7 +296,7 @@ export default {
                 { label: '角色', prop: 'role' },
                 { label: '员工微信昵称', prop: 'nickName', width: '220px' },
                 { label: '员工真实姓名', prop: 'remark', width: '220px' },
-                { label: '员工手机号', prop: 'phone' }
+                { label: '员工手机号', prop: 'phone' , width: '220px'}
             ],
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },

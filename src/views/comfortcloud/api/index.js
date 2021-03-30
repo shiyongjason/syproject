@@ -553,6 +553,10 @@ export function getCloudMerchantAdDetail (params) {
 export function getCloudMerchantAgentOrderDetail (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/manual-agent/edit-info', { params })
 }
+// 删除招商订单
+export function deleteCloudMerchantAgentOrderDetail (params) {
+    return axios.delete(iotUrl + '/mall/boss/agent-sign/manual-agent', { params })
+}
 
 // 招商广告保存
 export function saveCloudMerchantAd (params) {

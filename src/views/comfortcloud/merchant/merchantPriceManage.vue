@@ -177,8 +177,8 @@
                     <el-input v-model="form.promotedTagline" maxlength="100" :rows="2" type="textarea"
                               placeholder="输入推荐话术，将展示在推广商品列表中，不超过100字符"/>
                 </el-form-item>
-                <el-form-item label="分享话术：" prop="promotedTagline">
-                    <el-input v-model="form.promotedTagline" maxlength="100" :rows="2" type="textarea"
+                <el-form-item label="分享话术：" prop="shareTagline">
+                    <el-input v-model="form.shareTagline" maxlength="100" :rows="2" type="textarea"
                               placeholder="输入分享话术，不超过100字符"/>
                 </el-form-item>
                 <div style="height : 20px"></div>
@@ -216,6 +216,7 @@ export default {
                 productImg: '',
                 productDetailImg: '',
                 retailPrice: '',
+                shareTagline: '',
                 costPrice: '',
                 commissionRate: '',
                 priceList: [{
@@ -315,6 +316,9 @@ export default {
                 ],
                 promotedTagline: [
                     { required: false, message: '请输入推广话术' }
+                ],
+                shareTagline: [
+                    { required: false, message: '请输入分享话术' }
                 ]
             }
         }
@@ -389,6 +393,7 @@ export default {
                     productImg: '',
                     productDetailImg: '',
                     retailPrice: '',
+                    costPrice: '',
                     commissionRate: '',
                     priceList: [{
                         id: '',
@@ -556,8 +561,10 @@ export default {
                 productImg: data.productImg,
                 productDetailImg: data.productDetailImg,
                 retailPrice: data.retailPrice,
+                costPrice: data.costPrice,
                 commissionRate: data.commissionRate,
                 priceList: data.priceList,
+                shareTagline: data.shareTagline,
                 promotedTagline: data.promotedTagline,
                 operator: data.operator
             }

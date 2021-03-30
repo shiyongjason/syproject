@@ -78,8 +78,8 @@
 
 <script>
 
-import { mapGetters, mapActions } from 'vuex'
-import { deleteAppVersion } from '../../appUpdate/api'
+import { mapGetters, mapActions, mapState } from 'vuex'
+import { deleteCloudMerchantAgentOrderDetail } from '../api'
 
 export default {
     name: 'merchantOrder',
@@ -107,6 +107,7 @@ export default {
                 { label: '代理级别', prop: 'level' },
                 { label: '代理品类', prop: 'categoryName' },
                 { label: '订单金额', prop: 'payAmount' },
+                { label: '提货预付款', prop: 'prepayAmount', formatters: 'price' },
                 { label: '订单状态', prop: 'status' }],
             tableLabelDetail: [
                 { label: '代理品类', prop: 'categoryName' },
@@ -118,6 +119,9 @@ export default {
         this.queryList(this.queryParams)
     },
     computed: {
+        ...mapState({
+            userInfo: state => state.userInfo
+        }),
         ...mapGetters({
             cloudMerchantOrderList: 'cloudMerchantOrderList',
             cloudMerchantOrderDetail: 'cloudMerchantOrderDetail',
@@ -178,18 +182,18 @@ export default {
         onEdit: function (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantManage/merchantAgencyOrderEdit', query: val })
         },
-        async onDelete (row) {
+        async onDelete (value) {
             this.$confirm(`删除该订单后，该经销商的代理信息也将被删除，请确认是否继续删除？`, '删除代理订单', {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消'
             }).then(async () => {
-                await deleteAppVersion(row.id)
+                await deleteCloudMerchantAgentOrderDetail({ agentCode: value.agentCode, operator: this.userInfo.employeeName })
                 this.$message({
                     showClose: true,
                     message: '删除成功',
                     type: 'success'
                 })
-                this.onQuery()
+                this.onSearch()
             })
         },
         payStatus: function (status) {
