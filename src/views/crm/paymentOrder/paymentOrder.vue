@@ -108,11 +108,11 @@
                               (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)">
                         支付确认
                     </h-button>
-                    <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
+                    <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
                                   scope.data.row.supplierPayFlag === 1
                               )">
                         上游支付
-                    </h-button>
+                    </h-button> -->
                     <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
                                   scope.data.row.goodsConfirmFlag === 1
                               )">确认收货</h-button>

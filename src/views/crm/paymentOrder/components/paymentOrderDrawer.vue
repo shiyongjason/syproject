@@ -4,6 +4,7 @@
                    :before-close="handleClose" :wrapperClosable=false> -->
         <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='60%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
             <template #connect>
+                <h-button type="primary" v-if="paymentOrderDetail.payOrderDetail.isShowDownloadLoan" @click="onDownFile">下载放款交接单</h-button>
                 <div class="drawer-content">
                     <div class="info-content">
                         <div class="row-filed">
@@ -120,23 +121,23 @@
                                 <span class="label">供应商联行号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierBankNo}}
                             </p>
-                            <p class="col-filed col-25">
+                            <p class="col-filed">
                                 <span class="label">供应商开户行名称：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountName}}
                             </p>
-                            <p class="col-filed col-25">
+                            <p class="col-filed ">
                                 <span class="label">供应商银行账号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
-                            </p>
-                            <p class="col-filed col-25">
-                                <span class="label">期望上游支付日期：</span>
-                                {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
                             </p>
 
                         </div>
                         <div class="row-filed">
-                            <p class="col-filed col-25">
-                                <span class="label">特殊说明：</span>
+                            <p class="col-filed">
+                                <span class="label">期望上游支付日期：</span>
+                                {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
+                            </p>
+                            <p class="col-filed">
+                                <span class="label">备注信息：</span>
                                 {{paymentOrderDetail.payOrderDetail.specialRemark}}
                             </p>
                         </div>
@@ -225,8 +226,8 @@
                                         <div class="col-filed info-img-group">
                                             <span class="label">网银盾照片：</span>
                                             <p class="content">
-                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">
+                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles">
                                                         <imageAddToken :file-url="item.url" />
                                                     </span>
                                                 </template>
@@ -238,8 +239,8 @@
                                         <div class="col-filed info-img-group">
                                             <span class="label">共管户截图：</span>
                                             <p class="content">
-                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.paymentDetail">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.paymentDetail">
+                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">
+                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles">
                                                         <imageAddToken :file-url="item.url" />
                                                     </span>
                                                 </template>
@@ -249,12 +250,15 @@
                                     <div class="row-filed">
                                         <p class="col-filed col-25">
                                             <span class="label">质押信息：</span>{{
-                                            paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
+                                            paymentOrderDetail.payOrderDetail.pledgeNo
                                         }}
                                         </p>
                                         <p class="col-filed col-25">
-                                            <span class="label">OA审批编号：</span>{{
-                                            paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
+                                            <span class="label">OA审批编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
+                                        </p>
+                                        <p class="col-filed col-25">
+                                            <span class="label">审核备注：</span>{{
+                                            paymentOrderDetail.payOrderDetail.approvalRemark
                                         }}
                                         </p>
                                     </div>
@@ -644,7 +648,7 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { getPaymentOrderDetail, updateServiceAmountAndTime } from '@/views/crm/paymentOrder/api'
+import { getPaymentOrderDetail, updateServiceAmountAndTime, downFile } from '@/views/crm/paymentOrder/api'
 import PaymentOrderDict from '../paymentOrderDict'
 import FundsDict from '@/views/crm/funds/fundsDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
@@ -862,6 +866,10 @@ export default {
             }
             // const { data } = await getPaymentOrderDetail(this.row.id)
             // this.paymentOrderDetail = data
+        },
+        async onDownFile () {
+            const { data } = await downFile(this.paymentOrderDetail.payOrderDetail.id)
+            window.location.href = data
         }
     },
     watch: {
