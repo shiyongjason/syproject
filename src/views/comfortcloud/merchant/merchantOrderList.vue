@@ -36,7 +36,7 @@
                     <div class="query-col-input">
                         <el-select v-model="queryParams.source" clearable>
                             <el-option label="全部" value="" />
-                            <el-option label="享钱" value="1" />
+                            <el-option label="微信小店" value="1" />
                             <el-option label="第三方渠道" value="2" />
                         </el-select>
                     </div>
