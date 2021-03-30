@@ -172,27 +172,23 @@ export default {
                 payMethod: [{ required: true, message: '请输入支付方式', trigger: 'change' }],
                 payTime: [{ required: true, message: '请输入支付时间', trigger: 'change' }],
                 payCertificates: [{ required: true, message: '请输入支付凭证', trigger: 'change' }],
-                type: [{
+                signSpecifications: [{
                     required: true,
                     validator: (rule, value, callback) => {
                         if (!value) {
                             return callback(new Error('商品类型不能为空'))
                         }
-
-                        const index = parseInt(rule.field.split('.')[1])
-                        const categoryId = this.form.signSpecifications[index].categoryId
-                        const specificationId = value
-
+                        let categoryIds = []
                         for (let i = 0; i < this.form.signSpecifications.length; i++) {
-                            if (i === index) {
-                                continue
-                            }
                             let item = this.form.signSpecifications[i]
-                            if (item.categoryId === categoryId && item.specificationId === specificationId) {
+                            if (categoryIds.includes(item.specificationName)) {
                                 return callback(new Error('商品类型不能重复'))
+                            } else {
+                                categoryIds.push(item.specificationName)
                             }
                         }
-                        callback()
+
+                        return callback()
                     },
                     trigger: 'change'
                 }]

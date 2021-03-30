@@ -296,7 +296,7 @@ export default {
                 { label: '角色', prop: 'role' },
                 { label: '员工微信昵称', prop: 'nickName', width: '220px' },
                 { label: '员工真实姓名', prop: 'remark', width: '220px' },
-                { label: '员工手机号', prop: 'phone' , width: '220px'}
+                { label: '员工手机号', prop: 'phone', width: '220px' }
             ],
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
@@ -488,7 +488,7 @@ export default {
             this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
         },
         async employeeData () {
-            await this.findMerchantCompanyEmployee({ 'companyCode ': this.$route.query.companyCode })
+            await this.findMerchantCompanyEmployee(this.$route.query.companyCode)
             this.tableEmployeeData = this.companyEmployeeData
         },
         async showDliag (val) {

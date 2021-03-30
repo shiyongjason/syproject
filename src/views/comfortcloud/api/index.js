@@ -74,7 +74,8 @@ export function getMerchantMemberInvitationChangesituation (params) {
     return axios.get(iotUrl + `/mall/boss/user/` + params)
 }// 经销商会员邀请注册列表分页查询
 export function getMerchantCompanyEmployee (params) {
-    return axios.post(iotUrl + `/mall/company/company-members/`, params)
+    console.log(params)
+    return axios.get(iotUrl + `/mall/company/company-members/` + params)
 }
 // 经销商会员购买记录
 export function getMerchantMemberInvitationBuy (params) {
