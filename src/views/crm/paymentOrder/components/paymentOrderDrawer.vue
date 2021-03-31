@@ -228,7 +228,7 @@
                                             <p class="content">
                                                 <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">
                                                     <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles">
-                                                        <imageAddToken :file-url="item.url" />
+                                                        <img :src=item.fileUrl />
                                                     </span>
                                                 </template>
                                             </p>
@@ -241,7 +241,7 @@
                                             <p class="content">
                                                 <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">
                                                     <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles">
-                                                        <imageAddToken :file-url="item.url" />
+                                                        <img :src=item.fileUrl />
                                                     </span>
                                                 </template>
                                             </p>
