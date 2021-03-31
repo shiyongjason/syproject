@@ -15,33 +15,30 @@
             </el-form-item>
             <el-form-item label="采购明细表：">
                 <div class="info-img-group">
-                    <span :key="item.key" class="img-box"  v-for="item in enterReceiptDetail.detailed">
+                    <span :key="item.key" class="img-box" v-for="item in enterReceiptDetail.detailed">
                         <imageAddToken :file-url="item.fileUrl" />
                     </span>
                 </div>
             </el-form-item>
             <el-form-item label="本次到货金额：" prop="goodsAmount">
-               <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
+                <el-input type="text" placeholder="请输入" v-model="formData.goodsAmount" maxlength="50" v-isNegative:2="formData.goodsAmount"></el-input>
             </el-form-item>
             <el-form-item label="到货验收单：" prop="reqAttachDocs">
-                <OssFileHosjoyUpload
-                    v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=20
-                    :limit=20 :action='action' :uploadParameters='uploadParameters'
-                    style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png">
+                <OssFileHosjoyUpload v-model="formData.reqAttachDocs" :showPreView=true :fileSize=20 :fileNum=9 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
                 </OssFileHosjoyUpload>
-                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传20张图片，单张图片限制20M</p>
+                <p class="tips">上游发货凭证，经销商收货凭证、项目甲方收货凭证 （凭证包括不限于发货单、收货单、物流单、出库单、签收单等），最多可上传9个文件，单个文件限制20M</p>
             </el-form-item>
             <el-form-item label="收货备注：">
                 <el-input type="textarea" v-model="formData.goodsRemark" maxlength="200"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-                <h-button type="assist" @click="onCancel">取消</h-button>
-                <h-button type="primary" @click="onEnter">确认</h-button>
-            </span>
+            <h-button type="assist" @click="onCancel">取消</h-button>
+            <h-button type="primary" @click="onEnter">确认</h-button>
+        </span>
     </el-dialog>
 </template>
 
@@ -63,7 +60,7 @@ export default {
             type: Boolean,
             default: false
         },
-        params: { }
+        params: {}
     },
     data () {
         return {
@@ -151,7 +148,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.info-img-group{
+.info-img-group {
     display: flex;
     width: 100%;
     flex-wrap: wrap;
@@ -177,7 +174,6 @@ export default {
     .label {
         flex: 0 0 100px;
     }
-
 }
 .info-img {
     width: 80px;
@@ -187,7 +183,7 @@ export default {
 .tips {
     color: #8d8d8d;
 }
-/deep/ .el-dialog__body{
+/deep/ .el-dialog__body {
     max-height: 480px;
     overflow-x: hidden;
     overflow-y: scroll;
