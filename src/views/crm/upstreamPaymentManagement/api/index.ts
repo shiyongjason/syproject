@@ -30,3 +30,7 @@ export const onSubmitPayments: (params: ReqSupplierSubmit) => AxiosPromise<void>
 // }
 
 export const getSupplierDownload = (paymentOrderId) => axios.get(`/project/api/supplier-payments/${paymentOrderId}/download`)
+
+export const getUpStreamPaymentTotalAmountApi: (params: ReqUpStreamPaymentQuery) => AxiosPromise<number> = (params) => {
+    return axios.get('/project/api/supplier-payments/total-amount', { params })
+}

@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="query-cont__row">
-                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
+                <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
             <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
@@ -185,7 +185,6 @@ import elImageAddToken from '@/components/elImageAddToken/index.vue' // 组件�
 import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
-import { ccpBaseUrl } from '@/api/config'
 import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
@@ -279,6 +278,7 @@ export default class UpstreamPaymentManagement extends Vue {
         paymentBank: ''
     }
 
+    totalAmount:number = 0
     activeName:string='loanHandoverInformation'
     loanHandoverInformation:RespLoanHandoverInfo = '' as unknown as RespLoanHandoverInfo
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
@@ -425,6 +425,9 @@ export default class UpstreamPaymentManagement extends Vue {
         const { data } = await Api.getUpStreamPaymentApi(this.queryParams)
         this.tableData = data.records || []
         this.page.total = data.total as number
+
+        const res = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
+        this.totalAmount = res.data
     }
 
     sortChange (e) {
