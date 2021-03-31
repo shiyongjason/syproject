@@ -336,7 +336,7 @@ export default class UpstreamPaymentManagement extends Vue {
     get isShowTabs () {
         let temp:boolean | undefined = false
         // this.loanHandoverInformation初始化为空字符串
-        temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.some(item => {
+        temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.every(item => {
             return item.status == 1
         })
         console.log('isShowTabs', temp)
@@ -368,7 +368,14 @@ export default class UpstreamPaymentManagement extends Vue {
     ]
 
     onRenderPaymentLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
-        return <span>{scope.row.paymentStatus}/{scope.row.paymentNumber}</span>
+        // TODO支付状态 1：待出票 2：部分出票
+        return (
+            <span>
+                {scope.row.paymentStatus != null
+                    ? scope.row.paymentStatus == 1 ? '待支付' : '部分支付'
+                    : '-'}/{scope.row.paymentNumber}
+            </span>
+        )
     }
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
         return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
