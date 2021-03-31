@@ -50,7 +50,7 @@
                         is-action="true"
                         isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
-                    {{ scope.data.row.level === 1 ? '一级': '二级' }}
+                    {{ scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)') }}
                 </template>
                 <template slot="contactUser" slot-scope="scope">
                     <p>{{scope.data.row.contactUser}}</p>
