@@ -511,11 +511,11 @@ export default {
             },
             contactFormRules: {
                 email: [
-                    { required: true, message: '请输入电子邮箱', trigger: 'blur' },
+                    // { message: '请输入电子邮箱', trigger: 'blur' },
                     { validator: Email, trigger: 'blur' }
                 ],
                 contactAddress: [
-                    { required: true, message: '请输入联系地址', trigger: 'blur' }
+                    { message: '请输入联系地址', trigger: 'blur' }
                 ]
             },
             whiteRecordsList: [],

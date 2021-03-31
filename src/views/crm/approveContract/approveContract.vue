@@ -1,6 +1,7 @@
 <template>
     <div class="page-body B2b">
-        <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='currentKey.inputStyle==9' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]"></el-image>
+        <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='currentKey.inputStyle==9&&isRenderUpload' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]">
+        </el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
                 <div>
@@ -110,7 +111,7 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" size='580px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer class="editordrawerbox" title="编辑字段" :visible.sync="editorDrawer" :size='editordrawerboxSize' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="approvalcontract-layout-left">
                 <h1>字段/自定义合同条款修订</h1>
                 <div class="setarea" v-if="currentKey">
@@ -136,8 +137,8 @@
                         </el-form> -->
                     <!-- else -->
                     <p class="setarea-key">{{currentKey.paramName}}：</p>
-                    <p style="display: flex;justify-content: space-between;align-items: center;">
-                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9?'':'width:100%'" @submit.native.prevent>
+                    <div style="display: flex;justify-content: space-between;align-items: center;">
+                        <el-form :rules="rules" :model="currentKey" ref="ruleForm" label-width="100px" class="demo-ruleForm" :style="currentKey.inputStyle==9&&isRenderUpload?'':'width:100%'" @submit.native.prevent>
                             <el-form-item prop="formValidator" v-for="(value,key,index) in currentKeyToComponent()" :key="index">
                                 <component :is="key" v-bind="value.bind||{}" v-on="value.on||{}">
                                     <template v-if="value.slot" :slot="value.slot">{{value.innerHtml||''}}</template>
@@ -149,15 +150,16 @@
                             </el-form-item>
                         </el-form>
 
-                        <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -6px;"
+                        <hosjoyUpload v-model="imgArr" :showPreView='false' v-if="isRenderUpload&&currentKey.inputStyle==9" class="upload-editor" drag :action="action" :multiple='!!currentKey.multiple' :fileSize='20' :fileNum='imgArr.length+1' style="width:340px;margin-right:20px;margin-top: -24px;"
                             accept='.jpeg,.jpg,.png' :uploadParameters='uploadParameters' @successArg='successArg'>
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em>后点击<em>保存</em></div>
                             <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
                         </hosjoyUpload>
-                    </p>
-                    <h-button v-if="currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
-                    <h-button style="margin-top:10px" @click="onSaveContent('')" type="primary">保存</h-button>
+                    </div>
+                    <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-20px;"></div>
+                    <h-button v-if="isRenderUpload&&currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
+                    <h-button @click="onSaveContent('')" type="primary">保存</h-button>
                 </div>
                 <div class="tips">
                     <div><b>注意事项：</b></div>
@@ -193,6 +195,7 @@ import selectCom from './components/select'
 import isAllNum from './components/isAllNum'
 import isPositiveInt from './components/isPositiveInt'
 import isNum from './components/isNum'
+import serviceFeeToTable from './components/serviceFeeToTable'
 import inputAutocomplete from './components/inputAutocomplete'
 import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { mapState, mapActions } from 'vuex'
@@ -204,9 +207,12 @@ import comRender from './comRender'
 // http://tinymce.ax-z.cn/general/basic-setup.php
 export default {
     name: 'approveContract',
-    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender },
+    components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender, serviceFeeToTable },
     data () {
         return {
+            showServiceFee: false,
+            editordrawerboxSize: '580px',
+            serviceFee: '',
             TYCList: [], // 天眼查数据
             contentvsDataVisible: false,
             contentvsDataList: [],
@@ -311,6 +317,33 @@ export default {
                 return 'isNum'
             }
             return 'elInput'
+        },
+        isRenderUpload () {
+            console.log('isRenderUpload', this.currentKey.paramKey)
+            // 销售合同  的服务费分期表格
+            if (this.detailRes.contractTypeId == 10003 && this.currentKey.paramKey === 'purch_service_fee_form') {
+                let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
+                //  1:一次性采购 2：分批采购
+                if (temp && (temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
+                    return false
+                } else {
+                    return true
+                }
+            }
+            return this.currentKey.inputStyle == 9
+        },
+        computedServiceFee: {
+            get () {
+                if (this.contractFieldsList) {
+                    let temp = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                    return temp.paramValue
+                }
+                return ''
+            },
+            set (val) {
+                let temp = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                temp.paramValue = val
+            }
         }
     },
     methods: {
@@ -351,12 +384,20 @@ export default {
             done()
         },
         editorDrawerClose (done) {
+            console.log('editorDrawerClose')
             if (this.imgArr && this.imgArr.length > 0) {
                 this.imgArr = []
             }
             if (this.TYCList.length > 0) {
                 this.TYCList = []
             }
+            this.serviceFee = ''
+            this.showServiceFee = false
+            let temp = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+            if (temp) {
+                temp.paramValue = this.originalContentFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0].paramValue
+            }
+            this.editordrawerboxSize = '580px'
             done()
         },
         onBlur () {
@@ -478,7 +519,8 @@ export default {
                             max: 6,
                             min: 3,
                             marks: { 3: '3个月', 4: '4个月', 5: '5个月', 6: '6个月' },
-                            style: { marginBottom: '30px' }
+                            style: { marginBottom: '30px' },
+                            showTooltip: false
                         },
                         on: {
                             input: (val) => { this.currentKey.paramValue = val }
@@ -502,21 +544,50 @@ export default {
                     }
                 },
                 9: {
-                    elImage: {
-                        bind: {
-                            style: 'width: 140px; height: 140px; border-radius: 7px;border: 1px solid #d9d9d9',
-                            src: this.currentKey.paramValue || this.emptyImg,
-                            fit: 'cover'
-                            // previewSrcList: [this.currentKey.paramValue]
-                        },
-                        on: {
-                            input: (val) => { console.log(val) },
-                            click: (event) => {
-                                console.log(this.$refs['zoomImage'])
-                                this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
+                    [this.isRenderUpload ? 'elImage' : 'serviceFeeToTable']:
+                        this.isRenderUpload
+                            // render elImage
+                            ? {
+                                bind: {
+                                    style: 'width: 140px; height: 140px; border-radius: 7px;border: 1px solid #d9d9d9',
+                                    src: this.currentKey.paramValue || this.emptyImg,
+                                    fit: 'cover'
+                                    // previewSrcList: [this.currentKey.paramValue]
+                                },
+                                on: {
+                                    input: (val) => { console.log(val) },
+                                    click: (event) => {
+                                        console.log(this.$refs['zoomImage'])
+                                        this.$refs['zoomImage'] && this.$refs['zoomImage'].clickHandler()
+                                    }
+                                }
                             }
-                        }
-                    }
+                            // render elInput
+                            : {
+                                bind: {
+                                    value: this.computedServiceFee,
+                                    placeholder: '请输入内容',
+                                    class: this.currentKey.paramKey,
+                                    style: { width: '400px' }
+                                    // disabled: !this.currentKey.modify
+                                },
+                                on: {
+                                    inputService: async (val) => {
+                                        this.computedServiceFee = val
+                                    },
+                                    // 生成表格
+                                    onServiceFee: async () => {
+                                        await this.onServiceFee()
+                                        let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+                                        if (loanMonth.paramValue > 3) {
+                                            this.editordrawerboxSize = `${loanMonth.paramValue * 165}px`
+                                        } else {
+                                            this.editordrawerboxSize = '580px'
+                                        }
+                                        this.showServiceFee = true
+                                    }
+                                }
+                            }
                 },
                 // 年份选择器
                 10: {
@@ -572,8 +643,49 @@ export default {
             }
             return comObj[this.currentKey.inputStyle]
         },
+        // 点击生成表格
+        onServiceFee (flage = false, _serviceFeeEstimate = '', _loanMonth = '') {
+            return new Promise((resolve, reject) => {
+                // 务费分期表格 purch_service_fee_form // 采购批次：purch_order_purch_batch
+                // service_fee_estimate 服务费预计 / loan_month 剩余货款支付周期
+                let serviceFeeEstimate = _serviceFeeEstimate || this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                let loanMonth = _loanMonth || this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+                let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
+                const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期' }
+                // 表格数据渲染成服务费表格div
+                let tableHead = `<span style="border-top:1px solid #3a3a3a;float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">支付日期</span>`
+                let tableBody = `<span style="float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">支付金额</span>`
+                let preTotal = this.$multipliedBy(loanMonth.paramValue - 1, tableItem) // 精确乘法
+                let rest = this.$minus(serviceFeeEstimate.paramValue, preTotal) // 精确减法
+                for (let i = 0; i < loanMonth.paramValue * 1; i++) {
+                    let head = `<span style="border-top:1px solid #3a3a3a;float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">${dayObj[i]}</span>`
+                    let body = `<span style="float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">${i == loanMonth.paramValue - 1 ? rest.toFixed(2) : tableItem}元</span>`
+                    tableHead += head
+                    tableBody += body
+                }
+                let str = `<div contenteditable="false" class="purch_service_fee_form" style='cursor: pointer;border-left:1px solid #3a3a3a;width:${(loanMonth.paramValue + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
+                this.serviceFee = str
+                // if (loanMonth.paramValue > 3 && this.showServiceFee) {
+                //     this.editordrawerboxSize = `${loanMonth.paramValue * 165}px`
+                // } else {
+                //     this.editordrawerboxSize = '580px'
+                // }
+                // 是否生成
+                if (flage) {
+                    this.$nextTick(async () => {
+                        let tableDoms = this.contractDocument.getElementsByClassName('purch_service_fee_form')
+                        // 修改页面上的表格
+                        console.log('修改页面上的表格')
+                        Array.from(tableDoms).map(item => {
+                            item.outerHTML = this.serviceFee
+                        })
+                    })
+                }
+
+                resolve()
+            })
+        },
         async remoteMethod (val) {
-            console.log('remoteMethod', val)
             // 天眼查查询
             const { data } = await getTYCList({ word: val })
             if (data) {
@@ -583,8 +695,6 @@ export default {
         },
         handleCommand (command) {
             this.currentKey = command
-            console.log('修改字段: ', this.currentKey)
-            console.log('修改前字段', this.currentKeyOriginal)
         },
         async getDiff (item) {
             const { lastContentId, currentContentId } = JSON.parse(item)
@@ -621,6 +731,16 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
+            let flag = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
+            let flagBatch = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_order_purch_batch')[0]
+
+            if (flag && !flag.paramValue && flagBatch && flagBatch.paramValue == '分批采购') {
+                this.$message({
+                    message: `服务费分期表格(采购单)不能为空`,
+                    type: 'error'
+                })
+                return
+            }
             this.dialog.dialogVisible = true
             this.dialog.title = title
             this.dialog.status = status
@@ -765,7 +885,14 @@ export default {
             this.editorDrawer = false
         },
         async setImg () {
-            if (this.imgArr.length == 0) return
+            console.log('setImg')
+            if (this.imgArr.length == 0) {
+                this.$message({
+                    message: `图片不能为空`,
+                    type: 'error'
+                })
+                return
+            }
             this.imgArr.map(img => {
                 img.url = img.fileUrl
                 img.size = ''
@@ -798,7 +925,6 @@ export default {
             let fieldOriginalContent = ''
             // 修改键值对
             let contractFieldsList = JSON.parse(this.detailRes.contractFieldsList)
-            console.log('contractFieldsList: ', contractFieldsList)
             contractFieldsList.map(item => {
                 if (item.paramKey === this.currentKey.paramKey) {
                     // 图片非必填首次执行,可多图
@@ -813,7 +939,6 @@ export default {
                         item.paramValue.map((img, i) => {
                             // ?x-oss-process=image/auto-orient,1  页面上的图片有些在crm加了这个属性，而服务器的没有，导致了用===查找不到
                             if (img.fileUrl === this.oldImg || this.oldImg.indexOf(img.fileUrl) != -1) {
-                                console.log('i: ', i)
                                 let a = JSON.parse(JSON.stringify(item.paramValue))
                                 a.splice(i, 1, ...this.imgArr)
                                 item.paramValue = a
@@ -822,8 +947,19 @@ export default {
                     }
                 }
             })
-            console.log('contractFieldsList', contractFieldsList)
-            // return
+            console.log({
+                'contractId': this.$route.query.id,
+                // 合同审批角色 1：分财 2：风控 3：法务
+                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                'fieldName': this.currentKey.paramKey, // 编辑字段
+                'fieldOriginalContent': fieldOriginalContent, // 编辑前内容
+                // 'fieldContent': temp[0].fileUrl, // 编辑内容
+                'fieldContent': JSON.stringify(this.imgArr), // 编辑内容
+                'contractContent': this.contractDocument.innerHTML, // 拿input版的合同去提交。法务审核的时候需要用到。
+                'createBy': this.userInfo.employeeName,
+                'contractFieldsList': JSON.stringify(contractFieldsList) // 合同字段键值对
+            })
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -842,7 +978,92 @@ export default {
             })
             this.editorDrawer = false
         },
+        // 由于以前的逻辑不太记得了，也避免出错，重写一个保存表格方法
+        async onHandleSave (propName = '') {
+            console.log('onHandleSave')
+            try {
+                let tempObj = {}
+                let tempArr = []
+                this.contractFieldsList.map(item => {
+                    let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
+                    // 筛选出页面上的键值对，可能会被删除
+                    if (DomList && DomList.length > 0) {
+                        // 页面合同上的所有键值对、签署字段不存在className
+                        if (!(item.paramKey in tempObj) && item.paramKey !== '') {
+                            tempObj[item.paramKey] = JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === item.paramKey)
+                        }
+                    }
+                })
+                if (propName) {
+                    tempObj[propName] = this.contractFieldsList.filter(ktem => ktem.paramKey === propName)
+                }
+                for (const key in tempObj) {
+                    tempArr.push(tempObj[key][0])
+                }
+                await this.onServiceFee(true)
+                await saveContent({
+                    'contractId': this.$route.query.id,
+                    // 合同审批角色 1：分财 2：风控 3：法务
+                    'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
+                    'type': 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
+                    'fieldName': propName, // 编辑字段
+                    'fieldOriginalContent': JSON.parse(this.detailRes.contractFieldsList).filter(ktem => ktem.paramKey === propName)[0].paramValue, // 编辑前内容
+                    'fieldContent': tempObj[propName][0].paramValue, // 编辑内容
+                    'contractContent': this.contractDocument.innerHTML,
+                    'createBy': this.userInfo.employeeName,
+                    'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
+                })
+                this.init(() => {
+                    this.domBindMethods()
+                })
+                this.editorDrawer = false
+            } catch (error) {
+                console.log('error: ', error)
+                this.init(() => {
+                    this.domBindMethods()
+                })
+            }
+        },
+        async saveTable () {
+            let serviceFeeEstimate = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+            let originalServiceFeeEstimate = this.originalContentFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+            let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+            let originalLoanMonth = this.originalContentFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+            if (originalServiceFeeEstimate.paramValue != serviceFeeEstimate.paramValue || originalLoanMonth.paramValue != loanMonth.paramValue) {
+                console.log('保存表格')
+                if (!this.serviceFee) {
+                    this.onServiceFee()
+                }
+                this.$nextTick(async () => {
+                    let tableDoms = this.contractDocument.getElementsByClassName('purch_service_fee_form')
+                    // 修改页面上的表格
+                    Array.from(tableDoms).map(item => {
+                        item.outerHTML = this.serviceFee
+                    })
+                    let serviceFeeDoms = this.contractDocument.getElementsByClassName('service_fee_estimate')
+                    // 修改服务费金额
+                    Array.from(serviceFeeDoms).map(item => {
+                        item.innerHTML = serviceFeeEstimate.paramValue
+                    })
 
+                    this.onHandleSave('service_fee_estimate')
+                })
+            } else {
+                if (originalServiceFeeEstimate.paramValue == serviceFeeEstimate.paramValue) {
+                    this.$message({
+                        message: `服务费金额没有变化无需重新生成`,
+                        type: 'info'
+                    })
+                    return
+                }
+                if (originalLoanMonth.paramValue == loanMonth.paramValue) {
+                    this.$message({
+                        message: `剩余货款支付周期没有变化无需重新生成`,
+                        type: 'info'
+                    })
+                }
+            }
+        },
         // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
             if (operatorType) {
@@ -854,6 +1075,12 @@ export default {
                 console.log('更新条款')
             }
             if (this.currentKey.inputStyle == 9 && operatorType == '') {
+                let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
+                // 一次性采购才会修改合同上的表格
+                if (this.currentKey.paramKey === 'purch_service_fee_form' && (temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
+                    this.saveTable()
+                    return
+                }
                 // 修改图片，图片必填
                 this.setImg()
                 return
@@ -871,6 +1098,7 @@ export default {
             }
         },
         async dealSaveContent (operatorType) {
+            console.log('dealSaveContent')
             let { paramKey, paramValue } = this.currentKey
             let tempObj = {}
             let tempArr = []
@@ -970,19 +1198,39 @@ export default {
                     jtem.innerHTML = this.currentKey.paramname
                 })
             }
-            console.log({
-                'contractId': this.$route.query.id,
-                // 合同审批角色 1：分财 2：风控 3：法务
-                'approverRole': this.detailRes.contractStatus == 6 ? 3 : this.detailRes.contractStatus == 4 ? 2 : 1,
-                'type': operatorType || 2, // 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回
-                'fieldName': operatorType ? '' : this.fieldName, // 编辑字段
-                'fieldOriginalContent': operatorType ? '' : (this.fieldOriginalContent || ''), // 编辑前内容
-                'fieldContent': operatorType ? '' : this.fieldContent, // 编辑内容
-                'contractContent': this.contractDocument.innerHTML,
-                'createBy': this.userInfo.employeeName,
-                'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
-            })
-            // return
+            // "剩余货款支付周期 (个月)" || "服务费预计 (元)"
+            if (this.currentKey.paramKey === 'loan_month' || this.currentKey.paramKey === 'service_fee_estimate') {
+                let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
+                // 一次性采购才会修改合同上的表格
+                if ((temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
+                    let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
+                    let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                    console.log('serviceFeeEstimate, loanMonth: ', serviceFeeEstimate, loanMonth)
+                    await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
+                }
+            }
+            // 采购批次(采购单)： 一次性  分批
+            if (this.currentKey.paramKey === 'purch_order_purch_batch' && this.currentKey.paramValue === '分批采购') {
+                // 把表格修改成上传图片
+                let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
+                Array.from(feeTableDom).map(table => {
+                    table.outerHTML = `<div style="word-break: break-all; color: #ff7a45; cursor: pointer;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
+                })
+                //  分批，,生成表
+                if (this.currentKey.paramValue) {
+                    this.currentKey.paramValue = ''
+                    tempArr.map(item => {
+                        // 修改对应的键值对里的值
+                        if (item.paramKey === 'purch_service_fee_form') {
+                            item.paramValue = ''
+                        }
+                    })
+                }
+            } else if (this.currentKey.paramValue === '一次性采购' || this.currentKey.paramValue == 1) {
+                let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
+                let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
+            }
             try {
                 await saveContent({
                     'contractId': this.$route.query.id,
@@ -1026,22 +1274,66 @@ export default {
         domBindMethods (flag = '') {
             this.$nextTick(() => {
                 this.firstKsy = this.contractFieldsList[0].paramKey
-                console.log('我走了这里', this.contractDocument)
                 if (!this.currentKey) {
                     // 保存后不会更新左侧字段
                     this.currentKey = this.contractFieldsList.filter(item => item.paramKey === this.firstKsy)[0]
                 }
                 // 拿键值对遍历
                 if (this.detailRes.contractStatus == 6) {
-                    // let ifram = document.getElementsByClassName('tox-edit-area')[0].getElementsByClassName('tox-edit-area__iframe')[0]
-                    // this.contractDocument = ifram.contentWindow.document.getElementById('tinymce')
                     this.contractDocument = document.getElementsByClassName('mce-content-body')[0]
                 } else {
                     this.contractDocument = document.getElementsByClassName('approvalcontract-content')[0]
                 }
-                //
+                // 合同类型     10000：其他合同 10001：担保合同 10002：应收账款质押合同 10003：销售合同 10005：采购合同
                 this.contractFieldsList.map(item => {
                     if (item.inputStyle && item.inputStyle == 9) {
+                        let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
+                        //  1:一次性采购 2：分批采购
+                        if (item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '一次性采购' || temp.paramValue == 1)) {
+                            let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
+                            let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
+                            Array.from(DomList).map((jtem, index) => {
+                                jtem.onclick = (event) => {
+                                    this.currentKey = {
+                                        ...fields,
+                                        required: fields.required,
+                                        inputStyle: 9,
+                                        paramKey: fields.paramKey,
+                                        paramValue: fields.paramValue
+                                    }
+                                    console.log('this.currentKey-purch_service_fee_form::::', this.currentKey)
+                                    this.editorDrawer = true
+                                    this.$nextTick(() => {
+                                        this.$refs['ruleForm'].resetFields()
+                                    })
+                                }
+                            })
+                            return
+                        } else if (item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '分批采购' || temp.paramValue == 2)) {
+                            console.log('一次性采购改为分批 改为上传模式')
+                            let feeForm = this.contractDocument.getElementsByClassName(item.paramKey)
+                            let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.paramKey)[0]
+                            let _paramValue = ''
+                            if (Object.prototype.toString.call(fields.paramValue) === '[object Array]' && (temp.paramValue == '分批采购' || temp.paramValue == 2)) {
+                                _paramValue = fields.paramValue[0].fileUrl
+                            }
+                            Array.from(feeForm).map(feeFormHtml => {
+                                feeFormHtml.onclick = () => {
+                                    this.currentKey = {
+                                        ...fields,
+                                        inputstyle: 9,
+                                        paramName: '服务费分期表格(采购单)',
+                                        paramValue: _paramValue,
+                                        required: true
+                                    }
+                                    console.log('this.currentKeyxxx: ', this.currentKey)
+                                    this.editorDrawer = true
+                                    this.$nextTick(() => {
+                                        this.$refs['ruleForm'].resetFields()
+                                    })
+                                }
+                            })
+                        }
                         // 图片但非必填的展示<span...>{#比如采购明细表(采购单)#}</span>，添加点击事件
                         if (!item.required && !item.paramValue) {
                             let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
@@ -1066,11 +1358,11 @@ export default {
                                     }
                                 }
                             })
-                            return
                         }
                         // crm图片存在多图上传字段名后会加上序号不能用paramKey查dom
                         let imgDom = this.contractDocument.getElementsByTagName('img')
                         imgDom && imgDom.length > 0 && Array.from(imgDom).map(item => {
+                            //
                             // 查找图片上传字段
                             if (item.className != 'platform_sign' && item.dataset.key) {
                                 item.onclick = (event) => {
@@ -1094,6 +1386,7 @@ export default {
                                 }
                             }
                         })
+                        //
                     } else {
                         // 通过键值对里的key查找对应的dom
                         let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
@@ -1120,6 +1413,9 @@ export default {
                         }
                     }
                 })
+                this.serviceFee = ''
+                this.editordrawerboxSize = '580px'
+                this.showServiceFee = false
                 // 动态设置高度
                 if (this.detailRes.contractStatus == 6 && flag == '') {
                     // let hVal = document.getElementsByClassName('approvalcontract-content-layout') && document.getElementsByClassName('approvalcontract-content-layout')[0].offsetHeight - 30
@@ -1138,11 +1434,9 @@ export default {
             })
         },
         async init (cb) {
-            console.log('this.$route.query.id', this.$route.query.id)
             if (!this.$route.query.id) {
                 return
             }
-            console.log('getContractsContent')
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
@@ -1564,6 +1858,9 @@ export default {
         // font-weight: bold;
         // margin-bottom:10px
     }
+    /deep/.el-form-item {
+        margin-bottom: 15px;
+    }
 }
 .vsList {
     padding: 20px;
@@ -1602,7 +1899,7 @@ export default {
     // position: relative;
     // overflow: hidden;
     &-left {
-        width: 530px;
+        width: 90%;
         margin: 0 auto;
         overflow: hidden;
         h1 {

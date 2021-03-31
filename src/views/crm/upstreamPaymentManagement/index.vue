@@ -90,24 +90,24 @@
             <!-- end search bar -->
             <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
-                    <h-button table @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
+                    <h-button table v-if="hosAuthCheck(upstreamPayDetail)"  @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
                 </template>
             </hosJoyTable>
 
         </div>
         <el-drawer class="editordrawerbox" title="待支付" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
-                <!--TODO 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
+                <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest'></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
-                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation">
+                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isShowTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
                     </el-tab-pane>
                 </el-tabs>
             </div>
-            <!-- TODO 全部支付完隐藏按钮 -->
+            <!-- 全部支付完隐藏按钮 -->
             <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount == upstreamPaymentInformation.paidAmount">
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
@@ -169,7 +169,7 @@
 
             <div slot="footer" class="dialog-footer">
                 <h-button @click="onCancel">取消</h-button>
-                <h-button type="primary" @click="onEnterPay">确认支付</h-button>
+                <h-button v-if="hosAuthCheck(upstreamPayment)" type="primary" @click="onEnterPay">确认支付</h-button>
             </div>
         </el-dialog>
     </div>
@@ -189,6 +189,7 @@ import { ccpBaseUrl } from '@/api/config'
 import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
 
 export const PAYMENTTYPE: Map<number | null | string, string> = new Map([
     [null, '-'],
@@ -206,8 +207,10 @@ interface Query extends ReqUpStreamPaymentQuery{
 }
 /** tab切对应的Api请求 */
 enum TabInfoApi {
-    loanHandoverInformation = 'getLoanHandoverInfoApi', // 获取放款交接信息API
-    upstreamPaymentInformation = 'getPayConfirmApi' // 上游支付查询信息API
+    /** 获取放款交接信息API */
+    loanHandoverInformation = 'getLoanHandoverInfoApi',
+    /** 上游支付查询信息API */
+    upstreamPaymentInformation = 'getPayConfirmApi'
 }
 
 @Component({
@@ -221,6 +224,9 @@ enum TabInfoApi {
     }
 })
 export default class UpstreamPaymentManagement extends Vue {
+    upstreamPayDetail = UPSTREAM_PAY_DETAIL
+    upstreamPayment = UPSTREAM_PAY_MENT
+
     $refs!: {
         form: HTMLFormElement
     }
@@ -274,7 +280,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     activeName:string='loanHandoverInformation'
-    loanHandoverInformation:RespLoanHandoverInfo | string = ''
+    loanHandoverInformation:RespLoanHandoverInfo = '' as unknown as RespLoanHandoverInfo
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
     prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
 
@@ -316,6 +322,7 @@ export default class UpstreamPaymentManagement extends Vue {
             endTime: this.queryParams.endExpectSupplierPaymentDate
         }
     }
+
     get optionsByPaid () {
         return {
             type: 'date',
@@ -324,6 +331,16 @@ export default class UpstreamPaymentManagement extends Vue {
             startTime: this.queryParams.startDownPaymentConfirmTime,
             endTime: this.queryParams.endDownPaymentConfirmTime
         }
+    }
+
+    get isShowTabs () {
+        let temp:boolean | undefined = false
+        // this.loanHandoverInformation初始化为空字符串
+        temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.some(item => {
+            return item.status == 1
+        })
+        console.log('isShowTabs', temp)
+        return temp
     }
 
     tableLabel:tableLabelProps = [
@@ -428,7 +445,6 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     editorDrawerClose (done:Function): void {
-        // if
         this.isReady = false
         this.activeName = 'loanHandoverInformation'
         done()

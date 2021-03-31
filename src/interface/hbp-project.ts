@@ -3980,6 +3980,13 @@ export interface RespSupplierInfo {
      */
     goodsProgress: number | string
 
+    /**
+     * 采购单id
+     * @type {number | string}
+     * @memberof RespSupplierInfo
+     */
+    purchaseOrderId: number | string
+
 }
 
 /**
@@ -3988,6 +3995,13 @@ export interface RespSupplierInfo {
 * @interface RespLoanHandoverInfo
 */
 export interface RespLoanHandoverInfo {
+
+    /**
+     * 项目id
+     * @type {number | string}
+     * @memberof RespLoanHandoverInfo
+     */
+    projectId: number | string
 
     /**
      * 项目名称
@@ -4061,10 +4075,10 @@ export interface RespLoanHandoverInfo {
 
     /**
      * 客户经理
-     * @type {string}
+     * @type {Array<string>}
      * @memberof RespLoanHandoverInfo
      */
-    accountManager: string
+    accountManagers: Array<string>
 
     /**
      * 申请时间
@@ -8202,6 +8216,13 @@ export interface RespAppPaymentOrder {
      */
     payableDate: string
 
+    /**
+     * 账单状态 1：无账单 2：进行中 3：已结清
+     * @type {number | string}
+     * @memberof RespAppPaymentOrder
+     */
+    billStatus: number | string
+
 }
 
 /**
@@ -9167,6 +9188,28 @@ export interface RespPaymentFundDetail {
      * @memberof RespPaymentFundDetail
      */
     paymentOrderNo: string
+
+    /**
+     * 状态：
+     * 状态：0-支付单待审核;
+     * 1-首付款待支付;
+     * 2-首付款待确认;
+     * 3-上游支付确认中;
+     * 4-上游支付中;
+     * 5--待出票;
+     * 6-正在出票;
+     * 7-待发货;
+     * 8-待收货;
+     * 9-剩余货款待支付;
+     * 10-剩余货款待确认;
+     * 11-支付单完成;
+     * 12-支付单关闭;
+     * 13-支付单取消;
+
+     * @type {number | string}
+     * @memberof RespPaymentFundDetail
+     */
+    status: number | string
 
     /**
      * 账单状态 1：无账单 2：进行中 3：已结清
@@ -11317,6 +11360,13 @@ export interface RespContractRecord {
      * @memberof RespContractRecord
      */
     downloadUrl: string
+
+    /**
+     * 合同类型: 10000：其他合同 10001：担保合同 10002：应收账款质押合同 10003：销售合同 10005：采购合同
+     * @type {number | string}
+     * @memberof RespContractRecord
+     */
+    contractTypeId: number | string
 
 }
 

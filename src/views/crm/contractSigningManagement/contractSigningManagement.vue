@@ -111,8 +111,7 @@
             </hosJoyTable>
         </div>
 
-        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
-            <template #connect>
+        <el-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
                 <div slot="title">审核记录</div>
                 <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
                 <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
@@ -179,11 +178,10 @@
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
                 </div>
-            </template>
-            <template #btn>
+            <div class="history-bttom">
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
-            </template>
-        </h-drawer>
+            </div>
+        </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
     </div>
 </template>
@@ -560,6 +558,41 @@ export default {
             margin-top: 15px;
             align-items: baseline;
             margin-bottom: 8px;
+            .history-css-left {
+                font-size: 14px;
+                flex: 0 0 300px;
+                word-break: break-all;
+                max-width: 300px;
+                // word-break: break-all;
+                .name {
+                    color: #169bd5;
+                }
+            }
+            .history-css-right {
+                flex: 0 0 198px;
+                font-size: 13px;
+                color: #a7a5a5;
+                margin-left: 10px;
+                text-align: right;
+            }
+        }
+        .operationcontent-css {
+            font {
+                color: #ff7a45;
+                margin: 0 4px;
+            }
+        }
+    }
+    /deep/.history-css {
+        padding: 0 20px;
+        box-sizing: border-box;
+        height: calc(100vh - 190px);
+        overflow-y: scroll;
+        .history-css-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            align-items: baseline;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;
