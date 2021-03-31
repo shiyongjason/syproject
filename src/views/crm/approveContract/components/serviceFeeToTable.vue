@@ -6,7 +6,6 @@
             </el-input>
             <h-button type="primary" @click="()=>emitServiceFee()" style="margin-left:10px">生成表格</h-button>
         </div>
-
         <p class="servicefee">注意：服务费总额修改后，每期服务费金额将重新计算。</p>
     </div>
 </template>
