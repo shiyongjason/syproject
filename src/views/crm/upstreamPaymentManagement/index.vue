@@ -108,7 +108,7 @@
                 </el-tabs>
             </div>
             <!-- 全部支付完隐藏按钮 -->
-            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount == upstreamPaymentInformation.paidAmount">
+            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount != upstreamPaymentInformation.paidAmount">
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
