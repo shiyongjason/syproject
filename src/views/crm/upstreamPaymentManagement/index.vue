@@ -108,7 +108,7 @@
                 </el-tabs>
             </div>
             <!-- 全部支付完隐藏按钮 -->
-            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount != upstreamPaymentInformation.paidAmount">
+            <div class="drawer-content-footer" v-if="activeName == 'upstreamPaymentInformation' && upstreamPaymentInformation.totalAmount != upstreamPaymentInformation.paidAmount && hosAuthCheck(upstreamPayment)">
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
@@ -146,17 +146,17 @@
                        <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5; border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.paymentDetail" :key='index'></elImageAddToken>
                     </el-form-item>
                     <!-- 银行承兑 才展示 支付银行-->
-                    <el-form-item label="支付银行：" prop="paymentBank" v-if="prevPaymentDetail.supplierPaymentType == 2">
+                    <el-form-item label="支付银行：" prop="paymentBank" v-if="prevPaymentDetail.supplierPaymentType == 2" style="margin-bottom:20px">
                         <el-input placeholder="请输入支付银行" v-model="dialogFormData.paymentBank" maxlength="50"></el-input>
                     </el-form-item>
-                    <el-form-item label="本次支付金额：" prop="payAmount">
+                    <el-form-item label="本次支付金额：" prop="payAmount" style="margin-bottom:20px">
                         <el-input placeholder="请输入" v-model="dialogFormData.payAmount" maxlength="50" v-isNum:2 v-inputMAX='prevPaymentDetail.surplusAmount'></el-input>
                     </el-form-item>
-                    <el-form-item label="支付日期：" prop="payDate">
+                    <el-form-item label="支付日期：" prop="payDate" style="margin-bottom:20px">
                         <el-date-picker v-model="dialogFormData.payDate" value-format="yyyy-MM-dd" format="yyyy-MM-dd" type="date" placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="上传上游支付凭证：" prop="payVouchers">
+                    <el-form-item label="上传上游支付凭证：" prop="payVouchers" style="margin-bottom:20px">
                         <OssFileHosjoyUpload v-model="dialogFormData.payVouchers" :showPreView='true' :fileSize=20 :fileNum=9 :uploadParameters='uploadParameters' @successCb="$refs.form.clearValidate()" accept=".jpg,.png,.pdf">
                             <div class="a-line">
                                 <h-button>上传文件</h-button>
@@ -169,7 +169,7 @@
 
             <div slot="footer" class="dialog-footer">
                 <h-button @click="onCancel">取消</h-button>
-                <h-button v-if="hosAuthCheck(upstreamPayment)" type="primary" @click="onEnterPay">确认支付</h-button>
+                <h-button type="primary" @click="onEnterPay">确认支付</h-button>
             </div>
         </el-dialog>
     </div>
