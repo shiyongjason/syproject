@@ -1,7 +1,7 @@
 <template>
     <div class="drawer-wrap">
         <el-form :model="projectForm" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
-            <p class="drawer-by">项目提交人：{{projectForm.createBy}}</p>
+            <p class="drawer-by">项目提交人：{{projectForm.submitUser}}</p>
             <el-form-item label="经销商：">
                 {{projectForm.companyName}} <h-button table @click="onLinkBus(projectForm)">查看详情</h-button>
             </el-form-item>

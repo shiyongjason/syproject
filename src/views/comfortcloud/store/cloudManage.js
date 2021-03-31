@@ -14,6 +14,7 @@ const state = {
     iotmerchantActiveData: {},
     iotmerchantmemberTotalData: {},
     iotmerchantmemberInvitationRegisterData: {},
+    merchantCompanyEmployeeData: {},
     iotmerchantmemberEnterpriseInfo: {},
     iotmerchantmemberInvitationChangeData: {},
     iotmerchantmemberInvitationBuy: {},
@@ -78,7 +79,9 @@ const state = {
     cloudMerchantAdList: [],
     cloudMerchantAdListPagination: {},
     cloudMerchantAdDetail: {},
+    cloudMerchantAgentOrderDetail: {},
     cloudMerchantOrderList: [],
+    cloudMerchantOrderDetail: [],
     cloudMerchantOrderListPagination: {},
     cloudMerchantShopList: [],
     cloudMerchantShopListPagination: {},
@@ -100,7 +103,9 @@ const state = {
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
     cloudMerchantmemberInvitationOutOrderData: {},
-    cloudMerchantTaglist: []
+    cloudMerchantTaglist: [],
+    cloudMerchantMemberCommunicationList: [],
+    cloudMerchantMemberCommunicationListPagination: {}
 }
 
 const getters = {
@@ -113,6 +118,7 @@ const getters = {
     iotmerchantActiveData: state => state.iotmerchantActiveData,
     iotmerchantmemberInvitationOrderData: state => state.iotmerchantmemberInvitationOrderData,
     iotmerchantmemberInvitationRegisterData: state => state.iotmerchantmemberInvitationRegisterData,
+    merchantCompanyEmployeeData: state => state.merchantCompanyEmployeeData,
     iotmerchantmemberEnterpriseInfo: state => state.iotmerchantmemberEnterpriseInfo,
     iotmerchantmemberInvitationChangeData: state => state.iotmerchantmemberInvitationChangeData,
     iotmerchantmemberInvitationBuy: state => state.iotmerchantmemberInvitationBuy,
@@ -184,7 +190,9 @@ const getters = {
     cloudMerchantAdList: state => state.cloudMerchantAdList,
     cloudMerchantAdListPagination: state => state.cloudMerchantAdListPagination,
     cloudMerchantAdDetail: state => state.cloudMerchantAdDetail,
+    cloudMerchantAgentOrderDetail: state => state.cloudMerchantAgentOrderDetail,
     cloudMerchantOrderList: state => state.cloudMerchantOrderList,
+    cloudMerchantOrderDetail: state => state.cloudMerchantOrderDetail,
     cloudMerchantOrderListPagination: state => state.cloudMerchantOrderListPagination,
     cloudMerchantShopList: state => state.cloudMerchantShopList,
     cloudMerchantShopListPagination: state => state.cloudMerchantShopListPagination,
@@ -210,7 +218,9 @@ const getters = {
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
     cloudMerchantmemberInvitationOutOrderData: state => state.cloudMerchantmemberInvitationOutOrderData,
-    cloudMerchantTaglist: state => state.cloudMerchantTaglist
+    cloudMerchantTaglist: state => state.cloudMerchantTaglist,
+    cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
+    cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination
 }
 
 const mutations = {
@@ -243,6 +253,9 @@ const mutations = {
     },
     [types.MERCHANT_MEMBERS_INVITATION_REGISTER_DATA] (state, payload) {
         state.iotmerchantmemberInvitationRegisterData = payload
+    },
+    [types.MERCHANT_COMPANY_EMPLOYEEDATA] (state, payload) {
+        state.merchantCompanyEmployeeData = payload
     },
     [types.MERCHANT_MEMBERS_ENTERPRISE_INFO] (state, payload) {
         state.iotmerchantmemberEnterpriseInfo = payload
@@ -428,8 +441,14 @@ const mutations = {
     [cloud.GET_CLOUD_MERCHANT_AD_DETAIL] (state, payload) {
         state.cloudMerchantAdDetail = payload
     },
+    [cloud.GET_CLOUD_MERCHANT_AGENCY_ORDER_DETAIL] (state, payload) {
+        state.cloudMerchantAgentOrderDetail = payload
+    },
     [cloud.GET_CLOUD_MERCHANT_ORDER_LIST] (state, payload) {
         state.cloudMerchantOrderList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_ORDER_DETAIL] (state, payload) {
+        state.cloudMerchantOrderDetail = payload
     },
     [cloud.GET_CLOUD_MERCHANT_ORDER_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantOrderListPagination = payload
@@ -496,6 +515,12 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
         state.cloudMerchantTaglist = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST] (state, payload) {
+        state.cloudMerchantMemberCommunicationList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantMemberCommunicationListPagination = payload
     }
 }
 
@@ -549,11 +574,10 @@ const actions = {
     async findMerchantMemberInvitationChangesituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationChangesituation(params)
         commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA, data)
-        // commit(types.MERCHANT_MEMBERS_INVITATION_CHANGE_DATA_LIST_PAGINATION, {
-        //     pageNumber: data.pages,
-        //     pageSize: data.size,
-        //     total: data.total
-        // })
+    },
+    async findMerchantCompanyEmployee ({ commit }, params) {
+        const { data } = await Api.getMerchantCompanyEmployee(params)
+        commit(types.MERCHANT_COMPANY_EMPLOYEEDATA, data)
     },
     async findMerchantMemberInvitationBuy ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationBuy(params)
@@ -822,6 +846,10 @@ const actions = {
         const { data } = await Api.getCloudMerchantAdDetail(params)
         commit(cloud.GET_CLOUD_MERCHANT_AD_DETAIL, data)
     },
+    async findCloudMerchantAgentOrderDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantAgentOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_AGENCY_ORDER_DETAIL, data)
+    },
     async findCloudMerchantOrderList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantOrderList(params)
         commit(cloud.GET_CLOUD_MERCHANT_ORDER_LIST, data.records)
@@ -830,6 +858,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findCloudMerchantOrderDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantOrderDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_ORDER_DETAIL, data)
     },
     async findCloudMerchantShopList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantShopList(params)
@@ -926,6 +958,16 @@ const actions = {
             }
         }
         commit(cloud.GET_CLOUD_MERCHANT_TAG_LIST, data)
+    },
+    async findCloudMerchantMemberCommunicationList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantMemberCommunicationList(params)
+
+        commit(cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
     }
 }
 export default {
