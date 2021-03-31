@@ -67,7 +67,7 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="level" slot-scope="scope">
-                    {{scope.data.row.level === 1 ? '一级': '二级'}}
+                    {{scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)')}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
