@@ -449,7 +449,9 @@ export default {
                                 value: this.currentKey.paramValue,
                                 placeholder: '请输入内容',
                                 className: this.currentKey.paramKey,
-                                style: { width: '400px' }
+                                style: { width: '400px' },
+                                calculationRules: this.currentKey.calculationRules || '', // 最大值
+                                decimal: this.currentKey.decimal || 2
                                 // disabled: !this.currentKey.modify
                             },
                             on: {
@@ -613,7 +615,9 @@ export default {
                                     value: this.computedServiceFee,
                                     placeholder: '请输入内容',
                                     className: this.currentKey.paramKey,
-                                    style: { width: '600px' }
+                                    style: { width: '600px' },
+                                    calculationRules: this.currentKey.calculationRules || '', // 最大值
+                                    decimal: this.currentKey.decimal || 2
                                     // disabled: !this.currentKey.modify
                                 },
                                 on: {
