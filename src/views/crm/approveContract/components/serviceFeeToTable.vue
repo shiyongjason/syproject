@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="flex-fee-table">
+            <font v-if="className=='purch_service_fee_form'">服务费预计 (元)：</font>
             <el-input :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val)}" @blur="onBlur">
             </el-input>
             <h-button type="primary" @click="()=>emitServiceFee()" style="margin-left:10px">生成表格</h-button>
@@ -16,6 +17,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 })
 export default class ServiceFeeToTable extends Vue {
     @Prop({ default: '' }) readonly value!:any
+    @Prop({ default: '' }) readonly className!:any
 
     emitServiceFee () {
         this.$emit('onServiceFee')
@@ -44,7 +46,7 @@ export default class ServiceFeeToTable extends Vue {
         }
     }
 
-    onInput (val, max = '') {
+    onInput (val, max:any = '') {
         let num = this.isNum(val, 2)
         if (num && num.length > 0 && num == '.') {
             num = ''
@@ -58,19 +60,11 @@ export default class ServiceFeeToTable extends Vue {
         console.log('num: ', num)
         if (max) {
             if (Number(num) > max) {
-                if (this.innerHtml.indexOf('元') != -1) {
-                    this.$message({
-                        message: `最大不能超过${this.money(max)}`,
-                        type: 'error'
-                    })
-                    return
-                } else {
-                    this.$message({
-                        message: `最大不能超过${max}`,
-                        type: 'error'
-                    })
-                    return
-                }
+                this.$message({
+                    message: `最大不能超过${max}`,
+                    type: 'error'
+                })
+                return
             }
         }
         this.$emit('inputService', num)
@@ -106,11 +100,14 @@ export default class ServiceFeeToTable extends Vue {
     }
 }
 </script>
-<style scoped>
+<style scoped lang='scss'>
 .flex-fee-table{
      display: flex;
 }
 .servicefee{
     color: #f00;
+}
+/deep/.flex-fee-table .el-input{
+    width: 260px !important;
 }
 </style>
