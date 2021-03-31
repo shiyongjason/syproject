@@ -2,7 +2,7 @@
     <div class="drawer-wrap">
         <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
-                <el-tabs v-model="activeName">
+                <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="功能管理" name="first">
                         <div class="drawer-content">
                             <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
@@ -283,6 +283,42 @@
 
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane label="联系方式" name="third">
+                         <div class="drawer-content">
+                            <el-form :label-width="'150px'" :label-position="'right'" ref="contactForm" :model="companyContact.request" :rules="contactFormRules">
+                                <div class="companyContactlayout">
+                                    <el-form-item label="电子邮箱：" :label-width="formLabelWidth" prop="email">
+                                        <span v-if="!editorShow.email">
+                                            {{companyContact.response.email}}
+                                            <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('email')"></i>
+                                        </span>
+                                        <span v-if="editorShow.email">
+                                            <el-input  v-model="companyContact.request.email" placeholder='请输入' class="lageinput"></el-input>
+                                        </span>
+                                    </el-form-item>
+                                    <span v-if="editorShow.email">
+                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('email')"></i>
+                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('email')"></i>
+                                    </span>
+                                </div>
+
+                                <div class="companyContactlayout">
+                                    <el-form-item label="联系地址：" :label-width="formLabelWidth" prop="contactAddress">
+                                    <span v-if="!editorShow.address">
+                                        {{companyContact.response.contactAddress}}
+                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('address')"></i>
+                                    </span>
+                                    <el-input v-else type='textarea' :rows="3" v-model="companyContact.request.contactAddress" placeholder='请输入'  class="lageinput" maxlength="200" show-word-limit></el-input>
+                                </el-form-item>
+                                    <span v-if="editorShow.address">
+                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('address')"></i>
+                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('address')"></i>
+                                    </span>
+                                </div>
+
+                            </el-form>
+                        </div>
+                    </el-tab-pane>
                 </el-tabs>
             </template>
             <template #btn>
@@ -358,12 +394,13 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany, findCompanyContact, updateContact } from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
 import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
 import OssFileUtils from '@/utils/OssFileUtils'
 import elImageAddToken from '@/components/elImageAddToken'
+import { Email } from '@/utils/rules'
 
 export default {
     name: 'businessdrawer',
@@ -375,6 +412,12 @@ export default {
     },
     data () {
         return {
+            editorShow: {
+                email: false,
+                address: false
+            },
+            companyContactEditEmail: false,
+            companyContactEditAddress: false,
             options: {
                 direction: 'rtl',
                 size: '50%',
@@ -407,6 +450,14 @@ export default {
             businessDetail: {
             },
             copyDetail: {},
+            companyContact: {
+                request: {
+                    companyId: '',
+                    email: '',
+                    contactAddress: ''
+                },
+                response: ''
+            },
             rules: {
                 pkDeptDoc: [
                     { required: true, message: '请选择分部', trigger: 'change' }
@@ -458,6 +509,15 @@ export default {
                     { required: true, message: '请输入说明' }
                 ]
             },
+            contactFormRules: {
+                email: [
+                    // { message: '请输入电子邮箱', trigger: 'blur' },
+                    { validator: Email, trigger: 'blur' }
+                ],
+                contactAddress: [
+                    { message: '请输入联系地址', trigger: 'blur' }
+                ]
+            },
             whiteRecordsList: [],
             activeName: 'first',
             authenticationDetail: {}
@@ -502,6 +562,38 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onEdit (prop) {
+            if (this.editorShow.email) {
+                this.editorShow.email = false
+            }
+            if (this.editorShow.address) {
+                this.editorShow.address = false
+            }
+            this.companyContact.request = JSON.parse(JSON.stringify(this.companyContact.response))
+            this.editorShow[prop] = true
+        },
+        // 提交
+        onSure (prop) {
+            console.log('OnSureEmail')
+            this.editorShow[prop] = true
+            this.$refs.contactForm.validate(async value => {
+                console.log('value: ', value)
+                if (value) {
+                    await updateContact(this.companyContact.request)
+                    await this.handleTabClick()
+                    this.editorShow[prop] = false
+                } else {
+
+                }
+            })
+        },
+        // 取消
+        onCancel (prop) {
+            console.log('prop: ', prop)
+            this.editorShow[prop] = false
+            this.companyContact.request.companyId = this.businessDetail.companyId
+            this.$refs.contactForm.clearValidate()
+        },
         srcList (collect) {
             async function temp () {
                 for (let collectElement of collect) {
@@ -575,6 +667,11 @@ export default {
             }
         },
         handleClose () {
+            if (this.$refs.contactForm) {
+                this.$refs.contactForm.clearValidate()
+            }
+            this.editorShow.email = false
+            this.editorShow.address = false
             if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
@@ -756,6 +853,17 @@ export default {
                 this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
                 this.businessDetail.relationCompanyName = val.value ? val.value.companyShortName : ''
             }
+        },
+        async handleTabClick () {
+            if (this.editorShow.email) {
+                this.editorShow.email = false
+            }
+            if (this.editorShow.address) {
+                this.editorShow.address = false
+            }
+            const { data } = await findCompanyContact(this.businessDetail.companyId)
+            this.companyContact.request.companyId = this.businessDetail.companyId
+            this.companyContact.response = data
         }
     },
     mounted () {
@@ -891,6 +999,23 @@ export default {
         width: 158px;
         height: 100px;
         margin-right: 20px;
+    }
+}
+.companyContactlayout{
+    display: flex;
+    align-items: center;
+    margin-bottom:20px;
+   /deep/  .lageinput .el-input__inner {
+        width: 100%;
+    }
+    /deep/.el-form-item{
+        margin-bottom: 0;
+    }
+    /deep/.el-form-item__content .el-input {
+        width: 250px !important;
+    }
+    /deep/.el-form-item__content .el-textarea {
+        width: 350px !important;
     }
 }
 /deep/ .lageinput .el-input__inner {
