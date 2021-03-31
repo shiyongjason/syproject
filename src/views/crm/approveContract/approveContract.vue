@@ -448,7 +448,7 @@ export default {
                             bind: {
                                 value: this.currentKey.paramValue,
                                 placeholder: '请输入内容',
-                                class: this.currentKey.paramKey,
+                                className: this.currentKey.paramKey,
                                 style: { width: '400px' }
                                 // disabled: !this.currentKey.modify
                             },
@@ -612,8 +612,8 @@ export default {
                                 bind: {
                                     value: this.computedServiceFee,
                                     placeholder: '请输入内容',
-                                    class: this.currentKey.paramKey,
-                                    style: { width: '400px' }
+                                    className: this.currentKey.paramKey,
+                                    style: { width: '600px' }
                                     // disabled: !this.currentKey.modify
                                 },
                                 on: {
