@@ -43,42 +43,44 @@
          <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 70px">备注信息:</font><span>{{data.specialRemark||'-'}}</span></div>
          </div>
-         <!-- 业财风控确认信息 -->
-        <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[0].confirmTime|formatterTime}}</font></div>
-        <div class="info-layout">
-            <template v-if="data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList">
-                <span class="info-layout-span" v-for="item in data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList" :key="item.id">
-                    <el-checkbox border :value='true'>{{item.paramValue}}</el-checkbox>
-                </span>
-            </template>
-        </div>
-        <div class="info-layout">
-             <div class="info-layout-item"><font style="flex: 0 0 70px">审核备注:</font><span>{{data.upPaymentLoanHandoverList[0].remark||'-'}}</span></div>
-         </div>
-        <!-- 资金部放款审核岗确认信息 -->
-        <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmEx)"><span></span>资金部放款审核岗确认信息：<font v-if="data.upPaymentLoanHandoverList[1].confirmBy">确认人：{{data.upPaymentLoanHandoverList[1].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[1].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[1].confirmTime|formatterTime}}</font></div>
-        <div class="info-layout" v-if="hosAuthCheck(upstreamPayConfirmEx)">
-            <template v-if="data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList">
-                <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList" :key="item.id">
-                    <el-checkbox :value='checkBox[item.paramKey]' :true-label='1' :false-label='0' border @change="(val)=>onCheckBox(item.paramKey,val,data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList,index)">{{item.paramValue}}</el-checkbox>
-                </span>
-            </template>
-        </div>
-        <h-button v-if="data.upPaymentLoanHandoverList[1].status==0 && hosAuthCheck(upstreamPayConfirmEx)" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[1].id)">确认信息</h-button>
-        <!-- 资金部放款操作岗 -->
-        <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmLoan)"><span></span>资金部放款操作岗确认信息：<font v-if="data.upPaymentLoanHandoverList[2].confirmBy">确认人：{{data.upPaymentLoanHandoverList[2].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[2].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[2].confirmTime|formatterTime}}</font></div>
+         <template v-if="data.upPaymentLoanHandoverList&&data.upPaymentLoanHandoverList.length>0">
+             <!-- 业财风控确认信息 -->
+            <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[0].confirmTime|formatterTime}}</font></div>
+            <div class="info-layout">
+                <template v-if="data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList">
+                    <span class="info-layout-span" v-for="item in data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList" :key="item.id">
+                        <el-checkbox border :value='true'>{{item.paramValue}}</el-checkbox>
+                    </span>
+                </template>
+            </div>
+            <div class="info-layout">
+                <div class="info-layout-item"><font style="flex: 0 0 70px">审核备注:</font><span>{{data.upPaymentLoanHandoverList[0].remark||'-'}}</span></div>
+            </div>
+            <!-- 资金部放款审核岗确认信息 -->
+            <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmEx)"><span></span>资金部放款审核岗确认信息：<font v-if="data.upPaymentLoanHandoverList[1].confirmBy">确认人：{{data.upPaymentLoanHandoverList[1].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[1].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[1].confirmTime|formatterTime}}</font></div>
+            <div class="info-layout" v-if="hosAuthCheck(upstreamPayConfirmEx)">
+                <template v-if="data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList">
+                    <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList" :key="item.id">
+                        <el-checkbox :value='checkBox[item.paramKey]' :true-label='1' :false-label='0' border @change="(val)=>onCheckBox(item.paramKey,val,data.upPaymentLoanHandoverList[1].upPaymentLoanHandoverParamList,index)">{{item.paramValue}}</el-checkbox>
+                    </span>
+                </template>
+            </div>
+            <h-button v-if="data.upPaymentLoanHandoverList[1].status==0 && hosAuthCheck(upstreamPayConfirmEx)" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[1].id)">确认信息</h-button>
+            <!-- 资金部放款操作岗 -->
+            <div class="tab-layout-title" v-if="hosAuthCheck(upstreamPayConfirmLoan)"><span></span>资金部放款操作岗确认信息：<font v-if="data.upPaymentLoanHandoverList[2].confirmBy">确认人：{{data.upPaymentLoanHandoverList[2].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[2].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[2].confirmTime|formatterTime}}</font></div>
 
-        <div class="info-layout" v-if="hosAuthCheck(upstreamPayConfirmLoan)">
-            <template v-if="data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList">
-                <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList" :key="item.id">
-                    <el-checkbox :value='checkBox[item.paramKey]' :true-label='1' :false-label='0' border @change="(val)=>onCheckBox(item.paramKey,val,data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList,index)">{{item.paramValue}}</el-checkbox>
-                </span>
-            </template>
-        </div>
-        <!-- 前置流程（资金部放款审核岗确认信息）完成后，展示「确认信息」。 -->
-        <h-button v-if="data.upPaymentLoanHandoverList[1].status==1&&data.upPaymentLoanHandoverList[2].status==0&&hosAuthCheck(upstreamPayConfirmLoan)" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[2].id)">确认信息</h-button>
-        <!-- 资金部放款操作岗确认后，下方展示「下载放款交接单」按钮，顶部展示出「上游支付信息」tab页签 -->
-        <div v-if="data.upPaymentLoanHandoverList[2].status==1&&hosAuthCheck(upstreamPayDown)"><h-button style="margin-top:20px" type="primary" @click="onGetSupplierDownload">下载放款交接单</h-button></div>
+            <div class="info-layout" v-if="hosAuthCheck(upstreamPayConfirmLoan)">
+                <template v-if="data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList">
+                    <span class="info-layout-span" v-for="(item,index) in data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList" :key="item.id">
+                        <el-checkbox :value='checkBox[item.paramKey]' :true-label='1' :false-label='0' border @change="(val)=>onCheckBox(item.paramKey,val,data.upPaymentLoanHandoverList[2].upPaymentLoanHandoverParamList,index)">{{item.paramValue}}</el-checkbox>
+                    </span>
+                </template>
+            </div>
+            <!-- 前置流程（资金部放款审核岗确认信息）完成后，展示「确认信息」。 -->
+            <h-button v-if="data.upPaymentLoanHandoverList[1].status==1&&data.upPaymentLoanHandoverList[2].status==0&&hosAuthCheck(upstreamPayConfirmLoan)" style="margin-top:20px" type="primary" @click="()=>onSureInfo(data.upPaymentLoanHandoverList[2].id)">确认信息</h-button>
+            <!-- 资金部放款操作岗确认后，下方展示「下载放款交接单」按钮，顶部展示出「上游支付信息」tab页签 -->
+            <div v-if="data.upPaymentLoanHandoverList[2].status==1&&hosAuthCheck(upstreamPayDown)"><h-button style="margin-top:20px" type="primary" @click="onGetSupplierDownload">下载放款交接单</h-button></div>
+         </template>
     </div>
 </template>
 <script lang='ts'>
