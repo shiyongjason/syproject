@@ -28,3 +28,5 @@ export const onSubmitPayments: (params: ReqSupplierSubmit) => AxiosPromise<void>
 // export const onSubmitPayments: (params: ReqSupplierSubmit) => AxiosPromise<void> = (params) => {
 //     return axios.post('/project/api/supplier-payments/confirm', params)
 // }
+
+export const getSupplierDownload = (paymentOrderId) => axios.get(`/project/api/supplier-payments/${paymentOrderId}/download`)
