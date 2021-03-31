@@ -85,7 +85,7 @@
                             {{paymentDetail.payOrderDetail.supplierAccountNo}}
                         </el-form-item>
                         <el-form-item label="期望上游支付日期：">
-                            {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
+                            {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
                             {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转帐;':'银行承兑'}}
@@ -266,6 +266,7 @@ export default {
     },
     data () {
         return {
+            moment,
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
