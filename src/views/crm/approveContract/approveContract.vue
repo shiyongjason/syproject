@@ -336,7 +336,11 @@ export default {
             get () {
                 if (this.contractFieldsList) {
                     let temp = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
-                    return temp.paramValue
+                    console.log('temp: ', temp)
+                    if (temp) {
+                        return temp.paramValue
+                    }
+                    return ''
                 }
                 return ''
             },
@@ -401,6 +405,7 @@ export default {
             done()
         },
         onBlur () {
+            console.log('onBlur')
             this.onSaveContent(3)
         },
         checkField (rule, value, callback) {
@@ -1066,10 +1071,12 @@ export default {
         },
         // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
+            console.log('operatorType: ', operatorType)
             if (operatorType) {
                 let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '') || this.editorDrawer) {
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
                     // 条款没有变化
+                    console.log('条款没有变化')
                     return
                 }
                 console.log('更新条款')
@@ -1093,6 +1100,7 @@ export default {
                     }
                 })
             } else {
+                console.log('before dealSaveContent')
                 // 保存条款的时候也要遍历键值对去找dom，应该后台需要拿最新的键值对来判断是否有没有被删除的字段
                 this.dealSaveContent(operatorType)
             }
