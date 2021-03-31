@@ -2,7 +2,7 @@
     <div>
         <div class="flex-fee-table">
             <font v-if="className=='purch_service_fee_form'">服务费预计 (元)：</font>
-            <el-input :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val)}" @blur="onBlur">
+            <el-input :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,calculationRules)}" @blur="onBlur">
             </el-input>
             <h-button type="primary" @click="()=>emitServiceFee()" style="margin-left:10px">生成表格</h-button>
         </div>
@@ -18,6 +18,8 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 export default class ServiceFeeToTable extends Vue {
     @Prop({ default: '' }) readonly value!:any
     @Prop({ default: '' }) readonly className!:any
+    @Prop({ default: 10000000000 }) readonly calculationRules!:any
+    @Prop({ default: 2 }) readonly decimal!:any
 
     emitServiceFee () {
         this.$emit('onServiceFee')
@@ -47,7 +49,8 @@ export default class ServiceFeeToTable extends Vue {
     }
 
     onInput (val, max:any = '') {
-        let num = this.isNum(val, 2)
+        console.log('max: ', max)
+        let num = this.isNum(val, this.decimal)
         if (num && num.length > 0 && num == '.') {
             num = ''
         }
