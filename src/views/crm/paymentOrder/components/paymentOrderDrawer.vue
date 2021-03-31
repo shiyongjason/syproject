@@ -541,11 +541,11 @@ PaymentOrderDict.status.list[6].key  === paymentOrderDetail.payOrderDetail.statu
                                                 <span class="info-status-words" @click="openLookPrevPaymentDialog" v-if="hosAuthCheck(Auths.CRM_PREV_PAYMENT_DETAIL)">查看上游支付明细</span>
                                             </p>
                                         </div>
-                                        <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
+                                        <!-- <div class="row-filed" v-if="paymentOrderDetail.respGoodsAmount">
                                             <h-button type="assist" @click="openPrevPay" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV)&& (paymentOrderDetail.supplierPayFlag === 1)">
                                                 上游支付
                                             </h-button>
-                                        </div>
+                                        </div> -->
                                         <template>
                                             <div class="row-filed">
                                                 <p class="col-filed">
