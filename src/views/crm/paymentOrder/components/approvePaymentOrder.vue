@@ -88,7 +88,7 @@
                             {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
                         </el-form-item>
                         <el-form-item label="上游支付方式：">
-                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转帐;':'银行承兑'}}
+                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}
                         </el-form-item>
                         <!-- <div class="info-img-group">
                             <span class="label">采购明细表：</span>
@@ -175,13 +175,13 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="质押信息：" prop="pledgeNo">
-                                <el-input type="text" v-model="formData.pledgeNo" maxlength="50"></el-input>
+                                <el-input type="text" v-model="formData.pledgeNo" maxlength="50" placeholder="请输入中登网质押编号"></el-input>
                             </el-form-item>
                             <el-form-item label="OA审批编号：" prop="oaNo">
-                                <el-input type="text" v-model="formData.oaNo" maxlength="50"></el-input>
+                                <el-input type="text" v-model="formData.oaNo" maxlength="50" placeholder="请输入OA流程编号"></el-input>
                             </el-form-item>
                             <el-form-item label="审核备注" prop="approvalRemark">
-                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200" placeholder="可在此处备注对资金放款的要求"></el-input>
                             </el-form-item>
                             <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
                                 <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
@@ -349,18 +349,26 @@ export default {
         },
         isOpen (val) {
             if (val) {
+                const { payOrderDetail, payOrderPoDetail, projectInfo } = this.paymentDetail
                 this.serviceParams = {
                     ...this.serviceParams,
-                    downpaymentAmount: this.paymentDetail.payOrderDetail.downPaymentAmount,
-                    totalAmount: this.paymentDetail.payOrderDetail.applyAmount,
-                    freeInterestType: this.paymentDetail.payOrderPoDetail.freeInterestType,
-                    terms: this.paymentDetail.payOrderPoDetail.restPaymentPeriod
+                    // 当上游支付方式选择为银行转账时，取执行费率
+                    serviceFeeRate: payOrderDetail.supplierPaymentType == 1 ? projectInfo.transferBankRate : projectInfo.acceptBankRate,
+                    downpaymentAmount: payOrderDetail.downPaymentAmount,
+                    totalAmount: payOrderDetail.applyAmount,
+                    freeInterestType: payOrderPoDetail.freeInterestType,
+                    terms: payOrderPoDetail.restPaymentPeriod
                 }
                 this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
                 this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
                 this.$nextTick(() => {
                     this.$refs.form.clearValidate()
                 })
+            }
+        },
+        'formData.dealerCooperationMethod' (val) {
+            if (val == 1) {
+                this.getComputedValue()
             }
         },
         // 'formData.supplierPaymentType' (val) {
