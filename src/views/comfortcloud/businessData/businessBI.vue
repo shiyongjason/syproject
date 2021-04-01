@@ -15,7 +15,7 @@
     </div>
 </template>
 <script>
-import { mapActions, mapState } from 'vuex'
+
 import { findBiToken } from '../api'
 export default {
     name: 'businessBI',
