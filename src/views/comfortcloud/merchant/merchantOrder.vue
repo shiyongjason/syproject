@@ -97,7 +97,7 @@ export default {
             tableLabel: [
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'successTime', formatters: 'dateTime' },
-                { label: '订单号', prop: 'payNo' },
+                { label: '订单号', prop: 'agentCode' },
                 { label: '微信支付订单号', prop: 'wxPayNo' },
                 { label: '联系人', prop: 'contactUser' },
                 { label: '客户电话', prop: 'contactNumber' },
