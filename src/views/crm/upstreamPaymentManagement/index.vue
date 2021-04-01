@@ -95,7 +95,7 @@
             </hosJoyTable>
 
         </div>
-        <el-drawer class="editordrawerbox" :title="PAYMENTSTATUS.get(this.loanHandoverInformation.supplierPaymentType)" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer class="editordrawerbox" :title="PAYMENTSTATUS.get(this.loanHandoverInformation.paymentStatus)" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
                 <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
