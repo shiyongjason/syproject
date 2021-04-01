@@ -285,7 +285,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="联系方式" name="third">
                          <div class="drawer-content">
-                            <el-form :label-width="'150px'" :label-position="'right'" ref="contactForm" :model="companyContact.request" :rules="contactFormRules">
+                            <el-form :label-width="'150px'" :label-position="'right'" ref="contactForm" :model="companyContact.request" :rules="contactFormRules"  @submit.native.prevent>
                                 <div class="companyContactlayout">
                                     <el-form-item label="电子邮箱：" :label-width="formLabelWidth" prop="email">
                                         <span v-if="!editorShow.email">
@@ -293,7 +293,8 @@
                                             <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('email')"></i>
                                         </span>
                                         <span v-if="editorShow.email">
-                                            <el-input  v-model="companyContact.request.email" placeholder='请输入' class="lageinput"></el-input>
+                                            <inputAutocomplete v-model="companyContact.request.email" @onMousedown='onMousedown' @onBlur='onBlur' class="lageinput"></inputAutocomplete>
+                                            <!-- <el-input  v-model="companyContact.request.email" placeholder='请输入' class="lageinput"></el-input> -->
                                         </span>
                                     </el-form-item>
                                     <span v-if="editorShow.email">
@@ -329,7 +330,7 @@
                         <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
                 </div>
-                <div class="drawer-footer" v-if="activeName=='second'">
+                <div class="drawer-footer" v-else>
                     <div class="drawer-button">
                         <h-button @click="cancelForm">好 的</h-button>
                     </div>
@@ -401,7 +402,7 @@ import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHA
 import OssFileUtils from '@/utils/OssFileUtils'
 import elImageAddToken from '@/components/elImageAddToken'
 import { Email } from '@/utils/rules'
-
+import inputAutocomplete from '../../approveContract/components/inputAutocomplete'
 export default {
     name: 'businessdrawer',
     props: {
@@ -512,7 +513,7 @@ export default {
             contactFormRules: {
                 email: [
                     // { message: '请输入电子邮箱', trigger: 'blur' },
-                    { validator: Email, trigger: 'blur' }
+                    { validator: Email }
                 ],
                 contactAddress: [
                     { message: '请输入联系地址', trigger: 'blur' }
@@ -525,7 +526,8 @@ export default {
     },
     components: {
         HAutocomplete,
-        elImageAddToken
+        elImageAddToken,
+        inputAutocomplete
     },
     computed: {
         ...mapState({
@@ -562,6 +564,12 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onMousedown (val) {
+            console.log('onMousedown ', val)
+        },
+        onBlur () {
+            console.log('onBlur')
+        },
         onEdit (prop) {
             if (this.editorShow.email) {
                 this.editorShow.email = false
@@ -1016,6 +1024,9 @@ export default {
     }
     /deep/.el-form-item__content .el-textarea {
         width: 350px !important;
+    }
+    /deep/.el-form-item{
+            word-break: break-word;
     }
 }
 /deep/ .lageinput .el-input__inner {
