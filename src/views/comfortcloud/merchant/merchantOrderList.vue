@@ -95,8 +95,7 @@
                 <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                     <el-button type="primary" slot="trigger">选择本地文件</el-button>
                     <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                    <p slot="tip" class="el-upload__tip">2.请按照设备出库模板内容导入数据，否则可能会出现导入异常</p>
-                    <p slot="tip" class="el-upload__tip">3.在模版中完成内容填写后，请将表格内已输入的内容复制到新的Excel中再进行导入</p>
+                    <p slot="tip" class="el-upload__tip">2.请按照订单模板内容导入数据，否则可能会出现导入异常</p>
                 </el-upload>
                 <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
                 <div class="downloadExcel">
@@ -191,13 +190,6 @@ export default {
                 { label: '物流公司', prop: 'deliveryName' },
                 { label: '快递单号', prop: 'waybillId' }
             ],
-            prouctDetailTableLabel: [
-                { label: '商品ID', prop: 'productId' },
-                { label: '商品名称', prop: 'productName' },
-                { label: '商品规格', prop: 'wxSpecification' },
-                { label: '商品价格（元）', prop: 'productPrice' },
-                { label: '商品数量（件）', prop: 'productCount' }
-            ],
             prouctDetailTableData: [],
             detailDialogVisible: false,
             focusDetailOrder: {},
@@ -254,6 +246,23 @@ export default {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
+            }
+        },
+        prouctDetailTableLabel () {
+            if (this.focusDetailOrder.source === '微信小店') {
+                return [
+                    { label: '商品ID', prop: 'productId' },
+                    { label: '商品名称', prop: 'productName' },
+                    { label: '商品规格', prop: 'wxSpecification' },
+                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
+            } else {
+                return [
+                    { label: '商品型号', prop: 'wxSpecification' },
+                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
             }
         }
     },

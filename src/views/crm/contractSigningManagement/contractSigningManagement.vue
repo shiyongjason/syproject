@@ -53,23 +53,26 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">发起时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
+                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.createStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('createEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker type="datetime" :editable="false" v-model="queryParams.createEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('createStartTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
-            </div>
-            <div class="query-cont__row">
+
                 <div class="query-cont-col">
                     <div class="query-col-title">更新时间：</div>
                     <div class="query-col-input">
-                        <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
+                        <!-- <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateStartTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart('updateEndTime')">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
                         <el-date-picker type="datetime" :editable="false" v-model="queryParams.updateEndTime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd('updateStartTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartUpdate" :end-change="onEndUpdate" :options="updateOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -108,20 +111,19 @@
             </hosJoyTable>
         </div>
 
-        <h-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
-            <template #connect>
-                <div slot="title">审核记录</div>
-                <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-                <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
-                <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
-                <div class="history-css">
-                    <div v-if="historyList&&historyList.length==0">暂无数据</div>
-                    <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
-                        <div class="history-css-left">
-                            <span class="name">{{item.operator}} </span>
-                            <span>{{item.operationName}}</span>
-                            <template v-if="item.operationName == '编辑了'">
-                                <!-- <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+        <el-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
+            <div slot="title">审核记录</div>
+            <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
+            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
+            <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
+            <div class="history-css">
+                <div v-if="historyList&&historyList.length==0">暂无数据</div>
+                <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
+                    <div class="history-css-left">
+                        <span class="name">{{item.operator}} </span>
+                        <span>{{item.operationName}}</span>
+                        <template v-if="item.operationName == '编辑了'">
+                            <!-- <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
                                     <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
                                     从<font>
 
@@ -138,49 +140,48 @@
                                         </template>
                                     </font>
                                 </span> -->
-                                <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
-                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                    从<font>
-                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
-                                            :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
-                                    </font>
-                                    变为<font>
-                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
-                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
-                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
-                                        </template>
-                                        <template v-else>
-                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                        </template>
-                                    </font>
-                                </span>
-                                <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
-                            </template>
-                            <template v-else-if="item.operationName == '修订了'">
-                                <font style="margin: 0 4px;">合同</font>
-                                <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
-                            </template>
-                            <template v-else>
-                                <span class="operationcontent-css">
-                                    <font>{{item.operationContent}}</font>
-                                </span>
-                            </template>
-                            <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
-                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
-                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
-                                    <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
-                                </div>
-                            </template>
-                        </div>
-                        <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
+                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                从<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                        :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                </font>
+                                变为<font>
+                                    <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
+                                    <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                        <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                            :preview-src-list="[imgItem.fileUrl]"></el-image>
+                                    </template>
+                                    <template v-else>
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </template>
+                                </font>
+                            </span>
+                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                        </template>
+                        <template v-else-if="item.operationName == '修订了'">
+                            <font style="margin: 0 4px;">合同</font>
+                            <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                        </template>
+                        <template v-else>
+                            <span class="operationcontent-css">
+                                <font>{{item.operationContent}}</font>
+                            </span>
+                        </template>
+                        <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
+                        <template v-if="item.attachDocs&&item.attachDocs.length>0">
+                            <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
+                                <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
+                            </div>
+                        </template>
                     </div>
+                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                 </div>
-            </template>
-            <template #btn>
+            </div>
+            <div class="history-bttom">
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
-            </template>
-        </h-drawer>
+            </div>
+        </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
     </div>
 </template>
@@ -223,10 +224,6 @@ export default {
     components: { hosJoyTable, diffDialog },
     data () {
         return {
-            options: {
-                'wrapperClosable': false,
-                size: '550px'
-            },
             Auths,
             emptyImg: 'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/20210105/193158915/275fc2ef-5d7c-4056-b89f-bead48b3e90f.png',
             detailRes: {},
@@ -276,7 +273,25 @@ export default {
         }),
         ...mapGetters({
             crmdepList: 'crmmanage/crmdepList'
-        })
+        }),
+        options () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.createStartTime,
+                endTime: this.queryParams.createEndTime
+            }
+        },
+        updateOptions () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.updateStartTime,
+                endTime: this.queryParams.updateEndTime
+            }
+        }
     },
     methods: {
         ...mapActions({
@@ -298,6 +313,18 @@ export default {
                 this.searchList()
             }).catch(() => {
             })
+        },
+        onStartChange (val) {
+            this.queryParams.createStartTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.createEndTime = val
+        },
+        onStartUpdate (val) {
+            this.queryParams.updateStartTime = val
+        },
+        onEndUpdate (val) {
+            this.queryParams.updateEndTime = val
         },
         async getDiff (item) {
             const { lastContentId, currentContentId } = JSON.parse(item)
@@ -531,6 +558,41 @@ export default {
             margin-top: 15px;
             align-items: baseline;
             margin-bottom: 8px;
+            .history-css-left {
+                font-size: 14px;
+                flex: 0 0 300px;
+                word-break: break-all;
+                max-width: 300px;
+                // word-break: break-all;
+                .name {
+                    color: #169bd5;
+                }
+            }
+            .history-css-right {
+                flex: 0 0 198px;
+                font-size: 13px;
+                color: #a7a5a5;
+                margin-left: 10px;
+                text-align: right;
+            }
+        }
+        .operationcontent-css {
+            font {
+                color: #ff7a45;
+                margin: 0 4px;
+            }
+        }
+    }
+    /deep/.history-css {
+        padding: 0 20px;
+        box-sizing: border-box;
+        height: calc(100vh - 190px);
+        overflow-y: scroll;
+        .history-css-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            align-items: baseline;
             .history-css-left {
                 font-size: 14px;
                 flex: 0 0 300px;

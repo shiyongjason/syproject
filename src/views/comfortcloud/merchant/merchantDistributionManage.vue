@@ -33,6 +33,9 @@
             </div>
             <!-- 表格使用老毕的组件 -->
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="phone" slot-scope="scope">
+                    <p class="coloedit title" @click="onPhoneClick(scope.data.row.phone)">{{scope.data.row.phone}}</p>
+                </template>
                 <template slot="status" slot-scope="scope">
                     {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'审核不通过'}}
                 </template>
@@ -167,6 +170,9 @@ export default {
                 this.checkData = val
                 this.rightsDialogVisible = true
             }
+        },
+        onPhoneClick (phone) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { phone } })
         },
         onNameEdit (val) {
             if (val.status === 1) {
