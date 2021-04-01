@@ -118,7 +118,7 @@
                         <!-- 新增 -->
                         <div class="row-filed">
                             <p class="col-filed col-25">
-                                <span class="label">供应商联行号：</span>
+                                <span class="label">银行联行号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierBankNo}}
                             </p>
                             <p class="col-filed">
