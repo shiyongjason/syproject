@@ -135,7 +135,6 @@ export default {
                 { label: '代理商等级', prop: 'level' },
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
-                { label: '代理商联系地址', prop: 'contactAddress' },
                 { label: '代理品类', prop: 'categoryName' },
                 { label: '代理型号', prop: 'specificationName' }],
             progressTableLabel: [

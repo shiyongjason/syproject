@@ -48,7 +48,8 @@
                     {{scope.data.row.status===0?'--':scope.data.row.status===1?parseUpdateTime(scope.data.row):'--'}}
                 </template>
                 <template slot="quotationPermission" slot-scope="scope">
-                    <el-switch v-model="scope.data.row.quotationPermission" :active-value=1 :inactive-value=0 @change='onChangeQuotationPermission(scope.data.row)' />
+                    <el-switch v-if="scope.data.row.status === 1" v-model="scope.data.row.quotationPermission" :active-value=1 :inactive-value=0 @change='onChangeQuotationPermission(scope.data.row)' />
+                    <p v-else>--</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <p class="colred title" @click="onEdit(scope.data.row)">

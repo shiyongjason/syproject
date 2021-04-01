@@ -196,7 +196,7 @@ export default {
                 { label: '邀请成交订单数', prop: 'rewardCount' },
                 { label: '邀请成交金额', prop: 'payAmountTotal' },
                 { label: '奖励金额', prop: 'rewardAmountTotal' },
-                { label: '首次沟通日期', prop: 'firstCommunicationDate' },
+                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date', width: '150px' },
                 { label: '会员标签', prop: 'userTags', width: '200px' }
             ],
             recommendDialogVisible: false,

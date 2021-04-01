@@ -144,7 +144,7 @@
                         <basicTable :tableLabel="communicationTableLabel"
                                     :tableData="cloudMerchantMemberCommunicationList"
                                     :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false'
-                                    :isAction="true">
+                                    :isAction="true"  @onCurrentChange='onCommunicationCurrentChange' @onSizeChange='onCommunicationSizeChange'>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑
                                 </el-button>
@@ -203,18 +203,18 @@
             </span>
         </el-dialog>
         <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false
-                   :visible.sync="communicationRecordDialogVisible" width="50%">
+                   :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
             <el-form ref="communicationRecordForm" :model="communicationRecordForm"
                      :rules="communicationRecordFormRules" label-width="110px">
-                <el-form-item label="沟通日期：" prop="createTime">
+                <el-form-item label="沟通日期：" prop="communicationDate">
                     <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false
                                     placeholder="沟通日期" value-format='yyyy-MM-dd'>
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="沟通结果：" prop="result">
+                <el-form-item label="沟通结果：" prop="communicationResult">
                     <el-input v-model="communicationRecordForm.communicationResult" type="textarea"
                               :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%"
-                              show-word-limit maxlength="500"></el-input>
+                              show-word-limit maxlength="250"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -292,6 +292,7 @@ export default {
                 { label: '被邀请人手机号', prop: 'phone' },
                 { label: '注册时间', prop: 'createTime', formatters: 'dateTime' }
             ],
+            tableEmployeeData: [],
             tableEmployeeLabel: [
                 { label: '角色', prop: 'role' },
                 { label: '员工微信昵称', prop: 'nickName', width: '220px' },
@@ -790,6 +791,14 @@ export default {
         onAddCommunicationRecord () {
             this.clearCommunicationRecordForm()
             this.communicationRecordDialogVisible = true
+        },
+        onCommunicationCurrentChange (val) {
+            this.searchParams.pageNumber = val.pageNumber
+            this.requestMemberCommunicationList()
+        },
+        onCommunicationSizeChange (val) {
+            this.searchParams.pageSize = val
+            this.requestMemberCommunicationList()
         },
         onCommunicationRecordEdit (data) {
             this.communicationRecordForm = data

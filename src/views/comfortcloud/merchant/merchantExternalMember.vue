@@ -75,8 +75,8 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" @click="onInput">新增客户线索</el-button>
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
+                        <el-button type="primary" class="ml20" @click="onInput">新增客户线索</el-button>
                     </div>
                 </div>
             </div>
@@ -114,7 +114,7 @@
                     <el-button v-if="scope.data.row.source==='third'" class="orangeBtn" @click="deleteData(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
-            <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-dialog title="导入新增客户线索" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
                 <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                     <el-button type="primary" slot="trigger">选择本地文件</el-button>
                     <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
@@ -238,7 +238,7 @@ export default {
                 { label: '销售顾问姓名', prop: 'saleName' },
                 { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
-                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'dateTime', width: '150px' },
+                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date', width: '100px' },
                 { label: '手动标签', prop: 'manualTags', width: '200px' },
                 { label: '自动标签', prop: 'autoTag', width: '150px' }
             ],

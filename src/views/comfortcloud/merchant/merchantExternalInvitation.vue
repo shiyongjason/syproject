@@ -54,7 +54,7 @@
                         <el-button type="primary" @click="communicate">+新增记录</el-button>
                     </div>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true">
+                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true" @onCurrentChange='onCommunicationCurrentChange' @onSizeChange='onCommunicationSizeChange'>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
                                 <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
@@ -77,14 +77,14 @@
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
             </el-dialog>
-            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%">
+            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
                 <el-form ref="communicationRecordForm" :model="communicationRecordForm" :rules="communicationRecordFormRules" label-width="110px">
-                    <el-form-item label="沟通日期：" prop="createTime">
+                    <el-form-item label="沟通日期：" prop="communicationDate">
                         <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
                         </el-date-picker>
                     </el-form-item>
-                    <el-form-item label="沟通结果：" prop="result">
-                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="500"></el-input>
+                    <el-form-item label="沟通结果：" prop="communicationResult">
+                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="250"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -209,13 +209,16 @@ export default {
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationOutOrdersituation(this.searchParams)
-            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.enterpriseInfoData.phone })
+            await this.requestMemberCommunicationList()
             this.tableBuyData = this.merchantmemberInvitationOutOrderData.records
             this.pagination = {
                 pageNumber: this.merchantmemberInvitationOutOrderData.current,
                 pageSize: this.merchantmemberInvitationOutOrderData.size,
                 total: this.merchantmemberInvitationOutOrderData.total
             }
+        },
+        async requestMemberCommunicationList () {
+            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
         },
         async onTotal () {
             const { data } = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
@@ -263,6 +266,14 @@ export default {
             this.clearCommunicationRecordForm()
             this.communicationRecordDialogVisible = true
         },
+        onCommunicationCurrentChange (val) {
+            this.searchParams.pageNumber = val.pageNumber
+            this.requestMemberCommunicationList()
+        },
+        onCommunicationSizeChange (val) {
+            this.searchParams.pageSize = val
+            this.requestMemberCommunicationList()
+        },
         onCommunicationRecordEdit (data) {
             this.communicationRecordForm = data
             this.communicationRecordDialogVisible = true
@@ -276,7 +287,7 @@ export default {
                 let params = { ...data }
                 params.operator = this.userInfo.employeeName
                 await deleteCloudMerchantMemberCommunication(params)
-                await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.enterpriseInfoData.phone })
+                await this.requestMemberCommunicationList()
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -300,7 +311,7 @@ export default {
                         }
                         this.communicationRecordDialogVisible = false
                         this.clearCommunicationRecordForm()
-                        await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.enterpriseInfoData.phone })
+                        await this.requestMemberCommunicationList()
                     } catch (e) {
                     }
                 }
