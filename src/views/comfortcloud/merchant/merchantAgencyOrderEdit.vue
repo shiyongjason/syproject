@@ -353,6 +353,7 @@ export default {
             this.form.countryId = val.countryId
             this.form.countryName = val.countryName
             this.form.cityId = val.cityId
+            this.form.cityName = val.cityName
             this.form.provinceId = val.provinceId
             this.form.provinceName = val.provinceName
             this.form.contactAddress = val.contactAddress
