@@ -505,6 +505,13 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+/deep/.drawer__content {
+    padding: 0 20px 0 20px;
+}
+/deep/.el-tabs__header {
+    padding: 0 0 0 10px;
+    margin: 0;
+}
 /deep/.el-dialog {
     min-width: 745px;
 }
