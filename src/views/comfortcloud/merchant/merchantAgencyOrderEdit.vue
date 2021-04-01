@@ -358,7 +358,6 @@ export default {
             this.form.contactAddress = val.contactAddress
             this.form.contactUser = val.contactUser
             this.form.companyName = val.companyName
-            this.form.contactNumber = val.contactNumber
             this.optarr = [val.provinceId, val.cityId, val.countryId]
         },
         async remoteMethod (val) {
