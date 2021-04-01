@@ -777,15 +777,19 @@ export default {
             this.historyList = data.signHistory
         },
         openDialog (title, status) {
-            let flag = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
+            let flagFeeForm = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
             let flagBatch = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_order_purch_batch')[0]
-
-            if (title !== '驳回' && flag && !flag.paramValue && flagBatch && flagBatch.paramValue == '分批采购') {
-                this.$message({
-                    message: `服务费分期表格(采购单)不能为空`,
-                    type: 'error'
-                })
-                return
+            if (title !== '驳回' && flagFeeForm && flagBatch && flagBatch.paramValue == '分批采购') {
+                if ((Object.prototype.toString.call(flagFeeForm.paramValue) === '[object Array]' && flagFeeForm.paramValue.length == 0) || !flagFeeForm.paramValue) {
+                    this.$message({
+                        message: `服务费分期表格(采购单)不能为空`,
+                        type: 'error'
+                    })
+                    const dom = document.querySelector('.purch_service_fee_form')
+                    if (!dom) { console.error('dom不存在') }
+                    dom && dom.scrollIntoView()
+                    return
+                }
             }
             this.dialog.dialogVisible = true
             this.dialog.title = title
@@ -1050,6 +1054,11 @@ export default {
                 /** 获取页面最新合同字段键值对 end JSON.stringify(tempArr) */
 
                 await this.onServiceFee(true)
+                console.log('tempArr', tempArr)
+                let feeFormTemp = tempArr.find(tempItem => tempItem.paramKey === 'purch_service_fee_form')
+                let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
+                let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                feeFormTemp.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
                 await saveContent({
                     'contractId': this.$route.query.id,
                     // 合同审批角色 1：分财 2：风控 3：法务
@@ -1258,31 +1267,40 @@ export default {
                 if ((temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
                     let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
                     let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                    let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
                     await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
+                    purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
                 }
             }
 
             // 采购批次(采购单)： 一次性  分批
-            if (this.currentKey.paramKey === 'purch_order_purch_batch' && this.currentKey.paramValue === '分批采购') {
-                // 把表格修改成上传图片
-                let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
-                Array.from(feeTableDom).map(table => {
-                    table.outerHTML = `<div style="word-break: break-all; color: #ff7a45; cursor: pointer;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
-                })
-                //  分批，,生成表
-                if (this.currentKey.paramValue) {
-                    this.currentKey.paramValue = ''
-                    tempArr.map(item => {
-                        // 修改对应的键值对里的值
-                        if (item.paramKey === 'purch_service_fee_form') {
-                            item.paramValue = ''
-                        }
+            if (this.currentKey.paramKey === 'purch_order_purch_batch') {
+                // 分批
+                if (this.currentKey.paramValue === '分批采购' || this.currentKey.paramValue == 2) {
+                    // 把表格修改成上传图片
+                    let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
+                    Array.from(feeTableDom).map(table => {
+                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45; cursor: pointer;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
                     })
+                    //  分批,清空表
+                    if (this.currentKey.paramValue) {
+                        this.currentKey.paramValue = ''
+                        tempArr.map(item => {
+                            // 修改对应的键值对里的值
+                            if (item.paramKey === 'purch_service_fee_form') {
+                                item.paramValue = ''
+                            }
+                        })
+                    }
+                    // 一次性
+                } else if (this.currentKey.paramValue === '一次性采购' || this.currentKey.paramValue == 1) {
+                    let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
+                    let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
+                    let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                    purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
+                    console.log('purchServiceFeeForm: ', purchServiceFeeForm)
+                    await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
                 }
-            } else if (this.currentKey.paramValue === '一次性采购' || this.currentKey.paramValue == 1) {
-                let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
-                let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
-                await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
             }
             try {
                 await saveContent({
@@ -1367,7 +1385,8 @@ export default {
                             let feeForm = this.contractDocument.getElementsByClassName(item.paramKey)
                             let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.paramKey)[0]
                             let _paramValue = ''
-                            if (Object.prototype.toString.call(fields.paramValue) === '[object Array]' && (temp.paramValue == '分批采购' || temp.paramValue == 2)) {
+                            if (Object.prototype.toString.call(fields.paramValue) === '[object Array]' && (temp.paramValue == '分批采购' || temp.paramValue == 2) && fields.paramValue.length > 0) {
+                                console.log('fields.paramValue[0]: ', fields)
                                 _paramValue = fields.paramValue[0].fileUrl
                             }
                             Array.from(feeForm).map(feeFormHtml => {
