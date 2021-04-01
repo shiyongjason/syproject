@@ -112,18 +112,18 @@
         </div>
 
         <el-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
-                <div slot="title">审核记录</div>
-                <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
-                <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
-                <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
-                <div class="history-css">
-                    <div v-if="historyList&&historyList.length==0">暂无数据</div>
-                    <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
-                        <div class="history-css-left">
-                            <span class="name">{{item.operator}} </span>
-                            <span>{{item.operationName}}</span>
-                            <template v-if="item.operationName == '编辑了'">
-                                <!-- <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
+            <div slot="title">审核记录</div>
+            <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
+            <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
+            <div v-if="drawerVisible" style="text-align: center;font-size: 18px;">{{getContractStatusTxt(detailRes.contractStatus)}}</div>
+            <div class="history-css">
+                <div v-if="historyList&&historyList.length==0">暂无数据</div>
+                <div v-else class="history-css-flex" v-for="(item,index) in historyList" :key="index">
+                    <div class="history-css-left">
+                        <span class="name">{{item.operator}} </span>
+                        <span>{{item.operationName}}</span>
+                        <template v-if="item.operationName == '编辑了'">
+                            <!-- <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1">
                                     <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
                                     从<font>
 
@@ -140,44 +140,44 @@
                                         </template>
                                     </font>
                                 </span> -->
-                                <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
-                                    <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
-                                    从<font>
-                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
-                                            :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
-                                    </font>
-                                    变为<font>
-                                        <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
-                                        <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
-                                            <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
-                                                :preview-src-list="[imgItem.fileUrl]"></el-image>
-                                        </template>
-                                        <template v-else>
-                                            <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
-                                        </template>
-                                    </font>
-                                </span>
-                                <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
-                            </template>
-                            <template v-else-if="item.operationName == '修订了'">
-                                <font style="margin: 0 4px;">合同</font>
-                                <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
-                            </template>
-                            <template v-else>
-                                <span class="operationcontent-css">
-                                    <font>{{item.operationContent}}</font>
-                                </span>
-                            </template>
-                            <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
-                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
-                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
-                                    <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
-                                </div>
-                            </template>
-                        </div>
-                        <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
+                            <span class="imgcss" v-if="item.operationContent.indexOf('purchase_details') != -1||item.operationContent.indexOf('purch_service_fee_form') != -1">
+                                <font style="color:#ff7a45">{{JSON.parse(item.operationContent).fieldDesc}}</font>
+                                从<font>
+                                    <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldOriginalContent||emptyImg"
+                                        :preview-src-list="[JSON.parse(item.operationContent).fieldOriginalContent||emptyImg]"></el-image>
+                                </font>
+                                变为<font>
+                                    <span v-if="JSON.parse(item.operationContent).fieldContent==''">“”</span>
+                                    <template v-else-if="JSON.parse(item.operationContent).fieldContent.indexOf('[{')!=-1">
+                                        <el-image v-for="(imgItem,imgIndex) in JSON.parse(JSON.parse(item.operationContent).fieldContent)" :key="imgIndex" style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="imgItem.fileUrl"
+                                            :preview-src-list="[imgItem.fileUrl]"></el-image>
+                                    </template>
+                                    <template v-else>
+                                        <el-image style="width: 80px; height: 80px;margin:10px 5px 0;border-radius: 7px;border: 1px solid #d9d9d9" :src="JSON.parse(item.operationContent).fieldContent" :preview-src-list="[JSON.parse(item.operationContent).fieldContent]"></el-image>
+                                    </template>
+                                </font>
+                            </span>
+                            <span v-else class="operationcontent-css" v-html="getOperationContent(item)"></span>
+                        </template>
+                        <template v-else-if="item.operationName == '修订了'">
+                            <font style="margin: 0 4px;">合同</font>
+                            <font style="color: #ff7a45;margin-left:4px;cursor: pointer;" @click="getDiff(item.operationContent)">查看 >></font>
+                        </template>
+                        <template v-else>
+                            <span class="operationcontent-css">
+                                <font>{{item.operationContent}}</font>
+                            </span>
+                        </template>
+                        <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
+                        <template v-if="item.attachDocs&&item.attachDocs.length>0">
+                            <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
+                                <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
+                            </div>
+                        </template>
                     </div>
+                    <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                 </div>
+            </div>
             <div class="history-bttom">
                 <h-button type="primary" @click="drawerVisible=false">好的</h-button>
             </div>
