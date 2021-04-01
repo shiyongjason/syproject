@@ -6,10 +6,12 @@
                     <h3>新增代理订单</h3>
                 </div>
                 <el-form-item label="代理商联系电话：" prop="contactNumber">
-                    <el-select v-model="form.contactNumber" @change='selectContactItem' @blur="searchBlur" placeholder="请输入代理商联系电话" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
-                        <el-option v-for="items in this.contactNumberOptions" :key="items.contactNumber" :label="items.contactNumber" :value="items">
-                        </el-option>
-                    </el-select>
+                    <el-input v-model.trim="form.contactNumber" @change='remoteMethod' show-word-limit placeholder="请输入代理商手机号" maxlength='50' class="newTitle"></el-input>
+<!--                    <el-select v-model="form.contactNumber" @change='selectContactItem' @blur="searchBlur" placeholder="请输入代理商联系电话" reserve-keyword filterable remote-->
+<!--                               :remote-method="remoteMethod" :loading="loading">-->
+<!--                        <el-option v-for="items in this.contactNumberOptions" :key="items.contactNumber" :label="items.contactNumber" :value="items">-->
+<!--                        </el-option>-->
+<!--                    </el-select>-->
                 </el-form-item>
                 <el-form-item label="代理商公司全称：" prop="companyName">
                     <el-input v-model.trim="form.companyName" show-word-limit placeholder="请输入代理商公司全称" maxlength='50' class="newTitle"></el-input>
@@ -67,7 +69,7 @@
                     </el-col>
                     <el-col :span="3">
                         <el-form-item label="首批提货款：">
-                            <el-input v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款" class="newTitle"></el-input>
+                            <el-input v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款" class="newTitle" v-isNum:2="form.prepayAmount"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -85,8 +87,9 @@
                         <el-date-picker placeholder="选择日期" v-model="form.payTime" style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-ddTHH:mm"></el-date-picker>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="商品主图：" prop="payCertificates" ref="productImg">
+                <el-form-item label="商品主图：" prop="payCertificates" ref="productImg" >
                     <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
+                    <SingleUpload v-if="form.payCertificates.length===1||form.payCertificates.length===2" sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl2" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
                         建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
@@ -107,7 +110,6 @@
 import { interfaceUrl } from '@/api/config'
 import { saveManualAgent } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
-
 export default {
     name: 'merchantAgencyOrderEdit',
     data () {
@@ -209,7 +211,7 @@ export default {
         ...mapGetters({
             cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
             nestDdata: 'nestDdata',
-            cloudMerchantList: 'cloudMerchantList',
+            cloudMerchantFromPhone: 'cloudMerchantFromPhone',
             cloudMerchantAgentOrderDetail: 'cloudMerchantAgentOrderDetail',
             cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
@@ -242,6 +244,9 @@ export default {
         },
         productImgUrl () {
             return this.form.payCertificates[0]
+        },
+        productImgUrl2 () {
+            return this.form.payCertificates[1]
         }
     },
     async mounted () {
@@ -258,7 +263,7 @@ export default {
         ...mapActions({
             findCloudMerchantAgentOrderDetail: 'findCloudMerchantAgentOrderDetail',
             findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
-            findCloudMerchantList: 'findCloudMerchantList',
+            findCloudMerchantFromPhone: 'findCloudMerchantFromPhone',
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList',
             findNest: 'findNest'
         }),
@@ -357,8 +362,10 @@ export default {
             this.optarr = [val.provinceId, val.cityId, val.countryId]
         },
         async remoteMethod (val) {
-            await this.findCloudMerchantList({ contactNumber: val, pageNumber: 1, pageSize: 1 })
-            this.contactNumberOptions = this.cloudMerchantList
+            await this.findCloudMerchantFromPhone({ phone: val })
+            // this.contactNumberOptions.pop()
+            let data = this.cloudMerchantFromPhone
+            this.selectContactItem(data)
         },
         selectSpecificationIdChanged (item) {
             this.cloudMerchantShopCategoryTypeList.find((value) => { // 这里的ClaOptions就是上面遍历的数据源
@@ -370,15 +377,6 @@ export default {
 
             })
         },
-        selectSpecificationDisabled (item) {
-            this.form.signSpecifications.map((value, index) => {
-                if (value.specificationId === item.specificationId) {
-                    return true
-                }
-            })
-            return false
-        },
-
         productImg (val) {
             this.form.payCertificates.push(val.imageUrl)
         },
@@ -400,7 +398,18 @@ export default {
             this.form.provinceName = this.$refs.myCascader.getCheckedNodes()[0].pathLabels[0]
             this.form.cityName = this.$refs.myCascader.getCheckedNodes()[0].pathLabels[1]
             this.form.countryName = this.$refs.myCascader.getCheckedNodes()[0].pathLabels[2]
+        },
+        handleAvatarSuccess (res, file) {
+            this.imageUrl = URL.createObjectURL(file.raw)
+        },
+        beforeAvatarUpload (file) {
+            const isLt2M = file.size / 1024 / 1024 < 2
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!')
+            }
+            return isLt2M
         }
+
     }
 }
 </script>
@@ -409,7 +418,29 @@ export default {
 .page-body-title {
     margin-bottom: 20px;
 }
-
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
 .upload-tips {
     font-size: 12px;
     color: #999;

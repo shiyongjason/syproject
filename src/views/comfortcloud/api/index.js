@@ -602,6 +602,10 @@ export function getHomeUser (params) {
 export function getCloudMerchantList (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
 }
+// 获取招商代理商
+export function getCloudMerchantFromPhone (params) {
+    return axios.get(iotUrl + '/mall/boss/company/info-by-phone', { params })
+}
 
 // 获取招商代理商统计数据
 export function getCloudMerchantStatistics (params) {

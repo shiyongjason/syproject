@@ -69,6 +69,7 @@
             </basicTable>
         </div>
         <el-dialog title="查看代理信息" :modal-append-to-body=false :append-to-body=false :visible.sync="agentDetailVisible" width="50%">
+            <p style="line-height: 25px">代理等级 {{this.agentDetailLevel}} <br></p>
             <basicTable :tableLabel="tableLabelDetail" :tableData="cloudMerchantOrderDetail">
 
             </basicTable>
@@ -94,6 +95,7 @@ export default {
                 pageSize: 10
             },
             agentDetailVisible: false,
+            agentDetailLevel: '',
             tableLabel: [
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'successTime', formatters: 'dateTime' },
@@ -175,6 +177,7 @@ export default {
         },
         agentDetail: function (val) {
             this.findCloudMerchantOrderDetail({ agentCode: val.agentCode })
+            this.agentDetailLevel = val.level === 1 ? '一级' : '二级'
             this.agentDetailVisible = true
         },
         onEdit: function (val) {

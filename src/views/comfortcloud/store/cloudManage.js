@@ -74,6 +74,7 @@ const state = {
     cloudHomeModeTypeList: [],
     serviceManageHistoryList: [],
     cloudMerchantList: [],
+    cloudMerchantFromPhone: [],
     cloudMerchantListPagination: {},
     cloudMerchantAgentDetail: {},
     cloudMerchantAdList: [],
@@ -185,6 +186,7 @@ const getters = {
     cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
     serviceManageHistoryList: state => state.serviceManageHistoryList,
     cloudMerchantList: state => state.cloudMerchantList,
+    cloudMerchantFromPhone: state => state.cloudMerchantFromPhone,
     cloudMerchantListPagination: state => state.cloudMerchantListPagination,
     cloudMerchantAgentDetail: state => state.cloudMerchantAgentDetail,
     cloudMerchantAdList: state => state.cloudMerchantAdList,
@@ -425,6 +427,10 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_LIST] (state, payload) {
         state.cloudMerchantList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_FROM_PHONE] (state, payload) {
+        state.cloudMerchantFromPhone = payload
+        console.log(payload)
     },
     [cloud.CLOUD_MERCHANT_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantListPagination = payload
@@ -828,6 +834,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findCloudMerchantFromPhone ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantFromPhone(params)
+        commit(cloud.GET_CLOUD_MERCHANT_FROM_PHONE, data)
     },
     async getCloudMerchantAgentDetail ({ commit }, params) {
         const { data } = await Api.getCloudMerchantAgentDetail(params)
