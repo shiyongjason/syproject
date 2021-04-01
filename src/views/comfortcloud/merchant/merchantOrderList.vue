@@ -190,13 +190,6 @@ export default {
                 { label: '物流公司', prop: 'deliveryName' },
                 { label: '快递单号', prop: 'waybillId' }
             ],
-            prouctDetailTableLabel: [
-                { label: '商品ID', prop: 'productId' },
-                { label: '商品名称', prop: 'productName' },
-                { label: '商品规格', prop: 'wxSpecification' },
-                { label: '商品价格（元）', prop: 'productPrice' },
-                { label: '商品数量（件）', prop: 'productCount' }
-            ],
             prouctDetailTableData: [],
             detailDialogVisible: false,
             focusDetailOrder: {},
@@ -253,6 +246,23 @@ export default {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
+            }
+        },
+        prouctDetailTableLabel () {
+            if (this.focusDetailOrder.source === '微信小店') {
+                return [
+                    { label: '商品ID', prop: 'productId' },
+                    { label: '商品名称', prop: 'productName' },
+                    { label: '商品规格', prop: 'wxSpecification' },
+                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
+            } else {
+                return [
+                    { label: '商品型号', prop: 'wxSpecification' },
+                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
             }
         }
     },
