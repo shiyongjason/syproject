@@ -56,7 +56,7 @@ export default {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
         this.res = data
         this.res._attachementList = this.res.attachementList && this.res.attachementList.filter(val => {
-            if (val.picUrl.indexOf('.docx') < 0 && val.picUrl.indexOf('.pdf') < 0 && val.picUrl.indexOf('.xlsx') < 0) {
+            if (val.picUrl.indexOf('.doc') < 0 && val.picUrl.indexOf('.docx') < 0 && val.picUrl.indexOf('.pdf') < 0 && val.picUrl.indexOf('.xlsx') < 0) {
                 return val
             }
         })
