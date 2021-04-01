@@ -35,7 +35,7 @@ export const IsEnglish = (rule, value, callback) => {
  * @param {*} callback
  */
 export const Email = (rule, value, callback) => {
-    const Reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+    const Reg = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     if (value && !Reg.test(value)) {
         return callback(new Error('邮箱格式不正确'))
     }
