@@ -11,12 +11,6 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">手机号：</div>
-                <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入手机号" clearable></el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
                 <div class="query-col-title">联系人姓名：</div>
                 <div class="query-col-input">
                     <el-input type="text" v-model="queryParams.contactUser" maxlength="50" placeholder="输入联系人姓名" clearable></el-input>
@@ -25,7 +19,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.phone" maxlength="50" placeholder="输入手机号" clearable></el-input>
+                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入手机号" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -117,7 +111,6 @@ export default {
                 cityId: '',
                 categoryId: '',
                 pageNumber: 1,
-                phone: '',
                 pageSize: 10
             },
             statistics: {
