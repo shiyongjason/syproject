@@ -541,6 +541,8 @@ export default {
             // document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
             // document.getElementById(this._keyValue).outerHTML = ''
             this.$nextTick(() => {
+                let curObj = this.tempParams.find(item => item.paramKey === this.targetObjs.selectCode)
+                this.keyValue = curObj
                 let inputWidth = this.keyValue.paramName.length * 14
                 let domObj = document.getElementById(this._keyValue)
                 domObj.setAttribute('class', `${this.keyValue.paramKey}`)
