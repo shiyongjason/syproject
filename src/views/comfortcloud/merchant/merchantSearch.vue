@@ -178,9 +178,11 @@ export default {
             if (this.cloudMerchantAgentDetail == null || this.cloudMerchantAgentDetail.payTime == null) {
                 return '--'
             }
-            let sdtime1 = new Date(this.cloudMerchantAgentDetail.payTime).getTime() / 1000
-            let sdtime2 = new Date().getTime() / 1000
-            return sdtime2 - sdtime1 > 0 ? '履约中' : '已过期'
+
+            let sdtime1 = new Date(this.cloudMerchantAgentDetail.payTime)
+            sdtime1.setFullYear((sdtime1.getFullYear() + 1))
+            let sdtime3 = new Date().getTime()
+            return sdtime1.getTime() - sdtime3 > 0 ? '履约中' : '已过期'
         }
 
     },
