@@ -780,7 +780,7 @@ export default {
             let flag = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
             let flagBatch = this.contractFieldsList.filter(ktem => ktem.paramKey === 'purch_order_purch_batch')[0]
 
-            if (flag && !flag.paramValue && flagBatch && flagBatch.paramValue == '分批采购') {
+            if (title !== '驳回' && flag && !flag.paramValue && flagBatch && flagBatch.paramValue == '分批采购') {
                 this.$message({
                     message: `服务费分期表格(采购单)不能为空`,
                     type: 'error'
