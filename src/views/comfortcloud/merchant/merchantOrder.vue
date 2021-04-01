@@ -177,7 +177,7 @@ export default {
         },
         agentDetail: function (val) {
             this.findCloudMerchantOrderDetail({ agentCode: val.agentCode })
-            this.agentDetailLevel = val.level === 1 ? '一级' : '二级'
+            this.agentDetailLevel = val.level === 1 ? '一级' : val.level === 1 ? '二级' : ''
             this.agentDetailVisible = true
         },
         onEdit: function (val) {
