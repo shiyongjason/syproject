@@ -6,7 +6,7 @@
                     <h3>新增代理订单</h3>
                 </div>
                 <el-form-item label="代理商联系电话：" prop="contactNumber">
-                    <el-select v-model="form.contactNumber" @change='selectContactItem' placeholder="请输入代理商联系电话" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
+                    <el-select v-model="form.contactNumber" @change='selectContactItem' @blur="searchBlur" placeholder="请输入代理商联系电话" reserve-keyword filterable remote :remote-method="remoteMethod" :loading="loading">
                         <el-option v-for="items in this.contactNumberOptions" :key="items.contactNumber" :label="items.contactNumber" :value="items">
                         </el-option>
                     </el-select>
@@ -63,7 +63,7 @@
                 </el-form-item>
                 <el-form-item label="代理押金合计">
                     <el-col :span="6">
-                        <span>代理押金 2000元</span>
+                        <span>代理押金 {{this.form.signSpecifications.length*1000}}元</span>
                     </el-col>
                     <el-col :span="3">
                         <el-form-item label="首批提货款：">
@@ -181,6 +181,9 @@ export default {
                         let categoryIds = []
                         for (let i = 0; i < this.form.signSpecifications.length; i++) {
                             let item = this.form.signSpecifications[i]
+                            if (!item.specificationName || !item.categoryName) {
+                                return callback(new Error('商品类型不能为空'))
+                            }
                             if (categoryIds.includes(item.specificationName)) {
                                 return callback(new Error('商品类型不能重复'))
                             } else {
@@ -259,7 +262,9 @@ export default {
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList',
             findNest: 'findNest'
         }),
-
+        searchBlur (e) {
+            this.form.contactNumber = e.target.value
+        },
         async getAgentDetail (val) {
             await this.findCloudMerchantAgentOrderDetail({ agentCode: val })
             this.form = this.cloudMerchantAgentOrderDetail
@@ -296,7 +301,7 @@ export default {
                         cancelButtonText: '取消'
                     }).then(async () => {
                         try {
-                            this.form.totalAgentAmount = parseInt(this.form.prepayAmount) + 2000
+                            this.form.totalAgentAmount = parseInt(this.form.prepayAmount) + this.form.signSpecifications.length * 1000
                             this.form.operator += this.userInfo.employeeName
                             this.form.signSpecifications.map((item) => {
                                 item.signAmount = 1000

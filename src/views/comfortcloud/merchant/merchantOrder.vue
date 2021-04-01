@@ -104,7 +104,7 @@ export default {
                 { label: '联系地址', prop: 'contactAddress' },
                 // { label: '代理级别', prop: 'level' },
                 // { label: '代理品类', prop: 'categoryName' },
-                { label: '订单金额', prop: 'payAmount' },
+                { label: '订单金额', prop: 'agentAmount' },
                 { label: '提货预付款', prop: 'prepayAmount', formatters: 'price' },
                 { label: '订单状态', prop: 'status' }],
             tableLabelDetail: [
