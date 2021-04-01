@@ -175,13 +175,13 @@
                                 </div>
                             </el-form-item>
                             <el-form-item label="质押信息：" prop="pledgeNo">
-                                <el-input type="text" v-model="formData.pledgeNo" maxlength="50"></el-input>
+                                <el-input type="text" v-model="formData.pledgeNo" maxlength="50" placeholder="请输入中登网质押编号"></el-input>
                             </el-form-item>
                             <el-form-item label="OA审批编号：" prop="oaNo">
-                                <el-input type="text" v-model="formData.oaNo" maxlength="50"></el-input>
+                                <el-input type="text" v-model="formData.oaNo" maxlength="50" placeholder="请输OA审批编号"></el-input>
                             </el-form-item>
                             <el-form-item label="审核备注" prop="approvalRemark">
-                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200" placeholder="可在此处备注对资金放款的要求"></el-input>
                             </el-form-item>
                             <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
                                 <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
