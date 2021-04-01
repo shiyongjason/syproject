@@ -8,7 +8,7 @@
                 <div class="query-col-title">订单号：</div>
                 <div class="query-col-input">
                     <el-input type="text"
-                              v-model="queryParams.payNo" maxlength="50" placeholder="输入订单号" clearable></el-input>
+                              v-model="queryParams.agentCode" maxlength="50" placeholder="输入订单号" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -87,7 +87,7 @@ export default {
     data () {
         return {
             queryParams: {
-                payNo: '',
+                agentCode: '',
                 status: '',
                 payStartDate: '',
                 payEndDate: '',

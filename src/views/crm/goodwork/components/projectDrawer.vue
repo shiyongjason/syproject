@@ -5,13 +5,15 @@
              -->
         <h-drawer title="项目详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
             <template #connect>
-                <el-tabs v-model="activeName" @tab-click="handleClick" type="card" class="fiextab">
-                    <template v-for="item in tabs">
-                        <template v-if='isShowTab(item.key,status)'>
-                            <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
+                <div class="fiextab">
+                    <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                        <template v-for="item in tabs">
+                            <template v-if='isShowTab(item.key,status)'>
+                                <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
+                            </template>
                         </template>
-                    </template>
-                </el-tabs>
+                    </el-tabs>
+                </div>
                 <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
                 <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
                 <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
@@ -505,6 +507,13 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+/deep/.drawer__content {
+    padding: 0 20px 0 20px;
+}
+/deep/.el-tabs__header {
+    padding: 0 0 0 10px;
+    margin: 0;
+}
 /deep/.el-dialog {
     min-width: 745px;
 }
@@ -545,6 +554,7 @@ export default {
     background: #ffffff;
     width: 100%;
     z-index: 11;
+    top: 68px;
 }
 .el-textarea /deep/.el-input__count {
     bottom: -45px;
