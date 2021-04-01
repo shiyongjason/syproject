@@ -112,33 +112,36 @@
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
-        <el-dialog :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="800px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
+        <el-dialog :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
             <div class="dialog-ctx">
                 <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="150px" ref="form">
-                    <el-form-item label="经销商：">
+                    <div class="dialog-flex-layout">
+                        <el-form-item label="经销商：">
                         {{ prevPaymentDetail.companyName }}
-                    </el-form-item>
-                    <el-form-item label="项目：">
-                        {{ prevPaymentDetail.projectName }}
-                    </el-form-item>
-                    <el-form-item label="分部：">
-                        {{ prevPaymentDetail.deptName }}
-                    </el-form-item>
-                    <el-form-item label="剩余应上游支付：">
-                        {{ prevPaymentDetail.surplusAmount | fundMoneyHasTail }}元
-                    </el-form-item>
-                    <el-form-item label="上游供应商：">
-                        {{ prevPaymentDetail.supplierCompanyName }}
-                    </el-form-item>
-                    <el-form-item label="上游支付形式：">
-                        {{paymentType.get(prevPaymentDetail.supplierPaymentType)}}
-                    </el-form-item>
-                    <el-form-item label="上游货款方式：">
-                        {{supplierPaymentMethod.get(prevPaymentDetail.supplierPaymentMethod)}}
-                    </el-form-item>
-                    <el-form-item label="收货进度：">
-                        {{prevPaymentDetail.goodsProgress}}%
-                    </el-form-item>
+                        </el-form-item>
+                        <el-form-item label="项目：">
+                            {{ prevPaymentDetail.projectName }}
+                        </el-form-item>
+                        <el-form-item label="分部：">
+                            {{ prevPaymentDetail.deptName }}
+                        </el-form-item>
+                        <el-form-item label="剩余应上游支付：">
+                            {{ prevPaymentDetail.surplusAmount | fundMoneyHasTail }}元
+                        </el-form-item>
+                        <el-form-item label="上游供应商：">
+                            {{ prevPaymentDetail.supplierCompanyName }}
+                        </el-form-item>
+                        <el-form-item label="上游支付形式：">
+                            {{paymentType.get(prevPaymentDetail.supplierPaymentType)}}
+                        </el-form-item>
+                        <el-form-item label="上游货款方式：">
+                            <font style="color:#ff7a45">{{supplierPaymentMethod.get(prevPaymentDetail.supplierPaymentMethod)}}</font>
+                        </el-form-item>
+                        <el-form-item label="收货进度：">
+                            <font style="color:#ff7a45">{{prevPaymentDetail.goodsProgress}}%</font>
+                        </el-form-item>
+                    </div>
+
                     <el-form-item label="采购单货款明细：">
                         <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5;    border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.poDetail" :key='index'></elImageAddToken>
                     </el-form-item>
@@ -190,12 +193,12 @@ import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespS
 import filters from '@/utils/filters'
 import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
 
-export const PAYMENTTYPE: Map<number | null | string, string> = new Map([
+export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转帐'],
     [2, '银行承兑']
 ])
-export const SUPPLIERPAYMENTMETHOD: Map<number | null | string, string> = new Map([
+export const SUPPLIERPAYMENTMETHOD: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '先款后货'],
     [2, '先货后款']
@@ -368,15 +371,14 @@ export default class UpstreamPaymentManagement extends Vue {
     ]
 
     onRenderPaymentLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
-        // TODO支付状态 1：待出票 2：部分出票
-        return (
-            <span>
-                {scope.row.paymentStatus != null
-                    ? scope.row.paymentStatus == 1 ? '待支付' : '部分支付'
-                    : '-'}/{scope.row.paymentNumber}
-            </span>
-        )
+        const PAYMENTSTATUS: Map<number | null, string> = new Map([
+            [null, '-'],
+            [1, '待支付'],
+            [2, '部分支付']
+        ])
+        return <span> {PAYMENTSTATUS.get(scope.row.paymentStatus)}/{scope.row.paymentNumber}</span>
     }
+
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
         return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
     }
@@ -473,12 +475,11 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async mounted () {
-        console.log('mounted')
-        this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
-        this._dialogFormData = JSON.parse(JSON.stringify(this.dialogFormData))
         let AUTHCODE = sessionStorage.getItem('authCode') || ''
         this.queryParams.authCode = AUTHCODE ? JSON.parse(AUTHCODE) : ''
         this.queryParams.jobNumber = this.userInfo.jobNumber
+        this._queryParams = JSON.parse(JSON.stringify(this.queryParams))
+        this._dialogFormData = JSON.parse(JSON.stringify(this.dialogFormData))
         this.getList()
         await this.findCrmdeplist({
             deptType: 'F',
