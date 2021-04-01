@@ -115,7 +115,7 @@
                         <el-form-item label="收货地址：">
                             {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
                         </el-form-item>
-                        <el-form-item label="特殊说明：">
+                        <el-form-item label="备注信息：">
                             {{paymentDetail.payOrderDetail.specialRemark}}
                         </el-form-item>
                     </div>
