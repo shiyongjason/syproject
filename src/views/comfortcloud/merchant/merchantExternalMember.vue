@@ -238,7 +238,7 @@ export default {
                 { label: '销售顾问姓名', prop: 'saleName' },
                 { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
-                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'dateTime', width: '150px' },
+                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date', width: '150px' },
                 { label: '手动标签', prop: 'manualTags', width: '200px' },
                 { label: '自动标签', prop: 'autoTag', width: '150px' }
             ],
