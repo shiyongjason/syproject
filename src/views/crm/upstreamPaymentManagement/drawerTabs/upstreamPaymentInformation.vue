@@ -1,8 +1,8 @@
 <template>
     <div class="tab-layout" :style="{'height':'calc(100vh - 210px)'}">
         <div class="upstreamPaymentInformation-info">
-            <div>应向上游支付：{{ data.totalAmount | fundMoneyHasTail}} 元</div>
-            <div>已向上游支付：{{ data.paidAmount | fundMoneyHasTail}} 元</div>
+            <div>应向上游支付：<font style="color:#ff7a45">{{ data.totalAmount | fundMoneyHasTail}} 元</font></div>
+            <div>已向上游支付：<font style="color:#ff7a45">{{ data.paidAmount | fundMoneyHasTail}} 元</font></div>
         </div>
         <div class="upstreamPaymentInformation-item" v-for="(item,index) in data.supplierDetails" :key="item.id">
             <div class="upstreamPaymentInformation-item-no">{{index+1}}</div>
