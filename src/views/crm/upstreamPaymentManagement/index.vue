@@ -112,7 +112,7 @@
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
-        <el-dialog :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
+        <el-dialog v-if="isOpen" :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
             <div class="dialog-ctx">
                 <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="150px" ref="form">
                     <div class="dialog-flex-layout">
