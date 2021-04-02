@@ -260,6 +260,7 @@ export default {
     },
     methods: {
         ...mapActions({
+            setNewTags: 'setNewTags',
             findCloudMerchantAgentOrderDetail: 'findCloudMerchantAgentOrderDetail',
             findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
             findCloudMerchantFromPhone: 'findCloudMerchantFromPhone',
@@ -319,6 +320,7 @@ export default {
                                 this.$message.success('保存成功')
                             }
                             this.loading = false
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
                             this.$router.push({ path: '/comfortCloudMerchant/merchantManage/merchantOrder' })
                         } catch (error) {
                             this.loading = false
