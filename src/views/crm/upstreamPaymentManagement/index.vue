@@ -112,7 +112,7 @@
                 <h-button style="margin-top:20px" type="primary" @click="payInfoApi">立即上游支付</h-button>
             </div>
         </el-drawer>
-        <el-dialog :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
+        <el-dialog v-if="isOpen" :close-on-click-modal='false' title="上游支付" :visible.sync="isOpen" width="850px" :before-close="()=> onCancel()" class="prev-payment-dialog" >
             <div class="dialog-ctx">
                 <el-form id='elform' :model="dialogFormData" :rules="formRules" label-width="150px" ref="form">
                     <div class="dialog-flex-layout">
@@ -192,7 +192,7 @@ import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
 import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
-
+import moment from 'moment'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转帐'],
@@ -276,7 +276,7 @@ export default class UpstreamPaymentManagement extends Vue {
         poId: '',
         paymentOrderId: '',
         payAmount: '',
-        payDate: '',
+        payDate: moment().format('YYYY-MM-DD'),
         payVouchers: [],
         paymentBank: ''
     }
@@ -421,6 +421,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.$message.success('提交成功！')
         await this.onRequest()
         this.onCancel()
+        this.getList()
     }
 
     /** 对应tab切的响应请求 */

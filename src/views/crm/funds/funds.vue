@@ -219,10 +219,10 @@ export default {
     },
     methods: {
         onStartChange (val) {
-            this.queryParams.startApplyDate = val
+            this.queryParams.scheduleStartTime = val
         },
         onEndChange (val) {
-            this.queryParams.endApplyDate = val
+            this.queryParams.scheduleEndTime = val
         },
         onStartPay (val) {
             this.queryParams.paidStartTime = val
