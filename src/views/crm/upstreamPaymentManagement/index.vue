@@ -95,7 +95,7 @@
             </hosJoyTable>
 
         </div>
-        <el-drawer class="editordrawerbox" title="待支付" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer class="editordrawerbox" :title="PAYMENTSTATUS.get(this.loanHandoverInformation.paymentStatus)" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
                 <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
@@ -287,6 +287,11 @@ export default class UpstreamPaymentManagement extends Vue {
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
     prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
 
+    PAYMENTSTATUS: Map<number | null, string> = new Map([
+        [null, '-'],
+        [1, '待支付'],
+        [2, '部分支付']
+    ])
     @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList!: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist!: Function
@@ -371,12 +376,7 @@ export default class UpstreamPaymentManagement extends Vue {
     ]
 
     onRenderPaymentLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
-        const PAYMENTSTATUS: Map<number | null, string> = new Map([
-            [null, '-'],
-            [1, '待支付'],
-            [2, '部分支付']
-        ])
-        return <span> {PAYMENTSTATUS.get(scope.row.paymentStatus)}/{scope.row.paymentNumber}</span>
+        return <span> {this.PAYMENTSTATUS.get(scope.row.paymentStatus)}/{scope.row.paymentNumber}</span>
     }
 
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {

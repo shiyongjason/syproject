@@ -45,7 +45,7 @@
          </div>
          <template v-if="data.upPaymentLoanHandoverList&&data.upPaymentLoanHandoverList.length>0">
              <!-- 业财风控确认信息 -->
-            <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">确认时间：{{data.upPaymentLoanHandoverList[0].confirmTime|formatterTime}}</font></div>
+            <div class="tab-layout-title"><span></span>业财风控确认信息：<font v-if="data.upPaymentLoanHandoverList[0].confirmBy">确认人：{{data.upPaymentLoanHandoverList[0].confirmBy}}</font><font v-if="data.upPaymentLoanHandoverList[0].confirmTime">申请时间：{{data.upPaymentLoanHandoverList[0].confirmTime|formatterTime}}</font></div>
             <div class="info-layout">
                 <template v-if="data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList">
                     <span class="info-layout-span" v-for="item in data.upPaymentLoanHandoverList[0].upPaymentLoanHandoverParamList" :key="item.id">
