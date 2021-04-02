@@ -87,11 +87,11 @@
                         <el-date-picker placeholder="选择日期" v-model="form.payTime" style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-ddTHH:mm"></el-date-picker>
                     </el-col>
                 </el-form-item>
-                <el-form-item label="商品主图：" prop="payCertificates" ref="productImg" >
+                <el-form-item label="请上传支付凭证：" prop="payCertificates" ref="productImg" >
                     <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
                     <SingleUpload v-if="form.payCertificates.length===1||form.payCertificates.length===2" sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl2" ref="uploadImg" @back-event="productImg" :imgW="80" :imgH="80" />
                     <div class="upload-tips">
-                        建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
+                        上传1-2张经销商的付款截图或银行到账截图，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
                 <el-form-item style="text-align: center">
