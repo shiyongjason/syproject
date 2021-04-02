@@ -117,26 +117,32 @@
                         </div>
                         <!-- 新增 -->
                         <div class="row-filed">
-                            <p class="col-filed col-25">
-                                <span class="label">供应商联行号：</span>
+                            <p class="col-filed col-33">
+                                <span class="label">银行联行号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierBankNo}}
                             </p>
-                            <p class="col-filed">
+                            <p class="col-filed col-33">
                                 <span class="label">供应商开户行名称：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountName}}
                             </p>
-                            <p class="col-filed ">
+                            <p class="col-filed col-33">
                                 <span class="label">供应商银行账号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                             </p>
 
                         </div>
                         <div class="row-filed">
-                            <p class="col-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">上游支付方式：</span>
+                                {{
+                                            paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list)
+                                        }}
+                            </p>
+                            <p class="col-filed col-33">
                                 <span class="label">期望上游支付日期：</span>
                                 {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
                             </p>
-                            <p class="col-filed">
+                            <p class="col-filed  col-33">
                                 <span class="label">备注信息：</span>
                                 {{paymentOrderDetail.payOrderDetail.specialRemark}}
                             </p>
@@ -204,12 +210,7 @@
                                             paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
                                         }}
                                         </p>
-                                        <p class="col-filed col-25">
-                                            <span class="label">上游支付方式：</span>
-                                            {{
-                                            paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list)
-                                        }}
-                                        </p>
+
                                         <p class="col-filed col-25">
                                             <span class="label">上游货款方式：</span>{{
                                             paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
