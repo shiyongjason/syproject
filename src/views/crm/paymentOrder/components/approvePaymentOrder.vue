@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-dialog ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="70%" :before-close="()=> $emit('onClose')" class="payment-dialog">
+        <el-dialog v-if="isOpen" ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="70%" :before-close="()=> $emit('onClose')" class="payment-dialog">
             <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form" label-width="140px">
                 <div class="row-filed">
                     <div class="col-filed">
@@ -122,7 +122,7 @@
                     <div class="col-filed">
                         <div class="info-title">审核信息</div>
                         <el-form-item prop="checkPass" label="审核结果：">
-                            <el-radio-group v-model="formData.checkPass">
+                            <el-radio-group v-model="formData.checkPass" @change="onRdioChange">
                                 <el-radio label="pass">通过</el-radio>
                                 <el-radio label="noPass">不通过</el-radio>
                             </el-radio-group>
@@ -370,7 +370,7 @@ export default {
             if (val == 1) {
                 this.getComputedValue()
             }
-        },
+        }
         // 'formData.supplierPaymentType' (val) {
         //     if (val) {
         //         let serviceFeeRate = ''
@@ -389,18 +389,30 @@ export default {
         //         this.getComputedValue()
         //     }
         // },
-        'formData.checkPass' () {
-            this.formData.approvalRemark = ''
-            this.formData.accountReceivablePledgeType = ''
-            // this.formData.supplierPaymentType = ''
-            this.formData.supplierPaymentMethod = ''
-            this.formData.shieldFiles = []
-            this.formData.managedFiles = []
-            this.formData.pledgeNo = ''
-            this.formData.oaNo = ''
-        }
+        // 'formData.checkPass' () {
+        //     this.formData.approvalRemark = ''
+        //     this.formData.accountReceivablePledgeType = ''
+        //     // this.formData.supplierPaymentType = ''
+        //     this.formData.supplierPaymentMethod = ''
+        //     this.formData.shieldFiles = []
+        //     this.formData.managedFiles = []
+        //     this.formData.pledgeNo = ''
+        //     this.formData.oaNo = ''
+        // }
     },
     methods: {
+        onRdioChange (val) {
+            if (val === 'noPass') {
+                this.formData.approvalRemark = ''
+                this.formData.accountReceivablePledgeType = ''
+                // this.formData.supplierPaymentType = ''
+                this.formData.supplierPaymentMethod = ''
+                this.formData.shieldFiles = []
+                this.formData.managedFiles = []
+                this.formData.pledgeNo = ''
+                this.formData.oaNo = ''
+            }
+        },
         openEdit () {
             this.formData.downPaymentAmount = this.downPaymentAmount
             this.editAmountVisible = true
