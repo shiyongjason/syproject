@@ -19,8 +19,7 @@
                 <el-form-item label="代理商联系人：" prop="contactUser">
                     <el-input v-model.trim="form.contactUser" show-word-limit placeholder="请输入代理商联系人" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
-
-                <span>代理商注册享钱后，该手机号对应的企业代理信息将自动同步</span>
+                <p style="margin-bottom: 20px">代理商注册享钱后，该手机号对应的企业代理信息将自动同步</p>
                 <el-form-item label="选择代理区域" prop="provinceName">
                     <el-col :span="6">
                         <div class="query-col-input">
@@ -29,8 +28,8 @@
                         </div>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="详细地址：" prop="contactAddress">
-                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入详细地址" maxlength='50' class="newTitle"></el-input>
+                        <el-form-item label="详细地址：" prop="contactAddress" label-width='100px' style="margin-bottom: 0px">
+                            <el-input v-model.trim="form.contactAddress" show-word-limit placeholder="请输入详细地址" maxlength='50' style="width:350px"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -40,20 +39,20 @@
                         <el-option label="二级" :value=2></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="推荐搭配商品：" prop="signSpecifications">
+                <el-form-item label="代理产品详情：" prop="signSpecifications">
                     <el-button type="primary" @click="addAgency">新增</el-button>
                 </el-form-item>
-                <el-form-item label="商品名称：" v-for="(item,index) in form.signSpecifications" :key="index" :rules="rules.productId">
-                    <el-col :span="8">
-                        <el-form-item label="归属品类：">
+                <el-form-item  v-for="(item,index) in form.signSpecifications" :key="index" :rules="rules.productId">
+                    <el-col :span="6">
+                        <el-form-item label="代理品类：" label-width=“50px” style="margin-bottom: 0px">
                             <el-select v-model="item.categoryId" @change="selectChanged(item,index)">
                                 <el-option label="选择" value=""></el-option>
                                 <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in cloudMerchantShopCategoryList" :key="item.categoryId"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="商品型号：">
+                    <el-col :span="6">
+                        <el-form-item label="代理型号：" label-width='100px' style="margin-bottom: 0px">
                             <el-select v-model="item.specificationId" @change="selectSpecificationIdChanged(item)">
                                 <el-option label="选择" value=""></el-option>
                                 <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryList[index]"  :key="item.specificationId"></el-option>
@@ -63,13 +62,13 @@
                     <el-button type="danger" style="margin-left:20px" @click="deleteClassifyMerchants(index)">删除
                     </el-button>
                 </el-form-item>
-                <el-form-item label="代理押金合计">
+                <el-form-item label="代理押金合计" style="margin-bottom: 0px" >
                     <el-col :span="6">
                         <span>代理押金 {{this.form.signSpecifications.length*1000}}元</span>
                     </el-col>
                     <el-col :span="3">
-                        <el-form-item label="首批提货款：">
-                            <el-input v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款" class="newTitle" v-isNum:2="form.prepayAmount"></el-input>
+                        <el-form-item label="首批提货款：" label-width='100px'>
+                            <el-input style="width:150px" v-model.trim="form.prepayAmount" show-word-limit placeholder="首批提货款" class="midTitle" v-isNum:2="form.prepayAmount"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -84,7 +83,7 @@
                 </el-form-item>
                 <el-form-item label="代理押金支付时间" prop="payTime">
                     <el-col :span="4" label-width="200px">
-                        <el-date-picker placeholder="选择日期" v-model="form.payTime" style="width: 100%;" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-ddTHH:mm"></el-date-picker>
+                        <el-date-picker placeholder="选择日期" v-model="form.payTime" style="width:225px" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm"></el-date-picker>
                     </el-col>
                 </el-form-item>
                 <el-form-item label="请上传支付凭证：" prop="payCertificates" ref="productImg" >
@@ -464,6 +463,9 @@ export default {
 
 /deep/ .newTitle {
     width: 500px !important;
+}
+/deep/ .midTitle {
+    width: 225px !important;
 }
 
 .el-picker-panel {
