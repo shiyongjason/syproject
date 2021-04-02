@@ -283,6 +283,8 @@ export default {
             })
         },
         onBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            // this.$router.push({ path: '/comfortCloudMerchant/merchantManage/merchantOrder' })
             this.$router.go(-1)
         },
 
