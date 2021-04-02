@@ -192,7 +192,7 @@ import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
 import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
-
+import moment from 'moment'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转帐'],
@@ -276,7 +276,7 @@ export default class UpstreamPaymentManagement extends Vue {
         poId: '',
         paymentOrderId: '',
         payAmount: '',
-        payDate: '',
+        payDate: moment().format('YYYY-MM-DD'),
         payVouchers: [],
         paymentBank: ''
     }
