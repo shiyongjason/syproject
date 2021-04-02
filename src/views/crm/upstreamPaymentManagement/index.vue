@@ -421,6 +421,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.$message.success('提交成功！')
         await this.onRequest()
         this.onCancel()
+        this.getList()
     }
 
     /** 对应tab切的响应请求 */
