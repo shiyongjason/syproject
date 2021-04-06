@@ -255,9 +255,9 @@
                                         }}
                                         </p>
                                         <p class="col-filed col-25">
-                                            <span class="label">OA审批编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
+                                            <span class="label" style="min-width:95px">OA审批编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
                                         </p>
-                                        <p class="col-filed col-25">
+                                        <p class="col-filed">
                                             <span class="label">审核备注：</span>{{
                                             paymentOrderDetail.payOrderDetail.approvalRemark
                                         }}
@@ -870,7 +870,8 @@ export default {
         },
         async onDownFile () {
             const { data } = await downFile(this.paymentOrderDetail.payOrderDetail.id)
-            window.location.href = data
+            // window.location.href = data
+            window.open(data)
         }
     },
     watch: {
@@ -910,6 +911,9 @@ export default {
             //.address {
             //    width: 120px;
             //}
+             .label{
+                min-width: 75px;
+            }
         }
         .approval-remark {
             display: flex;
@@ -933,7 +937,9 @@ export default {
 
         .col-25 {
             flex: 0 0 25%;
+            word-break: break-all;
         }
+
         .col-45 {
             flex: 0 0 45%;
         }
