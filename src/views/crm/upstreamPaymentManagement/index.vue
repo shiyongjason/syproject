@@ -57,9 +57,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">剩余待支付金额（元）：</div>
                     <div class="query-col__input">
-                        <el-input type="text" v-model="queryParams.startNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.startNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
                         <span class="ml10 mr10">-</span>
-                        <el-input type="text" v-model="queryParams.endNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
+                        <el-input type="text" v-isNum:2 v-model="queryParams.endNoPayAmount" maxlength="20" placeholder="请输入金额"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
