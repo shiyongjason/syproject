@@ -64,7 +64,7 @@
                 <el-form-item label="审核结果：" prop="result">
                     <el-radio-group v-model="signOrLoanForm.result">
                         <el-radio :label=1>{{status==6?'确认签约':'确认放款'}}</el-radio>
-                        <el-radio :label=0>合作关闭</el-radio>
+                        <el-radio :label=0>审核未通过</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="说明：" prop="remark">
@@ -123,7 +123,7 @@ export default {
                 'createByMobile': '', // 审核人手机
                 'projectId': '', // 项目工程id
                 'remark': '', // 说明
-                'result': ''// 审核结果 1：确认签约或确认放款 0：合作关闭
+                'result': ''// 审核结果 1：确认签约或确认放款 0：审核未通过
             },
             signOrLoanVisibleTitle: '',
             signOrLoanVisible: false,
@@ -211,7 +211,7 @@ export default {
                     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_HUIKUAN) && this.status == 8
                 },
                 {
-                    name: '合作关闭',
+                    name: '审核未通过',
                     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_CLOSE) && this.status == 3
                 }
             ]
@@ -350,7 +350,7 @@ export default {
                 return
             } else if (status == 3) {
                 this.dialogVisible = true
-                this.aduitTitle = '合作关闭'
+                this.aduitTitle = '审核未通过'
                 this.statusForm = { ...this.copyStatusForm }
                 this.statusForm.afterStatus = 5
                 this.statusForm.reset = false
@@ -387,7 +387,7 @@ export default {
                 // status = !!status // H5端待立项 显示重置按钮和立项  这里需要弹窗  通过 不通过
                 return
             } else if (status == 5) {
-                // status = !!status //  合作关闭显示 重置
+                // status = !!status //  审核未通过显示 重置
             } else if (status == 6) {
                 this.onShowSignOrLoan()
                 return
