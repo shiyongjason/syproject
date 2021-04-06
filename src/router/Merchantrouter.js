@@ -83,8 +83,8 @@ export default [
                         path: 'merchantOrder',
                         name: 'merchantOrder',
                         meta: {
-                            title: '订单查询',
-                            tagName: '订单查询',
+                            title: '代理订单',
+                            tagName: '代理订单',
                             parentName: '经销商管理',
                             isMenu: true,
                             icon: ''

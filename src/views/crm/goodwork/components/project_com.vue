@@ -1,7 +1,7 @@
 <template>
     <div class="drawer-wrap">
         <el-form :model="projectForm" :rules="rules" ref="ruleForm" class="project-form" :label-width="formLabelWidth">
-            <p class="drawer-by">项目提交人：{{projectForm.createBy}}</p>
+            <p class="drawer-by">项目提交人：{{projectForm.submitUser}}</p>
             <el-form-item label="经销商：">
                 {{projectForm.companyName}} <h-button table @click="onLinkBus(projectForm)">查看详情</h-button>
             </el-form-item>
@@ -73,7 +73,7 @@
             </el-form-item>
             <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
                 <el-checkbox-group v-model="projectForm.upstreamPayTypearr" @change="onCRemarkTxt">
-                    <el-checkbox label="1" name="type">现金</el-checkbox>
+                    <el-checkbox label="1" name="type">银行转账</el-checkbox>
                     <el-checkbox label="2" name="type">承兑</el-checkbox>
                 </el-checkbox-group>
                 <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
@@ -172,7 +172,7 @@ export default {
             statusTxt: '',
             dialogVisible: false,
             aduitTitle: '',
-            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '立项' }, { 5: '合作关闭' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
+            statusList: [{ 1: '提交中' }, { 2: '审核' }, { 3: '资料收集中' }, { 4: '立项' }, { 5: '审核未通过' }, { 6: '签约' }, { 7: '放款' }, { 8: '全部回款' }, { 9: '合作完成' }, { 10: '信息待完善' }],
             newstatusType: NEW_STATUS_TYPE,
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {

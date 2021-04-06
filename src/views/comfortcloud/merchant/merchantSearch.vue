@@ -11,12 +11,6 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">手机号：</div>
-                <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入手机号" clearable></el-input>
-                </div>
-            </div>
-            <div class="query-cont-col">
                 <div class="query-col-title">联系人姓名：</div>
                 <div class="query-col-input">
                     <el-input type="text" v-model="queryParams.contactUser" maxlength="50" placeholder="输入联系人姓名" clearable></el-input>
@@ -25,7 +19,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">手机号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.phone" maxlength="50" placeholder="输入手机号" clearable></el-input>
+                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入手机号" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -67,7 +61,7 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="level" slot-scope="scope">
-                    {{scope.data.row.level === 1 ? '一级': '二级'}}
+                    {{scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)')}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
@@ -117,7 +111,6 @@ export default {
                 cityId: '',
                 categoryId: '',
                 pageNumber: 1,
-                phone: '',
                 pageSize: 10
             },
             statistics: {
@@ -135,7 +128,6 @@ export default {
                 { label: '代理商等级', prop: 'level' },
                 { label: '代理商联系人', prop: 'contactUser' },
                 { label: '代理商联系电话', prop: 'contactNumber' },
-                { label: '代理商联系地址', prop: 'contactAddress' },
                 { label: '代理品类', prop: 'categoryName' },
                 { label: '代理型号', prop: 'specificationName' }],
             progressTableLabel: [
@@ -186,9 +178,11 @@ export default {
             if (this.cloudMerchantAgentDetail == null || this.cloudMerchantAgentDetail.payTime == null) {
                 return '--'
             }
-            let sdtime1 = new Date(this.cloudMerchantAgentDetail.payTime).getTime() / 1000
-            let sdtime2 = new Date().getTime() / 1000
-            return sdtime2 - sdtime1 > 0 ? '履约中' : '已过期'
+
+            let sdtime1 = new Date(this.cloudMerchantAgentDetail.payTime)
+            sdtime1.setFullYear((sdtime1.getFullYear() + 1))
+            let sdtime3 = new Date().getTime()
+            return sdtime1.getTime() - sdtime3 > 0 ? '履约中' : '已过期'
         }
 
     },

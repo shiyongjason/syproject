@@ -33,6 +33,9 @@
             </div>
             <!-- 表格使用老毕的组件 -->
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                <template slot="phone" slot-scope="scope">
+                    <p class="coloedit title" @click="onPhoneClick(scope.data.row.phone)">{{scope.data.row.phone}}</p>
+                </template>
                 <template slot="status" slot-scope="scope">
                     {{scope.data.row.status===0?'待审核':scope.data.row.status===1?'审核通过':'审核不通过'}}
                 </template>
@@ -48,7 +51,8 @@
                     {{scope.data.row.status===0?'--':scope.data.row.status===1?parseUpdateTime(scope.data.row):'--'}}
                 </template>
                 <template slot="quotationPermission" slot-scope="scope">
-                    <el-switch v-model="scope.data.row.quotationPermission" :active-value=1 :inactive-value=0 @change='onChangeQuotationPermission(scope.data.row)' />
+                    <el-switch v-if="scope.data.row.status === 1" v-model="scope.data.row.quotationPermission" :active-value=1 :inactive-value=0 @change='onChangeQuotationPermission(scope.data.row)' />
+                    <p v-else>--</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <p class="colred title" @click="onEdit(scope.data.row)">
@@ -166,6 +170,9 @@ export default {
                 this.checkData = val
                 this.rightsDialogVisible = true
             }
+        },
+        onPhoneClick (phone) {
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { phone } })
         },
         onNameEdit (val) {
             if (val.status === 1) {
