@@ -261,7 +261,7 @@ export default {
                 { label: '设备品牌', prop: 'deviceBrand', showOverflowTooltip: true, width: '150' },
                 { label: '上游供应商类型', prop: 'upstreamSupplierType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
                 { label: '上游供应商名称', prop: 'upstreamSupplierName', showOverflowTooltip: true, width: '180' },
-                { label: '上游接受付款方式', prop: 'upstreamPayType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '现金' }, { value: 2, label: '承兑' }, { value: '1,2', label: '现金+承兑' }] },
+                { label: '上游接受付款方式', prop: 'upstreamPayType', showOverflowTooltip: true, width: '180', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '承兑' }, { value: '1,2', label: '银行转账+承兑' }] },
                 {
                     label: '上游接受付款周期',
                     prop: 'upstreamPromiseMonth',

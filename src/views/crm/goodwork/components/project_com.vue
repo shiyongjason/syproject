@@ -73,7 +73,7 @@
             </el-form-item>
             <el-form-item label="上游接受付款方式：" prop="upstreamPayTypearr">
                 <el-checkbox-group v-model="projectForm.upstreamPayTypearr" @change="onCRemarkTxt">
-                    <el-checkbox label="1" name="type">现金</el-checkbox>
+                    <el-checkbox label="1" name="type">银行转账</el-checkbox>
                     <el-checkbox label="2" name="type">承兑</el-checkbox>
                 </el-checkbox-group>
                 <el-form-item prop="payAcceptanceRemarkTxt" ref="remarkTxt">
