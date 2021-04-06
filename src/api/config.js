@@ -95,7 +95,7 @@ switch (env) {
         ossBucket = 'hosjoy-private'
         ossOldBucket = 'hosjoy-hbp'
         ossRegion = 'oss-cn-hangzhou'
-        ossAliyun = 'https://oss-aliyun.hosjoy.com/'
+        ossAliyun = 'https://oss-aliyun-hbp.hosjoy.com/'
         break
     case 'production':
         // TODO: 给产品调用
@@ -111,7 +111,7 @@ switch (env) {
         ossBucket = 'hosjoy-private'
         ossOldBucket = 'hosjoy-hbp'
         ossRegion = 'oss-cn-hangzhou'
-        ossAliyun = 'https://oss-aliyun.hosjoy.com/'
+        ossAliyun = 'https://oss-aliyun-hbp.hosjoy.com/'
         break
 }
 export {
