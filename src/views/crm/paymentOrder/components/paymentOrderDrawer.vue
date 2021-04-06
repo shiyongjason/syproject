@@ -870,7 +870,8 @@ export default {
         },
         async onDownFile () {
             const { data } = await downFile(this.paymentOrderDetail.payOrderDetail.id)
-            window.location.href = data
+            // window.location.href = data
+            window.open(data)
         }
     },
     watch: {
