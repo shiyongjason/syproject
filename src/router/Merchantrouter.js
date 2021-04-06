@@ -12,6 +12,29 @@ export default [
         component: Layout,
         children: [
             {
+                path: 'businessData',
+                meta: {
+                    title: '经营数据看板',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'businessBI',
+                        name: 'businessBI',
+                        meta: {
+                            title: '经营BI',
+                            tagName: '经营BI',
+                            parentName: '经营数据看板',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/businessData/businessBI.vue')
+                    }
+                ]
+            },
+            {
                 path: 'merchantManage',
                 meta: {
                     title: '经销商管理',
@@ -60,13 +83,25 @@ export default [
                         path: 'merchantOrder',
                         name: 'merchantOrder',
                         meta: {
-                            title: '订单查询',
-                            tagName: '订单查询',
+                            title: '代理订单',
+                            tagName: '代理订单',
                             parentName: '经销商管理',
                             isMenu: true,
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOrder.vue')
+                    },
+                    {
+                        path: 'merchantAgencyOrderEdit',
+                        name: 'merchantAgencyOrderEdit',
+                        meta: {
+                            title: '代理订单',
+                            tagName: '代理订单',
+                            parentName: '经销商管理',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantAgencyOrderEdit.vue')
                     }
                 ]
             },
@@ -212,8 +247,8 @@ export default [
                         path: 'merchantExternalMember',
                         name: 'merchantExternalMember',
                         meta: {
-                            title: '外部蓄水客户',
-                            tagName: '外部蓄水客户',
+                            title: '销售线索管理',
+                            tagName: '销售线索管理',
                             parentName: '会员管理',
                             isMenu: true,
                             icon: ''

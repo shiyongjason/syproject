@@ -32,8 +32,30 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">订单来源： </div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.source" clearable>
+                            <el-option label="全部" value="" />
+                            <el-option label="微信小店" value="1" />
+                            <el-option label="第三方渠道" value="2" />
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
+                    <div class="query-col-title">订单状态： </div>
+                    <div class="query-col-input">
+                        <el-select v-model="queryParams.status" clearable>
+                            <el-option v-for="item in statusOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+
+                <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
+                    </div>
+                    <div class="query-col-title">
+                        <el-button type="primary" class="ml20" @click="onImportOrder">导入订单</el-button>
                     </div>
                 </div>
             </div>
@@ -53,6 +75,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
+                    <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
 
@@ -68,11 +91,44 @@
                 <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
                 </basicTable>
             </el-dialog>
+            <el-dialog title="导入第三方订单明细" :visible.sync="importDialogVisible" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseImprtDialog">
+                <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+                    <el-button type="primary" slot="trigger">选择本地文件</el-button>
+                    <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
+                    <p slot="tip" class="el-upload__tip">2.请按照订单模板内容导入数据，否则可能会出现导入异常</p>
+                </el-upload>
+                <el-button class="errorBtn" v-if="errorData.failList.length > 0" @click="errorShow = true">上传失败数据</el-button>
+                <div class="downloadExcel">
+                    <a href="/excelTemplate/订单模板.xls" download="订单模板.xls">订单模板</a>
+                </div>
+<!--                <div style="color: red">{{errMessage}}</div>-->
+                <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
+            </span>
+<!--                <el-dialog width="1000px" title="上传结果" :visible.sync="errorShow" append-to-body>-->
+<!--                    <div>-->
+<!--                        <span class="uploadTips">上传数据：{{errorData.count}}条</span>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <span class="uploadTips">上传成功：{{errorData.successCount}}条</span>-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <span class="uploadTips uploadErr">上传失败：{{errorData.failCount}}条</span>-->
+<!--                    </div>-->
+<!--                    <div class="basic-table">-->
+<!--                        <basicTable :isShowIndex="true" :tableLabel="errTableLabel" :tableData="errorData.failList" :maxHeight='350'>-->
+<!--                        </basicTable>-->
+<!--                    </div>-->
+<!--                </el-dialog>-->
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
+import { iotUrl } from '@/api/config'
+import { deleteThirdOrder } from '../api'
+
 export default {
     name: 'merchantOrderList',
     data () {
@@ -84,8 +140,36 @@ export default {
                 orderId: '',
                 productName: '',
                 startTime: '',
-                endTime: ''
+                endTime: '',
+                source: '',
+                status: ''
             },
+            statusOptions: [
+                {
+                    label: '待付款',
+                    value: 10
+                },
+                {
+                    label: '待发货',
+                    value: 20
+                },
+                {
+                    label: '待收货',
+                    value: 30
+                },
+                {
+                    label: '已完成',
+                    value: 100
+                },
+                {
+                    label: '已退货退款',
+                    value: 200
+                },
+                {
+                    label: '已取消',
+                    value: 250
+                }
+            ],
             searchParams: {},
             tableData: [],
             tableLabel: [
@@ -106,16 +190,32 @@ export default {
                 { label: '物流公司', prop: 'deliveryName' },
                 { label: '快递单号', prop: 'waybillId' }
             ],
-            prouctDetailTableLabel: [
-                { label: '商品ID', prop: 'productId' },
-                { label: '商品名称', prop: 'productName' },
-                { label: '商品规格', prop: 'wxSpecification' },
-                { label: '商品价格（元）', prop: 'productPrice' },
-                { label: '商品数量（件）', prop: 'productCount' }
-            ],
             prouctDetailTableData: [],
             detailDialogVisible: false,
-            focusDetailOrder: {}
+            focusDetailOrder: {},
+            importDialogVisible: false,
+            uploadData: {
+                accept: '.xlsx,.xls',
+                action: `${iotUrl}/mall/boss/order/import`,
+                limit: 1,
+                autoUpload: false,
+                headers: {
+                    refreshToken: localStorage.getItem('refreshToken'),
+                    token: `Bearer ` + localStorage.getItem('token'),
+                    AccessKeyId: '5ksbfewexbfc'
+                },
+                data: {
+                    operateUserName: ''
+                }
+            },
+            fileList: [],
+            errorShow: false,
+            errorData: {
+                failList: []
+            },
+            errMessage: '',
+            errTableLabel: [],
+            loading: false
         }
     },
     computed: {
@@ -146,6 +246,23 @@ export default {
                         return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
                     }
                 }
+            }
+        },
+        prouctDetailTableLabel () {
+            if (this.focusDetailOrder.source === '微信小店') {
+                return [
+                    { label: '商品ID', prop: 'productId' },
+                    { label: '商品名称', prop: 'productName' },
+                    { label: '商品规格', prop: 'wxSpecification' },
+                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
+            } else {
+                return [
+                    { label: '商品型号', prop: 'wxSpecification' },
+                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
             }
         }
     },
@@ -180,6 +297,19 @@ export default {
             await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
             this.detailDialogVisible = true
         },
+        onDelete (val) {
+            this.$confirm('请确认是否继续删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteThirdOrder({
+                    orderId: val.orderId
+                })
+                this.$message.success('删除成功')
+                this.onQuery(this.searchParams)
+            })
+        },
         orderStatusDesc (status) {
             if (status == 10) {
                 return '待付款'
@@ -206,6 +336,86 @@ export default {
                 address += val.consigneeCountyName
             }
             return (address += val.consigneeAddress)
+        },
+        onImportOrder () {
+            this.importDialogVisible = true
+        },
+        async onImport () {
+            if (this.loading) return
+            this.loading = true
+            if (this.hasFile()) {
+                this.uploadData.data.operateUserName = this.userInfo.employeeName
+                try {
+                    await this.$refs.upload.submit()
+                } catch (e) { }
+            } else {
+                this.$message.error('请选择上传的文件')
+                this.loading = false
+            }
+        },
+        hasFile () {
+            return this.$refs.upload.uploadFiles.length > 0
+        },
+        onCloseImprtDialog () {
+            if (this.hasFile()) {
+                this.$confirm('是否确定取消选中的文件', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$refs.upload.clearFiles()
+                    this.importDialogVisible = false
+                    this.$message({
+                        type: 'success',
+                        message: '已取消选中的文件!'
+                    })
+                }).catch(() => { })
+            } else {
+                this.$refs.upload.clearFiles()
+                this.importDialogVisible = false
+            }
+        },
+        beforeAvatarUpload (file) {
+            const isLt10M = file.size / (1024 * 1024 * 10) < 1
+            const isCsv = file.name.lastIndexOf('.') > 0 ? ['.xlsx', '.xls'].indexOf(file.name.slice(file.name.lastIndexOf('.'), file.name.length)) > -1 : false
+            if (!isCsv) {
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件只能是 excel 格式!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+            }
+            if (!isLt10M) {
+                this.loading = true
+                this.$message({
+                    type: 'error',
+                    message: '上传文件大小不能超过 10MB!',
+                    duration: 800,
+                    onClose: () => {
+                        this.loading = false
+                    }
+                })
+            }
+            return isCsv && isLt10M
+        },
+        uploadError (res) {
+            console.log(JSON.parse(res.message).detail)
+            this.$refs.upload.clearFiles()
+            this.$message.error(JSON.parse(res.message).detail)
+            this.loading = false
+        },
+        uploadSuccess () {
+            this.$refs.upload.clearFiles()
+            this.loading = false
+            //  this.errorData = response.data
+            // this.errorShow = true
+            this.importDialogVisible = false
+            this.onQuery(this.searchParams)
+            this.$message.success('上传成功')
         }
     }
 }
