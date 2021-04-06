@@ -27,6 +27,10 @@
                     </el-tag>
                     <div class="page-body-cont">
                         <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="replenishmentTime" slot-scope="scope">
+                                <div v-if="scope.data.row.brandName === '舒适云'">{{scope.data.row.replenishmentTime | formatterTime}}</div>
+                                <div v-else>--</div>
+                            </template>
                             <template slot="action" slot-scope="scope">
                                 <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
                             </template>
@@ -45,6 +49,20 @@
                         <span style="margin-bottom: 20px">主营品牌：{{enterpriseInfoData.mainBrand}}</span>
                     </div>
                 </el-tab-pane>
+                <el-tab-pane label="沟通记录" name="2">
+                    <div class="query-cont-col ml20">
+                        <el-button type="primary" @click="communicate">+新增记录</el-button>
+                    </div>
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true" @onCurrentChange='onCommunicationCurrentChange' @onSizeChange='onCommunicationSizeChange'>
+                            <template slot="action" slot-scope="scope">
+                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
+                            </template>
+                        </basicTable>
+                    </div>
+
+                </el-tab-pane>
             </el-tabs>
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
@@ -59,12 +77,34 @@
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
             </el-dialog>
+            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
+                <el-form ref="communicationRecordForm" :model="communicationRecordForm" :rules="communicationRecordFormRules" label-width="110px">
+                    <el-form-item label="沟通日期：" prop="communicationDate">
+                        <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="沟通结果：" prop="communicationResult">
+                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="250"></el-input>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="onCommunicationRecordCancel()">取消</el-button>
+                    <el-button type="primary" @click="onCommunicationRecordConfirm()">确认</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getMerchantMemberInvitationOutOrdersTotal, addMemberTag, editMemberTag } from '../api'
+import {
+    getMerchantMemberInvitationOutOrdersTotal,
+    addMemberTag,
+    editMemberTag,
+    deleteCloudMerchantMemberCommunication,
+    modifyCloudMerchantMemberCommunication,
+    postCloudMerchantMemberCommunication
+} from '../api'
 
 export default {
     name: 'merchantExternalInvitation',
@@ -80,10 +120,11 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            tabIndex: 0,
+            tabIndex: this.$route.query.index,
             tableBuyTotalData: {},
             enterpriseInfoData: {},
             tagStringList: [],
+            tableBuyData: [],
             dialogVisible: false,
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
@@ -92,9 +133,26 @@ export default {
                 { label: '最近一次购买时间', prop: 'lastOrderTime', formatters: 'dateTime' },
                 { label: '累计购买订单数', prop: 'orderCount' },
                 { label: '累计购买件数', prop: 'productCount' },
-                { label: '累计购买金额', prop: 'orderAmount' }
+                { label: '累计购买金额', prop: 'orderAmount' },
+                { label: '预计补货时间', prop: 'replenishmentTime', formatters: 'dateTime' }
             ],
-            tableBuyData: []
+            communicationTableLabel: [
+                { label: '沟通日期', prop: 'communicationDate', formatters: 'date' },
+                { label: '沟通结果', prop: 'communicationResult' }
+            ],
+            communicationRecordDialogVisible: false,
+            communicationRecordForm: {
+                communicationDate: '',
+                communicationResult: ''
+            },
+            communicationRecordFormRules: {
+                communicationDate: [
+                    { required: true, message: '请选择沟通日期', trigger: 'blur' }
+                ],
+                communicationResult: [
+                    { required: true, message: '请输入沟通结果', trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
@@ -104,7 +162,9 @@ export default {
         ...mapGetters({
             merchantmemberInvitationOutOrderData: 'cloudMerchantmemberInvitationOutOrderData',
             merchantExernalMemberData: 'iotmerchantExternalMemberData',
-            cloudMerchantTaglist: 'cloudMerchantTaglist'
+            cloudMerchantTaglist: 'cloudMerchantTaglist',
+            cloudMerchantMemberCommunicationList: 'cloudMerchantMemberCommunicationList',
+            cloudMerchantMemberCommunicationListPagination: 'cloudMerchantMemberCommunicationListPagination'
         }),
         constructAddress () {
             let provinceName = this.enterpriseInfoData.provinceName ? this.enterpriseInfoData.provinceName : ''
@@ -144,17 +204,21 @@ export default {
         ...mapActions({
             findMerchantMemberInvitationOutOrdersituation: 'findMerchantMemberInvitationOutOrdersituation',
             findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
-            findCloudMerchantTaglist: 'findCloudMerchantTaglist'
-
+            findCloudMerchantTaglist: 'findCloudMerchantTaglist',
+            findCloudMerchantMemberCommunicationList: 'findCloudMerchantMemberCommunicationList'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationOutOrdersituation(this.searchParams)
+            await this.requestMemberCommunicationList()
             this.tableBuyData = this.merchantmemberInvitationOutOrderData.records
             this.pagination = {
                 pageNumber: this.merchantmemberInvitationOutOrderData.current,
                 pageSize: this.merchantmemberInvitationOutOrderData.size,
                 total: this.merchantmemberInvitationOutOrderData.total
             }
+        },
+        async requestMemberCommunicationList () {
+            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
         },
         async onTotal () {
             const { data } = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
@@ -189,6 +253,71 @@ export default {
             }
             this.clearData()
         },
+        clearCommunicationRecordForm () {
+            if (this.$refs['communicationRecordForm']) {
+                this.$refs['communicationRecordForm'].clearValidate()
+                this.communicationRecordForm = {
+                    communicationDate: '',
+                    communicationResult: ''
+                }
+            }
+        },
+        communicate () {
+            this.clearCommunicationRecordForm()
+            this.communicationRecordDialogVisible = true
+        },
+        onCommunicationCurrentChange (val) {
+            this.searchParams.pageNumber = val.pageNumber
+            this.requestMemberCommunicationList()
+        },
+        onCommunicationSizeChange (val) {
+            this.searchParams.pageSize = val
+            this.requestMemberCommunicationList()
+        },
+        onCommunicationRecordEdit (data) {
+            this.communicationRecordForm = data
+            this.communicationRecordDialogVisible = true
+        },
+        onCommunicationRecordDelete (data) {
+            this.$confirm(`删除后将无法恢复，请确认该条沟通记录要删除。`, '沟通记录删除确认', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                let params = { ...data }
+                params.operator = this.userInfo.employeeName
+                await deleteCloudMerchantMemberCommunication(params)
+                await this.requestMemberCommunicationList()
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => { })
+        },
+        onCommunicationRecordCancel () {
+            this.clearCommunicationRecordForm()
+            this.communicationRecordDialogVisible = false
+        },
+        onCommunicationRecordConfirm () {
+            this.$refs['communicationRecordForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        this.communicationRecordForm.phone = this.$route.query.phone
+                        this.communicationRecordForm.operator = this.userInfo.employeeName
+                        if (this.communicationRecordForm.id) {
+                            await modifyCloudMerchantMemberCommunication(this.communicationRecordForm)
+                        } else {
+                            await postCloudMerchantMemberCommunication(this.communicationRecordForm)
+                        }
+                        this.communicationRecordDialogVisible = false
+                        this.clearCommunicationRecordForm()
+                        await this.requestMemberCommunicationList()
+                    } catch (e) {
+                    }
+                }
+            })
+        },
+
         goToDetail (val) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList', query: { 'phone': this.queryParams.phone } })
         },

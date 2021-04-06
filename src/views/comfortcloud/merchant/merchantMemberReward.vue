@@ -28,12 +28,10 @@
                     <div class="query-col-title">奖励月份：</div>
                     <div class="query-col-input">
 
-                        <el-date-picker v-model="queryParams.startMonth" type="month" value-format='yyyy-MM'
-                                        placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startMonth" type="month" value-format='yyyy-MM' placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endMonth" type="month" value-format='yyyy-MM'
-                                        placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endMonth" type="month" value-format='yyyy-MM' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -45,12 +43,10 @@
                 </div>
             </div>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false'
-                        :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
-                        :isAction="true" :action-min-width="200">
-<!--                <template slot="source" slot-scope="scope">-->
-<!--                    {{scope.data.row.source==='1'?'微信小店':'好友推荐'}}-->
-<!--                </template>-->
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :action-min-width="200">
+                <!--                <template slot="source" slot-scope="scope">-->
+                <!--                    {{scope.data.row.source==='1'?'微信小店':'好友推荐'}}-->
+                <!--                </template>-->
                 <template slot="rewardAmount" slot-scope="scope">
                     <p @click="onEditMoney(scope.data.row)" class="colred">
                         {{scope.data.row.rewardAmount}}</p>
@@ -73,10 +69,8 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px"
-                   :close-on-click-modal="false" :before-close="onCloseDialog">
-            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess"
-                       :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
+        <el-dialog title="导入奖励明细" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+            <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照奖励明细模板内容导入数据，否则可能会出现导入异常</p>
@@ -94,19 +88,16 @@
                 </div>
             </el-dialog>
         </el-dialog>
-        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px"
-                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
-            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month"
-                            value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
+        <el-dialog title="奖励归属月份编辑" :visible.sync="updateMonthShow" class="upload-show" width="400px" :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <el-date-picker style="width: 200px" v-model="updateIndexData.rewardMonth" clear-icon="" type="month" value-format='yyyy-MM' placeholder="" :picker-options="pickerOptionsStart">
             </el-date-picker>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editMonth(0)">取消</el-button>
                 <el-button type="primary" @click="editMonth(1)">确认</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="奖励发放确认" :visible.sync="rewardShow" class="upload-show" width="400px"
-                   :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
-            <p  class="redcolred">请确认该订单已确认收货且未产生退货。</p>
+        <el-dialog title="奖励发放确认" :visible.sync="rewardShow" class="upload-show" width="400px" :close-on-click-modal="false" :before-close="onCloseEditMonthDialog">
+            <p class="redcolred">请确认该订单已确认收货且未产生退货。</p>
             <p>奖励金额：{{this.rewardPerson.rewardAmount}}元</p>
             <p>奖励对象：{{this.rewardPerson.distributorName}}</p>
             <span slot="footer" class="dialog-footer">
@@ -467,44 +458,44 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-    .spanflex {
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 10px;
+.spanflex {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
 
-        span {
-            flex: 1;
+    span {
+        flex: 1;
 
-            &:first-child {
-                font-size: 16px;
-            }
+        &:first-child {
+            font-size: 16px;
+        }
 
-            &:last-child {
-                text-align: right;
-            }
+        &:last-child {
+            text-align: right;
         }
     }
+}
 
-    .topTitle {
-        margin-right: 2rem;
-        font-weight: bold;
-    }
+.topTitle {
+    margin-right: 2rem;
+    font-weight: bold;
+}
 
-    .colred {
-        color: #ff7a45;
-        cursor: pointer;
-    }
-    .redcolred {
-        color: red;
-        cursor: pointer;
-    }
+.colred {
+    color: #ff7a45;
+    cursor: pointer;
+}
+.redcolred {
+    color: red;
+    cursor: pointer;
+}
 
-    .topColred {
-        color: #ff7a45;
-        cursor: pointer;
-    }
+.topColred {
+    color: #ff7a45;
+    cursor: pointer;
+}
 
-    /deep/ .el-dialog__body {
-        padding-top: 10px;
-    }
+/deep/ .el-dialog__body {
+    padding-top: 10px;
+}
 </style>
