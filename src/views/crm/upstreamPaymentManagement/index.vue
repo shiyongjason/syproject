@@ -27,8 +27,8 @@
                     <div class="query-col__input">
                         <el-select v-model="queryParams.supplierPaymentType" placeholder="请选择">
                             <el-option label="全部" value=""></el-option>
-                            <el-option label="银行承兑" :value="1"></el-option>
-                            <el-option label="银行转账" :value="2"></el-option>
+                            <el-option label="银行转账" :value="1"></el-option>
+                            <el-option label="银行承兑" :value="2"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -432,12 +432,11 @@ export default class UpstreamPaymentManagement extends Vue {
 
     @measure
     async getList () {
-        const { data } = await Api.getUpStreamPaymentApi(this.queryParams)
-        this.tableData = data.records || []
-        this.page.total = data.total as number
-
-        const res = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
-        this.totalAmount = res.data
+        const { data: tableData } = await Api.getUpStreamPaymentApi(this.queryParams)
+        this.tableData = tableData.records || []
+        this.page.total = tableData.total as number
+        const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
+        this.totalAmount = totalAmountData
     }
 
     sortChange (e) {
