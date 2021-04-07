@@ -110,6 +110,13 @@
                     </el-date-picker>
                 </div>
             </div>
+            <div class="query-cont-col" v-if="accountType == 0">
+                <div class="query-col-title">截止日期：</div>
+                <div class="query-col-input">
+                    <el-date-picker type="date" :editable="false" :clearable="true" v-model="queryParams.queryEndDate" value-format="yyyy-MM-dd" placeholder="截止日期">
+                    </el-date-picker>
+                </div>
+            </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <el-button type="primary" class="ml20" @click="onSearch">查询</el-button>
@@ -206,7 +213,8 @@ export default {
                 repaymentType: '',
                 startDate: '',
                 endDate: '',
-                repaymentStatus: ''
+                repaymentStatus: '',
+                queryEndDate: ''
             },
             searchParams: {},
             removeValue: false,
@@ -434,6 +442,7 @@ export default {
             this.$set(this.queryParams, 'startDate', '')
             this.$set(this.queryParams, 'endDate', '')
             this.$set(this.queryParams, 'repaymentStatus', '')
+            this.$set(this.queryParams, 'queryEndDate', '')
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
