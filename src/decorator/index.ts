@@ -60,3 +60,36 @@ export function validateForm (elFormName: string, beforeFunc?: Function, errorCb
         return descriptor
     }
 }
+
+/**
+ * @Description 防抖
+ * @param wait 等待时间
+ */
+export function useDebounce (wait: number = 200) {
+    let timeOut
+    return function (target, name, descriptor) {
+        const oldValue = descriptor.value
+        descriptor.value = function () {
+            try {
+                if (timeOut) clearTimeout(timeOut)
+                timeOut = setTimeout(() => {
+                    oldValue.apply(this, arguments)
+                }, wait)
+            } catch (error) {
+                console.error('error: ', error)
+            }
+        }
+        return descriptor
+    }
+}
+/* function debounce(fn,wait){
+    let timeout1
+    return function(){
+        clearTimeout(timeout1)  // 重新清零
+        let context = this  // 保存上下文
+        let args = arguments // 获取传入的参数
+        timeout1 = setTimeout(()=> {
+            fn.apply(context, args)
+        },wait)
+    }
+} */
