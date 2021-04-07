@@ -18,7 +18,7 @@ export const STATUS_LIST =
         { key: 7, value: '待放款' },
         { key: 8, value: '贷中' },
         { key: 9, value: '合作完成' },
-        { key: 5, value: '合作关闭' }
+        { key: 5, value: '审核未通过' }
     ]
 
 export const TYPE_LIST =
@@ -84,7 +84,7 @@ export const COOPERATION_PROGRESS_LIST = [
     { key: 7, value: '待放款' },
     { key: 8, value: '贷中' },
     { key: 9, value: '合作完成' },
-    { key: 5, value: '合作关闭' }
+    { key: 5, value: '审核未通过' }
 
 ]
 // 上游供应商类型
@@ -95,7 +95,7 @@ export const UPSTREAMSUPPLIERTYPE = [
 ]
 // 上游接受的付款方式
 export const UPSTREAMPAYTYPE = [
-    { key: 1, value: '现金' },
+    { key: 1, value: '银行转账' },
     { key: 2, value: '承兑' }
 ]
 // 信用等级
