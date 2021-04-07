@@ -1058,7 +1058,16 @@ export default {
                 let feeFormTemp = tempArr.find(tempItem => tempItem.paramKey === 'purch_service_fee_form')
                 let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
                 let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                if (serviceFeeEstimate.paramValue === '') {
+                    console.log('serviceFeeEstimate: ', serviceFeeEstimate)
+                    this.$message({
+                        message: `服务费预计不能为空`,
+                        type: 'error'
+                    })
+                    return
+                }
                 feeFormTemp.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
+
                 await saveContent({
                     'contractId': this.$route.query.id,
                     // 合同审批角色 1：分财 2：风控 3：法务
@@ -1266,8 +1275,11 @@ export default {
                 // 一次性采购才会修改合同上的表格
                 if ((temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
                     let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
+                    console.log('loanMonth: ', loanMonth)
                     let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                    console.log('serviceFeeEstimate: ', serviceFeeEstimate)
                     let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
+                    console.log('purchServiceFeeForm: ', purchServiceFeeForm)
                     await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
                     purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
                 }
@@ -1368,7 +1380,9 @@ export default {
                                 jtem.onclick = (event) => {
                                     this.currentKey = {
                                         ...fields,
-                                        required: fields.required,
+                                        // required: fields.required,
+                                        required: true,
+                                        checkRule: serviceFeeFields.checkRule || '',
                                         inputStyle: 9,
                                         paramKey: fields.paramKey,
                                         paramValue: fields.paramValue,

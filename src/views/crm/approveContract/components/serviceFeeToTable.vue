@@ -4,12 +4,13 @@
             <font v-if="className=='purch_service_fee_form'">服务费预计 (元)：</font>
             <el-input :value="money(value)" v-bind="$attrs" @input="(val)=>{onInput(val,calculationRules)}" @blur="onBlur">
             </el-input>
-            <h-button type="primary" @click="()=>emitServiceFee()" style="margin-left:10px">生成表格</h-button>
+            <!-- <h-button type="primary" @click="()=>emitServiceFee()" style="margin-left:10px">生成表格</h-button> -->
         </div>
         <p class="servicefee">注意：服务费总额修改后，每期服务费金额将重新计算。</p>
     </div>
 </template>
 <script lang='ts'>
+import { useDebounce } from '@/decorator'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 @Component({
     name: 'serviceFeeToTable'
@@ -20,6 +21,7 @@ export default class ServiceFeeToTable extends Vue {
     @Prop({ default: 10000000000 }) readonly calculationRules!:any
     @Prop({ default: 2 }) readonly decimal!:any
 
+    @useDebounce(800)
     emitServiceFee () {
         this.$emit('onServiceFee')
     }
@@ -70,6 +72,8 @@ export default class ServiceFeeToTable extends Vue {
             }
         }
         this.$emit('inputService', num)
+        // 生成表格
+        this.emitServiceFee()
     }
     numValidate (str, float, regular, regular2, limit = '') {
         if (!str) return
