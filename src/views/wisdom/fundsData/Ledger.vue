@@ -161,6 +161,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { interfaceUrl } from '@/api/config'
 import complexTable from './components/complexTable.vue'
 import { WISDOM_FLOWTOBORROW_FUNDSDATA_ADD, WISDOM_FLOWTOBORROW_GOOD_CREDIT, WISDOM_FLOWTOBORROW_SUPPLY_CHAIN, WISDOM_FLOWTOBORROW_ORANGE, WISDOM_EXPOSURE_GOOD_CREDIT, WISDOM_EXPOSURE_ORANGE, WISDOM_POINTSCREDIT_GOOD_CREDIT, WISDOM_POINTSCREDIT_FUNDSDATA_ADD, WISDOM_EXPOSURE_FUNDSDATA_ADD, WISDOM_ACCOUNT_EXPORT } from '@/utils/auth_const'
@@ -214,7 +215,7 @@ export default {
                 startDate: '',
                 endDate: '',
                 repaymentStatus: '',
-                queryEndDate: ''
+                queryEndDate: moment().format('YYYY-MM-DD')
             },
             searchParams: {},
             removeValue: false,
@@ -442,7 +443,7 @@ export default {
             this.$set(this.queryParams, 'startDate', '')
             this.$set(this.queryParams, 'endDate', '')
             this.$set(this.queryParams, 'repaymentStatus', '')
-            this.$set(this.queryParams, 'queryEndDate', '')
+            this.$set(this.queryParams, 'queryEndDate', moment().format('YYYY-MM-DD'))
             this.selectAuth.regionObj = { ...obj }
             this.selectAuth.branchObj = { ...obj }
             this.selectAuth.platformObj = { ...obj }
