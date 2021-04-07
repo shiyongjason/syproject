@@ -1363,6 +1363,7 @@ export default {
                         if (item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '一次性采购' || temp.paramValue == 1)) {
                             let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
                             let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
+                            let serviceFeeFields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === 'service_fee_estimate')[0]
                             Array.from(DomList).map((jtem, index) => {
                                 jtem.onclick = (event) => {
                                     this.currentKey = {
@@ -1370,7 +1371,8 @@ export default {
                                         required: fields.required,
                                         inputStyle: 9,
                                         paramKey: fields.paramKey,
-                                        paramValue: fields.paramValue
+                                        paramValue: fields.paramValue,
+                                        calculationRules: serviceFeeFields.calculationRules
                                     }
                                     console.log('this.currentKey-purch_service_fee_form::::', this.currentKey)
                                     this.editorDrawer = true

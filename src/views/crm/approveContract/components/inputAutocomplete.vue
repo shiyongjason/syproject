@@ -1,5 +1,5 @@
 <template>
-    <el-autocomplete class="inline-input" v-model="inputModelComputed" :fetch-suggestions='querySearch' placeholder="请输入内容" :trigger-on-focus="false" @blur='onBlur' maxlength=50>
+    <el-autocomplete class="inline-input" v-model="inputModelComputed" :fetch-suggestions='querySearch' placeholder="请输入内容" :trigger-on-focus="false" @blur='onBlur' :maxlength='50'>
         <template slot-scope="{ item }">
             <div class="name" @mousedown="onMousedown(item)">{{ item.value }}</div>
         </template>
