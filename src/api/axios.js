@@ -115,6 +115,7 @@ axios.interceptors.response.use(
             if (error.response.status === 401) {
                 requestArr.splice(0, requestArr.length)
                 if (!messageShowing) {
+                    localStorage.clear()
                     sessionStorage.clear()
                     messageShowing = Message({
                         message: '权限无效，已为你重定向到登录页',
