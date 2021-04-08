@@ -1280,8 +1280,10 @@ export default {
                     console.log('serviceFeeEstimate: ', serviceFeeEstimate)
                     let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
                     console.log('purchServiceFeeForm: ', purchServiceFeeForm)
-                    await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
-                    purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
+                    if (purchServiceFeeForm) {
+                        await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
+                        purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
+                    }
                 }
             }
 
@@ -1309,9 +1311,11 @@ export default {
                     let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
                     let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
                     let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
-                    purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
                     console.log('purchServiceFeeForm: ', purchServiceFeeForm)
-                    await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
+                    if (purchServiceFeeForm) {
+                        purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
+                        await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
+                    }
                 }
             }
             try {
