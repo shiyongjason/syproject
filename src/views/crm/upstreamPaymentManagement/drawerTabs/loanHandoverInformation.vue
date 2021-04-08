@@ -31,7 +31,7 @@
             </div>
         </div>
         <!-- 货款申请信息 -->
-        <div class="tab-layout-title"><span></span>货款申请信息：<font>客户经理：{{data.accountManagers.length>0?data.accountManagers.toString():'-'}}</font><font>申请时间：{{data.createTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>货款申请信息：<font>客户经理：{{data.applyBy||'-'}}</font><font>申请时间：{{data.createTime|formatterTime}}</font></div>
          <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 130px">供应商开户行名称：</font><span>{{data.supplierAccountName||'-'}}</span></div>
              <div class="info-layout-item"><font style="flex: 0 0 85px">银行联行号：</font><span>{{data.supplierBankNo||'-'}}</span></div>
