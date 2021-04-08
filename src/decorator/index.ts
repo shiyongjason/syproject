@@ -82,14 +82,3 @@ export function useDebounce (wait: number = 200) {
         return descriptor
     }
 }
-/* function debounce(fn,wait){
-    let timeout1
-    return function(){
-        clearTimeout(timeout1)  // 重新清零
-        let context = this  // 保存上下文
-        let args = arguments // 获取传入的参数
-        timeout1 = setTimeout(()=> {
-            fn.apply(context, args)
-        },wait)
-    }
-} */
