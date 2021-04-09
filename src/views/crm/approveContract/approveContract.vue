@@ -466,7 +466,7 @@ export default {
                                     serviceFeeEstimate.paramValue = this.currentKey.paramValue
                                     await this.onServiceFee(false, serviceFeeEstimate, loanMonth)
                                     if (loanMonth.paramValue > 3) {
-                                        this.editordrawerboxSize = `${loanMonth.paramValue * 165}px`
+                                        this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
                                     } else {
                                         this.editordrawerboxSize = '580px'
                                     }
@@ -630,7 +630,7 @@ export default {
                                         await this.onServiceFee()
                                         let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
                                         if (loanMonth.paramValue > 3) {
-                                            this.editordrawerboxSize = `${loanMonth.paramValue * 165}px`
+                                            this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
                                         } else {
                                             this.editordrawerboxSize = '580px'
                                         }
@@ -693,7 +693,9 @@ export default {
             }
             return comObj[this.currentKey.inputStyle]
         },
-        // 点击生成表格
+        /**
+         * 生成表格html
+         */
         onServiceFee (flage = false, _serviceFeeEstimate = '', _loanMonth = '') {
             return new Promise((resolve, reject) => {
                 // 务费分期表格 purch_service_fee_form // 采购批次：purch_order_purch_batch
@@ -715,8 +717,7 @@ export default {
                 }
                 let str = `<div contenteditable="false" class="purch_service_fee_form" style='cursor: pointer;border-left:1px solid #3a3a3a;width:${(loanMonth.paramValue + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
                 this.serviceFee = str
-                console.log('this.serviceFee: ', this.serviceFee)
-                // 是否生成
+                // 是否生成的表格修改到合同上
                 if (flage) {
                     this.$nextTick(async () => {
                         let tableDoms = this.contractDocument.getElementsByClassName('purch_service_fee_form')
@@ -1394,8 +1395,19 @@ export default {
                                     }
                                     console.log('this.currentKey-purch_service_fee_form::::', this.currentKey)
                                     this.editorDrawer = true
-                                    this.$nextTick(() => {
+                                    this.$nextTick(async () => {
                                         this.$refs['ruleForm'].resetFields()
+                                        //
+                                        let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+                                        if (loanMonth) {
+                                            await this.onServiceFee()
+                                            if (loanMonth.paramValue > 3) {
+                                                this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
+                                            } else {
+                                                this.editordrawerboxSize = '580px'
+                                            }
+                                            this.showServiceFee = true
+                                        }
                                     })
                                 }
                             })
