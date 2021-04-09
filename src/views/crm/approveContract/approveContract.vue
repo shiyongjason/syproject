@@ -328,6 +328,7 @@ export default {
             return 'elInput'
         },
         isRenderUpload () {
+            console.log('xxxxxxxxxxx')
             console.log('isRenderUpload', this.currentKey.paramKey)
             // 销售合同  的服务费分期表格
             if (this.detailRes.contractTypeId == 10003 && this.currentKey.paramKey === 'purch_service_fee_form') {
@@ -1170,6 +1171,16 @@ export default {
         },
         async dealSaveContent (operatorType) {
             console.log('methods::::::dealSaveContent:::::::')
+            if (operatorType == 3) {
+                // fix 处理暂不审核。点击暂不审核之前可能会删东西。
+                let curHTML = this.contractDocument.innerHTML
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
+                    // 条款没有变化
+                    console.log('条款没有变化')
+                    return
+                }
+                console.log('更新了条款')
+            }
             let { paramKey, paramValue } = this.currentKey
             let tempObj = {}
             let tempArr = []
@@ -1399,7 +1410,7 @@ export default {
                                         this.$refs['ruleForm'].resetFields()
                                         //
                                         let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
-                                        if (loanMonth) {
+                                        if (loanMonth && fields.paramValue) {
                                             await this.onServiceFee()
                                             if (loanMonth.paramValue > 3) {
                                                 this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
