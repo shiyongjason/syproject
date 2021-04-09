@@ -226,6 +226,7 @@ export default {
             showLoading: true,
             editorInit: {
                 // auto_focus: true,
+                object_resizing: false, // 开关图片、表格、媒体对象在编辑区内的调整大小工具。拖拽工具可调整对象大小。
                 inline: true,
                 menubar: false,
                 language: 'zh_CN',
@@ -1138,7 +1139,8 @@ export default {
             console.log('operatorType: ', operatorType)
             if (operatorType) {
                 let curHTML = this.contractDocument.innerHTML
-                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
+                //  fix 点击图片编辑器会修改一些属性，导致this.contractAfterApi == curHTML.replace(/\ufeff/g, '') 不成立。直接保存。editorDrawer变为false关闭了弹窗口
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '') || this.currentKey.tagName === 'IMG') {
                     // 条款没有变化
                     console.log('条款没有变化')
                     return
@@ -1240,8 +1242,6 @@ export default {
                 }
             })
             if (!flag) return
-            console.log('this.contractFieldsList', this.contractFieldsList)
-
             for (const key in tempObj) {
                 tempArr.push(tempObj[key][0])
             }
