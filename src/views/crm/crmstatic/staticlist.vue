@@ -93,7 +93,7 @@ export default {
                 { label: '待放款', prop: 'pendingLoanValue' },
                 { label: '待回款', prop: 'toReturnLoanValue' },
                 { label: '合作完成', prop: 'cooperCompleteValue' },
-                { label: '合作关闭', prop: 'cooperCloseValue' }
+                { label: '审核未通过', prop: 'cooperCloseValue' }
 
             ],
             rowKey: '',
