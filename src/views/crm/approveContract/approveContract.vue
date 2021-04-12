@@ -445,65 +445,65 @@ export default {
             const comObj = {
                 1: {
                     [this.inputStyleDom]:
-                    this.inputStyleDom == 'serviceFeeToTable'
-                        ? {
-                            bind: {
-                                value: this.currentKey.paramValue,
-                                placeholder: '请输入内容',
-                                className: this.currentKey.paramKey,
-                                style: { width: '400px' },
-                                calculationRules: this.currentKey.calculationRules || '', // 最大值
-                                decimal: this.currentKey.decimal || 2
-                                // disabled: !this.currentKey.modify
-                            },
-                            on: {
-                                inputService: async (val) => {
-                                    this.currentKey.paramValue = val
-                                },
-                                // 点击生成表格
-                                onServiceFee: async () => {
-                                    console.log('xxxxxx')
-                                    let serviceFeeEstimate = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
-                                    let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
-                                    serviceFeeEstimate.paramValue = this.currentKey.paramValue
-                                    await this.onServiceFee(false, serviceFeeEstimate, loanMonth)
-                                    if (loanMonth.paramValue > 3) {
-                                        this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
-                                    } else {
-                                        this.editordrawerboxSize = '580px'
-                                    }
-                                    this.showServiceFee = true
-                                }
-                            }
-                        }
-                        : this.inputStyleDom !== 'elInput'
+                        this.inputStyleDom == 'serviceFeeToTable'
                             ? {
                                 bind: {
-                                    paramKey: this.currentKey.paramKey,
                                     value: this.currentKey.paramValue,
                                     placeholder: '请输入内容',
-                                    disabled: !this.currentKey.modify,
-                                    style: this.currentKey.unit ? { width: '250px' } : '',
-                                    innerHtml: this.currentKey.unit || '',
-                                    maxlength: this.currentKey.maxLength || '',
-                                    decimal: this.currentKey.decimal || '',
-                                    calculationRules: this.currentKey.calculationRules || ''// 最大值
+                                    className: this.currentKey.paramKey,
+                                    style: { width: '400px' },
+                                    calculationRules: this.currentKey.calculationRules || '', // 最大值
+                                    decimal: this.currentKey.decimal || 2
+                                    // disabled: !this.currentKey.modify
                                 },
                                 on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
+                                    inputService: async (val) => {
+                                        this.currentKey.paramValue = val
+                                    },
+                                    // 点击生成表格
+                                    onServiceFee: async () => {
+                                        console.log('xxxxxx')
+                                        let serviceFeeEstimate = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
+                                        let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+                                        serviceFeeEstimate.paramValue = this.currentKey.paramValue
+                                        await this.onServiceFee(false, serviceFeeEstimate, loanMonth)
+                                        if (loanMonth.paramValue > 3) {
+                                            this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
+                                        } else {
+                                            this.editordrawerboxSize = '580px'
+                                        }
+                                        this.showServiceFee = true
+                                    }
                                 }
                             }
-                            : {
-                                bind: {
-                                    value: this.currentKey.paramValue,
-                                    placeholder: '请输入内容',
-                                    disabled: !this.currentKey.modify,
-                                    maxlength: this.currentKey.maxLength || ''
-                                },
-                                on: {
-                                    input: (val) => { this.currentKey.paramValue = val.trim() }
+                            : this.inputStyleDom !== 'elInput'
+                                ? {
+                                    bind: {
+                                        paramKey: this.currentKey.paramKey,
+                                        value: this.currentKey.paramValue,
+                                        placeholder: '请输入内容',
+                                        disabled: !this.currentKey.modify,
+                                        style: this.currentKey.unit ? { width: '250px' } : '',
+                                        innerHtml: this.currentKey.unit || '',
+                                        maxlength: this.currentKey.maxLength || '',
+                                        decimal: this.currentKey.decimal || '',
+                                        calculationRules: this.currentKey.calculationRules || ''// 最大值
+                                    },
+                                    on: {
+                                        input: (val) => { this.currentKey.paramValue = val.trim() }
+                                    }
                                 }
-                            }
+                                : {
+                                    bind: {
+                                        value: this.currentKey.paramValue,
+                                        placeholder: '请输入内容',
+                                        disabled: !this.currentKey.modify,
+                                        maxlength: this.currentKey.maxLength || ''
+                                    },
+                                    on: {
+                                        input: (val) => { this.currentKey.paramValue = val.trim() }
+                                    }
+                                }
                 },
                 3: {
                     selectCom: {
@@ -704,6 +704,13 @@ export default {
                 // service_fee_estimate 服务费预计 / loan_month 剩余货款支付周期
                 let serviceFeeEstimate = _serviceFeeEstimate || this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
                 let loanMonth = _loanMonth || this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+                if (!serviceFeeEstimate.paramValue) {
+                    this.$message({
+                        message: `服务费预计不能为空`,
+                        type: 'error'
+                    })
+                    return
+                }
                 let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
                 const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期' }
                 // 表格数据渲染成服务费表格div
