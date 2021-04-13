@@ -726,7 +726,7 @@ export default {
                     tableHead += head
                     tableBody += body
                 }
-                let str = `<div contenteditable="false" class="purch_service_fee_form" style='cursor: pointer;border-left:1px solid #3a3a3a;width:${(Number(loanMonth.paramValue) + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
+                let str = `<div contenteditable="false" class="purch_service_fee_form" style='border-left:1px solid #3a3a3a;width:${(Number(loanMonth.paramValue) + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
                 this.serviceFee = str
                 // 是否生成的表格修改到合同上
                 if (flage) {
@@ -1319,7 +1319,7 @@ export default {
                     // 把表格修改成上传图片
                     let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
                     Array.from(feeTableDom).map(table => {
-                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45; cursor: pointer;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
+                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
                     })
                     //  分批,清空表
                     if (this.currentKey.paramValue) {
