@@ -881,9 +881,13 @@ export default {
             })
         },
         async goBack () {
-            this.dealSaveContent(3)
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.push('/goodwork/contractSigningManagement')
+            // this.dealSaveContent(3, () => {
+            //     // Fix 报错不给跳列表页
+            //     this.setNewTags((this.$route.fullPath).split('?')[0])
+            //     this.$router.push('/goodwork/contractSigningManagement')
+            // })
         },
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
@@ -1143,11 +1147,11 @@ export default {
         },
         // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
-            console.log('operatorType: ', operatorType)
+            console.log('operatorType1150: ', operatorType)
             if (operatorType) {
-                let curHTML = this.contractDocument.innerHTML
-                //  fix 点击图片编辑器会修改一些属性，导致this.contractAfterApi == curHTML.replace(/\ufeff/g, '') 不成立。直接保存。editorDrawer变为false关闭了弹窗口
-                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '') || this.currentKey.tagName === 'IMG') {
+                //  fix 点击图片编辑器会修改一些属性，导致this.contractAfterApi == curHTML.replace(/\ufeff/g, '') 不成立。直接保存。editorDrawer变为false关闭了弹窗
+                let curHTML = this.contractDocument.innerHTML.replace(/ data-mce-selected="1"/g, '')
+                if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
                     // 条款没有变化
                     console.log('条款没有变化')
                     return
@@ -1178,7 +1182,7 @@ export default {
                 this.dealSaveContent(operatorType)
             }
         },
-        async dealSaveContent (operatorType) {
+        async dealSaveContent (operatorType, callback) {
             console.log('methods::::::dealSaveContent:::::::')
             if (operatorType == 3) {
                 // fix 处理暂不审核。点击暂不审核之前可能会删东西。
@@ -1350,6 +1354,10 @@ export default {
                     'createBy': this.userInfo.employeeName,
                     'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                 })
+                if (callback) {
+                    // Fix 暂不审核编辑、删除字段报错不给跳转
+                    callback()
+                }
                 if (operatorType && operatorType == 3) {
                     this.$message({
                         message: `当前修改已保存`,
