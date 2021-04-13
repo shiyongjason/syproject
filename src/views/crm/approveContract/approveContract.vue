@@ -157,7 +157,7 @@
                             <div class="el-upload__tip" slot="tip">只能上传jpeg/jpg/png文件，且不超过20M</div>
                         </hosjoyUpload>
                     </div>
-                    <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-20px;"></div>
+                    <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-10px;"></div>
                     <h-button v-if="isRenderUpload&&currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
                     <h-button @click="onSaveContent('')" type="primary">保存</h-button>
                 </div>
@@ -469,6 +469,7 @@ export default {
                                         await this.onServiceFee(false, serviceFeeEstimate, loanMonth)
                                         if (loanMonth.paramValue > 3) {
                                             this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
+                                            console.log('this.editordrawerboxSize: ', this.editordrawerboxSize)
                                         } else {
                                             this.editordrawerboxSize = '580px'
                                         }
@@ -633,6 +634,7 @@ export default {
                                         let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
                                         if (loanMonth.paramValue > 3) {
                                             this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
+                                            console.log('this.editordrawerboxSize: ', this.editordrawerboxSize)
                                         } else {
                                             this.editordrawerboxSize = '580px'
                                         }
@@ -724,7 +726,7 @@ export default {
                     tableHead += head
                     tableBody += body
                 }
-                let str = `<div contenteditable="false" class="purch_service_fee_form" style='cursor: pointer;border-left:1px solid #3a3a3a;width:${(loanMonth.paramValue + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
+                let str = `<div contenteditable="false" class="purch_service_fee_form" style='cursor: pointer;border-left:1px solid #3a3a3a;width:${(Number(loanMonth.paramValue) + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
                 this.serviceFee = str
                 // 是否生成的表格修改到合同上
                 if (flage) {
@@ -1334,8 +1336,7 @@ export default {
                     let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
                     let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
                     let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
-                    console.log('purchServiceFeeForm: ', purchServiceFeeForm)
-                    if (purchServiceFeeForm) {
+                    if (purchServiceFeeForm && serviceFeeEstimate && loanMonth) {
                         purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
                         await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
                     }
@@ -1429,6 +1430,7 @@ export default {
                                             await this.onServiceFee()
                                             if (loanMonth.paramValue > 3) {
                                                 this.editordrawerboxSize = `${loanMonth.paramValue * 165 > 915 ? 915 : loanMonth.paramValue * 165}px`
+                                                console.log('this.editordrawerboxSize: ', this.editordrawerboxSize)
                                             } else {
                                                 this.editordrawerboxSize = '580px'
                                             }
