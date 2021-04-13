@@ -414,6 +414,7 @@ export default {
                 temp.paramValue = this.originalContentFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0].paramValue
             }
             this.editordrawerboxSize = '580px'
+            this.domBindMethods()
             done()
         },
         onBlur () {
@@ -711,6 +712,7 @@ export default {
                         message: `服务费预计不能为空`,
                         type: 'error'
                     })
+
                     return
                 }
                 let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
