@@ -716,17 +716,17 @@ export default {
                 let tableItem = this.$dividedBy(serviceFeeEstimate.paramValue, loanMonth.paramValue).toFixed(2)
                 const dayObj = { 0: '第一期', 1: '第二期', 2: '第三期', 3: '第四期', 4: '第五期', 5: '第六期' }
                 // 表格数据渲染成服务费表格div
-                let tableHead = `<span style="border-top:1px solid #3a3a3a;float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">支付日期</span>`
-                let tableBody = `<span style="float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">支付金额</span>`
+                let tableHead = `<span style="border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付日期</span>`
+                let tableBody = `<span style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">支付金额</span>`
                 let preTotal = this.$multipliedBy(loanMonth.paramValue - 1, tableItem) // 精确乘法
                 let rest = this.$minus(serviceFeeEstimate.paramValue, preTotal) // 精确减法
                 for (let i = 0; i < loanMonth.paramValue * 1; i++) {
-                    let head = `<span style="border-top:1px solid #3a3a3a;float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">${dayObj[i]}</span>`
-                    let body = `<span style="float:left;height:80px;border-right:1px solid #3a3a3a;border-bottom:1px solid #3a3a3a;width:110px;word-break: break-all;padding:0 3px;font-size: 13px;line-height: 80px;text-align: center;">${i == loanMonth.paramValue - 1 ? rest.toFixed(2) : tableItem}元</span>`
+                    let head = `<span style="border-top: 1px solid #3a3a3a; float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">${dayObj[i]}</span>`
+                    let body = `<span style="float: left; height: 80px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; width: 110px; word-break: break-all; padding: 0 3px; font-size: 13px; line-height: 80px; text-align: center;">${i == loanMonth.paramValue - 1 ? rest.toFixed(2) : tableItem}元</span>`
                     tableHead += head
                     tableBody += body
                 }
-                let str = `<div contenteditable="false" class="purch_service_fee_form" style='border-left:1px solid #3a3a3a;width:${(Number(loanMonth.paramValue) + 1) * 120}px;'><div style='display: flex;margin-top: 10px;overflow: hidden;'>${tableHead}</div><div style='overflow: hidden;display: flex;'>${tableBody}</div></div>`
+                let str = `<div contenteditable="false" class="purch_service_fee_form" style='border-left: 1px solid #3a3a3a; width: ${(Number(loanMonth.paramValue) + 1) * 120}px;'><div style='display: flex; margin-top: 10px; overflow: hidden;'>${tableHead}</div><div style='overflow: hidden; display: flex;'>${tableBody}</div></div>`
                 this.serviceFee = str
                 // 是否生成的表格修改到合同上
                 if (flage) {
@@ -760,8 +760,9 @@ export default {
                 currentId: currentContentId,
                 lastId: lastContentId
             })
-            this.currentContent = data.contractContent
-            this.lastContent = data.lastContractContent
+            let reg = /\sdata-mce-style=".*?"/g
+            this.currentContent = data.contractContent.replace(reg, '')
+            this.lastContent = data.lastContractContent.replace(reg, '')
             if (this.currentContent === null) {
                 this.$message({
                     message: `获取新版合同失败`,
