@@ -883,13 +883,13 @@ export default {
             })
         },
         async goBack () {
-            this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/goodwork/contractSigningManagement')
-            // this.dealSaveContent(3, () => {
-            //     // Fix 报错不给跳列表页
-            //     this.setNewTags((this.$route.fullPath).split('?')[0])
-            //     this.$router.push('/goodwork/contractSigningManagement')
-            // })
+            // this.setNewTags((this.$route.fullPath).split('?')[0])
+            // this.$router.push('/goodwork/contractSigningManagement')
+            this.dealSaveContent(3, () => {
+                // Fix 报错不给跳列表页
+                this.setNewTags((this.$route.fullPath).split('?')[0])
+                this.$router.push('/goodwork/contractSigningManagement')
+            })
         },
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
