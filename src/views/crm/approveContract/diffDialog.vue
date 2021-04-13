@@ -140,7 +140,7 @@ export default {
     &-left {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         height: 100%;
         // overflow-y: scroll;
@@ -148,13 +148,28 @@ export default {
     &-right {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         height: 100%;
         // overflow-y: scroll;
-    #diff {
-        font-size: 14px;
+        #diff {
+            font-size: 14px;
+        }
     }
+    /deep/.purch_service_fee_form {
+        width: 100% !important;
+        div{
+            display: flex;
+        }
+        span {
+            font-size: 12px !important;
+            width: 100% !important;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            line-height: unset !important;
+            justify-content: center;
+        }
     }
 }
 </style>
