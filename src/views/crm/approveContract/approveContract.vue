@@ -1320,7 +1320,7 @@ export default {
                     // 把表格修改成上传图片
                     let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
                     Array.from(feeTableDom).map(table => {
-                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45; cursor: pointer;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
+                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
                     })
                     //  分批,清空表
                     if (this.currentKey.paramValue) {
