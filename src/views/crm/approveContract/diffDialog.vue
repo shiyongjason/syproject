@@ -85,6 +85,9 @@ export default {
                     this.$nextTick(() => {
                         let oldT = document.getElementById('oldT').innerHTML
                         let newT = document.getElementById('newT').innerHTML
+                        let reg = /\sdata-mce-style=".*?"/g
+                        newT = newT.replace(reg, '')
+                        console.log(newT)
                         fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
                             if (res) {
                                 this.diffHtml = res
@@ -158,7 +161,7 @@ export default {
     }
     /deep/.purch_service_fee_form {
         width: 100% !important;
-        div{
+        div {
             display: flex;
         }
         span {
