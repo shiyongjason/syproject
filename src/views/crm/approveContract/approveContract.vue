@@ -284,7 +284,9 @@ export default {
                 disabledDate: (time) => {
                     return time.getTime() < Date.now() - 1 * 24 * 3600 * 1000
                 }
-            }
+            },
+            /** 此占位符用于修复点击暂不审核和失焦失焦触发重复 */
+            isDealBack: false
 
         }
     },
@@ -329,7 +331,6 @@ export default {
             return 'elInput'
         },
         isRenderUpload () {
-            console.log('xxxxxxxxxxx')
             console.log('isRenderUpload', this.currentKey.paramKey)
             // 销售合同  的服务费分期表格
             if (this.detailRes.contractTypeId == 10003 && this.currentKey.paramKey === 'purch_service_fee_form') {
@@ -414,11 +415,12 @@ export default {
                 temp.paramValue = this.originalContentFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0].paramValue
             }
             this.editordrawerboxSize = '580px'
+            // this.domBindMethods()
             done()
         },
         onBlur () {
-            console.log('onBlur')
-            this.onSaveContent(3)
+            console.log('onBlur', this.isDealBack)
+            !this.isDealBack && this.onSaveContent(3)
         },
         checkField (rule, value, callback) {
             console.log('checkField')
@@ -462,7 +464,6 @@ export default {
                                     },
                                     // 点击生成表格
                                     onServiceFee: async () => {
-                                        console.log('xxxxxx')
                                         let serviceFeeEstimate = this.contractFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
                                         let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
                                         serviceFeeEstimate.paramValue = this.currentKey.paramValue
@@ -629,7 +630,6 @@ export default {
                                     },
                                     // 生成表格
                                     onServiceFee: async () => {
-                                        console.log('ooooo')
                                         await this.onServiceFee()
                                         let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
                                         if (loanMonth.paramValue > 3) {
@@ -688,7 +688,6 @@ export default {
                         on: {
                             input: (val) => {
                                 this.currentKey.paramValue = val
-                                console.log('xxxxxxx', val)
                             }
                         }
                     }
@@ -708,7 +707,7 @@ export default {
                 let loanMonth = _loanMonth || this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
                 if (!serviceFeeEstimate.paramValue) {
                     this.$message({
-                        message: `服务费预计不能为空`,
+                        message: `服务费预计不能为空！`,
                         type: 'error'
                     })
                     return
@@ -884,13 +883,29 @@ export default {
             })
         },
         async goBack () {
+            console.log('goBack')
+            this.isDealBack = true
+            let curHTML = this.contractDocument.innerHTML
+            if (this.contractAfterApi == curHTML.replace(/\ufeff/g, '')) {
+                console.log('条款没有变化!直接返回。')
+                this.setNewTags((this.$route.fullPath).split('?')[0])
+                this.$router.push('/goodwork/contractSigningManagement')
+                return
+            } else {
+                this.dealSaveContent(3, () => {
+                // Fix 报错不给跳列表页
+                    this.setNewTags((this.$route.fullPath).split('?')[0])
+                    this.$router.push('/goodwork/contractSigningManagement')
+                })
+            }
+            console.log('更新了条款!，但是失去焦点也会做一层保存。')
             // this.setNewTags((this.$route.fullPath).split('?')[0])
             // this.$router.push('/goodwork/contractSigningManagement')
-            this.dealSaveContent(3, () => {
+            /* this.dealSaveContent(3, () => {
                 // Fix 报错不给跳列表页
                 this.setNewTags((this.$route.fullPath).split('?')[0])
                 this.$router.push('/goodwork/contractSigningManagement')
-            })
+            }) */
         },
         successArg (val) {
             this.currentKey.paramValue = val.fileUrl
@@ -1113,6 +1128,14 @@ export default {
             let originalServiceFeeEstimate = this.originalContentFieldsList.filter(item => item.paramKey === 'service_fee_estimate')[0]
             let loanMonth = this.contractFieldsList.filter(item => item.paramKey === 'loan_month')[0]
             let originalLoanMonth = this.originalContentFieldsList.filter(item => item.paramKey === 'loan_month')[0]
+            // add 添加点击表格修改服务费填入空的校验
+            if (!serviceFeeEstimate.paramValue) {
+                this.$message({
+                    message: `服务费预计不能为空！`,
+                    type: 'error'
+                })
+                return
+            }
             if (originalServiceFeeEstimate.paramValue != serviceFeeEstimate.paramValue || originalLoanMonth.paramValue != loanMonth.paramValue) {
                 console.log('保存表格')
                 if (!this.serviceFee) {
@@ -1150,7 +1173,7 @@ export default {
         },
         // 保存 operatorType=3 更新条款
         onSaveContent (operatorType = '') {
-            console.log('operatorType1150: ', operatorType)
+            console.log('保存||失焦,operatorType1150: ', operatorType)
             if (operatorType) {
                 //  fix 点击图片编辑器会修改一些属性，导致this.contractAfterApi == curHTML.replace(/\ufeff/g, '') 不成立。直接保存。editorDrawer变为false关闭了弹窗
                 let curHTML = this.contractDocument.innerHTML.replace(/ data-mce-selected="1"/g, '')
@@ -1268,7 +1291,7 @@ export default {
             })
             // 法务修改字段触发,`条款已被编辑，请先保存条款`
 
-            // div版合同,修改页面上的值
+            // 修改页面上的值
             let ryanList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
             Array.from(ryanList).map(jtem => {
                 if (this.currentKey.inputStyle == 4 && this.currentKey.paramValue) {
@@ -1301,11 +1324,8 @@ export default {
                 // 一次性采购才会修改合同上的表格
                 if ((temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
                     let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
-                    console.log('loanMonth: ', loanMonth)
                     let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
-                    console.log('serviceFeeEstimate: ', serviceFeeEstimate)
                     let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
-                    console.log('purchServiceFeeForm: ', purchServiceFeeForm)
                     if (purchServiceFeeForm) {
                         await this.onServiceFee(true, serviceFeeEstimate, loanMonth)
                         purchServiceFeeForm.paramValue = `${serviceFeeEstimate.paramValue}_${loanMonth.paramValue}`
@@ -1356,9 +1376,8 @@ export default {
                     'createBy': this.userInfo.employeeName,
                     'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                 })
-                if (callback) {
-                    // Fix 暂不审核编辑、删除字段报错不给跳转
-                    callback()
+                if (this.isDealBack) {
+                    this.isDealBack = false
                 }
                 if (operatorType && operatorType == 3) {
                     this.$message({
@@ -1370,7 +1389,17 @@ export default {
                     this.domBindMethods()
                 })
                 this.editorDrawer = false
+                if (callback) {
+                    // Fix 暂不审核编辑、删除字段报错不给跳转
+                    setTimeout(() => {
+                        callback()
+                    }, 500)
+                }
             } catch (error) {
+                console.log('catch')
+                if (this.isDealBack) {
+                    this.isDealBack = false
+                }
                 this.init(() => {
                     this.domBindMethods()
                 })

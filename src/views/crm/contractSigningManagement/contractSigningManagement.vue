@@ -332,8 +332,9 @@ export default {
                 currentId: currentContentId,
                 lastId: lastContentId
             })
-            this.currentContent = data.contractContent
-            this.lastContent = data.lastContractContent
+            let reg = /\sdata-mce-style=".*?"/g
+            this.currentContent = data.contractContent.replace(reg, '')
+            this.lastContent = data.lastContractContent.replace(reg, '')
             if (this.currentContent === null) {
                 this.$message({
                     message: `获取新版合同失败`,
