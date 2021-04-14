@@ -391,7 +391,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
-        return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
+        return <span>{filters.money(scope.row.paidAmount, 2)}/{filters.money(scope.row.totalAmount, 2)}</span>
     }
 
     async viewDetail (paymentOrderId) {
