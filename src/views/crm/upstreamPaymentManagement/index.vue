@@ -195,7 +195,7 @@ import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
 import moment from 'moment'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
-    [1, '银行转帐'],
+    [1, '银行转账'],
     [2, '银行承兑']
 ])
 export const SUPPLIERPAYMENTMETHOD: Map<number | null, string> = new Map([
@@ -381,7 +381,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
         { label: '首付款确认时间', prop: 'downPaymentConfirmTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
-        { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转帐' }, { value: 2, label: '银行承兑' }] }
+        { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
 
     ]
 
