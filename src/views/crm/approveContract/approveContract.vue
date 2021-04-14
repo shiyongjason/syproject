@@ -763,6 +763,14 @@ export default {
             let reg = /\sdata-mce-style=".*?"/g
             this.currentContent = data.contractContent.replace(reg, '')
             this.lastContent = data.lastContractContent.replace(reg, '')
+            this.currentContent = this.currentContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.lastContent = this.lastContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.currentContent = this.currentContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.lastContent = this.lastContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.currentContent = this.currentContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.currentContent = this.currentContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
             if (this.currentContent === null) {
                 this.$message({
                     message: `获取新版合同失败`,
