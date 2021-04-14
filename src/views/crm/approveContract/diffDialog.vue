@@ -84,38 +84,16 @@ export default {
                 this.forMat('img', () => {
                     this.$nextTick(() => {
                         //
-                        // console.log(document.getElementById('oldT').getElementsByTagName('table')[0].style = '')
-                        // document.getElementById('newT').getElementsByTagName('table')[0].className = ''
-                        // document.getElementById('newT').getElementsByTagName('table')[0].style = 'border-collapse: collapse'
-                        // document.getElementById('oldT').getElementsByTagName('table')[0].style = 'border-collapse: collapse'
-                        // Array.from(document.getElementById('oldT').getElementsByTagName('td')).map(item => {
-                        //     item.style.border = '1px solid #666'
-                        //     item.style.padding = ''
-                        //     item.style.width = ''
-                        //     console.log('===', item)
-                        // })
-                        // Array.from(document.getElementById('newT').getElementsByTagName('td')).map(item => {
-                        //     item.style.border = '1px solid #666'
-                        //     item.style.padding = ''
-                        //     item.style.width = ''
-                        //     console.log('===', item)
-                        // })
-                        // Array.from(document.getElementById('oldT').getElementsByTagName('tr')).map(item => {
-                        //     item.style.border = '1px solid #666'
-                        //     item.style.padding = ''
-                        //     item.style.width = ''
-                        //     item.style.height = ''
-                        //     console.log('===', item)
-                        // })
-                        // Array.from(document.getElementById('newT').getElementsByTagName('tr')).map(item => {
-                        //     item.style.border = '1px solid #666'
-                        //     item.style.padding = ''
-                        //     item.style.width = ''
-                        //     item.style.height = ''
-                        //     console.log('===', item)
-                        // })
                         let oldT = document.getElementById('oldT').innerHTML
                         let newT = document.getElementById('newT').innerHTML
+                        // newT = newT.replace(/\sdata-mce-src=".*?"/g, '')
+                        // oldT = oldT.replace(/\sdata-mce-src=".*?"/g, '')
+                        // newT = newT.replace(/<table(.*?)style=".*?"/g, '<table$1style="border-collapse: collapse"')
+                        // oldT = oldT.replace(/<table(.*?)style=".*?"/g, '<table$1style="border-collapse: collapse"')
+                        // newT = newT.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+                        // oldT = oldT.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+                        // newT = newT.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
+                        // oldT = oldT.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
                         fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
                             if (res) {
                                 this.diffHtml = res
