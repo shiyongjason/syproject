@@ -302,9 +302,8 @@ export default class UpstreamPaymentManagement extends Vue {
                 {
                     required: true,
                     validator: (rule, value, callback) => {
-                        console.log('value: ', value)
-                        // if (value === '0' || !value) return callback(new Error('本次支付金额不能为 0'))
-                        if (value === '0') {
+                        // HAM-25441 BOSS-本次支付金额不能输入0元，但是能输入0.0和0.00元
+                        if (value && value == 0) {
                             return callback(new Error('本次支付金额不能为 0'))
                         }
                         if (!value) {
