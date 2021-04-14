@@ -228,7 +228,7 @@
                                             <span class="label">网银盾照片：</span>
                                             <p class="content">
                                                 <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles">
+                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles" @click="handle(item.fileUrl)">
                                                         <img :src=item.fileUrl />
                                                     </span>
                                                 </template>
@@ -241,7 +241,7 @@
                                             <span class="label">共管户截图：</span>
                                             <p class="content">
                                                 <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles">
+                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles" @click="handle(item.fileUrl)">
                                                         <img :src=item.fileUrl />
                                                     </span>
                                                 </template>
@@ -724,6 +724,9 @@ export default {
         })
     },
     methods: {
+        handle (url) {
+            window.open(url)
+        },
         goContractDetail () {
             let routeUrl = this.$router.resolve({
                 path: '/goodwork/contractSigningManagementDetail',
@@ -911,7 +914,7 @@ export default {
             //.address {
             //    width: 120px;
             //}
-             .label{
+            .label {
                 min-width: 75px;
             }
         }
