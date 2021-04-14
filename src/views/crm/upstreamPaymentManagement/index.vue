@@ -102,7 +102,7 @@
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
                         <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
-                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isShowTabs">
+                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
                     </el-tab-pane>
                 </el-tabs>
@@ -246,6 +246,7 @@ export default class UpstreamPaymentManagement extends Vue {
     editorDrawer:boolean = false
     isOpen:boolean = false
     isReady:boolean = false
+    isTabs:boolean = false
     paymentOrderId:string = ''
     private _queryParams = {}
     queryParams: Query = {
@@ -347,9 +348,10 @@ export default class UpstreamPaymentManagement extends Vue {
         }
     }
 
-    get isShowTabs () {
+    isShowTabs () {
         let temp:boolean | undefined = false
         // this.loanHandoverInformation初始化为空字符串
+        console.log(this.loanHandoverInformation)
         if (this.loanHandoverInformation?.upPaymentLoanHandoverList.length == 0) {
             temp = true
         } else {
@@ -357,8 +359,7 @@ export default class UpstreamPaymentManagement extends Vue {
                 return item.status == 1
             })
         }
-        console.log('isShowTabs', temp)
-        return temp
+        this.isTabs = temp
     }
 
     tableLabel:tableLabelProps = [
@@ -399,6 +400,7 @@ export default class UpstreamPaymentManagement extends Vue {
         console.log('data: ', data)
         this.loanHandoverInformation = data
         this.editorDrawer = true
+        this.isShowTabs()
     }
 
     onStartChange (val): void {
