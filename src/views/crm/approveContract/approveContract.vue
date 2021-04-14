@@ -893,7 +893,7 @@ export default {
                 return
             } else {
                 this.dealSaveContent(3, () => {
-                // Fix 报错不给跳列表页
+                    // Fix 报错不给跳列表页
                     this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/goodwork/contractSigningManagement')
                 })
@@ -1337,11 +1337,14 @@ export default {
             if (this.currentKey.paramKey === 'purch_order_purch_batch') {
                 // 分批
                 if (this.currentKey.paramValue === '分批采购' || this.currentKey.paramValue == 2) {
-                    // 把表格修改成上传图片
-                    let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
-                    Array.from(feeTableDom).map(table => {
-                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
-                    })
+                    console.log('我走了xxxx', this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src)
+                    if (!this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src) {
+                        // 把表格修改成上传图片
+                        let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
+                        Array.from(feeTableDom).map(table => {
+                            table.outerHTML = `<div style="word-break: break-all; color: #ff7a45;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
+                        })
+                    }
                     //  分批,清空表
                     if (this.currentKey.paramValue) {
                         this.currentKey.paramValue = ''
