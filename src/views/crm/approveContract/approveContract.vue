@@ -210,6 +210,7 @@ export default {
     components: { diffDialog, selectCom, isNum, inputAutocomplete, hosjoyUpload, isAllNum, isPositiveInt, 'editor': Editor, comRender, serviceFeeToTable },
     data () {
         return {
+            scrollTop: 0,
             showServiceFee: false,
             editordrawerboxSize: '580px',
             serviceFee: '',
@@ -762,6 +763,14 @@ export default {
             let reg = /\sdata-mce-style=".*?"/g
             this.currentContent = data.contractContent.replace(reg, '')
             this.lastContent = data.lastContractContent.replace(reg, '')
+            this.currentContent = this.currentContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.lastContent = this.lastContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.currentContent = this.currentContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.lastContent = this.lastContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.currentContent = this.currentContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.currentContent = this.currentContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
             if (this.currentContent === null) {
                 this.$message({
                     message: `获取新版合同失败`,
@@ -875,6 +884,8 @@ export default {
                 } catch (error) {
                     console.log('提交失败')
                     this.flag = false
+                    let s = document.getElementsByClassName('approvalcontract-content-layout')
+                    this.scrollTop = s[0].scrollTop
                     await this.init(() => {
                         this.domBindMethods()
                     })
@@ -893,7 +904,7 @@ export default {
                 return
             } else {
                 this.dealSaveContent(3, () => {
-                // Fix 报错不给跳列表页
+                    // Fix 报错不给跳列表页
                     this.setNewTags((this.$route.fullPath).split('?')[0])
                     this.$router.push('/goodwork/contractSigningManagement')
                 })
@@ -961,6 +972,8 @@ export default {
                 // 'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
                 'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
             })
+            let s = document.getElementsByClassName('approvalcontract-content-layout')
+            this.scrollTop = s[0].scrollTop
             this.init(() => {
                 this.domBindMethods()
             })
@@ -1055,6 +1068,8 @@ export default {
                 'createBy': this.userInfo.employeeName,
                 'contractFieldsList': JSON.stringify(contractFieldsList) // 合同字段键值对
             })
+            let s = document.getElementsByClassName('approvalcontract-content-layout')
+            this.scrollTop = s[0].scrollTop
             this.init(() => {
                 this.domBindMethods()
             })
@@ -1112,12 +1127,16 @@ export default {
                     'createBy': this.userInfo.employeeName,
                     'contractFieldsList': JSON.stringify(tempArr) // 合同字段键值对
                 })
+                let s = document.getElementsByClassName('approvalcontract-content-layout')
+                this.scrollTop = s[0].scrollTop
                 this.init(() => {
                     this.domBindMethods()
                 })
                 this.editorDrawer = false
             } catch (error) {
                 console.log('error: ', error)
+                let s = document.getElementsByClassName('approvalcontract-content-layout')
+                this.scrollTop = s[0].scrollTop
                 this.init(() => {
                     this.domBindMethods()
                 })
@@ -1187,7 +1206,7 @@ export default {
             if (this.currentKey.inputStyle == 9 && operatorType == '') {
                 let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
                 // 一次性采购才会修改合同上的表格
-                if (this.currentKey.paramKey === 'purch_service_fee_form' && (temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
+                if (temp && this.currentKey.paramKey === 'purch_service_fee_form' && (temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
                     this.saveTable()
                     return
                 }
@@ -1236,6 +1255,8 @@ export default {
                             message: `合同${item.paramName}字段不可删除`,
                             type: 'error'
                         })
+                        let s = document.getElementsByClassName('approvalcontract-content-layout')
+                        this.scrollTop = s[0].scrollTop
                         this.init(() => {
                             this.domBindMethods()
                         })
@@ -1322,7 +1343,7 @@ export default {
             if (this.currentKey.paramKey === 'loan_month' || this.currentKey.paramKey === 'service_fee_estimate') {
                 let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
                 // 一次性采购才会修改合同上的表格
-                if ((temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
+                if (temp && (temp.paramValue == 1 || temp.paramValue == '一次性采购')) {
                     let loanMonth = tempArr.filter(item => item.paramKey === 'loan_month')[0]
                     let serviceFeeEstimate = tempArr.filter(item => item.paramKey === 'service_fee_estimate')[0]
                     let purchServiceFeeForm = tempArr.filter(item => item.paramKey === 'purch_service_fee_form')[0]
@@ -1337,11 +1358,14 @@ export default {
             if (this.currentKey.paramKey === 'purch_order_purch_batch') {
                 // 分批
                 if (this.currentKey.paramValue === '分批采购' || this.currentKey.paramValue == 2) {
-                    // 把表格修改成上传图片
-                    let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
-                    Array.from(feeTableDom).map(table => {
-                        table.outerHTML = `<div style="word-break: break-all; color: #ff7a45;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
-                    })
+                    console.log('我走了xxxx', this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src)
+                    if (!this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src) {
+                        // 把表格修改成上传图片
+                        let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
+                        Array.from(feeTableDom).map(table => {
+                            table.outerHTML = `<div style="word-break: break-all; color: #ff7a45;" class="purch_service_fee_form" contenteditable="false" data-paramname="" data-inputstyle="9">{#服务费分期表格(采购单)#}</div>`
+                        })
+                    }
                     //  分批,清空表
                     if (this.currentKey.paramValue) {
                         this.currentKey.paramValue = ''
@@ -1385,6 +1409,8 @@ export default {
                         type: 'success'
                     })
                 }
+                let s = document.getElementsByClassName('approvalcontract-content-layout')
+                this.scrollTop = s[0].scrollTop
                 this.init(() => {
                     this.domBindMethods()
                 })
@@ -1400,6 +1426,8 @@ export default {
                 if (this.isDealBack) {
                     this.isDealBack = false
                 }
+                let s = document.getElementsByClassName('approvalcontract-content-layout')
+                this.scrollTop = s[0].scrollTop
                 this.init(() => {
                     this.domBindMethods()
                 })
@@ -1434,7 +1462,7 @@ export default {
                     if (item.inputStyle && item.inputStyle == 9) {
                         let temp = this.contractFieldsList.filter(item => item.paramKey === 'purch_order_purch_batch')[0]
                         //  1:一次性采购 2：分批采购
-                        if (item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '一次性采购' || temp.paramValue == 1)) {
+                        if (temp && item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '一次性采购' || temp.paramValue == 1)) {
                             let DomList = this.contractDocument.getElementsByClassName(item.paramKey)
                             let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === 'purch_service_fee_form')[0]
                             let serviceFeeFields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === 'service_fee_estimate')[0]
@@ -1470,7 +1498,7 @@ export default {
                                 }
                             })
                             return
-                        } else if (item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '分批采购' || temp.paramValue == 2)) {
+                        } else if (temp && item.paramKey == 'purch_service_fee_form' && (temp.paramValue == '分批采购' || temp.paramValue == 2)) {
                             console.log('一次性采购改为分批 改为上传模式')
                             let feeForm = this.contractDocument.getElementsByClassName(item.paramKey)
                             let fields = this.originalContentFieldsList.filter(ktem => ktem.paramKey === item.paramKey)[0]
@@ -1595,6 +1623,11 @@ export default {
                 }
             })
         },
+        // eDitorScrollY () {
+        //     let s = document.getElementsByClassName('approvalcontract-content-layout')
+        //     this.scrollTop = s[0].scrollTop
+        // },
+
         async init (cb) {
             if (!this.$route.query.id) {
                 return
@@ -1602,24 +1635,6 @@ export default {
             const res = await getContractsContent({ contractId: this.$route.query.id })
             this.detailRes = res.data
             this.contractContentDiv = res.data.contractContent // Div版的合同
-            // this.$nextTick(() => {
-            //     setTimeout(() => {
-            //     // 这里去给table赋值 style
-            //         console.log('==', document.getElementsByTagName('table'))
-            //         let tableobj = document.getElementsByTagName('table')
-
-            //         console.log(111, tableobj, Array.from(tableobj).length)
-            //         Array.from(tableobj).map(item => {
-            //             console.log(item.getElementsByTagName('tr'))
-            //             Array.from(item.getElementsByTagName('tr')).map(jtem => {
-            //                 jtem.style.border = '1px solid #333'
-            //             })
-            //             Array.from(item.getElementsByTagName('td')).map(jtem => {
-            //                 jtem.style.border = '1px solid #333'
-            //             })
-            //         })
-            //     }, 2000)
-            // })
             this.originalContentFieldsList = JSON.parse(res.data.contractFieldsList) // 保存最初的键值对
             this.contractFieldsList = JSON.parse(JSON.stringify(this.originalContentFieldsList)) // 可修改的键值对
             if (this.detailRes.contractStatus == 6) {
@@ -1634,6 +1649,10 @@ export default {
                 this.domBindMethods()
             }
             this.imgArr = []
+            this.$nextTick(() => {
+                let s = document.getElementsByClassName('approvalcontract-content-layout')
+                s[0].scrollTop = this.scrollTop
+            })
             console.log('init____this.contractFieldsList', this.contractFieldsList)
         },
         formatTxt (txt) {

@@ -102,7 +102,7 @@
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
                         <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
-                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isShowTabs">
+                    <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
                     </el-tab-pane>
                 </el-tabs>
@@ -195,7 +195,7 @@ import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
 import moment from 'moment'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
-    [1, '银行转帐'],
+    [1, '银行转账'],
     [2, '银行承兑']
 ])
 export const SUPPLIERPAYMENTMETHOD: Map<number | null, string> = new Map([
@@ -246,6 +246,7 @@ export default class UpstreamPaymentManagement extends Vue {
     editorDrawer:boolean = false
     isOpen:boolean = false
     isReady:boolean = false
+    isTabs:boolean = false
     paymentOrderId:string = ''
     private _queryParams = {}
     queryParams: Query = {
@@ -347,14 +348,18 @@ export default class UpstreamPaymentManagement extends Vue {
         }
     }
 
-    get isShowTabs () {
+    isShowTabs () {
         let temp:boolean | undefined = false
         // this.loanHandoverInformation初始化为空字符串
-        temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.every(item => {
-            return item.status == 1
-        })
-        console.log('isShowTabs', temp)
-        return temp
+        console.log(this.loanHandoverInformation)
+        if (this.loanHandoverInformation?.upPaymentLoanHandoverList.length == 0) {
+            temp = true
+        } else {
+            temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.every(item => {
+                return item.status == 1
+            })
+        }
+        this.isTabs = temp
     }
 
     tableLabel:tableLabelProps = [
@@ -377,7 +382,7 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
         { label: '首付款确认时间', prop: 'downPaymentConfirmTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
-        { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转帐' }, { value: 2, label: '银行承兑' }] }
+        { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
 
     ]
 
@@ -386,7 +391,7 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     onRenderPaidAmountLabel (h:CreateElement, scope:TableRenderParam): JSX.Element {
-        return <span>{scope.row.paidAmount}/{filters.money(scope.row.totalAmount, 2)}</span>
+        return <span>{filters.money(scope.row.paidAmount, 2)}/{filters.money(scope.row.totalAmount, 2)}</span>
     }
 
     async viewDetail (paymentOrderId) {
@@ -395,6 +400,7 @@ export default class UpstreamPaymentManagement extends Vue {
         console.log('data: ', data)
         this.loanHandoverInformation = data
         this.editorDrawer = true
+        this.isShowTabs()
     }
 
     onStartChange (val): void {
