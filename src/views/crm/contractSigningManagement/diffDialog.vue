@@ -83,6 +83,7 @@ export default {
                 this.forMat('span')
                 this.forMat('img', () => {
                     this.$nextTick(() => {
+                        //
                         let oldT = document.getElementById('oldT').innerHTML
                         let newT = document.getElementById('newT').innerHTML
                         fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
@@ -153,9 +154,23 @@ export default {
         height: 100%;
         // overflow-y: scroll;
         #diff {
-        font-size: 14px;
+            font-size: 14px;
+        }
     }
+    /deep/.purch_service_fee_form {
+        width: 100% !important;
+        div {
+            display: flex;
+        }
+        span {
+            font-size: 12px !important;
+            width: 100% !important;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            line-height: unset !important;
+            justify-content: center;
+        }
     }
-
 }
 </style>
