@@ -404,6 +404,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/exportExcelFile/index.vue')
+            },
+            {
+                path: 'upstreamPaymentManagement',
+                name: 'upstreamPaymentManagement',
+                meta: {
+                    title: '上游支付管理',
+                    tagName: '上游支付管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/upstreamPaymentManagement/index.vue')
             }
         ]
     }

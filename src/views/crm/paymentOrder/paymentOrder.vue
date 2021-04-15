@@ -37,11 +37,13 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">申请时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.startApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.endApplyDate" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -106,11 +108,11 @@
                               (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)">
                         支付确认
                     </h-button>
-                    <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
+                    <!-- <h-button table @click="tableOpenPrevPayDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_PREV) && (
                                   scope.data.row.supplierPayFlag === 1
                               )">
                         上游支付
-                    </h-button>
+                    </h-button> -->
                     <h-button table @click="tableOpenConfirmReceiptDialog(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM_RECEIPT) && (
                                   scope.data.row.goodsConfirmFlag === 1
                               )">确认收货</h-button>
@@ -131,7 +133,7 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
-import PaymentOrderDrawer from '@/views/crm/paymentOrder/components/paymentOrderDrawer'
+import PaymentOrderDrawer from './components/paymentOrderDrawer'
 import ApprovePaymentOrder from './components/approvePaymentOrder'
 import PrevPaymentDialog from './components/prevPaymentDialog'
 import LookPrevPaymentDialog from './components/lookPrevPaymentDialog'
@@ -204,24 +206,13 @@ export default {
         }
     },
     computed: {
-        pickerOptionsStart () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endApplyDate
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startApplyDate
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startApplyDate,
+                endTime: this.queryParams.endApplyDate
             }
         },
         ...mapState({
@@ -235,13 +226,19 @@ export default {
         queryParamsUseQuery () {
             return {
                 ...this.queryParams,
-                status: this.queryParams.status.join(','),
-                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                jobNumber: this.userInfo.jobNumber
+                status: this.queryParams.status.join(',')
+                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                // jobNumber: this.userInfo.jobNumber
             }
         }
     },
     methods: {
+        onStartChange (val) {
+            this.queryParams.startApplyDate = val
+        },
+        onEndChange (val) {
+            this.queryParams.endApplyDate = val
+        },
         fundsDialogClose () {
             this.fundsDialogVisible = false
             this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
