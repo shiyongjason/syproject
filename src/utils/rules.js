@@ -34,8 +34,11 @@ export const IsEnglish = (rule, value, callback) => {
  * @param {*} value
  * @param {*} callback
  */
+
 export const Email = (rule, value, callback) => {
-    const Reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
+    // const Reg = /^[\w]{1,}@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const Reg = /^.+@.+\..+/
+
     if (value && !Reg.test(value)) {
         return callback(new Error('邮箱格式不正确'))
     }
@@ -205,6 +208,15 @@ export const VerificationCode = (rule, value, callback) => {
     const Reg = /^[\d]+$/
     if (value && !(Reg.test(value))) {
         return callback(new Error('验证码只能为数字'))
+    }
+    callback()
+}
+
+// 大写字母和数字
+export const checkNumandEng = (rule, value, callback) => {
+    const Reg = /^[a-zA-Z\d]+$/
+    if (value && !(Reg.test(value))) {
+        return callback(new Error('只能输入数字和字母'))
     }
     callback()
 }

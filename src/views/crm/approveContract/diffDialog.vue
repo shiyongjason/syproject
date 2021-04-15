@@ -83,8 +83,17 @@ export default {
                 this.forMat('span')
                 this.forMat('img', () => {
                     this.$nextTick(() => {
+                        //
                         let oldT = document.getElementById('oldT').innerHTML
                         let newT = document.getElementById('newT').innerHTML
+                        // newT = newT.replace(/\sdata-mce-src=".*?"/g, '')
+                        // oldT = oldT.replace(/\sdata-mce-src=".*?"/g, '')
+                        // newT = newT.replace(/<table(.*?)style=".*?"/g, '<table$1style="border-collapse: collapse"')
+                        // oldT = oldT.replace(/<table(.*?)style=".*?"/g, '<table$1style="border-collapse: collapse"')
+                        // newT = newT.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+                        // oldT = oldT.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+                        // newT = newT.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
+                        // oldT = oldT.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
                         fuckDiff({ newVersion: newT, oldVersion: oldT }, res => {
                             if (res) {
                                 this.diffHtml = res
@@ -140,7 +149,7 @@ export default {
     &-left {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         height: 100%;
         // overflow-y: scroll;
@@ -148,13 +157,28 @@ export default {
     &-right {
         border: 1px solid #e5e5e5;
         width: 40%;
-        padding:10px;
+        padding: 10px;
         box-sizing: border-box;
         height: 100%;
         // overflow-y: scroll;
-    #diff {
-        font-size: 14px;
+        #diff {
+            font-size: 14px;
+        }
     }
+    /deep/.purch_service_fee_form {
+        width: 100% !important;
+        div {
+            display: flex;
+        }
+        span {
+            font-size: 12px !important;
+            width: 100% !important;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            line-height: unset !important;
+            justify-content: center;
+        }
     }
 }
 </style>

@@ -24,7 +24,7 @@
                 <div class="contract-temp_name">合同模版内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
-                        <RichEditor ref="RichEditor" v-model="contractForm.content"  :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
+                        <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
                         </RichEditor>
                     </div>
                     <div class="contract-temp_txt">
@@ -496,6 +496,9 @@ export default {
                 } else if (val.className.indexOf('contract_sign_') != -1) {
                     // 自定义合同条款绑定点击事件
                     val.onclick = (event) => {
+                        this.$nextTick(() => {
+                            this.$refs.customTermsForm.clearValidate()
+                        })
                         this.customTermsForm = {
                             parameterName: event.target.value,
                             parameterValue: event.target.dataset.content || '',
@@ -541,6 +544,8 @@ export default {
             // document.getElementsByClassName(`${this._keyValue.paramKey}`)[0].outerHTML = ''
             // document.getElementById(this._keyValue).outerHTML = ''
             this.$nextTick(() => {
+                let curObj = this.tempParams.find(item => item.paramKey === this.targetObjs.selectCode)
+                this.keyValue = curObj
                 let inputWidth = this.keyValue.paramName.length * 14
                 let domObj = document.getElementById(this._keyValue)
                 domObj.setAttribute('class', `${this.keyValue.paramKey}`)
@@ -916,7 +921,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-/deep/ .el-form .el-input{
+/deep/ .el-form .el-input {
     width: 270px;
 }
 
@@ -975,9 +980,8 @@ export default {
 /deep/.el-select-dropdown {
     z-index: 20000 !important;
 }
-/deep/.w-e-toolbar{
+/deep/.w-e-toolbar {
     z-index: 500 !important;
-
 }
 /deep/.w-e-menu {
     z-index: 500 !important;

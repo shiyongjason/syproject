@@ -21,7 +21,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">激活时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime"
+                        <!-- <el-date-picker v-model="queryParams.startTime" type="datetime"
                                         value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期"
                                         :picker-options="pickerOptionsStart('endTime')">
                         </el-date-picker>
@@ -29,7 +29,9 @@
                         <el-date-picker v-model="queryParams.endTime" type="datetime"
                                         value-format="yyyy-MM-ddTHH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期"
                                         :picker-options="pickerOptionsEnd('startTime')">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -49,10 +51,8 @@
                 累计失效：{{fundMoneys(recommenderTotal.invalidNumber)}}；
                 累计获得奖励：{{fundMoneys(recommenderTotal.rewardAmount)}}元；
             </el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
-                        @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" :showCheckAll="false"
-                        @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
-                        :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" :showCheckAll="false" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120
+                :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     <span v-if="+ scope.data.row.source === 1">客户经理分享</span>
                     <span v-if="+ scope.data.row.source === 2">小程序自主</span>
@@ -108,32 +108,27 @@ export default {
         ...mapState({
             recommenderList: state => state.crmRecommeder.recommenderList,
             recommenderTotal: state => state.crmRecommeder.recommenderTotal
-        })
+        }),
+        options () {
+            return {
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                startTime: this.queryParams.startTime,
+                endTime: this.queryParams.endTime
+            }
+        }
     },
     methods: {
         ...mapActions({
             getRecommenderList: 'crmRecommeder/getRecommenderList',
             getRecommenderTotal: 'crmRecommeder/getRecommenderTotal'
         }),
-        pickerOptionsStart (date) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams[date]
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
+        onStartChange (val) {
+            this.queryParams.startTime = val
         },
-        pickerOptionsEnd (date) {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams[date]
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
-            }
+        onEndChange (val) {
+            this.queryParams.endTime = val
         },
         onReset () {
             this.queryParams = { ...this.queryParamsTemp }
@@ -193,10 +188,10 @@ export default {
 </script>
 
 <style scoped>
-    .eltagtop {
-        margin-bottom: 10px;
-    }
-    .sub-eltag {
-        margin-right: 30px;
-    }
+.eltagtop {
+    margin-bottom: 10px;
+}
+.sub-eltag {
+    margin-right: 30px;
+}
 </style>

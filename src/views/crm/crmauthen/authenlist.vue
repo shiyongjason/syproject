@@ -71,11 +71,13 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">关联/认证时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.authenticationStartTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.authenticationEndTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="authOptions">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -177,24 +179,13 @@ export default {
         businessDrawer
     },
     computed: {
-        pickerOptionsStart () {
+        authOptions () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.authenticationEndTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.authenticationStartTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                valueFormat: 'yyyy-MM-dd HH:mm',
+                format: 'yyyy-MM-dd HH:mm',
+                type: 'datetime',
+                startTime: this.queryParams.authenticationStartTime,
+                endTime: this.queryParams.authenticationEndTime
             }
         },
         ...mapGetters({
@@ -227,6 +218,12 @@ export default {
         ...mapActions({
             findNest: 'findNest'
         }),
+        onStartChange (val) {
+            this.queryParams.authenticationStartTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.authenticationEndTime = val
+        },
         onChooseDep () {
 
         },
