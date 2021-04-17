@@ -222,7 +222,7 @@ export const CRM_SERVICE_FUND_CONFIRM = 109511 // 服务费账单-支付确认
 export const CRM_PREV_PAYMENT_DETAIL = 109512 // 查看上游支付明细
 export const CRM_ARREAR_FUND_CONFIRM = 109513 // 尾款账单-支付确认
 export const CRM_REVIEW_RECEIPT_DETAIL = 109514 // 查看收货明细
-
+export const CRM_PAYMENT_REVIEW_DOWN = 109524
 // 好程工 资金
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_CONFIRM = 109515 // 首付款账单-支付确认
 export const CRM_FUNDS_DOWN_PAYMENT_FUND_SEE = 109516 // 首付款账单-查看凭证
@@ -277,3 +277,14 @@ export const CONTRACTLIST_TYPE_AUTH = 5111115
 // 节假日管理
 export const HOLIDAY_ADD = 800081
 export const HOLIDAY_EDIT = 800082
+
+// 上游支付
+export const UPSTREAM_PAY_DETAIL = 500001// 详情
+// 确认信息 资金部审核
+export const UPSTREAM_PAY_CONFIRM_EX = 500002
+// 确认信息 资金部放款
+export const UPSTREAM_PAY_CONFIRM_LOAN = 500003
+// 下载放款单
+export const UPSTREAM_PAY_DOWN = 500004
+// 支付
+export const UPSTREAM_PAY_MENT = 500005

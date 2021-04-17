@@ -46,3 +46,8 @@ export const findWhiterecord = (params) => axios.get(B2bUrl + 'merchant/api/crm/
 
 // 删除企业
 export const delCompany = (params) => axios.delete(`memeber/api/crm/company/${params}`)
+
+//
+export const findCompanyContact = (companyId) => axios.get(`memeber/api/crm/company/search/${companyId}/company-contact`)
+//
+export const updateContact = (params) => axios.put('memeber/api/crm/company/contact', params)
