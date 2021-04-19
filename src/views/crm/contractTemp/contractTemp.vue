@@ -18,6 +18,10 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <!-- V.07 新增 -->
+                    <el-form-item label="适用情景：" class="contract-temp_scenario" style="width:500px;display: flex;">
+                        <el-input type="textarea" :autosize='{ minRows: 5, maxRows: 10 }' v-model="contractForm.describe" placeholder="请输入" maxlength="150" show-word-limit></el-input>
+                    </el-form-item>
                 </el-form>
             </div>
             <div class="page-body-cont">
@@ -54,9 +58,9 @@
                                 </HAutocomplete>
 
                             </el-form-item>
-                            <el-form-item label="">
+                            <!-- <el-form-item label="">
                                 <el-button type="primary" @click="onInsertInfo">插入当前位置</el-button>
-                            </el-form-item>
+                            </el-form-item> -->
                             <el-form-item label="自定义合同条款：">
                                 <el-button type="primary" @click="onShowCustomTermsDefine">插入当前位置</el-button>
                             </el-form-item>
@@ -216,7 +220,8 @@ export default {
                 signerSetting: [], // 签署方设置
                 operatorBy: '',
                 operatorAccount: '',
-                recommendSigner: 1
+                recommendSigner: 1,
+                describe: '' // 适用情景
             },
             valid_form: {},
             rules: {},
@@ -439,8 +444,13 @@ export default {
         //     console.log('val', val)
         //     this.keyValue = this.insertVal
         // },
+
+        // 选中下拉回调
         backFindparam (val) {
             this.keyValue = val.value
+            if (this.keyValue) {
+                this.onInsertInfo()
+            }
         },
         backFindparams (val) {
             this.keyValue = val.value
@@ -511,6 +521,7 @@ export default {
             })
         },
         onInsertInfo () {
+            console.log('🚀 --- onInsertInfo --- this.keyValue', this.keyValue)
             ++this.num
             if (!this.keyValue || !this.keyValue.paramKey) {
                 this.$message({
@@ -795,6 +806,13 @@ export default {
                 })
                 return
             }
+            if (!this.contractForm.describe) {
+                this.$message({
+                    message: '合同模板适用场景不得为空',
+                    type: 'warning'
+                })
+                return
+            }
             if (val == 1) {
                 if (!document.getElementsByClassName('platform_sign')[0]) {
                     this.$message({
@@ -924,7 +942,11 @@ export default {
 /deep/ .el-form .el-input {
     width: 270px;
 }
-
+.contract-temp_scenario{
+    /deep/.el-textarea{
+        width: 400px;
+    }
+}
 .contract-temp {
     &_flex {
         display: flex;
