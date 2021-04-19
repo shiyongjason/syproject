@@ -808,7 +808,7 @@ export default {
             }
             if (!this.contractForm.describe) {
                 this.$message({
-                    message: '合同模板适用场景不得为空',
+                    message: '合同模板适用情景不得为空',
                     type: 'warning'
                 })
                 return
