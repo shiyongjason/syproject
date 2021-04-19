@@ -207,7 +207,8 @@ export const SUPPLIERPAYMENTMETHOD: Map<number | null, string> = new Map([
 interface Query extends ReqUpStreamPaymentQuery{
     [key:string]:any
 }
-/** tab切对应的Api请求 */
+
+/** tab 切对应的Api请求 */
 enum TabInfoApi {
     /** 获取放款交接信息API */
     loanHandoverInformation = 'getLoanHandoverInfoApi',
@@ -422,7 +423,6 @@ export default class UpstreamPaymentManagement extends Vue {
     @validateForm('form')
     @handleSubmit()
     async onEnterPay () {
-        //
         this.dialogFormData = {
             ...this.dialogFormData,
             paymentOrderId: this.paymentOrderId,
@@ -473,14 +473,17 @@ export default class UpstreamPaymentManagement extends Vue {
         this.activeName = 'loanHandoverInformation'
         done()
     }
+
     onCancel (): void {
         this.isOpen = false
         this.$refs.form.clearValidate()
         this.clearForm()
     }
+
     clearForm () {
         this.dialogFormData = JSON.parse(JSON.stringify(this._dialogFormData))
     }
+
     onReset () {
         this.queryParams = JSON.parse(JSON.stringify(this._queryParams))
         this.getList()
