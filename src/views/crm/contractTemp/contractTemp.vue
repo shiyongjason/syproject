@@ -2,14 +2,14 @@
     <div class="page-body B2b">
         <div class="contract-temp  page-component__scroll">
             <div class="page-body-cont">
-                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type">新增合同模版</div>
-                <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模版</div>
-                <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模版</div>
+                <div class="contract-temp_title" v-if="!$route.query.id&&!$route.query.type">新增合同模板</div>
+                <div class="contract-temp_title" v-if="$route.query.id&&!$route.query.type">编辑合同模板</div>
+                <div class="contract-temp_title" v-if="$route.query.type&&$route.query.id">复制合同模板</div>
             </div>
             <div class="page-body-cont ">
-                <div class="contract-temp_name">合同模版设置</div>
+                <div class="contract-temp_name">合同模板设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
-                    <el-form-item label="模版名称：" class="contract-temp_set">
+                    <el-form-item label="模板名称：" class="contract-temp_set">
                         <el-input v-model="contractForm.templateName" placeholder="请输入" maxlength="50"></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
@@ -25,7 +25,7 @@
                 </el-form>
             </div>
             <div class="page-body-cont">
-                <div class="contract-temp_name">合同模版内容</div>
+                <div class="contract-temp_name">合同模板内容</div>
                 <div class="contract-temp_flex">
                     <div class="contract-temp_rich">
                         <RichEditor ref="RichEditor" v-model="contractForm.content" :menus="menus" :uploadImgServer="uploadImgServer" :height="500" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" style="margin-bottom: 12px;width:100%" @change="onchange" @blur="onBlur">
@@ -125,7 +125,7 @@
             <div class="page-body-cont">
                 <el-button type="default" @click="onCancelTemp">取消修改</el-button>
                 <el-button type="primary" @click="onSaveTemp(0)">保存模板</el-button>
-                <el-button type="primary" @click="onSaveTemp(1)">保存并启用模版</el-button>
+                <el-button type="primary" @click="onSaveTemp(1)">保存并启用模板</el-button>
             </div>
         </div>
         <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
@@ -794,7 +794,7 @@ export default {
             // 必填项校验
             if (!this.contractForm.templateName) {
                 this.$message({
-                    message: '请填写模版名称',
+                    message: '请填写模板名称',
                     type: 'warning'
                 })
                 return

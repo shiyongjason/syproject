@@ -248,14 +248,14 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
-                    label: '合同模版编号',
+                    label: '合同模板编号',
                     prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
                         return <span>{!scope.row.templateId ? '-' : scope.row.templateId}</span>
                     }
                 },
-                { label: '合同模版版本', prop: 'versionNo', width: '120' },
+                { label: '合同模板版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
                 { label: '发起人', prop: 'createBy', width: '120' },
