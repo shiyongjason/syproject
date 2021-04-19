@@ -54,6 +54,7 @@
                 </template>
             </div>
             <div class="info-layout">
+                <div class="info-layout-item"><font style="flex: 0 0 130px">OA货款支付编号:</font><span>{{data.oaNo||'-'}}</span></div>
                 <div class="info-layout-item"><font style="flex: 0 0 70px">审核备注:</font><span>{{data.upPaymentLoanHandoverList[0].remark||'-'}}</span></div>
             </div>
             <!-- 资金部放款审核岗确认信息 -->
