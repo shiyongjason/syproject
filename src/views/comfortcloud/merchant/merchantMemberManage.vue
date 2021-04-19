@@ -19,6 +19,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">企业名称：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">注册时间：</div>
                     <div class="query-col-input">
                         <el-date-picker v-model="queryParams.startRegisterTime" type="datetime"
@@ -69,6 +75,7 @@
                 <div class="query-cont-col">
                     <div class="query-col-title">
                         <el-button type="primary" class="ml20" @click="onSearch">查 询</el-button>
+                        <el-button type="primary" class="ml20" @click="onExport">导出</el-button>
                     </div>
                 </div>
             </div>
@@ -158,6 +165,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: this.$route.query.phone,
+                companyName: '',
                 endRegisterTime: '',
                 provinceId: '',
                 cityId: '',
@@ -315,6 +323,19 @@ export default {
         onSearch () {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
+        },
+        onExport () {
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无数据可导出！')
+            } else {
+                let url = ''
+                for (const key in this.queryParams) {
+                    if (this.queryParams[key] !== '') {
+                        url += (`${key}=${this.queryParams[key]}&`)
+                    }
+                }
+                // window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
+            }
         },
         async showDliag (val) {
             if (val !== undefined) {
