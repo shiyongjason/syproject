@@ -20,6 +20,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col-title">企业名称：</div>
+                    <div class="query-col-input">
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <div class="query-col-title">经营区域：</div>
                     <div class="query-cont-col-area">
                         <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
@@ -181,6 +187,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 phone: '',
+                companyName: '',
                 source: '',
                 provinceId: '',
                 cityId: '',
