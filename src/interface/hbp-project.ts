@@ -3733,7 +3733,7 @@ export interface ReqExaminePass {
     pledgeNo: string
 
     /**
-     * OA审批编号
+     * OA货款支付编号
      * @type {string}
      * @memberof ReqExaminePass
      */
