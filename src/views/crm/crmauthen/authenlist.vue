@@ -68,6 +68,17 @@
                         </el-select>
                     </div>
                 </div>
+                  <div class="query-cont-col">
+                    <div class="query-col__label">会员标签：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.memberTag">
+                            <el-option label="全部" value="">
+                            </el-option>
+                            <el-option v-for="item in memberTagArr" :key="item.key" :label="item.value" :value="item.key">
+                            </el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="query-cont-col">
                     <div class="query-col__label">关联/认证时间：</div>
                     <div class="query-col__input">
@@ -94,6 +105,9 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 ::rowKey="rowKey" :isShowIndex='true'>
                 <template slot="userAccount" slot-scope="scope">
                     <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
+                </template>
+                 <template slot="memberTag" slot-scope="scope">
+                    <span class="colblue"> {{memberTagArr[scope.data.row.memberTag-1].value}}</span>
                 </template>
                 <template slot="userName" slot-scope="scope">
                     <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
@@ -147,7 +161,8 @@ export default {
                 areaIds: '',
                 deptDoc: '',
                 jobNumber: '',
-                authCode: ''
+                authCode: '',
+                memberTag: ''
             },
             copyParams: {},
             tableData: [],
@@ -161,6 +176,7 @@ export default {
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
                 { label: '认证状态', prop: 'isAuthentication' },
+                { label: '会员标签', prop: 'memberTag' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }
             ],
@@ -172,7 +188,8 @@ export default {
             riskTypelist: RISK_TYPE_LIST,
             authenList: AUTEHEN_LIST,
             drawer: false,
-            branchArr: []
+            branchArr: [],
+            memberTagArr: [ { key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' } ]
         }
     },
     components: {
