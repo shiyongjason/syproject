@@ -210,7 +210,7 @@ export default {
             }
         },
         open (index, item = null) {
-            if ((item.fileName).indexOf('.png') > -1 || (item.fileName).indexOf('.jpg') > -1 || (item.fileName).indexOf('.jpeg') > -1) {
+            if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
