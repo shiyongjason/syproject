@@ -2,12 +2,12 @@
     <div class="page-body B2b">
         <div class="contract-temp  page-component__scroll">
             <div class="page-body-cont">
-                <div class="contract-temp_title">查看合同模版</div>
+                <div class="contract-temp_title">查看合同模板</div>
             </div>
             <div class="page-body-cont">
-                <div class="contract-temp_name">合同模版设置</div>
+                <div class="contract-temp_name">合同模板设置</div>
                 <el-form ref="contractForm" :model="contractForm" label-width="">
-                    <el-form-item label="模版名称：">
+                    <el-form-item label="模板名称：">
                         <el-input v-model="contractForm.templateName" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="合同类型：">
@@ -19,7 +19,7 @@
                 </el-form>
             </div>
             <div class="page-body-cont">
-                <div class="contract-temp_name">合同模版内容</div>
+                <div class="contract-temp_name">合同模板内容</div>
                 <div class="contract-temp_flex" id="editor">
                     <div v-html="contractForm.content" class=""></div>
                 </div>
