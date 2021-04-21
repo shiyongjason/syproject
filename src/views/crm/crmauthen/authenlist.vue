@@ -107,7 +107,7 @@
                     <span class="colblue" @click="onLinkship(scope.data.row.userAccount)"> {{scope.data.row.userAccount}}</span>
                 </template>
                  <template slot="memberTag" slot-scope="scope">
-                    <span class="colblue"> {{memberTagArr[scope.data.row.memberTag-1].value}}</span>
+                     {{memberTagArr[scope.data.row.memberTag-1].value}}
                 </template>
                 <template slot="userName" slot-scope="scope">
                     <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
