@@ -2,12 +2,15 @@
     <div class="drawer-wrap">
         <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
-                <el-tabs v-model="activeName">
+                <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="功能管理" name="first">
                         <div class="drawer-content">
                             <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                                 <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
-                                    <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
+                                    <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span>
+                                        <span class="authTag tagInfo">{{businessDetail.memberTag?memberTagArr[businessDetail.memberTag-1].value:'-'}}</span>
+                                        <span class="authTag tagBlue" @click="onTianyan(businessDetail.companyName)">一键天眼</span>
+                                    </p>
                                 </el-form-item>
                                 <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                                     {{businessDetail.userAccount||'-'}}
@@ -242,45 +245,82 @@
                                     <span v-else>-</span>
 
                                 </el-form-item>
-<!--                                <el-form-item label="法人身份证：">-->
-<!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
-<!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
-<!--                                        </el-image>-->
-<!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
-<!--                                        </el-image>-->
-<!--                                    </div>-->
-<!--                                    <span v-else>-</span>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="认证结果：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="认证方式：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="关联/认证时间：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="关联/认证人：">-->
-<!--                                    <p>-->
-<!--                                        <span v-if="authenticationDetail.authenticationBy">-->
-<!--                                            {{authenticationDetail.authenticationBy}}-->
-<!--                                        </span>-->
-<!--                                        <span v-else>-</span>-->
-<!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
-<!--                                            ({{authenticationDetail.authenticationPhone}})-->
-<!--                                        </span>-->
-<!--                                        <span v-else>(-)</span>-->
-<!--                                    </p>-->
-<!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="法人身份证：">-->
+                                <!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
+                                <!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
+                                <!--                                        </el-image>-->
+                                <!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
+                                <!--                                        </el-image>-->
+                                <!--                                    </div>-->
+                                <!--                                    <span v-else>-</span>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="认证结果：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="认证方式：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="关联/认证时间：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="关联/认证人：">-->
+                                <!--                                    <p>-->
+                                <!--                                        <span v-if="authenticationDetail.authenticationBy">-->
+                                <!--                                            {{authenticationDetail.authenticationBy}}-->
+                                <!--                                        </span>-->
+                                <!--                                        <span v-else>-</span>-->
+                                <!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
+                                <!--                                            ({{authenticationDetail.authenticationPhone}})-->
+                                <!--                                        </span>-->
+                                <!--                                        <span v-else>(-)</span>-->
+                                <!--                                    </p>-->
+                                <!--                                </el-form-item>-->
                             </el-form>
 
+                        </div>
+                    </el-tab-pane>
+                    <el-tab-pane label="联系方式" name="third">
+                        <div class="drawer-content">
+                            <el-form :label-width="'150px'" :label-position="'right'" ref="contactForm" :model="companyContact.request" :rules="contactFormRules" @submit.native.prevent>
+                                <div class="companyContactlayout">
+                                    <el-form-item label="电子邮箱：" :label-width="formLabelWidth" prop="email">
+                                        <span v-if="!editorShow.email">
+                                            {{companyContact.response.email}}
+                                            <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('email')"></i>
+                                        </span>
+                                        <span v-if="editorShow.email">
+                                            <inputAutocomplete v-model="companyContact.request.email" @onMousedown='onMousedown' @onBlur='onBlur' class="lageinput"></inputAutocomplete>
+                                            <!-- <el-input  v-model="companyContact.request.email" placeholder='请输入' class="lageinput"></el-input> -->
+                                        </span>
+                                    </el-form-item>
+                                    <span v-if="editorShow.email">
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('email')"></i>
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('email')"></i>
+                                    </span>
+                                </div>
+
+                                <div class="companyContactlayout">
+                                    <el-form-item label="联系地址：" :label-width="formLabelWidth" prop="contactAddress">
+                                        <span v-if="!editorShow.address">
+                                            {{companyContact.response.contactAddress}}
+                                            <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('address')"></i>
+                                        </span>
+                                        <el-input v-else type='textarea' :rows="3" v-model="companyContact.request.contactAddress" placeholder='请输入' class="lageinput" maxlength="200" show-word-limit></el-input>
+                                    </el-form-item>
+                                    <span v-if="editorShow.address">
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('address')"></i>
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('address')"></i>
+                                    </span>
+                                </div>
+
+                            </el-form>
                         </div>
                     </el-tab-pane>
                 </el-tabs>
@@ -293,7 +333,7 @@
                         <el-button type="primary" v-if="hosAuthCheck(authen_baocun)" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</el-button>
                     </div>
                 </div>
-                <div class="drawer-footer" v-if="activeName=='second'">
+                <div class="drawer-footer" v-else>
                     <div class="drawer-button">
                         <h-button @click="cancelForm">好 的</h-button>
                     </div>
@@ -358,13 +398,14 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany } from '../api/index'
+import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany, findCompanyContact, updateContact } from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
 import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
 import OssFileUtils from '@/utils/OssFileUtils'
 import elImageAddToken from '@/components/elImageAddToken'
-
+import { Email } from '@/utils/rules'
+import inputAutocomplete from '../../approveContract/components/inputAutocomplete'
 export default {
     name: 'businessdrawer',
     props: {
@@ -375,6 +416,13 @@ export default {
     },
     data () {
         return {
+            memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }],
+            editorShow: {
+                email: false,
+                address: false
+            },
+            companyContactEditEmail: false,
+            companyContactEditAddress: false,
             options: {
                 direction: 'rtl',
                 size: '50%',
@@ -407,6 +455,14 @@ export default {
             businessDetail: {
             },
             copyDetail: {},
+            companyContact: {
+                request: {
+                    companyId: '',
+                    email: '',
+                    contactAddress: ''
+                },
+                response: ''
+            },
             rules: {
                 pkDeptDoc: [
                     { required: true, message: '请选择分部', trigger: 'change' }
@@ -458,6 +514,15 @@ export default {
                     { required: true, message: '请输入说明' }
                 ]
             },
+            contactFormRules: {
+                email: [
+                    // { message: '请输入电子邮箱', trigger: 'blur' },
+                    { validator: Email }
+                ],
+                contactAddress: [
+                    { message: '请输入联系地址', trigger: 'blur' }
+                ]
+            },
             whiteRecordsList: [],
             activeName: 'first',
             authenticationDetail: {}
@@ -465,7 +530,8 @@ export default {
     },
     components: {
         HAutocomplete,
-        elImageAddToken
+        elImageAddToken,
+        inputAutocomplete
     },
     computed: {
         ...mapState({
@@ -502,6 +568,47 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onTianyan (name) {
+            this.$router.push({ path: '/goodwork/tianyan', query: { name } })
+        },
+        onMousedown (val) {
+            console.log('onMousedown ', val)
+        },
+        onBlur () {
+            console.log('onBlur')
+        },
+        onEdit (prop) {
+            if (this.editorShow.email) {
+                this.editorShow.email = false
+            }
+            if (this.editorShow.address) {
+                this.editorShow.address = false
+            }
+            this.companyContact.request = JSON.parse(JSON.stringify(this.companyContact.response))
+            this.editorShow[prop] = true
+        },
+        // 提交
+        onSure (prop) {
+            console.log('OnSureEmail')
+            this.editorShow[prop] = true
+            this.$refs.contactForm.validate(async value => {
+                console.log('value: ', value)
+                if (value) {
+                    await updateContact(this.companyContact.request)
+                    await this.handleTabClick()
+                    this.editorShow[prop] = false
+                } else {
+
+                }
+            })
+        },
+        // 取消
+        onCancel (prop) {
+            console.log('prop: ', prop)
+            this.editorShow[prop] = false
+            this.companyContact.request.companyId = this.businessDetail.companyId
+            this.$refs.contactForm.clearValidate()
+        },
         srcList (collect) {
             async function temp () {
                 for (let collectElement of collect) {
@@ -575,6 +682,11 @@ export default {
             }
         },
         handleClose () {
+            if (this.$refs.contactForm) {
+                this.$refs.contactForm.clearValidate()
+            }
+            this.editorShow.email = false
+            this.editorShow.address = false
             if (JSON.stringify(this.businessDetail) != JSON.stringify(this.copyDetail)) {
                 this.$confirm('取消则不会保存修改的内容，你还要继续吗？', '是否确认取消修改？', {
                     confirmButtonText: '确认取消',
@@ -756,6 +868,17 @@ export default {
                 this.businessDetail.relationCompanyCode = val.value ? val.value.selectCode : ''
                 this.businessDetail.relationCompanyName = val.value ? val.value.companyShortName : ''
             }
+        },
+        async handleTabClick () {
+            if (this.editorShow.email) {
+                this.editorShow.email = false
+            }
+            if (this.editorShow.address) {
+                this.editorShow.address = false
+            }
+            const { data } = await findCompanyContact(this.businessDetail.companyId)
+            this.companyContact.request.companyId = this.businessDetail.companyId
+            this.companyContact.response = data
         }
     },
     mounted () {
@@ -864,7 +987,7 @@ export default {
 }
 .authTag {
     border-radius: 8px;
-    padding: 2px 8px;
+    padding: 0px 8px;
     color: #fff;
     opacity: 0.8;
     display: inline-block;
@@ -876,6 +999,15 @@ export default {
 }
 .tagOrg {
     background: #ff7a45;
+}
+.tagInfo {
+    background: #13c2c2;
+    margin-left: 15px;
+}
+.tagBlue {
+    background: #50b7f7;
+    margin-left: 15px;
+    cursor: pointer;
 }
 .nameall {
     /deep/ .el-form-item__content {
@@ -891,6 +1023,26 @@ export default {
         width: 158px;
         height: 100px;
         margin-right: 20px;
+    }
+}
+.companyContactlayout {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    /deep/ .lageinput .el-input__inner {
+        width: 100%;
+    }
+    /deep/.el-form-item {
+        margin-bottom: 0;
+    }
+    /deep/.el-form-item__content .el-input {
+        width: 250px !important;
+    }
+    /deep/.el-form-item__content .el-textarea {
+        width: 350px !important;
+    }
+    /deep/.el-form-item {
+        word-break: break-word;
     }
 }
 /deep/ .lageinput .el-input__inner {

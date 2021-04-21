@@ -8,7 +8,7 @@
 import OssFileUtils from '@/utils/OssFileUtils'
 import { ossDownload } from '@/utils/utils'
 import { ossAliyun, ossOldBucket } from '@/api/config'
-
+// <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
 export default {
     name: 'downloadFileAddToken',
     props: {
@@ -31,6 +31,7 @@ export default {
             required: false,
             default: 'btn'
         },
+        // 是否新窗口标签页打开预览
         isPreview: {
             type: Boolean,
             required: false,

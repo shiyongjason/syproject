@@ -248,14 +248,14 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
-                    label: '合同模版编号',
+                    label: '合同模板编号',
                     prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
                         return <span>{!scope.row.templateId ? '-' : scope.row.templateId}</span>
                     }
                 },
-                { label: '合同模版版本', prop: 'versionNo', width: '120' },
+                { label: '合同模板版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
                 { label: '发起人', prop: 'createBy', width: '120' },
@@ -332,8 +332,17 @@ export default {
                 currentId: currentContentId,
                 lastId: lastContentId
             })
-            this.currentContent = data.contractContent
-            this.lastContent = data.lastContractContent
+            let reg = /\sdata-mce-style=".*?"/g
+            this.currentContent = data.contractContent.replace(reg, '')
+            this.lastContent = data.lastContractContent.replace(reg, '')
+            this.currentContent = this.currentContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.lastContent = this.lastContent.replace(/\sdata-mce-src=".*?"/g, '')
+            this.currentContent = this.currentContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.lastContent = this.lastContent.replace(/<table(.*?)style="[\s\S]*?"/gi, '<table$1style="border-collapse: collapse"')
+            this.currentContent = this.currentContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<tr(.*?)style=".*?"/g, '<tr$1style="border: 1px solid #666"')
+            this.currentContent = this.currentContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
+            this.lastContent = this.lastContent.replace(/<td(.*?)style=".*?"/g, '<td$1style="border: 1px solid #666"')
             if (this.currentContent === null) {
                 this.$message({
                     message: `获取新版合同失败`,

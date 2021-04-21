@@ -60,7 +60,7 @@
                                     </template>
                                 </span>
                             </div>
-                            <div>{{ moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
+                            <div style="flex:3">{{ moment(jtem.createTime).format('YYYY-MM-DD HH:mm:ss') }}</div>
                             <div>
                                 <font class="fileItemDownLoad" @click="()=>{onDelete(obj,index)}"
                                       v-if="(activeName=='3'&&status==4)||(activeName=='4'&&status==11)">删除</font>

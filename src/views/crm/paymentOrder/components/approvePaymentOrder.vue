@@ -1,19 +1,91 @@
 <template>
     <div>
-        <el-dialog ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="900px" :before-close="()=> $emit('onClose')" class="payment-dialog">
-            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form">
+        <el-dialog v-if="isOpen" ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="70%" :before-close="()=> $emit('onClose')" class="payment-dialog">
+            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form" label-width="150px">
                 <div class="row-filed">
                     <div class="col-filed">
+                        <div class="info-title">项目信息</div>
+                        <el-form-item label="项目：" label-width="100px">
+                            {{ paymentDetail.projectInfo.projectName }}
+                        </el-form-item>
+                        <el-form-item label="经销商：" label-width="100px">
+                            {{ paymentDetail.projectInfo.companyName }}
+                        </el-form-item>
+                        <el-form-item label="所属分部：" label-width="100px">
+                            {{ paymentDetail.projectInfo.deptName }}
+                        </el-form-item>
+                        <el-form-item label="执行费率：" label-width="100px">
+                            <span class="label">银行承兑：</span>
+                            {{paymentDetail.projectInfo.acceptBankRate}}%
+                            <span class="label">银行转账：</span>
+                            {{paymentDetail.projectInfo.transferBankRate}}%
+                        </el-form-item>
+                        <div class="info-title">采购单信息</div>
+                        <el-form-item label="采购单金额：">
+                            {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
+                        </el-form-item>
+                        <el-form-item label="采购明细表：">
+                            <div class="info-img-group content">
+                                <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderPoDetail.poDetail">
+                                        <imageAddToken :file-url="item.url" />
+                                    </span>
+                                </template>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="采购批次：">
+                            {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
+                        </el-form-item>
+                        <el-form-item label="所属分部：">
+                            {{ paymentDetail.projectInfo.deptName }}
+                        </el-form-item>
+                        <el-form-item label="最迟发货日期：">
+                            {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
+                        </el-form-item>
+                        <el-form-item label="收货地址：">
+                            {{ paymentDetail.payOrderPoDetail.goodsAddress }}
+                        </el-form-item>
+                        <el-form-item label="经销商预付款比例：">
+                            {{ paymentDetail.payOrderPoDetail.prePercent }}%
+                        </el-form-item>
+                        <el-form-item label="剩余货款支付周期：">
+                            {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}个月
+                        </el-form-item>
+                        <el-form-item label="免息方式：">
+                            {{paymentDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
+                        </el-form-item>
+                    </div>
+                    <div class="col-filed">
                         <div class="info-title">上游支付申请信息</div>
-                        <p>
-                            <span class="label">申请支付金额：</span>
+                        <el-form-item label="申请支付金额：">
                             {{ paymentDetail.payOrderDetail.applyAmount | fundMoneyHasTail }}元
-                        </p>
-                        <p>
-                            <span class="label">上游供应商：</span>
+                        </el-form-item>
+
+                        <el-form-item label="上游供应商：">
                             {{ paymentDetail.payOrderDetail.supplierCompanyName || '-'  }}
-                        </p>
-                        <div class="info-img-group">
+                        </el-form-item>
+                        <!-- 添加 -->
+                        <el-form-item label="银行联行号：">
+                            <!-- <el-input type="text" v-model="" maxlength="200"></el-input> -->
+                            {{paymentDetail.payOrderDetail.supplierBankNo}}
+                        </el-form-item>
+
+                        <el-form-item label="供应商开户行名称：">
+                            <!-- <el-input type="text" v-model="" maxlength="200"></el-input> -->
+                            {{paymentDetail.payOrderDetail.supplierAccountName}}
+                        </el-form-item>
+
+                        <el-form-item label="供应商银行账号：">
+                            <!-- <el-input type="text" v-model="" maxlength="200"></el-input> -->
+                            {{paymentDetail.payOrderDetail.supplierAccountNo}}
+                        </el-form-item>
+                        <el-form-item label="期望上游支付日期：">
+                            {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
+                        </el-form-item>
+                        <el-form-item label="上游支付方式：">
+                            {{paymentDetail.payOrderDetail.supplierPaymentType==1?'银行转账':'银行承兑'}}
+                        </el-form-item>
+                        <!-- <div class="info-img-group">
                             <span class="label">采购明细表：</span>
                             <p class="content">
                                 <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
@@ -22,153 +94,119 @@
                                     </span>
                                 </template>
                             </p>
-                        </div>
-                        <p>
-                            <span>最迟发货日期：</span>
-                            {{ paymentDetail.payOrderDetail.lastGoodsDate || '-' }}
-                        </p>
-                        <p>
-                            <span>收货地址：</span>
-                            {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
-                        </p>
-                        <div class="info-title">审核信息</div>
-                        <p>
-                            <el-form-item prop="checkPass" label="审核结果：">
-                                <el-radio-group v-model="formData.checkPass">
-                                    <el-radio label="pass">通过</el-radio>
-                                    <el-radio label="noPass">不通过</el-radio>
-                                </el-radio-group>
-                            </el-form-item>
-                        </p>
-                        <template v-if="formData.checkPass === 'pass'">
-                            <p>
-                                <el-form-item label="应收账款质押：" prop="accountReceivablePledgeType">
-                                    <el-radio-group v-model="formData.accountReceivablePledgeType">
-                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.accountReceivablePledgeType.list">
-                                            {{ item.value }}
-                                        </el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                            </p>
-                            <p>
-                                <el-form-item label="上游支付方式：" prop="supplierPaymentType">
-                                    <el-radio-group v-model="formData.supplierPaymentType">
-                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentType.list">
-                                            {{item.value}}
-                                        </el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                            </p>
-                            <p>
-                                <el-form-item label="上游货款方式：" prop="supplierPaymentMethod">
-                                    <el-radio-group v-model="formData.supplierPaymentMethod">
-                                        <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
-                                            {{item.value}}
-                                        </el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                            </p>
-
-                            <p>
-                                <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
-                                    <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
-                                        <el-radio :key="item.key" :label="item.key" v-for="item in dealerList">
-                                            {{item.value}}
-                                        </el-radio>
-                                    </el-radio-group>
-                                </el-form-item>
-                            </p>
-                            <template v-if="formData.dealerCooperationMethod">
-                                <p>
-                                    <span>经销商预付款：</span>
-                                    {{downPaymentAmount | fundMoneyHasTail}}元
-                                    <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
-                                </p>
-                                <p v-show="formData.dealerCooperationMethod==1">
-                                    <span>剩余货款：</span>
-                                    {{ serviceFee.arrearAmount | fundMoneyHasTail}}元
-                                </p>
-                                <p v-show="formData.dealerCooperationMethod==1">
-                                    <span>预计服务费总额：</span>
-                                    {{ serviceFee.feeAmount | fundMoneyHasTail}}元
-                                </p>
-                                <p v-show="formData.dealerCooperationMethod==1">
-                                    <span>预计每期服务费：</span>
-                                    {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
-                                </p>
-                            </template>
-                        </template>
-                        <template v-if="formData.checkPass === 'noPass'">
-                            <el-form-item label="审核备注" prop="approvalRemark">
-                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
-                            </el-form-item>
-                        </template>
-                    </div>
-                    <div class="col-filed">
-                        <div class="info-title">项目信息</div>
-                        <p>
-                            <span>项目：</span>
-                            {{ paymentDetail.projectInfo.projectName }}
-                        </p>
-                        <p>
-                            <span>经销商：</span>
-                            {{ paymentDetail.projectInfo.companyName }}
-                        </p>
-                        <p>
-                            <span>所属分部：</span>
-                            {{ paymentDetail.projectInfo.deptName }}
-                        </p>
-                        <div class="rate-row">
-                            <p>
-                                <span>执行费率：</span>
-                            </p>
-                            <p>
-                                <span class="label">银行承兑：</span>
-                                {{paymentDetail.projectInfo.acceptBankRate}}%
-                                <span class="label">银行转账：</span>
-                                {{paymentDetail.projectInfo.transferBankRate}}%
-                            </p>
-
-                        </div>
-                        <div class="info-title">采购单信息</div>
-                        <p>
-                            <span>采购单金额：</span>
-                            {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
-                        </p>
-                        <div class="info-img-group">
-                            <span class="label">采购明细表：</span>
-                            <p class="content">
-                                <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">
-                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderPoDetail.poDetail">
+                        </div> -->
+                        <el-form-item label="采购明细表：">
+                            <div class="info-img-group content">
+                                <template v-if="paymentDetail.payOrderDetail && paymentDetail.payOrderDetail.paymentDetail">
+                                    <span class="img-box" :key="item.url" v-for="item in paymentDetail.payOrderDetail.paymentDetail">
                                         <imageAddToken :file-url="item.url" />
                                     </span>
                                 </template>
-                            </p>
-                        </div>
-                        <p>
-                            <span>采购批次：</span>
-                            {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
-                        </p>
-                        <p>
-                            <span>最迟发货日期：</span>
-                            {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
-                        </p>
-                        <p>
-                            <span>收货地址：</span>
-                            {{ paymentDetail.payOrderPoDetail.goodsAddress }}
-                        </p>
-                        <p>
-                            <span>经销商预付款比例：</span>
-                            {{ paymentDetail.payOrderPoDetail.prePercent }}%
-                        </p>
-                        <p>
-                            <span>剩余货款支付周期：</span>
-                            {{paymentDetail.payOrderPoDetail.restPaymentPeriod}}个月
-                        </p>
-                        <p>
-                            <span>免息方式：</span>
-                            {{paymentDetail.payOrderPoDetail.freeInterestType | attributeComputed(PurchaseOrderDict.freeInterestType.list)}}
-                        </p>
+                            </div>
+                        </el-form-item>
+                        <el-form-item label="最迟发货日期：">
+                            {{ paymentDetail.payOrderDetail.lastGoodsDate || '-' }}
+                        </el-form-item>
+                        <el-form-item label="收货地址：">
+                            {{paymentDetail.payOrderDetail.goodsAddress || '-' }}
+                        </el-form-item>
+                        <el-form-item label="备注信息：">
+                            {{paymentDetail.payOrderDetail.specialRemark}}
+                        </el-form-item>
+                    </div>
+                    <div class="col-filed">
+                        <div class="info-title">审核信息</div>
+                        <el-form-item prop="checkPass" label="审核结果：">
+                            <el-radio-group v-model="formData.checkPass" @change="onRdioChange">
+                                <el-radio label="pass">通过</el-radio>
+                                <el-radio label="noPass">不通过</el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+
+                        <template v-if="formData.checkPass === 'pass'">
+                            <el-form-item label="应收账款质押：" prop="accountReceivablePledgeType">
+                                <el-radio-group v-model="formData.accountReceivablePledgeType">
+                                    <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.accountReceivablePledgeType.list">
+                                        {{ item.value }}
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <!-- <el-form-item label="上游支付方式：" prop="supplierPaymentType">
+                                <el-radio-group v-model="formData.supplierPaymentType">
+                                    <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentType.list">
+                                        {{item.value}}
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item> -->
+                            <el-form-item label="上游货款方式：" prop="supplierPaymentMethod">
+                                <el-radio-group v-model="formData.supplierPaymentMethod">
+                                    <el-radio :key="item.key" :label="item.key" v-for="item in PaymentOrderDict.supplierPaymentMethod.list">
+                                        {{item.value}}
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="网银盾照片：" prop="shieldFiles">
+                                <div class="info-img-group content">
+                                    <!-- <template v-if="formData.shieldFiles">
+                                        <span class="img-box" :key="item.url" v-for="item in formData.shieldFiles">
+                                            <imageAddToken :file-url="item.url" />
+                                        </span>
+                                    </template> -->
+                                    <hosjoyUpload v-model="formData.shieldFiles" :showPreView=true :fileSize=20 :fileNum=5 :action='action' accept='.jpg,.gif,.png' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(formData.shieldFiles)}" style="margin:10px 0 0 5px">
+                                        <el-button type="primary">上 传</el-button>
+                                    </hosjoyUpload>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="共管户截图：" prop="managedFiles">
+                                <div class="info-img-group content">
+                                    <!-- <template>
+                                        <span class="img-box" :key="item.url" v-for="item in formData.managedFiles">
+                                            <imageAddToken :file-url="item.url" />
+                                        </span>
+                                    </template> -->
+                                    <hosjoyUpload v-model="formData.managedFiles" :showPreView=true :fileSize=20 :fileNum=5 :action='action' accept='.jpg,.gif,.png' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb(formData.shieldFiles)}" style="margin:10px 0 0 5px">
+                                        <el-button type="primary">上 传</el-button>
+                                    </hosjoyUpload>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="质押信息：" prop="pledgeNo">
+                                <el-input type="text" v-model="formData.pledgeNo" maxlength="50" placeholder="请输入中登网质押编号"></el-input>
+                            </el-form-item>
+                            <el-form-item label="OA货款支付编号：" prop="oaNo">
+                                <el-input type="text" v-model="formData.oaNo" maxlength="50" placeholder="请输入OA货款支付编号"></el-input>
+                            </el-form-item>
+                            <el-form-item label="审核备注：" prop="approvalRemark">
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200" placeholder="可在此处备注对资金放款的要求"></el-input>
+                            </el-form-item>
+                            <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
+                                <el-radio-group v-model="formData.dealerCooperationMethod" @change="onChangeDealer">
+                                    <el-radio :key="item.key" :label="item.key" v-for="item in dealerList">
+                                        {{item.value}}
+                                    </el-radio>
+                                </el-radio-group>
+                            </el-form-item>
+                            <template v-if="formData.dealerCooperationMethod">
+                                <el-form-item label="经销商预付款：">
+                                    {{downPaymentAmount | fundMoneyHasTail}}元
+                                    <img src="../../../../assets/images/crm-edit.png" alt="" @click="openEdit" class="info-img-edit" v-if="formData.dealerCooperationMethod==1">
+                                </el-form-item>
+
+                                <el-form-item label="剩余货款：" v-show="formData.dealerCooperationMethod==1">
+                                    {{ serviceFee.arrearAmount | fundMoneyHasTail}}元
+                                </el-form-item>
+                                <el-form-item label="预计服务费总额：" v-show="formData.dealerCooperationMethod==1">
+                                    {{ serviceFee.feeAmount | fundMoneyHasTail}}元
+                                </el-form-item>
+                                <el-form-item label="预计每期服务费：" v-show="formData.dealerCooperationMethod==1">
+                                    {{ serviceFee.feeAmountPer | fundMoneyHasTail}}元
+                                </el-form-item>
+                            </template>
+                        </template>
+                        <template v-if="formData.checkPass === 'noPass'">
+                            <el-form-item label="审核备注：" prop="approvalRemark">
+                                <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
+                            </el-form-item>
+                        </template>
                     </div>
                 </div>
             </el-form>
@@ -198,11 +236,14 @@ import { updatePaymentOrderStatusNoPass, updatePaymentOrderStatusPass, getComput
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import imageAddToken from '@/components/imageAddToken'
-
+import hosjoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
+import { ccpBaseUrl } from '@/api/config'
+import { checkNumandEng } from '@/utils/rules'
+import moment from 'moment'
 export default {
     name: 'approvePaymentOrder',
     components: {
-        imageAddToken
+        imageAddToken, hosjoyUpload
     },
     props: {
         isOpen: {
@@ -220,14 +261,24 @@ export default {
     },
     data () {
         return {
+            moment,
+            action: ccpBaseUrl + 'common/files/upload-old',
+            uploadParameters: {
+                updateUid: '',
+                reservedName: false
+            },
             PurchaseOrderDict,
             formData: {
                 checkPass: '',
                 approvalRemark: '',
                 accountReceivablePledgeType: '',
-                supplierPaymentType: '',
+                // supplierPaymentType: '',
                 downPaymentAmount: '',
-                supplierPaymentMethod: ''
+                supplierPaymentMethod: '',
+                shieldFiles: [], // 网盾图片
+                managedFiles: [], // 共管账号
+                pledgeNo: '',
+                oaNo: ''
             },
             editAmountVisible: false,
             PaymentOrderDict,
@@ -250,28 +301,58 @@ export default {
                 accountReceivablePledgeType: [
                     { required: true, message: '请选择应收账款质押' }
                 ],
-                supplierPaymentType: [
-                    { required: true, message: '请选择上游支付方式' }
-                ],
                 supplierPaymentMethod: [
                     { required: true, message: '请选择上游货款方式' }
                 ],
                 dealerCooperationMethod: [
                     { required: true, message: '请选择下游合作方式' }
+                ],
+                pledgeNo: [
+                    { required: true, message: '请输入质押信息' },
+                    {
+                        validator: checkNumandEng, trigger: 'blur'
+                    }
+                ],
+                oaNo: [
+                    { required: true, message: '请输入OA货款支付编号' },
+                    {
+                        validator: checkNumandEng, trigger: 'blur'
+                    }
+                ],
+                shieldFiles: [
+                    { required: true, message: '请上传网银盾图片' }
+                ],
+                managedFiles: [
+                    { required: true, message: '请上传共管户截图' }
                 ]
             },
             downPaymentAmount: '-'
         }
     },
     watch: {
+        'formData.shieldFiles' (val) {
+            if (val.length > 0) {
+                console.log(val)
+                this.$refs.form.clearValidate(['shieldFiles'])
+            }
+        },
+        'formData.managedFiles' (val) {
+            if (val.length > 0) {
+                console.log(val)
+                this.$refs.form.clearValidate(['managedFiles'])
+            }
+        },
         isOpen (val) {
             if (val) {
+                const { payOrderDetail, payOrderPoDetail, projectInfo } = this.paymentDetail
                 this.serviceParams = {
                     ...this.serviceParams,
-                    downpaymentAmount: this.paymentDetail.payOrderDetail.downPaymentAmount,
-                    totalAmount: this.paymentDetail.payOrderDetail.applyAmount,
-                    freeInterestType: this.paymentDetail.payOrderPoDetail.freeInterestType,
-                    terms: this.paymentDetail.payOrderPoDetail.restPaymentPeriod
+                    // 当上游支付方式选择为银行转账时，取执行费率
+                    serviceFeeRate: payOrderDetail.supplierPaymentType == 1 ? projectInfo.transferBankRate : projectInfo.acceptBankRate,
+                    downpaymentAmount: payOrderDetail.downPaymentAmount,
+                    totalAmount: payOrderDetail.applyAmount,
+                    freeInterestType: payOrderPoDetail.freeInterestType,
+                    terms: payOrderPoDetail.restPaymentPeriod
                 }
                 this.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
                 this.formData.downPaymentAmount = this.paymentDetail.payOrderDetail.downPaymentAmount
@@ -280,32 +361,53 @@ export default {
                 })
             }
         },
-        'formData.supplierPaymentType' (val) {
-            if (val) {
-                let serviceFeeRate = ''
-                if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[0].key) {
-                    // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
-                    serviceFeeRate = this.paymentDetail.projectInfo.transferBankRate
-                }
-                if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[1].key) {
-                    // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
-                    serviceFeeRate = this.paymentDetail.projectInfo.acceptBankRate
-                }
-                this.serviceParams = {
-                    ...this.serviceParams,
-                    serviceFeeRate: serviceFeeRate
-                }
+        'formData.dealerCooperationMethod' (val) {
+            if (val == 1) {
                 this.getComputedValue()
             }
-        },
-        'formData.checkPass' () {
-            this.formData.approvalRemark = ''
-            this.formData.accountReceivablePledgeType = ''
-            this.formData.supplierPaymentType = ''
-            this.formData.supplierPaymentMethod = ''
         }
+        // 'formData.supplierPaymentType' (val) {
+        //     if (val) {
+        //         let serviceFeeRate = ''
+        //         if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[0].key) {
+        //             // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.transferBankRate, 100) - 0
+        //             serviceFeeRate = this.paymentDetail.projectInfo.transferBankRate
+        //         }
+        //         if (this.formData.supplierPaymentType === PaymentOrderDict.supplierPaymentMethod.list[1].key) {
+        //             // serviceFeeRate = this.$dividedBy(this.paymentDetail.projectInfo.acceptBankRate, 100) - 0
+        //             serviceFeeRate = this.paymentDetail.projectInfo.acceptBankRate
+        //         }
+        //         this.serviceParams = {
+        //             ...this.serviceParams,
+        //             serviceFeeRate: serviceFeeRate
+        //         }
+        //         this.getComputedValue()
+        //     }
+        // },
+        // 'formData.checkPass' () {
+        //     this.formData.approvalRemark = ''
+        //     this.formData.accountReceivablePledgeType = ''
+        //     // this.formData.supplierPaymentType = ''
+        //     this.formData.supplierPaymentMethod = ''
+        //     this.formData.shieldFiles = []
+        //     this.formData.managedFiles = []
+        //     this.formData.pledgeNo = ''
+        //     this.formData.oaNo = ''
+        // }
     },
     methods: {
+        onRdioChange (val) {
+            if (val === 'noPass') {
+                this.formData.approvalRemark = ''
+                this.formData.accountReceivablePledgeType = ''
+                // this.formData.supplierPaymentType = ''
+                this.formData.supplierPaymentMethod = ''
+                this.formData.shieldFiles = []
+                this.formData.managedFiles = []
+                this.formData.pledgeNo = ''
+                this.formData.oaNo = ''
+            }
+        },
         openEdit () {
             this.formData.downPaymentAmount = this.downPaymentAmount
             this.editAmountVisible = true
@@ -352,9 +454,11 @@ export default {
                 checkPass: '',
                 approvalRemark: '',
                 accountReceivablePledgeType: '',
-                supplierPaymentType: '',
+                // supplierPaymentType: '',
                 downPaymentAmount: '',
-                supplierPaymentMethod: ''
+                supplierPaymentMethod: '',
+                shieldFiles: [],
+                managedFiles: [] // 共管账号
             }
         },
         onCancel () {
@@ -364,6 +468,7 @@ export default {
         onReceived () {
             this.$refs.form.validate(async (value, rules) => {
                 if (value) {
+                    // this.formData.supplierPaymentType = 2
                     this.formData.downPaymentAmount = this.downPaymentAmount
                     this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
                     if (this.formData.checkPass === 'pass') {
@@ -391,12 +496,23 @@ export default {
         async getComputedValue () {
             const { data } = await getComputedValue(this.serviceParams)
             this.serviceFee = data
+        },
+        handleSuccessCb (row) {
+            console.log(row)
         }
     }
 }
 </script>
 
 <style scoped lang="scss">
+/deep/.default-pre-view-image {
+    width: 80px;
+    height: 80px;
+}
+/deep/.default-pre-view-mask {
+    width: 80px;
+    height: 80px;
+}
 .payment-dialog {
     /deep/ .el-dialog__body {
         max-height: 480px;
@@ -432,7 +548,7 @@ export default {
 .info-img-edit {
     width: 20px;
     cursor: pointer;
-    vertical-align: bottom;
+    vertical-align: middle;
 }
 .tips {
     line-height: 20px;
@@ -456,10 +572,13 @@ export default {
 }
 .payment-dialog {
     /deep/.el-form-item__content {
-        line-height: 20px;
+        // line-height: 20px;
     }
     /deep/.el-form-item__label {
-        line-height: 20px;
+        // line-height: 20px;
+    }
+    /deep/ .el-dialog .el-form .el-form-item {
+        // margin-bottom: 10px;
     }
 }
 .edit-amount {
@@ -472,9 +591,27 @@ export default {
 }
 .info-img-group {
     display: flex;
+    flex-wrap: wrap;
+    span {
+        display: flex;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 12px;
+        margin-right: 12px;
+        cursor: pointer;
+        border: 1px solid #e5e5e5;
+        box-sizing: border-box;
+    }
+    img {
+        display: block;
+        margin: auto;
+        max-height: 78px;
+        max-width: 78px;
+    }
     .content {
         display: flex;
         flex-wrap: wrap;
+
         span {
             display: flex;
             width: 80px;

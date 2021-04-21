@@ -404,6 +404,30 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/exportExcelFile/index.vue')
+            },
+            {
+                path: 'upstreamPaymentManagement',
+                name: 'upstreamPaymentManagement',
+                meta: {
+                    title: '上游支付管理',
+                    tagName: '上游支付管理',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/upstreamPaymentManagement/index.vue')
+            },
+            {
+                path: 'tianyan',
+                name: 'tianyan',
+                meta: {
+                    title: '天眼查',
+                    tagName: '天眼查',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/crmauthen/tianyan.vue')
             }
         ]
     }
