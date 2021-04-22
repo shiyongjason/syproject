@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-wrap">
+    <div class="drawer-wrap" v-if="drawer" >
         <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
