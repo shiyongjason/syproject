@@ -20,7 +20,7 @@
                     </el-form-item>
                     <!-- V.07 新增 -->
                     <el-form-item label="适用情景：" class="contract-temp_scenario" style="width:500px;display: flex;">
-                        <el-input type="textarea" :autosize='{ minRows: 5, maxRows: 10 }' v-model="contractForm.describe" placeholder="请输入" maxlength="150" show-word-limit></el-input>
+                        <el-input type="textarea" :autosize='{ minRows: 5, maxRows: 10 }' v-model.trim="contractForm.describe" placeholder="请输入" maxlength="150" show-word-limit></el-input>
                     </el-form-item>
                 </el-form>
             </div>
