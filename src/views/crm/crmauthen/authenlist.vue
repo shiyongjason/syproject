@@ -129,7 +129,7 @@
                 </template>
             </basicTable>
         </div>
-        <businessDrawer :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
+        <businessDrawer  :drawer=drawer @backEvent='restDrawer' ref="drawercom"></businessDrawer>
     </div>
 </template>
 <script>
