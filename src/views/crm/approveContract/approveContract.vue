@@ -499,7 +499,7 @@ export default {
                                         style: this.currentKey.unit ? { width: '250px' } : '',
                                         innerHtml: this.currentKey.unit || '',
                                         maxlength: this.currentKey.maxLength || '',
-                                        decimal: this.currentKey.decimal || '',
+                                        decimal: this.currentKey.decimal || 2,
                                         calculationRules: this.currentKey.calculationRules || ''// 最大值
                                     },
                                     on: {
