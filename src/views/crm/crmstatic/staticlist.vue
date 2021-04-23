@@ -143,6 +143,7 @@ export default {
             const nameArr = ['待签约', '待放款', '待回款', '合作完成']
             const projectStatic = this.projectStatic.filter(item => !nameArr.includes(item.name))
             this.drawBar(projectStatic)
+            this.searchList()
         },
         handleClick (tab) {
             this.barUnit = this.tabPosition == 1 ? '个' : '元'
