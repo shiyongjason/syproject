@@ -151,11 +151,12 @@
     </div>
 </template>
 <script>
-// import { interfaceUrl } from '@/api/config'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import axios from 'axios'
 import { clearCache, newCache } from '../../../utils'
 import { addMemberTag, editMemberTag, recommendChange } from '../api'
 import { getChiness } from '../../hmall/membership/api'
+import { iotUrl } from '../../../api/config'
 
 export default {
     name: 'comfortcloudMembermanage',
@@ -164,7 +165,7 @@ export default {
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
-                phone: this.$route.query.phone,
+                phone: this.$route.query.phone ? this.$route.query.phone : '',
                 companyName: '',
                 endRegisterTime: '',
                 provinceId: '',
@@ -332,7 +333,27 @@ export default {
                         url += (`${key}=${this.queryParams[key]}&`)
                     }
                 }
-                // window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
+
+                axios.defaults.responseType = 'blob'
+                axios.get(iotUrl + '/mall/boss/user/export', { params: this.queryParams }).then(function (response) {
+                    try {
+                        const reader = new FileReader()
+                        reader.readAsDataURL(response.data)
+                        reader.onload = function (e) {
+                            const a = document.createElement('a')
+                            a.download = '会员列表.xlsx'
+                            a.href = e.target.result
+                            document.querySelector('body').appendChild(a)
+                            a.click()
+                            document.querySelector('body').removeChild(a)
+                        }
+                        axios.defaults.responseType = 'json'
+                    } catch (e) {
+                        axios.defaults.responseType = 'json'
+                    }
+                }).catch(function () {
+                    axios.defaults.responseType = 'json'
+                })
             }
         },
         async showDliag (val) {
