@@ -1,42 +1,36 @@
 <template>
     <div>
-        <h-drawer title="详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
-            <template #connect>
-                <div class="drawer-wrap" v-if="vipDetail">
-                    <div class="drawer-wrap_title">{{companyName}}</div>
-                    <div class="drawer-wrap_btn">
-                        <div class="drawer-wrap_btn-flex">VIP签约信息</div>
-                        <div class="drawer-wrap_btn-flex">
-                            <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button>
-                        </div>
-                    </div>
-                    <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
-                        <template slot="assignedUserName" slot-scope="scope">
-                            {{scope.data.row.assignedUserName}} {{scope.data.row.assignedUserMobile}}
-                        </template>
-                        <template slot="status" slot-scope="scope">
-                            <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
-                        </template>
-                        <template slot="action" slot-scope="scope">
-                            <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
-                        </template>
-                    </basicTable>
-                    <p>
-                        最近维护时间：{{vipDetail.updateTime?moment(vipDetail.updateTime).format('YYYY-MM-DD HH:mm:ss'):'-'}}
-                    </p>
-                    <p>
-                        最近维护人：{{vipDetail.updateBy||'-'}}（{{vipDetail.updateByMobile||'-'}}）
-                    </p>
-                </div>
-            </template>
-            <template #btn>
-                <div class="drawer-footer">
-                    <div class="drawer-button">
-                        <h-button @click="handleClose">取消</h-button>
+        <el-drawer title="详情" :visible.sync="drawer" :before-close="handleClose" size="50%">
+            <div class="drawer-wrap">
+                <div class="drawer-wrap_title">{{companyName}}</div>
+                <div class="drawer-wrap_btn">
+                    <div class="drawer-wrap_btn-flex">VIP签约信息</div>
+                    <div class="drawer-wrap_btn-flex">
+                        <!-- <h-button type="create" @click="onEditVip()" v-if="hosAuthCheck(auths.CRM_ADD_DETAIL)">新增签约</h-button> -->
                     </div>
                 </div>
-            </template>
-        </h-drawer>
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :isShowIndex='true' :maxHeight=500>
+                    <template slot="assignedUserName" slot-scope="scope">
+                        {{scope.data.row.assignedUserName}} {{scope.data.row.assignedUserMobile}}
+                    </template>
+
+                    <template slot="status" slot-scope="scope">
+                        <span :class="scope.data.row.status==1?'green':''">{{scope.data.row.status==1?'生效':scope.data.row.status==0?'失效':'-'}}</span>
+                    </template>
+                    <template slot="action" slot-scope="scope">
+                        <h-button v-if="scope.data.row.contractId" table @click="onLookContract(scope.data.row.contractId)" >查看合同</h-button>
+                    </template>
+                    <!-- <template slot="action" slot-scope="scope">
+                        <h-button table @click="onEditVip(scope.data.row.id)" v-if="hosAuthCheck(auths.CRM_EDIT_DETAIL)">修改</h-button>
+                    </template> -->
+                </basicTable>
+            </div>
+            <div class="drawer-footer">
+                <div class="drawer-button">
+                    <h-button @click="handleClose">取消</h-button>
+                </div>
+            </div>
+        </el-drawer>
         <el-dialog title="签约" :visible.sync="dialogVisible" width="40%" :before-close="onCloseDrawer" :close-on-click-modal=false>
             <el-form :model="vipForm" :rules="rules" ref="vipForm" label-width="150px" class="demo-vipForm el-dialog__form">
                 <el-form-item label="签约人（员工）：" prop="assignedUserId" ref="assignedUserId">
@@ -96,11 +90,6 @@ export default {
     name: 'vipdrawer',
     data () {
         return {
-            options: {
-                direction: 'rtl',
-                size: '50%',
-                wrapperClosable: false
-            },
             auths,
             moment,
             drawer: false,
