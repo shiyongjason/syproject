@@ -69,6 +69,12 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__lable">店铺名称：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.shopName" placeholder="请输入" maxlength="60"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="onFindMlist(1)">
                         查询
                     </h-button>
@@ -135,8 +141,8 @@ export default {
                 registrationStartTime: '',
                 subsectionCode: '',
                 authenticationTime: '',
-                createTime: 'desc'
-
+                createTime: 'desc',
+                shopName: ''
             },
             paginationInfo: {},
             tableLabel: [

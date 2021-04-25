@@ -548,8 +548,7 @@ export default {
         width: 300px !important;
     }
 }
-/deep/.el-form .el-input {
-}
+
 .el-form-item__content .el-input {
     width: 200px !important;
 }
