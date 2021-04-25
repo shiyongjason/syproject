@@ -7,20 +7,23 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建日期：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.companyName" maxlength="50" placeholder="输入代理商名称" clearable></el-input>
+                    <el-input type="text" v-model="queryParams.companyName" maxlength="50" placeholder="输入代理商名称"
+                              clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">创建人会员账号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入会员账号" clearable></el-input>
+                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入会员账号"
+                              clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">城市：</div>
                 <div class="query-cont-col-area">
                     <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
-                        <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
+                        <el-option v-for="item in provinceList" :key="item.id" :label="item.name"
+                                   :value="item.provinceId">
                         </el-option>
                     </el-select>
                     <span class="ml10 mr10">-</span>
@@ -39,17 +42,22 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList"
+                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex
+                        @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="level" slot-scope="scope">
                     {{scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)')}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
-                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)" style="margin:10px 10px 0 10px">提货进度</el-button>
+                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)"
+                               style="margin:10px 10px 0 10px">提货进度
+                    </el-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="代理权益详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible" width="50%">
+        <el-dialog title="代理权益详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible"
+                   width="50%">
             <h3 class="right-title">代理订单</h3>
             <div class="right-items">
                 <p>代理订单号：{{cloudMerchantAgentDetail.agentCode}}</p>
@@ -64,7 +72,8 @@
             <div class="right-items" v-html="cloudMerchantAgentDetail.agentContent"></div>
         </el-dialog>
 
-        <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible" width="50%">
+        <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible"
+                   width="50%">
             <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
 
             </basicTable>
@@ -84,12 +93,11 @@ export default {
     data () {
         return {
             queryParams: {
-                companyName: '',
-                contactNumber: '',
-                contactUser: '',
+                startTime: '',
+                endTime: '',
                 provinceId: '',
                 cityId: '',
-                categoryId: '',
+                phone: '',
                 pageNumber: 1,
                 pageSize: 10
             },
@@ -98,6 +106,7 @@ export default {
                 oneLevelCount: 0,
                 twoLevelCount: 0
             },
+            cloudMerchantListPagination: {},
             provinceList: [],
             formLabelWidth: '140px',
             tableLabel: [
@@ -129,9 +138,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            cloudMerchantList: 'cloudMerchantList',
-            cloudMerchantListPagination: 'cloudMerchantListPagination',
-            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
+            cloudMerchantCaseList: 'cloudMerchantCaseList',
             cloudMerchantAgentDetail: 'cloudMerchantAgentDetail'
         }),
         getCity () {
@@ -168,8 +175,7 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCloudMerchantList: 'findCloudMerchantList',
-            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
+            findCloudMerchantCaseList: 'findCloudMerchantCaseList',
             getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail'
         }),
 
@@ -187,10 +193,7 @@ export default {
             this.queryList(this.queryParams)
         },
         queryList: function (params) {
-            this.findCloudMerchantList(params)
-        },
-        queryCetagory: function (params) {
-            this.findCloudMerchantShopCategoryList(params)
+            this.findCloudMerchantCaseList(params)
         },
         async getAreacode () {
             const { data } = await getChiness()
@@ -244,42 +247,45 @@ export default {
 </script>
 
 <style scoped>
-.spanflex {
-    font-size: 16px;
-    padding-bottom: 10px;
-}
-.eltagtop {
-    margin-bottom: 20px;
-}
-.query-cont-col-area {
-    position: relative;
-    display: inline-flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    margin-right: 24px;
-}
-.colred {
-    color: #ff7a45;
-    cursor: pointer;
-}
+    .spanflex {
+        font-size: 16px;
+        padding-bottom: 10px;
+    }
 
-.title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+    .eltagtop {
+        margin-bottom: 20px;
+    }
 
-.right-title {
-    margin: 20px 0 10px 0;
-}
+    .query-cont-col-area {
+        position: relative;
+        display: inline-flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-right: 24px;
+    }
 
-.right-items {
-    margin: 10px 0 30px 0;
-    line-height: 25px;
-}
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+    }
 
-.chckBtn {
-    float: right;
-    margin: 20px;
-}
+    .title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .right-title {
+        margin: 20px 0 10px 0;
+    }
+
+    .right-items {
+        margin: 10px 0 30px 0;
+        line-height: 25px;
+    }
+
+    .chckBtn {
+        float: right;
+        margin: 20px;
+    }
 </style>
