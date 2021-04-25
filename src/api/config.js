@@ -44,7 +44,6 @@ switch (env) {
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
         ccpBaseUrl = 'http://192.168.20.248:8021/'
         B2bUrl = 'http://192.168.20.248:40000/'
-        ccpBaseUrl = 'http://192.168.20.248:8021/'
         iotUrl = 'https://testiot.hosjoy.com:2286'
         iotZsUrl = 'https://iot-proxy-test.hosjoy.com'
         ossBucket = 'hosjoy-private-test'

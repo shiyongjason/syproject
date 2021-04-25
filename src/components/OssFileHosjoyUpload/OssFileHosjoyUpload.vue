@@ -213,6 +213,7 @@ export default {
             }
         },
         async uploadFile (params) {
+            console.log('params: ', params)
             this.successFileTemp = await OssFileUtils.uploadFile(params.file)
         }
     },
