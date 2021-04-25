@@ -60,12 +60,7 @@
                     <div class="query-col-title">自动标签：</div>
                     <div class="flex-wrap-cont">
                         <el-select v-model="queryParams.autoTags" multiple collapse-tags>
-                            <el-option label="买过采暖产品" value="1"></el-option>
-                            <el-option label="买过新风产品" value="2"></el-option>
-                            <el-option label="买过空调主材" value="3"></el-option>
-                            <el-option label="买过空调辅材" value="4"></el-option>
-                            <el-option label="买过智能产品" value="5"></el-option>
-                            <el-option label="买过舒适云产品" value="6"></el-option>
+                            <el-option v-for="item in this.allAutoTags" :key="item.tagId" :label="item.tagName" :value="item.tagId"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -175,7 +170,7 @@
 <script>
 import { getChiness } from '../../hmall/membership/api/index'
 import { clearCache, newCache } from '../../../utils'
-import { addMemberTag, editMemberTag, deleteThirdExernalMembersituation } from '../api'
+import { addMemberTag, editMemberTag, deleteThirdExernalMembersituation, getDictionary } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl } from '@/api/config'
 
@@ -224,6 +219,7 @@ export default {
             tagStringList: [],
             provinceList: [],
             cityList: [],
+            allAutoTags: [],
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -278,25 +274,33 @@ export default {
         autoTag () {
             return function (tags) {
                 if (tags && tags.length > 0) {
-                    let auto = tags.split(',')
+                    let auto = this.allAutoTags
+                    let val = tags.split(',')
                     let newAuto = []
                     for (let i = 0; i < auto.length; i++) {
-                        const element = auto[i]
-                        if (element.length > 0) {
-                            if (element === '1') {
-                                newAuto.push('买过采暖产品')
-                            } else if (element === '2') {
-                                newAuto.push('买过新风产品')
-                            } else if (element === '3') {
-                                newAuto.push('买过空调主材')
-                            } else if (element === '4') {
-                                newAuto.push('买过空调辅材')
-                            } else if (element === '5') {
-                                newAuto.push('买过智能产品')
-                            } else if (element === '6') {
-                                newAuto.push('买过舒适云产品')
+                        for (let j = 0; j < val.length; j++) {
+                            console.log(auto[i].tagId)
+                            console.log(val[j])
+                            if (auto[i].tagId == val[j]) {
+                                newAuto.push(auto[i].tagName)
                             }
                         }
+                        // const element = auto[i]
+                        // if (element.length > 0) {
+                        //     if (element === '1') {
+                        //         newAuto.push('买过采暖产品')
+                        //     } else if (element === '2') {
+                        //         newAuto.push('买过新风产品')
+                        //     } else if (element === '3') {
+                        //         newAuto.push('买过空调主材')
+                        //     } else if (element === '4') {
+                        //         newAuto.push('买过空调辅材')
+                        //     } else if (element === '5') {
+                        //         newAuto.push('买过智能产品')
+                        //     } else if (element === '6') {
+                        //         newAuto.push('买过舒适云产品')
+                        //     }
+                        // }
                     }
                     return newAuto
                 } else {
@@ -373,10 +377,20 @@ export default {
             }
         }
     },
-    mounted () {
+    async mounted () {
         this.onSearch()
         this.getAreacode()
         this.queryTags()
+        const { data } = await getDictionary({
+            item: 'out_store_water_member_auto_tag'
+        })
+        this.allAutoTags = data.data.map((v) => {
+            return {
+                tagType: 1,
+                tagId: parseInt(v.dataKey),
+                tagName: v.dataValue
+            }
+        })
     },
     activated () {
         this.onQuery()
