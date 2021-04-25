@@ -43,11 +43,13 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">创建时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <!-- <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10">-</span>
                         <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-ddTHH:mm:ss" format="yyyy-MM-dd HH:mm:ss" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        </el-date-picker> -->
+                        <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
+                        </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -142,6 +144,8 @@ export default {
                 projectNo: '',
                 status: '',
                 pageNumber: 1,
+                startTime: '',
+                endTime: '',
                 pageSize: 10,
                 'sort.property': null,
                 'sort.direction': null
@@ -176,24 +180,13 @@ export default {
         purchaseOrderDialog
     },
     computed: {
-        pickerOptionsStart () {
+        options () {
             return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endTime
-                    if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime()
-                    }
-                }
-            }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startTime
-                    if (beginDateVal) {
-                        return time.getTime() < new Date(beginDateVal).getTime()
-                    }
-                }
+                type: 'datetime',
+                valueFormat: 'yyyy-MM-ddTHH:mm:ss',
+                format: 'yyyy-MM-dd HH:mm:ss',
+                startTime: this.queryParams.startTime,
+                endTime: this.queryParams.endTime
             }
         },
         ...mapState({
@@ -220,6 +213,12 @@ export default {
             const { data } = await getSeals(val.id)
             console.log(data)
             this.editHistory = data
+        },
+        onStartChange (val) {
+            this.queryParams.startTime = val
+        },
+        onEndChange (val) {
+            this.queryParams.endTime = val
         },
         goProjectDetail (row) {
             let routeUrl = this.$router.resolve({
