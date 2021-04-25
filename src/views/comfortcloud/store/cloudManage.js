@@ -104,6 +104,7 @@ const state = {
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
     cloudMerchantmemberInvitationOutOrderData: {},
+    cloudMerchantmemberInvitationProjectData: {},
     cloudMerchantTaglist: [],
     cloudMerchantMemberCommunicationList: [],
     cloudMerchantMemberCommunicationListPagination: {}
@@ -220,6 +221,7 @@ const getters = {
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
     cloudMerchantmemberInvitationOutOrderData: state => state.cloudMerchantmemberInvitationOutOrderData,
+    cloudMerchantmemberInvitationProjectData: state => state.cloudMerchantmemberInvitationProjectData,
     cloudMerchantTaglist: state => state.cloudMerchantTaglist,
     cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
     cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination
@@ -518,6 +520,9 @@ const mutations = {
     },
     [cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA] (state, payload) {
         state.cloudMerchantmemberInvitationOutOrderData = payload
+    },
+    [cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA] (state, payload) {
+        state.cloudMerchantmemberInvitationProjectData = payload
     },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
         state.cloudMerchantTaglist = payload
@@ -958,6 +963,10 @@ const actions = {
     async findMerchantMemberInvitationOutOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOutOrdersituation(params)
         commit(cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
+    },
+    async findMerchantMemberInvitationProject ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationProject(params)
+        commit(cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA, data)
     },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)

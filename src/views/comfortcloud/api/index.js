@@ -865,6 +865,9 @@ export function editMemberTag (params) {
 // 获取销售线索管理购买记录
 export function getMerchantMemberInvitationOutOrdersituation (params) {
     return axios.get(iotUrl + '/mall/boss/user/out/order', { params })
+}// 获取销售线索管理购买记录
+export function getMerchantMemberInvitationProject (params) {
+    return axios.get(iotUrl + '/mall/boss/hbp/projects', { params })
 }
 
 // 获取销售线索管理购买记录统计
