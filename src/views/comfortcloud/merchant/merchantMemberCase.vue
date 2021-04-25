@@ -45,8 +45,8 @@
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList"
                         :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex
                         @onSizeChange='onSizeChange' :isAction="true">
-                <template slot="level" slot-scope="scope">
-                    {{scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)')}}
+                <template slot="id" slot-scope="scope">
+                    {{scope.data.row.customerName+'的智能方案'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
@@ -110,15 +110,12 @@ export default {
             provinceList: [],
             formLabelWidth: '140px',
             tableLabel: [
-                { label: '代理时间', prop: 'createTime', formatters: 'dateTime' },
-                { label: '省', prop: 'provinceName' },
-                { label: '市', prop: 'cityName' },
-                { label: '代理商公司名称', prop: 'companyName' },
-                { label: '代理商等级', prop: 'level' },
-                { label: '代理商联系人', prop: 'contactUser' },
-                { label: '代理商联系电话', prop: 'contactNumber' },
-                { label: '代理品类', prop: 'categoryName' },
-                { label: '代理型号', prop: 'specificationName' }],
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '创建人员账号', prop: 'phone' },
+                { label: '创建人员昵称', prop: 'nickName' },
+                { label: '方案名称', prop: 'id' },
+                { label: '所在城市', prop: 'cityName' },
+                { label: '小区名称', prop: 'customerAddress' }],
             progressTableLabel: [
                 { label: '年度提货额度', prop: 'totalPickGoodsCount' },
                 { label: '已提货', prop: 'alreadyPickGoodsCount' },
@@ -133,7 +130,6 @@ export default {
     mounted () {
         this.queryList(this.queryParams)
         this.queryStatistics(this.queryParams)
-        this.queryCetagory()
         this.getAreacode()
     },
     computed: {
@@ -198,12 +194,10 @@ export default {
         async getAreacode () {
             const { data } = await getChiness()
             this.provinceList = data
-            console.log('sheng' + this.provinceList)
         },
         onProvince (key) {
             this.queryParams.provinceId = key
             this.queryParams.cityId = ''
-            console.log('sheng' + key)
         },
         onCity (key) {
             this.queryParams.cityId = key

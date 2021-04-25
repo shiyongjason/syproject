@@ -85,10 +85,10 @@
                         </div>
                     </el-row>
                     <el-row>
-                        <SingleUpload sizeLimit='10M' :upload="videoUpload" :imageUrl="productVideoUrl" ref="video"
+                        <SingleUpload sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
                                       @back-event="videoUrl" :imgW="100" :imgH="100">
-                            <video v-if="this.form.video!==''"  :src="this.form.video" class="avatar" controls="controls">您的浏览器不支持视频播放</video>
                         </SingleUpload>
+                        <p v-if="form.video" type="primary" class="ml20" @click="addShop">视频预览</p>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4、 AVI、mov、rmvb格式, 大小不超过20MB
                             主图视频尺寸1:1，视频长度建议不超过60秒
@@ -208,6 +208,13 @@
                 <h-button @click="cancelClick">取 消</h-button>
                 <h-button type="primary" @click="submitForm('form')" :loading="isSaving">保 存</h-button>
             </div>
+            <el-dialog
+                width="30%"
+                title="视频播放"
+                :visible.sync="innerVisible"
+                append-to-body>
+                <Video :src="'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210425/ebe4067e-5a98-4932-b452-40e087abfe1d.mp4'" class="avatar" controls="controls">您的浏览器不支持视频播放</Video>
+            </el-dialog>
         </el-dialog>
     </div>
 </template>
@@ -226,6 +233,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            innerVisible: false,
             form: {
                 categoryId: '',
                 categoryName: '',
@@ -415,7 +423,7 @@ export default {
             return this.form.productIcon
         },
         productVideoUrl () {
-            return this.form.video
+            return this.form.productImgs[0] ? this.form.productImgs[0] : this.form.productImg
         },
         productDetailImgUrl () {
             return this.form.productDetailImg
