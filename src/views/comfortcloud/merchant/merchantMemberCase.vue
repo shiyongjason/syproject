@@ -5,10 +5,13 @@
         </div>
         <div class="page-body-cont query-cont">
             <div class="query-cont-col">
-                <div class="query-col-title">创建日期：</div>
+                <div class="query-col-title">创建日期： </div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.companyName" maxlength="50" placeholder="输入代理商名称"
-                              clearable></el-input>
+                    <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                    </el-date-picker>
+                    <span class="ml10">-</span>
+                    <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                    </el-date-picker>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -147,6 +150,26 @@ export default {
                 return province[0].cities
             }
             return []
+        },
+        pickerOptionsStart () {
+            return {
+                disabledDate: time => {
+                    let endDateVal = this.queryParams.endTime
+                    if (endDateVal) {
+                        return time.getTime() > new Date(endDateVal).getTime()
+                    }
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: time => {
+                    let beginDateVal = this.queryParams.startTime
+                    if (beginDateVal) {
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
+                    }
+                }
+            }
         },
         agentValidTimeDesc () {
             if (this.cloudMerchantCaseDetailList == null || this.cloudMerchantCaseDetailList.payTime == null) {
