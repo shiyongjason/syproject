@@ -60,21 +60,21 @@
                    width="50%">
             <h3 class="right-title">用户信息</h3>
             <div class="right-items-top">
-                <p>创建时间：{{cloudMerchantCaseDetailList.createTime}}</p>
-                <p>姓名：{{cloudMerchantCaseDetailList.customerName}}元</p>
+                <p>创建时间：{{moment(cloudMerchantCaseDetailList.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                <p>姓名：{{cloudMerchantCaseDetailList.customerName}}</p>
                 <p>联系电话：{{cloudMerchantCaseDetailList.customerPhone}}</p>
                 <p>小区名称：{{cloudMerchantCaseDetailList.customerAddress}}</p>
                 <p>房屋户型：{{cloudMerchantCaseDetailList.customerHouseType}}</p>
                 <p>客户家的主材产品：{{cloudMerchantCaseDetailList.customerCategory}}</p>
                 <p>装修进度：{{cloudMerchantCaseDetailList.customerDecorProgress}}</p>
-                <p>备注：{{cloudMerchantCaseDetailList.customerDecorProgress}}</p>
+                <p>备注：{{cloudMerchantCaseDetailList.remark}}</p>
             </div>
             <h3 class="right-title">智能升级方案详情</h3>
             <div  v-for="item in cloudMerchantCaseDetailList.details" :key="item.id">
                 <div class="right-items">
                     <div class="item-left">
                         <h5>{{item.customCategoryName}}</h5>
-                        <img style="height: 6rem;width: 6rem " :src="item.productIcon">
+                        <img style="height: 4rem;width: 4rem;margin-top: 10px;margin-bottom: 10px " :src="item.productIcon">
                         <p style="width: 12rem ">{{item.productName}}</p>
                     </div>
                     <div class="item-right">
@@ -85,6 +85,10 @@
                 <div class="line"/>
 
             </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="rightsDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="rightsDialogVisible = false">确 定</el-button>
+            </span>
         </el-dialog>
 
     </div>
@@ -94,12 +98,13 @@
 
 import { mapGetters, mapActions } from 'vuex'
 import { getChiness } from '../../hmall/membership/api/index'
-import { getCloudMerchantAgentProgress, getCloudMerchantStatistics } from '../api'
+import moment from 'moment'
 
 export default {
     name: 'merchantSearch',
     data () {
         return {
+            moment,
             queryParams: {
                 startTime: '',
                 endTime: '',
@@ -281,7 +286,7 @@ export default {
 
     .right-items {
         display: flex;
-        margin: 10px 0 30px 0;
+        margin: 10px 0 10px 0;
         flex-direction: row;
         justify-content: flex-start;
     }
@@ -290,13 +295,14 @@ export default {
         display: flex;
         margin: 10px 0 10px 0;
         flex-direction: column;
+        justify-content: space-between;
     }
     .item-right {
         display: flex;
         align-items: flex-start;
         margin-left: 50px;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
     }
     .right-items-top {
         margin: 10px 0 30px 0;
