@@ -88,7 +88,7 @@
                         <SingleUpload sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
                                       @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
-                        <p v-if="form.video" type="primary" class="ml20" @click="addShop">视频预览</p>
+                        <h-button v-if="form.video"   type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4、 AVI、mov、rmvb格式, 大小不超过20MB
                             主图视频尺寸1:1，视频长度建议不超过60秒
@@ -209,11 +209,16 @@
                 <h-button type="primary" @click="submitForm('form')" :loading="isSaving">保 存</h-button>
             </div>
             <el-dialog
-                width="30%"
+                width="600px"
                 title="视频播放"
+                @close="closePlayDialog"
                 :visible.sync="innerVisible"
                 append-to-body>
-                <Video :src="'https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/images/20210425/ebe4067e-5a98-4932-b452-40e087abfe1d.mp4'" class="avatar" controls="controls">您的浏览器不支持视频播放</Video>
+                <Video
+                    ref="videoPlay"
+                    :src="this.form.video"
+                    class="avatarVideo" controls="controls">您的浏览器不支持视频播放
+                </Video>
             </el-dialog>
         </el-dialog>
     </div>
@@ -656,6 +661,13 @@ export default {
             }
 
             this.form.productImg = this.form.productImgs[0]
+        },
+        palyVideo () {
+            this.innerVisible = true
+        },
+        closePlayDialog () {
+            console.log('closePlayDialog')
+            this.$refs['videoPlay'].pause()
         }
     }
 }
@@ -675,7 +687,10 @@ export default {
         font-size: 16px;
         padding-bottom: 10px;
     }
-
+    .avatarVideo {
+        width: 500px;
+        display: block;
+    }
     .address {
         overflow: hidden;
         text-overflow: ellipsis;

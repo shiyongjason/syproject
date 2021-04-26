@@ -49,36 +49,41 @@
                     {{scope.data.row.customerName+'的智能方案'}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看权益</el-button>
-                    <el-button class="orangeBtn clipBtn" @click="onShowProgress(scope.data.row)"
-                               style="margin:10px 10px 0 10px">提货进度
-                    </el-button>
+                    <el-button class="orangeBtn clipBtn" @click="onShowRights(scope.data.row)">查看方案详情</el-button>
                 </template>
             </basicTable>
         </div>
         <el-dialog title="代理权益详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible"
                    width="50%">
-            <h3 class="right-title">代理订单</h3>
-            <div class="right-items">
-                <p>代理订单号：{{cloudMerchantAgentDetail.agentCode}}</p>
-                <p>代理押金：{{cloudMerchantAgentDetail.payAmount}}元</p>
-                <p>代理品类：{{cloudMerchantAgentDetail.categoryName}}</p>
-                <p>代理型号：{{cloudMerchantAgentDetail.specificationName}}</p>
-                <p>代理区域：{{cloudMerchantAgentDetail.agentArea}}</p>
-                <p>代理权益有效期：{{agentValidTimeDesc}}</p>
-                <p>代理合同状态：{{contractState}}</p>
+            <h3 class="right-title">用户信息</h3>
+            <div class="right-items-top">
+                <p>创建时间：{{cloudMerchantCaseDetailList.createTime}}</p>
+                <p>姓名：{{cloudMerchantCaseDetailList.customerName}}元</p>
+                <p>联系电话：{{cloudMerchantCaseDetailList.customerPhone}}</p>
+                <p>小区名称：{{cloudMerchantCaseDetailList.customerAddress}}</p>
+                <p>房屋户型：{{cloudMerchantCaseDetailList.customerHouseType}}</p>
+                <p>客户家的主材产品：{{cloudMerchantCaseDetailList.customerCategory}}</p>
+                <p>装修进度：{{cloudMerchantCaseDetailList.customerDecorProgress}}</p>
+                <p>备注：{{cloudMerchantCaseDetailList.customerDecorProgress}}</p>
             </div>
-            <h3 class="right-title">代理权益</h3>
-            <div class="right-items" v-html="cloudMerchantAgentDetail.agentContent"></div>
+            <h3 class="right-title">智能升级方案详情</h3>
+            <div  v-for="item in cloudMerchantCaseDetailList.details" :key="item.id">
+                <div class="right-items">
+                    <div class="item-left">
+                        <h5>{{item.customCategoryName}}</h5>
+                        <img style="height: 6rem;width: 6rem " :src="item.productIcon">
+                        <p style="width: 12rem ">{{item.productName}}</p>
+                    </div>
+                    <div class="item-right">
+                        <h5 class="item-text">数量 {{item.productCount}} 个</h5>
+                        <p > {{item.promotedTagline}}</p>
+                    </div>
+                </div>
+                <div class="line"/>
+
+            </div>
         </el-dialog>
 
-        <el-dialog title="提货进度" :modal-append-to-body=false :append-to-body=false :visible.sync="progressDialogVisible"
-                   width="50%">
-            <basicTable :tableLabel="progressTableLabel" :tableData="progressTable">
-
-            </basicTable>
-            <el-button class="orangeBtn chckBtn" @click="checkShopManager(progressCompany)">查询提货明细</el-button>
-        </el-dialog>
     </div>
 </template>
 
@@ -129,13 +134,12 @@ export default {
     },
     mounted () {
         this.queryList(this.queryParams)
-        this.queryStatistics(this.queryParams)
         this.getAreacode()
     },
     computed: {
         ...mapGetters({
             cloudMerchantCaseList: 'cloudMerchantCaseList',
-            cloudMerchantAgentDetail: 'cloudMerchantAgentDetail'
+            cloudMerchantCaseDetailList: 'cloudMerchantCaseDetailList'
         }),
         getCity () {
             const province = this.provinceList.filter(item => item.provinceId == this.queryParams.provinceId)
@@ -145,11 +149,11 @@ export default {
             return []
         },
         agentValidTimeDesc () {
-            if (this.cloudMerchantAgentDetail == null || this.cloudMerchantAgentDetail.payTime == null) {
+            if (this.cloudMerchantCaseDetailList == null || this.cloudMerchantCaseDetailList.payTime == null) {
                 return '--'
             }
 
-            const date = new Date(this.cloudMerchantAgentDetail.payTime)
+            const date = new Date(this.cloudMerchantCaseDetailList.payTime)
 
             let nextDate = new Date(date)
             nextDate.setFullYear(nextDate.getFullYear() + 1)
@@ -158,11 +162,11 @@ export default {
             return '自' + this.dateToString(date) + '至' + this.dateToString(nextDate) + '失效'
         },
         contractState () {
-            if (this.cloudMerchantAgentDetail == null || this.cloudMerchantAgentDetail.payTime == null) {
+            if (this.cloudMerchantCaseDetailList == null || this.cloudMerchantCaseDetailList.payTime == null) {
                 return '--'
             }
 
-            let sdtime1 = new Date(this.cloudMerchantAgentDetail.payTime)
+            let sdtime1 = new Date(this.cloudMerchantCaseDetailList.payTime)
             sdtime1.setFullYear((sdtime1.getFullYear() + 1))
             let sdtime3 = new Date().getTime()
             return sdtime1.getTime() - sdtime3 > 0 ? '履约中' : '已过期'
@@ -172,13 +176,12 @@ export default {
     methods: {
         ...mapActions({
             findCloudMerchantCaseList: 'findCloudMerchantCaseList',
-            getCloudMerchantAgentDetail: 'getCloudMerchantAgentDetail'
+            findCloudMerchantCaseDetailList: 'findCloudMerchantCaseDetailList'
         }),
 
         onSearch: function () {
             this.queryParams.pageNumber = 1
             this.queryList(this.queryParams)
-            this.queryStatistics(this.queryParams)
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -204,22 +207,9 @@ export default {
             console.log(key)
         },
         async onShowRights (val) {
-            await this.getCloudMerchantAgentDetail({ id: val.id })
+            let data = await this.findCloudMerchantCaseDetailList({ id: val.id })
+            console.log(data)
             this.rightsDialogVisible = true
-        },
-        async onShowProgress (val) {
-            this.progressCompany = val
-            const data = await getCloudMerchantAgentProgress({ id: val.id })
-            if (data) {
-                this.progressTable = [data.data]
-                this.progressDialogVisible = true
-            }
-        },
-        async queryStatistics (parms) {
-            const data = await getCloudMerchantStatistics(parms)
-            if (data) {
-                this.statistics = data.data
-            }
         },
         dateToString (date) {
             const year = date.getFullYear()
@@ -227,14 +217,7 @@ export default {
             const day = (date.getDate()) < 10 ? '0' + (date.getDate()) : date.getDate()
 
             return year + '年' + month + '月' + day + '日'
-        },
-
-        checkShopManager (val) {
-            this.$router.push({
-                name: `warehouseManagement`, params: { dealer: val.companyName }
-            })
         }
-
     }
 
 }
@@ -274,10 +257,41 @@ export default {
     }
 
     .right-items {
+        display: flex;
+        margin: 10px 0 30px 0;
+        flex-direction: row;
+        justify-content: flex-start;
+    }
+    .item-left {
+        align-items: flex-start;
+        display: flex;
+        margin: 10px 0 10px 0;
+        flex-direction: column;
+    }
+    .item-right {
+        display: flex;
+        align-items: flex-start;
+        margin-left: 50px;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .right-items-top {
         margin: 10px 0 30px 0;
         line-height: 25px;
     }
-
+    .item-text {
+        margin: 10px 0 30px 0;
+        line-height: 25px;
+    }
+    .line{
+        float:right;
+        width: 100%;
+        height: 1px;
+        margin-top: -0.5em;
+        background:#d4c4c4;
+        position: relative;
+        text-align: center;
+    }
     .chckBtn {
         float: right;
         margin: 20px;

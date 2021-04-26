@@ -75,6 +75,7 @@ const state = {
     serviceManageHistoryList: [],
     cloudMerchantList: [],
     cloudMerchantCaseList: [],
+    cloudMerchantCaseDetailList: [],
     cloudMerchantFromPhone: [],
     cloudMerchantListPagination: {},
     cloudMerchantAgentDetail: {},
@@ -189,6 +190,7 @@ const getters = {
     serviceManageHistoryList: state => state.serviceManageHistoryList,
     cloudMerchantList: state => state.cloudMerchantList,
     cloudMerchantCaseList: state => state.cloudMerchantCaseList,
+    cloudMerchantCaseDetailList: state => state.cloudMerchantCaseDetailList,
     cloudMerchantFromPhone: state => state.cloudMerchantFromPhone,
     cloudMerchantListPagination: state => state.cloudMerchantListPagination,
     cloudMerchantAgentDetail: state => state.cloudMerchantAgentDetail,
@@ -434,6 +436,9 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_CASE_LIST] (state, payload) {
         state.cloudMerchantCaseList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CASE_DETAIL_LIST] (state, payload) {
+        state.cloudMerchantCaseDetailList = payload
     },
     [cloud.GET_CLOUD_MERCHANT_FROM_PHONE] (state, payload) {
         state.cloudMerchantFromPhone = payload
@@ -848,6 +853,10 @@ const actions = {
     async findCloudMerchantCaseList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantCaseList(params)
         commit(cloud.GET_CLOUD_MERCHANT_CASE_LIST, data.records)
+    },
+    async findCloudMerchantCaseDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantCaseDetailList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CASE_DETAIL_LIST, data)
     },
     async findCloudMerchantFromPhone ({ commit }, params) {
         const { data } = await Api.getCloudMerchantFromPhone(params)

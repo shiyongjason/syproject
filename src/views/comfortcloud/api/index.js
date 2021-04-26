@@ -606,6 +606,10 @@ export function getCloudMerchantList (params) {
 export function getCloudMerchantCaseList (params) {
     return axios.get(iotUrl + '/mall/boss/customer-project', { params })
 }
+// 获取用户方案详情
+export function getCloudMerchantCaseDetailList (params) {
+    return axios.get(iotUrl + '/mall/boss/customer-project/' + params.id)
+}
 // 获取招商代理商
 export function getCloudMerchantFromPhone (params) {
     return axios.get(iotUrl + '/mall/boss/company/info-by-phone', { params })
