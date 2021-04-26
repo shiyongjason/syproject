@@ -468,7 +468,7 @@ export default {
         approveContract (item, val) {
             // 这里根据 是否为 模板合同 来进入上传页面
             // 1：有模板 2：无模板
-            if (item.contractSignType == 2) {
+            if (!item.contractTemplateVersionId) {
                 this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, role: val } })
             } else {
                 this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })

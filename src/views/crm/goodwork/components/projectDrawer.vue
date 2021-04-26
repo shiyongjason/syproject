@@ -3,7 +3,7 @@
 
         <!-- <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
              -->
-        <h-drawer title="项目详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
+        <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
             <template #connect>
                 <div class="fiextab">
                     <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
