@@ -68,12 +68,33 @@
                         建议尺寸：172*172，图片大小1M以内，支持jpeg,png和jpg格式
                     </div>
                 </el-form-item>
-                <el-form-item label="商品主图：" prop="productImg" ref="productImg">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="productImgUrl" ref="uploadImg"
-                                  @back-event="productImg" :imgW="80" :imgH="80"/>
-                    <div class="upload-tips">
-                        建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
-                    </div>
+                <el-form-item label="商品主图：" prop="productImgs" ref="productImgs">
+                    <el-row :span="8">
+                        <el-upload
+                            list-type="picture-card"
+                            v-bind="uploadInfo"
+                            :multiple='true'
+                            :on-success="handleSuccess"
+                            :limit="5"
+                            :on-exceed="pictureMessage"
+                            :on-remove="handleRemove">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                        <div class="upload-tips">
+                            建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
+                        </div>
+                    </el-row>
+                    <el-row>
+                        <SingleUpload sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
+                                      @back-event="videoUrl" :imgW="100" :imgH="100">
+                        </SingleUpload>
+                        <h-button v-if="form.video"   type="primary" @click="palyVideo">视频预览</h-button>
+                        <div class="upload-tips">
+                            建议尺寸：支持 MP4、 AVI、mov、rmvb格式, 大小不超过20MB
+                            主图视频尺寸1:1，视频长度建议不超过60秒
+                        </div>
+                    </el-row>
+
                 </el-form-item>
                 <el-form-item label="商品详情：" prop="productDetailImg" ref="productDetailImg">
                     <SingleUpload sizeLimit='2M' :upload="uploadInfo" :imageUrl="productDetailImgUrl" ref="uploadImg"
@@ -187,6 +208,18 @@
                 <h-button @click="cancelClick">取 消</h-button>
                 <h-button type="primary" @click="submitForm('form')" :loading="isSaving">保 存</h-button>
             </div>
+            <el-dialog
+                width="600px"
+                title="视频播放"
+                @close="closePlayDialog"
+                :visible.sync="innerVisible"
+                append-to-body>
+                <Video
+                    ref="videoPlay"
+                    :src="this.form.video"
+                    class="avatarVideo" controls="controls">您的浏览器不支持视频播放
+                </Video>
+            </el-dialog>
         </el-dialog>
     </div>
 </template>
@@ -205,6 +238,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            innerVisible: false,
             form: {
                 categoryId: '',
                 categoryName: '',
@@ -214,10 +248,12 @@ export default {
                 productName: '',
                 productIcon: '',
                 productImg: '',
+                productImgs: [],
                 productDetailImg: '',
                 retailPrice: '',
                 shareTagline: '',
                 costPrice: '',
+                video: '',
                 commissionRate: '',
                 priceList: [{
                     id: '',
@@ -311,6 +347,18 @@ export default {
                 productImg: [
                     { required: true, message: '请设置商品主图' }
                 ],
+                productImgs: [
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            if (!value) {
+                                return callback(new Error('商品主图不能为空'))
+                            }
+                            return callback()
+                        },
+                        message: '请设置商品主图'
+                    }
+                ],
                 productDetailImg: [
                     { required: true, message: '请设置商品详情图片' }
                 ],
@@ -333,9 +381,9 @@ export default {
                 if (val) this.$refs['productIcon'].clearValidate()
             })
         },
-        'form.productImg' (val) {
+        'form.productImgs' (val) {
             this.$nextTick(() => {
-                if (val) this.$refs['productImg'].clearValidate()
+                if (val) this.$refs['productImgs'].clearValidate()
             })
         },
         'form.productDetailImg' (val) {
@@ -354,20 +402,33 @@ export default {
         ...mapState({
             userInfo: state => state.userInfo
         }),
+        action () {
+            return interfaceUrl + 'tms/files/upload'
+        },
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
-                accept: 'image/jpeg, image/jpg, image/png'
+                accept: 'image/jpeg, image/jpg, image/png',
+                name: 'multiFile'
+            }
+        },
+        videoUpload () {
+            return {
+                action: interfaceUrl + 'tms/files/upload',
+                data: {
+                    updateUid: this.userInfo.employeeName
+                },
+                accept: 'audio/mp4, video/mp4'
             }
         },
         productIconUrl () {
             return this.form.productIcon
         },
-        productImgUrl () {
-            return this.form.productImg
+        productVideoUrl () {
+            return this.form.productImgs[0] ? this.form.productImgs[0] : this.form.productImg
         },
         productDetailImgUrl () {
             return this.form.productDetailImg
@@ -391,6 +452,8 @@ export default {
                     productName: '',
                     productIcon: '',
                     productImg: '',
+                    video: '',
+                    productImgs: [],
                     productDetailImg: '',
                     retailPrice: '',
                     costPrice: '',
@@ -537,6 +600,19 @@ export default {
         productImg (val) {
             this.form.productImg = val.imageUrl
         },
+        videoUrl (val) {
+            this.$message.success('视频上传成功')
+            this.form.video = val.imageUrl
+
+            this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+        },
+
+        pictureMessage (files, fileList) {
+            this.$message({
+                type: 'warning',
+                message: '最多上传5张'
+            })
+        },
         productDetailImg (val) {
             this.form.productDetailImg = val.imageUrl
         },
@@ -559,6 +635,8 @@ export default {
                 productName: data.productName,
                 productIcon: data.productIcon,
                 productImg: data.productImg,
+                video: data.video,
+                productImgs: data.productImgs ? data.productImgs : [],
                 productDetailImg: data.productDetailImg,
                 retailPrice: data.retailPrice,
                 costPrice: data.costPrice,
@@ -572,6 +650,24 @@ export default {
             this.status = 'modify'
             this.dialogShopEdit = true
             this.findCloudMerchantShopCategoryTypeList({ categoryId: data.categoryId })
+        },
+        handleRemove (file, fileList) {
+            console.log(file, fileList)
+        },
+        handleSuccess (response, file, fileList) {
+            if (response.code === 200) {
+                console.log(response.data.accessUrl)
+                this.form.productImgs.push(response.data.accessUrl)
+            }
+
+            this.form.productImg = this.form.productImgs[0]
+        },
+        palyVideo () {
+            this.innerVisible = true
+        },
+        closePlayDialog () {
+            console.log('closePlayDialog')
+            this.$refs['videoPlay'].pause()
         }
     }
 }
@@ -591,7 +687,10 @@ export default {
         font-size: 16px;
         padding-bottom: 10px;
     }
-
+    .avatarVideo {
+        width: 500px;
+        display: block;
+    }
     .address {
         overflow: hidden;
         text-overflow: ellipsis;

@@ -18,15 +18,9 @@
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
-                <el-tab-pane label="购买记录" name="0">
-                    <el-tag size="medium" class="eltagtop">
-                        合计 共购买 {{tableBuyData.length}}种商品；
-                        累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
-                        累计购买件数：{{tableBuyTotalData.totalProductCount ? tableBuyTotalData.totalProductCount : '0'}}件；
-                        累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
-                    </el-tag>
+                <el-tab-pane label="工程项目" name="0">
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                        <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true' :pagination="projectPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                             <template slot="replenishmentTime" slot-scope="scope">
                                 <div v-if="scope.data.row.brandName === '舒适云'">{{scope.data.row.replenishmentTime | formatterTime}}</div>
                                 <div v-else>--</div>
@@ -37,7 +31,25 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="1">
+                <el-tab-pane label="购买记录" name="1">
+                    <el-tag size="medium" class="eltagtop">
+                        合计 共购买 {{tableBuyData.length}}种商品；
+                        累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
+                        累计购买件数：{{tableBuyTotalData.totalProductCount ? tableBuyTotalData.totalProductCount : '0'}}件；
+                        累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
+                    </el-tag>
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="status" slot-scope="scope">
+                                <div>{{statusMap[scope.data.row.status]}}</div>
+                            </template>
+                            <template slot="deviceCategory" slot-scope="scope">
+                                <div>{{categoryMap[scope.data.row.deviceCategory]}}</div>
+                            </template>
+                        </basicTable>
+                    </div>
+                </el-tab-pane>
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="2">
                     <div class="page-body-cont-enterprise-info">
                         <span style="margin-bottom: 20px">公司名称： {{enterpriseInfoData.companyName}} </span>
                         <span style="margin-bottom: 20px">联系地址： {{constructAddress}}</span>
@@ -49,7 +61,7 @@
                         <span style="margin-bottom: 20px">主营品牌：{{enterpriseInfoData.mainBrand}}</span>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="沟通记录" name="2">
+                <el-tab-pane label="沟通记录" name="3">
                     <div class="query-cont-col ml20">
                         <el-button type="primary" @click="communicate">+新增记录</el-button>
                     </div>
@@ -115,7 +127,19 @@ export default {
                 pageSize: 10,
                 phone: this.$route.query.phone
             },
+            statusMap: { 1: '待提交', 2: '初审中', 3: '资料收集中', 4: '待立项', 5: '合作关闭', 6: '待签约', 7: '待放款', 8: '贷中', 9: '项目完成', 10: '信息待完善', 11: '待终审', 12: '资料待审核' },
+            categoryMap: { 1: '空调', 2: '采暖', 3: '新风', 4: '净水', 5: '智能化', 6: '辅材', 7: '电梯', 8: '其他', 9: '电器', 10: '热水器' },
+            projectQueryParams: {
+                pageNumber: 1,
+                pageSize: 10,
+                companyId: this.$route.query.companyId
+            },
             pagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
+            projectPagination: {
                 pageNumber: 1,
                 pageSize: 10,
                 total: 0
@@ -125,6 +149,7 @@ export default {
             enterpriseInfoData: {},
             tagStringList: [],
             tableBuyData: [],
+            tableProjectData: [],
             dialogVisible: false,
             tableBuyLabel: [
                 { label: '品类', prop: 'categoryName' },
@@ -135,6 +160,22 @@ export default {
                 { label: '累计购买件数', prop: 'productCount' },
                 { label: '累计购买金额', prop: 'orderAmount' },
                 { label: '预计补货时间', prop: 'replenishmentTime', formatters: 'dateTime' }
+            ],
+            tableProjectLabel: [
+                { label: '项目名称', prop: 'projectName' },
+                { label: '项目地址', prop: 'address', width: '220px' },
+                { label: '项目编号', prop: 'projectNo' },
+                { label: '所属分部', prop: 'deptName', formatters: 'dateTime' },
+                { label: '经销商', prop: 'companyName' },
+                { label: '甲方名称', prop: 'firstPartName' },
+                { label: '预计签约时间', prop: 'estimateSignTime', formatters: 'dateTime' },
+                { label: '项目类别', prop: 'type' },
+                { label: '工程项目进度', prop: 'status' },
+                { label: '项目合同总额', prop: 'contractAmount' },
+                { label: '设备总额', prop: 'deviceAmount' },
+                { label: '设备品类', prop: 'deviceCategory' },
+                { label: '设备品牌', prop: 'deviceBrand' },
+                { label: '合作进度', prop: 'status' }
             ],
             communicationTableLabel: [
                 { label: '沟通日期', prop: 'communicationDate', formatters: 'date' },
@@ -161,6 +202,7 @@ export default {
         }),
         ...mapGetters({
             merchantmemberInvitationOutOrderData: 'cloudMerchantmemberInvitationOutOrderData',
+            merchantmemberInvitationProjectData: 'cloudMerchantmemberInvitationProjectData',
             merchantExernalMemberData: 'iotmerchantExternalMemberData',
             cloudMerchantTaglist: 'cloudMerchantTaglist',
             cloudMerchantMemberCommunicationList: 'cloudMerchantMemberCommunicationList',
@@ -203,18 +245,26 @@ export default {
     methods: {
         ...mapActions({
             findMerchantMemberInvitationOutOrdersituation: 'findMerchantMemberInvitationOutOrdersituation',
+            findMerchantMemberInvitationProject: 'findMerchantMemberInvitationProject',
             findMerchantExternalMembersituation: 'findMerchantExternalMembersituation',
             findCloudMerchantTaglist: 'findCloudMerchantTaglist',
             findCloudMerchantMemberCommunicationList: 'findCloudMerchantMemberCommunicationList'
         }),
         async onQuery () {
             await this.findMerchantMemberInvitationOutOrdersituation(this.searchParams)
+            await this.findMerchantMemberInvitationProject(this.projectQueryParams)
             await this.requestMemberCommunicationList()
             this.tableBuyData = this.merchantmemberInvitationOutOrderData.records
+            this.tableProjectData = this.merchantmemberInvitationProjectData.records
             this.pagination = {
                 pageNumber: this.merchantmemberInvitationOutOrderData.current,
                 pageSize: this.merchantmemberInvitationOutOrderData.size,
                 total: this.merchantmemberInvitationOutOrderData.total
+            }
+            this.projectPagination = {
+                pageNumber: this.merchantmemberInvitationProjectData.current,
+                pageSize: this.merchantmemberInvitationProjectData.size,
+                total: this.merchantmemberInvitationProjectData.total
             }
         },
         async requestMemberCommunicationList () {

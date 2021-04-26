@@ -74,6 +74,8 @@ const state = {
     cloudHomeModeTypeList: [],
     serviceManageHistoryList: [],
     cloudMerchantList: [],
+    cloudMerchantCaseList: [],
+    cloudMerchantCaseDetailList: [],
     cloudMerchantFromPhone: [],
     cloudMerchantListPagination: {},
     cloudMerchantAgentDetail: {},
@@ -104,6 +106,7 @@ const state = {
     cloudMerchantProductOrderTotal: {},
     cloudMerchantActivityPurchaseData: {},
     cloudMerchantmemberInvitationOutOrderData: {},
+    cloudMerchantmemberInvitationProjectData: {},
     cloudMerchantTaglist: [],
     cloudMerchantMemberCommunicationList: [],
     cloudMerchantMemberCommunicationListPagination: {}
@@ -186,6 +189,8 @@ const getters = {
     cloudHomeModeTypeList: state => state.cloudHomeModeTypeList,
     serviceManageHistoryList: state => state.serviceManageHistoryList,
     cloudMerchantList: state => state.cloudMerchantList,
+    cloudMerchantCaseList: state => state.cloudMerchantCaseList,
+    cloudMerchantCaseDetailList: state => state.cloudMerchantCaseDetailList,
     cloudMerchantFromPhone: state => state.cloudMerchantFromPhone,
     cloudMerchantListPagination: state => state.cloudMerchantListPagination,
     cloudMerchantAgentDetail: state => state.cloudMerchantAgentDetail,
@@ -220,6 +225,7 @@ const getters = {
     cloudMerchantProductOrderTotal: state => state.cloudMerchantProductOrderTotal,
     cloudMerchantActivityPurchaseData: state => state.cloudMerchantActivityPurchaseData,
     cloudMerchantmemberInvitationOutOrderData: state => state.cloudMerchantmemberInvitationOutOrderData,
+    cloudMerchantmemberInvitationProjectData: state => state.cloudMerchantmemberInvitationProjectData,
     cloudMerchantTaglist: state => state.cloudMerchantTaglist,
     cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
     cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination
@@ -428,6 +434,12 @@ const mutations = {
     [cloud.GET_CLOUD_MERCHANT_LIST] (state, payload) {
         state.cloudMerchantList = payload
     },
+    [cloud.GET_CLOUD_MERCHANT_CASE_LIST] (state, payload) {
+        state.cloudMerchantCaseList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_CASE_DETAIL_LIST] (state, payload) {
+        state.cloudMerchantCaseDetailList = payload
+    },
     [cloud.GET_CLOUD_MERCHANT_FROM_PHONE] (state, payload) {
         state.cloudMerchantFromPhone = payload
         console.log(payload)
@@ -518,6 +530,9 @@ const mutations = {
     },
     [cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA] (state, payload) {
         state.cloudMerchantmemberInvitationOutOrderData = payload
+    },
+    [cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA] (state, payload) {
+        state.cloudMerchantmemberInvitationProjectData = payload
     },
     [cloud.GET_CLOUD_MERCHANT_TAG_LIST] (state, payload) {
         state.cloudMerchantTaglist = payload
@@ -835,6 +850,14 @@ const actions = {
             total: data.total
         })
     },
+    async findCloudMerchantCaseList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantCaseList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CASE_LIST, data.records)
+    },
+    async findCloudMerchantCaseDetailList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantCaseDetailList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_CASE_DETAIL_LIST, data)
+    },
     async findCloudMerchantFromPhone ({ commit }, params) {
         const { data } = await Api.getCloudMerchantFromPhone(params)
         commit(cloud.GET_CLOUD_MERCHANT_FROM_PHONE, data)
@@ -958,6 +981,10 @@ const actions = {
     async findMerchantMemberInvitationOutOrdersituation ({ commit }, params) {
         const { data } = await Api.getMerchantMemberInvitationOutOrdersituation(params)
         commit(cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
+    },
+    async findMerchantMemberInvitationProject ({ commit }, params) {
+        const { data } = await Api.getMerchantMemberInvitationProject(params)
+        commit(cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA, data)
     },
     async findCloudMerchantTaglist ({ commit }, params) {
         const { data } = await Api.getCloudMerchantTaglist(params)
