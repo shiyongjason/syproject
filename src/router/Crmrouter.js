@@ -424,7 +424,7 @@ export default [
                     title: '天眼查',
                     tagName: '天眼查',
                     parentName: '好橙工',
-                    isMenu: true,
+                    isMenu: false,
                     icon: ''
                 },
                 component: () => import('@/views/crm/crmauthen/tianyan.vue')
