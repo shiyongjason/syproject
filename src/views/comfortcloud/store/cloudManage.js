@@ -983,6 +983,7 @@ const actions = {
         commit(cloud.MERCHANT_MEMBERS_INVITATION_OUT_ORDER_DATA, data)
     },
     async findMerchantMemberInvitationProject ({ commit }, params) {
+        console.log(params)
         const { data } = await Api.getMerchantMemberInvitationProject(params)
         commit(cloud.MERCHANT_MEMBERS_INVITATION_PROJECT_DATA, data)
     },
