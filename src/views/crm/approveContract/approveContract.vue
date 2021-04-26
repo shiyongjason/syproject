@@ -24,7 +24,7 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" v-if="flag"></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onBlur='onBlur' @onInit="editorOnInit" @onKeyUp="onKeyUp" v-if="flag"></editor>
                             <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
