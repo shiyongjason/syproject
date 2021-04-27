@@ -108,7 +108,7 @@
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
                         <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
-                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
+                        <el-button v-if="scope.data.row.autoTag" class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
                         <el-button class="orangeBtn" @click="onDetail(scope.data.row,2)">沟通记录</el-button>
                     </div>
                     <div v-else>-</div>
@@ -279,28 +279,10 @@ export default {
                     let newAuto = []
                     for (let i = 0; i < auto.length; i++) {
                         for (let j = 0; j < val.length; j++) {
-                            console.log(auto[i].tagId)
-                            console.log(val[j])
                             if (auto[i].tagId == val[j]) {
                                 newAuto.push(auto[i].tagName)
                             }
                         }
-                        // const element = auto[i]
-                        // if (element.length > 0) {
-                        //     if (element === '1') {
-                        //         newAuto.push('买过采暖产品')
-                        //     } else if (element === '2') {
-                        //         newAuto.push('买过新风产品')
-                        //     } else if (element === '3') {
-                        //         newAuto.push('买过空调主材')
-                        //     } else if (element === '4') {
-                        //         newAuto.push('买过空调辅材')
-                        //     } else if (element === '5') {
-                        //         newAuto.push('买过智能产品')
-                        //     } else if (element === '6') {
-                        //         newAuto.push('买过舒适云产品')
-                        //     }
-                        // }
                     }
                     return newAuto
                 } else {
@@ -468,7 +450,7 @@ export default {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { 'phone': val.phone } })
         },
         onDetail (val, index) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'index': index } })
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'index': index, 'companyId': val.companyId } })
         },
         async deleteData (val) {
             console.log(val)

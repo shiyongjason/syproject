@@ -335,7 +335,7 @@ export default {
                 }
 
                 axios.defaults.responseType = 'blob'
-                axios.get(iotUrl + '/mall/boss/user/export', { params: this.queryParams }).then(function (response) {
+                axios.post(iotUrl + '/mall/boss/user/export', this.queryParams).then(function (response) {
                     try {
                         const reader = new FileReader()
                         reader.readAsDataURL(response.data)
