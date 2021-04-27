@@ -612,7 +612,8 @@ export default {
             this.form.productImg = val.imageUrl
         },
         videoUrl (val) {
-            this.$message.success('视频上传成功')
+            console.log(val)
+            this.$message.success(val.imageUrl ? '视频上传成功' : '视频删除成功')
             this.form.video = val.imageUrl
 
             this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'

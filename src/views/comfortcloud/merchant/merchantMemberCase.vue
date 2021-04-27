@@ -17,7 +17,7 @@
             <div class="query-cont-col">
                 <div class="query-col-title">创建人会员账号：</div>
                 <div class="query-col-input">
-                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入会员账号"
+                    <el-input type="text" v-model="queryParams.phone" maxlength="50" placeholder="输入会员账号"
                               clearable></el-input>
                 </div>
             </div>
@@ -56,7 +56,7 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="代理权益详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible"
+        <el-dialog title="方案详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible"
                    width="50%">
             <div class="el-dialog-div">
                 <h3 class="right-title">用户信息</h3>
