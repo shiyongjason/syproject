@@ -667,7 +667,9 @@ export default {
             this.findCloudMerchantShopCategoryTypeList({ categoryId: data.categoryId })
         },
         handleRemove (file, fileList) {
-            console.log(file, fileList)
+            console.log(file)
+            let index = this.form.productImgs.indexOf(file.url)
+            this.form.productImgs.splice(index, 1)
         },
         handleSuccess (response, file, fileList) {
             if (response.code === 200) {

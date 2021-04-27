@@ -45,8 +45,8 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList"
-                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList.records"
+                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' :isShowIndex="true"
                         @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="id" slot-scope="scope">
                     {{scope.data.row.customerName+'的智能方案'}}
@@ -58,32 +58,34 @@
         </div>
         <el-dialog title="代理权益详情" :modal-append-to-body=false :append-to-body=false :visible.sync="rightsDialogVisible"
                    width="50%">
-            <h3 class="right-title">用户信息</h3>
-            <div class="right-items-top">
-                <p>创建时间：{{moment(cloudMerchantCaseDetailList.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
-                <p>姓名：{{cloudMerchantCaseDetailList.customerName}}</p>
-                <p>联系电话：{{cloudMerchantCaseDetailList.customerPhone}}</p>
-                <p>小区名称：{{cloudMerchantCaseDetailList.customerAddress}}</p>
-                <p>房屋户型：{{cloudMerchantCaseDetailList.customerHouseType}}</p>
-                <p>客户家的主材产品：{{cloudMerchantCaseDetailList.customerCategory}}</p>
-                <p>装修进度：{{cloudMerchantCaseDetailList.customerDecorProgress}}</p>
-                <p>备注：{{cloudMerchantCaseDetailList.remark}}</p>
-            </div>
-            <h3 class="right-title">智能升级方案详情</h3>
-            <div  v-for="item in cloudMerchantCaseDetailList.details" :key="item.id">
-                <div class="right-items">
-                    <div class="item-left">
-                        <h5>{{item.customCategoryName}}</h5>
-                        <img style="height: 4rem;width: 4rem;margin-top: 10px;margin-bottom: 10px " :src="item.productIcon">
-                        <p style="width: 12rem ">{{item.productName}}</p>
-                    </div>
-                    <div class="item-right">
-                        <h5 class="item-text">数量 {{item.productCount}} 个</h5>
-                        <p > {{item.promotedTagline}}</p>
-                    </div>
+            <div class="el-dialog-div">
+                <h3 class="right-title">用户信息</h3>
+                <div class="right-items-top">
+                    <p>创建时间：{{moment(cloudMerchantCaseDetailList.createTime).format('YYYY-MM-DD HH:mm:ss')}}</p>
+                    <p>姓名：{{cloudMerchantCaseDetailList.customerName}}</p>
+                    <p>联系电话：{{cloudMerchantCaseDetailList.customerPhone}}</p>
+                    <p>小区名称：{{cloudMerchantCaseDetailList.customerAddress}}</p>
+                    <p>房屋户型：{{cloudMerchantCaseDetailList.customerHouseType}}</p>
+                    <p>客户家的主材产品：{{cloudMerchantCaseDetailList.customerCategory}}</p>
+                    <p>装修进度：{{cloudMerchantCaseDetailList.customerDecorProgress}}</p>
+                    <p>备注：{{cloudMerchantCaseDetailList.remark}}</p>
                 </div>
-                <div class="line"/>
+                <h3 class="right-title">智能升级方案详情</h3>
+                <div  v-for="item in cloudMerchantCaseDetailList.details" :key="item.id">
+                    <div class="right-items">
+                        <div class="item-left">
+                            <h5>{{item.customCategoryName}}</h5>
+                            <img style="height: 4rem;width: 4rem;margin-top: 10px;margin-bottom: 10px " :src="item.productIcon">
+                            <p style="width: 12rem ">{{item.productName}}</p>
+                        </div>
+                        <div class="item-right">
+                            <h5 class="item-text">数量 {{item.productCount}} 个</h5>
+                            <p > {{item.promotedTagline}}</p>
+                        </div>
+                    </div>
+                    <div class="line"/>
 
+                </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="rightsDialogVisible = false">取 消</el-button>
@@ -119,7 +121,11 @@ export default {
                 oneLevelCount: 0,
                 twoLevelCount: 0
             },
-            cloudMerchantListPagination: {},
+            cloudMerchantListPagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
             provinceList: [],
             formLabelWidth: '140px',
             tableLabel: [
@@ -220,7 +226,13 @@ export default {
             this.queryList(this.queryParams)
         },
         queryList: function (params) {
-            this.findCloudMerchantCaseList(params)
+            let data = this.findCloudMerchantCaseList(params)
+            console.log(data)
+            this.cloudMerchantListPagination = {
+                pageNumber: this.cloudMerchantCaseList.current,
+                pageSize: this.cloudMerchantCaseList.size,
+                total: this.cloudMerchantCaseList.total
+            }
         },
         async getAreacode () {
             const { data } = await getChiness()
@@ -324,5 +336,9 @@ export default {
     .chckBtn {
         float: right;
         margin: 20px;
+    }
+    .el-dialog-div {
+        height: 80vh;
+        overflow: auto;
     }
 </style>

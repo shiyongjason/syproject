@@ -852,7 +852,7 @@ const actions = {
     },
     async findCloudMerchantCaseList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantCaseList(params)
-        commit(cloud.GET_CLOUD_MERCHANT_CASE_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_CASE_LIST, data)
     },
     async findCloudMerchantCaseDetailList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantCaseDetailList(params)
