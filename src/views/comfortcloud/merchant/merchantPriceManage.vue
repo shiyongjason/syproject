@@ -433,7 +433,11 @@ export default {
             return this.form.productIcon
         },
         productVideoUrl () {
-            return this.form.productImgs[0] ? this.form.productImgs[0] : this.form.productImg
+            if (this.form.video) {
+                return this.form.productImgs[0] ? this.form.productImgs[0] : this.form.productImg
+            } else {
+                return ''
+            }
         },
         productDetailImgUrl () {
             return this.form.productDetailImg
@@ -707,7 +711,7 @@ export default {
         text-overflow: ellipsis;
     }
     .el-dialog-div {
-        height: 90vh;
+        height: 80vh;
         overflow: auto;
     }
     /deep/ .el-upload--picture-card{
