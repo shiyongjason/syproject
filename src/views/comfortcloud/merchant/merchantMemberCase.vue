@@ -45,8 +45,8 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList"
-                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList.records"
+                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' :isShowIndex="false"
                         @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="id" slot-scope="scope">
                     {{scope.data.row.customerName+'的智能方案'}}
@@ -121,7 +121,11 @@ export default {
                 oneLevelCount: 0,
                 twoLevelCount: 0
             },
-            cloudMerchantListPagination: {},
+            cloudMerchantListPagination: {
+                pageNumber: 1,
+                pageSize: 10,
+                total: 0
+            },
             provinceList: [],
             formLabelWidth: '140px',
             tableLabel: [
@@ -222,7 +226,12 @@ export default {
             this.queryList(this.queryParams)
         },
         queryList: function (params) {
-            this.findCloudMerchantCaseList(params)
+            let data = this.findCloudMerchantCaseList(params)
+            this.cloudMerchantListPagination = {
+                pageNumber: data.current,
+                pageSize: data.size,
+                total: data.total
+            }
         },
         async getAreacode () {
             const { data } = await getChiness()
