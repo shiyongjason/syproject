@@ -46,7 +46,7 @@
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantCaseList.records"
-                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' :isShowIndex="false"
+                        :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' :isShowIndex="true"
                         @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="id" slot-scope="scope">
                     {{scope.data.row.customerName+'的智能方案'}}
@@ -227,10 +227,11 @@ export default {
         },
         queryList: function (params) {
             let data = this.findCloudMerchantCaseList(params)
+            console.log(data)
             this.cloudMerchantListPagination = {
-                pageNumber: data.current,
-                pageSize: data.size,
-                total: data.total
+                pageNumber: this.cloudMerchantCaseList.current,
+                pageSize: this.cloudMerchantCaseList.size,
+                total: this.cloudMerchantCaseList.total
             }
         },
         async getAreacode () {
