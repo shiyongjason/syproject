@@ -407,6 +407,12 @@ export default {
                 } else {
                     this.$message.error(`${this.canIOpenTheWindow.name}不能为空`)
                 }
+            } else {
+                console.log('hahhashdhashd ')
+
+                this.$nextTick(() => {
+                    this.$refs.approveDailg.clearValidate()
+                })
             }
             this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
