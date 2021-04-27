@@ -20,13 +20,17 @@
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
                 <el-tab-pane label="工程项目" name="0">
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true' :pagination="projectPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                            <template slot="replenishmentTime" slot-scope="scope">
-                                <div v-if="scope.data.row.brandName === '舒适云'">{{scope.data.row.replenishmentTime | formatterTime}}</div>
-                                <div v-else>--</div>
+                        <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true'
+                                    :pagination="projectPagination" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="false">
+                            <template slot="status" slot-scope="scope">
+                                <div>{{statusMap[scope.data.row.status]}}</div>
                             </template>
-                            <template slot="action" slot-scope="scope">
-                                <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
+                            <template slot="deviceCategory" slot-scope="scope">
+                                <div>{{categoryMap[scope.data.row.deviceCategory]}}</div>
+                            </template>
+                            <template slot="type" slot-scope="scope">
+                                <div>{{typeMap[scope.data.row.type]}}</div>
                             </template>
                         </basicTable>
                     </div>
@@ -39,13 +43,9 @@
                         累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
                     </el-tag>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-                            <template slot="status" slot-scope="scope">
-                                <div>{{statusMap[scope.data.row.status]}}</div>
-                            </template>
-                            <template slot="deviceCategory" slot-scope="scope">
-                                <div>{{categoryMap[scope.data.row.deviceCategory]}}</div>
-                            </template>
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
+                                    :pagination="pagination" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="true">
                         </basicTable>
                     </div>
                 </el-tab-pane>
@@ -66,17 +66,24 @@
                         <el-button type="primary" @click="communicate">+新增记录</el-button>
                     </div>
                     <div class="page-body-cont">
-                        <basicTable :tableLabel="communicationTableLabel" :tableData="cloudMerchantMemberCommunicationList" :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false' :isAction="true" @onCurrentChange='onCommunicationCurrentChange' @onSizeChange='onCommunicationSizeChange'>
+                        <basicTable :tableLabel="communicationTableLabel"
+                                    :tableData="cloudMerchantMemberCommunicationList"
+                                    :pagination="cloudMerchantMemberCommunicationListPagination" :isShowIndex='false'
+                                    :isAction="true" @onCurrentChange='onCommunicationCurrentChange'
+                                    @onSizeChange='onCommunicationSizeChange'>
                             <template slot="action" slot-scope="scope">
-                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑</el-button>
-                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除</el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordEdit(scope.data.row)">编辑
+                                </el-button>
+                                <el-button class="orangeBtn" @click="onCommunicationRecordDelete(scope.data.row)">删除
+                                </el-button>
                             </template>
                         </basicTable>
                     </div>
 
                 </el-tab-pane>
             </el-tabs>
-            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible" width="50%">
+            <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible"
+                       width="50%">
                 <div v-for="item in cloudMerchantTaglist" :key="item.id">
                     <h1>{{item.tagCategory}}</h1>
                     <div class="tag-cont">
@@ -89,14 +96,19 @@
                     <el-button type="primary" @click="editConform()">确认</el-button>
                 </span>
             </el-dialog>
-            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
-                <el-form ref="communicationRecordForm" :model="communicationRecordForm" :rules="communicationRecordFormRules" label-width="110px">
+            <el-dialog title="沟通内容编辑" :modal-append-to-body=false :append-to-body=false
+                       :visible.sync="communicationRecordDialogVisible" width="50%" :close-on-click-modal="false">
+                <el-form ref="communicationRecordForm" :model="communicationRecordForm"
+                         :rules="communicationRecordFormRules" label-width="110px">
                     <el-form-item label="沟通日期：" prop="communicationDate">
-                        <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false placeholder="沟通日期" value-format='yyyy-MM-dd'>
+                        <el-date-picker type="date" v-model="communicationRecordForm.communicationDate" :clearable=false
+                                        placeholder="沟通日期" value-format='yyyy-MM-dd'>
                         </el-date-picker>
                     </el-form-item>
                     <el-form-item label="沟通结果：" prop="communicationResult">
-                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea" :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%" show-word-limit maxlength="250"></el-input>
+                        <el-input v-model="communicationRecordForm.communicationResult" type="textarea"
+                                  :autosize="{ minRows: 4, maxRows: 6}" placeholder="请输入沟通结果" style="width:80%"
+                                  show-word-limit maxlength="250"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -127,8 +139,33 @@ export default {
                 pageSize: 10,
                 phone: this.$route.query.phone
             },
-            statusMap: { 1: '待提交', 2: '初审中', 3: '资料收集中', 4: '待立项', 5: '合作关闭', 6: '待签约', 7: '待放款', 8: '贷中', 9: '项目完成', 10: '信息待完善', 11: '待终审', 12: '资料待审核' },
-            categoryMap: { 1: '空调', 2: '采暖', 3: '新风', 4: '净水', 5: '智能化', 6: '辅材', 7: '电梯', 8: '其他', 9: '电器', 10: '热水器' },
+            statusMap: {
+                1: '待提交',
+                2: '初审中',
+                3: '资料收集中',
+                4: '待立项',
+                5: '合作关闭',
+                6: '待签约',
+                7: '待放款',
+                8: '贷中',
+                9: '项目完成',
+                10: '信息待完善',
+                11: '待终审',
+                12: '资料待审核'
+            },
+            categoryMap: {
+                1: '空调',
+                2: '采暖',
+                3: '新风',
+                4: '净水',
+                5: '智能化',
+                6: '辅材',
+                7: '电梯',
+                8: '其他',
+                9: '电器',
+                10: '热水器'
+            },
+            typeMap: { 1: '地产项目', 2: '政府共建项目', 3: '市政项目', 4: '办公楼', 5: '厂房', 6: '其他' },
             projectQueryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -165,7 +202,7 @@ export default {
                 { label: '项目名称', prop: 'projectName' },
                 { label: '项目地址', prop: 'address', width: '220px' },
                 { label: '项目编号', prop: 'projectNo' },
-                { label: '所属分部', prop: 'deptName', formatters: 'dateTime' },
+                { label: '所属分部', prop: 'deptName' },
                 { label: '经销商', prop: 'companyName' },
                 { label: '甲方名称', prop: 'firstPartName' },
                 { label: '预计签约时间', prop: 'estimateSignTime', formatters: 'dateTime' },
@@ -268,7 +305,10 @@ export default {
             }
         },
         async requestMemberCommunicationList () {
-            await this.findCloudMerchantMemberCommunicationList({ ...this.searchParams, phone: this.$route.query.phone })
+            await this.findCloudMerchantMemberCommunicationList({
+                ...this.searchParams,
+                phone: this.$route.query.phone
+            })
         },
         async onTotal () {
             const { data } = await getMerchantMemberInvitationOutOrdersTotal({ 'phone': this.$route.query.phone })
@@ -342,7 +382,8 @@ export default {
                     type: 'success',
                     message: '删除成功!'
                 })
-            }).catch(() => { })
+            }).catch(() => {
+            })
         },
         onCommunicationRecordCancel () {
             this.clearCommunicationRecordForm()
@@ -369,7 +410,10 @@ export default {
         },
 
         goToDetail (val) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList', query: { 'phone': this.queryParams.phone } })
+            this.$router.push({
+                path: '/comfortCloudMerchant/merchantOrderManage/merchantOutOrderList',
+                query: { 'phone': this.queryParams.phone }
+            })
         },
         tagCancel () {
             this.clearData()
@@ -423,106 +467,109 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-/deep/ .el-dialog__body {
-    padding-top: 10px;
-}
+    /deep/ .el-dialog__body {
+        padding-top: 10px;
+    }
 
-.top-box {
-    width: auto;
-    margin-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    height: 4rem;
-    justify-content: space-between;
-    background: #ffffff;
-}
+    .top-box {
+        width: auto;
+        margin-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        height: 4rem;
+        justify-content: space-between;
+        background: #ffffff;
+    }
 
-.top-box-right {
-    width: auto;
-    margin-left: 3rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    background: #ffffff;
-}
+    .top-box-right {
+        width: auto;
+        margin-left: 3rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background: #ffffff;
+    }
 
-.choice-tag {
-    color: #ff7a45;
-    cursor: pointer;
-}
-.unselect {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 10px;
-    border: 1px solid #606266;
-    border-radius: 5px;
-}
-.select {
-    display: inline-block;
-    padding: 5px 10px;
-    margin: 10px;
-    background-color: #ff7a45;
-    border: 1px solid #ff7a45;
-    color: white;
-    border-radius: 5px;
-}
-.hand {
-    cursor: pointer !important;
-}
+    .choice-tag {
+        color: #ff7a45;
+        cursor: pointer;
+    }
 
-.page-body-cont-top {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-content: flex-start;
-    padding: 20px 24px;
-    background: $whiteColor;
-}
+    .unselect {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        border: 1px solid #606266;
+        border-radius: 5px;
+    }
 
-.page-body-cont-top-no-left {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-content: flex-start;
-    padding-top: 20px;
-    background: $whiteColor;
-    align-items: center;
-}
+    .select {
+        display: inline-block;
+        padding: 5px 10px;
+        margin: 10px;
+        background-color: #ff7a45;
+        border: 1px solid #ff7a45;
+        color: white;
+        border-radius: 5px;
+    }
 
-.page-body-cont-top-no-align-items {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: row;
-    align-content: flex-start;
-    padding-top: 20px;
-    background: $whiteColor;
-}
+    .hand {
+        cursor: pointer !important;
+    }
 
-.page-body-cont-enterprise-info {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-    align-content: flex-start;
-    padding: 20px 24px;
-    background: $whiteColor;
-}
+    .page-body-cont-top {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+    }
 
-.page-body-cont-enterprise {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    background: $whiteColor;
-}
+    .page-body-cont-top-no-left {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+        align-items: center;
+    }
 
-.page-body-cont-enterprise-info-empty {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    text-align: center;
-    color: #888888;
-    flex-direction: column;
-    align-content: center;
-    padding: 40px 200px 40px 200px;
-    background: $whiteColor;
-}
+    .page-body-cont-top-no-align-items {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: row;
+        align-content: flex-start;
+        padding-top: 20px;
+        background: $whiteColor;
+    }
+
+    .page-body-cont-enterprise-info {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-content: flex-start;
+        padding: 20px 24px;
+        background: $whiteColor;
+    }
+
+    .page-body-cont-enterprise {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        background: $whiteColor;
+    }
+
+    .page-body-cont-enterprise-info-empty {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+        color: #888888;
+        flex-direction: column;
+        align-content: center;
+        padding: 40px 200px 40px 200px;
+        background: $whiteColor;
+    }
 </style>
