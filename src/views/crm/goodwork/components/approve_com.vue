@@ -98,7 +98,7 @@
         <el-dialog title="终审" :visible.sync="projectFinaleVisible" width="50%" :before-close="onCloseProjectFinale"
                    :modal=false :close-on-click-modal=false>
             <el-form ref="projectFinaleDialog" :model="projectFinaleForm" :rules="projectFinaleRules" label-width="180px">
-                <el-form-item :label="approveTitle+'结果：'" prop="submitStatus">
+                <el-form-item :label="approveTitle+'结果：'" prop="result">
                     <el-radio-group v-model="projectFinaleForm.result">
                         <el-radio :label=1>通过</el-radio>
                         <el-radio :label=0>不通过</el-radio>
@@ -407,6 +407,12 @@ export default {
                 } else {
                     this.$message.error(`${this.canIOpenTheWindow.name}不能为空`)
                 }
+            } else {
+                console.log('hahhashdhashd ')
+
+                this.$nextTick(() => {
+                    this.$refs.approveDailg.clearValidate()
+                })
             }
             this.approveTitle = this.status == 4 ? '立项' : '终审'
         },
