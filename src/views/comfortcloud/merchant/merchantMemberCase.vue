@@ -225,9 +225,8 @@ export default {
             this.queryParams.pageSize = val
             this.queryList(this.queryParams)
         },
-        queryList: function (params) {
-            let data = this.findCloudMerchantCaseList(params)
-            console.log(data)
+        queryList: async function (params) {
+            await this.findCloudMerchantCaseList(params)
             this.cloudMerchantListPagination = {
                 pageNumber: this.cloudMerchantCaseList.current,
                 pageSize: this.cloudMerchantCaseList.size,
