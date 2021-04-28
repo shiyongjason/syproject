@@ -91,6 +91,19 @@
                     </el-form-item>
                     <el-form-item label="商品视频：" prop="video" >
                         <el-row>
+<!--                            <el-upload-->
+<!--                                list-type="picture-card"-->
+<!--                                v-bind="videoUpload"-->
+<!--                                :file-list="videos"-->
+<!--                                :multiple='true'-->
+<!--                                accept=".mp4,.avi,.mov,.rmvb"-->
+<!--                                :on-success="handleVideoSuccess"-->
+<!--                                :limit="1"-->
+<!--                                :on-exceed="pictureMessage"-->
+<!--                                :before-upload="beforeVideoUpload"-->
+<!--                                :on-remove="handleVideoRemove">-->
+<!--                                <i class="el-icon-plus"></i>-->
+<!--                            </el-upload>-->
                             <SingleUpload  sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
                                           @back-event="videoUrl" :imgW="100" :imgH="100">
                             </SingleUpload>
@@ -248,6 +261,7 @@ export default {
             },
             innerVisible: false,
             imgs: [],
+            videos: [],
             form: {
                 categoryId: '',
                 categoryName: '',
@@ -450,6 +464,7 @@ export default {
         }),
         clearData () {
             this.imgs = []
+            this.videos = []
             if (this.$refs.form) {
                 this.$refs['form'].clearValidate()
                 this.form = {
@@ -523,6 +538,7 @@ export default {
         },
         cancelClick () {
             this.imgs = []
+            this.videos = []
             this.clearData()
             this.dialogShopEdit = false
         },
@@ -628,13 +644,27 @@ export default {
             const isJPG = file.type === 'image/jpg'
             const isJPEG = file.type === 'image/jpeg'
             const isPNG = file.type === 'image/png'
-            if (!isJPG || !isJPEG || !isPNG) {
+            if (!(isJPG || isJPEG || isPNG)) {
                 this.$message({
                     type: 'error',
                     message: '文件格式不正确'
                 })
             }
             return isJPG || isJPEG || isPNG
+        },
+        beforeVideoUpload (file) {
+            console.log(file.type)
+            const mp4 = file.type === 'video/mp4'
+            const avi = file.type === 'video/avi'
+            const mov = file.type === 'video/mov'
+            const rmvb = file.type === 'video/rmvb'
+            if (!(mp4 || avi || mov || rmvb)) {
+                this.$message({
+                    type: 'error',
+                    message: '文件格式不正确'
+                })
+            }
+            return mp4 || avi || mov || rmvb
         },
         productDetailImg (val) {
             this.form.productDetailImg = val.imageUrl
@@ -643,16 +673,12 @@ export default {
             const { data } = await getCloudMerchantShopDetail({ productId: modifyId })
 
             console.log(data)
-            // function compare (arg) {
-            //     return function (a, b) {
-            //         return a[arg] - b[arg]
-            //     }
-            // }
-            // const sortPriceList = data.priceList.sort(compare('age'))
             this.imgs = []
+            this.videos = []
             data.productImgs.map((item) => {
                 this.imgs.push({ url: item })
             })
+            this.videos.push(data.video)
             this.form = {
                 categoryId: data.categoryId,
                 categoryName: data.categoryName,
@@ -690,6 +716,15 @@ export default {
             }
 
             this.form.productImg = this.form.productImgs[0]
+        },
+        handleVideoSuccess (response, file, fileList) {
+            if (response.code === 200) {
+                console.log(response.data.accessUrl)
+                this.form.video = response.data.accessUrl
+            }
+        },
+        handleVideoRemove (file, fileList) {
+            this.form.video = ''
         },
         palyVideo () {
             this.innerVisible = true
