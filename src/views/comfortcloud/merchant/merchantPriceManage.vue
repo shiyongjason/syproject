@@ -91,12 +91,25 @@
                     </el-form-item>
                     <el-form-item label="商品视频：" prop="video" >
                         <el-row>
+<!--                            <el-upload-->
+<!--                                list-type="picture-card"-->
+<!--                                v-bind="videoUpload"-->
+<!--                                :file-list="imgs.splice(1)"-->
+<!--                                :multiple='true'-->
+<!--                                accept=".mp4,.avi,.mov,.rmvb"-->
+<!--                                :on-success="handleVideoSuccess"-->
+<!--                                :limit="1"-->
+<!--                                :on-exceed="pictureVideoMessage"-->
+<!--                                :before-upload="beforeVideoUpload"-->
+<!--                                :on-remove="handleVideoRemove">-->
+<!--                                <i class="el-icon-plus"></i>-->
+<!--                            </el-upload>-->
                             <SingleUpload  sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
                                           @back-event="videoUrl" :imgW="100" :imgH="100">
                             </SingleUpload>
                             <h-button v-if="form.video"   type="primary" @click="palyVideo">视频预览</h-button>
                             <div class="upload-tips">
-                                建议尺寸：支持 MP4、 AVI、mov、rmvb格式, 大小不超过20MB
+                                建议尺寸：支持 MP4格式, 大小不超过20MB
                                 主图视频尺寸1:1，视频长度建议不超过60秒
                             </div>
                         </el-row>
@@ -248,6 +261,7 @@ export default {
             },
             innerVisible: false,
             imgs: [],
+            videos: [],
             form: {
                 categoryId: '',
                 categoryName: '',
@@ -425,7 +439,8 @@ export default {
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
-                accept: 'audio/mp4, video/mp4, video/avi, video/mov, video/rmvb'
+                accept: 'audio/mp4, video/mp4',
+                name: 'multiFile'
             }
         },
         productIconUrl () {
@@ -450,6 +465,7 @@ export default {
         }),
         clearData () {
             this.imgs = []
+            this.videos = []
             if (this.$refs.form) {
                 this.$refs['form'].clearValidate()
                 this.form = {
@@ -523,6 +539,7 @@ export default {
         },
         cancelClick () {
             this.imgs = []
+            this.videos = []
             this.clearData()
             this.dialogShopEdit = false
         },
@@ -624,17 +641,36 @@ export default {
                 message: '最多上传5张'
             })
         },
+        pictureVideoMessage (files, fileList) {
+            this.$message({
+                type: 'warning',
+                message: '最多上传一个视频'
+            })
+        },
         beforeAvatarUpload (file) {
             const isJPG = file.type === 'image/jpg'
             const isJPEG = file.type === 'image/jpeg'
             const isPNG = file.type === 'image/png'
-            if (!isJPG || !isJPEG || !isPNG) {
+            if (!(isJPG || isJPEG || isPNG)) {
                 this.$message({
                     type: 'error',
                     message: '文件格式不正确'
                 })
             }
             return isJPG || isJPEG || isPNG
+        },
+        beforeVideoUpload (file) {
+            const mp4 = file.name.endsWith('.mp4')
+            const avi = file.name.endsWith('.avi')
+            const mov = file.name.endsWith('.mov')
+            const rmvb = file.name.endsWith('.rmvb')
+            if (!(mp4 || avi || mov || rmvb)) {
+                this.$message({
+                    type: 'error',
+                    message: '文件格式不正确'
+                })
+            }
+            return mp4 || avi || mov || rmvb
         },
         productDetailImg (val) {
             this.form.productDetailImg = val.imageUrl
@@ -643,16 +679,12 @@ export default {
             const { data } = await getCloudMerchantShopDetail({ productId: modifyId })
 
             console.log(data)
-            // function compare (arg) {
-            //     return function (a, b) {
-            //         return a[arg] - b[arg]
-            //     }
-            // }
-            // const sortPriceList = data.priceList.sort(compare('age'))
             this.imgs = []
+            this.videos = []
             data.productImgs.map((item) => {
                 this.imgs.push({ url: item })
             })
+            this.videos.push(data.productImgs[0])
             this.form = {
                 categoryId: data.categoryId,
                 categoryName: data.categoryName,
@@ -690,6 +722,15 @@ export default {
             }
 
             this.form.productImg = this.form.productImgs[0]
+        },
+        handleVideoSuccess (response, file, fileList) {
+            if (response.code === 200) {
+                console.log(response.data.accessUrl)
+                this.form.video = response.data.accessUrl
+            }
+        },
+        handleVideoRemove (file, fileList) {
+            this.form.video = ''
         },
         palyVideo () {
             this.innerVisible = true
