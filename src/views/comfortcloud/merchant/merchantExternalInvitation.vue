@@ -18,24 +18,7 @@
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
-                <el-tab-pane label="工程项目" name="0">
-                    <div class="page-body-cont">
-                        <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true'
-                                    :pagination="projectPagination" @onCurrentChange='onCurrentChange'
-                                    @onSizeChange='onSizeChange' :isAction="false">
-                            <template slot="status" slot-scope="scope">
-                                <div>{{statusMap[scope.data.row.status]}}</div>
-                            </template>
-                            <template slot="deviceCategory" slot-scope="scope">
-                                <div>{{categoryMap[scope.data.row.deviceCategory]}}</div>
-                            </template>
-                            <template slot="type" slot-scope="scope">
-                                <div>{{typeMap[scope.data.row.type]}}</div>
-                            </template>
-                        </basicTable>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane label="购买记录" name="1">
+                <el-tab-pane label="购买记录" name="0">
                     <el-tag size="medium" class="eltagtop">
                         合计 共购买 {{tableBuyData.length}}种商品；
                         累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
@@ -49,7 +32,7 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="2">
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="1">
                     <div class="page-body-cont-enterprise-info">
                         <span style="margin-bottom: 20px">公司名称： {{enterpriseInfoData.companyName}} </span>
                         <span style="margin-bottom: 20px">联系地址： {{constructAddress}}</span>
@@ -61,7 +44,7 @@
                         <span style="margin-bottom: 20px">主营品牌：{{enterpriseInfoData.mainBrand}}</span>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="沟通记录" name="3">
+                <el-tab-pane label="沟通记录" name="2">
                     <div class="query-cont-col ml20">
                         <el-button type="primary" @click="communicate">+新增记录</el-button>
                     </div>
@@ -80,6 +63,23 @@
                         </basicTable>
                     </div>
 
+                </el-tab-pane>
+                <el-tab-pane v-if="enterpriseInfoData.source==='hcg'" label="工程项目" name="3">
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true'
+                                    :pagination="projectPagination" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="false">
+                            <template slot="status" slot-scope="scope">
+                                <div>{{statusMap[scope.data.row.status]}}</div>
+                            </template>
+                            <template slot="deviceCategory" slot-scope="scope">
+                                <div>{{categoryMap[scope.data.row.deviceCategory]}}</div>
+                            </template>
+                            <template slot="type" slot-scope="scope">
+                                <div>{{typeMap[scope.data.row.type]}}</div>
+                            </template>
+                        </basicTable>
+                    </div>
                 </el-tab-pane>
             </el-tabs>
             <el-dialog title="选择标签" :modal-append-to-body=false :append-to-body=false :visible.sync="dialogVisible"
@@ -365,7 +365,7 @@ export default {
             this.requestMemberCommunicationList()
         },
         onCommunicationRecordEdit (data) {
-            this.communicationRecordForm = data
+            this.communicationRecordForm = Object.assign({}, data)
             this.communicationRecordDialogVisible = true
         },
         onCommunicationRecordDelete (data) {
