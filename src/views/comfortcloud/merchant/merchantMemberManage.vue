@@ -382,7 +382,7 @@ export default {
         },
         async editConform () {
             if (this.tagStringList) {
-                // 这里因为后台需要传递tagid 所以要加上再传递
+                // 这里因为后台需要传递tagid  所以要加上再传递
                 let tagMapList = []
                 for (let i = 0; i < this.tagStringList.length; i++) {
                     const element = this.tagStringList[i]
