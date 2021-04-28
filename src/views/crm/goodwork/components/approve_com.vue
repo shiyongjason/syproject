@@ -408,8 +408,6 @@ export default {
                     this.$message.error(`${this.canIOpenTheWindow.name}不能为空`)
                 }
             } else {
-                console.log('hahhashdhashd ')
-
                 this.$nextTick(() => {
                     this.$refs.approveDailg.clearValidate()
                 })
