@@ -76,9 +76,11 @@
                                 v-bind="uploadInfo"
                                 :file-list="imgs"
                                 :multiple='true'
+                                accept=".jpg,.jpeg,.png"
                                 :on-success="handleSuccess"
                                 :limit="5"
                                 :on-exceed="pictureMessage"
+                                :before-upload="beforeAvatarUpload"
                                 :on-remove="handleRemove">
                                 <i class="el-icon-plus"></i>
                             </el-upload>
@@ -86,6 +88,8 @@
                                 建议尺寸：375*375，图片大小1M以内，支持jpeg,png和jpg格式
                             </div>
                         </el-row>
+                    </el-form-item>
+                    <el-form-item label="商品视频：" prop="video" >
                         <el-row>
                             <SingleUpload  sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
                                           @back-event="videoUrl" :imgW="100" :imgH="100">
@@ -350,18 +354,13 @@ export default {
                     { required: true, message: '请设置商品列表图' }
                 ],
                 productImg: [
-                    { required: true, message: '请设置商品主图' }
+                    { required: false, message: '请设置商品主图' }
                 ],
                 productImgs: [
                     {
                         required: true,
-                        validator: (rule, value, callback) => {
-                            if (!value) {
-                                return callback(new Error('商品主图不能为空'))
-                            }
-                            return callback()
-                        },
-                        message: '请设置商品主图'
+                        message: '请设置商品主图',
+                        trigger: 'blur'
                     }
                 ],
                 productDetailImg: [
@@ -426,7 +425,7 @@ export default {
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
-                accept: 'audio/mp4, video/mp4'
+                accept: 'audio/mp4, video/mp4, video/avi, video/mov, video/rmvb'
             }
         },
         productIconUrl () {
@@ -624,6 +623,18 @@ export default {
                 type: 'warning',
                 message: '最多上传5张'
             })
+        },
+        beforeAvatarUpload (file) {
+            const isJPG = file.type === 'image/jpg'
+            const isJPEG = file.type === 'image/jpeg'
+            const isPNG = file.type === 'image/png'
+            if (!isJPG || !isJPEG || !isPNG) {
+                this.$message({
+                    type: 'error',
+                    message: '文件格式不正确'
+                })
+            }
+            return isJPG || isJPEG || isPNG
         },
         productDetailImg (val) {
             this.form.productDetailImg = val.imageUrl
