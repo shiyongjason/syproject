@@ -18,21 +18,7 @@
         </div>
         <div class="page-body-cont query-cont">
             <el-tabs v-model="tabIndex" type="card" @tab-click="handleClick">
-                <el-tab-pane label="购买记录" name="0">
-                    <el-tag size="medium" class="eltagtop">
-                        合计 共购买 {{tableBuyData.length}}种商品；
-                        累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
-                        累计购买件数：{{tableBuyTotalData.totalProductCount ? tableBuyTotalData.totalProductCount : '0'}}件；
-                        累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
-                    </el-tag>
-                    <div class="page-body-cont">
-                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
-                                    :pagination="pagination" @onCurrentChange='onCurrentChange'
-                                    @onSizeChange='onSizeChange' :isAction="true">
-                        </basicTable>
-                    </div>
-                </el-tab-pane>
-                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="1">
+                <el-tab-pane class="page-body-cont-enterprise" label="企业信息" name="0">
                     <div class="page-body-cont-enterprise-info">
                         <span style="margin-bottom: 20px">公司名称： {{enterpriseInfoData.companyName}} </span>
                         <span style="margin-bottom: 20px">联系地址： {{constructAddress}}</span>
@@ -44,7 +30,7 @@
                         <span style="margin-bottom: 20px">主营品牌：{{enterpriseInfoData.mainBrand}}</span>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="沟通记录" name="2">
+                <el-tab-pane label="沟通记录" name="1">
                     <div class="query-cont-col ml20">
                         <el-button type="primary" @click="communicate">+新增记录</el-button>
                     </div>
@@ -63,6 +49,20 @@
                         </basicTable>
                     </div>
 
+                </el-tab-pane>
+                <el-tab-pane v-if="enterpriseInfoData.source!='hcg'" label="购买记录" name="2">
+                    <el-tag size="medium" class="eltagtop">
+                        合计 共购买 {{tableBuyData.length}}种商品；
+                        累计购买订单数：{{tableBuyTotalData.totalOrderCount ? tableBuyTotalData.totalOrderCount : '0'}}笔；
+                        累计购买件数：{{tableBuyTotalData.totalProductCount ? tableBuyTotalData.totalProductCount : '0'}}件；
+                        累计购买金额：{{tableBuyTotalData.totalOrderAmount ? tableBuyTotalData.totalOrderAmount : '0'}}元；
+                    </el-tag>
+                    <div class="page-body-cont">
+                        <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
+                                    :pagination="pagination" @onCurrentChange='onCurrentChange'
+                                    @onSizeChange='onSizeChange' :isAction="true">
+                        </basicTable>
+                    </div>
                 </el-tab-pane>
                 <el-tab-pane v-if="enterpriseInfoData.source==='hcg'" label="工程项目" name="3">
                     <div class="page-body-cont">
