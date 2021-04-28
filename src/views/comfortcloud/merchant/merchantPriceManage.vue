@@ -94,12 +94,12 @@
 <!--                            <el-upload-->
 <!--                                list-type="picture-card"-->
 <!--                                v-bind="videoUpload"-->
-<!--                                :file-list="videos"-->
+<!--                                :file-list="imgs.splice(1)"-->
 <!--                                :multiple='true'-->
 <!--                                accept=".mp4,.avi,.mov,.rmvb"-->
 <!--                                :on-success="handleVideoSuccess"-->
 <!--                                :limit="1"-->
-<!--                                :on-exceed="pictureMessage"-->
+<!--                                :on-exceed="pictureVideoMessage"-->
 <!--                                :before-upload="beforeVideoUpload"-->
 <!--                                :on-remove="handleVideoRemove">-->
 <!--                                <i class="el-icon-plus"></i>-->
@@ -109,7 +109,7 @@
                             </SingleUpload>
                             <h-button v-if="form.video"   type="primary" @click="palyVideo">视频预览</h-button>
                             <div class="upload-tips">
-                                建议尺寸：支持 MP4、 AVI、mov、rmvb格式, 大小不超过20MB
+                                建议尺寸：支持 MP4格式, 大小不超过20MB
                                 主图视频尺寸1:1，视频长度建议不超过60秒
                             </div>
                         </el-row>
@@ -439,7 +439,8 @@ export default {
                 data: {
                     updateUid: this.userInfo.employeeName
                 },
-                accept: 'audio/mp4, video/mp4, video/avi, video/mov, video/rmvb'
+                accept: 'audio/mp4, video/mp4',
+                name: 'multiFile'
             }
         },
         productIconUrl () {
@@ -640,6 +641,12 @@ export default {
                 message: '最多上传5张'
             })
         },
+        pictureVideoMessage (files, fileList) {
+            this.$message({
+                type: 'warning',
+                message: '最多上传一个视频'
+            })
+        },
         beforeAvatarUpload (file) {
             const isJPG = file.type === 'image/jpg'
             const isJPEG = file.type === 'image/jpeg'
@@ -653,11 +660,10 @@ export default {
             return isJPG || isJPEG || isPNG
         },
         beforeVideoUpload (file) {
-            console.log(file.type)
-            const mp4 = file.type === 'video/mp4'
-            const avi = file.type === 'video/avi'
-            const mov = file.type === 'video/mov'
-            const rmvb = file.type === 'video/rmvb'
+            const mp4 = file.name.endsWith('.mp4')
+            const avi = file.name.endsWith('.avi')
+            const mov = file.name.endsWith('.mov')
+            const rmvb = file.name.endsWith('.rmvb')
             if (!(mp4 || avi || mov || rmvb)) {
                 this.$message({
                     type: 'error',
@@ -678,7 +684,7 @@ export default {
             data.productImgs.map((item) => {
                 this.imgs.push({ url: item })
             })
-            this.videos.push(data.video)
+            this.videos.push(data.productImgs[0])
             this.form = {
                 categoryId: data.categoryId,
                 categoryName: data.categoryName,
