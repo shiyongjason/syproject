@@ -1,109 +1,67 @@
 <template>
     <div class="page-body B2b">
-        <div class="page-body-cont pb20">
-            <el-form :model="form" ref='form' :rules="rules.event" label-position='left'>
-                <div class="forminfo">
-                    <div class="title-cont">
-                        <span class="title-cont__label">1.设置活动基本信息</span>
-                    </div>
-                    <div class="query-cont-row">
-                        <div class="query-cont-col">
-                            <div class="query-col-input">
-                                <el-form-item prop="spikeName" label="活动名称：" style="display: flex;">
-                                    <el-input style="width:466px" v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled='disableStatus'></el-input>
-                                </el-form-item>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="query-cont-row">
-                        <!-- <div class="query-col-title">活动时间：</div> -->
-                        <div class="query-cont-col">
-                            <el-form-item label="活动时间：" prop="startTime" style="margin-bottom:0;display: flex;">
-                                <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='disableStatus'>
-                                </el-date-picker>
-                            </el-form-item>
-                            <div class="line ml5 mr5">-</div>
-                            <el-form-item prop="endTime" style="margin-bottom:0">
-                                <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'>
-                                </el-date-picker>
-                            </el-form-item>
-                            <div class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</div>
-                        </div>
-                    </div>
-                    <el-form-item label="活动banner：" prop="image" ref="reqPictureList" class="mb20">
-                        <ul class="picture-container">
-                            <template v-if="pictureContainer.length>0">
-                                <li v-for="(item,index) in pictureContainer" :key="index">
-                                    <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
-                                    <img :src="item.url" :alt="item.url">
-                                    <span class="picture-setting" @click="pictureSetting(index)">
-                                        banner
-                                    </span>
-                                </li>
-                            </template>
-                            <el-upload v-bind="uploadInfo" v-if="pictureContainer.length<1" :on-error="pictureError" :on-success="pictureSuccess" :show-file-list="false" :before-upload="beforeAvatarUpload" style="float: left" list-type="picture-card">
-                                <i class="el-icon-plus"></i>
-                            </el-upload>
-                        </ul>
-                        <p style="color:#999">banner大小为 702px x 262px</p>
-                    </el-form-item>
+        <div class="page-body-cont">
+            <el-form ref='form' :model="form" :rules="rules.event" label-width="120px">
+                <div class="title-cont">
+                    <span class="title-cont__label">1.设置活动基本信息</span>
                 </div>
-                <div class="forminfo">
-                    <div class="title-cont">
-                        <span class="title-cont__label">2.设置规则和优惠</span>
-                    </div>
-                    <div class="query-cont-row">
-                        <div class="query-cont-col">
-                            <div class="query-col-input">
-                                <el-form-item prop="discountType" label="优惠方式：" style="display: flex;">
-                                    <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
-                                    <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
-                                </el-form-item>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="query-cont-row">
-                        <div class="query-cont-col">
-                            <div class="query-col-input">
-                                <el-form-item prop="memberScope" label="会员限制：" style="display: flex;">
-                                    <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
-                                    <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
-                                    <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
-                                </el-form-item>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="forminfo">
-                    <div class="title-cont">
-                        <span class="title-cont__label">3.选择活动商品</span>
-                    </div>
-                    <div class="query-cont-row">
-                        <div class="query-cont-col">
-                            <div class="query-col-title">活动商品：</div>
-                            <div class="query-col-input">
-                                <h-button type="create" @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</h-button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="page-table">
-                    <!-- table -->
-                    <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
-                        <template slot="skuName" slot-scope="scope">
-                            <div class="goods">
-                                <img :src="scope.data.row.pictureUrl">
-                                <span class="goods-name">{{scope.data.row.skuName}}</span>
-                            </div>
+                <el-form-item label="活动名称：" prop="spikeName">
+                    <el-input v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled='disableStatus'></el-input>
+                </el-form-item>
+                <el-form-item label="活动时间：" prop="startTime">
+                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='disableStatus'></el-date-picker>
+                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'></el-date-picker>
+                    <span class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</span>
+                </el-form-item>
+                <el-form-item label="活动banner：" prop="image" ref="reqPictureList" class="mb20">
+                    <ul class="picture-container">
+                        <template v-if="pictureContainer.length>0">
+                            <li v-for="(item,index) in pictureContainer" :key="index">
+                                <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
+                                <img :src="item.url" :alt="item.url">
+                                <span class="picture-setting" @click="pictureSetting(index)">
+                                    banner
+                                </span>
+                            </li>
                         </template>
-                        <template slot="action" slot-scope="scope">
-                            <h-button table @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</h-button>
-                            <h-button table @click="onOrder(scope.data.row)" :disabled='canNotOrder'>
-                                刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
-                            </h-button>
-                        </template>
-                    </hosJoyTable>
+                        <el-upload v-bind="uploadInfo" v-if="pictureContainer.length<1" :on-error="pictureError" :on-success="pictureSuccess" :show-file-list="false" :before-upload="beforeAvatarUpload" style="float: left" list-type="picture-card">
+                            <i class="el-icon-plus"></i>
+                        </el-upload>
+                    </ul>
+                    <p style="color:#999">banner大小为 702px x 262px</p>
+                </el-form-item>
+                <div class="title-cont">
+                    <span class="title-cont__label">2.设置规则和优惠</span>
                 </div>
+                <el-form-item label="优惠方式：" prop="discountType">
+                    <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
+                    <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
+                </el-form-item>
+                <el-form-item label="会员限制：" prop="memberScope">
+                    <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
+                    <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
+                    <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
+                </el-form-item>
+                <div class="title-cont">
+                    <span class="title-cont__label">3.选择活动商品</span>
+                </div>
+                <el-form-item label="活动商品：">
+                    <h-button type="create" @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</h-button>
+                </el-form-item>
+                <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
+                    <template slot="skuName" slot-scope="scope">
+                        <div class="goods">
+                            <img :src="scope.data.row.pictureUrl">
+                            <span class="goods-name">{{scope.data.row.skuName}}</span>
+                        </div>
+                    </template>
+                    <template slot="action" slot-scope="scope">
+                        <h-button table @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</h-button>
+                        <h-button table @click="onOrder(scope.data.row)" :disabled='canNotOrder'>
+                            刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
+                        </h-button>
+                    </template>
+                </hosJoyTable>
             </el-form>
         </div>
         <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
@@ -885,5 +843,10 @@ export default {
 .upload-tips {
     font-size: 12px;
     color: #999;
+}
+
+.el-form-item__label,
+.el-form-item__content {
+    line-height: 40p;
 }
 </style>
