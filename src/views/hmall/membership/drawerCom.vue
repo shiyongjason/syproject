@@ -14,7 +14,7 @@
                     <el-form-item label="企业名称：" :label-width="formLabelWidth">
                         {{bossDetail.companyName?bossDetail.companyName:'-'}}
                     </el-form-item>
-                    <el-form-item label="店铺名称：" :label-width="formLabelWidth">
+                    <el-form-item label="店铺名称：" :label-width="formLabelWidth" v-if="type == 'merchant'">
                         <el-input v-model="bossDetail.shopName" maxLength="60" placeholder="请输入"></el-input>
                     </el-form-item>
                     <el-form-item label="所属分部：" :label-width="formLabelWidth" v-if="type==='merchant'">
