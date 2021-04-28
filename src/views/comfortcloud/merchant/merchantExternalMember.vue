@@ -107,7 +107,7 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
-                        <el-button class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
+                        <el-button v-if="scope.data.row.source!=='hcg'" class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
                         <el-button v-if="scope.data.row.autoTag" class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
                         <el-button class="orangeBtn" @click="onDetail(scope.data.row,2)">沟通记录</el-button>
                     </div>
