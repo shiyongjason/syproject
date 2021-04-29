@@ -104,7 +104,7 @@
 <!--                                :on-remove="handleVideoRemove">-->
 <!--                                <i class="el-icon-plus"></i>-->
 <!--                            </el-upload>-->
-                            <SingleUpload  sizeLimit='20M' :upload="videoUpload" :imageUrl="productVideoUrl"
+                            <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="productVideoUrl"
                                           @back-event="videoUrl" :imgW="100" :imgH="100">
                             </SingleUpload>
                             <h-button v-if="form.video"   type="primary" @click="palyVideo">视频预览</h-button>
