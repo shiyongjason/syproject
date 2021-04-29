@@ -184,7 +184,8 @@ export default {
             tabIndex: this.$route.query.index,
             tableBuyTotalData: {},
             enterpriseInfoData: {},
-            tagStringList: [],
+            tagStringList: [], // 用于编辑的tags列表
+            showTagStringList: [], // 用于展示的tags列表
             tableBuyData: [],
             tableProjectData: [],
             dialogVisible: false,
@@ -268,8 +269,8 @@ export default {
             }
         },
         showTag () {
-            if (this.tagStringList.length > 0) {
-                return this.tagStringList.join(',')
+            if (this.showTagStringList.length > 0) {
+                return this.showTagStringList.join(',')
             } else {
                 return '--'
             }
@@ -277,7 +278,6 @@ export default {
     },
     mounted () {
         this.onSearch()
-        // this.tagStringList = ['空调地暖面板YG-3329', '水地暖智控面板YH-3305']
     },
     methods: {
         ...mapActions({
@@ -303,6 +303,7 @@ export default {
                 pageSize: this.merchantmemberInvitationProjectData.size,
                 total: this.merchantmemberInvitationProjectData.total
             }
+            this.memberInfo()
         },
         async requestMemberCommunicationList () {
             await this.findCloudMerchantMemberCommunicationList({
@@ -319,7 +320,10 @@ export default {
             if (this.merchantExernalMemberData.records.length > 0) {
                 this.enterpriseInfoData = this.merchantExernalMemberData.records[0]
             }
+
             this.tagStringList = this.enterpriseInfoData.manualTags ? this.enterpriseInfoData.manualTags : []
+            this.showTagStringList = [...this.tagStringList]
+            console.log(this.showTagStringList)
         },
         async showDliag (val) {
             await this.findCloudMerchantTaglist()
@@ -334,7 +338,7 @@ export default {
                     tagMapList.push({ 'tagId': '', 'tagName': element })
                 }
 
-                if (this.$route.query.manualTags) {
+                if (this.showTagStringList && this.showTagStringList.length > 0) {
                     await editMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
                 } else {
                     await addMemberTag({ 'phone': this.$route.query.phone, 'tagNames': tagMapList })
