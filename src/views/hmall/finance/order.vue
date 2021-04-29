@@ -74,8 +74,7 @@
                     <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo"
-                @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isShowIndex='true'>
                 <template slot="payWay" slot-scope="scope">
                     {{ paymethodMap.get(scope.data.row.payWay) || '-' }}
                 </template>
@@ -192,7 +191,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/api/boss/orders/finance-orders/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'order/boss/child-orders/finance/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         onSizeChange (val) {
