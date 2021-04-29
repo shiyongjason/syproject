@@ -64,7 +64,7 @@
                         </basicTable>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane v-if="enterpriseInfoData.source==='hcg'" label="工程项目" name="3">
+                <el-tab-pane v-else label="工程项目" name="2">
                     <div class="page-body-cont">
                         <basicTable :tableLabel="tableProjectLabel" :tableData="tableProjectData" :isShowIndex='true'
                                     :pagination="projectPagination" @onCurrentChange='onCurrentChange'
