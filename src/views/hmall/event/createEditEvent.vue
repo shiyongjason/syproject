@@ -57,20 +57,20 @@
                     </template>
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</h-button>
-                        <h-button table @click="onOrder(scope.data.row)" :disabled='canNotOrder'>
-                            刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）
-                        </h-button>
+                        <h-button table @click="onOrder(scope.data.row)" :disabled='canNotOrder'>刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）</h-button>
                     </template>
                 </hosJoyTable>
             </el-form>
         </div>
-        <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <h-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</h-button>
-            <h-button type="primary" @click='onSave(1)'>保存</h-button>
-            <h-button type="primary" @click='onSave(2)'>活动发布</h-button>
-        </div>
-        <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
-            <h-button @click='()=>{$router.go(-1)}'>返回</h-button>
+        <div class="page-body-cont btn-cont">
+            <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
+                <h-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</h-button>
+                <h-button type="primary" @click='onSave(1)'>保存</h-button>
+                <h-button type="primary" @click='onSave(2)'>活动发布</h-button>
+            </div>
+            <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
+                <h-button @click='()=>{$router.go(-1)}'>返回</h-button>
+            </div>
         </div>
         <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
             <center>
