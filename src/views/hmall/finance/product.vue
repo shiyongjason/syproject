@@ -94,8 +94,7 @@
                     <h-button class="ml20" @click="onExport">导出</h-button>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false"  @onSortChange="onSortChange"
-                :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" @onSortChange="onSortChange" :isShowIndex='true'>
                 <template slot="source" slot-scope="scope">
                     {{ orderChannelMap.get(scope.data.row.source) }}
                 </template>
@@ -226,7 +225,7 @@ export default {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
             url += 'access_token=' + localStorage.getItem('token')
-            location.href = B2bUrl + 'order/api/boss/orders/finance-products/export?' + url
+            location.href = B2bUrl + 'order/boss/child-orders/finance-product/export?' + url
         },
         async findProductCategoryAsync () {
             const { data } = await findAllCategory()
