@@ -108,8 +108,8 @@
                 <template slot="action" slot-scope="scope">
                     <div v-if="scope.data.row.autoTag && scope.data.row.autoTag.length > 0">
                         <el-button v-if="scope.data.row.source!=='hcg'" class="orangeBtn" @click="onOrderList(scope.data.row)">查看订单</el-button>
-                        <el-button v-if="scope.data.row.autoTag" class="orangeBtn" @click="onDetail(scope.data.row,0)">会员详情</el-button>
-                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,1)">沟通记录</el-button>
+                        <el-button v-if="scope.data.row.autoTag" class="orangeBtn" @click="onDetail(scope.data.row,'enterpriseInfo')">会员详情</el-button>
+                        <el-button class="orangeBtn" @click="onDetail(scope.data.row,'contact')">沟通记录</el-button>
                     </div>
                     <div v-else>-</div>
                     <el-button v-if="scope.data.row.source==='third'" class="orangeBtn" @click="deleteData(scope.data.row)">删除</el-button>
@@ -450,7 +450,7 @@ export default {
             this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantMemberManage', query: { 'phone': val.phone } })
         },
         onDetail (val, index) {
-            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'index': index, 'companyId': val.companyId } })
+            this.$router.push({ path: '/comfortCloudMerchant/merchantVIP/merchantExternalInvitation', query: { 'phone': val.phone, 'name': index, 'companyId': val.companyId } })
         },
         async deleteData (val) {
             console.log(val)
