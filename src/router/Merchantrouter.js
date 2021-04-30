@@ -315,6 +315,29 @@ export default [
                         component: () => import('@/views/comfortcloud/merchant/merchantPurchase.vue')
                     }
                 ]
+            },
+            {
+                path: 'merchantCase',
+                meta: {
+                    title: '用户方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantMemberCase',
+                        name: 'merchantMemberCase',
+                        meta: {
+                            title: '方案列表',
+                            tagName: '方案列表',
+                            parentName: '用户方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantMemberCase.vue')
+                    }
+                ]
             }
         ]
     }

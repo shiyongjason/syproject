@@ -43,7 +43,7 @@ export function getMembersituation (params) {
 
 // 经销商会员列表分页查询
 export function getMerchantMembersituation (params) {
-    return axios.post(iotUrl + `/mall/wx/user/boss/manage`, params)
+    return axios.post(iotUrl + `/mall/boss/user/manage`, params)
 }
 
 // 销售线索管理会员列表分页查询
@@ -73,7 +73,7 @@ export function getMerchantMembersDistributor (params) {
 
 // 经销商会员邀请注册列表分页查询
 export function getMerchantMemberInvitationRegistersituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/registered/` + params.uuid, { params })
+    return axios.get(iotUrl + `/mall/boss/user/registered/` + params.uuid, { params })
 }
 
 // 经销商会员企业信息
@@ -102,12 +102,12 @@ export function getMerchantMemberInvitationBuyTotal (params) {
 
 // 经销商会员邀请成交列表分页查询
 export function getMerchantMemberInvitationOrdersituation (params) {
-    return axios.get(iotUrl + `/mall/wx/user/boss/order/` + params.uuid, { params })
+    return axios.get(iotUrl + `/mall/boss/user/order/` + params.uuid, { params })
 }
 
 // 经销商会员总数查询
 export function getMerchantMemberTotalsituation (params) {
-    return axios.post(iotUrl + `/mall/wx/user/boss/count`, params)
+    return axios.post(iotUrl + `/mall/boss/user/count`, params)
 }
 
 // 邀请详情订单修改
@@ -602,6 +602,14 @@ export function getHomeUser (params) {
 export function getCloudMerchantList (params) {
     return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
 }
+// 获取用户方案
+export function getCloudMerchantCaseList (params) {
+    return axios.get(iotUrl + '/mall/boss/customer-project', { params })
+}
+// 获取用户方案详情
+export function getCloudMerchantCaseDetailList (params) {
+    return axios.get(iotUrl + '/mall/boss/customer-project/' + params.id)
+}
 // 获取招商代理商
 export function getCloudMerchantFromPhone (params) {
     return axios.get(iotUrl + '/mall/boss/company/info-by-phone', { params })
@@ -865,6 +873,9 @@ export function editMemberTag (params) {
 // 获取销售线索管理购买记录
 export function getMerchantMemberInvitationOutOrdersituation (params) {
     return axios.get(iotUrl + '/mall/boss/user/out/order', { params })
+}// 获取销售线索管理购买记录
+export function getMerchantMemberInvitationProject (params) {
+    return axios.get(iotUrl + '/mall/boss/hbp/projects', { params })
 }
 
 // 获取销售线索管理购买记录统计

@@ -10,9 +10,9 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">子订单编号：</div>
+                    <div class="query-col__lable">订单编号：</div>
                     <div class="query-col__input">
-                        <el-input type="text" maxlength="50" v-model="queryParams.childOrderNo" placeholder="请输入子订单编号">
+                        <el-input type="text" maxlength="50" v-model="queryParams.childOrderNo" placeholder="请输入订单编号">
                         </el-input>
                     </div>
                 </div>
