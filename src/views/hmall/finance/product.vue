@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">子订单编号：</div>
+                    <div class="query-col__lable">订单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
                     </div>
@@ -185,7 +185,7 @@ export default {
             return [
                 { label: 'SPU编码', prop: 'spuCode' },
                 { label: 'SKU编码', prop: 'skuCode' },
-                { label: '子订单编号', prop: 'childOrderNo' },
+                { label: '订单编号', prop: 'childOrderNo' },
                 { label: '订单来源', prop: 'sourceMerchantName' },
                 { label: '商品所属', prop: 'merchantName' },
                 { label: '商品单价（元）', prop: 'price', sortable: true, formatters: 'moneyShow' },
