@@ -440,6 +440,8 @@ export default class UpstreamPaymentManagement extends Vue {
     async onRequest () {
         const { data } = await Api[TabInfoApi[this.activeName]](this.paymentOrderId)
         this[this.activeName] = data
+        //
+        this.isShowTabs()
     }
 
     @measure

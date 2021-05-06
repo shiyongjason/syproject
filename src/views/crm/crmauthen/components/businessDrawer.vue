@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-wrap">
+    <div class="drawer-wrap" v-if="drawer" >
         <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
@@ -7,7 +7,10 @@
                         <div class="drawer-content">
                             <el-form :model="businessDetail" :rules="rules" ref="ruleForm">
                                 <el-form-item label="企业名称：" :label-width="formLabelWidth" class="nameall">
-                                    <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span></p>
+                                    <p> {{businessDetail.companyName}} &emsp;<span :class="['authTag',businessDetail.isAuthentication?'tagGreen':'tagOrg']">{{businessDetail.isAuthentication?'已认证':'未认证'}}</span>
+                                        <span class="authTag tagInfo">{{businessDetail.memberTag?memberTagArr[businessDetail.memberTag-1].value:'-'}}</span>
+                                        <span class="authTag tagBlue" @click="onTianyan(businessDetail.companyName)">一键天眼</span>
+                                    </p>
                                 </el-form-item>
                                 <el-form-item label="管理员账号：" :label-width="formLabelWidth">
                                     {{businessDetail.userAccount||'-'}}
@@ -242,55 +245,55 @@
                                     <span v-else>-</span>
 
                                 </el-form-item>
-<!--                                <el-form-item label="法人身份证：">-->
-<!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
-<!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
-<!--                                        </el-image>-->
-<!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
-<!--                                        </el-image>-->
-<!--                                    </div>-->
-<!--                                    <span v-else>-</span>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="认证结果：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="认证方式：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="关联/认证时间：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="关联/认证人：">-->
-<!--                                    <p>-->
-<!--                                        <span v-if="authenticationDetail.authenticationBy">-->
-<!--                                            {{authenticationDetail.authenticationBy}}-->
-<!--                                        </span>-->
-<!--                                        <span v-else>-</span>-->
-<!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
-<!--                                            ({{authenticationDetail.authenticationPhone}})-->
-<!--                                        </span>-->
-<!--                                        <span v-else>(-)</span>-->
-<!--                                    </p>-->
-<!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="法人身份证：">-->
+                                <!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
+                                <!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
+                                <!--                                        </el-image>-->
+                                <!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
+                                <!--                                        </el-image>-->
+                                <!--                                    </div>-->
+                                <!--                                    <span v-else>-</span>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="认证结果：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="认证方式：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="关联/认证时间：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="关联/认证人：">-->
+                                <!--                                    <p>-->
+                                <!--                                        <span v-if="authenticationDetail.authenticationBy">-->
+                                <!--                                            {{authenticationDetail.authenticationBy}}-->
+                                <!--                                        </span>-->
+                                <!--                                        <span v-else>-</span>-->
+                                <!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
+                                <!--                                            ({{authenticationDetail.authenticationPhone}})-->
+                                <!--                                        </span>-->
+                                <!--                                        <span v-else>(-)</span>-->
+                                <!--                                    </p>-->
+                                <!--                                </el-form-item>-->
                             </el-form>
 
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="联系方式" name="third">
-                         <div class="drawer-content">
-                            <el-form :label-width="'150px'" :label-position="'right'" ref="contactForm" :model="companyContact.request" :rules="contactFormRules"  @submit.native.prevent>
+                        <div class="drawer-content">
+                            <el-form :label-width="'150px'" :label-position="'right'" ref="contactForm" :model="companyContact.request" :rules="contactFormRules" @submit.native.prevent>
                                 <div class="companyContactlayout">
                                     <el-form-item label="电子邮箱：" :label-width="formLabelWidth" prop="email">
                                         <span v-if="!editorShow.email">
                                             {{companyContact.response.email}}
-                                            <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('email')"></i>
+                                            <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('email')"></i>
                                         </span>
                                         <span v-if="editorShow.email">
                                             <inputAutocomplete v-model="companyContact.request.email" @onMousedown='onMousedown' @onBlur='onBlur' class="lageinput"></inputAutocomplete>
@@ -298,22 +301,22 @@
                                         </span>
                                     </el-form-item>
                                     <span v-if="editorShow.email">
-                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('email')"></i>
-                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('email')"></i>
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('email')"></i>
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('email')"></i>
                                     </span>
                                 </div>
 
                                 <div class="companyContactlayout">
                                     <el-form-item label="联系地址：" :label-width="formLabelWidth" prop="contactAddress">
-                                    <span v-if="!editorShow.address">
-                                        {{companyContact.response.contactAddress}}
-                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('address')"></i>
-                                    </span>
-                                    <el-input v-else type='textarea' :rows="3" v-model="companyContact.request.contactAddress" placeholder='请输入'  class="lageinput" maxlength="200" show-word-limit></el-input>
-                                </el-form-item>
+                                        <span v-if="!editorShow.address">
+                                            {{companyContact.response.contactAddress}}
+                                            <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-edit-outline" @click="()=>onEdit('address')"></i>
+                                        </span>
+                                        <el-input v-else type='textarea' :rows="3" v-model="companyContact.request.contactAddress" placeholder='请输入' class="lageinput" maxlength="200" show-word-limit></el-input>
+                                    </el-form-item>
                                     <span v-if="editorShow.address">
-                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('address')"></i>
-                                        <i  style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('address')"></i>
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-check" @click="()=>onSure('address')"></i>
+                                        <i style="font-size:21px;color:#FF7A45;  margin-left: 10px;cursor: pointer;" class="el-icon-close" @click="()=>onCancel('address')"></i>
                                     </span>
                                 </div>
 
@@ -413,6 +416,7 @@ export default {
     },
     data () {
         return {
+            memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }],
             editorShow: {
                 email: false,
                 address: false
@@ -564,6 +568,9 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        onTianyan (name) {
+            this.$router.push({ path: '/goodwork/tianyan', query: { name } })
+        },
         onMousedown (val) {
             console.log('onMousedown ', val)
         },
@@ -980,7 +987,7 @@ export default {
 }
 .authTag {
     border-radius: 8px;
-    padding: 2px 8px;
+    padding: 0px 8px;
     color: #fff;
     opacity: 0.8;
     display: inline-block;
@@ -992,6 +999,15 @@ export default {
 }
 .tagOrg {
     background: #ff7a45;
+}
+.tagInfo {
+    background: #13c2c2;
+    margin-left: 15px;
+}
+.tagBlue {
+    background: #50b7f7;
+    margin-left: 15px;
+    cursor: pointer;
 }
 .nameall {
     /deep/ .el-form-item__content {
@@ -1009,14 +1025,14 @@ export default {
         margin-right: 20px;
     }
 }
-.companyContactlayout{
+.companyContactlayout {
     display: flex;
     align-items: center;
-    margin-bottom:20px;
-   /deep/  .lageinput .el-input__inner {
+    margin-bottom: 20px;
+    /deep/ .lageinput .el-input__inner {
         width: 100%;
     }
-    /deep/.el-form-item{
+    /deep/.el-form-item {
         margin-bottom: 0;
     }
     /deep/.el-form-item__content .el-input {
@@ -1025,8 +1041,8 @@ export default {
     /deep/.el-form-item__content .el-textarea {
         width: 350px !important;
     }
-    /deep/.el-form-item{
-            word-break: break-word;
+    /deep/.el-form-item {
+        word-break: break-word;
     }
 }
 /deep/ .lageinput .el-input__inner {
