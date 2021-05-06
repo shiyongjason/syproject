@@ -248,14 +248,14 @@ export default {
                 { label: '所属分部', prop: 'subsectionName', width: '120' },
                 { label: '项目', prop: 'projectName', width: '120' },
                 {
-                    label: '合同模版编号',
+                    label: '合同模板编号',
                     prop: 'templateId',
                     width: '180',
                     render: (h, scope) => {
                         return <span>{!scope.row.templateId ? '-' : scope.row.templateId}</span>
                     }
                 },
-                { label: '合同模版版本', prop: 'versionNo', width: '120' },
+                { label: '合同模板版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
                 { label: '发起人', prop: 'createBy', width: '120' },
@@ -468,7 +468,7 @@ export default {
         approveContract (item, val) {
             // 这里根据 是否为 模板合同 来进入上传页面
             // 1：有模板 2：无模板
-            if (item.contractSignType == 2) {
+            if (!item.contractTemplateVersionId) {
                 this.$router.push({ path: '/goodwork/noTempApprove', query: { id: item.id, role: val } })
             } else {
                 this.$router.push({ path: '/goodwork/approveContract', query: { id: item.id, contractTypeId: item.contractTypeId } })

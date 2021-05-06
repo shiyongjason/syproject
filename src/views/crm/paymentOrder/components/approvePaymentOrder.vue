@@ -1,30 +1,25 @@
 <template>
     <div>
         <el-dialog v-if="isOpen" ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="70%" :before-close="()=> $emit('onClose')" class="payment-dialog">
-            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form" label-width="140px">
+            <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form" label-width="150px">
                 <div class="row-filed">
                     <div class="col-filed">
                         <div class="info-title">项目信息</div>
-                        <el-form-item label="项目：">
+                        <el-form-item label="项目：" label-width="100px">
                             {{ paymentDetail.projectInfo.projectName }}
                         </el-form-item>
-                        <el-form-item label="经销商：">
+                        <el-form-item label="经销商：" label-width="100px">
                             {{ paymentDetail.projectInfo.companyName }}
                         </el-form-item>
-                        <el-form-item label="所属分部：">
+                        <el-form-item label="所属分部：" label-width="100px">
                             {{ paymentDetail.projectInfo.deptName }}
                         </el-form-item>
-                        <div class="rate-row">
-                            <p>
-                                <span>执行费率：</span>
-                            </p>
-                            <p>
-                                <span class="label">银行承兑：</span>
-                                {{paymentDetail.projectInfo.acceptBankRate}}%
-                                <span class="label">银行转账：</span>
-                                {{paymentDetail.projectInfo.transferBankRate}}%
-                            </p>
-                        </div>
+                        <el-form-item label="执行费率：" label-width="100px">
+                            <span class="label">银行承兑：</span>
+                            {{paymentDetail.projectInfo.acceptBankRate}}%
+                            <span class="label">银行转账：</span>
+                            {{paymentDetail.projectInfo.transferBankRate}}%
+                        </el-form-item>
                         <div class="info-title">采购单信息</div>
                         <el-form-item label="采购单金额：">
                             {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
@@ -177,10 +172,10 @@
                             <el-form-item label="质押信息：" prop="pledgeNo">
                                 <el-input type="text" v-model="formData.pledgeNo" maxlength="50" placeholder="请输入中登网质押编号"></el-input>
                             </el-form-item>
-                            <el-form-item label="OA审批编号：" prop="oaNo">
-                                <el-input type="text" v-model="formData.oaNo" maxlength="50" placeholder="请输入OA流程编号"></el-input>
+                            <el-form-item label="OA货款支付编号：" prop="oaNo">
+                                <el-input type="text" v-model="formData.oaNo" maxlength="50" placeholder="请输入OA货款支付编号"></el-input>
                             </el-form-item>
-                            <el-form-item label="审核备注" prop="approvalRemark">
+                            <el-form-item label="审核备注：" prop="approvalRemark">
                                 <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200" placeholder="可在此处备注对资金放款的要求"></el-input>
                             </el-form-item>
                             <el-form-item label="下游合作方式：" prop="dealerCooperationMethod">
@@ -208,7 +203,7 @@
                             </template>
                         </template>
                         <template v-if="formData.checkPass === 'noPass'">
-                            <el-form-item label="审核备注" prop="approvalRemark">
+                            <el-form-item label="审核备注：" prop="approvalRemark">
                                 <el-input type="textarea" v-model="formData.approvalRemark" maxlength="200"></el-input>
                             </el-form-item>
                         </template>
@@ -319,7 +314,7 @@ export default {
                     }
                 ],
                 oaNo: [
-                    { required: true, message: '请输入OA审批编号' },
+                    { required: true, message: '请输入OA货款支付编号' },
                     {
                         validator: checkNumandEng, trigger: 'blur'
                     }
