@@ -119,7 +119,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.smartparams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -129,7 +129,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.smartparams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }
@@ -139,7 +139,7 @@ export default {
                 disabledDate: time => {
                     let endDateVal = this.homeParams.endDate
                     if (endDateVal) {
-                        return time.getTime() < new Date(endDateVal).getTime() - 30 * 24 * 60 * 60 * 1000 || time.getTime() > new Date(endDateVal).getTime()
+                        return time.getTime() > new Date(endDateVal).getTime()
                     }
                 }
             }
@@ -149,7 +149,7 @@ export default {
                 disabledDate: time => {
                     let beginDateVal = this.homeParams.startDate
                     if (beginDateVal) {
-                        return time.getTime() > new Date(beginDateVal).getTime() + 30 * 24 * 60 * 60 * 1000 || time.getTime() < new Date(beginDateVal).getTime()
+                        return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
                 }
             }

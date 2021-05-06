@@ -7,20 +7,27 @@
             <div class="query-cont-col">
                 <div class="query-col-title">订单号：</div>
                 <div class="query-col-input">
-                    <el-input type="text"
-                              v-model="queryParams.agentCode" maxlength="50" placeholder="输入订单号" clearable></el-input>
+                    <el-input type="text" v-model="queryParams.agentCode" maxlength="50" placeholder="输入订单号" clearable></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">联系人姓名：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.contactUser" maxlength="50" placeholder="联系人姓名" clearable></el-input>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">手机号：</div>
+                <div class="query-col-input">
+                    <el-input type="text" v-model="queryParams.contactNumber" maxlength="50" placeholder="输入手机号" clearable></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">支付时间：</div>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期"
-                                v-model="queryParams.payStartDate"
-                                :picker-options="pickerOptionsStart" clearable :editable="false">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="开始日期" v-model="queryParams.payStartDate" :picker-options="pickerOptionsStart" clearable :editable="false">
                 </el-date-picker>
                 <span class="ml10 mr10">-</span>
-                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期"
-                                v-model="queryParams.payEndDate"
-                                :picker-options="pickerOptionsEnd" clearable :editable="false">
+                <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="结束日期" v-model="queryParams.payEndDate" :picker-options="pickerOptionsEnd" clearable :editable="false">
                 </el-date-picker>
             </div>
             <div class="query-cont-col">
@@ -45,10 +52,7 @@
 
         <div class="page-body-cont">
             <!-- 表格使用老毕的组件 -->
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList"
-                        :pagination="cloudMerchantOrderListPagination" @onCurrentChange='onCurrentChange'
-                        is-action="true"
-                        isShowIndex @onSizeChange='onSizeChange'>
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantOrderList" :pagination="cloudMerchantOrderListPagination" @onCurrentChange='onCurrentChange' is-action="true" isShowIndex @onSizeChange='onSizeChange'>
                 <template slot="level" slot-scope="scope">
                     {{ scope.data.row.level === 1 ? '一级': (scope.data.row.level === 2 ? '二级' : '一级(独家)') }}
                 </template>
@@ -62,8 +66,8 @@
                     {{payStatus(scope.data.row.status)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn"  @click="agentDetail(scope.data.row)">查看代理信息</el-button>
-                    <el-button class="orangeBtn" v-if="scope.data.row.source===3"  @click="onEdit(scope.data.row)">编辑</el-button>
+                    <el-button class="orangeBtn" @click="agentDetail(scope.data.row)">查看代理信息</el-button>
+                    <el-button class="orangeBtn" v-if="scope.data.row.source===3" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" v-if="scope.data.row.source===3" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
@@ -88,6 +92,8 @@ export default {
         return {
             queryParams: {
                 agentCode: '',
+                contactUser: '',
+                contactNumber: '',
                 status: '',
                 payStartDate: '',
                 payEndDate: '',
@@ -217,13 +223,13 @@ export default {
 </script>
 
 <style scoped>
-    .spanflex {
-        font-size: 16px;
-        padding-bottom: 10px;
-    }
+.spanflex {
+    font-size: 16px;
+    padding-bottom: 10px;
+}
 
-    .address {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.address {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 </style>
