@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__lable">子订单号：</div>
+                    <div class="query-col__lable">订单编号：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
                     </div>
@@ -125,7 +125,7 @@ export default {
                 pageSize: 10
             },
             tableLabel: [
-                { label: '子订单号', prop: 'childOrderNo' },
+                { label: '订单编号', prop: 'childOrderNo' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '客户名称', prop: 'customerName' },
                 { label: '支付方式', prop: 'payWay' },
