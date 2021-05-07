@@ -17,7 +17,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true >
+                        <el-select v-model="queryParams.subsectionCode" placeholder="全部" :clearable=true>
                             <el-option :label="item.organizationName" :value="item.organizationCode" v-for="item in branchArr" :key="item.organizationCode"></el-option>
                         </el-select>
                     </div>
@@ -69,20 +69,25 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                        <h-button type="primary" @click="onFindMlist(1)">
-                            查询
-                        </h-button>
-                        <h-button @click="onRest()">
-                            重置
-                        </h-button>
+                    <div class="query-col__lable">店铺名称：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.shopName" placeholder="请输入" maxlength="60"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="onFindMlist(1)">
+                        查询
+                    </h-button>
+                    <h-button @click="onRest()">
+                        重置
+                    </h-button>
                 </div>
             </div>
             <!-- <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；启用状态：{{bossStatic.enabledNum?bossStatic.enabledNum:0}}；禁用状态：{{bossStatic.forbiddenNum?bossStatic.forbiddenNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
                 店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag> -->
             <el-tag size="medium" class="eltagtop">已筛选{{bossStatic.screenOut}} 项 | 未认证：{{bossStatic.unAuthenticationNum?bossStatic.unAuthenticationNum:0}}；已认证：{{bossStatic.authenticationNum?bossStatic.authenticationNum:0}}；上架商品总数：{{bossStatic.onMarketTotalNum?bossStatic.onMarketTotalNum:0}}；
-            店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange"
-            @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
+                店铺商品总数：{{bossStatic.omMerchantTotalNum?bossStatic.omMerchantTotalNum:0}}；会员总数：{{bossStatic.memberTotalNum?bossStatic.memberTotalNum:0}}</el-tag>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
                 <template slot="subsectionName" slot-scope="scope">
                     {{scope.data.row.subsectionName || '无'}}
                 </template>
@@ -104,7 +109,7 @@
                 <template slot="authenticationTime" slot-scope="scope">
                     {{scope.data.row.authenticationTime | formatDate}}
                 </template>
-                <template slot="action" slot-scope="scope" >
+                <template slot="action" slot-scope="scope">
                     <!-- <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button> -->
                     <h-button table @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</h-button>
                 </template>
@@ -136,20 +141,22 @@ export default {
                 registrationStartTime: '',
                 subsectionCode: '',
                 authenticationTime: '',
-                createTime: 'desc'
-
+                createTime: 'desc',
+                shopName: ''
             },
             paginationInfo: {},
             tableLabel: [
-                { label: '企业名称', prop: 'companyName', width: '180px' },
+                { label: '企业名称', prop: 'companyName', width: '180' },
                 { label: '管理员账号', prop: 'adminAccount', width: '120px' },
-                { label: '所属分部', prop: 'subsectionName', width: '180px' },
+                { label: '所属分部', prop: 'subsectionName' },
+                { label: '店铺名称', prop: 'shopName', width: '180px' },
                 { label: '商家类型', prop: 'merchantType' },
-                { label: '上架商品数', prop: 'omMarketNum' },
-                { label: '店铺商品数', prop: 'omMerchantNum' },
+                { label: '上架商品数', prop: 'omMarketNum', width: '100px' },
+                { label: '店铺商品数', prop: 'omMerchantNum', width: '100px' },
                 { label: '会员数', prop: 'memberNum' },
                 { label: '创建时间', prop: 'registrationTime', formatters: 'dateTimes', width: '150px', sortable: true },
-                { label: '认证状态',
+                {
+                    label: '认证状态',
                     prop: 'isAuthentication',
                     renderHeader: (h, scope) => {
                         return (
@@ -160,10 +167,11 @@ export default {
                                 </el-tooltip>
                             </span>
                         )
-                    } },
+                    }
+                },
                 { label: '认证时间', prop: 'authenticationTime', sortable: true, width: '150px' },
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
-                { label: '自动推送至店铺', prop: 'isAutoDispatch' }
+                { label: '自动推送至店铺', prop: 'isAutoDispatch', width: '120px' }
                 // { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
@@ -292,15 +300,15 @@ export default {
 .eltagtop {
     margin-bottom: 10px;
 }
-.colorRed{
+.colorRed {
     color: #f00000;
 }
-.colorGreen{
-    color: #67C23A
+.colorGreen {
+    color: #67c23a;
 }
-/deep/.iconfl{
+/deep/.iconfl {
     position: relative;
-    i{
+    i {
         position: absolute;
         top: 3px;
     }
