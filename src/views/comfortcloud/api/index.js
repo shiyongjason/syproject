@@ -241,6 +241,12 @@ export function downloadQuestionTemp () {
 // 设备故障列表
 export function getCloudEquipmentErrorList (params) {
     return axios.get(iotUrl + `/api/device/breakdown`, { params })
+}// 设备故障列表
+export function getCloudDeviceIDImportData (params) {
+    return axios.get(iotUrl + `/api/user/device/page`, { params })
+}
+export function getCloudDeviceBrandNo (params) {
+    return axios.get(iotUrl + `/api//user/device/batch-nos`)
 }
 
 // 下载故障模板
@@ -265,6 +271,10 @@ export function downloadEquipmentErrorList () {
     }).catch(function () {
         axios.defaults.responseType = 'json'
     })
+}
+// 下载导入数据失败列表
+export function downloadImportDeviceErrorList (params) {
+    return axios.post(iotUrl + `/api/user/device/download-failed-devices`, params)
 }
 
 // 设备故障字典

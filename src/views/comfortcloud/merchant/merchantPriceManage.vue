@@ -221,6 +221,10 @@
                         <el-input v-model="form.shareTagline" maxlength="100" :rows="2" type="textarea"
                                   placeholder="输入分享话术，不超过100字符"/>
                     </el-form-item>
+                    <el-form-item label="虚拟体验链接：" prop="virtualExperienceUrl">
+                        <el-input v-model="form.virtualExperienceUrl" maxlength="100" :rows="2" type="textarea"
+                                  placeholder="输入完整的虚拟体验H5链接地址"/>
+                    </el-form-item>
                     <div style="height : 20px"></div>
                 </el-form>
 
@@ -275,6 +279,7 @@ export default {
                 productDetailImg: '',
                 retailPrice: '',
                 shareTagline: '',
+                virtualExperienceUrl: '',
                 costPrice: '',
                 video: '',
                 commissionRate: '',
@@ -702,6 +707,7 @@ export default {
                 commissionRate: data.commissionRate,
                 priceList: data.priceList,
                 shareTagline: data.shareTagline,
+                virtualExperienceUrl: data.virtualExperienceUrl,
                 promotedTagline: data.promotedTagline,
                 operator: data.operator
             }

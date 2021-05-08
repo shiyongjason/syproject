@@ -27,7 +27,7 @@
                     <span>{{scope.data.row.type === 1 ? '按主营产品' : '按会员标签'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">查看匹配商品</el-button>
+                    <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
