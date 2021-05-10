@@ -1,52 +1,51 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form ref='form' :model="form" :rules="rules.event" label-width="120px">
+            <el-form ref='form' :model="form" :rules="rules" label-width="120px">
                 <div class="title-cont">
                     <span class="title-cont__label">1.设置活动基本信息</span>
                 </div>
                 <el-form-item label="活动名称：" prop="spikeName">
-                    <el-input v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled='disableStatus'></el-input>
+                    <el-input v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="startTime">
-                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled='disableStatus'></el-date-picker>
-                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled='disableStatus'></el-date-picker>
-                    <span class="timeTips" v-if="!disableStatus">只能创建10分钟后开始的活动</span>
+                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间"></el-date-picker>
+                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间"></el-date-picker>
+                    <span class="timeTips">只能创建10分钟后开始的活动</span>
                 </el-form-item>
-                <el-form-item label="活动banner：" prop="image" ref="reqPictureList" class="mb20">
-                    <ul class="picture-container">
-                        <template v-if="pictureContainer.length>0">
-                            <li v-for="(item,index) in pictureContainer" :key="index">
-                                <span class="picture-delete" @click="pictureDelete(index)"><i class="el-icon-delete"></i></span>
-                                <img :src="item.url" :alt="item.url">
-                                <span class="picture-setting" @click="pictureSetting(index)">
-                                    banner
-                                </span>
-                            </li>
-                        </template>
-                        <el-upload v-bind="uploadInfo" v-if="pictureContainer.length<1" :on-error="pictureError" :on-success="pictureSuccess" :show-file-list="false" :before-upload="beforeAvatarUpload" style="float: left" list-type="picture-card">
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                    </ul>
-                    <p style="color:#999">banner大小为 702px x 262px</p>
+                <el-form-item label="活动banner：" prop="image">
+                    <SingleUpload :upload="uploadInfo" :imgW="104" :imgH="104" :imageUrl="form.image" @back-event="backPicUrl" />
+                    <div class="banner-wrap" v-if="disabled"></div>
+                    <div class="picture-prompt ml20">
+                        <p>banner大小为 702px x 262px</p>
+                    </div>
+                    <input type="hidden" v-model="form.image">
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">2.设置规则和优惠</span>
                 </div>
-                <el-form-item label="优惠方式：" prop="discountType">
-                    <el-radio v-model="form.discountType" :label=1 @change='radioChange' :disabled='disableStatus'>折扣</el-radio>
-                    <el-radio v-model="form.discountType" :label=2 @change='radioChange' :disabled='disableStatus'>直降（平台补贴）</el-radio>
+                <el-form-item label="活动区域：" prop="seckillAreaList">
+                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea"></el-cascader>
+                </el-form-item>
+                <el-form-item label="优惠方式：" prop="discountType" @change='radioChange'>
+                    <el-radio-group v-model="form.discountType">
+                        <el-radio :label=1>折扣</el-radio>
+                        <el-radio :label=2>直降（平台补贴）</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="会员限制：" prop="memberScope">
-                    <el-radio v-model="form.memberScope" :label=1 :disabled='disableStatus'>所有会员</el-radio>
-                    <el-radio v-model="form.memberScope" :label=2 :disabled='disableStatus'>首单会员（第一次购买）</el-radio>
-                    <el-radio v-model="form.memberScope" :label=3 :disabled='disableStatus'>新注册会员</el-radio>
+                    <el-radio-group v-model="form.memberScope">
+                        <el-radio :label=1>所有会员</el-radio>
+                        <el-radio :label=2>首单会员（第一次购买）</el-radio>
+                        <el-radio :label=3>新注册会员</el-radio>
+                    </el-radio-group>
+
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">3.选择活动商品</span>
                 </div>
                 <el-form-item label="活动商品：">
-                    <h-button type="create" @click="()=>{$router.push('/b2b/marketing/addProducts')}" :disabled='disableStatus'>添加商品</h-button>
+                    <h-button type="create" @click="onAddProduct" :disabled="form.spikeAreaList.length==0 ">添加商品</h-button>
                 </el-form-item>
                 <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
                     <template slot="skuName" slot-scope="scope">
@@ -56,49 +55,46 @@
                         </div>
                     </template>
                     <template slot="action" slot-scope="scope">
-                        <h-button table @click="onRemove(scope.data.row)" :disabled='disableStatus'>移除</h-button>
-                        <h-button table @click="onOrder(scope.data.row)" :disabled='canNotOrder'>刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）</h-button>
+                        <h-button table @click="onRemove(scope.data.row)">移除</h-button>
+                        <h-button table @click="onOrder(scope.data.row)">刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）</h-button>
                     </template>
                 </hosJoyTable>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont">
-            <div class="subfixed" v-if="!disableStatus || $route.query.copeId" :class="isCollapse ? 'minLeft' : 'maxLeft'">
-                <h-button @click="()=>{$router.push('/b2b/marketing/eventMange')}">返回</h-button>
-                <h-button type="primary" @click='onSave(1)'>保存</h-button>
-                <h-button type="primary" @click='onSave(2)'>活动发布</h-button>
-            </div>
-            <div class="subfixed" v-else :class="isCollapse ? 'minLeft' : 'maxLeft'">
-                <h-button @click='()=>{$router.go(-1)}'>返回</h-button>
-            </div>
+            <h-button @click="onBack">返回</h-button>
+            <h-button type="primary" @click='onSave(1)'>保存</h-button>
+            <h-button type="primary" @click='onSave(2)'>活动发布</h-button>
         </div>
-        <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
+        <!-- <el-dialog title="提示" :visible.sync="orderDialogVisible" width="450px" class="orderDialog" center :close-on-click-modal=false :close-on-press-escape=false>
             <center>
                 <p>确认是否刷单一次?此操作不可撤销，是否继续？</p>
-                <!-- <p class="isremind"><el-checkbox v-model="remind" @change='onrRemind'><font>不再提醒</font></el-checkbox></p> -->
             </center>
             <span slot="footer" class="dialog-footer">
                 <h-button @click="onCancle">取 消</h-button>
                 <h-button type="primary" @click="onSureOrder">确 定</h-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
 <script>
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex'
+import { newCache, clearCache } from '@/utils/index'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
 import { isNum } from '@/utils/validate/format'
 import { interfaceUrl } from '@/api/config'
 import Sortable from 'sortablejs'
-import { mapState, mapMutations, mapActions } from 'vuex'
-import { saveEvent, editEvent, clickFarming } from './api/index'
+import { saveEvent, editEvent, clickFarming } from '../api/index'
 import moment from 'moment'
 export default {
-    name: 'createEditEvent',
-    components: { hosJoyTable },
+    name: 'createSeckill',
+    components: {
+        hosJoyTable
+    },
     data () {
         return {
-            pictureContainer: [], // 图片列表
+            seckillAreaList: [],
             canNotOrder: false,
             isFirst: true,
             popoverVisible: false,
@@ -115,30 +111,29 @@ export default {
                 image: '',
                 discountType: 1, // 优惠方式 1：折扣 2：直降
                 memberScope: 1, // 会员限制 1：所有会员 2：首单会员 3：新注册会员
-                spikeSku: [],
-                status: ''// 状态 1：待发布 2：已发布 3：已取消
+                status: '', // 状态 1：待发布 2：已发布 3：已取消,
+                spikeAreaList: [],
+                spikeSku: []
             },
             rules: {
-                event: {
-                    spikeName: [
-                        { required: true, validator: this.validateSpikeName, trigger: 'blur' }
-                    ],
-                    startTime: [
-                        { required: true, message: '请选择活动开始时间', trigger: 'change' }
-                    ],
-                    endTime: [
-                        { required: true, message: '请选择活动结束时间', trigger: 'change' }
-                    ],
-                    image: [
-                        { required: true, message: '请选择活动图片' }
-                    ],
-                    discountType: [
-                        { required: true, message: '请选择优惠方式', trigger: 'change' }
-                    ],
-                    memberScope: [
-                        { required: true, message: '请选择会员限制', trigger: 'change' }
-                    ]
-                }
+                spikeName: [
+                    { required: true, validator: this.validateSpikeName, trigger: 'blur' }
+                ],
+                startTime: [
+                    { required: true, message: '请选择活动开始时间', trigger: 'change' }
+                ],
+                endTime: [
+                    { required: true, message: '请选择活动结束时间', trigger: 'change' }
+                ],
+                image: [
+                    { required: true, message: '请选择活动图片' }
+                ],
+                discountType: [
+                    { required: true, message: '请选择优惠方式', trigger: 'change' }
+                ],
+                memberScope: [
+                    { required: true, message: '请选择会员限制', trigger: 'change' }
+                ]
             },
             purchaseLimitNum: '',
             discountValue: '',
@@ -154,7 +149,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12' disabled={this.disableStatus}></el-input>
+                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12' disabled={this.disabled}></el-input>
                             </span>
                         )
                     }
@@ -174,7 +169,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disableStatus}></el-input>
+                                <el-input class={scope.row._inventoryNumError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
                                 {scope.row._inventoryNumError ? <div class='errormsg'>{scope.row.inventoryNumErrorMsg}</div> : ''}
                             </span>
                         )
@@ -189,9 +184,9 @@ export default {
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' style='width:80%' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.purchaseLimitNum} onInput={(val) => { this.purchaseLimitNum = val.replace(/[^\d]/g, '') }} disabled={this.disabled}></el-input>
                                 {
-                                    this.disableStatus ? '' : (<span class='popover'>
+                                    this.disabled ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.popoverVisible}>
                                             <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 1); this.popoverVisible = false }}>应用到全部</p>
                                             <p class='popover-p' onClick={() => { this.setAllCol('purchaseLimitNum', this.purchaseLimitNum, 2); this.popoverVisible = false }}>应用到未填写</p>
@@ -205,7 +200,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }} disabled={this.disableStatus}></el-input>
+                                <el-input class={scope.row._numError ? 'error' : ''} style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'purchaseLimitNum') }} disabled={this.disabled}></el-input>
                                 {scope.row._numError ? <div class='errormsg'>{scope.row.numErrorMsg}</div> : ''}
                             </span>
                         )
@@ -220,9 +215,9 @@ export default {
                             <span class='flxinput'>
                                 <i class='mark'>*</i>
                                 <font>{scope.column.label}</font>
-                                <el-input size='mini' style='width:80%' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disableStatus}></el-input>
+                                <el-input size='mini' style='width:80%' value={this.discountValue} onInput={(val) => { this.discountValue = val }} disabled={this.disabled}></el-input>
                                 {
-                                    this.disableStatus ? '' : (<span class='popover'>
+                                    this.disabled ? '' : (<span class='popover'>
                                         <el-popover placement="bottom" width="100" trigger="click" v-model={this.otpopoverVisible}>
                                             <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 1); this.otpopoverVisible = false }}>应用到全部</p>
                                             <p class='popover-p' onClick={() => { this.setAllCol('discountValue', this.discountValue, 2); this.otpopoverVisible = false }}>应用到未填写</p>
@@ -237,10 +232,10 @@ export default {
                         return (
                             this.form.discountType === 1
                                 ? <span>
-                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>折{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    <el-input class={scope.row._error ? 'error' : ''} style='width:110px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disabled}></el-input>折{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                                 : <span>
-                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disableStatus}></el-input>元{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
+                                    直降<el-input class={scope.row._error ? 'error' : ''} style='width:70px;margin:0 10px' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disabled}></el-input>元{scope.row._error ? <div class='errormsg'>{scope.row.errorMsg}</div> : ''}
                                 </span>
                         )
                     }
@@ -254,20 +249,43 @@ export default {
             ]
         }
     },
-    watch: {
-        pictureContainer (val) {
-            this.$nextTick(() => {
-                if (val.length > 0) this.$refs['reqPictureList'].clearValidate()
-            })
-        }
-    },
     computed: {
         ...mapState({
             eventProducts: state => state.eventManage.eventProducts,
             userInfo: state => state.userInfo,
             eventInfos: state => state.eventManage.eventInfos,
-            isCollapse: state => state.isCollapse
+            isCollapse: state => state.isCollapse,
+            selectSeckillProduct: state => state.hmall.marketManage.selectSeckillProduct,
+            selectSkuData: state => state.hmall.marketManage.selectSkuData
         }),
+        ...mapGetters({
+            activityAreaData: 'marketManage/activityAreaData'
+        }),
+        pickerOptionsStart () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = this.form.endTime
+                    if (beginDateVal) {
+                        return time.getTime() > new Date(beginDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
+                    }
+                    return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        },
+        pickerOptionsEnd () {
+            return {
+                disabledDate: (time) => {
+                    const beginDateVal = moment(this.form.startTime).format('YYYY-MM-DD')
+                    if (beginDateVal) {
+                        return time.getTime() < new Date(beginDateVal).getTime() - 8.64e7 || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
+                    }
+                    return time.getTime() <= Date.now() - 8.64e7
+                }
+            }
+        },
+        disabled () {
+            return !!this.$route.query.id
+        },
         uploadInfo () {
             return {
                 action: interfaceUrl + 'tms/files/upload',
@@ -276,32 +294,16 @@ export default {
                 },
                 name: 'multiFile'
             }
-        },
-        pickerOptionsStart () {
-            return {
-                disabledDate: time => {
-                    let endDateVal = this.form.endTime
-                    if (endDateVal) {
-                        return time.getTime() > new Date(endDateVal).getTime() || time.getTime() <= Date.now() - 1 * 24 * 60 * 60 * 1000
-                    }
-                    return time.getTime() <= Date.now() - 8.64e7
+        }
+    },
+    watch: {
+        selectSeckillProduct: {
+            immediate: true,
+            handler (value) {
+                if (value.length > 0) {
+                    this.getSelectSkuList()
                 }
             }
-        },
-        pickerOptionsEnd () {
-            return {
-                disabledDate: time => {
-                    let beginDateVal = this.form.startTime
-                    if (beginDateVal) {
-                        return time.getTime() <= new Date(beginDateVal).getTime() - 1 * 24 * 60 * 60 * 1000
-                    }
-                    return time.getTime() <= Date.now() - 8.64e7
-                }
-            }
-        },
-        disableStatus () {
-            // 在编辑状态下，非待发布的活动全部不可编辑，新增和复制全部可以编辑
-            return this.$route.query.eventId && this.form.status != 1
         }
     },
     methods: {
@@ -309,35 +311,11 @@ export default {
         ...mapActions(['eventInfo', 'copy', 'setNewTags']),
         dealBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
-            this.$router.push('/b2b/marketing/eventMange')
+            this.$router.push('/b2b/market/eventMange')
         },
         onGoBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.go(-1)
-        },
-        beforeAvatarUpload (file) {
-            const isImage = ['image/jpeg', 'image/jpg', 'image/png']
-            const isJPG = file.type
-            if (!isImage.includes(isJPG)) {
-                this.$message.error('上传图片仅支持jpg、jpeg、png！')
-                return false
-            }
-            return true
-        },
-        pictureError () {
-            this.$message({
-                type: 'error',
-                message: '文件上传失败'
-            })
-        },
-        pictureSuccess (files, fileList) {
-            this.pictureContainer.push({ url: files.data.accessUrl })
-        },
-        pictureDelete (i) {
-            this.pictureContainer.splice(i, 1)
-        },
-        pictureSetting (i) {
-            this.pictureContainer.unshift((this.pictureContainer.splice(i, 1))[0])
         },
         radioChange (val) {
             this.discountValue = ''
@@ -521,81 +499,80 @@ export default {
             })
         },
         /** 保存 */
-        async onSave (status, mark = '') {
-            this.form.image = this.pictureContainer.length > 0 ? this.pictureContainer[0].url : ''
-            let temp = true
-            this.$refs['form'].validate((valid, errors) => {
-                if (!valid) {
-                    let arr = Object.values(errors)
-                    for (let i = 0; i < arr.length; i++) {
-                        this.$message.error(`${arr[0][0].message}`)
-                        break
-                    }
-                    temp = false
-                }
-            })
-            if (!temp) return false
-            if (this.form.spikeSku && this.form.spikeSku.length == 0) {
-                this.$message.error(`活动商品不能为空`)
-                return
-            }
-            let hours = moment.duration(moment(this.form.endTime).valueOf() - moment(this.form.startTime).valueOf()).as('hours')
-            if (hours == 0) {
-                this.$message.error(`活动结束时间不能和开始时间一样`)
-                return
-            }
-            if (hours < 0) {
-                this.$message.error(`开始时间不能大于结束时间`)
-                return
-            }
-            if (hours > 30 * 24) {
-                this.$message.error(`活动时间最多持续三十天`)
-                return
-            }
-            let flag = true
-            this.form.spikeSku.some((item, index) => {
-                this.validate(item, 'submit')
-                item.sort = index + 1
-                this.$set(item, 'inventoryOriginNum', item.availableStock)
-                this.$set(item, 'inventoryRemainNum', item.availableStock)
-                if (item._error || item._numError || item._inventoryNumError) flag = false
-            })
-            if (flag) {
-                if (status === 2 && mark === '') {
-                    let now = moment().format('YYYY-MM-DD HH:mm:ss')
-                    let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
-                    if (consumingMinutes < 9) {
-                        this.$message.error(`只能创建10分钟后开始的活动`)
-                        return
-                    }
-                    if (consumingMinutes > 30 * 24 * 60) {
-                        this.$message.error(`只能提前三十天发布`)
-                        return
-                    }
-                    this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
-                }
-                if (this.isPending) return
-                this.isPending = true
-                try {
-                    if (mark === '') this.form.status = status
-                    if (this.$route.query.eventId) {
-                        this.form.updateBy = this.userInfo.employeeName
-                        await editEvent(this.form)
-                    } else {
-                        this.form.createBy = this.userInfo.employeeName
-                        await saveEvent(this.form)
-                    }
-                    this.isPending = false
-                    this.$message.success(`提交成功！`)
-                    this.setNewTags((this.$route.fullPath).split('?')[0])
-                    this.$router.push('/b2b/marketing/eventMange')
-                } catch (error) {
-                    this.isPending = false
-                }
-            } else {
-                // this.$message.error(`信息尚未填写完整`)
-            }
-        },
+        // async onSave (status, mark = '') {
+        //     let temp = true
+        //     this.$refs['form'].validate((valid, errors) => {
+        //         if (!valid) {
+        //             let arr = Object.values(errors)
+        //             for (let i = 0; i < arr.length; i++) {
+        //                 this.$message.error(`${arr[0][0].message}`)
+        //                 break
+        //             }
+        //             temp = false
+        //         }
+        //     })
+        //     if (!temp) return false
+        //     if (this.form.spikeSku && this.form.spikeSku.length == 0) {
+        //         this.$message.error(`活动商品不能为空`)
+        //         return
+        //     }
+        //     let hours = moment.duration(moment(this.form.endTime).valueOf() - moment(this.form.startTime).valueOf()).as('hours')
+        //     if (hours == 0) {
+        //         this.$message.error(`活动结束时间不能和开始时间一样`)
+        //         return
+        //     }
+        //     if (hours < 0) {
+        //         this.$message.error(`开始时间不能大于结束时间`)
+        //         return
+        //     }
+        //     if (hours > 30 * 24) {
+        //         this.$message.error(`活动时间最多持续三十天`)
+        //         return
+        //     }
+        //     let flag = true
+        //     this.form.spikeSku.some((item, index) => {
+        //         this.validate(item, 'submit')
+        //         item.sort = index + 1
+        //         this.$set(item, 'inventoryOriginNum', item.availableStock)
+        //         this.$set(item, 'inventoryRemainNum', item.availableStock)
+        //         if (item._error || item._numError || item._inventoryNumError) flag = false
+        //     })
+        //     if (flag) {
+        //         if (status === 2 && mark === '') {
+        //             let now = moment().format('YYYY-MM-DD HH:mm:ss')
+        //             let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
+        //             if (consumingMinutes < 9) {
+        //                 this.$message.error(`只能创建10分钟后开始的活动`)
+        //                 return
+        //             }
+        //             if (consumingMinutes > 30 * 24 * 60) {
+        //                 this.$message.error(`只能提前三十天发布`)
+        //                 return
+        //             }
+        //             this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
+        //         }
+        //         if (this.isPending) return
+        //         this.isPending = true
+        //         try {
+        //             if (mark === '') this.form.status = status
+        //             if (this.$route.query.eventId) {
+        //                 this.form.updateBy = this.userInfo.employeeName
+        //                 await editEvent(this.form)
+        //             } else {
+        //                 this.form.createBy = this.userInfo.employeeName
+        //                 await saveEvent(this.form)
+        //             }
+        //             this.isPending = false
+        //             this.$message.success(`提交成功！`)
+        //             this.setNewTags((this.$route.fullPath).split('?')[0])
+        //             this.$router.push('/b2b/market/eventMange')
+        //         } catch (error) {
+        //             this.isPending = false
+        //         }
+        //     } else {
+        //         // this.$message.error(`信息尚未填写完整`)
+        //     }
+        // },
         validateSpikeName (rule, value, callback) {
             if (value === '') {
                 callback(new Error('请输入活动名称'))
@@ -637,11 +614,9 @@ export default {
             })
         },
         async getEventInfo () {
-            this.pictureContainer = []
             let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
             await this.eventInfo(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
-            this.pictureContainer.push({ url: this.form.image })
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
             if (this.$route.query.action) {
@@ -655,47 +630,132 @@ export default {
             let obj = { id: this.$route.query.eventId ? this.$route.query.eventId : this.$route.query.copeId, isFirst: this.isFirst }
             await this.copy(obj)
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
-            this.pictureContainer.push({ url: this.form.image })
             const { spikeSku } = this.eventInfos
             this.setTableData(spikeSku)
+        },
+        init () {
+            this.getActivityArea()
+        },
+        backPicUrl (file) {
+            this.form.image = file.imageUrl
+        },
+        onChangeArea (value) {
+            this.form.spikeAreaList = this.objArrToDyadicArr(value)
+        },
+        onAddProduct () {
+            this.setSeckillSaleAreaList(this.form.spikeAreaList)
+            this.setSelectSeckillProduct(this.form.spikeSku)
+            this.$router.push({ path: '/b2b/market/addSeckillProducts', query: { id: this.$route.query.id, type: this.$route.query.type } })
+        },
+        onSave () {
+            const form = {
+                ...this.form,
+                spikeSku: this.form.spikeSku
+            }
+            this.$refs.form.validate(async (valid) => {
+                if (valid) {
+                    if (form.spikeSku.length <= 0) {
+                        this.$message.warning('请添加活动商品！')
+                        return false
+                    } else {
+                        console.log(form)
+                        // await createPresale(form)
+                        this.$message.success('特价活动创建成功')
+                        // this.$router.push({ path: '/b2b/market/seckillManage' })
+                    }
+                }
+            })
+        },
+        onBack () {
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/b2b/market/seckillManage')
+        },
+        objArrToDyadicArr (value) {
+            const filterResult = this.activityAreaData.filter(item => value.some(i => item.children.some(j => j.value == i[1])))
+                .map(item => ({ label: item.label, value: item.value, children: item.children.filter(i => value.some(j => i.value == j[1])) }))
+            const result = []
+            filterResult.map(item => {
+                item.children.map(sItem => {
+                    result.push({ provinceId: item.value, provinceName: item.label, cityId: sItem.value, cityName: sItem.label, areaId: 0 })
+                })
+            })
+            return result
+        },
+        dyadicArrToObjArr (value) {
+            let result = []
+            const provinceObj = {}
+            const cityArr = this.activityAreaData.map(item => {
+                provinceObj[item.value] = item.children.map(cItem => [item.value, cItem.value])
+                return item.children.map(cItem => [item.value, cItem.value])
+            })
+            value.forEach(item => {
+                if (item.provinceId == '0') {
+                    result = result.concat(cityArr.flat())
+                } else if (item.cityId == '0') {
+                    result = result.concat(provinceObj[item.provinceId])
+                } else {
+                    result.push([item.provinceId, item.cityId])
+                }
+            })
+            return result
+        },
+        ...mapMutations({
+            setSeckillSaleAreaList: 'marketManage/SET_SECKILL_SALE_AREA_LIST',
+            setSelectSeckillProduct: 'marketManage/SET_SELECT_SECKILL_PRODUCT'
+        }),
+        ...mapActions({
+            findActivityArea: 'marketManage/findActivityArea',
+            findSelectSkuList: 'marketManage/findSelectSkuList'
+        }),
+        async getActivityArea () {
+            await this.findActivityArea()
+        },
+        async getSelectSkuList () {
+            const cityIdList = this.form.spikeAreaList.map(item => item.cityId)
+            const skuIdList = this.selectSeckillProduct.map(item => item.skuId)
+            await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList })
+            this.form.spikeSku = this.selectSkuData
         }
-
     },
-    /*  async activated () {
-        if (this.$route.query.eventId) {
-            this.getEventInfo()
-        } else if (this.$route.query.copeId) {
-            this.onCopy()
-        } else {
-            this.setTableData(this.eventProducts)
-        }
-        this.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-    }, */
+    mounted () {
+        this.init()
+    },
     beforeRouteEnter (to, from, next) {
-        // newCache('createEditEvent')
-        next(vm => {
-            if (from.path == '/b2b/marketing/addProducts') {
-                vm.isFirst = false
-            } else {
-                vm.isFirst = true
-            }
-            if (vm.$route.query.eventId && vm.isFirst) {
-                vm.getEventInfo()
-            } else if (vm.$route.query.copeId && vm.isFirst) {
-                vm.onCopy()
-            } else {
-                vm.setTableData(vm.eventProducts)
-            }
-            vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-        })
+        newCache('createSeckill')
+        next()
     },
     beforeRouteLeave (to, from, next) {
-        if (to.name != 'addProducts') {
-            // clearCache('createEditEvent')
-            this.EMPTY_EVENT_PRODUCTS()
+        if (to.name != 'addSeckillProducts') {
+            clearCache('createSeckill')
+            this.setSelectSeckillProduct([])
         }
         next()
     }
+    // beforeRouteEnter (to, from, next) {
+    //     // newCache('createEditEvent')
+    //     next(vm => {
+    //         if (from.path == '/b2b/market/addProducts') {
+    //             vm.isFirst = false
+    //         } else {
+    //             vm.isFirst = true
+    //         }
+    //         if (vm.$route.query.eventId && vm.isFirst) {
+    //             vm.getEventInfo()
+    //         } else if (vm.$route.query.copeId && vm.isFirst) {
+    //             vm.onCopy()
+    //         } else {
+    //             vm.setTableData(vm.eventProducts)
+    //         }
+    //         vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
+    //     })
+    // },
+    // beforeRouteLeave (to, from, next) {
+    //     if (to.name != 'addProducts') {
+    //         // clearCache('createEditEvent')
+    //         this.EMPTY_EVENT_PRODUCTS()
+    //     }
+    //     next()
+    // }
 }
 
 </script>
@@ -848,5 +908,25 @@ export default {
 .el-form-item__label,
 .el-form-item__content {
     line-height: 40p;
+}
+
+.area-cascader {
+    /deep/ .el-cascader__tags {
+        max-height: 100px;
+        overflow-y: auto;
+    }
+    /deep/ .el-cascader {
+        max-height: 100px;
+    }
+    /deep/ .el-input {
+        width: 600px;
+    }
+}
+
+.banner-wrap {
+    position: absolute;
+    left: 0;
+    width: 106px;
+    height: 106px;
 }
 </style>
