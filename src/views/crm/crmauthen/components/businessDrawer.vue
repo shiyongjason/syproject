@@ -320,6 +320,19 @@
                             </el-form>
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane label="员工信息" name="four">
+                        <div class="drawer-content">
+                            <div class="employee-bar">
+                                <h2>{{ businessDetail.companyName }}</h2>
+                                <h-button type="primary">转让管理员</h-button>
+                            </div>
+                            <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
+                                <template slot="selfAction" slot-scope="scope">
+                                    操作{{scope}}
+                                </template>
+                            </basicTable>
+                        </div>
+                    </el-tab-pane>
                 </el-tabs>
             </template>
             <template #btn>
@@ -395,7 +408,16 @@
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany, findCompanyContact, updateContact } from '../api/index'
+import {
+    getBusinessAuthen,
+    updateCrmauthen,
+    putWhiterecord,
+    getAuthenticationMessage,
+    delCompany,
+    findCompanyContact,
+    updateContact,
+    findEmployeeList
+} from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
 import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
@@ -521,7 +543,16 @@ export default {
             },
             whiteRecordsList: [],
             activeName: 'first',
-            authenticationDetail: {}
+            authenticationDetail: {},
+            employeeTableData: [],
+            employeeTableLabel: [
+                { label: '昵称', prop: 'nickName', width: '150' },
+                { label: '手机号', prop: 'phoneNumber', width: '150' },
+                { label: '角色', prop: 'role', width: '150' },
+                { label: '加入时间', prop: 'joinTime', width: '200' },
+                { label: '', prop: 'selfAction' }
+            ],
+            employeeTablePaginationInfo: {}
         }
     },
     components: {
@@ -564,6 +595,14 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.searchList()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.searchList()
+        },
         onMousedown (val) {
             console.log('onMousedown ', val)
         },
@@ -863,15 +902,23 @@ export default {
             }
         },
         async handleTabClick () {
-            if (this.editorShow.email) {
-                this.editorShow.email = false
+            if (this.activeName == 'four') {
+                const params = {
+                    companyCode: this.businessDetail.companyId
+                }
+                const { data } = await findEmployeeList(params)
+                this.employeeTableData = data
+            } else {
+                if (this.editorShow.email) {
+                    this.editorShow.email = false
+                }
+                if (this.editorShow.address) {
+                    this.editorShow.address = false
+                }
+                const { data } = await findCompanyContact(this.businessDetail.companyId)
+                this.companyContact.request.companyId = this.businessDetail.companyId
+                this.companyContact.response = data
             }
-            if (this.editorShow.address) {
-                this.editorShow.address = false
-            }
-            const { data } = await findCompanyContact(this.businessDetail.companyId)
-            this.companyContact.request.companyId = this.businessDetail.companyId
-            this.companyContact.response = data
         }
     },
     mounted () {
@@ -1087,5 +1134,10 @@ export default {
 }
 .labelname {
     margin-right: 10px;
+}
+.employee-bar {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
 }
 </style>

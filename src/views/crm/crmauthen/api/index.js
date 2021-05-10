@@ -51,3 +51,6 @@ export const delCompany = (params) => axios.delete(`memeber/api/crm/company/${pa
 export const findCompanyContact = (companyId) => axios.get(`memeber/api/crm/company/search/${companyId}/company-contact`)
 //
 export const updateContact = (params) => axios.put('memeber/api/crm/company/contact', params)
+
+// 公司雇员列表 /openapi/company/user/boss/staff-info
+export const findEmployeeList = (params) => axios.get(`memeber/openapi/company/user/boss/staff-info`, { params })
