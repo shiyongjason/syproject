@@ -390,6 +390,12 @@ export default {
                 ],
                 shareTagline: [
                     { required: false, message: '请输入分享话术' }
+                ],
+                virtualExperienceUrl: [
+                    { required: false,
+                        type: 'url',
+                        message: '请输入正确的链接',
+                        trigger: 'change' }
                 ]
             }
         }
