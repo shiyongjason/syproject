@@ -33,6 +33,7 @@ const state = {
     cloudEquipmentErrorPagination: {},
     deviceIDImportPagination: {},
     cloudDict: [],
+    cloudImportDict: [],
     cloudSmartPlayList: [],
     cloudSmartPlayPagination: {},
     cloudSendMessageList: [],
@@ -140,6 +141,7 @@ const getters = {
     cloudEquipmentErrorPagination: state => state.cloudEquipmentErrorPagination,
     deviceIDImportPagination: state => state.deviceIDImportPagination,
     cloudDict: state => state.cloudDict,
+    cloudImportDict: state => state.cloudImportDict,
     cloudSmartPlayList: state => state.cloudSmartPlayList,
     cloudSmartPlayPagination: state => state.cloudSmartPlayPagination,
     cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail,
@@ -313,6 +315,9 @@ const mutations = {
     },
     [cloud.CLOUD_DICT] (state, payload) {
         state.cloudDict = payload
+    },
+    [cloud.CLOUD_DEVICE_BRAND_NO] (state, payload) {
+        state.cloudImportDict = payload
     },
     [cloud.CLOUD_SMART_PLAY_LIST] (state, payload) {
         state.cloudSmartPlayList = payload

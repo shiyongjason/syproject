@@ -16,12 +16,12 @@
                 <div class="query-col-input">
                     <el-select v-model="queryParams.batchNo">
                         <el-option label="全部" value=""></el-option>
-                        <el-option :label="item.dataValue" :value="item.dataKey" v-for="item in cloudDict" :key="item.dataKey"></el-option>
+                        <el-option :label="item.dataValue" :value="item" v-for="item in cloudImportDict" :key="item"></el-option>
                     </el-select>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-checkbox v-model="queryParams.noVersion">无版本号</el-checkbox>
+                <el-checkbox :true-label="1" :false-label="2" v-model="queryParams.noVersion">无版本号</el-checkbox>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
@@ -64,20 +64,22 @@
                     <p class="colred" @click="openFaultEdit(scope.data.row,'content')">{{scope.data.row.content}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="deleteFault(scope.data.row.id)">详情</el-button>
+                    <el-button class="orangeBtn" @click="deviceDetail(scope.data.row)">详情</el-button>
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="上传结果" :visible.sync="importResultVisible" class="fault-code-edit" width="395px" :close-on-click-modal="false">
-            <p>上传数据：{{tableImportResultData?tableImportResultData.allCount:0}} 条</p>
-            <p>上传成功：{{tableImportResultData?tableImportResultData.successCount:0}} 条</p>
-            <p>上传失败：{{tableImportResultData.failDevices?tableImportResultData.failDevices.length:0}} 条</p>
+        <el-dialog title="上传结果" :visible.sync="importResultVisible" class="fault-code-edit" width="80%" :close-on-click-modal="false">
+            <p v-if="tableImportResultData">上传数据：{{tableImportResultData?tableImportResultData.allCount:0}} 条</p>
+            <p v-if="tableImportResultData">上传成功：{{tableImportResultData?tableImportResultData.successCount:0}} 条</p>
+            <p v-if="tableImportResultData">上传失败：{{tableImportResultData.failDevices?tableImportResultData.failDevices.length:0}} 条</p>
             <basicTable :isShowIndex="true" :tableLabel="tableImportResultLabel" :tableData="tableImportResultData.failDevices"
                         :isAction="false" :actionMinWidth='80'>
 
             </basicTable>
+            <span slot="footer" class="dialog-footer">
             <el-button type="primary" @click="onDownloadImpoort(tableImportResultData.failDevices)" :loading="loading">下 载</el-button>
             <el-button @click="importResultVisible = false">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>
@@ -85,7 +87,7 @@
 <script>
 import { iotUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
-import { downloadEquipmentErrorList, updateCloudEquipment, deleteCloudEquipment } from '../api/index'
+import { downloadEquipmentIDImportList, downloadImportDeviceErrorList } from '../api/index'
 export default {
     name: 'equipmentError',
     data () {
@@ -185,7 +187,7 @@ export default {
         ...mapGetters({
             cloudDeviceIDImportData: 'cloudDeviceIDImportData',
             deviceIDImportPagination: 'deviceIDImportPagination',
-            cloudDict: 'cloudDict'
+            cloudImportDict: 'cloudImportDict'
         }),
         ...mapState({
             userInfo: state => state.userInfo
@@ -215,6 +217,12 @@ export default {
             if (response.code === 200) {
                 this.$message.success('文件上传成功')
                 this.uploadShow = false
+                if (response.data.failDevices) {
+                    this.importResultVisible = true
+                    this.tableImportResultData = response.data
+                } else {
+                    this.importResultVisible = false
+                }
                 this.onQuery()
             } else {
                 this.importResultVisible = true
@@ -239,7 +247,7 @@ export default {
             }
         },
         onDownload () {
-            downloadEquipmentErrorList()
+            downloadEquipmentIDImportList()
         },
         async onDownloadImpoort (params) {
             await downloadImportDeviceErrorList(params)
@@ -328,10 +336,14 @@ export default {
             }
             this.loading = true
         },
-        deleteFault (id) {
-            this.$confirm('确认要删除该条故障码', '删除提示').then(() => {
-                deleteCloudEquipment({ id: id, operateUserName: this.userInfo.employeeName })
-                this.onQuery(this.queryParams)
+        deviceDetail (val) {
+            this.$router.push({
+                path: '/comfortcloud/equipmentOverview/deviceDetail',
+                query: {
+                    iotId: val.iotId,
+                    subIotId: val.iotId,
+                    deviceClass: '1'
+                }
             })
         }
     },

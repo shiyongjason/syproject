@@ -272,9 +272,51 @@ export function downloadEquipmentErrorList () {
         axios.defaults.responseType = 'json'
     })
 }
+// 下载
+export function downloadEquipmentIDImportList () {
+    axios.defaults.responseType = 'blob'
+    axios.get(iotUrl + `/api/user/device/download-template`).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '设备入库模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
 // 下载导入数据失败列表
 export function downloadImportDeviceErrorList (params) {
-    return axios.post(iotUrl + `/api/user/device/download-failed-devices`, params)
+    axios.defaults.responseType = 'blob'
+    axios.post(iotUrl + `/api/user/device/download-failed-devices`, params).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '设备入库模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
 }
 
 // 设备故障字典

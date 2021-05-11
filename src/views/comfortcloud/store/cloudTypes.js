@@ -9,6 +9,7 @@ export const CLOUD_DEVICE_ID_IMPORT = 'CLOUD_DEVICE_ID_IMPORT' // 设备故障�
 export const CLOUD_EQUIPMENT_ERROR_PAGINATION = 'CLOUD_EQUIPMENT_ERROR_PAGINATION' // 设备故障列表分页
 export const CLOUD_DEVICE_ID_IMPORT_PAGINATION = 'CLOUD_DEVICE_ID_IMPORT_PAGINATION' //
 export const CLOUD_DICT = 'CLOUD_EQUIPMENT_ERROR_DICT' // 设备故障字典
+export const CLOUD_IMPORT_DICT = 'CLOUD_IMPORT_DICT' //
 
 export const CLOUD_SMART_PLAY_LIST = 'CLOUD_SMART_PLAY_LIST' // 智能玩法列表
 export const CLOUD_SMART_PLAY_PAGINATION = 'CLOUD_SMART_PLAY_PAGINATION' // 智能玩法列表分页
