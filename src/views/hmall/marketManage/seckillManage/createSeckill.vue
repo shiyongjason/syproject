@@ -436,7 +436,7 @@ export default {
         async getEventInfo () {
             // 实在不理解为什么复制和详情要用两个接口，不都是获取活动信息吗
             // 后来去看了后端的代码，发现后端做了一些数据的处理，将一些数据置空，比如刷单次数之类的信息，单独做了一个接口
-            this.$route.query.type == 'copy' ? await this.eventInfo({ id: this.$route.query.id }) : await this.copy({ id: this.$route.query.id })
+            this.$route.query.type == 'copy' ? await this.copy({ id: this.$route.query.id }) : await this.eventInfo({ id: this.$route.query.id })
             this.form = JSON.parse(JSON.stringify(this.eventInfos))
             const { spikeSku } = this.eventInfos
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
