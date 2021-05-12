@@ -19,7 +19,7 @@
                     <div class="picture-prompt ml20">
                         <p>banner大小为 702px x 262px</p>
                     </div>
-                    <input type="hidden" v-model="form.image">
+                    <el-input type="hidden" v-model="form.image"/>
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">2.设置规则和优惠</span>
@@ -160,7 +160,7 @@ export default {
                     }
                 ],
                 image: [
-                    { required: true, message: '请选择活动图片', trigger: 'change' }
+                    { required: true, message: '请选择活动图片' }
                 ],
                 discountType: [
                     { required: true, message: '请选择优惠方式', trigger: 'change' }
@@ -250,7 +250,7 @@ export default {
                 },
                 {
                     label: '库存',
-                    minWidth: '110',
+                    minWidth: '180',
                     prop: 'availableStock',
                     renderHeader: (h, scope) => {
                         return (
@@ -263,7 +263,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <el-form-item prop={`spikeSku[${scope.$index}].availableStock`} rules={this.availableStockRules} label-width="10px">
-                                <el-input value={scope.row.availableStock} style='width:80%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
+                                {scope.row.cityName}：<el-input value={scope.row.availableStock} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
                     }
@@ -423,9 +423,11 @@ export default {
         },
         async getSelectSkuList () {
             const cityIdList = this.form.spikeAreaList.map(item => item.cityId)
-            const skuIdList = this.selectSeckillProduct.map(item => item.skuId)
-            await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList })
-            this.setTableData(this.selectSkuData)
+            const skuIdList = this.selectSeckillProduct.filter(item => !this.form.spikeSku.some(i => item.skuId == i.skuId)).map(item => item.skuId)
+            if (skuIdList.length > 0) {
+                await this.findSelectSkuList({ cityIdList: cityIdList, skuIdList: skuIdList })
+                this.setTableData(this.form.spikeSku.concat(this.selectSkuData))
+            }
         },
         /**
          * 获取秒杀活动详情
@@ -502,82 +504,6 @@ export default {
                 }
             })
         },
-        /** 保存 */
-        // async onSave (status, mark = '') {
-        //     let temp = true
-        //     this.$refs['form'].validate((valid, errors) => {
-        //         if (!valid) {
-        //             let arr = Object.values(errors)
-        //             for (let i = 0; i < arr.length; i++) {
-        //                 this.$message.error(`${arr[0][0].message}`)
-        //                 break
-        //             }
-        //             temp = false
-        //         }
-        //     })
-        //     if (!temp) return false
-        //     if (this.form.spikeSku && this.form.spikeSku.length == 0) {
-        //         this.$message.error(`活动商品不能为空`)
-        //         return
-        //     }
-        //     let hours = moment.duration(moment(this.form.endTime).valueOf() - moment(this.form.startTime).valueOf()).as('hours')
-        //     if (hours == 0) {
-        //         this.$message.error(`活动结束时间不能和开始时间一样`)
-        //         return
-        //     }
-        //     if (hours < 0) {
-        //         this.$message.error(`开始时间不能大于结束时间`)
-        //         return
-        //     }
-        //     if (hours > 30 * 24) {
-        //         this.$message.error(`活动时间最多持续三十天`)
-        //         return
-        //     }
-        //     let flag = true
-        //     this.form.spikeSku.some((item, index) => {
-        //         this.validate(item, 'submit')
-        //         item.sort = index + 1
-        //         this.$set(item, 'inventoryOriginNum', item.availableStock)
-        //         this.$set(item, 'inventoryRemainNum', item.availableStock)
-        //         if (item._error || item._numError || item._inventoryNumError) flag = false
-        //     })
-        //     if (flag) {
-        //         if (status === 2 && mark === '') {
-        //             let now = moment().format('YYYY-MM-DD HH:mm:ss')
-        //             let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
-        //             if (consumingMinutes < 9) {
-        //                 this.$message.error(`只能创建10分钟后开始的活动`)
-        //                 return
-        //             }
-        //             if (consumingMinutes > 30 * 24 * 60) {
-        //                 this.$message.error(`只能提前三十天发布`)
-        //                 return
-        //             }
-        //             this.$set(this.form, 'publishTime', moment().format('YYYY-MM-DD HH:mm:ss'))
-        //         }
-        //         if (this.isPending) return
-        //         this.isPending = true
-        //         try {
-        //             if (mark === '') this.form.status = status
-        //             if (this.$route.query.eventId) {
-        //                 this.form.updateBy = this.userInfo.employeeName
-        //                 await editEvent(this.form)
-        //             } else {
-        //                 this.form.createBy = this.userInfo.employeeName
-        //                 await saveEvent(this.form)
-        //             }
-        //             this.isPending = false
-        //             this.$message.success(`提交成功！`)
-        //             this.setNewTags((this.$route.fullPath).split('?')[0])
-        //             this.$router.push('/b2b/market/eventMange')
-        //         } catch (error) {
-        //             this.isPending = false
-        //         }
-        //     } else {
-        //         // this.$message.error(`信息尚未填写完整`)
-        //     }
-        // },
-
         init () {
             this.getActivityArea()
             // 当复制或者编辑的时候获取活动详情
@@ -586,7 +512,8 @@ export default {
             }
         },
         backPicUrl (file) {
-            this.form.image = file.imageUrl
+            this.$set(this.form, 'image', file.imageUrl)
+            // this.form.image = file.imageUrl
         },
         onChangeArea (value) {
             this.form.spikeAreaList = this.objArrToDyadicArr(value)
@@ -595,7 +522,7 @@ export default {
         // 添加商品事件
         onAddProduct () {
             this.setSeckillSaleAreaList(this.form.spikeAreaList)
-            this.setSelectSeckillProduct(this.form.spikeSku)
+            this.setSelectSeckillProduct(this.selectSeckillProduct.filter(item => this.form.spikeSku.some(i => i.skuId == item.skuId)))
             this.$router.push({ path: '/b2b/market/addSeckillProducts', query: { id: this.$route.query.id, type: this.$route.query.type } })
         },
         /**
@@ -603,7 +530,7 @@ export default {
          * TODO: 此处需要调整
          */
         onRemove (val) {
-            this.form.spikeSku = this.form.spikeSku.filter(item => item.skuId != val.skuId)
+            this.form.spikeSku = this.form.spikeSku.filter(item => !(item.skuId == val.skuId && item.cityId == val.cityId))
         },
         /**
          * 刷单操作
@@ -621,23 +548,62 @@ export default {
                 this.getEventInfo()
             }).catch(() => { })
         },
-        // 保存或者活动发布事件
-        onSave () {
-            const form = {
-                ...this.form,
-                spikeSku: this.form.spikeSku
+        /**
+         * 保存或者活动发布事件
+         * @param saveType 1: 保存 2：发布
+         */
+        onSave (saveType) {
+            if (this.isPending) return
+            this.isPending = true
+            // 如果是点击发布需要做额外校验
+            if (saveType == 2) {
+                let now = moment().format('YYYY-MM-DD HH:mm:ss')
+                let consumingMinutes = moment.duration(moment(this.form.startTime).valueOf() - moment(now).valueOf()).as('minutes')
+                if (consumingMinutes < 9) {
+                    this.$message.error(`只能创建10分钟后开始的活动`)
+                    this.isPending = false
+                    return
+                }
+                if (consumingMinutes > 30 * 24 * 60) {
+                    this.$message.error(`只能提前三十天发布`)
+                    this.isPending = false
+                    return
+                }
             }
             this.$refs.form.validate(async (valid) => {
                 if (valid) {
-                    if (form.spikeSku.length <= 0) {
-                        this.$message.warning('请添加活动商品！')
+                    if (this.form.spikeSku.length <= 0) {
+                        this.$message.error(`活动商品不能为空`)
+                        this.isPending = false
                         return false
                     } else {
-                        console.log(form)
-                        // await createPresale(form)
-                        this.$message.success('特价活动创建成功')
-                        // this.$router.push({ path: '/b2b/market/seckillManage' })
+                        // 保存的时候商品数据处理，排序和库存信息
+                        this.form.spikeSku.forEach((item, index) => {
+                            item.sort = index + 1
+                            this.$set(item, 'inventoryOriginNum', item.availableStock)
+                            this.$set(item, 'inventoryRemainNum', item.availableStock)
+                        })
+                        this.form.status = saveType
+                        try {
+                            // 设置更新人或者添加人
+                            if (this.$route.query.id && this.$route.query.type != 'copy') {
+                                this.form.updateBy = this.userInfo.employeeName
+                                await editEvent(this.form)
+                                this.$message.success('特价活动编辑成功')
+                            } else {
+                                this.form.createBy = this.userInfo.employeeName
+                                await saveEvent(this.form)
+                                this.$message.success('特价活动创建成功')
+                            }
+                            this.isPending = false
+                            this.setNewTags((this.$route.fullPath).split('?')[0])
+                            this.$router.push({ path: '/b2b/market/seckillManage' })
+                        } catch (e) {
+                            this.isPending = false
+                        }
                     }
+                } else {
+                    this.isPending = false
                 }
             })
         },
@@ -738,31 +704,6 @@ export default {
         }
         next()
     }
-    // beforeRouteEnter (to, from, next) {
-    //     // newCache('createEditEvent')
-    //     next(vm => {
-    //         if (from.path == '/b2b/market/addProducts') {
-    //             vm.isFirst = false
-    //         } else {
-    //             vm.isFirst = true
-    //         }
-    //         if (vm.$route.query.eventId && vm.isFirst) {
-    //             vm.getEventInfo()
-    //         } else if (vm.$route.query.copeId && vm.isFirst) {
-    //             vm.onCopy()
-    //         } else {
-    //             vm.setTableData(vm.eventProducts)
-    //         }
-    //         vm.remind = JSON.parse(sessionStorage.getItem('remind')) || false
-    //     })
-    // },
-    // beforeRouteLeave (to, from, next) {
-    //     if (to.name != 'addProducts') {
-    //         // clearCache('createEditEvent')
-    //         this.EMPTY_EVENT_PRODUCTS()
-    //     }
-    //     next()
-    // }
 }
 
 </script>
