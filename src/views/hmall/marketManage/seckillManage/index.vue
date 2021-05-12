@@ -135,7 +135,7 @@ export default {
             this.$router.push({ path: '/b2b/market/createSeckill', query: { id: id, status: status } })
         },
         onCopyActivity ({ id }) {
-            this.$router.push({ path: '/b2b/market/createSeckill', query: { id: id } })
+            this.$router.push({ path: '/b2b/market/createSeckill', query: { id: id, type: 'copy' } })
         },
         onOperate (row, status) {
             this.$confirm(status == 2 ? '是否发布该活动' : '是否终止该活动', '提示', {
@@ -185,7 +185,7 @@ export default {
     },
     beforeRouteEnter (to, from, next) {
         next(vm => {
-            if (from.path === '/b2b/market/createEditEvent') {
+            if (from.path === '/b2b/market/createSeckill') {
                 vm.onFindeSpike('fromCreat')
             }
         })
