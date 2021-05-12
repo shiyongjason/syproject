@@ -62,6 +62,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { ACTIVITY_STATUS } from '../const'
+import { clearCache, newCache } from '@/utils/index'
 export default {
     name: 'seckillManage',
     data () {
@@ -184,11 +185,18 @@ export default {
         this.init()
     },
     beforeRouteEnter (to, from, next) {
+        newCache('seckillManage')
         next(vm => {
             if (from.path === '/b2b/market/createSeckill') {
-                vm.onFindeSpike('fromCreat')
+                vm.getSeckillList()
             }
         })
+    },
+    beforeRouteLeave (to, from, next) {
+        if (to.name != 'createSeckill' && to.name != 'eventStatistics') {
+            clearCache('seckillManage')
+        }
+        next()
     }
     /* activated () {
         this.onFindeSpike()

@@ -131,7 +131,7 @@ export default {
             if (this.multiSelection.length <= 0) {
                 this.$message.warning('请选择商品！')
             } else {
-                const selectSeckillProduct = this.selectSeckillProduct.concat(this.multiSelection)
+                const selectSeckillProduct = this.selectSeckillProduct.concat(this.multiSelection.map(item => ({ skuId: item.skuId })))
                 this.setSelectSeckillProduct(selectSeckillProduct)
                 this.$message.success('商品添加成功')
                 this.getSeckillSkuList()
