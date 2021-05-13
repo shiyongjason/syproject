@@ -77,6 +77,9 @@ const actions = {
     async hoverTrack ({ commit }, params) {
         const { data } = await axios.get('ets/api/b2b/activity/hover', { params })
         commit(types.LIST_TRACK, data)
+    },
+    async addStock ({ commit }, params) {
+        await instance.patch('/ops/api/spike/add-stock', params)
     }
 }
 
