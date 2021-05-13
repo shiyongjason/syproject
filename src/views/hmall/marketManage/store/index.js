@@ -1,4 +1,5 @@
 import instance from '@/api/axios_new.js'
+import axios from 'axios'
 
 import * as types from './mutation-types.js'
 
@@ -8,7 +9,8 @@ const state = {
     seckillSaleAreaList: [],
     selectSeckillProduct: [],
     seckillSkuData: {},
-    selectSkuData: []
+    selectSkuData: [],
+    listTrack: {}
 }
 
 const getters = {
@@ -46,6 +48,9 @@ const mutations = {
     },
     [types.SELECT_SKU_DATA] (state, payload) {
         state.selectSkuData = payload
+    },
+    [types.LIST_TRACK] (state, payload) {
+        state.listTrack = payload
     }
 }
 
@@ -68,6 +73,10 @@ const actions = {
     async findSelectSkuList ({ commit }, params) {
         const { data } = await instance.post('/product/api/market/sku/select', params)
         commit(types.SELECT_SKU_DATA, data)
+    },
+    async hoverTrack ({ commit }, params) {
+        const { data } = await axios.get('ets/api/b2b/activity/hover', { params })
+        commit(types.LIST_TRACK, data)
     }
 }
 
