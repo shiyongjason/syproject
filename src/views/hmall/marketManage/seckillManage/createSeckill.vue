@@ -46,7 +46,7 @@
                 <el-form-item label="活动商品：">
                     <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0">添加商品</h-button>
                 </el-form-item>
-                <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
+                <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='260px'>
                     <template slot="skuName" slot-scope="scope">
                         <div class="goods">
                             <img :src="scope.data.row.pictureUrl">
@@ -203,7 +203,11 @@ export default {
                         if (value - this.form.spikeSku[index].availableStock > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
                         } else if (this.form.spikeSku[index].availableStock) {
-                            this.$refs.form.clearValidate(`spikeSku[${index}].availableStock`)
+                            let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
+                            let availableStock = this.form.spikeSku[index].availableStock
+                            if (availableStock - inventoryRemainNum <= 0) {
+                                this.$refs.form.clearValidate(`spikeSku[${index}].availableStock`)
+                            }
                         }
                         callback()
                     }
