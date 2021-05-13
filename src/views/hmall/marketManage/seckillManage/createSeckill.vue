@@ -56,6 +56,7 @@
                     <template slot="action" slot-scope="scope">
                         <h-button table @click="onRemove(scope.data.row)" :disabled="disabled">移除</h-button>
                         <h-button table @click="onOrder(scope.data.row)" :disabled="canNotOrder">刷单（{{scope.data.row.clickFarmingNum?scope.data.row.clickFarmingNum:0}}）</h-button>
+                        <h-button table @click="onAddStock(scope.data.row)" :disabled="canNotOrder">增加库存</h-button>
                     </template>
                 </hosJoyTable>
             </el-form>
@@ -418,7 +419,8 @@ export default {
         }),
         ...mapActions({
             findActivityArea: 'marketManage/findActivityArea',
-            findSelectSkuList: 'marketManage/findSelectSkuList'
+            findSelectSkuList: 'marketManage/findSelectSkuList',
+            addStock: 'marketManage/addStock'
         }),
         // 获取活动区域
         async getActivityArea () {
@@ -555,6 +557,20 @@ export default {
                 await clickFarming({ productId: val.productId, updateBy: this.userInfo.employeeName })
                 this.getEventInfo()
             }).catch(() => { })
+        },
+        async onAddStock (row) {
+            if (this.form.status == SPIKE_STATUS_DRAFT || !row.productId || row.inventoryRemainNum === 0 || this.$route.query.type == 'copy') {
+                this.$message.error(`增加库存的前置条件该商品已经发布且库存不为零。`)
+                return
+            }
+            await this.addStock({
+                spikeId: row.spikeId,
+                skuId: row.skuId,
+                provinceId: row.provinceId,
+                cityId: row.cityId,
+                addStock: 1
+            })
+            this.getEventInfo()
         },
         /**
          * 保存或者活动发布事件

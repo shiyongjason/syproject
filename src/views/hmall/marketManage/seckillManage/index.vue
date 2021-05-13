@@ -92,8 +92,8 @@ export default {
     computed: {
         ...mapState({
             userInfo: state => state.userInfo,
-            listTrack: state => state.eventManage.listTrack,
-            seckillData: state => state.hmall.marketManage.seckillData
+            seckillData: state => state.hmall.marketManage.seckillData,
+            listTrack: state => state.hmall.marketManage.listTrack
         }),
         pickerOptionsStart () {
             return {
@@ -168,12 +168,18 @@ export default {
         ...mapActions({
             findSeckillList: 'marketManage/findSeckillList',
             updateSeckillList: 'marketManage/updateSeckillList',
-            findSpike: 'findSpike',
-            hoverTrack: 'hoverTrack'
+            hoverTrack: 'marketManage/hoverTrack'
         }),
         async getSeckillList () {
             await this.findSeckillList(this.queryParams)
-            this.tableData = this.seckillData.records
+            let tableData = this.seckillData.records
+            tableData.map(async (item, index) => {
+                await this.hoverTrack({ activityId: item.id, activityName: item.spikeName })
+                item.pvdata = this.listTrack
+                this.$set(item, index, this.listTrack)
+                return item
+            })
+            this.tableData = tableData
             this.pagination = {
                 pageNumber: this.seckillData.current,
                 pageSize: this.seckillData.size,
