@@ -44,7 +44,7 @@
                     <span class="title-cont__label">3.选择活动商品</span>
                 </div>
                 <el-form-item label="活动商品：">
-                    <h-button type="create" @click="onAddProduct" :disabled="form.spikeAreaList.length==0 ">添加商品</h-button>
+                    <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0" >添加商品</h-button>
                 </el-form-item>
                 <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
                     <template slot="skuName" slot-scope="scope">
@@ -246,7 +246,7 @@ export default {
                     render: (h, scope) => {
                         return (
                             <span>
-                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} maxLength='12' disabled={this.disabled}></el-input>
+                                <el-input style='width:80%' size='mini' value={scope.row[scope.column.property]} onInput={(val) => { this.setOneCol(val, scope, 'sellingPoint') }} maxLength='12' disabled={this.disabled}></el-input>
                             </span>
                         )
                     }
