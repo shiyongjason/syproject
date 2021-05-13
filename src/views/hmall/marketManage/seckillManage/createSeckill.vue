@@ -9,8 +9,8 @@
                     <el-input v-model.trim="form.spikeName" placeholder="请输入活动名称" maxlength="255" clearable :disabled="disabled"></el-input>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="startTime">
-                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间"></el-date-picker>
-                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间"></el-date-picker>
+                    <el-date-picker v-model="form.startTime" :clearable=false :editable=false :picker-options="pickerOptionsStart" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="开始时间" :disabled="disabled"></el-date-picker>
+                    <el-date-picker v-model="form.endTime" :editable=false :clearable=false :picker-options="pickerOptionsEnd" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" placeholder="结束时间" :disabled="disabled"></el-date-picker>
                     <span class="timeTips" v-if="!disabled">只能创建10分钟后开始的活动</span>
                 </el-form-item>
                 <el-form-item label="活动banner：" prop="image">
@@ -179,8 +179,11 @@ export default {
                         const beginIndex = rule.field.indexOf('[')
                         const endIndex = rule.field.indexOf(']')
                         const index = rule.field.substring(beginIndex + 1, endIndex)
+                        let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
                         if (this.form.spikeSku[index].purchaseLimitNum - value > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
+                        } else if (value - inventoryRemainNum > 0) {
+                            return callback(new Error('库存不能大于最大可售库存'))
                         } else if (this.form.spikeSku[index].purchaseLimitNum) {
                             // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
                             this.$refs.form.clearValidate(`spikeSku[${index}].purchaseLimitNum`)
@@ -262,7 +265,7 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].availableStock`} rules={this.availableStockRules} label-width="10px">
+                            <el-form-item prop={`spikeSku[${scope.$index}].availableStock`} rules={this.availableStockRules} label-width="10px" style="margin-top: 20px">
                                 {scope.row.cityName}：<el-input value={scope.row.availableStock} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
@@ -292,7 +295,7 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].purchaseLimitNum`} rules={this.purchaseLimitNumRules} label-width="0px">
+                            <el-form-item prop={`spikeSku[${scope.$index}].purchaseLimitNum`} rules={this.purchaseLimitNumRules} label-width="0px" style="margin-top: 20px">
                                 <el-input value={scope.row.purchaseLimitNum} style='width:80%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'purchaseLimitNum') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
@@ -323,10 +326,10 @@ export default {
                     render: (h, scope) => {
                         return (
                             this.form.discountType === DISCOUNT_TYPE_PERCENT
-                                ? <el-form-item prop={`spikeSku[${scope.$index}].discountValue`} rules={this.discountValueRules} label-width="0px">
+                                ? <el-form-item prop={`spikeSku[${scope.$index}].discountValue`} rules={this.discountValueRules} label-width="0px" style="margin-top: 20px">
                                     <el-input value={scope.row.discountValue} style='width:110px;margin:0 10px' size='mini' onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disabled}></el-input>折
                                 </el-form-item>
-                                : <el-form-item prop={`spikeSku[${scope.$index}].discountValue`} rules={this.discountValueRules} label-width="0px">
+                                : <el-form-item prop={`spikeSku[${scope.$index}].discountValue`} rules={this.discountValueRules} label-width="0px" style="margin-top: 20px">
                                     直降<el-input value={scope.row.discountValue} style='width:70px;margin:0 10px' size='mini' onInput={(val) => { this.setOneCol(val, scope, 'discountValue') }} disabled={this.disabled}></el-input>元
                                 </el-form-item>
                         )
