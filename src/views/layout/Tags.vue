@@ -212,7 +212,6 @@ export default {
             this.tagUpdate(tags || [])
             this.reloadUpdate(false)
             if (this.$route.path.indexOf('/b2b/') > -1) {
-                console.log(232323232321)
                 tags.map(item => {
                     if (item.middleComponents && (this.cachedInclude.indexOf(item.middleComponents) == -1)) {
                         newCache(item.middleComponents)

@@ -255,7 +255,7 @@
                                         }}
                                         </p>
                                         <p class="col-filed col-25">
-                                            <span class="label" style="min-width:95px">OA审批编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
+                                            <span class="label" style="min-width:95px">OA货款支付编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
                                         </p>
                                         <p class="col-filed">
                                             <span class="label">审核备注：</span>{{

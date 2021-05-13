@@ -179,6 +179,7 @@ export default {
                 pageSize: 10,
                 tableNameEn: ''
             }
+            this.getExcelTableTableList(this.queryParams)
         },
         downloadFile () {
             if (this.uploadParams.tableNameEn) {
