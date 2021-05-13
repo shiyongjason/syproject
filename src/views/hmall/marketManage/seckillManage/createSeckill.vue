@@ -206,6 +206,7 @@ export default {
                         } else if (this.form.spikeSku[index].availableStock) {
                             let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
                             let availableStock = this.form.spikeSku[index].availableStock
+                            console.log(availableStock - inventoryRemainNum)
                             if (availableStock - inventoryRemainNum <= 0) {
                                 this.$refs.form.clearValidate(`spikeSku[${index}].availableStock`)
                             }
