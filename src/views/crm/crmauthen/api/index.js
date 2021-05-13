@@ -52,6 +52,11 @@ export const findCompanyContact = (companyId) => axios.get(`memeber/api/crm/comp
 //
 export const updateContact = (params) => axios.put('memeber/api/crm/company/contact', params)
 
+// 获取天眼查url
+export const getTianyanUrl = (params) => {
+    return axios.get(`develop/companyurl/${params}`)
+}
+
 // 公司雇员列表
 export const findEmployeeList = (params) => axios.get(`memeber/openapi/company/user/boss/staff-info`, { params })
 // 转换管理员

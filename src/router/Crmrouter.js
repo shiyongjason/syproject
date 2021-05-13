@@ -416,6 +416,18 @@ export default [
                     icon: ''
                 },
                 component: () => import('@/views/crm/upstreamPaymentManagement/index.vue')
+            },
+            {
+                path: 'tianyan',
+                name: 'tianyan',
+                meta: {
+                    title: '天眼查',
+                    tagName: '天眼查',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/crmauthen/tianyan.vue')
             }
         ]
     }

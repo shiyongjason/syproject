@@ -2,7 +2,8 @@
     <div class="page-body B2b">
         <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='imgArr.length>1' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="getImgList(imgArr)">
         </el-image>
-        <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='currentKey.inputStyle==9&&isRenderUpload&&imgArr.length==0' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg" :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]">
+        <el-image fit="contain" :z-index='999999' ref="zoomImage" v-if='currentKey.inputStyle==9&&isRenderUpload&&imgArr.length==0' style="width: 0px; height:0px;position: absolute;" :src="this.currentKey.paramValue||emptyImg"
+            :preview-src-list="this.currentKey.paramValue?[this.currentKey.paramValue]:[emptyImg]">
         </el-image>
         <div class="page-body-cont approvalcontract">
             <div class="approvalcontract-head">
@@ -23,7 +24,7 @@
                         <div class="approvalcontract-content" v-html='contractContentDiv' v-if="detailRes.contractStatus != 6"></div>
                         <!-- 法务预览html——编辑器 -->
                         <div class="approvalcontract-content-legal-affairs" v-if="detailRes.contractStatus == 6">
-                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onInit="editorOnInit" @onKeyUp="onKeyUp" @onBlur='onBlur' v-if="flag"></editor>
+                            <editor ref="editor" apiKey="v30p89tdwvdwt7x2fcngnrvnv2syzsvs7q9hps4gakdtt4ak" v-model="contractContentDiv" :init="editorInit" @onBlur='onBlur' @onInit="editorOnInit" @onKeyUp="onKeyUp" v-if="flag"></editor>
                             <!-- @onKeyUp="onKeyUp"  -->
                             <!-- 如果报tinymce vue This domain is not registered with Tiny Cloud. Please see the 请添加白名单 -->
                             <!-- https://www.tiny.cloud/docs/integrations/vue/ -->
@@ -161,7 +162,8 @@
                     </div>
                     <div style="margin-bottom:10px;margin-top:-30px;text-indent: 3px;" v-if='imgArr.length > 1'>{{`+${imgArr.length-1} 张图 (多图)`}}</div>
                     <div v-if="serviceFee" v-show='showServiceFee' v-html="serviceFee" style="margin-bottom:20px;margin-top:-10px;"></div>
-                    <h-button v-if="imgArr.length == 0 && isRenderUpload&&currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
+                    <!-- <h-button v-if="imgArr.length == 0 && isRenderUpload&&currentKey.inputStyle==9&&!currentKey.required&&currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button> -->
+                    <h-button v-if="imgArr.length == 0 && isRenderUpload && currentKey.inputStyle == 9 && currentKey.paramValue" style="margin-top:10px" @click="emptyTheImg" type="editor">清空该图片</h-button>
                     <h-button @click="onSaveContent('')" type="primary">保存</h-button>
                 </div>
                 <div class="tips">
@@ -497,7 +499,7 @@ export default {
                                         style: this.currentKey.unit ? { width: '250px' } : '',
                                         innerHtml: this.currentKey.unit || '',
                                         maxlength: this.currentKey.maxLength || '',
-                                        decimal: this.currentKey.decimal || '',
+                                        decimal: this.currentKey.decimal || 2,
                                         calculationRules: this.currentKey.calculationRules || ''// 最大值
                                     },
                                     on: {
@@ -936,6 +938,7 @@ export default {
             let dataParamName = `{#${this.currentKey.paramName}#}`
             let domList = this.contractDocument.getElementsByClassName(this.currentKey.paramKey)
             let old = this.currentKey.paramValue
+            let canSaveContent = true
             Array.from(domList).map(jtem => {
                 let img = jtem.getElementsByTagName('img')
                 //
@@ -955,8 +958,18 @@ export default {
                         d.paramValue = dData
                     }
                 })
-                //
+                // 只剩最后一张图片
                 if (img.length == 1) {
+                    console.log('🚀 --- Array.from --- img.length == 1', img.length == 1)
+                    // 如果是必填字段保留最后一张图。
+                    if (this.currentKey.required) {
+                        this.$message({
+                            message: `必填字段不能为空，您可以替换该图片`,
+                            type: 'error'
+                        })
+                        canSaveContent = false
+                        return
+                    }
                     doms[0].outerHTML = `${dataParamName}`
                     this.contractFieldsList.map((d, i) => {
                         if (d.paramKey === this.currentKey.paramKey) {
@@ -967,6 +980,9 @@ export default {
                     doms[0].outerHTML = ''
                 }
             })
+            if (!canSaveContent) {
+                return
+            }
             await saveContent({
                 'contractId': this.$route.query.id,
                 // 合同审批角色 1：分财 2：风控 3：法务
@@ -977,7 +993,6 @@ export default {
                 'fieldContent': '', // 编辑内容
                 'contractContent': this.contractDocument.innerHTML, // 拿input版的合同去提交。法务审核的时候需要用到。
                 'createBy': this.userInfo.employeeName,
-                // 'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
                 'contractFieldsList': JSON.stringify(this.contractFieldsList) // 合同字段键值对
             })
             let s = document.getElementsByClassName('approvalcontract-content-layout')
@@ -989,6 +1004,7 @@ export default {
         },
         async setImg () {
             console.log('setImg')
+            // 判断保存图片是否没上传图就点了保存。
             if (this.imgArr.length == 0) {
                 this.$message({
                     message: `图片不能为空`,
