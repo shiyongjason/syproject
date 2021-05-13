@@ -19,7 +19,7 @@
                     <div class="picture-prompt ml20">
                         <p>banner大小为 702px x 262px</p>
                     </div>
-                    <el-input type="hidden" v-model="form.image"/>
+                    <el-input type="hidden" v-model="form.image" />
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">2.设置规则和优惠</span>
@@ -265,8 +265,8 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].availableStock`} rules={this.availableStockRules} label-width="10px" style="margin-top: 20px">
-                                {scope.row.cityName}：<el-input value={scope.row.availableStock} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
+                            <el-form-item prop={`spikeSku[${scope.$index}].availableStock`} label={scope.row.cityName} rules={this.availableStockRules} label-width="10px" style="margin-top: 20px">
+                                <el-input value={scope.row.availableStock} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
                     }
@@ -658,7 +658,7 @@ export default {
             this.form.spikeSku.forEach(item => {
                 !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '') // 限购数量
                 !item.sellingPoint && this.$set(item, 'sellingPoint', '') // 卖点信息
-                !item.availableStock && this.$set(item, 'availableStock', item.inventoryRemainNum) // 库存
+                item.availableStock && this.$set(item, 'inventoryRemainNum', item.availableStock) // 库存
                 // 为什么优惠信息这块的判断比较特别，是因为优惠信息可以为0，限购数量和库存都不可以为0
                 if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '') // 优惠信息
                 !item.productId && this.$set(item, 'productId', null) // 产品ID
