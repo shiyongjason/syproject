@@ -24,19 +24,19 @@ export const findBankCardInfo = (params) => {
 }
 // 提现银行卡信息
 export const getSmsCode = () => {
-    return axios.post(`${B2bUrl}payment/api/boss/service-fee/withdraws/sms`, { })
+    return axios.post(`${B2bUrl}payment/api/boss/service-fee/withdraws/sms`, {})
 }
 // 订单列表
 export const findOrders = (params) => {
-    return axios.get(`${B2bUrl}order/api/boss/orders/finance-orders`, { params })
+    return axios.get(`${B2bUrl}order/boss/child-orders/finance`, { params })
 }
 // 营销列表
 export const findMarketing = (params) => {
-    return axios.get(`${B2bUrl}order/api/boss/orders/finance-market`, { params })
+    return axios.get(`${B2bUrl}order/boss/child-orders/market`, { params })
 }
 // 商品明细列表
 export const findProductsInfo = (params) => {
-    return axios.get(`${B2bUrl}order/api/boss/orders/finance-products`, { params })
+    return axios.get(`${B2bUrl}order/boss/child-orders/finance-product`, { params })
 }
 // 查询所有类目
 export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categories/tree', { params })
