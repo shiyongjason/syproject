@@ -321,14 +321,14 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="员工信息" name="four">
-                        <div class="drawer-content">
+                        <div class="drawer-content employee-content">
                             <div class="employee-bar">
                                 <h2>{{ businessDetail.companyName }}</h2>
-                                <h-button type="primary">转让管理员</h-button>
+                                <h-button type="primary" @click="openTransferAdminDialog" v-if="hosAuthCheck(auth_transfer_admin)">转让管理员</h-button>
                             </div>
                             <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
                                 <template slot="selfAction" slot-scope="scope">
-                                    操作{{scope}}
+                                    <img src="../../../../assets/images/edit.png" alt="" class="employee-edit" @click="openEmployeeRoleDialog(scope.data.row)">
                                 </template>
                             </basicTable>
                         </div>
@@ -403,10 +403,15 @@
                 <el-button type="primary" @click="qualificationDialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList"/>
+        <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData"
+                       :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList"/>
     </div>
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import EditTargetEmployeeRoleDialog from './editTargetEmployeeRoleDialog'
+import TransferAdmin from './transferAdminDialog'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import {
     getBusinessAuthen,
@@ -416,7 +421,7 @@ import {
     delCompany,
     findCompanyContact,
     updateContact,
-    findEmployeeList
+    findEmployeeList, findRoleList
 } from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
@@ -425,6 +430,9 @@ import OssFileUtils from '@/utils/OssFileUtils'
 import elImageAddToken from '@/components/elImageAddToken'
 import { Email } from '@/utils/rules'
 import inputAutocomplete from '../../approveContract/components/inputAutocomplete'
+
+// 1：老板 2：操盘手 3：业务 4：财务 5：仓管 6：普通员工
+
 export default {
     name: 'businessdrawer',
     props: {
@@ -448,6 +456,8 @@ export default {
             },
             qualificationDialogData: '',
             qualificationDialogVisible: false,
+            editEmployeeDialogVisible: false,
+            transferAdminDialogVisible: false,
             serviceCapabilityDetail: [],
             businessType: {
                 retail: '',
@@ -465,6 +475,7 @@ export default {
             agentLevel: AGENTLEVEL,
             authen_operate: Auths.CRM_WHITE_OPERATE,
             authen_baocun: Auths.CRM_WHITE_BAOCUN,
+            auth_transfer_admin: Auths.CRM_TRANSFER_ADMIN,
             removeValue: true,
             branchArr: [],
             formLabelWidth: '150px',
@@ -545,20 +556,24 @@ export default {
             activeName: 'first',
             authenticationDetail: {},
             employeeTableData: [],
+            adminData: {},
             employeeTableLabel: [
                 { label: '昵称', prop: 'nickName', width: '150' },
                 { label: '手机号', prop: 'phoneNumber', width: '150' },
-                { label: '角色', prop: 'role', width: '150' },
-                { label: '加入时间', prop: 'joinTime', width: '200' },
-                { label: '', prop: 'selfAction' }
+                { label: '角色', prop: 'roleName', width: '150' },
+                { label: '加入时间', prop: 'joinTime', width: '200', formatters: 'date' },
+                { label: '', hidden: true, prop: 'selfAction' }
             ],
-            employeeTablePaginationInfo: {}
+            roleList: [],
+            targetEmployeeData: {}
         }
     },
     components: {
         HAutocomplete,
         elImageAddToken,
-        inputAutocomplete
+        inputAutocomplete,
+        EditTargetEmployeeRoleDialog,
+        TransferAdmin
     },
     computed: {
         ...mapState({
@@ -595,6 +610,14 @@ export default {
             findWhiterecords: 'crmauthen/findWhiterecords'
 
         }),
+        async openTransferAdminDialog () {
+            await this.getEmployeeList()
+            this.transferAdminDialogVisible = true
+        },
+        openEmployeeRoleDialog (val) {
+            this.targetEmployeeData = val
+            this.editEmployeeDialogVisible = true
+        },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
             this.searchList()
@@ -901,13 +924,25 @@ export default {
                 this.businessDetail.relationCompanyName = val.value ? val.value.companyShortName : ''
             }
         },
+        async getEmployeeList () {
+            const params = {
+                companyCode: this.businessDetail.companyCode
+            }
+            const { data } = await findEmployeeList(params)
+            const { data: roleList } = await findRoleList()
+            this.employeeTableData = data
+            if (data && data.length > 0) {
+                data.forEach(val => {
+                    if (val.admin) this.adminData = val
+                })
+            } else {
+                this.adminData = {}
+            }
+            this.roleList = roleList
+        },
         async handleTabClick () {
             if (this.activeName == 'four') {
-                const params = {
-                    companyCode: this.businessDetail.companyId
-                }
-                const { data } = await findEmployeeList(params)
-                this.employeeTableData = data
+                this.getEmployeeList()
             } else {
                 if (this.editorShow.email) {
                     this.editorShow.email = false
@@ -960,6 +995,13 @@ export default {
             text-align: right;
         }
     }
+}
+.employee-content {
+    padding-bottom: 200px;
+}
+.employee-edit {
+    width: 20px;
+    height: 20px;
 }
 /deep/.el-tabs__nav-scroll {
     padding-left: 20px;
@@ -1140,4 +1182,5 @@ export default {
     justify-content: space-between;
     padding-bottom: 20px;
 }
+
 </style>
