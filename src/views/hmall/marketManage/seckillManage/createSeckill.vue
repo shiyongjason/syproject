@@ -19,7 +19,7 @@
                     <div class="picture-prompt ml20">
                         <p>banner大小为 702px x 262px</p>
                     </div>
-                    <el-input type="hidden" v-model="form.image"/>
+                    <el-input type="hidden" v-model="form.image" />
                 </el-form-item>
                 <div class="title-cont">
                     <span class="title-cont__label">2.设置规则和优惠</span>
@@ -44,7 +44,7 @@
                     <span class="title-cont__label">3.选择活动商品</span>
                 </div>
                 <el-form-item label="活动商品：">
-                    <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0" >添加商品</h-button>
+                    <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0">添加商品</h-button>
                 </el-form-item>
                 <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
                     <template slot="skuName" slot-scope="scope">
