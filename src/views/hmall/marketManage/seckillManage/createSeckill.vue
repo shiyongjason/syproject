@@ -46,7 +46,7 @@
                 <el-form-item label="活动商品：">
                     <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0">添加商品</h-button>
                 </el-form-item>
-                <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
+                <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='260px'>
                     <template slot="skuName" slot-scope="scope">
                         <div class="goods">
                             <img :src="scope.data.row.pictureUrl">
