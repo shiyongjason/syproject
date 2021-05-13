@@ -245,43 +245,43 @@
                                     <span v-else>-</span>
 
                                 </el-form-item>
-                                <!--                                <el-form-item label="法人身份证：">-->
-                                <!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
-                                <!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
-                                <!--                                        </el-image>-->
-                                <!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
-                                <!--                                        </el-image>-->
-                                <!--                                    </div>-->
-                                <!--                                    <span v-else>-</span>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="认证结果：">-->
-                                <!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
-                                <!--                                    <p v-else>-</p>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="认证方式：">-->
-                                <!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
-                                <!--                                    <p v-else>-</p>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="关联/认证时间：">-->
-                                <!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
-                                <!--                                    <p v-else>-</p>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="关联/认证人：">-->
-                                <!--                                    <p>-->
-                                <!--                                        <span v-if="authenticationDetail.authenticationBy">-->
-                                <!--                                            {{authenticationDetail.authenticationBy}}-->
-                                <!--                                        </span>-->
-                                <!--                                        <span v-else>-</span>-->
-                                <!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
-                                <!--                                            ({{authenticationDetail.authenticationPhone}})-->
-                                <!--                                        </span>-->
-                                <!--                                        <span v-else>(-)</span>-->
-                                <!--                                    </p>-->
-                                <!--                                </el-form-item>-->
+<!--                                <el-form-item label="法人身份证：">-->
+<!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
+<!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
+<!--                                        </el-image>-->
+<!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
+<!--                                        </el-image>-->
+<!--                                    </div>-->
+<!--                                    <span v-else>-</span>-->
+<!--                                </el-form-item>-->
+<!--                                <el-form-item label="认证结果：">-->
+<!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
+<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
+<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
+<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
+<!--                                    <p v-else>-</p>-->
+<!--                                </el-form-item>-->
+<!--                                <el-form-item label="认证方式：">-->
+<!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
+<!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
+<!--                                    <p v-else>-</p>-->
+<!--                                </el-form-item>-->
+<!--                                <el-form-item label="关联/认证时间：">-->
+<!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
+<!--                                    <p v-else>-</p>-->
+<!--                                </el-form-item>-->
+<!--                                <el-form-item label="关联/认证人：">-->
+<!--                                    <p>-->
+<!--                                        <span v-if="authenticationDetail.authenticationBy">-->
+<!--                                            {{authenticationDetail.authenticationBy}}-->
+<!--                                        </span>-->
+<!--                                        <span v-else>-</span>-->
+<!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
+<!--                                            ({{authenticationDetail.authenticationPhone}})-->
+<!--                                        </span>-->
+<!--                                        <span v-else>(-)</span>-->
+<!--                                    </p>-->
+<!--                                </el-form-item>-->
                             </el-form>
 
                         </div>
@@ -393,12 +393,26 @@
                 <el-button type="primary" @click="qualificationDialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
+        <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList"/>
+        <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData"
+                       :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList"/>
     </div>
 </template>
 <script>
 import HAutocomplete from '@/components/autoComplete/HAutocomplete'
+import EditTargetEmployeeRoleDialog from './editTargetEmployeeRoleDialog'
+import TransferAdmin from './transferAdminDialog'
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { getBusinessAuthen, updateCrmauthen, putWhiterecord, getAuthenticationMessage, delCompany, findCompanyContact, updateContact } from '../api/index'
+import {
+    getBusinessAuthen,
+    updateCrmauthen,
+    putWhiterecord,
+    getAuthenticationMessage,
+    delCompany,
+    findCompanyContact,
+    updateContact,
+    findEmployeeList, findRoleList
+} from '../api/index'
 import { deepCopy } from '@/utils/utils'
 import * as Auths from '@/utils/auth_const'
 import { DEVICE_LIST, AGENTLEVEL, THREEYEARPROJECTSCALE, TYPE_LIST, MATERIALSCHANNEL } from '../../const'
@@ -406,6 +420,9 @@ import OssFileUtils from '@/utils/OssFileUtils'
 import elImageAddToken from '@/components/elImageAddToken'
 import { Email } from '@/utils/rules'
 import inputAutocomplete from '../../approveContract/components/inputAutocomplete'
+
+// 1：老板 2：操盘手 3：业务 4：财务 5：仓管 6：普通员工
+
 export default {
     name: 'businessdrawer',
     props: {
@@ -430,6 +447,8 @@ export default {
             },
             qualificationDialogData: '',
             qualificationDialogVisible: false,
+            editEmployeeDialogVisible: false,
+            transferAdminDialogVisible: false,
             serviceCapabilityDetail: [],
             businessType: {
                 retail: '',
@@ -447,6 +466,7 @@ export default {
             agentLevel: AGENTLEVEL,
             authen_operate: Auths.CRM_WHITE_OPERATE,
             authen_baocun: Auths.CRM_WHITE_BAOCUN,
+            auth_transfer_admin: Auths.CRM_TRANSFER_ADMIN,
             removeValue: true,
             branchArr: [],
             formLabelWidth: '150px',
@@ -525,13 +545,26 @@ export default {
             },
             whiteRecordsList: [],
             activeName: 'first',
-            authenticationDetail: {}
+            authenticationDetail: {},
+            employeeTableData: [],
+            adminData: {},
+            employeeTableLabel: [
+                { label: '昵称', prop: 'nickName', width: '150' },
+                { label: '手机号', prop: 'phoneNumber', width: '150' },
+                { label: '角色', prop: 'roleName', width: '150' },
+                { label: '加入时间', prop: 'joinTime', width: '200', formatters: 'date' },
+                { label: '', hidden: true, prop: 'selfAction' }
+            ],
+            roleList: [],
+            targetEmployeeData: {}
         }
     },
     components: {
         HAutocomplete,
         elImageAddToken,
-        inputAutocomplete
+        inputAutocomplete,
+        EditTargetEmployeeRoleDialog,
+        TransferAdmin
     },
     computed: {
         ...mapState({
@@ -570,6 +603,22 @@ export default {
         }),
         onTianyan (name) {
             this.$router.push({ path: '/goodwork/tianyan', query: { name } })
+        },
+        async openTransferAdminDialog () {
+            await this.getEmployeeList()
+            this.transferAdminDialogVisible = true
+        },
+        openEmployeeRoleDialog (val) {
+            this.targetEmployeeData = val
+            this.editEmployeeDialogVisible = true
+        },
+        handleSizeChange (val) {
+            this.queryParams.pageSize = val
+            this.searchList()
+        },
+        handleCurrentChange (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.searchList()
         },
         onMousedown (val) {
             console.log('onMousedown ', val)
@@ -869,16 +918,36 @@ export default {
                 this.businessDetail.relationCompanyName = val.value ? val.value.companyShortName : ''
             }
         },
+        async getEmployeeList () {
+            const params = {
+                companyCode: this.businessDetail.companyCode
+            }
+            const { data } = await findEmployeeList(params)
+            const { data: roleList } = await findRoleList()
+            this.employeeTableData = data
+            if (data && data.length > 0) {
+                data.forEach(val => {
+                    if (val.admin) this.adminData = val
+                })
+            } else {
+                this.adminData = {}
+            }
+            this.roleList = roleList
+        },
         async handleTabClick () {
-            if (this.editorShow.email) {
-                this.editorShow.email = false
+            if (this.activeName == 'four') {
+                this.getEmployeeList()
+            } else {
+                if (this.editorShow.email) {
+                    this.editorShow.email = false
+                }
+                if (this.editorShow.address) {
+                    this.editorShow.address = false
+                }
+                const { data } = await findCompanyContact(this.businessDetail.companyId)
+                this.companyContact.request.companyId = this.businessDetail.companyId
+                this.companyContact.response = data
             }
-            if (this.editorShow.address) {
-                this.editorShow.address = false
-            }
-            const { data } = await findCompanyContact(this.businessDetail.companyId)
-            this.companyContact.request.companyId = this.businessDetail.companyId
-            this.companyContact.response = data
         }
     },
     mounted () {
@@ -920,6 +989,13 @@ export default {
             text-align: right;
         }
     }
+}
+.employee-content {
+    padding-bottom: 200px;
+}
+.employee-edit {
+    width: 20px;
+    height: 20px;
 }
 /deep/.el-tabs__nav-scroll {
     padding-left: 20px;
@@ -1104,4 +1180,10 @@ export default {
 .labelname {
     margin-right: 10px;
 }
+.employee-bar {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
 </style>
