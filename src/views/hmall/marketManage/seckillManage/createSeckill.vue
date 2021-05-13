@@ -203,7 +203,11 @@ export default {
                         if (value - this.form.spikeSku[index].availableStock > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
                         } else if (this.form.spikeSku[index].availableStock) {
-                            this.$refs.form.clearValidate(`spikeSku[${index}].availableStock`)
+                            let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
+                            let availableStock = this.form.spikeSku[index].availableStock
+                            if (availableStock - inventoryRemainNum <= 0) {
+                                this.$refs.form.clearValidate(`spikeSku[${index}].availableStock`)
+                            }
                         }
                         callback()
                     }
