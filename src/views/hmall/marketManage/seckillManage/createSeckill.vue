@@ -44,7 +44,7 @@
                     <span class="title-cont__label">3.选择活动商品</span>
                 </div>
                 <el-form-item label="活动商品：">
-                    <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0" >添加商品</h-button>
+                    <h-button type="create" @click="onAddProduct" :disabled="disabled||form.spikeAreaList.length==0">添加商品</h-button>
                 </el-form-item>
                 <hosJoyTable ref="hosjoyTable" isShowIndex border isAction :column="column" :data="form.spikeSku" align="center" actionWidth='200px'>
                     <template slot="skuName" slot-scope="scope">
@@ -466,6 +466,8 @@ export default {
          */
         setOneCol (val, scope, key = '') {
             scope.row[scope.column.property] = isNum(val, this.form.discountType === DISCOUNT_TYPE_PERCENT ? 1 : 2)
+            if (key != 'sellingPoint') scope.row[scope.column.property] = isNum(val, this.form.discountType === 1 ? 1 : 2)
+            else scope.row[scope.column.property] = val
             if (val && key === 'discountValue') {
                 this.handleSetSalePrice(scope.row)
             }
@@ -658,7 +660,7 @@ export default {
             this.form.spikeSku.forEach(item => {
                 !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '') // 限购数量
                 !item.sellingPoint && this.$set(item, 'sellingPoint', '') // 卖点信息
-                item.availableStock && this.$set(item, 'inventoryRemainNum', item.availableStock) // 库存
+                item.availableStock && this.$set(item, 'inventoryRemainNum', item.availableStock)
                 // 为什么优惠信息这块的判断比较特别，是因为优惠信息可以为0，限购数量和库存都不可以为0
                 if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '') // 优惠信息
                 !item.productId && this.$set(item, 'productId', null) // 产品ID
