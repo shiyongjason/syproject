@@ -323,6 +323,19 @@
                             </el-form>
                         </div>
                     </el-tab-pane>
+                    <el-tab-pane label="员工信息" name="four">
+                        <div class="drawer-content employee-content">
+                            <div class="employee-bar">
+                                <h2>{{ businessDetail.companyName }}</h2>
+                                <h-button type="primary" @click="openTransferAdminDialog" v-if="hosAuthCheck(auth_transfer_admin)">转让管理员</h-button>
+                            </div>
+                            <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
+                                <template slot="selfAction" slot-scope="scope">
+                                    <img src="../../../../assets/images/edit.png" alt="" class="employee-edit" @click="openEmployeeRoleDialog(scope.data.row)">
+                                </template>
+                            </basicTable>
+                        </div>
+                    </el-tab-pane>
                 </el-tabs>
             </template>
             <template #btn>
