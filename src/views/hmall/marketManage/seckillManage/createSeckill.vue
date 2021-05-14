@@ -25,7 +25,7 @@
                     <span class="title-cont__label">2.设置规则和优惠</span>
                 </div>
                 <el-form-item label="活动区域：" prop="spikeAreaList">
-                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="disabled"></el-cascader>
+                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="form.spikeSku.length>0"></el-cascader>
                 </el-form-item>
                 <el-form-item label="优惠方式：" prop="discountType">
                     <el-radio-group v-model="form.discountType" :disabled="disabled" @change='radioChange'>
