@@ -78,7 +78,6 @@ export default {
             if (val) {
                 this.employeeForm.nickName = this.targetVal.nickName
                 this.employeeForm.roleCodes = this.targetVal.roleCode
-                console.log(this.targetVal)
                 if (this.targetVal.admin) {
                     this.employeeRules.roleCodes[0].required = false
                 }
@@ -94,6 +93,9 @@ export default {
                 })
                 this.selfRoleList = this.roleList
             }
+        },
+        'employeeForm.roleCodes' (val) {
+            this.updateDisabled(val)
         }
     },
     methods: {
@@ -121,7 +123,6 @@ export default {
         },
         updateDisabled (val) {
             // role 6 是普通员工，目前是写死的
-            console.log(val.includes('6'))
             if (val.includes('6')) {
                 this.selfRoleList.forEach(val => {
                     if (val.roleCode != '6') {
