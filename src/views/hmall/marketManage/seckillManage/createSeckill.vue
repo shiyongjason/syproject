@@ -387,7 +387,7 @@ export default {
         },
         disabled () {
             // 在编辑状态下，非待发布的活动全部不可编辑，新增和复制全部可以编辑
-            return !!this.$route.query.id && this.form.status != 1 && this.$route.query.type != 'copy'
+            return !!this.$route.query.id && this.eventInfos.status != SPIKE_STATUS_DRAFT && this.$route.query.type != 'copy'
         },
         uploadInfo () {
             return {
@@ -452,7 +452,7 @@ export default {
             const { spikeSku } = this.eventInfos
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
             this.setSelectSeckillProduct(Array.from(new Set(spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
-            this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
+            this.seckillAreaList = this.form.spikeAreaList.map(item => item.cityId)
             this.setTableData(spikeSku)
         },
         // ======================================== 前后端交互 =====================================================
