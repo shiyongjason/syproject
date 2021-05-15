@@ -68,10 +68,10 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="上传结果" :visible.sync="importResultVisible" class="fault-code-edit" width="80%" :close-on-click-modal="false">
-            <p v-if="tableImportResultData">上传数据：{{tableImportResultData?tableImportResultData.allCount:0}} 条</p>
-            <p v-if="tableImportResultData">上传成功：{{tableImportResultData?tableImportResultData.successCount:0}} 条</p>
-            <p v-if="tableImportResultData">上传失败：{{tableImportResultData.failDevices?tableImportResultData.failDevices.length:0}} 条</p>
+        <el-dialog title="上传结果" :visible.sync="importResultVisible" class="upload-show" width="60%" :close-on-click-modal="false">
+            <div v-if="tableImportResultData">上传数据：{{tableImportResultData?tableImportResultData.allCount:0}} 条</div>
+            <div v-if="tableImportResultData">上传成功：{{tableImportResultData?tableImportResultData.successCount:0}} 条</div>
+            <div v-if="tableImportResultData">上传失败：{{tableImportResultData.failDevices?tableImportResultData.failDevices.length:0}} 条</div>
             <basicTable :isShowIndex="true" :tableLabel="tableImportResultLabel" :tableData="tableImportResultData.failDevices"
                         :isAction="false" :actionMinWidth='80'>
 
