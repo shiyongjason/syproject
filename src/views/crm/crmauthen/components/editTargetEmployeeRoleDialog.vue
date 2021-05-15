@@ -63,7 +63,7 @@ export default {
             employeeRules: {
                 nickName: [
                     { required: true, message: '昵称不得为空！', trigger: 'blur' },
-                    { required: true, validator: validatorIsChinese, message: '昵称只能为2-24个汉子！', trigger: 'blur' }
+                    { required: true, validator: validatorIsChinese, message: '昵称只能为2-24个汉字！', trigger: 'blur' }
                 ],
                 roleCodes: [
                     { required: true, validator: validator, message: '角色不得为空！', trigger: 'blur' }
