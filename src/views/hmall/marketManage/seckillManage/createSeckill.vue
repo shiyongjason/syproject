@@ -181,7 +181,8 @@ export default {
                         const endIndex = rule.field.indexOf(']')
                         const index = rule.field.substring(beginIndex + 1, endIndex)
                         let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
-                        if (this.form.spikeSku[index].purchaseLimitNum - value > 0) {
+                        console.log(this.eventInfos.status)
+                        if (this.eventInfos.status != 2 && this.form.spikeSku[index].purchaseLimitNum - value > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
                         } else if (this.form.spikeSku[index].purchaseLimitNum) {
                             // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
@@ -201,7 +202,7 @@ export default {
                         const beginIndex = rule.field.indexOf('[')
                         const endIndex = rule.field.indexOf(']')
                         const index = rule.field.substring(beginIndex + 1, endIndex)
-                        if (value - this.form.spikeSku[index].availableStock > 0) {
+                        if (this.eventInfos.status != 2 && value - this.form.spikeSku[index].availableStock > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
                         } else if (this.form.spikeSku[index].availableStock) {
                             let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
