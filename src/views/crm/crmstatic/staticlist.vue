@@ -27,20 +27,14 @@
                 <template slot="trustTrialValue" slot-scope="scope">
                     {{scope.data.row.trustTrialValue?fundMoneys(scope.data.row.trustTrialValue):'-'}}
                 </template>
-                <template slot="pendingLoanValue" slot-scope="scope">
-                    {{scope.data.row.pendingLoanValue?fundMoneys(scope.data.row.pendingLoanValue):'-'}}
-                </template>
-                <template slot="toReturnLoanValue" slot-scope="scope">
-                    {{scope.data.row.toReturnLoanValue?fundMoneys(scope.data.row.toReturnLoanValue):'-'}}
+                <template slot="finalApproveNoValue" slot-scope="scope">
+                    {{scope.data.row.finalApproveNoValue?fundMoneys(scope.data.row.finalApproveNoValue):'-'}}
                 </template>
                 <template slot="cooperCloseValue" slot-scope="scope">
                     {{scope.data.row.cooperCloseValue?fundMoneys(scope.data.row.cooperCloseValue):'-'}}
                 </template>
-                <template slot="toBeSignedValue" slot-scope="scope">
-                    {{scope.data.row.toBeSignedValue?fundMoneys(scope.data.row.toBeSignedValue):'-'}}
-                </template>
-                <template slot="cooperCompleteValue" slot-scope="scope">
-                    {{scope.data.row.cooperCompleteValue?fundMoneys(scope.data.row.cooperCompleteValue):'-'}}
+                <template slot="finalApproveYesValue" slot-scope="scope">
+                    {{scope.data.row.finalApproveYesValue?fundMoneys(scope.data.row.finalApproveYesValue):'-'}}
                 </template>
                 <template slot="finalApproveValue" slot-scope="scope">
                     {{scope.data.row.finalApproveValue?fundMoneys(scope.data.row.finalApproveValue):'-'}}
@@ -89,12 +83,9 @@ export default {
                 { label: '资料待审核', prop: 'docAuditValue' },
                 { label: '待立项', prop: 'trustTrialValue' },
                 { label: '待终审', prop: 'finalApproveValue' },
-                { label: '待签约', prop: 'toBeSignedValue' },
-                { label: '待放款', prop: 'pendingLoanValue' },
-                { label: '待回款', prop: 'toReturnLoanValue' },
-                { label: '合作完成', prop: 'cooperCompleteValue' },
+                { label: '终审通过', prop: 'finalApproveYesValue' },
+                { label: '终审未通过', prop: 'finalApproveNoValue' },
                 { label: '审核未通过', prop: 'cooperCloseValue' }
-
             ],
             rowKey: '',
             tabPosition: 1,
@@ -149,7 +140,10 @@ export default {
         },
         async onFindBar (val) {
             await this.findProjetstatic(val)
-            this.drawBar(this.projectStatic)
+            const nameArr = ['待签约', '待放款', '待回款', '合作完成']
+            const projectStatic = this.projectStatic.filter(item => !nameArr.includes(item.name))
+            this.drawBar(projectStatic)
+            this.searchList()
         },
         handleClick (tab) {
             this.barUnit = this.tabPosition == 1 ? '个' : '元'
