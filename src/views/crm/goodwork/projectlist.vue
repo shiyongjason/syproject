@@ -513,7 +513,7 @@ export default {
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
             } else {
-                return map[key]
+                return map[key] || { value: '-' }
             }
         },
         sortChange (e) {

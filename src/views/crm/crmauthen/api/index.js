@@ -51,3 +51,8 @@ export const delCompany = (params) => axios.delete(`memeber/api/crm/company/${pa
 export const findCompanyContact = (companyId) => axios.get(`memeber/api/crm/company/search/${companyId}/company-contact`)
 //
 export const updateContact = (params) => axios.put('memeber/api/crm/company/contact', params)
+
+// 获取天眼查url
+export const getTianyanUrl = (params) => {
+    return axios.get(`develop/companyurl/${params}`)
+}
