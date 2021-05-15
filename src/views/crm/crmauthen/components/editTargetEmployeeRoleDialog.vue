@@ -48,6 +48,13 @@ export default {
             }
             return callback()
         }
+        const validatorIsChinese = (rule, value, callback) => {
+            const Reg = /[^\u4e00-\u9fa5]/
+            if (value?.length < 2 || Reg.test(value)) {
+                return callback(new Error(rule.message))
+            }
+            return callback()
+        }
         return {
             employeeForm: {
                 nickName: '',
@@ -55,7 +62,8 @@ export default {
             },
             employeeRules: {
                 nickName: [
-                    { required: true, message: '昵称不得为空！', trigger: 'blur' }
+                    { required: true, message: '昵称不得为空！', trigger: 'blur' },
+                    { required: true, validator: validatorIsChinese, message: '昵称只能为2-24个汉子！', trigger: 'blur' }
                 ],
                 roleCodes: [
                     { required: true, validator: validator, message: '角色不得为空！', trigger: 'blur' }
@@ -70,7 +78,6 @@ export default {
             if (val) {
                 this.employeeForm.nickName = this.targetVal.nickName
                 this.employeeForm.roleCodes = this.targetVal.roleCode
-                console.log(this.targetVal)
                 if (this.targetVal.admin) {
                     this.employeeRules.roleCodes[0].required = false
                 }
@@ -86,6 +93,9 @@ export default {
                 })
                 this.selfRoleList = this.roleList
             }
+        },
+        'employeeForm.roleCodes' (val) {
+            this.updateDisabled(val)
         }
     },
     methods: {
@@ -113,7 +123,6 @@ export default {
         },
         updateDisabled (val) {
             // role 6 是普通员工，目前是写死的
-            console.log(val.includes('6'))
             if (val.includes('6')) {
                 this.selfRoleList.forEach(val => {
                     if (val.roleCode != '6') {
