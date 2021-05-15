@@ -8,7 +8,7 @@
                 <div class="query-col-title">设备ID：</div>
                 <div class="query-col-input">
                     <el-input type="text"
-                              v-model="queryParams.iotId" maxlength="20" placeholder="输入品牌名称"></el-input>
+                              v-model="queryParams.iotId" maxlength="20" placeholder="输入设备ID"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
