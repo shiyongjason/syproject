@@ -181,7 +181,8 @@ export default {
                         const endIndex = rule.field.indexOf(']')
                         const index = rule.field.substring(beginIndex + 1, endIndex)
                         let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
-                        if (this.form.spikeSku[index].purchaseLimitNum - value > 0) {
+                        console.log(this.eventInfos.status)
+                        if (this.eventInfos.status != 2 && this.form.spikeSku[index].purchaseLimitNum - value > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
                         } else if (this.form.spikeSku[index].purchaseLimitNum) {
                             // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
@@ -201,7 +202,7 @@ export default {
                         const beginIndex = rule.field.indexOf('[')
                         const endIndex = rule.field.indexOf(']')
                         const index = rule.field.substring(beginIndex + 1, endIndex)
-                        if (value - this.form.spikeSku[index].availableStock > 0) {
+                        if (this.eventInfos.status != 2 && value - this.form.spikeSku[index].availableStock > 0) {
                             return callback(new Error('限购数量不可超过库存数量'))
                         } else if (this.form.spikeSku[index].availableStock) {
                             let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
@@ -387,7 +388,7 @@ export default {
         },
         disabled () {
             // 在编辑状态下，非待发布的活动全部不可编辑，新增和复制全部可以编辑
-            return !!this.$route.query.id && this.form.status != 1 && this.$route.query.type != 'copy'
+            return !!this.$route.query.id && this.eventInfos.status != SPIKE_STATUS_DRAFT && this.$route.query.type != 'copy'
         },
         uploadInfo () {
             return {
@@ -452,7 +453,7 @@ export default {
             const { spikeSku } = this.eventInfos
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
             this.setSelectSeckillProduct(Array.from(new Set(spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
-            this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
+            this.seckillAreaList = this.form.spikeAreaList.map(item => item.cityId)
             this.setTableData(spikeSku)
         },
         // ======================================== 前后端交互 =====================================================
