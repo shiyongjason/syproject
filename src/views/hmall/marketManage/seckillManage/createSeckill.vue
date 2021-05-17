@@ -449,12 +449,14 @@ export default {
             // 实在不理解为什么复制和详情要用两个接口，不都是获取活动信息吗
             // 后来去看了后端的代码，发现后端做了一些数据的处理，将一些数据置空，比如刷单次数之类的信息，单独做了一个接口
             this.$route.query.type == 'copy' ? await this.copy({ id: this.$route.query.id }) : await this.eventInfo({ id: this.$route.query.id })
-            this.form = JSON.parse(JSON.stringify(this.eventInfos))
-            const { spikeSku } = this.eventInfos
+            this.form = {
+                ...this.eventInfos,
+                spikeSku: JSON.parse(JSON.stringify(this.eventInfos.spikeSku))
+            }
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
-            this.setSelectSeckillProduct(Array.from(new Set(spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
+            this.setSelectSeckillProduct(Array.from(new Set(this.form.spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
             this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
-            this.setTableData(spikeSku)
+            this.setTableData(this.form.spikeSku)
         },
         // ======================================== 前后端交互 =====================================================
         // 折扣或者直降选项变更的时候，折扣金额或者直降金额清空处理
