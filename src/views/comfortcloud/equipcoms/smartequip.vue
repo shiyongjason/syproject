@@ -193,7 +193,8 @@ export default {
                 query: {
                     iotId: val.iotId,
                     subIotId: val.subIotId,
-                    deviceClass: val.deviceClass
+                    deviceClass: val.deviceClass,
+                    createTime: val.createTime
                 }
             })
         },
