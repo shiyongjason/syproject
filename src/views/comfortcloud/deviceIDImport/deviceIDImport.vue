@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">无版本号：</div>
+                <div class="query-col-title">无批次号：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.batchNo">
                         <el-option label="全部" value=""></el-option>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-checkbox :true-label="1" :false-label="2" v-model="queryParams.noVersion">无版本号</el-checkbox>
+                <el-checkbox :checked="false" :true-label="1" :false-label="2" v-model="queryParams.noVersion">无版本号</el-checkbox>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
@@ -42,9 +42,9 @@
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
                 <el-button type="primary"  slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
-                <p slot="tip" class="el-upload__tip">2.请按照设备出入库模板内容导入故障数据，否则可能会出现导入异常</p>
+                <p slot="tip" class="el-upload__tip">2.请按照设备id导入模板导入设备数据，否则可能会出现导入异常</p>
             </el-upload>
-            <el-button type="primary" @click="onDownload" class="download-template">下载故障模板库</el-button>
+            <el-button type="primary" @click="onDownload" class="download-template">下载设备ID导入模板</el-button>
             <span slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="onImport" :loading="loading">上传</el-button>
             </span>
@@ -96,7 +96,7 @@ export default {
                 batchNo: '',
                 iotId: '',
                 pageNumber: 1,
-                noVersion: 1,
+                noVersion: 2,
                 pageSize: 10
             },
             tableData: [],
@@ -109,7 +109,7 @@ export default {
                 { label: '批次', prop: 'batchNo' },
                 { label: '设备型号', prop: 'productKey' },
                 { label: '设备ID', prop: 'iotId' },
-                { label: '秘钥', prop: 'secretKey' },
+                { label: '秘钥', prop: 'deviceSecret' },
                 { label: '入库时间', prop: 'storeDate', formatters: 'dateTime', sortable: true },
                 { label: '入网时间', prop: 'netDate', formatters: 'dateTime', sortable: true },
                 { label: '版本号', prop: 'version' }
@@ -119,7 +119,7 @@ export default {
                 { label: '设备型号', prop: 'productKey' },
                 { label: '设备名称', prop: 'deviceName' },
                 { label: '设备ID', prop: 'iotId' },
-                { label: '秘钥', prop: 'secretKey' },
+                { label: '秘钥', prop: 'deviceSecret' },
                 { label: '版本号', prop: 'version' }
             ],
             uploadShow: false,
@@ -224,6 +224,7 @@ export default {
                     this.importResultVisible = false
                 }
                 this.onQuery()
+                this.findCloudBrandNo()
             } else {
                 this.importResultVisible = true
                 this.tableImportResultData = response.data
