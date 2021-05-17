@@ -5,6 +5,23 @@
             <div class="ctilte"><span>合同详情</span>
                 <div type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1&&res.downloadUrl"><a :href="res.downloadUrl" target="_blank">下载合同</a></div>
             </div>
+            <div class="file_wrap">
+                <h-button type="primary">
+                    更 新 归 档
+                </h-button>
+                <div class="file_wrap-table">
+                    <div class='file_wrap-table--flex'>
+                        <div>归档时间</div>
+                        <div>归档人</div>
+                        <div>文件详情</div>
+                    </div>
+                     <div class='file_wrap-table--flex'>
+                        <div>20210 - 6 - 6</div>
+                        <div>sky</div>
+                        <div> 文件详情 文件详情 文件详情</div>
+                    </div>
+                </div>
+            </div>
             <div class="loader-css" v-if="showLoading&&res.contractUrl">
                 <div class="loader"></div>
                 <div class="loader-txt">页面拼命加载中...</div>
@@ -189,5 +206,32 @@ export default {
     width: 1000px;
     margin: 0 auto;
     text-align: center;
+}
+.file_wrap {
+    margin-bottom: 40px;
+    &-table {
+        margin: 20px;
+        &--flex {
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid #cccccc;
+            height: 40px;
+            line-height: 40px;
+            border-bottom: none;
+            &:last-child {
+                border-bottom: 1px solid #cccccc;
+            }
+            div {
+                padding: 0 10px;
+                display: flex;
+                flex: 2;
+                justify-content: center;
+                &:not(:last-child) {
+                    flex: 1;
+                    border-right: 1px solid #cccccc;
+                }
+            }
+        }
+    }
 }
 </style>
