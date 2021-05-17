@@ -27,13 +27,13 @@
                             到货验收单：
                         </span>
                         <div class="content">
-                            <div :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers.filter(value => ['.png', '.jpg', '.jpeg'].indexOf(value.fileUrl.slice(value.fileUrl.lastIndexOf('.'))) > -1)">
+                            <div :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers.filter(value => ['.png', '.jpg', '.jpeg'].indexOf(value.fileUrl.toLowerCase().slice(value.fileUrl.lastIndexOf('.'))) > -1)">
                                 <span class="img-box">
                                         <imageAddToken :file-url="subItem.fileUrl"/>
                                     </span>
                             </div>
-                            <div class="file-group" :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers.filter(value => ['.png', '.jpg', '.jpeg'].indexOf(value.fileUrl.slice(value.fileUrl.lastIndexOf('.'))) === -1)">
-                                <p v-if="['.png', '.jpg', '.jpeg'].indexOf(subItem.fileUrl.slice(subItem.fileUrl.lastIndexOf('.'))) === -1">
+                            <div class="file-group" :key="subItem.fileUrl" v-for="subItem in item.goodsVouchers.filter(value => ['.png', '.jpg', '.jpeg'].indexOf(value.fileUrl.toLowerCase().slice(value.fileUrl.lastIndexOf('.'))) === -1)">
+                                <p v-if="['.png', '.jpg', '.jpeg'].indexOf(subItem.fileUrl.toLowerCase().slice(subItem.fileUrl.lastIndexOf('.'))) === -1">
                                     <i class="el-icon-document upload-list-icon"></i> <downloadFileAddToken  :file-name="subItem.fileName"
                                                           :file-url="subItem.fileUrl"
                                                           :a-link-words="subItem.fileName"
