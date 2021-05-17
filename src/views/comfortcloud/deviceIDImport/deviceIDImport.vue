@@ -16,12 +16,14 @@
                 <div class="query-col-input">
                     <el-select v-model="queryParams.batchNo">
                         <el-option label="全部" value=""></el-option>
-                        <el-option :label="item.dataValue" :value="item" v-for="item in cloudImportDict" :key="item"></el-option>
+                        <el-option :label="item.dataValue" :value="item" v-for="item in cloudImportDict"
+                                   :key="item"></el-option>
                     </el-select>
                 </div>
             </div>
             <div class="query-cont-col">
-                <el-checkbox :checked="false" :true-label="1" :false-label="2" v-model="queryParams.noVersion">无版本号</el-checkbox>
+                <el-checkbox :checked="false" :true-label="1" :false-label="2" v-model="queryParams.noVersion">无版本号
+                </el-checkbox>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
@@ -32,7 +34,8 @@
                 </div>
             </div>
         </div>
-        <el-dialog title="设备ID导入" :visible.sync="uploadShow" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDialog">
+        <el-dialog title="设备ID导入" :visible.sync="uploadShow" class="upload-show" width="800px"
+                   :close-on-click-modal="false" :before-close="onCloseDialog">
             <el-upload
                 class="upload-fault"
                 ref="upload"
@@ -40,7 +43,7 @@
                 :on-success="uploadSuccess"
                 :on-error="uploadError"
                 :before-upload="beforeAvatarUpload" v-bind="uploadData">
-                <el-button type="primary"  slot="trigger">选择本地文件</el-button>
+                <el-button type="primary" slot="trigger">选择本地文件</el-button>
                 <p slot="tip" class="el-upload__tip">1.仅支持excel格式文件（大小在10M以内）</p>
                 <p slot="tip" class="el-upload__tip">2.请按照设备id导入模板导入设备数据，否则可能会出现导入异常</p>
             </el-upload>
@@ -50,7 +53,8 @@
             </span>
         </el-dialog>
         <div class="page-body-cont">
-            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="cloudDeviceIDImportData.records" :pagination="deviceIDImportPagination"
+            <basicTable :isShowIndex="true" :tableLabel="tableLabel" :tableData="cloudDeviceIDImportData.records"
+                        :pagination="deviceIDImportPagination"
                         @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
                         @onSortChange="onSortChange"
                         :isAction="true" :actionMinWidth='80'>
@@ -68,11 +72,16 @@
                 </template>
             </basicTable>
         </div>
-        <el-dialog title="上传结果" :visible.sync="importResultVisible" class="upload-show" width="60%" :close-on-click-modal="false">
+        <el-dialog title="上传结果" :visible.sync="importResultVisible" class="upload-show" width="60%"
+                   :close-on-click-modal="false">
             <div v-if="tableImportResultData">上传数据：{{tableImportResultData?tableImportResultData.allCount:0}} 条</div>
-            <div v-if="tableImportResultData">上传成功：{{tableImportResultData?tableImportResultData.successCount:0}} 条</div>
-            <div v-if="tableImportResultData">上传失败：{{tableImportResultData.failDevices?tableImportResultData.failDevices.length:0}} 条</div>
-            <basicTable :isShowIndex="true" :tableLabel="tableImportResultLabel" :tableData="tableImportResultData.failDevices"
+            <div v-if="tableImportResultData">上传成功：{{tableImportResultData?tableImportResultData.successCount:0}} 条
+            </div>
+            <div v-if="tableImportResultData">
+                上传失败：{{tableImportResultData.failDevices?tableImportResultData.failDevices.length:0}} 条
+            </div>
+            <basicTable :isShowIndex="true" :tableLabel="tableImportResultLabel"
+                        :tableData="tableImportResultData.failDevices"
                         :isAction="false" :actionMinWidth='80'>
 
             </basicTable>
@@ -88,6 +97,8 @@
 import { iotUrl } from '@/api/config'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import { downloadEquipmentIDImportList, downloadImportDeviceErrorList } from '../api/index'
+import moment from 'moment'
+
 export default {
     name: 'equipmentError',
     data () {
@@ -214,9 +225,9 @@ export default {
         uploadSuccess (response) {
             this.$refs.upload.clearFiles()
             this.loading = false
+            this.uploadShow = false
             if (response.code === 200) {
                 this.$message.success('文件上传成功')
-                this.uploadShow = false
                 if (response.data.failDevices) {
                     this.importResultVisible = true
                     this.tableImportResultData = response.data
@@ -226,8 +237,6 @@ export default {
                 this.onQuery()
                 this.findCloudBrandNo()
             } else {
-                this.importResultVisible = true
-                this.tableImportResultData = response.data
                 this.$message.error(response.message)
             }
         },
@@ -241,7 +250,8 @@ export default {
                 this.uploadData.data.operateUserName = this.userInfo.employeeName
                 try {
                     await this.$refs.upload.submit()
-                } catch (e) {}
+                } catch (e) {
+                }
             } else {
                 this.$message.error('请选择上传的文件')
                 this.loading = false
@@ -343,7 +353,8 @@ export default {
                 query: {
                     iotId: val.iotId,
                     subIotId: val.iotId,
-                    deviceClass: '1'
+                    deviceClass: '1',
+                    createTime: val.netDate
                 }
             })
         }
@@ -360,19 +371,23 @@ export default {
         font-size: 16px;
         padding-bottom: 10px;
     }
+
     .upload-fault {
         margin-top: 30px;
         margin-bottom: 20px;
     }
+
     .download-template {
         margin-bottom: 30px;
     }
+
     .colred {
         color: #ff7a45;
         cursor: pointer;
     }
+
     .fault-code-edit {
-        /deep/.el-dialog__body{
+        /deep/ .el-dialog__body {
             display: flex;
             flex-direction: column;
             justify-content: center;
