@@ -45,6 +45,14 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
+                    <div class="query-col__label">是否已归档：</div>
+                    <div class="query-col__input">
+                        <el-select placeholder="请选择" v-model="queryParams.contractStatusArrays" :clearable=true>
+                            <el-option :label="item.label" :value="item.value" v-for="item in contractStatus" :key="item.label"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__label">发起人：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.createBy" placeholder="请输入" maxlength="50"></el-input>
@@ -99,7 +107,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项</el-tag>
             </div>
             <hosJoyTable localName="V3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="searchList"
-                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+                actionWidth='420' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template slot="action" slot-scope="scope">
                     <h-button v-if="scope.data.row.contractStatus===2&&hosAuthCheck(Auths.CRM_CONTRACT_FIN)" table @click="approveContract(scope.data.row,1)">分财审核</h-button>
                     <h-button v-if="scope.data.row.contractStatus===4&&hosAuthCheck(Auths.CRM_CONTRACT_RISK)" table @click="approveContract(scope.data.row,2)">风控审核</h-button>
@@ -107,11 +115,12 @@
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
+                    <h-button table @click="onGetfile(scope.data.row)">归档</h-button>
                 </template>
             </hosJoyTable>
         </div>
 
-        <el-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="() => drawerVisible=false" class="contentdrawerbox">
+        <el-drawer title="查看信息" :visible.sync="drawerVisible" :wrapperClosable="false" size='580px' :beforeClose="onCancelFileDialog" class="contentdrawerbox">
             <div slot="title">审核记录</div>
             <!-- 类型 1：提交合同 2：编辑合同内容 3：编辑合同条款 4：审核通过 5：驳回 -->
             <!-- {{detailRes.contractStatus == 2?'合同待分财审核':detailRes.contractStatus == 4?'合同待风控审核':detailRes.contractStatus == 6?'合同待法务审核':''}} -->
@@ -183,11 +192,13 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
+        <fileDialog ref='fileDialog'></fileDialog>
     </div>
 </template>
 <script>
 import diffDialog from './diffDialog'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table'
+import fileDialog from './fileDialog'
 import {
     contractSigningList,
     contractStatic,
@@ -219,9 +230,11 @@ const _queryParams = {
     updateTimeOrder: null// asc 或 desc
 }
 const _dicData = [{ value: 1, label: '草稿' }, { value: 2, label: '待分财审核' }, { value: 3, label: '分财审核未通过' }, { value: 4, label: '待风控审核' }, { value: 5, label: '风控审核未通过' }, { value: 6, label: '待法务审核' }, { value: 7, label: '法务审核未通过' }, { value: 8, label: '待客户签署' }, { value: 9, label: '客户拒签' }, { value: 10, label: '待平台签署' }, { value: 11, label: '平台签署未通过' }, { value: 12, label: '合同已签署' }, { value: 13, label: '异常关闭' }, { value: 14, label: '超时关闭' }, { value: 15, label: '用印发起失败' }, { value: 16, label: '发起线上待客户签署' }, { value: 17, label: '合同废止' }]
+
+const _fileData = [{ value: 1, label: '是' }, { value: 2, label: '否' }]
 export default {
     name: 'contractSigningManagement',
-    components: { hosJoyTable, diffDialog },
+    components: { hosJoyTable, diffDialog, fileDialog },
     data () {
         return {
             Auths,
@@ -258,13 +271,16 @@ export default {
                 { label: '合同模板版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
+                { label: '是否已归档', prop: 'contractStatus', width: '120', dicData: _fileData },
                 { label: '发起人', prop: 'createBy', width: '120' },
                 { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
             ],
             tableData: [],
             currentContent: '',
-            lastContent: ''
+            lastContent: '',
+            fileDialog: false,
+            riskCheckProjectDocPos: []
         }
     },
     computed: {
@@ -488,9 +504,13 @@ export default {
             this.financeManagerWaitingNum = data.financeManagerWaitingNum
             this.lawManagerWaitingNum = data.lawManagerWaitingNum
             this.riskManagerWaitingNum = data.riskManagerWaitingNum
+        },
+        onGetfile () {
+            this.$nextTick(() => {
+                this.$refs.fileDialog.onGetfile()
+            })
         }
     },
-
     async mounted () {
         // tableData
         this.getList()
