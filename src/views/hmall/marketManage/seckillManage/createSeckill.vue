@@ -566,7 +566,7 @@ export default {
             }).catch(() => { })
         },
         async onAddStock (row) {
-            if (this.form.status == SPIKE_STATUS_DRAFT || !row.productId || row.inventoryRemainNum === 0 || this.$route.query.type == 'copy') {
+            if (this.form.status == SPIKE_STATUS_DRAFT || !row.productId || row.inventoryOriginNum === 0 || this.$route.query.type == 'copy') {
                 this.$message.error(`增加库存的前置条件该商品已经发布且库存不为零。`)
                 return
             }
