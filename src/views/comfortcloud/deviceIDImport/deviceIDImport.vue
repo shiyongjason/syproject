@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="query-cont-col">
-                <div class="query-col-title">无批次号：</div>
+                <div class="query-col-title">批次查询：</div>
                 <div class="query-col-input">
                     <el-select v-model="queryParams.batchNo">
                         <el-option label="全部" value=""></el-option>
