@@ -42,6 +42,22 @@ export default {
         },
         onCancelFileDialog () {
             this.fileDialog = false
+        },
+        onDelete (item, index) {
+            console.log(item)
+            this.$confirm('此操作将删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                item.riskCheckProjectDocPos.splice(index, 1)
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => {
+                // do nothing
+            })
         }
     }
 }
