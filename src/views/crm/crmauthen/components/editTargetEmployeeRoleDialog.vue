@@ -3,7 +3,7 @@
         <div class="edit-employee-role">
             <el-form ref="employeeForm" :model="employeeForm" :rules="employeeRules" label-width="100px">
                 <el-form-item label="昵称：" prop="nickName">
-                    <el-input type="text" v-model="employeeForm.nickName" maxlength="20" :rows="5" placeholder="请填写员工昵称"></el-input>
+                    <el-input type="text" v-model="employeeForm.nickName" maxlength="24" :rows="5" placeholder="请填写员工昵称"></el-input>
                 </el-form-item>
                 <el-form-item label="手机号：">
                     {{targetVal.phoneNumber}}
