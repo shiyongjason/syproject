@@ -348,13 +348,15 @@ export default {
             this.loading = true
         },
         deviceDetail (val) {
+            let date = new Date(val.netDate) // 传入一个时间格式，如果不传入就是获取现在的时间了，这样做不兼容火狐。
+            console.log(date)
             this.$router.push({
                 path: '/comfortcloud/equipmentOverview/deviceDetail',
                 query: {
                     iotId: val.iotId,
                     subIotId: val.iotId,
                     deviceClass: '1',
-                    createTime: val.netDate
+                    createTime: Date.parse(date)
                 }
             })
         }
