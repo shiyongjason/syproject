@@ -129,7 +129,26 @@
                                 <span class="label">供应商银行账号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                             </p>
-
+                            <div class="col-filed col-100">
+                                <div class="ticket-table">
+                                    <div class="tr">
+                                        <div class="td">
+                                            出票张数
+                                        </div>
+                                        <div class="td">
+                                            票面金额（元）
+                                        </div>
+                                    </div>
+                                    <div class="tr">
+                                        <div class="td">
+                                            1
+                                        </div>
+                                        <div class="td">
+                                            2
+                                        </div>
+                                    </div>
+                                </div>
+                            <div/>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-33">
@@ -930,6 +949,9 @@ export default {
 
         .col-50 {
             flex: 0 0 50%;
+        }
+        .col-100 {
+            flex: 0 0 100%;
         }
         .col-30 {
             flex: 0 0 30%;
