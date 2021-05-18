@@ -4,7 +4,7 @@
             <p>设备明细</p>
             <div class="query-flex">
                 <div>设备ID：{{ this.$route.query.subIotId | isNotBlank}}</div>
-                <div>入网时间：{{deviceInfo.createTime | formatterTime}}</div>
+                <div>入网时间：{{parseInt(this.$route.query.createTime) | formatterTime}}</div>
                 <div>设备状态：{{ deviceInfo.status}}</div>
                 <div>经销商：{{deviceInfo.dealer | isNotBlank}}</div>
                 <div>经销商电话：{{deviceInfo.dealerPhone | isNotBlank}}</div>
@@ -29,7 +29,7 @@
 
 <script>
 import { getCloudDeviceDetail, getCloudSubDeviceDetail, getHomeUser } from '../api'
-
+import moment from 'moment'
 export default {
     name: 'deviceDetail',
     data () {
