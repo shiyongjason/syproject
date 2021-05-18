@@ -222,7 +222,6 @@
                                   placeholder="输入分享话术，不超过100字符"/>
                     </el-form-item>
 
-                    
                     <el-form-item label="虚拟体验链接：" prop="virtualExperienceUrl">
                         <el-input v-model="form.virtualExperienceUrl" maxlength="300" :rows="2" type="textarea"
                                   placeholder="输入完整的虚拟体验H5链接地址"/>
