@@ -448,6 +448,7 @@ export default {
                     return item
                 })
             }
+            console.log(this.form)
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
             this.setSelectSeckillProduct(Array.from(new Set(this.form.spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
             this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
@@ -567,13 +568,7 @@ export default {
                 this.$message.error(`增加库存的前置条件该商品已经发布且库存不为零。`)
                 return
             }
-            await this.addStock({
-                spikeId: row.spikeId,
-                skuId: row.skuId,
-                provinceId: row.provinceId,
-                cityId: row.cityId,
-                addStock: 1
-            })
+            await this.addStock({ spikeId: row.spikeId, skuId: row.skuId, provinceId: row.provinceId, cityId: row.cityId, addStock: 1 })
             this.getEventInfo()
         },
         /**
@@ -679,7 +674,7 @@ export default {
             this.form.spikeSku.forEach(item => {
                 !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '') // 限购数量
                 !item.sellingPoint && this.$set(item, 'sellingPoint', '') // 卖点信息
-                !item.inventoryRemainNum && this.$set(item, 'inventoryRemainNum', item.availableStock)
+                !(item.inventoryRemainNum || item.inventoryRemainNum == 0) && this.$set(item, 'inventoryRemainNum', item.availableStock)
                 // 为什么优惠信息这块的判断比较特别，是因为优惠信息可以为0，限购数量和库存都不可以为0
                 if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '') // 优惠信息
                 !item.productId && this.$set(item, 'productId', null) // 产品ID
