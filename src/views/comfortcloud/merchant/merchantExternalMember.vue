@@ -226,24 +226,24 @@ export default {
                 total: 0
             },
             tableLabel: [
-                { label: '会员来源', prop: 'source', width: '100px' },
-                { label: '企业名称', prop: 'companyName', width: '100px' },
+                { label: '会员来源', prop: 'source' },
+                { label: '企业名称', prop: 'companyName', width: '200' },
                 { label: '认证状态', prop: 'authenticationStatus' },
                 { label: '会员角色', prop: 'role' },
-                { label: '会员账号', prop: 'phone', width: '100px' },
+                { label: '会员账号', prop: 'phone' },
                 { label: '会员昵称', prop: 'nickName' },
-                { label: '经营区域', prop: 'provinceName', width: '100px' },
+                { label: '经营区域', prop: 'provinceName' },
                 { label: '门店地址', prop: 'storeAddress' },
                 { label: '所属分部', prop: 'department' },
                 { label: '主营品牌', prop: 'mainBrand' },
                 { label: '主营品类', prop: 'mainCategory' },
-                { label: '注册时间', prop: 'createTime', formatters: 'dateTime', width: '150px' },
+                { label: '注册时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '销售顾问姓名', prop: 'saleName' },
-                { label: '销售顾问手机号', prop: 'salePhone', width: '100px' },
+                { label: '销售顾问手机号', prop: 'salePhone' },
                 { label: '是否注册享钱', prop: 'isAppletUser' },
-                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date', width: '100px' },
-                { label: '手动标签', prop: 'manualTags', width: '200px' },
-                { label: '自动标签', prop: 'autoTag', width: '150px' }
+                { label: '首次沟通日期', prop: 'firstCommunicationDate', formatters: 'date' },
+                { label: '手动标签', prop: 'manualTags', width: '200' },
+                { label: '自动标签', prop: 'autoTag', width: '150' }
             ],
             errTableLabel: [
                 { label: '企业名称', prop: 'companyName' },
