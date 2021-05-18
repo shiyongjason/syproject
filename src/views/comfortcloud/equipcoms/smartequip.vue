@@ -188,12 +188,14 @@ export default {
             this.drawLine(this.smartData)
         },
         onDetail (val) {
+            let date = new Date(val.createTime) // 传入一个时间格式，如果不传入就是获取现在的时间了，这样做不兼容火狐。
             this.$router.push({
                 path: '/comfortcloud/equipmentOverview/deviceDetail',
                 query: {
                     iotId: val.iotId,
                     subIotId: val.subIotId,
-                    deviceClass: val.deviceClass
+                    deviceClass: val.deviceClass,
+                    createTime: Date.parse(date)
                 }
             })
         },
