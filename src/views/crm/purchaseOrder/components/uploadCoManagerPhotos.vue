@@ -72,8 +72,8 @@ export default {
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     const params = {
-                        id: this.id,
-                        ...this.formData
+                        ...this.formData,
+                        id: this.id
                     }
                     await uploadCoManagerPhotos(params)
                     this.onCancel()
