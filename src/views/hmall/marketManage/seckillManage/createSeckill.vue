@@ -178,14 +178,16 @@ export default {
                 {
                     validator: (rule, value, callback) => {
                         let availableStock = item.availableStock || 0
-                        if (this.eventInfos.status != 2 && item.purchaseLimitNum - value > 0) {
-                            return callback(new Error('限购数量不可超过库存数量'))
-                        } else if (item.purchaseLimitNum) {
-                            // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
-                            this.$refs.form.clearValidate(`spikeSku[${index}].purchaseLimitNum`)
-                        }
-                        if (value - availableStock > 0) {
-                            return callback(new Error('库存不能大于最大可售库存'))
+                        if (this.eventInfos.status != SPIKE_STATUS_PUBLISHED) {
+                            if (item.purchaseLimitNum - value > 0) {
+                                return callback(new Error('限购数量不可超过库存数量'))
+                            } else if (item.purchaseLimitNum) {
+                                // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
+                                this.$refs.form.clearValidate(`spikeSku[${index}].purchaseLimitNum`)
+                            }
+                            if (value - availableStock > 0) {
+                                return callback(new Error('库存不能大于最大可售库存'))
+                            }
                         }
                         callback()
                     }
@@ -195,13 +197,15 @@ export default {
                 { required: true, message: '限购数量不能小于0' },
                 {
                     validator: (rule, value, callback) => {
-                        if (this.eventInfos.status != 2 && value - item.inventoryRemainNum > 0) {
-                            return callback(new Error('限购数量不可超过库存数量'))
-                        } else if (item.inventoryRemainNum) {
-                            let inventoryRemainNum = item.inventoryRemainNum || 0
-                            let availableStock = item.availableStock || 0
-                            if (availableStock - inventoryRemainNum > 0) {
-                                this.$refs.form.clearValidate(`spikeSku[${index}].inventoryRemainNum`)
+                        if (this.eventInfos.status != SPIKE_STATUS_PUBLISHED) {
+                            if (value - item.inventoryRemainNum > 0) {
+                                return callback(new Error('限购数量不可超过库存数量'))
+                            } else if (item.inventoryRemainNum) {
+                                let inventoryRemainNum = item.inventoryRemainNum || 0
+                                let availableStock = item.availableStock || 0
+                                if (availableStock - inventoryRemainNum > 0) {
+                                    this.$refs.form.clearValidate(`spikeSku[${index}].inventoryRemainNum`)
+                                }
                             }
                         }
                         callback()
