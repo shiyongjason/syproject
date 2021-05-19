@@ -25,7 +25,7 @@
                     <span class="title-cont__label">2.设置规则和优惠</span>
                 </div>
                 <el-form-item label="活动区域：" prop="spikeAreaList">
-                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="disabled"></el-cascader>
+                    <el-cascader class="area-cascader" v-model="seckillAreaList" :options="activityAreaData" :props="{multiple: true}" @change="onChangeArea" :disabled="form.spikeSku.length>0"></el-cascader>
                 </el-form-item>
                 <el-form-item label="优惠方式：" prop="discountType">
                     <el-radio-group v-model="form.discountType" :disabled="disabled" @change='radioChange'>
@@ -173,42 +173,39 @@ export default {
                     { required: true, message: '请选择活动区域', trigger: 'change' }
                 ]
             },
-            availableStockRules: [
+            inventoryRemainNumRules: (item, index) => [
                 { required: true, message: '库存不能小于0' },
                 {
                     validator: (rule, value, callback) => {
-                        const beginIndex = rule.field.indexOf('[')
-                        const endIndex = rule.field.indexOf(']')
-                        const index = rule.field.substring(beginIndex + 1, endIndex)
-                        let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
-                        if (this.form.spikeSku[index].purchaseLimitNum - value > 0) {
-                            return callback(new Error('限购数量不可超过库存数量'))
-                        } else if (this.form.spikeSku[index].purchaseLimitNum) {
-                            // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
-                            this.$refs.form.clearValidate(`spikeSku[${index}].purchaseLimitNum`)
-                        }
-                        if (value - inventoryRemainNum > 0) {
-                            return callback(new Error('库存不能大于最大可售库存'))
+                        let availableStock = item.availableStock || 0
+                        if (this.eventInfos.status != SPIKE_STATUS_PUBLISHED) {
+                            if (item.purchaseLimitNum - value > 0) {
+                                return callback(new Error('限购数量不可超过库存数量'))
+                            } else if (item.purchaseLimitNum) {
+                                // 因为有关联性，当库存调整之后，限购数量就满足条件了，清除掉校验信息
+                                this.$refs.form.clearValidate(`spikeSku[${index}].purchaseLimitNum`)
+                            }
+                            if (value - availableStock > 0) {
+                                return callback(new Error('库存不能大于最大可售库存'))
+                            }
                         }
                         callback()
                     }
                 }
             ],
-            purchaseLimitNumRules: [
+            purchaseLimitNumRules: (item, index) => [
                 { required: true, message: '限购数量不能小于0' },
                 {
                     validator: (rule, value, callback) => {
-                        const beginIndex = rule.field.indexOf('[')
-                        const endIndex = rule.field.indexOf(']')
-                        const index = rule.field.substring(beginIndex + 1, endIndex)
-                        if (value - this.form.spikeSku[index].availableStock > 0) {
-                            return callback(new Error('限购数量不可超过库存数量'))
-                        } else if (this.form.spikeSku[index].availableStock) {
-                            let inventoryRemainNum = this.form.spikeSku[index].inventoryRemainNum || 0
-                            let availableStock = this.form.spikeSku[index].availableStock
-                            console.log(availableStock - inventoryRemainNum)
-                            if (availableStock - inventoryRemainNum <= 0) {
-                                this.$refs.form.clearValidate(`spikeSku[${index}].availableStock`)
+                        if (this.eventInfos.status != SPIKE_STATUS_PUBLISHED) {
+                            if (value - item.inventoryRemainNum > 0) {
+                                return callback(new Error('限购数量不可超过库存数量'))
+                            } else if (item.inventoryRemainNum) {
+                                let inventoryRemainNum = item.inventoryRemainNum || 0
+                                let availableStock = item.availableStock || 0
+                                if (availableStock - inventoryRemainNum > 0) {
+                                    this.$refs.form.clearValidate(`spikeSku[${index}].inventoryRemainNum`)
+                                }
                             }
                         }
                         callback()
@@ -261,7 +258,7 @@ export default {
                 {
                     label: '库存',
                     minWidth: '180',
-                    prop: 'availableStock',
+                    prop: 'inventoryRemainNum',
                     renderHeader: (h, scope) => {
                         return (
                             <span>
@@ -272,8 +269,8 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].availableStock`} label={scope.row.cityName} rules={this.availableStockRules} label-width="10px" style="margin-top: 20px">
-                                <el-input value={scope.row.availableStock} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'availableStock') }} disabled={this.disabled}></el-input>
+                            <el-form-item prop={`spikeSku[${scope.$index}].inventoryRemainNum`} label={scope.row.cityName} rules={this.inventoryRemainNumRules(scope.row, scope.$index)} label-width="40px" style="margin-top: 20px">
+                                <el-input value={scope.row.inventoryRemainNum} style='width:50%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'inventoryRemainNum') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
                     }
@@ -302,7 +299,7 @@ export default {
                     },
                     render: (h, scope) => {
                         return (
-                            <el-form-item prop={`spikeSku[${scope.$index}].purchaseLimitNum`} rules={this.purchaseLimitNumRules} label-width="0px" style="margin-top: 20px">
+                            <el-form-item prop={`spikeSku[${scope.$index}].purchaseLimitNum`} rules={this.purchaseLimitNumRules(scope.row, scope.$index)} label-width="0px" style="margin-top: 20px">
                                 <el-input value={scope.row.purchaseLimitNum} style='width:80%' size='mini' onInput={(val) => { this.setOneCol(Number(val.replace(/[^\d]/g, '')), scope, 'purchaseLimitNum') }} disabled={this.disabled}></el-input>
                             </el-form-item>
                         )
@@ -387,7 +384,7 @@ export default {
         },
         disabled () {
             // 在编辑状态下，非待发布的活动全部不可编辑，新增和复制全部可以编辑
-            return !!this.$route.query.id && this.form.status != 1 && this.$route.query.type != 'copy'
+            return !!this.$route.query.id && this.eventInfos.status != SPIKE_STATUS_DRAFT && this.$route.query.type != 'copy'
         },
         uploadInfo () {
             return {
@@ -448,12 +445,18 @@ export default {
             // 实在不理解为什么复制和详情要用两个接口，不都是获取活动信息吗
             // 后来去看了后端的代码，发现后端做了一些数据的处理，将一些数据置空，比如刷单次数之类的信息，单独做了一个接口
             this.$route.query.type == 'copy' ? await this.copy({ id: this.$route.query.id }) : await this.eventInfo({ id: this.$route.query.id })
-            this.form = JSON.parse(JSON.stringify(this.eventInfos))
-            const { spikeSku } = this.eventInfos
+            this.form = {
+                ...this.eventInfos,
+                spikeSku: JSON.parse(JSON.stringify(this.eventInfos.spikeSku)).map(item => {
+                    item.inventoryRemainNum = this.$route.query.type == 'copy' ? item.availableStock : item.inventoryRemainNum
+                    return item
+                })
+            }
+            console.log(this.form)
             // 编辑或者拷贝的时候选择的商品是从数据库过来的，这个时候已经选择商品的列表是没有信息，需要添加进来
-            this.setSelectSeckillProduct(Array.from(new Set(spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
+            this.setSelectSeckillProduct(Array.from(new Set(this.form.spikeSku.map(item => item.skuId))).map(item => ({ skuId: item })))
             this.seckillAreaList = this.form.spikeAreaList.map(item => [item.provinceId, item.cityId])
-            this.setTableData(spikeSku)
+            this.setTableData(this.form.spikeSku)
         },
         // ======================================== 前后端交互 =====================================================
         // 折扣或者直降选项变更的时候，折扣金额或者直降金额清空处理
@@ -565,17 +568,11 @@ export default {
             }).catch(() => { })
         },
         async onAddStock (row) {
-            if (this.form.status == SPIKE_STATUS_DRAFT || !row.productId || row.inventoryRemainNum === 0 || this.$route.query.type == 'copy') {
+            if (this.form.status == SPIKE_STATUS_DRAFT || !row.productId || row.inventoryOriginNum === 0 || this.$route.query.type == 'copy') {
                 this.$message.error(`增加库存的前置条件该商品已经发布且库存不为零。`)
                 return
             }
-            await this.addStock({
-                spikeId: row.spikeId,
-                skuId: row.skuId,
-                provinceId: row.provinceId,
-                cityId: row.cityId,
-                addStock: 1
-            })
+            await this.addStock({ spikeId: row.spikeId, skuId: row.skuId, provinceId: row.provinceId, cityId: row.cityId, addStock: 1 })
             this.getEventInfo()
         },
         /**
@@ -610,8 +607,7 @@ export default {
                         // 保存的时候商品数据处理，排序和库存信息
                         this.form.spikeSku.forEach((item, index) => {
                             item.sort = index + 1
-                            this.$set(item, 'inventoryOriginNum', item.availableStock)
-                            this.$set(item, 'inventoryRemainNum', item.availableStock)
+                            this.$set(item, 'inventoryOriginNum', item.inventoryRemainNum)
                         })
                         this.form.status = saveType
                         try {
@@ -682,7 +678,7 @@ export default {
             this.form.spikeSku.forEach(item => {
                 !item.purchaseLimitNum && this.$set(item, 'purchaseLimitNum', '') // 限购数量
                 !item.sellingPoint && this.$set(item, 'sellingPoint', '') // 卖点信息
-                item.availableStock ? this.$set(item, 'inventoryRemainNum', item.availableStock) : this.$set(item, 'availableStock', item.inventoryRemainNum)
+                !(item.inventoryRemainNum || item.inventoryRemainNum == 0) && this.$set(item, 'inventoryRemainNum', item.availableStock)
                 // 为什么优惠信息这块的判断比较特别，是因为优惠信息可以为0，限购数量和库存都不可以为0
                 if (!item.discountValue && item.discountValue != 0) this.$set(item, 'discountValue', '') // 优惠信息
                 !item.productId && this.$set(item, 'productId', null) // 产品ID
