@@ -1,6 +1,6 @@
 <template>
     <div class="drawer-wrap" v-if="drawer" >
-        <h-drawer title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
+        <h-drawer v-if="drawer" title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="功能管理" name="first">
@@ -329,7 +329,8 @@
                                 <h2>{{ businessDetail.companyName }}</h2>
                                 <h-button type="primary" @click="openTransferAdminDialog" v-if="hosAuthCheck(auth_transfer_admin)">转让管理员</h-button>
                             </div>
-                            <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
+<!--                            goodwork/authenlist  show-check-all-->
+                            <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :show-check-all="false" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
                                 <template slot="selfAction" slot-scope="scope">
                                     <img src="../../../../assets/images/edit.png" alt="" class="employee-edit" @click="openEmployeeRoleDialog(scope.data.row)">
                                 </template>
