@@ -35,13 +35,20 @@ export default {
     },
     props: ['isOpen', 'id'],
     data () {
-        const checkOnlineBankingShields = (rule, value, callback) => {
-            if (value && value.length < 1) {
-                return callback(new Error(rule.message))
-            }
-            return callback()
-        }
-        const checkScreenshots = (rule, value, callback) => {
+        // const checkOnlineBankingShields = (rule, value, callback) => {
+        //     if (value && value.length < 1) {
+        //         return callback(new Error(rule.message))
+        //     }
+        //     return callback()
+        // }
+        // const checkScreenshots = (rule, value, callback) => {
+        //     if (value && value.length < 1) {
+        //         return callback(new Error(rule.message))
+        //     }
+        //     return callback()
+        // }
+        // 目前判断比较简单，公用一个方法
+        const validatorIsNull = (rule, value, callback) => {
             if (value && value.length < 1) {
                 return callback(new Error(rule.message))
             }
@@ -54,10 +61,10 @@ export default {
             },
             rules: {
                 onlineBankingShields: [
-                    { required: true, message: '请上传网银盾照片', validator: checkOnlineBankingShields }
+                    { required: true, message: '请上传网银盾照片', validator: validatorIsNull }
                 ],
                 screenshots: [
-                    { required: true, message: '请上传共管户截图', validator: checkScreenshots }
+                    { required: true, message: '请上传共管户截图', validator: validatorIsNull }
                 ]
             }
         }
