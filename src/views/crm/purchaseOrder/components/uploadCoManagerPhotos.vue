@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="共管户信息" :visible.sync="isOpen" width="650px" :before-close="()=> onCancel()" :close-on-click-modal=false :destroy-on-close="true">
-        <el-form ref="form" :model="formData" v-if="true" :rules="rules" label-width="120px">
+        <el-form ref="form" :model="formData" :rules="rules" label-width="120px">
             <el-form-item label="网银盾照片：" prop="onlineBankingShields">
                 <OssFileHosjoyUpload v-model="formData.onlineBankingShields" :showPreView=true :fileSize=20 :fileNum=9 style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
                     <div class="a-line">
