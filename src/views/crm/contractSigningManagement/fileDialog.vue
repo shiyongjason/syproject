@@ -4,10 +4,11 @@
             <div class="file_scroll">
                 <div>(请上传双方盖章后的采购合同或采购明细附件，上传格式为PDF，单个文件最大允许20M )</div>
                 <div class="file_tit"><i>*</i>上传合同附件：</div>
-                <HosJoyUpload v-model="riskCheckProjectDocPos" :showPreView=false :fileSize=20 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" style="margin:10px 0 0 5px">
+                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.pdf'  style="margin:10px 0 0 5px">
                     <el-button type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
-                <div class="file_box"><i class="el-icon-paperclip"></i><span>ff6600ppppppppppppppp.png</span>
+                <div class="file_box" v-for="(item,index) in docPos" :key='index'>
+                    <i class="el-icon-paperclip"></i><span></span>
                     <em>预览</em>
                     <em>删除</em>
                 </div>
@@ -22,7 +23,7 @@
 <script>
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload'
 import { ccpBaseUrl } from '@/api/config'
-
+import { signContractarchive } from './api/index'
 export default {
     components: { HosJoyUpload },
     data () {
@@ -32,7 +33,8 @@ export default {
                 updateUid: '',
                 reservedName: false
             },
-            fileDialog: false
+            fileDialog: false,
+            docPos: []
         }
     },
     methods: {
@@ -42,6 +44,9 @@ export default {
         },
         onCancelFileDialog () {
             this.fileDialog = false
+        },
+        handleSuccessCb () {
+
         },
         onDelete (item, index) {
             console.log(item)
