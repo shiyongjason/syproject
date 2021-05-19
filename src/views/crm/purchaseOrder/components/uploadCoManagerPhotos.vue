@@ -1,14 +1,14 @@
 <template>
-    <el-dialog title="共管户信息" :visible.sync="isOpen" width="650px" :before-close="()=> $emit('onClose')" :close-on-click-modal=false :destroy-on-close="true">
+    <el-dialog title="共管户信息" :visible.sync="isOpen" width="650px" :before-close="()=> onCancel()" :close-on-click-modal=false :destroy-on-close="true">
         <el-form ref="form" :model="formData" v-if="true" :rules="rules" label-width="120px">
-            <el-form-item label="网银盾照片：" prop="reqAttachDocs">
+            <el-form-item label="网银盾照片：" prop="onlineBankingShields">
                 <OssFileHosjoyUpload v-model="formData.onlineBankingShields" :showPreView=true :fileSize=20 :fileNum=9 style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
                     </div>
                 </OssFileHosjoyUpload>
             </el-form-item>
-            <el-form-item label="共管户截图：" prop="reqAttachDocs">
+            <el-form-item label="共管户截图：" prop="screenshots">
                 <OssFileHosjoyUpload v-model="formData.screenshots" :showPreView=true :fileSize=20 :fileNum=9  style="margin:10px 0 0 5px" @successCb="$refs.form.clearValidate()" accept=".jpg,.jpeg,.png,.pdf">
                     <div class="a-line">
                         <h-button>上传文件</h-button>
@@ -27,18 +27,25 @@
 
 <script>
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
+import { uploadCoManagerPhotos } from '@/views/crm/purchaseOrder/api'
 export default {
     name: 'uploadPublicUserPhotos',
     components: {
         OssFileHosjoyUpload
     },
-    props: ['isOpen'],
+    props: ['isOpen', 'id'],
     data () {
-        const checkOnlineBankingShields = () => {
-
+        const checkOnlineBankingShields = (rule, value, callback) => {
+            if (value && value.length < 1) {
+                return callback(new Error(rule.message))
+            }
+            return callback()
         }
-        const checkScreenshots = () => {
-
+        const checkScreenshots = (rule, value, callback) => {
+            if (value && value.length < 1) {
+                return callback(new Error(rule.message))
+            }
+            return callback()
         }
         return {
             formData: {
@@ -57,11 +64,28 @@ export default {
     },
     methods: {
         onCancel () {
+            this.clearFormData()
             this.$refs.form.clearValidate()
-            this.$emit('onClose')
+            this.$emit('update:isOpen', false)
         },
         onEnter () {
-            console.log(1)
+            this.$refs['form'].validate(async (valid) => {
+                if (valid) {
+                    const params = {
+                        id: this.id,
+                        ...this.formData
+                    }
+                    await uploadCoManagerPhotos(params)
+                    this.onCancel()
+                    this.$emit('backEvent')
+                }
+            })
+        },
+        clearFormData () {
+            this.formData = {
+                onlineBankingShields: [],
+                screenshots: []
+            }
         }
     }
 }

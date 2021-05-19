@@ -112,7 +112,7 @@
                 </template>
             </basicTable>
         </div>
-        <uploadCoManagerPhotos :isOpen=coManagerIsOpen />
+        <uploadCoManagerPhotos :isOpen.sync=coManagerIsOpen :id="coManagerId" @backEvent='drawerBackEvent'/>
         <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
@@ -192,7 +192,8 @@ export default {
             purchaseOrderDialogParams: {},
             editHistory: [],
             purchaseName: '',
-            coManagerIsOpen: false
+            coManagerIsOpen: false,
+            coManagerId: ''
         }
     },
     components: {
@@ -289,8 +290,7 @@ export default {
         },
         openCoManagerDialog (row) {
             this.coManagerIsOpen = true
-            // this.purchaseOrderDialogParams = dialogParams
-            // this.isOpen = true
+            this.coManagerId = row.id
         },
         dialogBackEvent () {
             this.isOpen = false

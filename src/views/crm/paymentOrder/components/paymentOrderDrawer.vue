@@ -249,32 +249,32 @@
                                         }}
                                         </p>
                                     </div>
-                                    <div class="row-filed">
-                                        <!-- 新增 -->
-                                        <div class="col-filed info-img-group">
-                                            <span class="label">网银盾照片：</span>
-                                            <p class="content">
-                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles" @click="handle(item.fileUrl)">
-                                                        <img :src=item.fileUrl />
-                                                    </span>
-                                                </template>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row-filed">
-                                        <!-- 新增 -->
-                                        <div class="col-filed info-img-group">
-                                            <span class="label">共管户截图：</span>
-                                            <p class="content">
-                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles" @click="handle(item.fileUrl)">
-                                                        <img :src=item.fileUrl />
-                                                    </span>
-                                                </template>
-                                            </p>
-                                        </div>
-                                    </div>
+<!--                                    <div class="row-filed">-->
+<!--                                        &lt;!&ndash; 新增 &ndash;&gt;-->
+<!--                                        <div class="col-filed info-img-group">-->
+<!--                                            <span class="label">网银盾照片：</span>-->
+<!--                                            <p class="content">-->
+<!--                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">-->
+<!--                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles" @click="handle(item.fileUrl)">-->
+<!--                                                        <img :src=item.fileUrl />-->
+<!--                                                    </span>-->
+<!--                                                </template>-->
+<!--                                            </p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="row-filed">-->
+<!--                                        &lt;!&ndash; 新增 &ndash;&gt;-->
+<!--                                        <div class="col-filed info-img-group">-->
+<!--                                            <span class="label">共管户截图：</span>-->
+<!--                                            <p class="content">-->
+<!--                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">-->
+<!--                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles" @click="handle(item.fileUrl)">-->
+<!--                                                        <img :src=item.fileUrl />-->
+<!--                                                    </span>-->
+<!--                                                </template>-->
+<!--                                            </p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
                                     <div class="row-filed">
                                         <p class="col-filed col-25">
                                             <span class="label">质押信息：</span>{{
