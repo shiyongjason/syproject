@@ -129,26 +129,34 @@
                                 <span class="label">供应商银行账号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                             </p>
-                            <div class="col-filed col-100">
-                                <div class="ticket-table">
-                                    <div class="tr">
-                                        <div class="td">
-                                            出票张数
-                                        </div>
-                                        <div class="td">
-                                            票面金额（元）
-                                        </div>
+                        </div>
+                        <div class="row-filed">
+                            <div class="ticket-table">
+                                <div class="tr">
+                                    <div class="th">
+                                        出票张数
                                     </div>
-                                    <div class="tr">
-                                        <div class="td">
-                                            1
-                                        </div>
-                                        <div class="td">
-                                            2
-                                        </div>
+                                    <div class="th">
+                                        票面金额（元）
                                     </div>
                                 </div>
-                            <div/>
+                                <div class="tr">
+                                    <div class="td">
+                                        1
+                                    </div>
+                                    <div class="td">
+                                        2
+                                    </div>
+                                </div>
+                                <div class="tr">
+                                    <div class="td">
+                                        合计
+                                    </div>
+                                    <div class="td">
+                                        2
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-33">
@@ -1133,6 +1141,32 @@ export default {
     align-items: center;
     .info-status {
         margin-left: 20px;
+    }
+}
+.ticket-table {
+    display: table;
+    width: 500px;
+    text-align: center;
+    border: 1px solid #eeeeee;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: #666666;
+    font-weight: 400;
+    .tr{
+        display: table-row;
+    }
+    .th{
+        display: table-cell;
+        border: 1px solid #eeeeee;
+        padding: 8px;
+        font-size: 14px;
+        color: #333333;
+        font-weight: 600;
+    }
+    .td{
+        display: table-cell;
+        border: 1px solid #eeeeee;
+        padding: 8px;
     }
 }
 </style>

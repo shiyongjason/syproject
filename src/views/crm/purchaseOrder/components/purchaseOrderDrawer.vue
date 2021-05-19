@@ -41,6 +41,23 @@
                                 创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                             </p>
                         </div>
+<!--                        todo -->
+                        <div class="col-filed info-img-group">
+                            <span class="label">网银盾照片： </span>
+                            <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
+                                <span class="img-box" :key="item.url" v-for="item in purchaseOrderDetail.poInfo.poDetail">
+                                      <img :src="item.url" alt="" @click="goDetail(item.url)">
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-filed info-img-group">
+                            <span class="label">共管户截图： </span>
+                            <p class="content" v-if="purchaseOrderDetail.poInfo && purchaseOrderDetail.poInfo.poDetail">
+                                <span class="img-box" :key="item.url" v-for="item in purchaseOrderDetail.poInfo.poDetail">
+                                      <img :src="item.url" alt="" @click="goDetail(item.url)">
+                                </span>
+                            </p>
+                        </div>
                         <template v-if="purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[0].key">
                             <div class="row-filed">
                                 <p class="col-filed">
