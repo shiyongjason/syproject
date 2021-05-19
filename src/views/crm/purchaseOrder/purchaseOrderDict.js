@@ -32,11 +32,11 @@ const PurchaseOrderDict = Object.freeze({
         title: '共管户信息',
         list: [
             {
-                key: 'false',
+                key: false,
                 value: '未确认'
             },
             {
-                key: 'true',
+                key: true,
                 value: '已确认'
             }
         ]
