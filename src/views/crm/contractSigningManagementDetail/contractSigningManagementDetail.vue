@@ -6,19 +6,20 @@
                 <div type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1&&res.downloadUrl"><a :href="res.downloadUrl" target="_blank">下载合同</a></div>
             </div>
             <div class="file_wrap">
-                <h-button type="primary">
+                <h-button type="primary" @click="onGetfile">
                     更 新 归 档
                 </h-button>
-                <div class="file_wrap-table">
+                <div class="file_wrap-table" v-if="res.contractArchives&&res.contractArchives.length>0">
                     <div class='file_wrap-table--flex'>
                         <div>归档时间</div>
                         <div>归档人</div>
                         <div>文件详情</div>
                     </div>
-                     <div class='file_wrap-table--flex'>
-                        <div>20210 - 6 - 6</div>
-                        <div>sky</div>
-                        <div> 文件详情 文件详情 文件详情</div>
+                    <div class='file_wrap-table--flex' v-for="(item,index) in res.contractArchives" :key='index'>
+                        <div>{{moment(item.createTime).format('YYYY-MM-DD HH-mm-ss')}}</div>
+                        <div>{{item.createBy}}</div>
+                        <div><span v-for="(jtem,jdenx) in item.attachDocList" :key='jdenx'>
+                                <a :href="jtem.fileUrl" target="_blank">{{jtem.fileName}}</a></span></div>
                     </div>
                 </div>
             </div>
@@ -40,18 +41,23 @@
                 </div>
             </div>
         </div>
+        <fileDialog ref="fileDialog" @callBackFun=initFun></fileDialog>
         <!---->
     </div>
 </template>
 <script>
+import fileDialog from '@/views/crm/contractSigningManagement/fileDialog'
 import { getContractsContent } from './api/index'
+import moment from 'moment'
 export default {
     name: 'SigningManagementDetail',
+    components: { fileDialog },
     data () {
         return {
             vHtml: '',
             res: '',
-            showLoading: false
+            showLoading: false,
+            moment
         }
     },
     methods: {
@@ -67,46 +73,54 @@ export default {
         unescapeHTM (a) {
             a = '' + a
             return a.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'")
-        }
-    },
-    async mounted () {
-        const { data } = await getContractsContent({ contractId: this.$route.query.id })
-        this.res = data
-        this.res._attachementList = this.res.attachementList && this.res.attachementList.filter(val => {
-            if (val.picUrl.indexOf('.doc') < 0 && val.picUrl.indexOf('.docx') < 0 && val.picUrl.indexOf('.pdf') < 0 && val.picUrl.indexOf('.xlsx') < 0) {
-                return val
-            }
-        })
-        console.log('==', this.res._attachementList)
-        if (!this.res.contractUrl && (!this.res.attachementList || this.res.attachementList.length == 0)) {
-            this.vHtml = data.contractContent
-            if (this.vHtml) {
-                this.vHtml = this.unescapeHTM(this.vHtml)
-                this.init()
-            }
-        }
-        if (this.res.contractUrl) {
+        },
+        onGetfile (val) {
             this.$nextTick(() => {
-                this.showLoading = true
-                let _this = this
-                const iframe = document.querySelector('#ifra')
-                if (iframe.attachEvent) {
-                    iframe.attachEvent('onload', function () {
-                        console.log('iframe已加载完毕')
-                        setTimeout(() => {
-                            _this.showLoading = false
-                        }, 800)
-                    })
-                } else {
-                    iframe.onload = function () {
-                        console.log('iframe已加载完毕')
-                        setTimeout(() => {
-                            _this.showLoading = false
-                        }, 800)
-                    }
+                this.$refs.fileDialog.onGetfile(this.$route.query.id, 2)
+            })
+        },
+        async initFun () {
+            const { data } = await getContractsContent({ contractId: this.$route.query.id })
+            this.res = data
+            this.res._attachementList = this.res.attachementList && this.res.attachementList.filter(val => {
+                if (val.picUrl.indexOf('.doc') < 0 && val.picUrl.indexOf('.docx') < 0 && val.picUrl.indexOf('.pdf') < 0 && val.picUrl.indexOf('.xlsx') < 0) {
+                    return val
                 }
             })
+            console.log('==', this.res._attachementList)
+            if (!this.res.contractUrl && (!this.res.attachementList || this.res.attachementList.length == 0)) {
+                this.vHtml = data.contractContent
+                if (this.vHtml) {
+                    this.vHtml = this.unescapeHTM(this.vHtml)
+                    this.init()
+                }
+            }
+            if (this.res.contractUrl) {
+                this.$nextTick(() => {
+                    this.showLoading = true
+                    let _this = this
+                    const iframe = document.querySelector('#ifra')
+                    if (iframe.attachEvent) {
+                        iframe.attachEvent('onload', function () {
+                            console.log('iframe已加载完毕')
+                            setTimeout(() => {
+                                _this.showLoading = false
+                            }, 800)
+                        })
+                    } else {
+                        iframe.onload = function () {
+                            console.log('iframe已加载完毕')
+                            setTimeout(() => {
+                                _this.showLoading = false
+                            }, 800)
+                        }
+                    }
+                })
+            }
         }
+    },
+    mounted () {
+        this.initFun()
     }/* ,
     async activated () {
         const { data } = await getContractsContent({ contractId: this.$route.query.id })
@@ -215,20 +229,42 @@ export default {
             display: flex;
             justify-content: space-between;
             border: 1px solid #cccccc;
-            height: 40px;
-            line-height: 40px;
+            line-height: 30px;
             border-bottom: none;
+            &:first-child {
+                display: flex;
+                text-align: center;
+                height: 40px;
+                div {
+                    align-items: center;
+                    justify-content: center;
+                    color: #333333;
+                }
+            }
             &:last-child {
                 border-bottom: 1px solid #cccccc;
+            }
+            span {
+                margin-right: 10px;
             }
             div {
                 padding: 0 10px;
                 display: flex;
                 flex: 2;
-                justify-content: center;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                a {
+                    color: #ff7a45;
+                    width: 120px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
                 &:not(:last-child) {
+                    color: #333333;
                     flex: 1;
                     border-right: 1px solid #cccccc;
+                    justify-content: center;
                 }
             }
         }

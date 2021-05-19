@@ -41,7 +41,7 @@
                     </div>
                     <div class="approve_flex">
                         <p><span class="star">*</span>剩余货款支付周期：{{approveForm.remainPaymentCycle || '-'}}个月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
-                        <p><span class="star">*</span>*评审决议编号：{{approveForm.remainPaymentCycle || '-'}}个月 <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
+                        <p><span class="star">*</span>评审决议编号：<span style="width:150px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">{{approveForm.reviewResolutionNo || '-'}}</span> <img src="../../../../assets/images/crm-edit.png" alt="" class="crm-edit" @click="openFinalConfirmDialog"></p>
                     </div>
                 </template>
             </div>
@@ -179,8 +179,8 @@
                     </el-select>
                     个月
                 </el-form-item>
-                <el-form-item label="评审决议编号：" prop="transferBankRate">
-                    <el-input type="text" maxlength="50" v-model="formData.transferBankRate">
+                <el-form-item label="评审决议编号：" prop="reviewResolutionNo">
+                    <el-input type="text" maxlength="50" v-model="formData.reviewResolutionNo">
 
                     </el-input>
                 </el-form-item>
@@ -313,7 +313,8 @@ export default {
                 transferBankRate: '',
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
-                remainPaymentCycle: ''
+                remainPaymentCycle: '',
+                reviewResolutionNo: ''
             },
             rules: {
                 acceptBankRate: [
@@ -335,9 +336,9 @@ export default {
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
                 ],
-                advancePaymentRates: [
-                    { required: true, message: '111111', trigger: 'blur' },
-                    { message: '经销商首付款比例0-100', validator: checkNumandEng, trigger: 'blur' }
+                reviewResolutionNo: [
+                    { required: true, message: '请输入评审决议编号', trigger: 'blur' },
+                    { message: '格式为50位以内数字或字母', validator: checkNumandEng, trigger: 'blur' }
                 ]
             }
         }
