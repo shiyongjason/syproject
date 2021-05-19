@@ -29,7 +29,7 @@
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { uploadCoManagerPhotos } from '@/views/crm/purchaseOrder/api'
 export default {
-    name: 'uploadPublicUserPhotos',
+    name: 'uploadCoManagerPhotos',
     components: {
         OssFileHosjoyUpload
     },
