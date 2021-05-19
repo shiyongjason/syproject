@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="转让管理员" :visible.sync="transferAdminDialogVisible" width="500px" :before-close="()=>{cancel()}" :close-on-click-modal=false>
+    <el-dialog title="转让管理员" :visible.sync="transferAdminDialogVisible" width="500px" :before-close="()=>{cancel()}" :destroy-on-close="true" :close-on-click-modal=false>
         <div class="edit-employee-role">
             <el-form ref="transferAdminForm" :model="transferAdminForm" :rules="transferAdminRules" label-width="100px">
                 <el-form-item label="当前管理员：">
