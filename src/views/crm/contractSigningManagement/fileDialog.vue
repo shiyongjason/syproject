@@ -1,21 +1,21 @@
 <template>
     <div>
-        <el-dialog title="归档该合同" :visible.sync="fileDialog" width="40%" :close-on-click-modal="false" :before-close="()=>{fileDialog=false}">
+        <el-dialog :title='title' :visible.sync="fileDialog" width="40%" :close-on-click-modal="false" :before-close="()=>{fileDialog=false}">
             <div class="file_scroll">
                 <div>(请上传双方盖章后的采购合同或采购明细附件，上传格式为PDF，单个文件最大允许20M )</div>
                 <div class="file_tit"><i>*</i>上传合同附件：</div>
-                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.pdf'  style="margin:10px 0 0 5px">
+                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.pdf' style="margin:10px 0 0 5px">
                     <el-button type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
                 <div class="file_box" v-for="(item,index) in docPos" :key='index'>
-                    <i class="el-icon-paperclip"></i><span></span>
-                    <em>预览</em>
+                    <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
+                    <em> <a :href="item.fileUrl" target="_blank">预览</a></em>
                     <em>删除</em>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancelFileDialog">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="onSaveArchive">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -34,12 +34,21 @@ export default {
                 reservedName: false
             },
             fileDialog: false,
-            docPos: []
+            docPos: [],
+            title: '',
+            form: {
+                contractId: '',
+                updateBy: '',
+                attachDocs: []
+            }
         }
     },
     methods: {
-        onGetfile () {
+        onGetfile (val, tit) {
             // 新增归档 操作
+            this.docPos = []
+            this.form.contractId = val
+            this.title = tit == 1 ? '归档该合同' : '更新归档'
             this.fileDialog = true
         },
         onCancelFileDialog () {
@@ -62,6 +71,23 @@ export default {
                 })
             }).catch(() => {
                 // do nothing
+            })
+        },
+        async onSaveArchive () {
+            this.form.updateBy = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
+            if (this.docPos.length == 0) {
+                this.$message({
+                    message: '请先上传文件',
+                    type: 'warning'
+                })
+                return
+            }
+            this.form.attachDocs = this.docPos
+            await signContractarchive(this.form)
+            this.$emit('callBackFun')
+            this.$message({
+                message: '归档成功',
+                type: 'success'
             })
         }
     }

@@ -47,7 +47,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">是否已归档：</div>
                     <div class="query-col__input">
-                        <el-select placeholder="请选择" v-model="queryParams.archive" :clearable=true>
+                        <el-select placeholder="请选择" v-model="archive" :clearable=true>
                             <el-option :label="item.label" :value="item.value" v-for="item in fileStatus" :key="item.label"></el-option>
                         </el-select>
                     </div>
@@ -106,7 +106,7 @@
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
                     <h-button table @click="onGetfile(scope.data.row)" v-if="scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
-                    <h-button table @click="onGetfile(scope.data.row)" >归档</h-button>
+                    <h-button table @click="onGetfile(scope.data.row)">归档</h-button>
                 </template>
             </hosJoyTable>
         </div>
@@ -217,6 +217,7 @@ const _queryParams = {
     authCode: '',
     jobNumber: '',
     companyName: '',
+    archive: '',
     createTimeOrder: null, // asc 或 desc
     updateTimeOrder: null// asc 或 desc
 }
@@ -262,7 +263,14 @@ export default {
                 { label: '合同模板版本', prop: 'versionNo', width: '120' },
                 { label: '合同类型', prop: 'contractTemplateTypeName', width: '150' },
                 { label: '状态', prop: 'contractStatus', width: '120', dicData: _dicData },
-                { label: '是否已归档', prop: 'archive', width: '120', dicData: _fileData },
+                {
+                    label: '是否已归档',
+                    prop: 'archive',
+                    width: '120',
+                    render: (h, scope) => {
+                        return <span>{scope.row.archive ? '是' : '否'}</span>
+                    }
+                },
                 { label: '发起人', prop: 'createBy', width: '120' },
                 { label: '发起时间', prop: 'createTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
                 { label: '更新时间', prop: 'updateTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' }
@@ -271,7 +279,8 @@ export default {
             currentContent: '',
             lastContent: '',
             fileDialog: false,
-            fileStatus: [{ value: '', label: '全部' }, { value: 1, label: '是' }, { value: 2, label: '否' }]
+            archive: '',
+            fileStatus: [{ value: 1, label: '是' }, { value: 2, label: '否' }]
         }
     },
     computed: {
@@ -460,6 +469,7 @@ export default {
             this.searchList()
         },
         async getList (val = '') {
+            this.queryParams.archive = this.archive == 1 ? true : this.archive == 2 ? false : ''
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             if (val) {
@@ -496,9 +506,9 @@ export default {
             this.lawManagerWaitingNum = data.lawManagerWaitingNum
             this.riskManagerWaitingNum = data.riskManagerWaitingNum
         },
-        onGetfile () {
+        onGetfile (val) {
             this.$nextTick(() => {
-                this.$refs.fileDialog.onGetfile()
+                this.$refs.fileDialog.onGetfile(val.id, 1)
             })
         }
     },
