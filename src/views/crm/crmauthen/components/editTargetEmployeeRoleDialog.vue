@@ -1,5 +1,5 @@
 <template>
-    <el-dialog :title="targetVal.admin ? '编辑管理员信息': '编辑员工信息'" :visible.sync="editEmployeeDialogVisible" width="500px" :before-close="()=>{$emit('update:editEmployeeDialogVisible', false)}" :close-on-click-modal=false>
+    <el-dialog :title="targetVal.admin ? '编辑管理员信息': '编辑员工信息'" :destroy-on-close="true" :visible.sync="editEmployeeDialogVisible" width="500px" :before-close="()=>{$emit('update:editEmployeeDialogVisible', false)}" :close-on-click-modal=false>
         <div class="edit-employee-role">
             <el-form ref="employeeForm" :model="employeeForm" :rules="employeeRules" label-width="100px">
                 <el-form-item label="昵称：" prop="nickName">
