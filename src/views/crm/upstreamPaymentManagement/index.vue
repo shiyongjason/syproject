@@ -386,13 +386,14 @@ export default class UpstreamPaymentManagement extends Vue {
     isShowTabs () {
         let temp:boolean | undefined = false
         // this.loanHandoverInformation初始化为空字符串
-        if (this.loanHandoverInformation?.upPaymentLoanHandoverList.length == 0) {
-            temp = true
-        } else {
-            temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.every(item => {
-                return item.status == 1
-            })
-        }
+        // console.log(this.loanHandoverInformation)
+        // if (this.loanHandoverInformation?.upPaymentLoanHandoverList.length == 0) {
+        //     temp = true
+        // } else {
+        //     temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.every(item => {
+        //         return item.status == 1
+        //     })
+        // }
         this.isTabs = temp
     }
 
