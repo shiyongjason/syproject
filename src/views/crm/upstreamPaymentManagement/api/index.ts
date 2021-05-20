@@ -1,4 +1,4 @@
-import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit } from '@/interface/hbp-project'
+import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery) => AxiosPromise<IPageRespUpStreamPayment> = (params) => {
@@ -33,4 +33,33 @@ export const getSupplierDownload = (paymentOrderId) => axios.get(`/project/api/s
 
 export const getUpStreamPaymentTotalAmountApi: (params: ReqUpStreamPaymentQuery) => AxiosPromise<number> = (params) => {
     return axios.get('/project/api/supplier-payments/total-amount', { params })
+}
+
+export const updateLoanTransferStatus: (params: ReqLoanTransferChange) => AxiosPromise<void> = (params) => {
+    return axios.put('/project/api/loan-transfers/boss/change', { params })
+}
+
+// 上游支付管理导出
+export const exportUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery, callback: any) => void = (params, callback) => {
+    axios.defaults.responseType = 'blob'
+    axios.post(`/project/api/supplier-payments/boss/export`, { params }).then(function (response) {
+        try {
+            // const reader = new FileReader()
+            // reader.readAsDataURL(response.data)
+            // reader.onload = function (e) {
+            //     const a = document.createElement('a')
+            //     a.download = '承诺值信息.xlsx'
+            //     a.href = e.target.result
+            //     document.querySelector('body').appendChild(a)
+            //     a.click()
+            //     document.querySelector('body').removeChild(a)
+            // }
+            callback(response)
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
 }

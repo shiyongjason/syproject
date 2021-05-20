@@ -74,26 +74,32 @@
                         <HDatePicker :start-change="onStartChangePaidTime" :end-change="onEndChangePaidTime" :options="optionsByPaid"></HDatePicker>
                     </div>
                 </div>
-
                 <div class="query-cont__col">
-                    <h-button type="primary" @click="getList">
-                        查询
-                    </h-button>
-                    <h-button @click="onReset">
-                        重置
-                    </h-button>
+                    <div class="query-col__label">放款交接状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.loanTransferStatus" placeholder="请选择">
+                            <el-option label="全部" value=""></el-option>
+                            <el-option label="待对接" :value="1"></el-option>
+                            <el-option label="已对接" :value="2"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <h-button type="primary" @click="getList">查询</h-button>
+                    <h-button @click="onReset">重置</h-button>
+                    <h-button @click="onExport">导出列表数据</h-button>
                 </div>
             </div>
             <div class="query-cont__row">
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.3.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='100' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)"  @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
+                    <h-button table v-if="changeLoanTransferStatusAuthCheck(slotProps.data.row)"  @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
                 </template>
             </hosJoyTable>
-
         </div>
         <el-drawer class="editordrawerbox" :title="PAYMENTSTATUS.get(this.loanHandoverInformation.paymentStatus)" :visible.sync="editorDrawer" size='620px' :before-close='editorDrawerClose' :modal-append-to-body="false" :wrapperClosable='false'>
             <div class="drawer-content">
@@ -148,10 +154,6 @@
                     <el-form-item label="支付单货款明细：">
                        <elImageAddToken style="width: 100px; height: 100px;margin-right:10px; border:1px solid #dad5d5; border-radius: 5px;" :fileUrl="pic.fileUrl" :fit="'contain'" v-for="(pic,index) in prevPaymentDetail.paymentDetail" :key='index'></elImageAddToken>
                     </el-form-item>
-                    <!-- 银行承兑 才展示 支付银行-->
-                    <el-form-item label="支付银行：" prop="paymentBank" v-if="prevPaymentDetail.supplierPaymentType == 2" style="margin-bottom:20px">
-                        <el-input placeholder="请输入支付银行" v-model="dialogFormData.paymentBank" maxlength="50"></el-input>
-                    </el-form-item>
                     <el-form-item label="本次支付金额：" prop="payAmount" style="margin-bottom:20px">
                         <el-input placeholder="请输入" v-model="dialogFormData.payAmount" maxlength="50" v-isNum:2 v-inputMAX='prevPaymentDetail.surplusAmount'></el-input>
                     </el-form-item>
@@ -175,6 +177,24 @@
                 <h-button type="primary" @click="onEnterPay">确认支付</h-button>
             </div>
         </el-dialog>
+        <el-dialog :close-on-click-modal='false' title="变更交接状态" :visible.sync="isOpenChangeStatus" width="850px" class="prev-payment-dialog" >
+            <el-form ref="statusForm" :model="loanTransferStatusForm" :rules="changeRules" label-width="150px">
+                <el-form-item label="变更交接状态到：" prop="changeType" style="margin-bottom:20px">
+                    <el-radio-group v-model="loanTransferStatusForm.changeType">
+                        <el-radio :label=1>运营部</el-radio>
+                        <el-radio :label=2>资金部</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="备注：" prop="remark" style="margin-bottom:20px">
+                    <el-input type="textarea" placeholder="请输入内容" v-model="loanTransferStatusForm.remark" maxlength="200" :autosize="{ minRows:5, maxRows: 6}" show-word-limit>
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <h-button @click="isOpenChangeStatus = false">取消</h-button>
+                <h-button type="primary" @click="onChangeLoanTransferStatus">确定</h-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -189,10 +209,11 @@ import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' /
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
-import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment } from '@/interface/hbp-project'
+import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT } from '@/utils/auth_const'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS } from '@/utils/auth_const'
 import moment from 'moment'
+import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
     [null, '-'],
     [1, '银行转账'],
@@ -241,11 +262,12 @@ export default class UpstreamPaymentManagement extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    paymentType=PAYMENTTYPE
-    supplierPaymentMethod=SUPPLIERPAYMENTMETHOD
+    paymentType = PAYMENTTYPE
+    supplierPaymentMethod = SUPPLIERPAYMENTMETHOD
     tableData:RespUpStreamPayment[] | [] = []
     editorDrawer:boolean = false
     isOpen:boolean = false
+    isOpenChangeStatus: boolean = false
     isReady:boolean = false
     isTabs:boolean = false
     paymentOrderId:string = ''
@@ -269,6 +291,7 @@ export default class UpstreamPaymentManagement extends Vue {
         authCode: '',
         jobNumber: '',
         subsectionCode: '',
+        loanTransferStatus: '',
         'sort.property': null,
         'sort.direction': null
     }
@@ -279,12 +302,17 @@ export default class UpstreamPaymentManagement extends Vue {
         paymentOrderId: '',
         payAmount: '',
         payDate: moment().format('YYYY-MM-DD'),
-        payVouchers: [],
-        paymentBank: ''
+        payVouchers: []
+    }
+    loanTransferStatusForm: ReqLoanTransferChange = {
+        loanTransferId: '',
+        changeType: '',
+        remark: '',
+        updateBy: ''
     }
 
     totalAmount:number = 0
-    activeName:string='loanHandoverInformation'
+    activeName:string = 'loanHandoverInformation'
     loanHandoverInformation:RespLoanHandoverInfo = '' as unknown as RespLoanHandoverInfo
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
     prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
@@ -321,9 +349,15 @@ export default class UpstreamPaymentManagement extends Vue {
             ],
             payVouchers: [
                 { required: true, message: '请上传上游支付凭证' }
-            ],
-            paymentBank: [
-                { required: true, message: '请输入支付银行', trigger: 'blur' }
+            ]
+        }
+        return rules
+    }
+
+    get changeRules () {
+        let rules = {
+            changeType: [
+                { required: true, message: '请选择变更交接状态', trigger: 'change' }
             ]
         }
         return rules
@@ -352,7 +386,6 @@ export default class UpstreamPaymentManagement extends Vue {
     isShowTabs () {
         let temp:boolean | undefined = false
         // this.loanHandoverInformation初始化为空字符串
-        console.log(this.loanHandoverInformation)
         if (this.loanHandoverInformation?.upPaymentLoanHandoverList.length == 0) {
             temp = true
         } else {
@@ -370,6 +403,11 @@ export default class UpstreamPaymentManagement extends Vue {
         { label: '上游供应商', prop: 'supplierCompanyName', width: '180' },
         { label: '项目名称', prop: 'projectName', minWidth: '300' },
         { label: '采购单金额', prop: 'poAmount', width: '160', displayAs: 'money' },
+        {
+            label: '放款交接状态',
+            width: '160',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => this.onRenderLoanTransferStatus(h, scope)
+        },
         {
             label: '支付状态/支付次数',
             width: '150',
@@ -395,10 +433,18 @@ export default class UpstreamPaymentManagement extends Vue {
         return <span>{filters.money(scope.row.paidAmount, 2)}/{filters.money(scope.row.totalAmount, 2)}</span>
     }
 
+    onRenderLoanTransferStatus (h:CreateElement, scope:TableRenderParam): JSX.Element {
+        return (
+            <div>
+                { scope.row.loanTransferStatus == 1 ? '待对接' : scope.row.loanTransferStatus == 2 ? '已对接' : '-' }
+                { scope.row.loanTransferStatus == 2 && <p>({ filters.formatterDate(scope.row.loanTransferDate) })</p> }
+            </div>
+        )
+    }
+
     async viewDetail (paymentOrderId) {
         this.paymentOrderId = paymentOrderId
         const { data } = await Api.getLoanHandoverInfoApi(paymentOrderId)
-        console.log('data: ', data)
         this.loanHandoverInformation = data
         this.editorDrawer = true
         this.isShowTabs()
@@ -428,7 +474,6 @@ export default class UpstreamPaymentManagement extends Vue {
             paymentOrderId: this.paymentOrderId,
             poId: this.prevPaymentDetail.purchaseOrderId
         }
-        console.log('this.dialogFormData: ', this.dialogFormData)
         await Api.onSubmitPayments(this.dialogFormData)
         this.$message.success('提交成功！')
         await this.onRequest()
@@ -489,6 +534,56 @@ export default class UpstreamPaymentManagement extends Vue {
     onReset () {
         this.queryParams = JSON.parse(JSON.stringify(this._queryParams))
         this.getList()
+    }
+
+    /**
+     * 变更交接状态弹出层展示
+     */
+    onShowChangeLoanTransferStatus (loanTransferId) {
+        let employeeName = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
+        this.loanTransferStatusForm.loanTransferId = loanTransferId
+        this.loanTransferStatusForm.updateBy = employeeName
+        this.loanTransferStatusForm.changeType = ''
+        this.loanTransferStatusForm.remark = ''
+        this.$refs['statusForm'] && this.$refs['statusForm'].clearValidate()
+        this.isOpenChangeStatus = true
+    }
+    /**
+     * 变更交接状态操作
+     */
+    onChangeLoanTransferStatus () {
+        (this.$refs as any).statusForm.validate(async (validate) => {
+            if (validate) {
+                await Api.updateLoanTransferStatus(this.loanTransferStatusForm)
+                this.getList()
+                this.$message.success('交接状态变更成功！')
+            }
+        })
+    }
+
+    onExport () {
+        if (this.tableData.length <= 0) {
+            this.$message.warning('无数据可导出！')
+        } else {
+            Api.exportUpStreamPaymentApi(this.queryParams, function (response) {
+                const reader = new FileReader()
+                reader.readAsDataURL(response.data)
+                reader.onload = function (e: any) {
+                    const a: any = document.createElement('a')
+                    a.download = '上游支付管理.xlsx'
+                    a.href = e.target.result
+                    const body: any = document.querySelector('body')
+                    body.appendChild(a)
+                    a.click()
+                    body.removeChild(a)
+                }
+            })
+        }
+    }
+
+    changeLoanTransferStatusAuthCheck (row) {
+        // 当放款交接状态为“已对接”且为待支付状态时，展示变更交接状态按钮
+        return row.loanTransferStatus == LOAN_TRANSFER_STATUS_DONE && row.paymentStatus == UPSTREAM_PAYMENT_STATUS_WAITING && (this as any).hosAuthCheck(CHANGE_LOAN_TRANSFER_STATUS)
     }
 
     async mounted () {
