@@ -5,26 +5,20 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">时间筛选：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入开始时间" :picker-options="pickerOptionsStart"></el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入结束时间" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请输入结束时间" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary" class="ml20" @click="searchList()">
-                        查询
-                    </h-button>
-                    <h-button class="ml20" @click="onExportTable()">
-                        导出详情
-                    </h-button>
+                    <h-button type="primary" class="ml20" @click="searchList()">查询</h-button>
+                    <h-button class="ml20" @click="onExportTable()">导出详情</h-button>
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="false" :actionMinWidth=250 :isShowIndex='true'>
-           <template slot="totalMoney" slot-scope="scope">
-               ¥{{scope.data.row.totalMoney}}
-               </template>
+                <template slot="totalMoney" slot-scope="scope">
+                    ¥{{scope.data.row.totalMoney}}
+                </template>
             </basicTable>
         </div>
         <div class="page-body-cont page-static">
@@ -52,7 +46,7 @@
                         <span>商品名称</span>
                         <span>累计成交订单数量</span>
                     </div>
-                   <div v-for="(item,index) in productPayedRankings" :key="index" class="text item">
+                    <div v-for="(item,index) in productPayedRankings" :key="index" class="text item">
                         <span>{{index+1}}.{{item.productName}}</span>
                         <span>{{item.payed}}</span>
                     </div>
@@ -67,7 +61,7 @@
                         <span>商品名称</span>
                         <span>累计成交订单金额</span>
                     </div>
-                   <div v-for="(item,index) in productTotalMoneyRankings" :key="index" class="text item">
+                    <div v-for="(item,index) in productTotalMoneyRankings" :key="index" class="text item">
                         <span>{{index+1}}.{{item.productName}}</span>
                         <span>¥{{item.totalMoney}}</span>
                     </div>
@@ -153,9 +147,7 @@ export default {
             }
             location.href = interfaceUrl + 'ets/api/b2b/activity/export?' + url
         }
-
     }
-
 }
 </script>
 <style lang="scss" scoped>
@@ -172,13 +164,13 @@ export default {
         display: flex;
         margin-bottom: 18px;
         span {
-            word-break:break-all;
+            word-break: break-all;
             &:first-child {
                 flex: 3;
-                margin-right:10px;
+                margin-right: 10px;
             }
             &:last-child {
-                text-align:right;
+                text-align: right;
                 flex: 1;
             }
         }
