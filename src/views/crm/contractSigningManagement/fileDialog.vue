@@ -38,7 +38,7 @@ export default {
             title: '',
             form: {
                 contractId: '',
-                updateBy: '',
+                createBy: '',
                 attachDocs: []
             }
         }
@@ -74,7 +74,7 @@ export default {
             })
         },
         async onSaveArchive () {
-            this.form.updateBy = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
+            this.form.createBy = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             if (this.docPos.length == 0) {
                 this.$message({
                     message: '请先上传文件',
@@ -89,6 +89,7 @@ export default {
                 message: '归档成功',
                 type: 'success'
             })
+            this.fileDialog = false
         }
     }
 }
