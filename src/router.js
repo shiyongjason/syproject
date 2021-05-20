@@ -15,12 +15,12 @@ import Bestrouter from './router/Bestrouter'
 import Wisdomrouter from './router/Wisdomrouter'
 import Cloudrouter from './router/Cloudrouter'
 import Crmrouter from './router/Crmrouter'
-import Merchantrouter from "./router/Merchantrouter";
-import OssFileUtils from "@/utils/OssFileUtils";
+import Merchantrouter from "./router/Merchantrouter"
+import OssFileUtils from "@/utils/OssFileUtils"
 
-const originalPush = Router.prototype.push;
-Router.prototype.push = function(location) {
-  return originalPush.call(this, location).catch(err => err)
+const originalPush = Router.prototype.push
+Router.prototype.push = function (location) {
+    return originalPush.call(this, location).catch(err => err)
 }
 Vue.use(Router)
 
@@ -374,8 +374,6 @@ router.beforeEach(async (to, from, next) => {
             'client_secret': 'boss',
             'scope': 'boss'
         }))
-
-        console.log(data)
         localStorage.setItem('tokenB2b', data.access_token)
         axios.defaults.headers['Authorization'] = 'Bearer ' + data.access_token
 
