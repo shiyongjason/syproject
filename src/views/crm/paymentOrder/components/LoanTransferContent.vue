@@ -253,7 +253,9 @@
     </div>
 
 </template>
+
 <script>
+// TODO 1.当上游支付方式为银行转账时，不展示下方框选区域 2.operateStatus查看放款交接 3.交接记录缺少操作人 4.票面金额信：提交人、更新人 5.展开更多的判断 6.总金额校验 7.去掉末尾 . 7. 列表弹窗的标题
 import { mapState } from 'vuex'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
@@ -281,12 +283,6 @@ export default {
                 reviewResolutionStatus: '', // 评审决议流程状态 1已完结
                 oaNo: '', // OA货款支付流程
                 oaStatus: ''// OA货款支付流程状态 1已完结
-            },
-            dialogForm: {
-                textarea: '',
-                info: '',
-                value: '',
-                payVouchers: []
             },
             uploadParameters: {
                 updateUid: '',
@@ -458,7 +454,6 @@ export default {
         },
         // 提交票面
         submitForm () {
-            // TODO 去掉末尾 .
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
                     if (this.totalAmount != this.LoanTransferContent.billAmountResponse.totalAmount) {

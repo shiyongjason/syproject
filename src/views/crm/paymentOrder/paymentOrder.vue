@@ -130,12 +130,9 @@
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
-        <!-- :visible.sync="editorDrawer" :before-close='editorDrawerClose' -->
         <!-- 查看放款交接 -->
-        <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="'发起放款交接'"  :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false'>
+        <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="'发起放款交接'"  :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false' :before-close='editorDrawerClose'>
             <div class="drawer-content">
-                <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
-                <!-- @tab-click="handleTabClick" -->
                  <el-tabs v-model="activeName" @tab-click="handleClickTabs" >
                     <el-tab-pane label="放款交接内容" name="LoanTransferContent">
                         <LoanTransferContent v-if="LoanTransferContent" :LoanTransferContent = 'LoanTransferContent' :paymentOrderId='paymentOrderId' @getDetailAgain='getDetailAgain' @closeLoanTransferContentVisible ='onCloseLoanTransferContentVisible'></LoanTransferContent>
@@ -260,6 +257,10 @@ export default {
         }
     },
     methods: {
+        editorDrawerClose () {
+            this.loanTransferContentVisible = false
+            this.activeName = 'LoanTransferContent'
+        },
         async handleClickTabs (tab, event) {
             if (tab.name === 'ViewHandoverRecords') {
                 const { data } = await getLoanTransferRecord(this.paymentOrderId)
