@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body B2b">
+    <div class="page-body B2b paymentOrderLayout">
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont-col">
@@ -103,6 +103,8 @@
                     <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
+                    <!-- • 仅在支付单状态为待收货(8)及之后状态展示 “发起放款交接” (支付单关闭状态12不展示)  • 该笔支付单未发起放款支付流程 -->
+                    <h-button table @click="()=>openLoanTransferContent(scope.data.row.id)"  >发起放款交接</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && PaymentOrderDict.status.list[0].key === scope.data.row.status">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
                               (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)">
@@ -128,6 +130,22 @@
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
+        <!-- :visible.sync="editorDrawer" :before-close='editorDrawerClose' -->
+        <!-- 查看放款交接 -->
+        <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="'发起放款交接'"  :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false'>
+            <div class="drawer-content">
+                <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
+                <!-- @tab-click="handleTabClick" -->
+                 <el-tabs v-model="activeName" @tab-click="handleClickTabs" >
+                    <el-tab-pane label="放款交接内容" name="LoanTransferContent">
+                        <LoanTransferContent v-if="LoanTransferContent" :LoanTransferContent = 'LoanTransferContent' :paymentOrderId='paymentOrderId' @getDetailAgain='getDetailAgain' @closeLoanTransferContentVisible ='onCloseLoanTransferContentVisible'></LoanTransferContent>
+                    </el-tab-pane>
+                    <el-tab-pane label="查看交接记录" name="ViewHandoverRecords">
+                        <ViewHandoverRecords :loanTransferRecord='loanTransferRecord'></ViewHandoverRecords>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-drawer>
     </div>
 </template>
 
@@ -142,7 +160,9 @@ import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import * as Auths from '@/utils/auth_const'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
-
+import LoanTransferContent from './components/LoanTransferContent'
+import ViewHandoverRecords from './components/ViewHandoverRecords'
+import { getLoanTransferContent, getLoanTransferRecord } from './api/index'
 export default {
     name: 'payOrder',
     components: {
@@ -152,10 +172,14 @@ export default {
         LookPrevPaymentDialog,
         ConfirmReceiptDialog,
         LookReceiptDetail,
-        FundsDialog
+        FundsDialog,
+        LoanTransferContent,
+        ViewHandoverRecords
     },
     data () {
         return {
+            activeName: 'LoanTransferContent',
+            loanTransferContentVisible: false,
             Auths,
             dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             signList: [{ key: 1, value: '是' }, { key: 0, value: '否' }],
@@ -202,7 +226,10 @@ export default {
             paymentStatus: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
-            PaymentOrderDict
+            PaymentOrderDict,
+            paymentOrderId: '',
+            LoanTransferContent: '',
+            loanTransferRecord: ''
         }
     },
     computed: {
@@ -233,6 +260,29 @@ export default {
         }
     },
     methods: {
+        async handleClickTabs (tab, event) {
+            if (tab.name === 'ViewHandoverRecords') {
+                const { data } = await getLoanTransferRecord(this.paymentOrderId)
+                this.loanTransferRecord = data
+            }
+        },
+        onCloseLoanTransferContentVisible () {
+            this.findPaymentOrderList(this.queryParamsUseQuery)
+            this.loanTransferContentVisible = false
+        },
+        async getDetailAgain () {
+            const { data } = await getLoanTransferContent(this.paymentOrderId)
+            this.LoanTransferContent = data
+        },
+        async openLoanTransferContent (paymentOrderId) {
+            this.paymentOrderId = paymentOrderId
+            const { data } = await getLoanTransferContent(paymentOrderId)
+            this.loanTransferContentVisible = true
+            this.LoanTransferContent = data
+        },
+        onOpenDialog (val) {
+            this.openDialog = val
+        },
         onStartChange (val) {
             this.queryParams.startApplyDate = val
         },
@@ -347,8 +397,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='scss' >
 .eltagtop {
     margin-bottom: 10px;
+}
+.paymentOrderLayout{
+    .editordrawerbox {
+        /deep/ .el-drawer__header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            font-size: 18px;
+            margin-bottom:10px;
+        }
+        .drawer-content{
+            padding:0 20px;
+        }
+    }
 }
 </style>
