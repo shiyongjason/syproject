@@ -290,3 +290,5 @@ export const UPSTREAM_PAY_CONFIRM_LOAN = 500003
 export const UPSTREAM_PAY_DOWN = 500004
 // 支付
 export const UPSTREAM_PAY_MENT = 500005
+// 变更交接状态
+export const CHANGE_LOAN_TRANSFER_STATUS = 500006
