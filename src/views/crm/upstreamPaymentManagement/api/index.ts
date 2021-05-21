@@ -42,7 +42,7 @@ export const updateLoanTransferStatus: (params: ReqLoanTransferChange) => AxiosP
 // 上游支付管理导出
 export const exportUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery, callback: any) => void = (params, callback) => {
     axios.defaults.responseType = 'blob'
-    axios.post(`/project/api/supplier-payments/boss/export`, { params }).then(function (response) {
+    axios.get(`/project/api/supplier-payments/boss/export`, { params }).then(function (response) {
         try {
             // const reader = new FileReader()
             // reader.readAsDataURL(response.data)
