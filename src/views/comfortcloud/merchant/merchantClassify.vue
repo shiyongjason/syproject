@@ -26,8 +26,11 @@
                 <template slot="type" slot-scope="scope">
                     <span>{{scope.data.row.type === 1 ? '按主营产品' : '按会员标签'}}</span>
                 </template>
+                <template slot="products" slot-scope="scope">
+                    <div v-html="productDes(scope.data.row.products)">{{}}</div>
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">查看匹配商品</el-button>
+                    <el-button class="orangeBtn" @click="checkClassify(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
             </basicTable>
@@ -121,7 +124,8 @@ export default {
             isEdith: false, // 是否是新增
             tableLabel: [
                 { label: '匹配类型', prop: 'type' },
-                { label: '匹配内容', prop: 'mainCategoryName' }
+                { label: '匹配内容', prop: 'mainCategoryName' },
+                { label: '匹配商品', prop: 'products' }
             ],
             dialogAddVisible: false,
             isAdding: false,
@@ -276,6 +280,13 @@ export default {
             }).finally(null)
         },
 
+        productDes (data) {
+            let des = ''
+            data.map((item) => {
+                des += item.productName + '<br>'
+            })
+            return des
+        },
         clearAddFormData () {
             if (this.$refs['addForm']) {
                 this.$refs['addForm'].clearValidate()
