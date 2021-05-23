@@ -509,6 +509,7 @@ export default class UpstreamPaymentManagement extends Vue {
     async payInfoApi () {
         const { data } = await Api.getPayInfoApi(this.paymentOrderId)
         this.prevPaymentDetail = data
+        this.dialogFormData.payAmount = this.prevPaymentDetail.surplusAmount
         this.isOpen = true
     }
 
