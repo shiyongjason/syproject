@@ -5,7 +5,7 @@
 * @interface ReqPurchaseOrder
 */
 export interface ReqPurchaseOrder {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -141,7 +141,7 @@ export interface ReqPurchaseOrder {
 * @interface ReqPurchaseOrderConfirm
 */
 export interface ReqPurchaseOrderConfirm {
-
+    
     /**
      * 采购订单主键Id
      * @type {number | string}
@@ -179,7 +179,7 @@ export interface ReqPurchaseOrderConfirm {
 * @interface ReqPurchaseOrderContract
 */
 export interface ReqPurchaseOrderContract {
-
+    
     /**
      * 关联id
      * @type {number | string}
@@ -231,7 +231,7 @@ export interface ReqPurchaseOrderContract {
 * @interface ReqLoanTransferUpdate
 */
 export interface ReqLoanTransferUpdate {
-
+    
     /**
      * 放款交接id
      * @type {number | string}
@@ -262,7 +262,7 @@ export interface ReqLoanTransferUpdate {
 * @interface ReqLoanTransferChange
 */
 export interface ReqLoanTransferChange {
-
+    
     /**
      * 放款交接id
      * @type {number | string}
@@ -300,7 +300,7 @@ export interface ReqLoanTransferChange {
 * @interface ReqContract
 */
 export interface ReqContract {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -443,7 +443,7 @@ export interface ReqContract {
 * @interface ReqPicture
 */
 export interface ReqPicture {
-
+    
     /**
      * 图片id
      * @type {number | string}
@@ -474,7 +474,7 @@ export interface ReqPicture {
 * @interface Contract
 */
 export interface Contract {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -645,7 +645,7 @@ export interface Contract {
 * @interface ReqVipContract
 */
 export interface ReqVipContract {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -732,7 +732,7 @@ export interface ReqVipContract {
 * @interface RespContract
 */
 export interface RespContract {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -980,7 +980,7 @@ export interface RespContract {
 * @interface RespPicture
 */
 export interface RespPicture {
-
+    
     /**
      * 图片id
      * @type {number | string}
@@ -1011,7 +1011,7 @@ export interface RespPicture {
 * @interface ReqTemplateContractOffLineUpdate
 */
 export interface ReqTemplateContractOffLineUpdate {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -1049,7 +1049,7 @@ export interface ReqTemplateContractOffLineUpdate {
 * @interface ReqContractTemplate
 */
 export interface ReqContractTemplate {
-
+    
     /**
      * 模板id(修改时传)
      * @type {number | string}
@@ -1143,7 +1143,7 @@ export interface ReqContractTemplate {
 * @interface ReqParam
 */
 export interface ReqParam {
-
+    
     /**
      * 参数id
      * @type {number | string}
@@ -1181,7 +1181,7 @@ export interface ReqParam {
 * @interface ReqTemplateSigner
 */
 export interface ReqTemplateSigner {
-
+    
     /**
      * 类型：1平台，2签署方
      * @type {number | string}
@@ -1254,7 +1254,7 @@ export interface ReqTemplateSigner {
 * @interface PayVoucher
 */
 export interface PayVoucher {
-
+    
     /**
      * 上游支付凭证文件路径url
      * @type {string}
@@ -1278,7 +1278,7 @@ export interface PayVoucher {
 * @interface ReqSupplierSubmit
 */
 export interface ReqSupplierSubmit {
-
+    
     /**
      * 上游支付Id
      * @type {number | string}
@@ -1330,7 +1330,7 @@ export interface ReqSupplierSubmit {
 * @interface ReqUpPaymentLoanHandoverConfirm
 */
 export interface ReqUpPaymentLoanHandoverConfirm {
-
+    
     /**
      * 放款交接id
      * @type {number | string}
@@ -1354,7 +1354,7 @@ export interface ReqUpPaymentLoanHandoverConfirm {
 * @interface ReqSealApproval
 */
 export interface ReqSealApproval {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -1420,7 +1420,7 @@ export interface ReqSealApproval {
 * @interface FormComponentValue
 */
 export interface FormComponentValue {
-
+    
     /**
      * 标签名
      * @type {string}
@@ -1465,7 +1465,7 @@ export interface FormComponentValue {
 * @interface ReqDingCallbackApproval
 */
 export interface ReqDingCallbackApproval {
-
+    
     /**
      * 变更类型 1-代表审批节点任务变更 2-审批实例状态变更
      * @type {number | string}
@@ -1552,7 +1552,7 @@ export interface ReqDingCallbackApproval {
 * @interface ReqDingCallbackOperationRecord
 */
 export interface ReqDingCallbackOperationRecord {
-
+    
     /**
      * 操作人DingId
      * @type {string}
@@ -1613,7 +1613,7 @@ export interface ReqDingCallbackOperationRecord {
 * @interface ReqDingCallbackTask
 */
 export interface ReqDingCallbackTask {
-
+    
     /**
      * 处理人DingId
      * @type {string}
@@ -1693,7 +1693,7 @@ export interface ReqDingCallbackTask {
 * @interface PoChangeFields
 */
 export interface PoChangeFields {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -1773,7 +1773,7 @@ export interface PoChangeFields {
 * @interface PoInfo
 */
 export interface PoInfo {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -1923,7 +1923,7 @@ export interface PoInfo {
 * @interface ReqPurchaseOrderDingInitApproval
 */
 export interface ReqPurchaseOrderDingInitApproval {
-
+    
     /**
      * 采购单id
      * @type {number | string}
@@ -1975,7 +1975,7 @@ export interface ReqPurchaseOrderDingInitApproval {
 * @interface ReqDingInitApproval
 */
 export interface ReqDingInitApproval {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -2048,7 +2048,7 @@ export interface ReqDingInitApproval {
 * @interface RespPurchaseOrderPrompt
 */
 export interface RespPurchaseOrderPrompt {
-
+    
     /**
      * 采购单id
      * @type {number | string}
@@ -2079,7 +2079,7 @@ export interface RespPurchaseOrderPrompt {
 * @interface ReqPurchaseOrderSubmit
 */
 export interface ReqPurchaseOrderSubmit {
-
+    
     /**
      * 采购单主键id
      * @type {number | string}
@@ -2110,7 +2110,7 @@ export interface ReqPurchaseOrderSubmit {
 * @interface ReqPurchaseOrderChange
 */
 export interface ReqPurchaseOrderChange {
-
+    
     /**
      * 采购单主键id
      * @type {number | string}
@@ -2148,7 +2148,7 @@ export interface ReqPurchaseOrderChange {
 * @interface ReqAttachDoc
 */
 export interface ReqAttachDoc {
-
+    
     /**
      * id
      * @type {number | string}
@@ -2179,7 +2179,7 @@ export interface ReqAttachDoc {
 * @interface ReqContractCoManager
 */
 export interface ReqContractCoManager {
-
+    
     /**
      * 采购单id
      * @type {number | string}
@@ -2210,7 +2210,7 @@ export interface ReqContractCoManager {
 * @interface ReqPurchaseOrderContractSave
 */
 export interface ReqPurchaseOrderContractSave {
-
+    
     /**
      * 采购单id
      * @type {number | string}
@@ -2255,7 +2255,7 @@ export interface ReqPurchaseOrderContractSave {
 * @interface ReqServiceFeePayment
 */
 export interface ReqServiceFeePayment {
-
+    
     /**
      * 账单id
      * @type {number | string}
@@ -2300,7 +2300,7 @@ export interface ReqServiceFeePayment {
 * @interface ReqGoodsConfirm
 */
 export interface ReqGoodsConfirm {
-
+    
     /**
      * 支付单Id
      * @type {number | string}
@@ -2366,7 +2366,7 @@ export interface ReqGoodsConfirm {
 * @interface ReqConfirmPayment
 */
 export interface ReqConfirmPayment {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -2418,7 +2418,7 @@ export interface ReqConfirmPayment {
 * @interface ReqFundCancel
 */
 export interface ReqFundCancel {
-
+    
     /**
      * 支付单Id
      * @type {number | string}
@@ -2465,7 +2465,7 @@ export interface ReqFundCancel {
 * @interface BillAmountRequest
 */
 export interface BillAmountRequest {
-
+    
     /**
      * 票面章数
      * @type {number | string}
@@ -2489,7 +2489,7 @@ export interface BillAmountRequest {
 * @interface ReqPaymentOrderApply
 */
 export interface ReqPaymentOrderApply {
-
+    
     /**
      * 项目Id
      * @type {number | string}
@@ -2632,7 +2632,7 @@ export interface ReqPaymentOrderApply {
 * @interface LoanTransferRequest
 */
 export interface LoanTransferRequest {
-
+    
     /**
      * 支付单放款交接id
      * @type {number | string}
@@ -2684,7 +2684,7 @@ export interface LoanTransferRequest {
 * @interface LoanTransferDocRequest
 */
 export interface LoanTransferDocRequest {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -2722,7 +2722,7 @@ export interface LoanTransferDocRequest {
 * @interface LoanTransferConfirm
 */
 export interface LoanTransferConfirm {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -2746,7 +2746,7 @@ export interface LoanTransferConfirm {
 * @interface ReqFundUpdate
 */
 export interface ReqFundUpdate {
-
+    
     /**
      * 账单Id
      * @type {number | string}
@@ -2784,7 +2784,7 @@ export interface ReqFundUpdate {
 * @interface ReqFundGenerate
 */
 export interface ReqFundGenerate {
-
+    
     /**
      * 支付单
      * @type {number | string}
@@ -2850,7 +2850,7 @@ export interface ReqFundGenerate {
 * @interface ReqFundConfirm
 */
 export interface ReqFundConfirm {
-
+    
     /**
      * 账单Id
      * @type {number | string}
@@ -2881,7 +2881,7 @@ export interface ReqFundConfirm {
 * @interface AttachDoc
 */
 export interface AttachDoc {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -2961,7 +2961,7 @@ export interface AttachDoc {
 * @interface ReqFund
 */
 export interface ReqFund {
-
+    
     /**
      * 账单Id
      * @type {number | string}
@@ -3055,7 +3055,7 @@ export interface ReqFund {
 * @interface ReqContractExport
 */
 export interface ReqContractExport {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3086,7 +3086,7 @@ export interface ReqContractExport {
 * @interface ReqOfflineContract
 */
 export interface ReqOfflineContract {
-
+    
     /**
      * 合同Id
      * @type {number | string}
@@ -3201,7 +3201,7 @@ export interface ReqOfflineContract {
 * @interface ReqContractSubmitApprove
 */
 export interface ReqContractSubmitApprove {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3246,7 +3246,7 @@ export interface ReqContractSubmitApprove {
 * @interface ReqContractUrlExport
 */
 export interface ReqContractUrlExport {
-
+    
     /**
      * 合同名称
      * @type {string}
@@ -3284,7 +3284,7 @@ export interface ReqContractUrlExport {
 * @interface ReqContractAbolish
 */
 export interface ReqContractAbolish {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3315,7 +3315,7 @@ export interface ReqContractAbolish {
 * @interface ReqContractSign
 */
 export interface ReqContractSign {
-
+    
     /**
      * 合同签署id
      * @type {number | string}
@@ -3479,7 +3479,7 @@ export interface ReqContractSign {
 * @interface ReqContractSignPerfect
 */
 export interface ReqContractSignPerfect {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3510,7 +3510,7 @@ export interface ReqContractSignPerfect {
 * @interface ReqInitiateContractSigning
 */
 export interface ReqInitiateContractSigning {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3562,7 +3562,7 @@ export interface ReqInitiateContractSigning {
 * @interface ReqContractArchive
 */
 export interface ReqContractArchive {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3593,7 +3593,7 @@ export interface ReqContractArchive {
 * @interface ReqConfirmationSign
 */
 export interface ReqConfirmationSign {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -3631,7 +3631,7 @@ export interface ReqConfirmationSign {
 * @interface ContractTemplateVersion
 */
 export interface ContractTemplateVersion {
-
+    
     /**
      * 
      * @type {number | string}
@@ -3725,7 +3725,7 @@ export interface ContractTemplateVersion {
 * @interface RespConfirmation
 */
 export interface RespConfirmation {
-
+    
     /**
      * 签署链接
      * @type {string}
@@ -3749,7 +3749,7 @@ export interface RespConfirmation {
 * @interface ReqContractEditRecord
 */
 export interface ReqContractEditRecord {
-
+    
     /**
      * 合同编辑记录id
      * @type {number | string}
@@ -3836,7 +3836,7 @@ export interface ReqContractEditRecord {
 * @interface ReqContractReject
 */
 export interface ReqContractReject {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -3874,7 +3874,7 @@ export interface ReqContractReject {
 * @interface ReqContractApproval
 */
 export interface ReqContractApproval {
-
+    
     /**
      * 合同审批id
      * @type {number | string}
@@ -3954,7 +3954,7 @@ export interface ReqContractApproval {
 * @interface ReqContractRecord
 */
 export interface ReqContractRecord {
-
+    
     /**
      * 合同内容记录id
      * @type {number | string}
@@ -4006,7 +4006,7 @@ export interface ReqContractRecord {
 * @interface ReqRealStatus
 */
 export interface ReqRealStatus {
-
+    
     /**
      * 签署人CA账号id
      * @type {string}
@@ -4037,7 +4037,7 @@ export interface ReqRealStatus {
 * @interface SaveBillAmountRequest
 */
 export interface SaveBillAmountRequest {
-
+    
     /**
      * 
      * @type {string}
@@ -4068,7 +4068,7 @@ export interface SaveBillAmountRequest {
 * @interface ReqExaminePass
 */
 export interface ReqExaminePass {
-
+    
     /**
      * 审核备注 ((备注信息： 上游出票备注：)纯文本编辑框，最多输入500个字符。)
      * @type {string}
@@ -4120,7 +4120,7 @@ export interface ReqExaminePass {
 * @interface ReqExamineFail
 */
 export interface ReqExamineFail {
-
+    
     /**
      * 审核备注
      * @type {string}
@@ -4144,7 +4144,7 @@ export interface ReqExamineFail {
 * @interface ReqPaymentOrderFundConfirm
 */
 export interface ReqPaymentOrderFundConfirm {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -4168,7 +4168,7 @@ export interface ReqPaymentOrderFundConfirm {
 * @interface Download
 */
 export interface Download {
-
+    
     /**
      * 
      * @type {string}
@@ -4192,7 +4192,7 @@ export interface Download {
 * @interface RespSupplierPayment
 */
 export interface RespSupplierPayment {
-
+    
     /**
      * 本次上游支付金额
      * @type {number | string}
@@ -4230,7 +4230,7 @@ export interface RespSupplierPayment {
 * @interface RespSupplier
 */
 export interface RespSupplier {
-
+    
     /**
      * 上游支付方式:1-银行转帐;2-银行承兑
      * @type {number | string}
@@ -4282,7 +4282,7 @@ export interface RespSupplier {
 * @interface RespSupplierDetail
 */
 export interface RespSupplierDetail {
-
+    
     /**
      * 
      * @type {number | string}
@@ -4341,7 +4341,7 @@ export interface RespSupplierDetail {
 * @interface RespSupplierInfo
 */
 export interface RespSupplierInfo {
-
+    
     /**
      * 项目名称
      * @type {string}
@@ -4428,7 +4428,7 @@ export interface RespSupplierInfo {
 * @interface RespLoanHandoverInfo
 */
 export interface RespLoanHandoverInfo {
-
+    
     /**
      * 项目id
      * @type {number | string}
@@ -4578,7 +4578,7 @@ export interface RespLoanHandoverInfo {
 * @interface RespUpPaymentLoanHandover
 */
 export interface RespUpPaymentLoanHandover {
-
+    
     /**
      * 放款交接id
      * @type {number | string}
@@ -4644,7 +4644,7 @@ export interface RespUpPaymentLoanHandover {
 * @interface RespUpPaymentLoanHandoverParam
 */
 export interface RespUpPaymentLoanHandoverParam {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -4696,7 +4696,7 @@ export interface RespUpPaymentLoanHandoverParam {
 * @interface ReqUpStreamPaymentQuery
 */
 export interface ReqUpStreamPaymentQuery {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -4839,7 +4839,7 @@ export interface ReqUpStreamPaymentQuery {
 * @interface Sort
 */
 export interface Sort {
-
+    
     /**
      * 排序属性
      * @type {string}
@@ -4863,7 +4863,7 @@ export interface Sort {
 * @interface IPageRespUpStreamPayment
 */
 export interface IPageRespUpStreamPayment {
-
+    
     /**
      * 
      * @type {boolean}
@@ -4922,7 +4922,7 @@ export interface IPageRespUpStreamPayment {
 * @interface RespUpStreamPayment
 */
 export interface RespUpStreamPayment {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -5042,6 +5042,13 @@ export interface RespUpStreamPayment {
      */
     loanTransferDate?: string
 
+    /**
+     * 放款交接id
+     * @type {number | string}
+     * @memberof RespUpStreamPayment
+     */
+    loanTransferId?: number | string
+
 }
 
 
@@ -5051,7 +5058,7 @@ export interface RespUpStreamPayment {
 * @interface ContractPic
 */
 export interface ContractPic {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -5110,7 +5117,7 @@ export interface ContractPic {
 * @interface RespPurchaseDetailDing
 */
 export interface RespPurchaseDetailDing {
-
+    
     /**
      * 采购单钉钉展示类型 1：提交 2：变更
      * @type {number | string}
@@ -5127,7 +5134,7 @@ export interface RespPurchaseDetailDing {
 * @interface RespPurchaseDetailDingChange
 */
 export interface RespPurchaseDetailDingChange {
-
+    
     /**
      * 变更前采购明细
      * @type {string}
@@ -5256,7 +5263,7 @@ export interface RespPurchaseDetailDingChange {
 * @interface RespPurchaseDetailDingSubmit
 */
 export interface RespPurchaseDetailDingSubmit {
-
+    
     /**
      * 销售合同信息
      * @type {Array<RespPurchaseOrderContractDingSubmit>}
@@ -5336,7 +5343,7 @@ export interface RespPurchaseDetailDingSubmit {
 * @interface RespPurchaseOrderContractDingChange
 */
 export interface RespPurchaseOrderContractDingChange {
-
+    
     /**
      * 变更前合同名称
      * @type {string}
@@ -5430,7 +5437,7 @@ export interface RespPurchaseOrderContractDingChange {
 * @interface RespPurchaseOrderContractDingSubmit
 */
 export interface RespPurchaseOrderContractDingSubmit {
-
+    
     /**
      * 合同名称
      * @type {string}
@@ -5482,7 +5489,7 @@ export interface RespPurchaseOrderContractDingSubmit {
 * @interface RespCrmPurchaseOrderDetail
 */
 export interface RespCrmPurchaseOrderDetail {
-
+    
     /**
      * 采购单id
      * @type {number | string}
@@ -5604,7 +5611,7 @@ export interface RespCrmPurchaseOrderDetail {
 * @interface RespCrmPurchaseOrderDetail$Contract
 */
 export interface RespCrmPurchaseOrderDetail$Contract {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -5656,7 +5663,7 @@ export interface RespCrmPurchaseOrderDetail$Contract {
 * @interface RespPoInfo
 */
 export interface RespPoInfo {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -5806,7 +5813,7 @@ export interface RespPoInfo {
 * @interface RespPurchaseOrderSubmit
 */
 export interface RespPurchaseOrderSubmit {
-
+    
     /**
      * 项目id
      * @type {number | string}
@@ -5844,7 +5851,7 @@ export interface RespPurchaseOrderSubmit {
 * @interface RespPurchaseOrderSubmit$Contract
 */
 export interface RespPurchaseOrderSubmit$Contract {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -5896,7 +5903,7 @@ export interface RespPurchaseOrderSubmit$Contract {
 * @interface RespPurchaseOrderChangeFields
 */
 export interface RespPurchaseOrderChangeFields {
-
+    
     /**
      * 业务字段
      * @type {string}
@@ -5948,7 +5955,7 @@ export interface RespPurchaseOrderChangeFields {
 * @interface RespContractChangeRelationship
 */
 export interface RespContractChangeRelationship {
-
+    
     /**
      * 合同类别id
      * @type {number | string}
@@ -5986,7 +5993,7 @@ export interface RespContractChangeRelationship {
 * @interface RespPurchaseOrderChangeConfirmInfo
 */
 export interface RespPurchaseOrderChangeConfirmInfo {
-
+    
     /**
      * 项目id
      * @type {number | string}
@@ -6038,7 +6045,7 @@ export interface RespPurchaseOrderChangeConfirmInfo {
 * @interface PurchaseOrder
 */
 export interface PurchaseOrder {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -6251,7 +6258,7 @@ export interface PurchaseOrder {
 * @interface RespPurchaseOrderContract
 */
 export interface RespPurchaseOrderContract {
-
+    
     /**
      * 关联id
      * @type {number | string}
@@ -6422,7 +6429,7 @@ export interface RespPurchaseOrderContract {
 * @interface RespPurchaseOrderCrm
 */
 export interface RespPurchaseOrderCrm {
-
+    
     /**
      * 合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -6474,7 +6481,7 @@ export interface RespPurchaseOrderCrm {
 * @interface ReqPurchaseOrderCrmSearch
 */
 export interface ReqPurchaseOrderCrmSearch {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -6519,7 +6526,7 @@ export interface ReqPurchaseOrderCrmSearch {
 * @interface IPageRespPurchaseOrderCrmPage
 */
 export interface IPageRespPurchaseOrderCrmPage {
-
+    
     /**
      * 
      * @type {boolean}
@@ -6578,7 +6585,7 @@ export interface IPageRespPurchaseOrderCrmPage {
 * @interface RespContractTypeNumber
 */
 export interface RespContractTypeNumber {
-
+    
     /**
      * 合同类型id
      * @type {number | string}
@@ -6609,7 +6616,7 @@ export interface RespContractTypeNumber {
 * @interface RespPurchaseOrderCrmPage
 */
 export interface RespPurchaseOrderCrmPage {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -6822,7 +6829,7 @@ export interface RespPurchaseOrderCrmPage {
 * @interface PoChange
 */
 export interface PoChange {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -6944,7 +6951,7 @@ export interface PoChange {
 * @interface RespPayOrderDetail
 */
 export interface RespPayOrderDetail {
-
+    
     /**
      * id
      * @type {number | string}
@@ -7316,7 +7323,7 @@ export interface RespPayOrderDetail {
 * @interface RespPurchaseOrderInfo
 */
 export interface RespPurchaseOrderInfo {
-
+    
     /**
      * 采购单合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -7361,7 +7368,7 @@ export interface RespPurchaseOrderInfo {
 * @interface RespPurchaseOrderConfirm
 */
 export interface RespPurchaseOrderConfirm {
-
+    
     /**
      * 采购单合同信息
      * @type {Array<RespPurchaseOrderContract>}
@@ -7378,7 +7385,7 @@ export interface RespPurchaseOrderConfirm {
 * @interface RespPoChangeContract
 */
 export interface RespPoChangeContract {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -7486,7 +7493,7 @@ export interface RespPoChangeContract {
 * @interface RespPurchaseOrderChangeConfirm
 */
 export interface RespPurchaseOrderChangeConfirm {
-
+    
     /**
      * 采购单变更字段内容信息
      * @type {Array<RespPurchaseOrderChangeFields>}
@@ -7510,7 +7517,7 @@ export interface RespPurchaseOrderChangeConfirm {
 * @interface ReqPurchaseOrderSearch
 */
 export interface ReqPurchaseOrderSearch {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -7646,7 +7653,7 @@ export interface ReqPurchaseOrderSearch {
 * @interface IPageRespPurchaseOrder
 */
 export interface IPageRespPurchaseOrder {
-
+    
     /**
      * 
      * @type {boolean}
@@ -7705,7 +7712,7 @@ export interface IPageRespPurchaseOrder {
 * @interface RespPurchaseOrder
 */
 export interface RespPurchaseOrder {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -7925,7 +7932,7 @@ export interface RespPurchaseOrder {
 * @interface ReqPurchaseOrderAppletsSearch
 */
 export interface ReqPurchaseOrderAppletsSearch {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -7963,7 +7970,7 @@ export interface ReqPurchaseOrderAppletsSearch {
 * @interface ReqPurchaseOrderContractQuery
 */
 export interface ReqPurchaseOrderContractQuery {
-
+    
     /**
      * 采购单id
      * @type {number | string}
@@ -8036,7 +8043,7 @@ export interface ReqPurchaseOrderContractQuery {
 * @interface ReqBasePage
 */
 export interface ReqBasePage {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -8060,7 +8067,7 @@ export interface ReqBasePage {
 * @interface ReqPaymentOrderQuery
 */
 export interface ReqPaymentOrderQuery {
-
+    
     /**
      * 
      * @type {string}
@@ -8196,7 +8203,7 @@ export interface ReqPaymentOrderQuery {
 * @interface IPageRespPaymentOrders
 */
 export interface IPageRespPaymentOrders {
-
+    
     /**
      * 
      * @type {boolean}
@@ -8255,7 +8262,7 @@ export interface IPageRespPaymentOrders {
 * @interface RespPaymentOrders
 */
 export interface RespPaymentOrders {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -8406,7 +8413,7 @@ export interface RespPaymentOrders {
 * @interface BillAmountDetail
 */
 export interface BillAmountDetail {
-
+    
     /**
      * 
      * @type {number | string}
@@ -8444,7 +8451,7 @@ export interface BillAmountDetail {
 * @interface BillAmountResponse
 */
 export interface BillAmountResponse {
-
+    
     /**
      * 票面金额提交人
      * @type {string}
@@ -8482,7 +8489,7 @@ export interface BillAmountResponse {
 * @interface Fund
 */
 export interface Fund {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -8632,7 +8639,7 @@ export interface Fund {
 * @interface RespFundDetailPage
 */
 export interface RespFundDetailPage {
-
+    
     /**
      * 服务费账单列表
      * @type {Array<Fund>}
@@ -8663,7 +8670,7 @@ export interface RespFundDetailPage {
 * @interface RespGoodsAmount
 */
 export interface RespGoodsAmount {
-
+    
     /**
      * 应到货金额
      * @type {number | string}
@@ -8687,7 +8694,7 @@ export interface RespGoodsAmount {
 * @interface RespPayOrderPoDetail
 */
 export interface RespPayOrderPoDetail {
-
+    
     /**
      * 主键id
      * @type {number | string}
@@ -8760,7 +8767,7 @@ export interface RespPayOrderPoDetail {
 * @interface RespPaymentOrderDetail
 */
 export interface RespPaymentOrderDetail {
-
+    
     /**
      * 上游可支付标识：0-不可支付，1-可支付
      * @type {number | string}
@@ -8784,7 +8791,7 @@ export interface RespPaymentOrderDetail {
 * @interface RespProjectInfo
 */
 export interface RespProjectInfo {
-
+    
     /**
      * 项目名称
      * @type {string}
@@ -8829,7 +8836,7 @@ export interface RespProjectInfo {
 * @interface RespSupplierAmount
 */
 export interface RespSupplierAmount {
-
+    
     /**
      * 
      * @type {number | string}
@@ -8853,7 +8860,7 @@ export interface RespSupplierAmount {
 * @interface RespPaymentOrderPicDetail
 */
 export interface RespPaymentOrderPicDetail {
-
+    
     /**
      * 经销商名称
      * @type {string}
@@ -8891,7 +8898,7 @@ export interface RespPaymentOrderPicDetail {
 * @interface Detailed
 */
 export interface Detailed {
-
+    
     /**
      * 
      * @type {string}
@@ -8915,7 +8922,7 @@ export interface Detailed {
 * @interface RespGoodsInfo
 */
 export interface RespGoodsInfo {
-
+    
     /**
      * 货物id
      * @type {number | string}
@@ -8981,7 +8988,7 @@ export interface RespGoodsInfo {
 * @interface GoodsVoucher
 */
 export interface GoodsVoucher {
-
+    
     /**
      * 
      * @type {string}
@@ -9005,7 +9012,7 @@ export interface GoodsVoucher {
 * @interface RespGoods
 */
 export interface RespGoods {
-
+    
     /**
      * 货物id
      * @type {number | string}
@@ -9050,7 +9057,7 @@ export interface RespGoods {
 * @interface RespGoodsDetail
 */
 export interface RespGoodsDetail {
-
+    
     /**
      * 货物明细id
      * @type {number | string}
@@ -9109,7 +9116,7 @@ export interface RespGoodsDetail {
 * @interface RespAppPaymentOrder
 */
 export interface RespAppPaymentOrder {
-
+    
     /**
      * 支付单id
      * @type {number | string}
@@ -9413,7 +9420,7 @@ export interface RespAppPaymentOrder {
 * @interface RespUserCurMonFundStatic
 */
 export interface RespUserCurMonFundStatic {
-
+    
     /**
      * 当前月份
      * @type {number | string}
@@ -9486,7 +9493,7 @@ export interface RespUserCurMonFundStatic {
 * @interface ReqServiceFeeQuery
 */
 export interface ReqServiceFeeQuery {
-
+    
     /**
      * 支付单
      * @type {number | string}
@@ -9545,7 +9552,7 @@ export interface ReqServiceFeeQuery {
 * @interface RespServiceFeeResult
 */
 export interface RespServiceFeeResult {
-
+    
     /**
      * 服务费
      * @type {number | string}
@@ -9576,7 +9583,7 @@ export interface RespServiceFeeResult {
 * @interface ReqFundStatisticsQuery
 */
 export interface ReqFundStatisticsQuery {
-
+    
     /**
      * 支付单
      * @type {number | string}
@@ -9621,7 +9628,7 @@ export interface ReqFundStatisticsQuery {
 * @interface RespFundStatisticsResult
 */
 export interface RespFundStatisticsResult {
-
+    
     /**
      * 统计月份
      * @type {string}
@@ -9680,7 +9687,7 @@ export interface RespFundStatisticsResult {
 * @interface ReqFundQuery
 */
 export interface ReqFundQuery {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -9865,7 +9872,7 @@ export interface ReqFundQuery {
 * @interface IPageRespFundResult
 */
 export interface IPageRespFundResult {
-
+    
     /**
      * 
      * @type {boolean}
@@ -9924,7 +9931,7 @@ export interface IPageRespFundResult {
 * @interface RespFundResult
 */
 export interface RespFundResult {
-
+    
     /**
      * 账单Id
      * @type {number | string}
@@ -10137,13 +10144,20 @@ export interface RespFundResult {
 * @interface LoanTransferRecordResponse
 */
 export interface LoanTransferRecordResponse {
-
+    
     /**
      * 操作人
      * @type {string}
      * @memberof LoanTransferRecordResponse
      */
     operator?: string
+
+    /**
+     * 操作内容
+     * @type {string}
+     * @memberof LoanTransferRecordResponse
+     */
+    operationContent?: string
 
     /**
      * 备注
@@ -10168,7 +10182,7 @@ export interface LoanTransferRecordResponse {
 * @interface AttachDocResponse
 */
 export interface AttachDocResponse {
-
+    
     /**
      * id
      * @type {number | string}
@@ -10199,7 +10213,7 @@ export interface AttachDocResponse {
 * @interface LoanTransferInfoResponse
 */
 export interface LoanTransferInfoResponse {
-
+    
     /**
      * 项目id
      * @type {number | string}
@@ -10473,6 +10487,34 @@ export interface LoanTransferInfoResponse {
      */
     remark: string
 
+    /**
+     * 放款交接状态：1-未确认【待交接】；2-已确认【已交接】
+     * @type {number | string}
+     * @memberof LoanTransferInfoResponse
+     */
+    loanTransferStatus: number | string
+
+    /**
+     * 支付状态 1：待支付 2：部分支付 
+     * @type {number | string}
+     * @memberof LoanTransferInfoResponse
+     */
+    paymentStatus: number | string
+
+    /**
+     * 评审决议流程状态：1已完结
+     * @type {number | string}
+     * @memberof LoanTransferInfoResponse
+     */
+    reviewResolutionStatus: number | string
+
+    /**
+     * 货款支付流程状态：1已完结
+     * @type {number | string}
+     * @memberof LoanTransferInfoResponse
+     */
+    oaStatus: number | string
+
 }
 
 
@@ -10482,7 +10524,7 @@ export interface LoanTransferInfoResponse {
 * @interface ReviewResolutionResponse
 */
 export interface ReviewResolutionResponse {
-
+    
     /**
      * 支付单放款交接id
      * @type {number | string}
@@ -10548,7 +10590,7 @@ export interface ReviewResolutionResponse {
 * @interface LoanTransferDocResponse
 */
 export interface LoanTransferDocResponse {
-
+    
     /**
      * 采购合同（合同归档合同文件）20
      * @type {Array<AttachDocResponse>}
@@ -10579,7 +10621,7 @@ export interface LoanTransferDocResponse {
 * @interface LoanTransferResponse
 */
 export interface LoanTransferResponse {
-
+    
     /**
      * 采购合同（合同归档合同文件）20 & 21
      * @type {Array<AttachDocResponse>}
@@ -10594,6 +10636,13 @@ export interface LoanTransferResponse {
      */
     purchaseDetailsDocs: Array<AttachDocResponse>
 
+    /**
+     * 更多票面金额（总数）
+     * @type {number | string}
+     * @memberof LoanTransferResponse
+     */
+    billAmountNumber: number | string
+
 }
 
 
@@ -10603,7 +10652,7 @@ export interface LoanTransferResponse {
 * @interface IPageRespYear
 */
 export interface IPageRespYear {
-
+    
     /**
      * 
      * @type {boolean}
@@ -10662,7 +10711,7 @@ export interface IPageRespYear {
 * @interface RespYear
 */
 export interface RespYear {
-
+    
     /**
      * 年份
      * @type {number | string}
@@ -10707,7 +10756,7 @@ export interface RespYear {
 * @interface HolidayRecord
 */
 export interface HolidayRecord {
-
+    
     /**
      * id
      * @type {number | string}
@@ -10752,7 +10801,7 @@ export interface HolidayRecord {
 * @interface IPageHolidayRecord
 */
 export interface IPageHolidayRecord {
-
+    
     /**
      * 
      * @type {boolean}
@@ -10811,7 +10860,7 @@ export interface IPageHolidayRecord {
 * @interface RespPaymentFundDetail
 */
 export interface RespPaymentFundDetail {
-
+    
     /**
      * 采购单名称
      * @type {string}
@@ -10899,7 +10948,7 @@ export interface RespPaymentFundDetail {
 * @interface ReqFundListQuery
 */
 export interface ReqFundListQuery {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -11007,7 +11056,7 @@ export interface ReqFundListQuery {
 * @interface ReqFundSimpleQuery
 */
 export interface ReqFundSimpleQuery {
-
+    
     /**
      * 账单Id
      * @type {number | string}
@@ -11031,7 +11080,7 @@ export interface ReqFundSimpleQuery {
 * @interface ReqFundAttachDetail
 */
 export interface ReqFundAttachDetail {
-
+    
     /**
      * 业务Id
      * @type {number | string}
@@ -11055,7 +11104,7 @@ export interface ReqFundAttachDetail {
 * @interface ReqFundMonthBill
 */
 export interface ReqFundMonthBill {
-
+    
     /**
      * 年月 格式：yyyy-MM
      * @type {string}
@@ -11086,7 +11135,7 @@ export interface ReqFundMonthBill {
 * @interface RespFundBill
 */
 export interface RespFundBill {
-
+    
     /**
      * 账单状态 1：无账单 2：进行中 3：已结清
      * @type {number | string}
@@ -11145,7 +11194,7 @@ export interface RespFundBill {
 * @interface RespMonthStaticFundDetail
 */
 export interface RespMonthStaticFundDetail {
-
+    
     /**
      * 账单Id
      * @type {number | string}
@@ -11281,7 +11330,7 @@ export interface RespMonthStaticFundDetail {
 * @interface ReqFundCurrentMonthBill
 */
 export interface ReqFundCurrentMonthBill {
-
+    
     /**
      * 企业id
      * @type {number | string}
@@ -11305,7 +11354,7 @@ export interface ReqFundCurrentMonthBill {
 * @interface RespCurrentMonthFundStatic
 */
 export interface RespCurrentMonthFundStatic {
-
+    
     /**
      * 当前月份
      * @type {number | string}
@@ -11329,7 +11378,7 @@ export interface RespCurrentMonthFundStatic {
 * @interface RespContractStatusStatic
 */
 export interface RespContractStatusStatic {
-
+    
     /**
      * 待分财审核数量
      * @type {number | string}
@@ -11360,7 +11409,7 @@ export interface RespContractStatusStatic {
 * @interface ReqContractPageQuery
 */
 export interface ReqContractPageQuery {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -11510,7 +11559,7 @@ export interface ReqContractPageQuery {
 * @interface IPageRespContract
 */
 export interface IPageRespContract {
-
+    
     /**
      * 
      * @type {boolean}
@@ -11569,7 +11618,7 @@ export interface IPageRespContract {
 * @interface ReqContractListQuery
 */
 export interface ReqContractListQuery {
-
+    
     /**
      * 合同名称
      * @type {string}
@@ -11614,7 +11663,7 @@ export interface ReqContractListQuery {
 * @interface RespContractEditNumber
 */
 export interface RespContractEditNumber {
-
+    
     /**
      * 分财修订数量
      * @type {number | string}
@@ -11645,7 +11694,7 @@ export interface RespContractEditNumber {
 * @interface ReqTemplateQuery
 */
 export interface ReqTemplateQuery {
-
+    
     /**
      * 合同类型权限 1：系统 2：业务
      * @type {number | string}
@@ -11683,7 +11732,7 @@ export interface ReqTemplateQuery {
 * @interface IPageRespContractTemplate
 */
 export interface IPageRespContractTemplate {
-
+    
     /**
      * 
      * @type {boolean}
@@ -11742,7 +11791,7 @@ export interface IPageRespContractTemplate {
 * @interface RespContractTemplate
 */
 export interface RespContractTemplate {
-
+    
     /**
      * 模板id
      * @type {number | string}
@@ -11829,7 +11878,7 @@ export interface RespContractTemplate {
 * @interface RespContractTemplateList
 */
 export interface RespContractTemplateList {
-
+    
     /**
      * id
      * @type {number | string}
@@ -11867,7 +11916,7 @@ export interface RespContractTemplateList {
 * @interface ContractTemplateSigner
 */
 export interface ContractTemplateSigner {
-
+    
     /**
      * 
      * @type {number | string}
@@ -11968,7 +12017,7 @@ export interface ContractTemplateSigner {
 * @interface ContractTemplateTypeParam
 */
 export interface ContractTemplateTypeParam {
-
+    
     /**
      * 
      * @type {number | string}
@@ -12139,7 +12188,7 @@ export interface ContractTemplateTypeParam {
 * @interface RespContractTemplateInfo
 */
 export interface RespContractTemplateInfo {
-
+    
     /**
      * 模板id(修改时传)
      * @type {number | string}
@@ -12219,7 +12268,7 @@ export interface RespContractTemplateInfo {
 * @interface IPageRespContractTemplateVersion
 */
 export interface IPageRespContractTemplateVersion {
-
+    
     /**
      * 
      * @type {boolean}
@@ -12278,7 +12327,7 @@ export interface IPageRespContractTemplateVersion {
 * @interface RespContractTemplateVersion
 */
 export interface RespContractTemplateVersion {
-
+    
     /**
      * 版本id
      * @type {number | string}
@@ -12323,7 +12372,7 @@ export interface RespContractTemplateVersion {
 * @interface RespTemplateVersionParam
 */
 export interface RespTemplateVersionParam {
-
+    
     /**
      * 内容
      * @type {string}
@@ -12347,7 +12396,7 @@ export interface RespTemplateVersionParam {
 * @interface RespTemplateStatus
 */
 export interface RespTemplateStatus {
-
+    
     /**
      * 状态0禁用，1启用
      * @type {number | string}
@@ -12371,7 +12420,7 @@ export interface RespTemplateStatus {
 * @interface RespContractTemplateType
 */
 export interface RespContractTemplateType {
-
+    
     /**
      * 类型id
      * @type {number | string}
@@ -12402,7 +12451,7 @@ export interface RespContractTemplateType {
 * @interface RespContractTemplateTypeParam
 */
 export interface RespContractTemplateTypeParam {
-
+    
     /**
      * 参数id
      * @type {string}
@@ -12554,7 +12603,7 @@ export interface RespContractTemplateTypeParam {
 * @interface RespConfirmationSignDetail
 */
 export interface RespConfirmationSignDetail {
-
+    
     /**
      * 签署链接
      * @type {string}
@@ -12592,7 +12641,7 @@ export interface RespConfirmationSignDetail {
 * @interface ContractSign
 */
 export interface ContractSign {
-
+    
     /**
      * 合同签署id
      * @type {number | string}
@@ -12777,7 +12826,7 @@ export interface ContractSign {
 * @interface RespConfirmationContractSign
 */
 export interface RespConfirmationContractSign {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -12878,7 +12927,7 @@ export interface RespConfirmationContractSign {
 * @interface RespContractCrmSignHistory
 */
 export interface RespContractCrmSignHistory {
-
+    
     /**
      * 操作人员
      * @type {string}
@@ -13007,7 +13056,7 @@ export interface RespContractCrmSignHistory {
 * @interface RespContractSignHistory
 */
 export interface RespContractSignHistory {
-
+    
     /**
      * 操作人员
      * @type {string}
@@ -13115,7 +13164,7 @@ export interface RespContractSignHistory {
 * @interface RespCRMContractSignHistory
 */
 export interface RespCRMContractSignHistory {
-
+    
     /**
      * 审核记录
      * @type {Array<RespContractCrmSignHistory>}
@@ -13139,7 +13188,7 @@ export interface RespCRMContractSignHistory {
 * @interface RespContractArchive
 */
 export interface RespContractArchive {
-
+    
     /**
      * 归档人
      * @type {string}
@@ -13170,7 +13219,7 @@ export interface RespContractArchive {
 * @interface RespContractRecord
 */
 export interface RespContractRecord {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -13250,7 +13299,7 @@ export interface RespContractRecord {
 * @interface ReqCompareContractRecord
 */
 export interface ReqCompareContractRecord {
-
+    
     /**
      * 最新合同内容记录id
      * @type {number | string}
@@ -13274,7 +13323,7 @@ export interface ReqCompareContractRecord {
 * @interface RespCompareContractRecord
 */
 export interface RespCompareContractRecord {
-
+    
     /**
      * 当前合同内容
      * @type {string}
@@ -13298,7 +13347,7 @@ export interface RespCompareContractRecord {
 * @interface RespContractCheckHistoryRecord
 */
 export interface RespContractCheckHistoryRecord {
-
+    
     /**
      * 合同id
      * @type {number | string}
@@ -13322,7 +13371,7 @@ export interface RespContractCheckHistoryRecord {
 * @interface ReqCaSealUrl
 */
 export interface ReqCaSealUrl {
-
+    
     /**
      * 账号Id
      * @type {string}
@@ -13353,7 +13402,7 @@ export interface ReqCaSealUrl {
 * @interface ReqCaQuery
 */
 export interface ReqCaQuery {
-
+    
     /**
      * 页码
      * @type {number | string}
@@ -13454,7 +13503,7 @@ export interface ReqCaQuery {
 * @interface IPageRespCAOrg
 */
 export interface IPageRespCAOrg {
-
+    
     /**
      * 
      * @type {boolean}
@@ -13513,7 +13562,7 @@ export interface IPageRespCAOrg {
 * @interface RespCAOrg
 */
 export interface RespCAOrg {
-
+    
     /**
      * 企业CA认证id
      * @type {number | string}
@@ -13670,7 +13719,7 @@ export interface RespCAOrg {
 * @interface IPageRespCAAccount
 */
 export interface IPageRespCAAccount {
-
+    
     /**
      * 
      * @type {boolean}
@@ -13729,7 +13778,7 @@ export interface IPageRespCAAccount {
 * @interface RespCAAccount
 */
 export interface RespCAAccount {
-
+    
     /**
      * CA认证id
      * @type {number | string}

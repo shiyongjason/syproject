@@ -13,7 +13,7 @@
                     <div class="pdfimg" v-if="_checkPicType(item,['.pdf'])">
                         <img :src="pdfbase">
                     </div>
-                    <div class="pdfimg" v-else-if="_checkPicType(item,['.xls','.xlxs'])">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.xls','.xlsx'])">
                         <img :src="xlsbase">
                     </div>
                     <div class="pdfimg" v-else-if="_checkPicType(item,['.zip','.rar'])">

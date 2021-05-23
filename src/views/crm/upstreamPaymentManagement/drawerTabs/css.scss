@@ -37,6 +37,7 @@
         margin: 10px 10px 0 0;
         flex: 1;
         display: flex;
+        flex-wrap: wrap;
         font {
             flex: 0 0 70px;
         }
@@ -93,9 +94,23 @@
         }
     }
 }
+.info-layout-img{
+    width: 100px;
+    height: 100px;
+    img{
+        width: 100px;
+        height: 100px;
+    }
+}
 .info_box {
     margin-top: 15px;
-
+    &-icon{
+        display: block;
+        i{
+            color: #ff7a45;
+            font-size: 16px;
+        }
+    }
     p {
         padding: 8px 0 0 25px;
     }
@@ -144,6 +159,13 @@
         }
     }
 }
+.info_more{
+    text-align: right;
+    padding-top: 10px;
+    color: #ff7a45;
+    cursor: pointer;
+    padding-right: 25px;
+}
 .info_btnbot {
     position: absolute;
     bottom: 0;
@@ -154,3 +176,16 @@
     background: #fff;
     z-index: 1;
 }
+/* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+    transition: all .5s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */ {
+    transform: translateX(10px);
+    opacity: 0;
+  }
