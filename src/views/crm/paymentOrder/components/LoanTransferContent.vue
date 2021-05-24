@@ -54,7 +54,8 @@
             <template>
                 <div class="info-layout" v-for="item in LoanTransferContent.purchaseDetailsDocs" :key="item.fileUrl">
                     <div class="info-layout-item">
-                        <a class="info-layout-item-link" :href="item.fileUrl" target="_bank">{{item.fileName}}</a>
+                        <!-- <a class="info-layout-item-link" :href="item.fileUrl" target="_bank">{{item.fileName}}</a> -->
+                        <downloadFileAddToken isPreview :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
                     </div>
                 </div>
             </template>

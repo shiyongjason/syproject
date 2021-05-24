@@ -305,5 +305,5 @@ export const UPSTREAM_DOWN_BILLS = 800204
 export const UPSTREAM_REJECT = 800205
 // 上游支付确认交接
 export const UPSTREAM_CONFIRM = 800206
-// 列表导出数据
-export const UPSTREAM_PAY_EXPORT = 800207
+// 支付单管理放款交接
+export const LENDER_HANDOVER = 800208
