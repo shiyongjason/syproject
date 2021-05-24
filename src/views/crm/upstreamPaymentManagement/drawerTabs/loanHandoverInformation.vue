@@ -166,13 +166,13 @@
         </div>
         <div class="info_btnbot">
               <div>
-                <el-button type="primary" @click="onArchiveDown">下载采购合同</el-button>
-                <el-button type="primary" @click="onLoanDown">下载放款交接单</el-button>
-                <el-button type="primary" @click="onExport">下载出票明细</el-button>
+                <el-button type="primary" @click="onArchiveDown&&hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
+                <el-button type="primary" @click="onLoanDown&&hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" @click="onExport&&hosAuthCheck(upstreamDownBills)">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
-                <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1">驳回交接</el-button>
-                <el-button type="primary" @click="onConfirm" v-if="data.loanTransferStatus==1">确认交接</el-button>
+                <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamReject)">驳回交接</el-button>
+                <el-button type="primary" @click="onConfirm" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamConfirm)">确认交接</el-button>
               </div>
         </div>
           <el-dialog :title='title' :visible.sync="infoDialog" width="40%" :modal=false :close-on-click-modal="false" :before-close="onCancelDialog">
@@ -200,7 +200,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { LoanTransferInfoResponse, ReqLoanTransferUpdate, BillAmountResponse } from '@/interface/hbp-project'
 import { onConfirmApi, archiveDown, downLoan, exportExcel, onSubmitReject, onSubmitConfirm, getMoreBill } from '../api/index'
 import { PAYMENTTYPE } from '../index.vue'
-import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN } from '@/utils/auth_const'
+import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN, UPSTREAM_DOWN_PURCHASE, UPSTREAM_DOWN_BILLS, UPSTREAM_REJECT, UPSTREAM_CONFIRM } from '@/utils/auth_const'
 import { interfaceUrl } from '@/api/config'
 @Component({
     name: 'loanHandoverInformation'
@@ -217,6 +217,10 @@ export default class LoanHandoverInformation extends Vue {
     upstreamPayConfirmEx = UPSTREAM_PAY_CONFIRM_EX
     upstreamPayConfirmLoan = UPSTREAM_PAY_CONFIRM_LOAN
     upstreamPayDown = UPSTREAM_PAY_DOWN
+    upstreamDownPurchase = UPSTREAM_DOWN_PURCHASE
+    upstreamDownBills = UPSTREAM_DOWN_BILLS
+    upstreamReject = UPSTREAM_REJECT
+    upstreamConfirm = UPSTREAM_CONFIRM
 
     paymentType=PAYMENTTYPE
     infoDialog:boolean = false
@@ -301,6 +305,7 @@ export default class LoanHandoverInformation extends Vue {
             if (valid) {
                 if (this.title == '驳回') {
                     await onSubmitReject(this.dialogFormData)
+                    this.$emit('requestBack')
                 } else {
                     // 交接
                     await onSubmitConfirm(this.dialogFormData)

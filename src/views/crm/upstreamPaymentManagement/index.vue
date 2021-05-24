@@ -106,7 +106,7 @@
                 <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
                     <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
@@ -493,6 +493,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.page.total = tableData.total as number
         const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
         this.totalAmount = totalAmountData
+        this.editorDrawer = false
     }
 
     sortChange (e) {
