@@ -391,6 +391,7 @@ export default {
             this.formData.maxPurchaseAmount = this.approveForm.maxPurchaseAmount
             this.formData.advancePaymentRate = this.approveForm.advancePaymentRate
             this.formData.remainPaymentCycle = this.approveForm.remainPaymentCycle
+            this.formData.reviewResolutionNo = this.approveForm.reviewResolutionNo
             this.$nextTick(() => {
                 this.$refs.finalConfirmForm.clearValidate()
             })
