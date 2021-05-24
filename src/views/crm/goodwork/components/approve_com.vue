@@ -136,6 +136,10 @@
                         </el-select>
                         个月
                     </el-form-item>
+                    <el-form-item label="评审决议编号：" prop="reviewResolutionNo">
+                        <el-input v-model="projectFinaleForm.reviewResolutionNo"  maxlength="50">
+                        </el-input>
+                    </el-form-item>
                 </template>
                 <el-form-item label="说明：" prop="remark">
                     <el-input type="textarea" placeholder="请输入说明" v-model.trim="projectFinaleForm.remark" maxlength="500" :rows="8" show-word-limit></el-input>
@@ -181,7 +185,6 @@
                 </el-form-item>
                 <el-form-item label="评审决议编号：" prop="reviewResolutionNo">
                     <el-input type="text" maxlength="50" v-model="formData.reviewResolutionNo">
-
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -303,6 +306,10 @@ export default {
                 ],
                 remainPaymentCycle: [
                     { required: true, message: '请选择剩余货款支付周期', trigger: 'change' }
+                ],
+                reviewResolutionNo: [
+                    { required: true, message: '请输入评审决议编号', trigger: 'blur' },
+                    { message: '格式为50位以内数字或字母', validator: checkNumandEng, trigger: 'blur' }
                 ]
             },
             isDownLoad: false,
@@ -546,6 +553,7 @@ export default {
                             value.projectId = this.approveForm.projectId
                         })
                         this.projectFinaleForm.riskCheckProjectDocPoList = riskCheckProjectDocPoList
+                        console.log(this.projectFinaleForm)
                         await updateFinalStatus(this.projectFinaleForm)
                         this.$message.success(`项目终审提交成功`)
                         this.$emit('onCompsback')

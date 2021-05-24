@@ -87,7 +87,7 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
-                    <h-button @click="onExport">导出列表数据</h-button>
+                    <h-button @click="onExport" v-if="hosAuthCheck(upstreamExport)">导出列表数据</h-button>
                 </div>
             </div>
             <div class="query-cont__row">
@@ -211,7 +211,7 @@ import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS } from '@/utils/auth_const'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT } from '@/utils/auth_const'
 import moment from 'moment'
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
@@ -250,6 +250,7 @@ enum TabInfoApi {
 export default class UpstreamPaymentManagement extends Vue {
     upstreamPayDetail = UPSTREAM_PAY_DETAIL
     upstreamPayment = UPSTREAM_PAY_MENT
+    upstreamExport = UPSTREAM_PAY_EXPORT
 
     $refs!: {
         form: HTMLFormElement
