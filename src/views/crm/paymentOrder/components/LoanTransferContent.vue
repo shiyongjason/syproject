@@ -205,7 +205,7 @@
                             <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
                             <em @click="()=>handleDelFile(index,uploadForm.loanTransferArchiveDocs)">删除</em>
                         </div>
-                        <OssFileHosjoyUpload :showPreView=false v-model="uploadForm.loanTransferArchiveDocs" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg">
+                        <OssFileHosjoyUpload :showPreView=false v-model="uploadForm.loanTransferArchiveDocs" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".pdf">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -222,7 +222,7 @@
                             <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
                             <em @click="()=>handleDelFile(index,uploadForm.purchaseDetailsDocs)">删除</em>
                         </div>
-                        <OssFileHosjoyUpload :showPreView=false v-model="uploadForm.purchaseDetailsDocs" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg">
+                        <OssFileHosjoyUpload :showPreView=false v-model="uploadForm.purchaseDetailsDocs" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".pdf">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
