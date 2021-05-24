@@ -240,9 +240,7 @@
             <div class="dialog-ctx billAmountFormbox">
                 <p style="margin:10px 0">注：合计票面金额应等于货款申请金额 ({{LoanTransferContent.applyAmount|fundMoneyHasTail}}元)</p>
                 <el-form id='elform' :model="billAmountForm" ref="formVoter" label-position="left" label-width="120px">
-                    <el-form-item :label="`第 ${index+1} 张票：`" :prop="'billAmount.' + index + '.amount'" v-for="(item,index) in billAmountForm.billAmount" :key="index+'Voter'" :rules="{
-                            required: true, message: '票面金额不能为空', trigger: 'blur'
-                        }">
+                    <el-form-item :label="`第 ${index+1} 张票：`" :prop="'billAmount.' + index + '.amount'" v-for="(item,index) in billAmountForm.billAmount" :key="index+'Voter'" :rules="rules">
                         <el-input placeholder="请输入票面金额" @input="(val)=>inputChage(val,item)" :value="money(item.amount)">
                             <template slot="append">元</template>
                         </el-input>
@@ -334,6 +332,21 @@ export default {
             }, 0)
             return total
         },
+        rules () {
+            return {
+                required: true,
+                validator: (rule, value, callback) => {
+                    if (value && value == 0) {
+                        return callback(new Error('单张银票票面金额不能为 0'))
+                    }
+                    if (!value) {
+                        return callback(new Error('票面金额不能为空'))
+                    }
+                    return callback()
+                },
+                trigger: 'blur'
+            }
+        },
         formRules () {
             let rules = {
                 pledgeNo: [
@@ -356,6 +369,7 @@ export default {
         async confirmLoanTransfers () {
             if (!this.LoanTransferContent.reviewResolutionResponse.pledgeNo || !this.LoanTransferContent.reviewResolutionResponse.reviewResolutionNo || !this.LoanTransferContent.reviewResolutionResponse.oaNo || !this.LoanTransferContent.contractArchiveDocs.length) {
                 this.$message.error('必填项不得为空哦~')
+                return
             }
             this.loanTransfersConfirm.paymentOrderId = this.paymentOrderId
             await postLoanTransfersConfirm(this.loanTransfersConfirm)
