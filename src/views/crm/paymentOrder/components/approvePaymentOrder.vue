@@ -36,9 +36,6 @@
                         <el-form-item label="采购批次：">
                             {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
                         </el-form-item>
-                        <el-form-item label="所属分部：">
-                            {{ paymentDetail.projectInfo.deptName }}
-                        </el-form-item>
                         <el-form-item label="最迟发货日期：">
                             {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
                         </el-form-item>
@@ -65,16 +62,15 @@
                             {{ paymentDetail.payOrderDetail.supplierCompanyName || '-'  }}
                         </el-form-item>
                         <!-- 添加 -->
-                        <el-form-item label="银行联行号：">
-                            {{paymentDetail.payOrderDetail.supplierBankNo}}
-                        </el-form-item>
-
                         <el-form-item label="供应商开户行名称：">
                             {{paymentDetail.payOrderDetail.supplierAccountName}}
                         </el-form-item>
 
                         <el-form-item label="供应商银行账号：">
                             {{paymentDetail.payOrderDetail.supplierAccountNo}}
+                        </el-form-item>
+                        <el-form-item label="银行联行号：">
+                            {{paymentDetail.payOrderDetail.supplierBankNo}}
                         </el-form-item>
                         <el-form-item label="期望上游支付日期：">
                             {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
