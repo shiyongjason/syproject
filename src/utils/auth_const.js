@@ -293,3 +293,15 @@ export const UPSTREAM_PAY_DOWN = 500004
 export const UPSTREAM_PAY_MENT = 500005
 // 变更交接状态
 export const CHANGE_LOAN_TRANSFER_STATUS = 500006
+// 合同签署的归档
+export const CONTRACT_PLACE = 800201
+// 合同签署的更新归档
+export const CONTRACT_UPDATEPLACE = 800202
+// 上游支付下载采购合同
+export const UPSTREAM_DOWN_PURCHASE = 800203
+// 上游支付下载票面明细
+export const UPSTREAM_DOWN_BILLS = 800204
+// 上游支付驳回交接
+export const UPSTREAM_REJECT = 800205
+// 上游支付确认交接
+export const UPSTREAM_CONFIRM = 800206
