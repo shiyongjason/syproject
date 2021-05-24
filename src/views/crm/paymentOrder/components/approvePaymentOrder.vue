@@ -81,7 +81,7 @@
                         <el-form-item label="票面金额：" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             {{paymentDetail.payOrderDetail.billClaim == 1 ? '有要求' : '无要求'}}
                         </el-form-item>
-                        <div class="mb20">
+                        <div class="mb20" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             <basicTable :tableData="paymentDetail.billAmountDetail" :tableLabel="tableLabel" :isPagination='false'>
                                 <template slot="number" slot-scope="scope">
                                     第{{ scope.data.row.number }}张票
