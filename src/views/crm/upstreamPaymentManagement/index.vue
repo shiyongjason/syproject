@@ -359,6 +359,9 @@ export default class UpstreamPaymentManagement extends Vue {
         let rules = {
             changeType: [
                 { required: true, message: '请选择变更交接状态', trigger: 'change' }
+            ],
+            remark: [
+                { required: true, message: '请输入备注', trigger: 'blur' }
             ]
         }
         return rules

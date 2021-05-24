@@ -168,7 +168,7 @@
               <div>
                 <el-button type="primary" @click="onArchiveDown&&hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
                 <el-button type="primary" @click="onLoanDown&&hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
-                <el-button type="primary" @click="onExport&&hosAuthCheck(upstreamDownBills)">下载出票明细</el-button>
+                <el-button type="primary" @click="onExport&&hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
                 <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamReject)">驳回交接</el-button>
