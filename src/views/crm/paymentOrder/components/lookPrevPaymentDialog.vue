@@ -31,12 +31,12 @@
                         <span class="orange-main">{{ item.payAmount | fundMoneyHasTail }}元</span>
                         <span class="info">{{ item.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }} {{ item.createBy }}（{{ item.createPhone }}）</span>
                     </p>
-                    <p style="margin-top:10px">
+                    <!-- <p style="margin-top:10px">
                         <span class="label">
                             支付银行：
                         </span>
                         {{ item.paymentBank||'-' }}
-                    </p>
+                    </p> -->
                     <div class="body info-img-group">
                         <span class="label">
                             支付凭证：

@@ -81,6 +81,18 @@ export default [
                         component: () => import('@/views/comfortcloud/equipmentError/equipmentError.vue')
                     },
                     {
+                        path: 'deviceIDImport',
+                        name: 'deviceIDImport',
+                        meta: {
+                            title: '设备ID入库',
+                            tagName: '设备ID入库',
+                            parentName: '舒适云概览',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/deviceIDImport/deviceIDImport.vue')
+                    },
+                    {
                         path: 'warehouseManagement',
                         name: 'warehouseManagement',
                         meta: {

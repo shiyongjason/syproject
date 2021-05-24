@@ -1,4 +1,4 @@
-import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange } from '@/interface/hbp-project'
+import { IPageRespUpStreamPayment, ReqUpPaymentLoanHandoverConfirm, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, ReqSupplierSubmit, ReqLoanTransferChange, ReqLoanTransferUpdate, LoanTransferInfoResponse, BillAmountResponse } from '@/interface/hbp-project'
 import axios, { AxiosPromise } from 'axios'
 
 export const getUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery) => AxiosPromise<IPageRespUpStreamPayment> = (params) => {
@@ -64,7 +64,7 @@ export const exportUpStreamPaymentApi: (params: ReqUpStreamPaymentQuery, callbac
     })
 }
 /** 新的放款交接 */
-export const getLoanHandoverInfoApi: (paymentOrderId: string) => AxiosPromise<RespLoanHandoverInfo> = (paymentOrderId) => {
+export const getLoanHandoverInfoApi: (paymentOrderId: string) => AxiosPromise<LoanTransferInfoResponse> = (paymentOrderId) => {
     return axios.get(`/project/api/loan-transfers/boss/${paymentOrderId}/info`)
 }
 /** 下载采购合同 */
@@ -76,6 +76,16 @@ export const downLoan = (paymentOrderId) => axios.get(`/project/api/loan-transfe
 /** 导出excel */
 export const exportExcel = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/${paymentOrderId}/bill-amount/export`)
 
-export const onSubmitPaymentss: (params: ReqSupplierSubmit) => AxiosPromise<void> = (params) => {
-    return axios.post('/project/api/supplier-payments/submit', params)
+/** 驳回 */
+export const onSubmitReject: (params: ReqLoanTransferUpdate) => AxiosPromise<void> = (params) => {
+    return axios.put('/project/api/loan-transfers/boss/reject', params)
+}
+/** 通过 */
+export const onSubmitConfirm: (params: ReqLoanTransferUpdate) => AxiosPromise<void> = (params) => {
+    return axios.put('/project/api/loan-transfers/boss/confirm', params)
+}
+
+/** 更多票面信息 */
+export const getMoreBill: (paymentOrderId) => AxiosPromise<BillAmountResponse[]> = (paymentOrderId) => {
+    return axios.get(`/project/api/bill-amount/boss/${paymentOrderId}`)
 }

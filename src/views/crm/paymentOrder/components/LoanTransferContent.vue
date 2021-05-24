@@ -6,7 +6,7 @@
                 <span></span>
                 <div class="tab-layout-title-box">
                     质押与终审决议信息：
-                    <h-button table @click="handleOpenDialog">编辑</h-button>
+                    <h-button table @click="handleOpenDialog" v-if="operateStatus==1">编辑</h-button>
                 </div>
             </div>
             <div class="info-layout">
@@ -29,7 +29,7 @@
                 <span></span>
                 <div class="tab-layout-title-box">
                     采购合同信息：
-                    <h-button table @click="handleOpenDialogUpload">编辑</h-button>
+                    <h-button table @click="handleOpenDialogUpload" v-if="operateStatus==1">编辑</h-button>
                 </div>
             </div>
             <div class="info-layout">
@@ -58,26 +58,31 @@
                     </div>
                 </div>
             </template>
-            <!-- 当上游支付方式为银行转账时，不展示下方框选区域 -->
-            <div class="tab-layout-title">
+            <!-- 当上游支付方式为银行转账时，不展示下方框选区域 supplierPaymentType 上游支付方式:1-银行转帐;2-银行承兑-->
+            <div class="tab-layout-title" v-if="LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <span></span>
                 <div class="tab-layout-title-box">
                     票面金额信息：
-                    <h-button table @click="handleOpenDialogVoter">编辑</h-button>
+                    <h-button table @click="handleOpenDialogVoter" v-if="operateStatus==1">编辑</h-button>
                 </div>
             </div>
-            <div class="info-layout" v-if="LoanTransferContent.billAmountResponse">
+            <div class="info-layout" v-if="LoanTransferContent.billAmountResponse&&LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <!-- CRM/小程序发起货款申请时，为“提交人”姓名；
                 Boss后台对票面明细修改后，展示为“更新人”姓名； -->
-                <!-- 更新人：玄烨                     更新时间：2021-04-25 14:15:32 -->
                 <div class="info-layout-item">
-                    <font style="flex: 0 0 85px">提交人：</font><span>{{LoanTransferContent.billAmountResponse.billAmountCreateBy}}</span>
+                    <font style="flex: 0 0 85px">
+                        {{LoanTransferContent.billAmountNumber?'更新人：':'提交人：'}}
+                    </font>
+                    <span>{{LoanTransferContent.billAmountResponse.billAmountCreateBy}}</span>
                 </div>
                 <div class="info-layout-item">
-                    <font style="flex: 0 0 70px">提交时间：</font><span>{{LoanTransferContent.billAmountResponse.billAmountCreateTime|formatterTime}}</span>
+                    <font style="flex: 0 0 70px">
+                        {{LoanTransferContent.billAmountNumber?'更新时间：':'提交时间：'}}
+                    </font>
+                    <span>{{LoanTransferContent.billAmountResponse.billAmountCreateTime|formatterTime}}</span>
                 </div>
             </div>
-            <div class='bill-table' v-if="LoanTransferContent.billAmountResponse">
+            <div class='bill-table' v-if="LoanTransferContent.billAmountResponse&&LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <div class='bill-table_flex'>
                     <div class='bill-table_flex--left'>出票张数</div>
                     <div class='bill-table_flex--right'>票面金额(元)</div>
@@ -91,16 +96,16 @@
                     <div class='bill-table_flex--right'>{{LoanTransferContent.billAmountResponse.totalAmount|fundMoneyHasTail}}</div>
                 </div>
             </div>
-            <div class="historyRecords">
+            <div class="historyRecords" v-if="LoanTransferContent.billAmountNumber&&LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <el-collapse @change="handleChangeCollapse">
                     <el-collapse-item title="展开更多票面记录" name="1">
                         <div v-for="(obj,objIndex) in moreBillAmount" :key="objIndex+'table'">
-                            <div class="table-title">
-                                <div class="table-title-item">
-                                    <font style="flex: 0 0 85px">提交人：</font><span>{{obj.billAmountCreateBy}}</span>
+                            <div class="info-layout" style="font-size: 14px;">
+                                <div class="info-layout-item">
+                                    <font style="flex: 0 0 85px;">{{objIndex==0?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
                                 </div>
-                                <div class="table-title-item">
-                                    <font style="flex: 0 0 70px">提交时间：</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
+                                <div class="info-layout-item">
+                                    <font style="flex: 0 0 70px;">{{objIndex==0?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
                                 </div>
                             </div>
                             <div class='bill-table' v-if="moreBillAmount">
@@ -131,12 +136,13 @@
                 </div>
             </div>
             <div class="tab-textarea">
-                <el-input type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="200" rows="5" show-word-limit>
+                <el-input v-if="operateStatus==1" type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="200" rows="5" show-word-limit>
                 </el-input>
+                <p v-else>{{loanTransfersConfirm.remark}}</p>
             </div>
 
         </div>
-        <div class="sure-sub-btn">
+        <div class="sure-sub-btn" v-if="operateStatus==1">
             <!-- 需要校验页面必填项不得为空。若为空给予页面提示：“必填项不得为空哦~” -->
             <h-button type='primary' @click="confirmLoanTransfers">确认并发起流程</h-button>
         </div>
@@ -231,7 +237,7 @@
         <!-- 票面金额信息 dialog -->
         <el-dialog v-if="openDialogVoter" title="票面金额信息" :close-on-click-modal='false' :visible.sync="openDialogVoter" width="750px" :before-close="()=>onCancel('formVoter')" :modal='false'>
             <div class="dialog-ctx billAmountFormbox">
-                <p style="margin:10px 0">注：合计票面金额应等于货款申请金额 (50,000,000元)</p>
+                <p style="margin:10px 0">注：合计票面金额应等于货款申请金额 ({{LoanTransferContent.applyAmount|fundMoneyHasTail}}元)</p>
                 <el-form id='elform' :model="billAmountForm" ref="formVoter" label-position="left" label-width="120px">
                     <el-form-item :label="`第 ${index+1} 张票：`" :prop="'billAmount.' + index + '.amount'" v-for="(item,index) in billAmountForm.billAmount" :key="index+'Voter'" :rules="{
                             required: true, message: '票面金额不能为空', trigger: 'blur'
@@ -255,7 +261,6 @@
 </template>
 
 <script>
-// TODO 1.当上游支付方式为银行转账时，不展示下方框选区域 2.operateStatus查看放款交接 3.交接记录缺少操作人 4.票面金额信：提交人、更新人 5.展开更多的判断 6.总金额校验 7.去掉末尾 . 7. 列表弹窗的标题
 import { mapState } from 'vuex'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload'
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
@@ -268,9 +273,14 @@ import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTr
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
-    props: ['LoanTransferContent', 'paymentOrderId'],
+    props: ['LoanTransferContent', 'paymentOrderId', 'operateStatus'],
     data () {
         return {
+            // 上游支付方式:1-银行转帐;2-银行承兑
+            upstreamPaymentMethod: {
+                bankTransfer: 1,
+                bankAcceptance: 2
+            },
             activeNames: ['1'],
             action: ccpBaseUrl + 'common/files/upload-old',
             openDialog: false,
@@ -456,11 +466,16 @@ export default {
         submitForm () {
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
-                    if (this.totalAmount != this.LoanTransferContent.billAmountResponse.totalAmount) {
+                    if (this.totalAmount != this.LoanTransferContent.applyAmount) {
                         console.log('🚀 --- ', this.totalAmount)
-                        this.$message.error(`提示：合计票面金额应等于货款申请金额 ${this.LoanTransferContent.billAmountResponse.totalAmount}`)
+                        this.$message.error(`提示：合计票面金额应等于货款申请金额 ${this.LoanTransferContent.applyAmount}`)
                         return
                     }
+                    this.billAmountForm.billAmount.map(item => {
+                        if (typeof item.amount === 'string' && item.amount.charAt(item.amount.length - 1) === '.') {
+                            item.amount = item.amount.substr(0, item.amount.length - 1)
+                        }
+                    })
                     this.billAmountForm.createBy = this.userInfo.employeeName
                     this.billAmountForm.paymentOrderId = this.paymentOrderId
                     console.log('🚀 --- billAmountForm', this.billAmountForm)

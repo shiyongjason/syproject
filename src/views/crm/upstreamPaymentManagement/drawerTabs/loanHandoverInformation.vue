@@ -7,7 +7,7 @@
              <div class="info-layout-item"><font style="flex: 0 0 60px">经销商：</font><span>{{data.companyName}}</span></div>
          </div>
         <div class="info-layout">
-            <div class="info-layout-item"><font style="flex: 0 0 85px">收款人名称：</font><span>{{data.supplierCompanyName}}</span></div>
+            <!-- <div class="info-layout-item"><font style="flex: 0 0 85px">收款人名称：</font><span>{{data.supplierCompanyName}}</span></div> -->
             <div class="info-layout-item"><font style="flex: 0 0 70px">所属分部：</font><span>{{data.deptName}}</span></div>
         </div>
         <div class="info-layout">
@@ -19,9 +19,6 @@
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">支付单金额：</font><span>
                 {{ data.applyAmount|fundMoneyHasTail}} 元</span></div>
-            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付形式：</font><span>
-                 {{paymentType.get(data.supplierPaymentType)}}
-            </span></div>
         </div>
         <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 85px">首付款比例：</font>
@@ -35,13 +32,27 @@
             <div class="info-layout-item"><font style="flex: 0 0 100px">监管账户账号：</font>
                 <span>{{data.regulatorAccountNo?data.regulatorAccountNo:'-'}}</span>
             </div>
-            <div class="info-layout-item"><font style="flex: 0 0 130px">监管账户户名：</font>
+            <div class="info-layout-item"><font style="flex: 0 0 100px">监管账户户名：</font>
                 <span>{{data.regulatorAccountName||'-'}}</span>
             </div>
         </div>
-         <div class="info-layout">
+        <div class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 120px">监管账户开户行：</font>
                 <span>{{data.regulatorAccountBank?data.regulatorAccountBank:'-'}}</span>
+            </div>
+        </div>
+        <div  class="info-layout">
+            <div class="info-layout-item"><font style="flex: 0 0 100px">网银盾照片：</font>
+                <div class="" v-for="(item,index) in data.onlineBankingShields" :key="index">
+                    <a :href="item.fileUrl" target="_blank"><img :src="item.fileUrl" alt=""></a>
+                </div>
+            </div>
+        </div>
+        <div  class="info-layout">
+            <div class="info-layout-item"><font style="flex: 0 0 100px">共管户截图：</font>
+                <div class="info-layout-img" v-for="(item,index) in data.screenshots" :key="index">
+                    <a :href="item.fileUrl" target="_blank" ><img :src="item.fileUrl" alt=""></a>
+                </div>
             </div>
         </div>
         <!-- 货款申请信息 -->
@@ -57,6 +68,11 @@
              <div class="info-layout-item"><font style="flex: 0 0 115px">供应商银行账号：</font><span>{{data.supplierAccountNo||'-'}}</span></div>
              <div class="info-layout-item"><font style="flex: 0 0 130px">期望上游支付日期：</font><span>{{data.expectSupplierPaymentDate||'-'}}</span></div>
          </div>
+         <div  class="info-layout">
+            <div class="info-layout-item"><font style="flex: 0 0 100px">上游支付形式：</font><span>
+                {{paymentType.get(data.supplierPaymentType)}}
+            </span></div>
+         </div>
          <div class="info-layout">
              <div class="info-layout-item"><font style="flex: 0 0 70px">备注信息:</font><span>{{data.specialRemark||'-'}}</span></div>
          </div>
@@ -69,47 +85,84 @@
           <!-- 放款交接内容 -->
         <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|formatterTime}}</font></div>
         <div class="info_box">
-             <el-checkbox >预付款到好享家账户</el-checkbox>
-             <div class="info_box-txt">预付款金额：{{data.advancePaymentAmount||0}}元        确认到账时间：{{data.confirmArrivalTime|formatterTime}}       确认人：{{data.confirmArrivalBy}}</div>
+             <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
+             <div class="info_box-txt">预付款金额：{{data.advancePaymentAmount|money}}元 &nbsp;&nbsp;  确认到账时间：{{data.confirmArrivalTime|formatterTime}}  &nbsp;&nbsp;     确认人：{{data.confirmArrivalBy}}</div>
+            <div  class="info-layout">
+            <div class="info-layout-item">
+                <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
+                    <a :href="item.fileUrl" target="_blank" ><img :src="item.fileUrl" alt=""></a>
+                </div>
+            </div>
+        </div>
         </div>
         <div class="info_box">
-             <el-checkbox >质押信息：{{data.pledgeNo}}</el-checkbox>
+             <div class="info_box-icon"><i class="el-icon-s-claim"></i>质押信息：{{data.pledgeNo}}</div>
         </div>
         <div class="info_box">
-             <el-checkbox >评审决议流程：已完结（{{data.reviewResolutionNo}}）</el-checkbox>
+              <div class="info_box-icon"><i class="el-icon-s-claim"></i>评审决议流程：{{data.reviewResolutionStatus==1?'已完结':'未完结'}}（{{data.reviewResolutionNo}}）</div>
         </div>
         <div class="info_box">
-             <el-checkbox >货款支付流程：已完结（12345678909）</el-checkbox>
+            <div class="info_box-icon"><i class="el-icon-s-claim"></i>货款支付流程：{{data.oaStatus==1?'已完结':'未完结'}}（{{data.oaNo}}）</div>
         </div>
         <div class="info_box">
-             <el-checkbox >上游采购合同</el-checkbox>
+             <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
              <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index">
                 {{index+1}}、 <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
              </div>
-             <p>单次采购明细附件</p>
+            <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles">
+                 暂无数据
+            </div>
+            <p>单次采购明细附件</p>
               <div class="info_box-img" v-for="(item,index) in data.purchaseDetailFiles" :key="index">
                 {{index+1}}、  <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
-             </div>
+            </div>
+            <div class="info_box-img" v-if="data.purchaseDetailFiles.length==0||!data.purchaseDetailFiles">
+                 暂无数据
+            </div>
         </div>
         <div v-if="data.supplierPaymentType==2">
          <div class="info_box-txt"><h3>票面信息</h3></div>
-         <div class="info_box-txt">更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}} 更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</div>
-          <div class="info_box-table">
+         <div class="info_box-txt">更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}} &nbsp;&nbsp; 更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</div>
+        <div class="info_box-table">
             <div class="info_box-table--flex">
                 <div class="info_box-table--left">出票张数</div>
                 <div class="info_box-table--left">票面金额（元）</div>
             </div>
              <div class="info_box-table--flex" v-for="(item,index) in data.billAmountResponse.billAmountDetail" :key="index">
-                <div class="info_box-table--left">{{item.number}}</div>
-                <div class="info_box-table--left">{{item.amount}}</div>
+                <div class="info_box-table--left">第{{item.number}}张发票</div>
+                <div class="info_box-table--left">{{item.amount|money}}</div>
             </div>
              <div class="info_box-table--flex">
                 <div class="info_box-table--left">合计</div>
-                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount}}</div>
+                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|money}}</div>
             </div>
         </div>
+        <transition name="fade" mode="out-in">
+        <div class="info_more" @click="onShowMore">{{isMoreBill?`收起更多票面记录`:'展开更多票面记录'}}</div>
+        </transition>
+        <transition name="slide-fade">
+        <div v-if="isMoreBill">
+            <div v-for="(item,index) in billData" :key="index">
+                <p class="info_box-txt">{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}} &nbsp; 更新时间：{{item.billAmountCreateTime|formatterTime}}</p>
+                <div class="info_box-table">
+                    <div class="info_box-table--flex">
+                        <div class="info_box-table--left">出票张数</div>
+                        <div class="info_box-table--left">票面金额（元）</div>
+                    </div>
+                    <div class="info_box-table--flex" v-for="(jtem,jndex) in item.billAmountDetail" :key="jndex">
+                        <div class="info_box-table--left">第{{item.number}}张发票</div>
+                        <div class="info_box-table--left">{{jtem.amount|money}}</div>
+                    </div>
+                    <div class="info_box-table--flex">
+                        <div class="info_box-table--left">合计</div>
+                        <div class="info_box-table--left">{{item.totalAmount|money}}</div>
+                    </div>
+                </div>
+            </div>
         </div>
-         <div class="info_box-txt">备注信息：{{data.remark}}</div>
+        </transition>
+        </div>
+         <div class="info_box-txt">备注信息：{{data.remark||'-'}}</div>
         </div>
         <div class="info_btnbot">
               <div>
@@ -118,37 +171,48 @@
                 <el-button type="primary" @click="onExport">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
-                <el-button type="primary" @click="onRefuse">驳回交接</el-button>
-                <el-button type="primary">确认交接</el-button>
+                <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1">驳回交接</el-button>
+                <el-button type="primary" @click="onConfirm" v-if="data.loanTransferStatus==1">确认交接</el-button>
               </div>
         </div>
           <el-dialog :title='title' :visible.sync="infoDialog" width="40%" :modal=false :close-on-click-modal="false" :before-close="onCancelDialog">
-           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="活动形式" prop="desc">
-                <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+           <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
+            <el-form-item label="请输入驳回原因:" prop="remark" v-if="title=='驳回'">
+                <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}"
+                maxlength="500"
+                show-word-limit></el-input>
+            </el-form-item>
+             <el-form-item label="请输入交接备注:" prop="remark" v-if="title=='交接'">
+                <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}"
+                maxlength="200"
+                show-word-limit></el-input>
             </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="onCancelDialog">取 消</el-button>
-                <el-button type="primary" @click="onCancelDialog">确 定</el-button>
+                <el-button type="primary" @click="onHandleSubmit">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script lang='ts'>
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { RespLoanHandoverInfo } from '@/interface/hbp-project'
-import { onConfirmApi, archiveDown, downLoan, exportExcel } from '../api/index'
+import { LoanTransferInfoResponse, ReqLoanTransferUpdate, BillAmountResponse } from '@/interface/hbp-project'
+import { onConfirmApi, archiveDown, downLoan, exportExcel, onSubmitReject, onSubmitConfirm, getMoreBill } from '../api/index'
 import { PAYMENTTYPE } from '../index.vue'
 import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN } from '@/utils/auth_const'
-import { ossUrl } from '@/api/config'
+import { interfaceUrl } from '@/api/config'
 @Component({
     name: 'loanHandoverInformation'
 })
 export default class LoanHandoverInformation extends Vue {
-    @Prop({ default: '' }) readonly data!:RespLoanHandoverInfo
+    @Prop({ default: '' }) readonly data!:LoanTransferInfoResponse
     @Prop({ default: '' }) readonly userInfo!:any
     @Prop({ default: '' }) readonly paymentOrderId!:any
+
+    $refs!: {
+        form: HTMLFormElement
+    }
 
     upstreamPayConfirmEx = UPSTREAM_PAY_CONFIRM_EX
     upstreamPayConfirmLoan = UPSTREAM_PAY_CONFIRM_LOAN
@@ -156,23 +220,38 @@ export default class LoanHandoverInformation extends Vue {
 
     paymentType=PAYMENTTYPE
     infoDialog:boolean = false
+    isMoreBill:boolean = false
     title:string = ''
+    billData:BillAmountResponse[] | [] = []
     supplierPaymentMethodArr = new Map([[1, '先款后货'], [2, '先货后款']])
     dealerCooperationMethodArr = new Map([[1, '垫资代采'], [2, '代收代付']])
-    // form:{
-    //     remark:''
-    // }
-    get checkBox () {
-        let res = {}
-        this.data.upPaymentLoanHandoverList.map((item, index) => {
-            res[index] = {}
-            item.upPaymentLoanHandoverParamList!.map(jtem => {
-                jtem['status'] = item.status
-                res[index][jtem.paramKey!] = item.status
-            })
-        })
-        console.log('res: ', res)
-        return res
+
+    checkArr = [true, true, true, true, true]
+
+    get formRules () {
+        let rules = {
+            remark: [{
+                validator: (rule, value, callback) => {
+                    console.log('22', this.title)
+                    if (value === '') {
+                        if (this.title == '驳回') {
+                            return callback(new Error('请请输入驳回原因'))
+                        } else {
+                            return callback(new Error('请请输入交接备注'))
+                        }
+                    } else {
+                        callback()
+                    }
+                },
+                trigger: 'blur'
+            }]
+        }
+        return rules
+    }
+    dialogFormData:ReqLoanTransferUpdate={
+        loanTransferId: '',
+        remark: '',
+        updateBy: this.userInfo.employeeName
     }
 
     async onArchiveDown () {
@@ -186,54 +265,56 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     async onExport () {
-        const { data } = await exportExcel(this.paymentOrderId)
-        window.open(encodeURI(data))
+        location.href = interfaceUrl + `project/api/loan-transfers/boss/${this.data.loanTransferId}/bill-amount/export`
     }
 
     onRefuse () {
         this.infoDialog = true
-        this.title = '请输入驳回原因'
+        this.title = '驳回'
+    }
+
+    onConfirm () {
+        this.infoDialog = true
+        this.title = '交接'
     }
 
     onCancelDialog () {
         this.infoDialog = false
+        this.$refs['ruleForm'].clearValidate()
+        this.dialogFormData.remark = ''
     }
 
-    onCheckBox (key: string | any, val: any, list: any[] | any, index:number, checkBoxKey:number) {
-        if (list[index].status == 1) {
-            console.log('checkBox', this.checkBox)
-            return
+    async onShowMore () {
+        if (this.isMoreBill) {
+            this.isMoreBill = false
+        } else {
+            const { data } = await getMoreBill(this.paymentOrderId)
+            console.log(data)
+            this.billData = data
+            this.isMoreBill = true
         }
-        // 给每个checkBox添加paramKey，没值的初始化0
-        list.map(item => {
-            this.checkBox[checkBoxKey][item.paramKey] = this.checkBox[checkBoxKey][item.paramKey] || 0
+    }
+
+    onHandleSubmit () {
+        this.dialogFormData.loanTransferId = this.data.loanTransferId
+        this.$refs['ruleForm'].validate(async (valid) => {
+            if (valid) {
+                if (this.title == '驳回') {
+                    await onSubmitReject(this.dialogFormData)
+                } else {
+                    // 交接
+                    await onSubmitConfirm(this.dialogFormData)
+                    this.$emit('requestAgain')
+                }
+                this.$message.success('提交成功！')
+                this.infoDialog = false
+            } else {
+            }
         })
-        this.checkBox[checkBoxKey][key] = val
-        this.$forceUpdate()
-        console.log(' this.checkBox: ', this.checkBox)
     }
 
     async onSureInfo (id:any, checkBoxKey:number) {
         console.log('id: ', id)
-
-        console.log(this.checkBox[checkBoxKey])
-        let temp = true
-        for (const key in this.checkBox[checkBoxKey]) {
-            if (!this.checkBox[checkBoxKey][key]) {
-                this.$message.error('请先勾选确认项')
-                temp = false
-                break
-            }
-        }
-        if (temp) {
-            console.log('操作成功')
-            await onConfirmApi({
-                upPaymentLoanHandoverId: id,
-                updateBy: this.userInfo.employeeName
-            })
-            this.$message.success('操作成功~')
-            this.$emit('requestAgain')
-        }
     }
 }
 </script>

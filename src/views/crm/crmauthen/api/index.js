@@ -56,3 +56,12 @@ export const updateContact = (params) => axios.put('memeber/api/crm/company/cont
 export const getTianyanUrl = (params) => {
     return axios.get(`develop/companyurl/${params}`)
 }
+
+// 公司雇员列表
+export const findEmployeeList = (params) => axios.get(`memeber/openapi/company/user/boss/staff-info`, { params })
+// 转换管理员
+export const updateAdmin = (params) => axios.post(`memeber/openapi/company/user/boss/transfer-admin`, params)
+// 更新雇员信息
+export const updateEmployeeInfo = (params) => axios.patch(`memeber/openapi/company/user/boss`, params)
+// 角色字典
+export const findRoleList = () => axios.get(`memeber/openapi/company/user/roles`)

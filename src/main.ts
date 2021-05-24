@@ -24,6 +24,8 @@ import TreeTable from 'tree-table-vue'
 // @ts-ignore
 import filters from './utils/filters'
 // @ts-ignore
+import commonFun from './utils/common'
+// @ts-ignore
 import basicTable from './components/CommonTable/CommonTable'
 // @ts-ignore
 import searchBarOpenAndClose from './components/SearchBarOpenAndClose/index'
@@ -53,6 +55,7 @@ moment.locale('zh-cn')
 Vue.use(ElementUI)
 Vue.use(TreeTable)
 Vue.use(HosjoyUI)
+Vue.use(commonFun)
 // table公共组件
 Vue.component(
     'basicTable', basicTable

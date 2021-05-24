@@ -209,7 +209,7 @@ import loanHandoverInformation from './drawerTabs/loanHandoverInformation.vue' /
 import upstreamPaymentInformation from './drawerTabs/upstreamPaymentInformation.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
-import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange } from '@/interface/hbp-project'
+import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
 import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS } from '@/utils/auth_const'
 import moment from 'moment'
@@ -313,7 +313,7 @@ export default class UpstreamPaymentManagement extends Vue {
 
     totalAmount:number = 0
     activeName:string = 'loanHandoverInformation'
-    loanHandoverInformation:RespLoanHandoverInfo = '' as unknown as RespLoanHandoverInfo
+    loanHandoverInformation:LoanTransferInfoResponse = '' as unknown as LoanTransferInfoResponse
     upstreamPaymentInformation:RespSupplier = '' as unknown as RespSupplier
     prevPaymentDetail:RespSupplierInfo = '' as unknown as RespSupplierInfo
 
@@ -385,15 +385,11 @@ export default class UpstreamPaymentManagement extends Vue {
 
     isShowTabs () {
         let temp:boolean | undefined = false
-        // this.loanHandoverInformation初始化为空字符串
-        // console.log(this.loanHandoverInformation)
-        // if (this.loanHandoverInformation?.upPaymentLoanHandoverList.length == 0) {
-        //     temp = true
-        // } else {
-        //     temp = this.loanHandoverInformation?.upPaymentLoanHandoverList?.every(item => {
-        //         return item.status == 1
-        //     })
-        // }
+        if (this.loanHandoverInformation.loanTransferStatus == 2) {
+            temp = true
+        } else {
+            temp = false
+        }
         this.isTabs = temp
     }
 
@@ -513,6 +509,7 @@ export default class UpstreamPaymentManagement extends Vue {
     async payInfoApi () {
         const { data } = await Api.getPayInfoApi(this.paymentOrderId)
         this.prevPaymentDetail = data
+        this.dialogFormData.payAmount = this.prevPaymentDetail.surplusAmount
         this.isOpen = true
     }
 

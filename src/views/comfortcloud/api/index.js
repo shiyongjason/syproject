@@ -241,6 +241,12 @@ export function downloadQuestionTemp () {
 // 设备故障列表
 export function getCloudEquipmentErrorList (params) {
     return axios.get(iotUrl + `/api/device/breakdown`, { params })
+}// 设备故障列表
+export function getCloudDeviceIDImportData (params) {
+    return axios.get(iotUrl + `/api/user/device/page`, { params })
+}
+export function getCloudDeviceBrandNo (params) {
+    return axios.get(iotUrl + `/api//user/device/batch-nos`)
 }
 
 // 下载故障模板
@@ -253,6 +259,52 @@ export function downloadEquipmentErrorList () {
             reader.onload = function (e) {
                 const a = document.createElement('a')
                 a.download = '故障模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 下载
+export function downloadEquipmentIDImportList () {
+    axios.defaults.responseType = 'blob'
+    axios.get(iotUrl + `/api/user/device/download-template`).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '设备入库模板.xlsx'
+                a.href = e.target.result
+                document.querySelector('body').appendChild(a)
+                a.click()
+                document.querySelector('body').removeChild(a)
+            }
+            axios.defaults.responseType = 'json'
+        } catch (e) {
+            axios.defaults.responseType = 'json'
+        }
+    }).catch(function () {
+        axios.defaults.responseType = 'json'
+    })
+}
+// 下载导入数据失败列表
+export function downloadImportDeviceErrorList (params) {
+    axios.defaults.responseType = 'blob'
+    axios.post(iotUrl + `/api/user/device/download-failed-devices`, params).then(function (response) {
+        try {
+            const reader = new FileReader()
+            reader.readAsDataURL(response.data)
+            reader.onload = function (e) {
+                const a = document.createElement('a')
+                a.download = '设备入库模板.xlsx'
                 a.href = e.target.result
                 document.querySelector('body').appendChild(a)
                 a.click()
