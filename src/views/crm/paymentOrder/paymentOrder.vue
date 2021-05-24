@@ -281,8 +281,8 @@ export default {
             this.LoanTransferContent = data
         },
         async openLoanTransferContent (paymentOrderId, operateStatus) {
-            this.operateStatus = operateStatus
-            // this.operateStatus = 1
+            // this.operateStatus = operateStatus
+            this.operateStatus = 1
             this.paymentOrderId = paymentOrderId
             const { data } = await getLoanTransferContent(paymentOrderId)
             this.loanTransferContentVisible = true
