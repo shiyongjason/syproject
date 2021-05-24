@@ -189,6 +189,7 @@ export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
 // 好橙工
 export const CRM_GOODWORK_CLOSE = 109214 // 合作关闭
+export const CRM_TRANSFER_ADMIN = 109216 // 转让管理员 109215有个天眼查
 
 // 好橙工 申请列表
 export const CRM_APPLY_ASSIGN = 109301 // 分配

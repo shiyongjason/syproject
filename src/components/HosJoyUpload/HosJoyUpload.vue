@@ -10,16 +10,16 @@
                         </div>
                     </div>
                     <!-- TODO:在tab切换存在一开始有数据，图片渲染不出来情况 暂时父组件用v-if控制-->
-                    <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
+                    <div class="pdfimg" v-if="_checkPicType(item,['.pdf'])">
                         <img :src="pdfbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.xls') != -1||(item.fileUrl).indexOf('.xlxs') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.xls','.xlsx'])">
                         <img :src="xlsbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.zip') != -1||(item.fileUrl).indexOf('.rar') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.zip','.rar'])">
                         <img :src="zipbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.doc') != -1||(item.fileUrl).indexOf('.docx') != -1||(item.fileUrl).indexOf('.word') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
                     <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.fileUrl" :preview-src-list="previewSrcList"></el-image>
@@ -160,6 +160,13 @@ export default {
             this.fileList.splice(this.index, 1)
             this.$set(this, 'fileList', this.fileList)
             this.deleteVisible = false
+        },
+        // 校验大小
+        _checkPicType (item, typePic) {
+            if (item && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
+                return true
+            }
+            return false
         },
         remove (index) {
             this.deleteVisible = true
