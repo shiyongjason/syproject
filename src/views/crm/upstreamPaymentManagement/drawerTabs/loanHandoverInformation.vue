@@ -43,20 +43,20 @@
         </div>
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">网银盾照片：</font>
-                <div class="" v-for="(item,index) in data.onlineBankingShields" :key="index">
-                    <a :href="item.fileUrl" target="_blank"><img :src="item.fileUrl" alt=""></a>
+                <div class="info-layout-img" v-for="(item,index) in data.onlineBankingShields" :key="index">
+                    <a :href="item.fileUrl" target="_blank"><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
                 </div>
             </div>
         </div>
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">共管户截图：</font>
                 <div class="info-layout-img" v-for="(item,index) in data.screenshots" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><img :src="item.fileUrl" alt=""></a>
+                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
                 </div>
             </div>
         </div>
         <!-- 货款申请信息 -->
-        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.createTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.applyTime|formatterTime}}</font></div>
         <div>
              <div class="info-layout-item"><font style="flex: 0 0 85px">上游供应商：</font><span>{{data.supplierCompanyName||'-'}}</span></div>
         </div>
@@ -90,7 +90,7 @@
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><img :src="item.fileUrl" alt=""></a>
+                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
                 </div>
             </div>
         </div>
@@ -202,8 +202,12 @@ import { onConfirmApi, archiveDown, downLoan, exportExcel, onSubmitReject, onSub
 import { PAYMENTTYPE } from '../index.vue'
 import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN, UPSTREAM_DOWN_PURCHASE, UPSTREAM_DOWN_BILLS, UPSTREAM_REJECT, UPSTREAM_CONFIRM } from '@/utils/auth_const'
 import { interfaceUrl } from '@/api/config'
+import ImageAddToken from '@/components/imageAddToken/index.vue'
 @Component({
-    name: 'loanHandoverInformation'
+    name: 'loanHandoverInformation',
+    components: {
+        ImageAddToken
+    }
 })
 export default class LoanHandoverInformation extends Vue {
     @Prop({ default: '' }) readonly data!:LoanTransferInfoResponse
