@@ -161,7 +161,7 @@ import * as Auths from '@/utils/auth_const'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
-import { getLoanTransferContent, getLoanTransferRecord } from './api/index'
+import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck } from './api/index'
 export default {
     name: 'payOrder',
     components: {
@@ -281,6 +281,9 @@ export default {
             this.LoanTransferContent = data
         },
         async openLoanTransferContent (paymentOrderId, operateStatus) {
+            if (operateStatus == 1) {
+                await getLoanTransferCheck(paymentOrderId)
+            }
             this.operateStatus = operateStatus
             // this.operateStatus = 1
             this.paymentOrderId = paymentOrderId

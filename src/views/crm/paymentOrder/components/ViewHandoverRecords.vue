@@ -6,7 +6,7 @@
                 <div class="info-layout-item" style="flex:0 0 150px"><font>{{item.operatorTime|formatterTime}}</font></div>
             </div>
             <div class="remark-infos">
-                备注：{{item.remark||'-'}}
+                {{item.type==2?'原因':'备注'}}：{{item.remark||'-'}}
             </div>
         </div>
     </div>

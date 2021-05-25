@@ -141,7 +141,7 @@
             <div class="tab-textarea">
                 <el-input v-if="operateStatus==1" type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="200" rows="5" show-word-limit>
                 </el-input>
-                <p v-else>{{loanTransfersConfirm.remark}}</p>
+                <p v-else>{{loanTransfersConfirm.remark||'-'}}</p>
             </div>
 
         </div>
