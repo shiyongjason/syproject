@@ -31,7 +31,7 @@ export default {
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
-                reservedName: false
+                reservedName: true
             },
             fileDialog: false,
             docPos: [],
