@@ -6,7 +6,7 @@
                 <div type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1&&res.downloadUrl"><a :href="res.downloadUrl" target="_blank">下载合同</a></div>
             </div>
             <div class="file_wrap">
-                <h-button type="primary" @click="onGetfile" v-if="hosAuthCheck(Auths.CONTRACT_UPDATEPLACE)">
+                <h-button type="primary" @click="onGetfile" v-if="res.contractStatus=='12'&&res.contractSignType==2&&hosAuthCheck(Auths.CONTRACT_UPDATEPLACE)">
                     更 新 归 档
                 </h-button>
                 <div class="file_wrap-table" v-if="res.contractArchives&&res.contractArchives.length>0">
