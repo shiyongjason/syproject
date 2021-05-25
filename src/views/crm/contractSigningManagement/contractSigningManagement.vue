@@ -280,7 +280,7 @@ export default {
             lastContent: '',
             fileDialog: false,
             archive: '',
-            fileStatus: [{ value: 1, label: '是' }, { value: 2, label: '否' }]
+            fileStatus: [{ value: '', label: '全部' }, { value: 1, label: '是' }, { value: 2, label: '否' }]
         }
     },
     computed: {
