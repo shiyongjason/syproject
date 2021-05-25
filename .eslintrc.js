@@ -6,9 +6,9 @@ module.exports = {
     parserOptions: {
         parser: '@typescript-eslint/parser'
     },
-    plugins: [
-        '@typescript-eslint',
-    ],
+    // plugins: [
+    //     '@typescript-eslint',
+    // ],
     extends: ['plugin:vue/essential', '@vue/standard', '@vue/typescript'],
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
