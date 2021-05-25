@@ -16,12 +16,14 @@
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font><span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}</span>
+                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
+                    <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}} {{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}</span>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font><span>{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}</span>
+                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
+                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}} {{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}</span>
                 </div>
             </div>
             <!-- 采购合同信息 -->
@@ -350,10 +352,36 @@ export default {
         formRules () {
             let rules = {
                 pledgeNo: [
-                    { required: true, message: '请输入中登网质押编号', trigger: 'blur' }
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            var Reg = /^[A-Za-z0-9]+$/
+                            if (value && !(Reg.test(value))) {
+                                return callback(new Error('只能为数字或字母'))
+                            }
+                            if (!value) {
+                                return callback(new Error('请输入中登网质押编号'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ],
                 oaNo: [
-                    { required: true, message: '请输入OA货款支付编号', trigger: 'blur' }
+                    {
+                        required: true,
+                        validator: (rule, value, callback) => {
+                            var Reg = /^[A-Za-z0-9]+$/
+                            if (value && !(Reg.test(value))) {
+                                return callback(new Error('只能为数字或字母'))
+                            }
+                            if (!value) {
+                                return callback(new Error('请输入OA货款支付编号'))
+                            }
+                            return callback()
+                        },
+                        trigger: 'blur'
+                    }
                 ],
                 oaStatus: [
                     { required: true, message: '必填项不能为空' }
@@ -377,21 +405,21 @@ export default {
         },
         // 提交采购合同信息
         async submitLoanTransferDoc () {
-            console.log(' 🚗 🚕 🚙 🚌 🚎 this.uploadForm', this.uploadForm)
+            if (this.uploadForm.contractArchiveDocs.length == 0 && this.uploadForm.loanTransferArchiveDocs.length == 0) {
+                this.$message.error('页面必填项不得为空~')
+                return
+            }
             await postLoanTransferDoc(this.uploadForm)
             this.getDetailAgain()
             this.onCancel('DialogUpload')
         },
         handleDelFile (index, fileList) {
             fileList.splice(index, 1)
-            console.log(' 🚗 🚕 🚙 🚌 🚎 this.up', this.uploadForm)
         },
         // 查看更多票面信息
         async handleChangeCollapse (val) {
-            console.log('🚀 --- handleChangeCollapse --- val', val)
             if (val.length) {
                 const { data } = await getMoreBillAmount(this.paymentOrderId)
-                console.log('🚀 --- handleChangeCollapse --- data', data)
                 this.moreBillAmount = data
             }
         },
@@ -439,9 +467,8 @@ export default {
         // 打开采购合同信息弹窗
         async handleOpenDialogUpload () {
             const { data } = await getLoanTransferDoc(this.paymentOrderId)
-            console.log('🚀 --- handleOpenDialogUpload --- data', data)
             const { contractArchiveDocs, loanTransferArchiveDocs, purchaseDetailsDocs } = data
-            // contractArchiveDocs 只能删
+            // contractArchiveDocs 后端规定只能删
             this.uploadForm = {
                 paymentOrderId: this.paymentOrderId,
                 contractArchiveDocs: contractArchiveDocs || [],
@@ -454,8 +481,7 @@ export default {
         handleOpenDialogVoter () {
             this.openDialogVoter = true
             const { billAmountResponse } = this.LoanTransferContent
-            console.log('🚀 --- handleOpenDialogVoter --- billAmountResponse', billAmountResponse)
-            this.billAmountForm.billAmount = [...billAmountResponse.billAmountDetail]
+            this.billAmountForm.billAmount = JSON.parse(JSON.stringify(billAmountResponse.billAmountDetail))
         },
         // 添加票面
         addItem () {
@@ -464,7 +490,6 @@ export default {
                 number: index,
                 amount: ''
             })
-            console.log(' 🚗 🚕 🚙 🚌 🚎 this.billAmountForm', this.billAmountForm)
         },
         // 删除一条票面
         delItem (item) {
@@ -482,8 +507,7 @@ export default {
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
                     if (this.totalAmount != this.LoanTransferContent.applyAmount) {
-                        console.log('🚀 --- ', this.totalAmount)
-                        this.$message.error(`提示：合计票面金额应等于货款申请金额 ${this.LoanTransferContent.applyAmount}`)
+                        this.$message.error(`提示：合计票面金额应等于货款申请金额`)
                         return
                     }
                     this.billAmountForm.billAmount.map(item => {
@@ -493,12 +517,10 @@ export default {
                     })
                     this.billAmountForm.createBy = this.userInfo.employeeName
                     this.billAmountForm.paymentOrderId = this.paymentOrderId
-                    console.log('🚀 --- billAmountForm', this.billAmountForm)
                     await postBillAmount(this.billAmountForm)
                     this.getDetailAgain()
                     this.onCancel('formVoter')
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
@@ -512,25 +534,21 @@ export default {
                 num = ''
             }
             item.amount = num
-            console.log('🚀 --- inputChage --- item', item)
         },
         // 提交质押与终审决议信息
         submitReviewResolutionForm () {
             this.$refs['reviewResolutionForm'].validate(async (valid) => {
-                console.log('🚀 --- this.reviewResolutionForm', this.reviewResolutionForm)
                 if (valid) {
                     await postPledgeResolution(this.reviewResolutionForm)
                     this.getDetailAgain()
                     this.openDialog = false
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
         }
     },
     mounted () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.LoanTransferContent)
         this.loanTransfersConfirm.remark = this.LoanTransferContent.reviewResolutionResponse.remark
     }
 }
