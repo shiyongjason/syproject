@@ -270,7 +270,7 @@ import downloadFileAddToken from '@/components/downloadFileAddToken'
 import utils from '@/utils/filters'
 import { isNum } from '@/utils/validate/format'
 // api
-import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm } from '../api/index'
+import { postPledgeResolution, getMoreBillAmount, getLoanTransferDoc, postLoanTransferDoc, postBillAmount, postLoanTransfersConfirm, getReviewResolution } from '../api/index'
 export default {
     name: 'LoanTransferContent',
     components: { OssFileHosjoyUpload, downloadFileAddToken },
@@ -436,8 +436,8 @@ export default {
             this.$emit('getDetailAgain')
         },
         // 打开编辑质押与终审决议信息弹窗
-        handleOpenDialog () {
-            const { reviewResolutionResponse } = this.LoanTransferContent
+        async handleOpenDialog () {
+            const { data: reviewResolutionResponse } = await getReviewResolution(this.paymentOrderId)
             this.reviewResolutionForm = {
                 id: reviewResolutionResponse.id,
                 reviewResolutionNo: reviewResolutionResponse.reviewResolutionNo,

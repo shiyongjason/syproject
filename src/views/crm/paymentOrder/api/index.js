@@ -52,3 +52,5 @@ export const postLoanTransfersConfirm = (params) => axios.post(`/project/api/loa
 export const getLoanTransferRecord = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/${paymentOrderId}/record`)
 // 发起放款交接单前 - 校验
 export const getLoanTransferCheck = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/check/${paymentOrderId}`)
+// 放款交接-终审决议信息 - 查询
+export const getReviewResolution = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/review-resolution/${paymentOrderId}`)
