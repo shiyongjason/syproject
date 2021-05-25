@@ -47,7 +47,7 @@ export const getLoanTransferDoc = (paymentOrderId) => axios.get(`/project/api/lo
 // 放款交接内容-采购合同信息 - 编辑保存
 export const postLoanTransferDoc = (params) => axios.post(`/project/api/loan-transfers/boss/loan-transfer-doc`, params)
 // 确认并发起流程
-export const postLoanTransfersConfirm = (params) => axios.post(`/project/api/loan-transfers/boss/confirm`, params)
+export const postLoanTransfersConfirm = (params) => axios.post(`/project/api/loan-transfers/boss/confirm-initiate`, params)
 //
 export const getLoanTransferRecord = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/${paymentOrderId}/record`)
 // 发起放款交接单前 - 校验
