@@ -106,7 +106,7 @@
         </div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
-             <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index">
+             <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index+'L'">
                 {{index+1}}、 <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
              </div>
             <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles">
@@ -166,9 +166,9 @@
         </div>
         <div class="info_btnbot">
               <div>
-                <el-button type="primary" @click="onArchiveDown&&hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
-                <el-button type="primary" @click="onLoanDown&&hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
-                <el-button type="primary" @click="onExport&&hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
+                <el-button type="primary" @click="onArchiveDown" v-if="hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
+                <el-button type="primary" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" @click="onExport" v-if="hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
                 <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamReject)">驳回交接</el-button>

@@ -559,6 +559,7 @@ export default class UpstreamPaymentManagement extends Vue {
             if (validate) {
                 await Api.updateLoanTransferStatus(this.loanTransferStatusForm)
                 this.getList()
+                this.isOpenChangeStatus = false
                 this.$message.success('交接状态变更成功！')
             }
         })
