@@ -16,7 +16,7 @@
                         <div>文件详情</div>
                     </div>
                     <div class='file_wrap-table--flex' v-for="(item,index) in res.contractArchives" :key='index'>
-                        <div>{{moment(item.createTime).format('YYYY-MM-DD HH-mm-ss')}}</div>
+                        <div>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
                         <div>{{item.createBy}}</div>
                         <div><span v-for="(jtem,jdenx) in item.attachDocList" :key='jdenx'>
                                 <a :href="jtem.fileUrl" target="_blank">{{jtem.fileName}}</a></span></div>

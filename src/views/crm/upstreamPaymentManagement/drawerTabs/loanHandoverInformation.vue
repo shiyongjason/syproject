@@ -107,14 +107,22 @@
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
              <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index+'L'">
-                {{index+1}}、 <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
+                {{index+1}}、 <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
              </div>
             <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles">
                  暂无数据
             </div>
             <p>单次采购明细附件</p>
               <div class="info_box-img" v-for="(item,index) in data.purchaseDetailFiles" :key="index">
-                {{index+1}}、  <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
+                {{index+1}}、   <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
             </div>
             <div class="info_box-img" v-if="data.purchaseDetailFiles.length==0||!data.purchaseDetailFiles">
                  暂无数据
@@ -203,10 +211,13 @@ import { PAYMENTTYPE } from '../index.vue'
 import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN, UPSTREAM_DOWN_PURCHASE, UPSTREAM_DOWN_BILLS, UPSTREAM_REJECT, UPSTREAM_CONFIRM } from '@/utils/auth_const'
 import { interfaceUrl } from '@/api/config'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
+
 @Component({
     name: 'loanHandoverInformation',
     components: {
-        ImageAddToken
+        ImageAddToken,
+        downloadFileAddToken
     }
 })
 export default class LoanHandoverInformation extends Vue {
