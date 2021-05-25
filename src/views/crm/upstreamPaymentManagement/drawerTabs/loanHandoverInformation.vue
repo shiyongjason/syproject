@@ -106,15 +106,23 @@
         </div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
-             <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index">
-                {{index+1}}、 <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
+             <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index+'L'">
+                {{index+1}}、 <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
              </div>
             <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles">
                  暂无数据
             </div>
             <p>单次采购明细附件</p>
               <div class="info_box-img" v-for="(item,index) in data.purchaseDetailFiles" :key="index">
-                {{index+1}}、  <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
+                {{index+1}}、   <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
             </div>
             <div class="info_box-img" v-if="data.purchaseDetailFiles.length==0||!data.purchaseDetailFiles">
                  暂无数据
@@ -166,9 +174,9 @@
         </div>
         <div class="info_btnbot">
               <div>
-                <el-button type="primary" @click="onArchiveDown&&hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
-                <el-button type="primary" @click="onLoanDown&&hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
-                <el-button type="primary" @click="onExport&&hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
+                <el-button type="primary" @click="onArchiveDown" v-if="hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
+                <el-button type="primary" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" @click="onExport" v-if="hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
                 <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamReject)">驳回交接</el-button>
@@ -203,10 +211,13 @@ import { PAYMENTTYPE } from '../index.vue'
 import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN, UPSTREAM_DOWN_PURCHASE, UPSTREAM_DOWN_BILLS, UPSTREAM_REJECT, UPSTREAM_CONFIRM } from '@/utils/auth_const'
 import { interfaceUrl } from '@/api/config'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
+
 @Component({
     name: 'loanHandoverInformation',
     components: {
-        ImageAddToken
+        ImageAddToken,
+        downloadFileAddToken
     }
 })
 export default class LoanHandoverInformation extends Vue {

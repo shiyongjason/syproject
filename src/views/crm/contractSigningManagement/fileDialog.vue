@@ -132,6 +132,7 @@ export default {
         font-style: normal;
         margin-left: 10px;
         color: #169bd5;
+        cursor: pointer;
     }
 }
 </style>
