@@ -158,7 +158,7 @@
                         <div class="info_box-table--left">票面金额（元）</div>
                     </div>
                     <div class="info_box-table--flex" v-for="(jtem,jndex) in item.billAmountDetail" :key="jndex">
-                        <div class="info_box-table--left">第{{item.number}}张发票</div>
+                        <div class="info_box-table--left">第{{jtem.number}}张发票</div>
                         <div class="info_box-table--left">{{jtem.amount|fundMoneyHasTail}}</div>
                     </div>
                     <div class="info_box-table--flex">

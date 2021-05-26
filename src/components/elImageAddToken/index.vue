@@ -1,5 +1,5 @@
 <template>
-    <el-image ref="img" v-if="tokenUrl" class="default-pre-view-image" :fit="fit" :src="tokenUrl" :preview-src-list="[tokenUrl]"></el-image>
+    <el-image ref="img" v-if="tokenUrl" class="default-pre-view-image" :fit="fit" :src="tokenUrl" :preview-src-list="[tokenUrl]" :z-index="3000"></el-image>
 </template>
 
 <script>
