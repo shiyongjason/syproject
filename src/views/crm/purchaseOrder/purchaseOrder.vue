@@ -18,6 +18,7 @@
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.subsectionCode" placeholder="请选择" :clearable=true>
+                            <el-option label="全部" value=""></el-option>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -64,6 +65,7 @@
                     <div class="query-col__label">共管户信息：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.coManager" placeholder="请选择" :clearable=true>
+                            <el-option label="全部" value=""></el-option>
                             <el-option :label="item.value" :value="item.key" v-for="item in PurchaseOrderDict.coManager.list" :key="item.value"></el-option>
                         </el-select>
                     </div>
