@@ -105,8 +105,8 @@
                     <h-button table @click="openDetail(scope.data.row)">查看合同</h-button>
                     <h-button table @click="getHistory(scope.data.row)">审核记录</h-button>
                     <h-button table @click="onAbolished(scope.data.row)" v-if="scope.data.row.contractStatus!=17 && hosAuthCheck(Auths.CRM_CONTRACT_ABOLISH)">废止</h-button>
-                    <h-button table @click="onGetfile(scope.data.row)" v-if="scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
-                    <h-button table @click="onGetfile(scope.data.row)">归档</h-button>
+                    <h-button table @click="onGetfile(scope.data.row)" v-if="hosAuthCheck(Auths.CONTRACT_PLACE)&&scope.data.row.contractSignType==2&&scope.data.row.contractStatus==12&&!scope.data.row.archive">归档</h-button>
+                    <!-- <h-button table @click="onGetfile(scope.data.row)">归档</h-button> -->
                 </template>
             </hosJoyTable>
         </div>
@@ -280,7 +280,7 @@ export default {
             lastContent: '',
             fileDialog: false,
             archive: '',
-            fileStatus: [{ value: 1, label: '是' }, { value: 2, label: '否' }]
+            fileStatus: [{ value: '', label: '全部' }, { value: 1, label: '是' }, { value: 2, label: '否' }]
         }
     },
     computed: {

@@ -36,7 +36,7 @@ export const getUpStreamPaymentTotalAmountApi: (params: ReqUpStreamPaymentQuery)
 }
 
 export const updateLoanTransferStatus: (params: ReqLoanTransferChange) => AxiosPromise<void> = (params) => {
-    return axios.put('/project/api/loan-transfers/boss/change', { params })
+    return axios.put('/project/api/loan-transfers/boss/change', params)
 }
 
 // 上游支付管理导出

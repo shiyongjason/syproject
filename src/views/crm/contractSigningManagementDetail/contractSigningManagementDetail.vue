@@ -6,7 +6,7 @@
                 <div type="primary" class="btn-right" v-if="res.contractStatus=='12'&&res.contractSignType==1&&res.downloadUrl"><a :href="res.downloadUrl" target="_blank">下载合同</a></div>
             </div>
             <div class="file_wrap">
-                <h-button type="primary" @click="onGetfile">
+                <h-button type="primary" @click="onGetfile" v-if="res.contractStatus=='12'&&res.contractSignType==2&&hosAuthCheck(Auths.CONTRACT_UPDATEPLACE)">
                     更 新 归 档
                 </h-button>
                 <div class="file_wrap-table" v-if="res.contractArchives&&res.contractArchives.length>0">
@@ -16,7 +16,7 @@
                         <div>文件详情</div>
                     </div>
                     <div class='file_wrap-table--flex' v-for="(item,index) in res.contractArchives" :key='index'>
-                        <div>{{moment(item.createTime).format('YYYY-MM-DD HH-mm-ss')}}</div>
+                        <div>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</div>
                         <div>{{item.createBy}}</div>
                         <div><span v-for="(jtem,jdenx) in item.attachDocList" :key='jdenx'>
                                 <a :href="jtem.fileUrl" target="_blank">{{jtem.fileName}}</a></span></div>
@@ -48,12 +48,14 @@
 <script>
 import fileDialog from '@/views/crm/contractSigningManagement/fileDialog'
 import { getContractsContent } from './api/index'
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 export default {
     name: 'SigningManagementDetail',
     components: { fileDialog },
     data () {
         return {
+            Auths,
             vHtml: '',
             res: '',
             showLoading: false,

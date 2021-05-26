@@ -4,13 +4,13 @@
             <div class="file_scroll">
                 <div>(请上传双方盖章后的采购合同或采购明细附件，上传格式为PDF，单个文件最大允许20M )</div>
                 <div class="file_tit"><i>*</i>上传合同附件：</div>
-                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.pdf' style="margin:10px 0 0 5px">
+                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :fileNum='1' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.pdf' style="margin:10px 0 0 5px">
                     <el-button type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
                 <div class="file_box" v-for="(item,index) in docPos" :key='index'>
                     <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                     <em> <a :href="item.fileUrl" target="_blank">预览</a></em>
-                    <em>删除</em>
+                    <em @click="onDelete(item,index)">删除</em>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
@@ -31,7 +31,7 @@ export default {
             action: ccpBaseUrl + 'common/files/upload-old',
             uploadParameters: {
                 updateUid: '',
-                reservedName: false
+                reservedName: true
             },
             fileDialog: false,
             docPos: [],
@@ -64,7 +64,7 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                item.riskCheckProjectDocPos.splice(index, 1)
+                this.docPos.splice(index, 1)
                 this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -108,7 +108,7 @@ export default {
     color: #fff;
 }
 .file_scroll {
-    height: 400px;
+    height: 300px;
     overflow-y: scroll;
 }
 .file_box {
@@ -132,6 +132,7 @@ export default {
         font-style: normal;
         margin-left: 10px;
         color: #169bd5;
+        cursor: pointer;
     }
 }
 </style>

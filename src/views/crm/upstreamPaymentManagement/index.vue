@@ -87,7 +87,7 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="getList">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
-                    <h-button @click="onExport">导出列表数据</h-button>
+                    <h-button @click="onExport" v-if="hosAuthCheck(upstreamExport)">导出列表数据</h-button>
                 </div>
             </div>
             <div class="query-cont__row">
@@ -106,7 +106,7 @@
                 <!-- 资金部放款操作岗确认后，顶部展示出「上游支付信息」tab页签 -->
                  <el-tabs v-model="activeName" @tab-click="handleTabClick">
                     <el-tab-pane label="放款交接信息" name="loanHandoverInformation">
-                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
+                        <loanHandoverInformation v-if="editorDrawer" :data='loanHandoverInformation' :userInfo='userInfo' @requestAgain='onRequest' @requestBack='getList' :paymentOrderId='paymentOrderId'></loanHandoverInformation>
                     </el-tab-pane>
                     <el-tab-pane label="上游支付信息" name="upstreamPaymentInformation" v-if="isTabs">
                         <upstreamPaymentInformation :data='upstreamPaymentInformation' :userInfo='userInfo' @requestAgain='onRequest'></upstreamPaymentInformation>
@@ -211,7 +211,7 @@ import { measure, handleSubmit, validateForm } from '@/decorator/index'
 import * as Api from './api/index'
 import { ReqSupplierSubmit, ReqUpStreamPaymentQuery, RespLoanHandoverInfo, RespSupplier, RespSupplierInfo, RespUpStreamPayment, ReqLoanTransferChange, LoanTransferInfoResponse } from '@/interface/hbp-project'
 import filters from '@/utils/filters'
-import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS } from '@/utils/auth_const'
+import { UPSTREAM_PAY_DETAIL, UPSTREAM_PAY_MENT, CHANGE_LOAN_TRANSFER_STATUS, UPSTREAM_PAY_EXPORT } from '@/utils/auth_const'
 import moment from 'moment'
 import { LOAN_TRANSFER_STATUS_DONE, UPSTREAM_PAYMENT_STATUS_WAITING } from './const'
 export const PAYMENTTYPE: Map<number | null, string> = new Map([
@@ -250,6 +250,7 @@ enum TabInfoApi {
 export default class UpstreamPaymentManagement extends Vue {
     upstreamPayDetail = UPSTREAM_PAY_DETAIL
     upstreamPayment = UPSTREAM_PAY_MENT
+    upstreamExport = UPSTREAM_PAY_EXPORT
 
     $refs!: {
         form: HTMLFormElement
@@ -358,6 +359,9 @@ export default class UpstreamPaymentManagement extends Vue {
         let rules = {
             changeType: [
                 { required: true, message: '请选择变更交接状态', trigger: 'change' }
+            ],
+            remark: [
+                { required: true, message: '请输入备注', trigger: 'blur' }
             ]
         }
         return rules
@@ -493,6 +497,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.page.total = tableData.total as number
         const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.queryParams)
         this.totalAmount = totalAmountData
+        this.editorDrawer = false
     }
 
     sortChange (e) {
@@ -554,6 +559,7 @@ export default class UpstreamPaymentManagement extends Vue {
             if (validate) {
                 await Api.updateLoanTransferStatus(this.loanTransferStatusForm)
                 this.getList()
+                this.isOpenChangeStatus = false
                 this.$message.success('交接状态变更成功！')
             }
         })

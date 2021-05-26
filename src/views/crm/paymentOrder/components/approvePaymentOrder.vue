@@ -36,9 +36,6 @@
                         <el-form-item label="采购批次：">
                             {{ paymentDetail.payOrderPoDetail.poNumber | attributeComputed(PaymentOrderDict.applyType.list) }}
                         </el-form-item>
-                        <el-form-item label="所属分部：">
-                            {{ paymentDetail.projectInfo.deptName }}
-                        </el-form-item>
                         <el-form-item label="最迟发货日期：">
                             {{ paymentDetail.payOrderPoDetail.lastGoodsDate }}
                         </el-form-item>
@@ -65,16 +62,15 @@
                             {{ paymentDetail.payOrderDetail.supplierCompanyName || '-'  }}
                         </el-form-item>
                         <!-- 添加 -->
-                        <el-form-item label="银行联行号：">
-                            {{paymentDetail.payOrderDetail.supplierBankNo}}
-                        </el-form-item>
-
                         <el-form-item label="供应商开户行名称：">
                             {{paymentDetail.payOrderDetail.supplierAccountName}}
                         </el-form-item>
 
                         <el-form-item label="供应商银行账号：">
                             {{paymentDetail.payOrderDetail.supplierAccountNo}}
+                        </el-form-item>
+                        <el-form-item label="银行联行号：">
+                            {{paymentDetail.payOrderDetail.supplierBankNo}}
                         </el-form-item>
                         <el-form-item label="期望上游支付日期：">
                             {{paymentDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
@@ -85,7 +81,7 @@
                         <el-form-item label="票面金额：" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             {{paymentDetail.payOrderDetail.billClaim == 1 ? '有要求' : '无要求'}}
                         </el-form-item>
-                        <div class="mb20">
+                        <div class="mb20" v-if="paymentDetail.payOrderDetail.supplierPaymentType != 1">
                             <basicTable :tableData="paymentDetail.billAmountDetail" :tableLabel="tableLabel" :isPagination='false'>
                                 <template slot="number" slot-scope="scope">
                                     第{{ scope.data.row.number }}张票

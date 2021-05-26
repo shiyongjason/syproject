@@ -189,6 +189,7 @@ export const CRM_WHITE_OPERATE = 109212
 export const CRM_WHITE_BAOCUN = 109213
 // 好橙工
 export const CRM_GOODWORK_CLOSE = 109214 // 合作关闭
+export const CRM_TRANSFER_ADMIN = 109216 // 转让管理员 109215有个天眼查
 
 // 好橙工 申请列表
 export const CRM_APPLY_ASSIGN = 109301 // 分配
@@ -292,3 +293,19 @@ export const UPSTREAM_PAY_DOWN = 500004
 export const UPSTREAM_PAY_MENT = 500005
 // 变更交接状态
 export const CHANGE_LOAN_TRANSFER_STATUS = 500006
+// 合同签署的归档
+export const CONTRACT_PLACE = 800201
+// 合同签署的更新归档
+export const CONTRACT_UPDATEPLACE = 800202
+// 上游支付下载采购合同
+export const UPSTREAM_DOWN_PURCHASE = 800203
+// 上游支付下载票面明细
+export const UPSTREAM_DOWN_BILLS = 800204
+// 上游支付驳回交接
+export const UPSTREAM_REJECT = 800205
+// 上游支付确认交接
+export const UPSTREAM_CONFIRM = 800206
+// 列表导出数据
+export const UPSTREAM_PAY_EXPORT = 800207
+// 支付单管理放款交接
+export const LENDER_HANDOVER = 800208

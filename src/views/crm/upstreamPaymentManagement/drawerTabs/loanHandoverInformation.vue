@@ -43,20 +43,20 @@
         </div>
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">网银盾照片：</font>
-                <div class="" v-for="(item,index) in data.onlineBankingShields" :key="index">
-                    <a :href="item.fileUrl" target="_blank"><img :src="item.fileUrl" alt=""></a>
+                <div class="info-layout-img" v-for="(item,index) in data.onlineBankingShields" :key="index">
+                    <a :href="item.fileUrl" target="_blank"><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
                 </div>
             </div>
         </div>
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">共管户截图：</font>
                 <div class="info-layout-img" v-for="(item,index) in data.screenshots" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><img :src="item.fileUrl" alt=""></a>
+                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
                 </div>
             </div>
         </div>
         <!-- 货款申请信息 -->
-        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.createTime|formatterTime}}</font></div>
+        <div class="tab-layout-title"><span></span>货款申请信息：<font>申请人：{{data.applyBy||'-'}}</font><font>申请时间：{{data.applyTime|formatterTime}}</font></div>
         <div>
              <div class="info-layout-item"><font style="flex: 0 0 85px">上游供应商：</font><span>{{data.supplierCompanyName||'-'}}</span></div>
         </div>
@@ -90,7 +90,7 @@
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><img :src="item.fileUrl" alt=""></a>
+                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
                 </div>
             </div>
         </div>
@@ -106,15 +106,23 @@
         </div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
-             <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index">
-                {{index+1}}、 <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
+             <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index+'L'">
+                {{index+1}}、 <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
              </div>
             <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles">
                  暂无数据
             </div>
             <p>单次采购明细附件</p>
               <div class="info_box-img" v-for="(item,index) in data.purchaseDetailFiles" :key="index">
-                {{index+1}}、  <a :href="item.fileUrl" target="_blank" >{{item.fileName}}</a>
+                {{index+1}}、   <downloadFileAddToken isPreview
+                                                              :file-name="item.fileName"
+                                                              :file-url="item.fileUrl"
+                                                              :a-link-words="item.fileName"
+                                                              is-type="main" />
             </div>
             <div class="info_box-img" v-if="data.purchaseDetailFiles.length==0||!data.purchaseDetailFiles">
                  暂无数据
@@ -166,13 +174,13 @@
         </div>
         <div class="info_btnbot">
               <div>
-                <el-button type="primary" @click="onArchiveDown">下载采购合同</el-button>
-                <el-button type="primary" @click="onLoanDown">下载放款交接单</el-button>
-                <el-button type="primary" @click="onExport">下载出票明细</el-button>
+                <el-button type="primary" @click="onArchiveDown" v-if="hosAuthCheck(upstreamDownPurchase)">下载采购合同</el-button>
+                <el-button type="primary" @click="onLoanDown" v-if="hosAuthCheck(upstreamPayDown)">下载放款交接单</el-button>
+                <el-button type="primary" @click="onExport" v-if="hosAuthCheck(upstreamDownBills)&&data.supplierPaymentType==2">下载出票明细</el-button>
               </div>
               <div style="margin-top:10px">
-                <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1">驳回交接</el-button>
-                <el-button type="primary" @click="onConfirm" v-if="data.loanTransferStatus==1">确认交接</el-button>
+                <el-button type="primary" @click="onRefuse" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamReject)">驳回交接</el-button>
+                <el-button type="primary" @click="onConfirm" v-if="data.loanTransferStatus==1&&hosAuthCheck(upstreamConfirm)">确认交接</el-button>
               </div>
         </div>
           <el-dialog :title='title' :visible.sync="infoDialog" width="40%" :modal=false :close-on-click-modal="false" :before-close="onCancelDialog">
@@ -200,10 +208,17 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { LoanTransferInfoResponse, ReqLoanTransferUpdate, BillAmountResponse } from '@/interface/hbp-project'
 import { onConfirmApi, archiveDown, downLoan, exportExcel, onSubmitReject, onSubmitConfirm, getMoreBill } from '../api/index'
 import { PAYMENTTYPE } from '../index.vue'
-import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN } from '@/utils/auth_const'
+import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN, UPSTREAM_DOWN_PURCHASE, UPSTREAM_DOWN_BILLS, UPSTREAM_REJECT, UPSTREAM_CONFIRM } from '@/utils/auth_const'
 import { interfaceUrl } from '@/api/config'
+import ImageAddToken from '@/components/imageAddToken/index.vue'
+import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
+
 @Component({
-    name: 'loanHandoverInformation'
+    name: 'loanHandoverInformation',
+    components: {
+        ImageAddToken,
+        downloadFileAddToken
+    }
 })
 export default class LoanHandoverInformation extends Vue {
     @Prop({ default: '' }) readonly data!:LoanTransferInfoResponse
@@ -217,6 +232,10 @@ export default class LoanHandoverInformation extends Vue {
     upstreamPayConfirmEx = UPSTREAM_PAY_CONFIRM_EX
     upstreamPayConfirmLoan = UPSTREAM_PAY_CONFIRM_LOAN
     upstreamPayDown = UPSTREAM_PAY_DOWN
+    upstreamDownPurchase = UPSTREAM_DOWN_PURCHASE
+    upstreamDownBills = UPSTREAM_DOWN_BILLS
+    upstreamReject = UPSTREAM_REJECT
+    upstreamConfirm = UPSTREAM_CONFIRM
 
     paymentType=PAYMENTTYPE
     infoDialog:boolean = false
@@ -301,6 +320,7 @@ export default class LoanHandoverInformation extends Vue {
             if (valid) {
                 if (this.title == '驳回') {
                     await onSubmitReject(this.dialogFormData)
+                    this.$emit('requestBack')
                 } else {
                     // 交接
                     await onSubmitConfirm(this.dialogFormData)
