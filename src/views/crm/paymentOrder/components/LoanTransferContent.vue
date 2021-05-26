@@ -159,7 +159,7 @@
                     </div>
                     <el-form-item label="中登网质押编号：" prop='pledgeNo' style="marginLeft:-44px">
                         <!-- 长度为50位以内字母或数字。 -->
-                        <el-input placeholder="请输入" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
+                        <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
                         <div class="reviewResolutionForm-title">
                             评审决议流程：
@@ -176,7 +176,7 @@
                             货款支付流程：
                         </div>
                         <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-38px">
-                            <el-input placeholder="请输入" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
+                            <el-input placeholder="请输入OA货款支付编号" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
                         </el-form-item>
                         <el-form-item label="OA货款支付流程状态：" prop='oaStatus' style="marginLeft:-10px;marginTop:20px" >
                             <el-select v-model="reviewResolutionForm.oaStatus" placeholder="请选择">
