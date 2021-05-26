@@ -17,13 +17,13 @@
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}} （{{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}）</span>
+                    <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
                     <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}} （{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}）</span>
+                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?' （':''}}{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'）':''}}</span>
                 </div>
             </div>
             <!-- 采购合同信息 -->
@@ -157,17 +157,17 @@
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
                         质押信息：
                     </div>
-                    <el-form-item label="中登网质押编号：" prop='pledgeNo' style="marginLeft:-44px">
+                    <el-form-item label="中登网质押编号：" prop='pledgeNo' style="marginLeft:-8px">
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
                         <div class="reviewResolutionForm-title">
                             评审决议流程：
                         </div>
-                        <div class="reviewResolutionForm-reviewResolutionNo">
+                        <div class="reviewResolutionForm-reviewResolutionNo" style="margin-left: 32px;">
                             评审决议编号：{{reviewResolutionForm.reviewResolutionNo||'-'}}
                         </div>
-                        <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-31px;marginTop:10px">
+                        <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
                             <el-select v-model="reviewResolutionForm.reviewResolutionStatus" placeholder="请选择">
                                 <el-option label="已完结" :value="1"></el-option>
                             </el-select>
@@ -175,7 +175,7 @@
                         <div class="reviewResolutionForm-title">
                             货款支付流程：
                         </div>
-                        <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-38px">
+                        <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-9px">
                             <el-input placeholder="请输入OA货款支付编号" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
                         </el-form-item>
                         <el-form-item label="OA货款支付流程状态：" prop='oaStatus' style="marginLeft:-10px;marginTop:20px" >
