@@ -184,13 +184,13 @@
               </div>
         </div>
           <el-dialog :title='title' :visible.sync="infoDialog" width="40%" :modal=false :close-on-click-modal="false" :before-close="onCancelDialog">
-           <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-            <el-form-item label="请输入驳回原因:" prop="remark" v-if="title=='驳回'">
+           <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
+            <el-form-item label="驳回原因:" prop="remark" v-if="title=='驳回'">
                 <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}"
                 maxlength="500"
                 show-word-limit></el-input>
             </el-form-item>
-             <el-form-item label="请输入交接备注:" prop="remark" v-if="title=='交接'">
+             <el-form-item label="交接备注:" v-if="title=='交接'">
                 <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}"
                 maxlength="200"
                 show-word-limit></el-input>
@@ -250,6 +250,7 @@ export default class LoanHandoverInformation extends Vue {
     get formRules () {
         let rules = {
             remark: [{
+                required: true,
                 validator: (rule, value, callback) => {
                     console.log('22', this.title)
                     if (value === '') {
@@ -274,7 +275,7 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     async onArchiveDown () {
-        const { data } = await archiveDown(this.paymentOrderId)
+        const { data } = await archiveDown(this.data.loanTransferId)
         window.open(data)
     }
 
@@ -325,6 +326,7 @@ export default class LoanHandoverInformation extends Vue {
                     // 交接
                     await onSubmitConfirm(this.dialogFormData)
                     this.$emit('requestAgain')
+                    this.$emit('requestBack')
                 }
                 this.$message.success('提交成功！')
                 this.infoDialog = false
