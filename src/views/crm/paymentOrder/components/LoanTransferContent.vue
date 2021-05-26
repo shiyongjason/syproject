@@ -11,18 +11,18 @@
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>质押信息：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>质押信息：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font style="width: 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
                     <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}} （{{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}）</span>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font style="width: 120px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
                     <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}} （{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}）</span>
                 </div>
             </div>
