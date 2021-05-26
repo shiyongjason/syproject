@@ -5,32 +5,32 @@
             <div class="tab-layout-title" style="marginTop:0">
                 <span></span>
                 <div class="tab-layout-title-box">
-                    质押与终审决议信息：
+                    质押与终审决议信息
                     <h-button table @click="handleOpenDialog" v-if="operateStatus==1">编辑</h-button>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>质押信息：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>质押信息：</font><span>{{LoanTransferContent.reviewResolutionResponse.pledgeNo||'-'}}</span>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}} {{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}</span>
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程：</font>
+                    <span>{{LoanTransferContent.reviewResolutionResponse.reviewResolutionStatus==1?'已完结':''}} （{{LoanTransferContent.reviewResolutionResponse.reviewResolutionNo||'-'}}）</span>
                 </div>
             </div>
             <div class="info-layout">
                 <div class="info-layout-item">
-                    <font><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
-                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}} {{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}</span>
+                    <font style="flex:0 0 110px;"><em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>货款支付流程：</font>
+                    <span>{{LoanTransferContent.reviewResolutionResponse.oaStatus==1?'已完结':''}} （{{LoanTransferContent.reviewResolutionResponse.oaNo||'-'}}）</span>
                 </div>
             </div>
             <!-- 采购合同信息 -->
             <div class="tab-layout-title">
                 <span></span>
                 <div class="tab-layout-title-box">
-                    采购合同信息：
+                    采购合同信息
                     <h-button table @click="handleOpenDialogUpload" v-if="operateStatus==1">编辑</h-button>
                 </div>
             </div>
@@ -65,7 +65,7 @@
             <div class="tab-layout-title" v-if="LoanTransferContent.supplierPaymentType!=upstreamPaymentMethod.bankTransfer">
                 <span></span>
                 <div class="tab-layout-title-box">
-                    票面金额信息：
+                    票面金额信息
                     <h-button table @click="handleOpenDialogVoter" v-if="operateStatus==1">编辑</h-button>
                 </div>
             </div>
@@ -105,10 +105,10 @@
                         <div v-for="(obj,objIndex) in moreBillAmount" :key="objIndex+'table'">
                             <div class="info-layout" style="font-size: 14px;">
                                 <div class="info-layout-item">
-                                    <font style="flex: 0 0 85px;">{{objIndex==0?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
+                                    <font style="flex: 0 0 85px;">{{objIndex==moreBillAmount.length-1?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
                                 </div>
                                 <div class="info-layout-item">
-                                    <font style="flex: 0 0 70px;">{{objIndex==0?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
+                                    <font style="flex: 0 0 70px;">{{objIndex==moreBillAmount.length-1?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
                                 </div>
                             </div>
                             <div class='bill-table' v-if="moreBillAmount">
@@ -135,7 +135,7 @@
             <div class="tab-layout-title">
                 <span></span>
                 <div class="tab-layout-title-box">
-                    备注信息：
+                    备注信息
                 </div>
             </div>
             <div class="tab-textarea">
@@ -153,30 +153,36 @@
         <!-- 质押与终审决议信息 dialog -->
         <el-dialog title="质押与终审决议信息" :close-on-click-modal='false' :visible.sync="openDialog" width="750px" :before-close="()=>onCancel('reviewResolutionForm')" :modal='false'>
             <div class="dialog-ctx reviewResolution">
-                <el-form id='elform' :model="reviewResolutionForm" :rules="formRules" label-width="150px" ref="reviewResolutionForm">
-                    <el-form-item label="质押信息：" prop='pledgeNo'>
+                <el-form id='elform' :model="reviewResolutionForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
+                    <div class="reviewResolutionForm-title" style="marginTop:0px">
+                        质押信息：
+                    </div>
+                    <el-form-item label="中登网质押编号：" prop='pledgeNo' style="marginLeft:-44px">
                         <!-- 长度为50位以内字母或数字。 -->
                         <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
-                    <div class="flexlayout" style="margin-left:31px">
-                        <em style="color:#F56C6C;font-style: normal;margin-right: 3px;">*</em>评审决议流程： 评审决议编号：{{reviewResolutionForm.reviewResolutionNo||'-'}}
-                        <el-form-item label="" prop='reviewResolutionStatus' style="margin-left:-140px">
+                        <div class="reviewResolutionForm-title">
+                            评审决议流程：
+                        </div>
+                        <div class="reviewResolutionForm-reviewResolutionNo">
+                            评审决议编号：{{reviewResolutionForm.reviewResolutionNo||'-'}}
+                        </div>
+                        <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-31px;marginTop:10px">
                             <el-select v-model="reviewResolutionForm.reviewResolutionStatus" placeholder="请选择">
                                 <el-option label="已完结" :value="1"></el-option>
                             </el-select>
                         </el-form-item>
-                    </div>
-
-                    <div class="flexlayout">
-                        <el-form-item label="货款支付流程：" prop='oaNo'>
+                        <div class="reviewResolutionForm-title">
+                            货款支付流程：
+                        </div>
+                        <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-38px">
                             <el-input placeholder="请输入OA货款支付编号" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
                         </el-form-item>
-                        <el-form-item label="" prop='oaStatus' style="margin-left:-140px">
+                        <el-form-item label="OA货款支付流程状态：" prop='oaStatus' style="marginLeft:-10px;marginTop:20px" >
                             <el-select v-model="reviewResolutionForm.oaStatus" placeholder="请选择">
                                 <el-option label="已完结" :value="1"></el-option>
                             </el-select>
                         </el-form-item>
-                    </div>
 
                 </el-form>
             </div>
@@ -216,7 +222,6 @@
                 </div>
                 <div class="upload-title">
                     <font style="font-weight:bold">单次采购明细附件(若有)：</font>
-                    <span v-if="uploadForm.purchaseDetailsDocs.length==0">-</span>
                     <!-- C -->
                     <div>
                         <div class="file_box" v-for="(item,index) in uploadForm.purchaseDetailsDocs" :key="item.fileUrl">
@@ -329,7 +334,8 @@ export default {
         totalAmount () {
             let total = ''
             total = this.billAmountForm.billAmount.reduce((t, c) => {
-                t = Number(t) + Number(c.amount)
+                // t = Number(t) + Number(c.amount)
+                t = this.$plus(Number(t), Number(c.amount))
                 return t
             }, 0)
             return total
@@ -507,6 +513,8 @@ export default {
             this.$refs['formVoter'].validate(async (valid) => {
                 if (valid) {
                     if (this.totalAmount != this.LoanTransferContent.applyAmount) {
+                        console.log('🚀 --- totalAmount', this.totalAmount)
+                        console.log('🚀 --- this.LoanTransferContent.applyAmount', this.LoanTransferContent.applyAmount)
                         this.$message.error(`提示：合计票面金额应等于货款申请金额`)
                         return
                     }

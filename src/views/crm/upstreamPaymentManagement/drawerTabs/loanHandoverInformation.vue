@@ -86,7 +86,7 @@
         <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|formatterTime}}</font></div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
-             <div class="info_box-txt">预付款金额：{{data.advancePaymentAmount|money}}元 &nbsp;&nbsp;  确认到账时间：{{data.confirmArrivalTime|formatterTime}}  &nbsp;&nbsp;     确认人：{{data.confirmArrivalBy}}</div>
+             <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|formatterTime}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
@@ -124,13 +124,13 @@
                                                               :a-link-words="item.fileName"
                                                               is-type="main" />
             </div>
-            <div class="info_box-img" v-if="data.purchaseDetailFiles.length==0||!data.purchaseDetailFiles">
+            <div class="info_box-img" v-if="data.purchaseDetailFiles.length==0||!data.purchaseDetailFiles" style="color:#999999">
                  暂无数据
             </div>
         </div>
-        <div v-if="data.supplierPaymentType==2">
-         <div class="info_box-txt"><h3>票面信息</h3></div>
-         <div class="info_box-txt">更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}} &nbsp;&nbsp; 更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</div>
+        <div style="margin-top:20px" v-if="data.supplierPaymentType==2">
+         <div><h3>票面信息</h3></div>
+         <div class="info_box-txt"><font>更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}}</font><font>更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</font></div>
         <div class="info_box-table">
             <div class="info_box-table--flex">
                 <div class="info_box-table--left">出票张数</div>
@@ -138,11 +138,11 @@
             </div>
              <div class="info_box-table--flex" v-for="(item,index) in data.billAmountResponse.billAmountDetail" :key="index">
                 <div class="info_box-table--left">第{{item.number}}张发票</div>
-                <div class="info_box-table--left">{{item.amount|money}}</div>
+                <div class="info_box-table--left">{{item.amount|fundMoneyHasTail}}</div>
             </div>
              <div class="info_box-table--flex">
                 <div class="info_box-table--left">合计</div>
-                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|money}}</div>
+                <div class="info_box-table--left">{{data.billAmountResponse.totalAmount|fundMoneyHasTail}}</div>
             </div>
         </div>
         <transition name="fade" mode="out-in">
@@ -159,11 +159,11 @@
                     </div>
                     <div class="info_box-table--flex" v-for="(jtem,jndex) in item.billAmountDetail" :key="jndex">
                         <div class="info_box-table--left">第{{item.number}}张发票</div>
-                        <div class="info_box-table--left">{{jtem.amount|money}}</div>
+                        <div class="info_box-table--left">{{jtem.amount|fundMoneyHasTail}}</div>
                     </div>
                     <div class="info_box-table--flex">
                         <div class="info_box-table--left">合计</div>
-                        <div class="info_box-table--left">{{item.totalAmount|money}}</div>
+                        <div class="info_box-table--left">{{item.totalAmount|fundMoneyHasTail}}</div>
                     </div>
                 </div>
             </div>
@@ -184,13 +184,13 @@
               </div>
         </div>
           <el-dialog :title='title' :visible.sync="infoDialog" width="40%" :modal=false :close-on-click-modal="false" :before-close="onCancelDialog">
-           <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="130px" class="demo-ruleForm">
-            <el-form-item label="请输入驳回原因:" prop="remark" v-if="title=='驳回'">
+           <el-form :model="dialogFormData" :rules="formRules" ref="ruleForm" label-width="90px" class="demo-ruleForm">
+            <el-form-item label="驳回原因:" prop="remark" v-if="title=='驳回'">
                 <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}"
                 maxlength="500"
                 show-word-limit></el-input>
             </el-form-item>
-             <el-form-item label="请输入交接备注:" prop="remark" v-if="title=='交接'">
+             <el-form-item label="交接备注:" v-if="title=='交接'">
                 <el-input type="textarea" v-model.trim="dialogFormData.remark" :autosize="{ minRows: 4, maxRows: 6}"
                 maxlength="200"
                 show-word-limit></el-input>
@@ -250,6 +250,7 @@ export default class LoanHandoverInformation extends Vue {
     get formRules () {
         let rules = {
             remark: [{
+                required: true,
                 validator: (rule, value, callback) => {
                     console.log('22', this.title)
                     if (value === '') {
@@ -274,7 +275,7 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     async onArchiveDown () {
-        const { data } = await archiveDown(this.paymentOrderId)
+        const { data } = await archiveDown(this.data.loanTransferId)
         window.open(data)
     }
 
@@ -325,6 +326,7 @@ export default class LoanHandoverInformation extends Vue {
                     // 交接
                     await onSubmitConfirm(this.dialogFormData)
                     this.$emit('requestAgain')
+                    this.$emit('requestBack')
                 }
                 this.$message.success('提交成功！')
                 this.infoDialog = false

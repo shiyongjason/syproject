@@ -77,7 +77,7 @@ export default {
             this.form.createBy = JSON.parse(sessionStorage.getItem('userInfo')).employeeName
             if (this.docPos.length == 0) {
                 this.$message({
-                    message: '请先上传文件',
+                    message: '必填项不得为空',
                     type: 'warning'
                 })
                 return
