@@ -130,6 +130,21 @@
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                             </p>
                         </div>
+
+                        <div class="row-filed">
+                            <p class="col-filed col-33">
+                                <span class="label">上游支付方式：</span>
+                                {{paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list)}}
+                            </p>
+                            <p class="col-filed col-33">
+                                <span class="label">期望上游支付日期：</span>
+                                {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
+                            </p>
+                            <p class="col-filed  col-33">
+                                <span class="label">备注信息：</span>
+                                {{paymentOrderDetail.payOrderDetail.specialRemark}}
+                            </p>
+                        </div>
                         <div class="row-filed" v-if="paymentOrderDetail.payOrderDetail.supplierPaymentType==2">
                             <div class="ticket-table">
                                 <div class="tr">
@@ -141,30 +156,14 @@
                                     </div>
                                 </div>
                                 <div class="tr" v-for="(item,index) in paymentOrderDetail.billAmountResponse.billAmountDetail" :key="index">
-                                    <div class="td">第{{item.number}}张票</div>
-                                    <div class="td">{{item.amount|money}}</div>
+                                    <div class="td">第 {{item.number}} 张票</div>
+                                    <div class="td">{{item.amount|fundMoneyHasTail}}</div>
                                 </div>
                                 <div class="tr">
                                     <div class="td">合计 </div>
-                                    <div class="td">{{paymentOrderDetail.billAmountResponse.totalAmount|money}}</div>
+                                    <div class="td">{{paymentOrderDetail.billAmountResponse.totalAmount|fundMoneyHasTail}}</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row-filed">
-                            <p class="col-filed col-33">
-                                <span class="label">上游支付方式：</span>
-                                {{
-                                            paymentOrderDetail.payOrderDetail.supplierPaymentType | attributeComputed(PaymentOrderDict.supplierPaymentType.list)
-                                        }}
-                            </p>
-                            <p class="col-filed col-33">
-                                <span class="label">期望上游支付日期：</span>
-                                {{paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate?moment(paymentOrderDetail.payOrderDetail.expectSupplierPaymentDate).format('YYYY-MM-DD'):''}}
-                            </p>
-                            <p class="col-filed  col-33">
-                                <span class="label">备注信息：</span>
-                                {{paymentOrderDetail.payOrderDetail.specialRemark}}
-                            </p>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-33">
@@ -173,9 +172,7 @@
                             </p>
                             <p class="col-filed col-33">
                                 <span class="label">申请人：</span>
-                                {{
-                                paymentOrderDetail.payOrderDetail.createBy
-                            }}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
+                                {{paymentOrderDetail.payOrderDetail.createBy}}（{{ paymentOrderDetail.payOrderDetail.createPhone }}）
                             </p>
                         </div>
                         <div class="row-filed" v-if="PaymentOrderDict.status.list[7].key === paymentOrderDetail.payOrderDetail.status">
