@@ -8,7 +8,11 @@
                 <div class="td">{{ item.contractStatus | attributeComputed(PurchaseOrderDict.contractStatus.list) }}</div>
                 <div class="td">{{ item.signedTime | formatDate('YYYY-MM-DD HH:mm:ss') }}</div>
                 <div class="td">{{ item.createBy }}</div>
-                <div class="td"><h-button table v-if="hosAuthCheck(CRM_PURCHASE_ORDER_CONTRACT_SEE)" @click="goContractDetail(item.contractId)">查看合同</h-button></div>
+                <div class="td">
+                    <h-button table v-if="hosAuthCheck(CRM_PURCHASE_ORDER_CONTRACT_SEE)" @click="goContractDetail(item.contractId)">查看合同</h-button>
+<!--                    todo 当合同状态为“合同已签署”时，操作列常驻展示“去归档”。点击去归档，进入合同详情页面。-->
+                    <h-button table v-if="true" @click="goContractDetail(item.contractId)">去归档</h-button>
+                </div>
             </div>
         </template>
         <template v-else>

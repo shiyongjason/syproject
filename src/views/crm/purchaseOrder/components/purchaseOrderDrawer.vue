@@ -41,6 +41,27 @@
                                 创建时间: {{ purchaseOrderDetail.purchaseOrder.createTime | formatDate('YYYY-MM-DD HH:mm:ss') }}
                             </p>
                         </div>
+                        <div class="row-filed">
+                            <div class="col-filed info-img-group">
+                                <span class="label">网银盾照片： </span>
+                                <div class="content" v-if="purchaseOrderDetail.onlineBankingShields && purchaseOrderDetail.onlineBankingShields.length > 0">
+                                    <p class="img-box" :key="item.fileUrl" v-for="item in purchaseOrderDetail.onlineBankingShields">
+                                          <ImageAddToken :fileUrl="item.fileUrl" alt="" />
+                                    </p>
+                                </div>
+                                <p v-else>-</p>
+                            </div>
+                            <div class="col-filed info-img-group">
+                                <span class="label">共管户截图： </span>
+                                <div class="content" v-if="purchaseOrderDetail.screenshots && purchaseOrderDetail.screenshots.length > 0">
+                                    <p class="img-box" :key="item.fileUrl" v-for="item in purchaseOrderDetail.screenshots">
+                                          <ImageAddToken :fileUrl="item.fileUrl" alt="" />
+                                    </p>
+                                </div>
+                                <p v-else>-</p>
+                            </div>
+                        </div>
+
                         <template v-if="purchaseOrderDetail.purchaseOrder.status !== PurchaseOrderDict.status.list[0].key">
                             <div class="row-filed">
                                 <p class="col-filed">
@@ -258,6 +279,7 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import PureCollapseTr from '@/views/crm/purchaseOrder/components/pureCollapseTr'
 import PurchaseOrderDialogStatus from '@/views/crm/purchaseOrder/dialogStatus'
+import ImageAddToken from '@/components/imageAddToken'
 export default {
     name: 'purchaseOrderDrawer',
     props: {
@@ -289,7 +311,7 @@ export default {
             PaymentOrderDict
         }
     },
-    components: { PureCollapseTr },
+    components: { PureCollapseTr, ImageAddToken },
     computed: {
         ...mapState({
             userInfo: state => state.userInfo
@@ -459,7 +481,7 @@ export default {
         .content {
             display: flex;
             flex-wrap: wrap;
-            span {
+            .img-box {
                 display: flex;
                 width: 80px;
                 height: 80px;

@@ -59,14 +59,9 @@ const actions = {
         const { data } = await instance.get('/product/api/market/spike/sku/page', { params })
         commit(types.SKU_DATA, data)
     },
-    /** 活动详情 */
-    async eventInfo ({ commit }, { id, isFirst }) {
+    /** 秒杀活动详情 */
+    async eventInfo ({ commit }, { id }) {
         const { data } = await instance.get(`/ops/api/spike/base-info/${id}`, {})
-        if (isFirst) {
-            commit(types.EMPTY_EVENT_PRODUCTS)
-            commit(types.ADD_EVENT_PRODUCTS, data.spikeSku)
-        }
-        data.spikeSku = state.eventProducts
         commit(types.SET_EVENT_INFO, data)
     },
     async findSpike ({ commit }, params) {
@@ -81,14 +76,9 @@ const actions = {
         const { data } = await axios.get('ets/api/b2b/activity/hover', { params })
         commit(types.LIST_TRACK, data)
     },
-    /** 复制活动 */
-    async copy ({ commit }, { id, isFirst }) {
+    /** 复制秒杀活动 */
+    async copy ({ commit }, { id }) {
         const { data } = await instance.get(`/ops/api/spike/copy/${id}`, {})
-        if (isFirst) {
-            commit(types.EMPTY_EVENT_PRODUCTS)
-            commit(types.ADD_EVENT_PRODUCTS, data.spikeSku)
-        }
-        data.spikeSku = state.eventProducts
         commit(types.SET_EVENT_INFO, data)
     }
 

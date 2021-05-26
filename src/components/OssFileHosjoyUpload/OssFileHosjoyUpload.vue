@@ -10,20 +10,20 @@
                         </div>
                     </div>
                     <!-- TODO: 这块功能还未涉及到，已经更新了对应代码 没有场景用到，可能会有bug-->
-                    <div class="pdfimg" v-if="(item.fileUrl).indexOf('.pdf') != -1">
+                    <div class="pdfimg" v-if="_checkPicType(item,['.pdf'])">
                         <img :src="pdfbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.xls') != -1||(item.fileUrl).indexOf('.xlxs') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.xls','.xlsx'])">
                         <img :src="xlsbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.zip') != -1||(item.fileUrl).indexOf('.rar') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.zip','.rar'])">
                         <img :src="zipbase">
                     </div>
-                    <div class="pdfimg" v-else-if="(item.fileUrl).indexOf('.doc') != -1||(item.fileUrl).indexOf('.docx') != -1||(item.fileUrl).indexOf('.word') != -1">
+                    <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
-<!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
-                    <elImageAddToken  v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
+                    <!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
+                    <elImageAddToken v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
                 </div>
             </template>
         </template>
@@ -31,9 +31,9 @@
             <span v-for="(item,index) in fileList" :key="index" class="posrtv">
                 <template v-if="item&&item.fileUrl">
                     <i class="el-icon-document"></i>
-<!--                    <a src="item.fileUrl" target="_blank">-->
-<!--                        <font>{{item.fileName}}</font>-->
-<!--                    </a>-->
+                    <!--                    <a src="item.fileUrl" target="_blank">-->
+                    <!--                        <font>{{item.fileName}}</font>-->
+                    <!--                    </a>-->
                     <downloadFileAddToken :file-name="item.fileName" :file-url="item.fileUrl" :a-link-words="item.fileName"></downloadFileAddToken>
                     <div class="abs">
                         <i class="el-icon-circle-close" @click="remove(index)"></i>
@@ -43,7 +43,7 @@
         </template>
         <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
             <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
-                       :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
+                :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
                 <!-- 默认插槽 -->
                 <slot>
                     <div class="default-upload">
@@ -148,6 +148,13 @@ export default {
                 this.$emit('successCb')
                 this.$emit('successArg', obj)
             }, 500)
+        },
+        // 校验大小
+        _checkPicType (item, typePic) {
+            if (item && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
+                return true
+            }
+            return false
         },
         doRemove () {
             this.fileList.splice(this.index, 1)

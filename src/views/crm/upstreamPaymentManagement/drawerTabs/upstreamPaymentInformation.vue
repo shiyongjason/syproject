@@ -20,9 +20,9 @@
                     <div style="width:220px"><font>操作时间：</font><i>{{item.createTime||'-'|formatterTime}}</i></div>
                 </div>
                 <!-- 支付银行：若上游支付方式为银行承兑时，展示此项；若上游支付方式为银行转账时，不展示此项。 -->
-                <div class="upstreamPaymentInformation-item-info-item" v-if="data.supplierPaymentType == 2">
+                <!-- <div class="upstreamPaymentInformation-item-info-item" v-if="data.supplierPaymentType == 2">
                     <div style="width:460px"><font>支付银行：</font><i>{{item.paymentBank||'-'}}</i></div>
-                </div>
+                </div> -->
                 <div class="upstreamPaymentInformation-item-info-item">
                     <div>
                         <font>支付凭证：</font>

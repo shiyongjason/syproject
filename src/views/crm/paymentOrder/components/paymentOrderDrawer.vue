@@ -2,7 +2,7 @@
     <div class="drawer-wrap">
         <!-- <el-drawer title="支付单详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='65%'
                    :before-close="handleClose" :wrapperClosable=false> -->
-        <h-drawer title="支付单详情" :visible.sync="drawer" direction='rtl' size='60%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
+        <h-drawer v-if="drawer" title="支付单详情" :visible.sync="drawer" direction='rtl' size='60%' :wrapperClosable="false" :modal="false" :beforeClose="handleClose">
             <template #connect>
                 <h-button type="primary" v-if="paymentOrderDetail.payOrderDetail.isShowDownloadLoan&&hosAuthCheck(Auths.CRM_PAYMENT_REVIEW_DOWN)" @click="onDownFile">下载放款交接单</h-button>
                 <div class="drawer-content">
@@ -129,7 +129,26 @@
                                 <span class="label">供应商银行账号：</span>
                                 {{paymentOrderDetail.payOrderDetail.supplierAccountNo}}
                             </p>
-
+                        </div>
+                        <div class="row-filed" v-if="paymentOrderDetail.payOrderDetail.supplierPaymentType==2">
+                            <div class="ticket-table">
+                                <div class="tr">
+                                    <div class="th">
+                                        出票张数
+                                    </div>
+                                    <div class="th">
+                                        票面金额（元）
+                                    </div>
+                                </div>
+                                <div class="tr" v-for="(item,index) in paymentOrderDetail.billAmountResponse.billAmountDetail" :key="index">
+                                    <div class="td">第{{item.number}}张票</div>
+                                    <div class="td">{{item.amount|money}}</div>
+                                </div>
+                                <div class="tr">
+                                    <div class="td">合计 </div>
+                                    <div class="td">{{paymentOrderDetail.billAmountResponse.totalAmount|money}}</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row-filed">
                             <p class="col-filed col-33">
@@ -148,11 +167,11 @@
                             </p>
                         </div>
                         <div class="row-filed">
-                            <p class="col-filed">
+                            <p class="col-filed col-33">
                                 <span class="label">申请时间：</span>
                                 {{ paymentOrderDetail.payOrderDetail.applyDate | formatDate('YYYY-MM-DD HH:mm:ss') }}
                             </p>
-                            <p class="col-filed">
+                            <p class="col-filed col-33">
                                 <span class="label">申请人：</span>
                                 {{
                                 paymentOrderDetail.payOrderDetail.createBy
@@ -205,57 +224,57 @@
                                 <!--                            && paymentOrderDetail.payOrderDetail.orderLetterStatus !== PaymentOrderDict.orderLetterStatus.list[2].key-->
                                 <template v-if="(!paymentOrderDetail.payOrderDetail.closeReasonCode || paymentOrderDetail.payOrderDetail.closeReasonCode >= PaymentOrderDict.closeReasonCode.list[1].key)">
                                     <div class="row-filed">
-                                        <p class="col-filed col-25">
+                                        <p class="col-filed col-33">
                                             <span class="label">应收账款质押：</span>{{
                                             paymentOrderDetail.payOrderDetail.accountReceivablePledgeType | attributeComputed(PaymentOrderDict.accountReceivablePledgeType.list)
                                         }}
                                         </p>
 
-                                        <p class="col-filed col-25">
+                                        <p class="col-filed col-33">
                                             <span class="label">上游货款方式：</span>{{
                                             paymentOrderDetail.payOrderDetail.supplierPaymentMethod  | attributeComputed(PaymentOrderDict.supplierPaymentMethod.list)
                                         }}
                                         </p>
-                                        <p class="col-filed col-25">
+                                        <p class="col-filed col-33">
                                             <span class="label">下游合作方式：</span>{{
                                             paymentOrderDetail.payOrderDetail.dealerCooperationMethod==2?'代收代付': paymentOrderDetail.payOrderDetail.dealerCooperationMethod==1?'垫资代采':'-'
                                         }}
                                         </p>
                                     </div>
+                                    <!--                                    <div class="row-filed">-->
+                                    <!--                                        &lt;!&ndash; 新增 &ndash;&gt;-->
+                                    <!--                                        <div class="col-filed info-img-group">-->
+                                    <!--                                            <span class="label">网银盾照片：</span>-->
+                                    <!--                                            <p class="content">-->
+                                    <!--                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">-->
+                                    <!--                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles" @click="handle(item.fileUrl)">-->
+                                    <!--                                                        <img :src=item.fileUrl />-->
+                                    <!--                                                    </span>-->
+                                    <!--                                                </template>-->
+                                    <!--                                            </p>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
+                                    <!--                                    <div class="row-filed">-->
+                                    <!--                                        &lt;!&ndash; 新增 &ndash;&gt;-->
+                                    <!--                                        <div class="col-filed info-img-group">-->
+                                    <!--                                            <span class="label">共管户截图：</span>-->
+                                    <!--                                            <p class="content">-->
+                                    <!--                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">-->
+                                    <!--                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles" @click="handle(item.fileUrl)">-->
+                                    <!--                                                        <img :src=item.fileUrl />-->
+                                    <!--                                                    </span>-->
+                                    <!--                                                </template>-->
+                                    <!--                                            </p>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </div>-->
                                     <div class="row-filed">
-                                        <!-- 新增 -->
-                                        <div class="col-filed info-img-group">
-                                            <span class="label">网银盾照片：</span>
-                                            <p class="content">
-                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.shieldFiles">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.shieldFiles" @click="handle(item.fileUrl)">
-                                                        <img :src=item.fileUrl />
-                                                    </span>
-                                                </template>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row-filed">
-                                        <!-- 新增 -->
-                                        <div class="col-filed info-img-group">
-                                            <span class="label">共管户截图：</span>
-                                            <p class="content">
-                                                <template v-if="paymentOrderDetail.payOrderDetail && paymentOrderDetail.payOrderDetail.managedFiles">
-                                                    <span class="img-box" :key="item.url" v-for="item in paymentOrderDetail.payOrderDetail.managedFiles" @click="handle(item.fileUrl)">
-                                                        <img :src=item.fileUrl />
-                                                    </span>
-                                                </template>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row-filed">
-                                        <p class="col-filed col-25">
+                                        <p class="col-filed col-33">
                                             <span class="label">质押信息：</span>{{
                                             paymentOrderDetail.payOrderDetail.pledgeNo
                                         }}
                                         </p>
-                                        <p class="col-filed col-25">
-                                            <span class="label" style="min-width:95px">OA货款支付编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
+                                        <p class="col-filed col-33">
+                                            <span class="label" style="min-width:100px">OA货款支付编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
                                         </p>
                                         <p class="col-filed">
                                             <span class="label">审核备注：</span>{{
@@ -931,6 +950,9 @@ export default {
         .col-50 {
             flex: 0 0 50%;
         }
+        .col-100 {
+            flex: 0 0 100%;
+        }
         .col-30 {
             flex: 0 0 30%;
         }
@@ -1111,6 +1133,32 @@ export default {
     align-items: center;
     .info-status {
         margin-left: 20px;
+    }
+}
+.ticket-table {
+    display: table;
+    width: 500px;
+    text-align: center;
+    border: 1px solid #eeeeee;
+    border-collapse: collapse;
+    font-size: 13px;
+    color: #666666;
+    font-weight: 400;
+    .tr {
+        display: table-row;
+    }
+    .th {
+        display: table-cell;
+        border: 1px solid #eeeeee;
+        padding: 8px;
+        font-size: 14px;
+        color: #333333;
+        font-weight: 600;
+    }
+    .td {
+        display: table-cell;
+        border: 1px solid #eeeeee;
+        padding: 8px;
     }
 }
 </style>

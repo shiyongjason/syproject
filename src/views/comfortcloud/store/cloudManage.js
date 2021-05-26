@@ -29,8 +29,11 @@ const state = {
     cloudAlarmList: [],
     cloudAlarmPagination: {},
     cloudEquipmentErrorList: [],
+    cloudDeviceIDImportData: {},
     cloudEquipmentErrorPagination: {},
+    deviceIDImportPagination: {},
     cloudDict: [],
+    cloudImportDict: [],
     cloudSmartPlayList: [],
     cloudSmartPlayPagination: {},
     cloudSendMessageList: [],
@@ -134,8 +137,11 @@ const getters = {
     cloudAlarmList: state => state.cloudAlarmList,
     cloudAlarmPagination: state => state.cloudAlarmPagination,
     cloudEquipmentErrorList: state => state.cloudEquipmentErrorList,
+    cloudDeviceIDImportData: state => state.cloudDeviceIDImportData,
     cloudEquipmentErrorPagination: state => state.cloudEquipmentErrorPagination,
+    deviceIDImportPagination: state => state.deviceIDImportPagination,
     cloudDict: state => state.cloudDict,
+    cloudImportDict: state => state.cloudImportDict,
     cloudSmartPlayList: state => state.cloudSmartPlayList,
     cloudSmartPlayPagination: state => state.cloudSmartPlayPagination,
     cloudSmartPlayPostDetail: state => state.cloudSmartPlayPostDetail,
@@ -298,11 +304,20 @@ const mutations = {
     [cloud.CLOUD_EQUIPMENT_ERROR_LIST] (state, payload) {
         state.cloudEquipmentErrorList = payload
     },
+    [cloud.CLOUD_DEVICE_ID_IMPORT] (state, payload) {
+        state.cloudDeviceIDImportData = payload
+    },
     [cloud.CLOUD_EQUIPMENT_ERROR_PAGINATION] (state, payload) {
         state.cloudEquipmentErrorPagination = payload
     },
+    [cloud.CLOUD_DEVICE_ID_IMPORT_PAGINATION] (state, payload) {
+        state.deviceIDImportPagination = payload
+    },
     [cloud.CLOUD_DICT] (state, payload) {
         state.cloudDict = payload
+    },
+    [cloud.CLOUD_DEVICE_BRAND_NO] (state, payload) {
+        state.cloudImportDict = payload
     },
     [cloud.CLOUD_SMART_PLAY_LIST] (state, payload) {
         state.cloudSmartPlayList = payload
@@ -655,6 +670,19 @@ const actions = {
             pageSize: data.data.size,
             total: data.data.total
         })
+    },
+    async findCloudDeviceIDImportData ({ commit }, params) {
+        const { data } = await Api.getCloudDeviceIDImportData(params)
+        commit(cloud.CLOUD_DEVICE_ID_IMPORT, data.data)
+        commit(cloud.CLOUD_DEVICE_ID_IMPORT_PAGINATION, {
+            pageNumber: data.data.current,
+            pageSize: data.data.size,
+            total: data.data.total
+        })
+    },
+    async findCloudBrandNo ({ commit }, params) {
+        const { data } = await Api.getCloudDeviceBrandNo(params)
+        commit(cloud.CLOUD_DEVICE_BRAND_NO, data.data)
     },
     async findCloudDict ({ commit }, params) {
         const { data } = await Api.getCloudDict(params)
