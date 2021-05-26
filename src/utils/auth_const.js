@@ -237,6 +237,8 @@ export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
 export const CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT = 109523 // 支付单- [日期修改,服务费修改]
 // 好橙工 采购单上传共管户信息 2021-05-19
 export const CRM_PURCHASE_CO_MANAGER = 109525
+// 采购单详情去归档按钮权限
+export const CRM_PURCHASE_DETAIL_FILE = 109526
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
