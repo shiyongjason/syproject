@@ -61,6 +61,14 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">共管户信息：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.coManager" placeholder="请选择" :clearable=true>
+                            <el-option :label="item.value" :value="item.key" v-for="item in PurchaseOrderDict.coManager.list" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <h-button type="primary" @click="findPurchaseList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
@@ -79,6 +87,9 @@
                 <template slot="poAmount" slot-scope="scope">
                     <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
                 </template>
+                <template slot="coManager" slot-scope="scope">
+                    <span>{{ scope.data.row.coManager| attributeComputed(PurchaseOrderDict.coManager.list)}}</span>
+                </template>
                 <template slot="status" slot-scope="scope">
                     <span> {{ scope.data.row.status| attributeComputed(PurchaseOrderDict.status.list)}}</span>
                 </template>
@@ -94,9 +105,14 @@
                     </h-button>
                     <h-button table @click="onApproveRecords(scope.data.row)">审批记录
                     </h-button>
+<!--                    1-待提交;2-采购单待确认;3-变更待确认;4-采购中;5-采购单完成;6-采购单关闭  -->
+<!--                    当共管户信息为已确认或采购单状态为“采购单关闭”时，不展示此按钮 权限按钮-->
+                    <h-button table @click="openCoManagerDialog(scope.data.row)" v-if="(!scope.data.row.coManager && scope.data.row.status != PurchaseOrderDict.status.list[5].key) && hosAuthCheck(Auths.CRM_PURCHASE_CO_MANAGER)">上传共管户信息
+                    </h-button>
                 </template>
             </basicTable>
         </div>
+        <uploadCoManagerPhotos :isOpen.sync=coManagerIsOpen :id="coManagerId" @backEvent='drawerBackEvent'/>
         <purchaseOrderDrawer :drawer=drawer @backEvent='drawerBackEvent' @openDialog="openDialog" ref="drawerDetail" :row="purchaseOrderRow"></purchaseOrderDrawer>
         <purchaseOrderDialog :isOpen=isOpen :openStatus="openStatus" @backEvent='dialogBackEvent' @closeDrawer="drawer = false" :dialogParams="purchaseOrderDialogParams" ref="dialog"></purchaseOrderDialog>
         <h-drawer title="审核记录" :visible.sync="drawerPur" direction='rtl' size='500px' :wrapperClosable="false" :beforeClose="handleClose">
@@ -122,6 +138,7 @@
 <script>
 import purchaseOrderDrawer from '@/views/crm/purchaseOrder/components/purchaseOrderDrawer'
 import purchaseOrderDialog from '@/views/crm/purchaseOrder/components/purchaseOrderDialog'
+import uploadCoManagerPhotos from '@/views/crm/purchaseOrder/components/uploadCoManagerPhotos'
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDialogStatus from './dialogStatus'
 import PurchaseOrderDict from './purchaseOrderDict'
@@ -143,6 +160,7 @@ export default {
                 projectName: '',
                 projectNo: '',
                 status: '',
+                coManager: '',
                 pageNumber: 1,
                 startTime: '',
                 endTime: '',
@@ -160,6 +178,7 @@ export default {
                 { label: '项目编号', prop: 'projectNo', width: '150' },
                 { label: '采购单金额', prop: 'poAmount', width: '100', align: 'right' },
                 { label: '状态', prop: 'status', width: '120' },
+                { label: '共管户信息', prop: 'coManager', width: '150' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTime', sortable: 'createTimeOrder' },
                 { label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTime', sortable: 'updateTimeOrder' }
             ],
@@ -172,12 +191,15 @@ export default {
             purchaseOrderRow: {},
             purchaseOrderDialogParams: {},
             editHistory: [],
-            purchaseName: ''
+            purchaseName: '',
+            coManagerIsOpen: false,
+            coManagerId: ''
         }
     },
     components: {
         purchaseOrderDrawer,
-        purchaseOrderDialog
+        purchaseOrderDialog,
+        uploadCoManagerPhotos
     },
     computed: {
         options () {
@@ -265,6 +287,10 @@ export default {
             this.openStatus = status
             this.purchaseOrderDialogParams = dialogParams
             this.isOpen = true
+        },
+        openCoManagerDialog (row) {
+            this.coManagerIsOpen = true
+            this.coManagerId = row.id
         },
         dialogBackEvent () {
             this.isOpen = false

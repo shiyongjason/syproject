@@ -1,5 +1,5 @@
 <template>
-    <div class="page-body B2b">
+    <div class="page-body B2b paymentOrderLayout">
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont-col">
@@ -103,6 +103,10 @@
                     <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
+                    <!-- operateStatus 操作按钮 1.发起放款交接 2.查看放款交接  3.null不展示-->
+                    <h-button v-if="scope.data.row.operateStatus" table @click="()=>openLoanTransferContent(scope.data.row.id,scope.data.row.operateStatus)"  >
+                        {{scope.data.row.operateStatus===1?'发起放款交接':'查看放款交接'}}
+                    </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && PaymentOrderDict.status.list[0].key === scope.data.row.status">审核</h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenFundsDialog(scope.data.row.id, scope.data.row.status)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_CONFIRM) &&
                               (PaymentOrderDict.status.list[2].key === scope.data.row.status || PaymentOrderDict.status.list[5].key === scope.data.row.status)">
@@ -128,6 +132,19 @@
         <ConfirmReceiptDialog :params="paymentParams" :is-open="confirmReceiptVisible" @onClose="confirmReceiptVisible = false" @onCloseDialogAndQuery="onCloseDialogAndQuery"></ConfirmReceiptDialog>
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
+        <!-- 查看放款交接 -->
+        <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="operateStatus==1?'发起放款交接':'查看放款交接'"  :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false' :before-close='editorDrawerClose'>
+            <div class="drawer-content">
+                 <el-tabs v-model="activeName" @tab-click="handleClickTabs" >
+                    <el-tab-pane label="放款交接内容" name="LoanTransferContent">
+                        <LoanTransferContent v-if="LoanTransferContent" :LoanTransferContent = 'LoanTransferContent' :paymentOrderId='paymentOrderId' @getDetailAgain='getDetailAgain' @closeLoanTransferContentVisible ='onCloseLoanTransferContentVisible' :operateStatus='operateStatus'></LoanTransferContent>
+                    </el-tab-pane>
+                    <el-tab-pane label="查看交接记录" name="ViewHandoverRecords">
+                        <ViewHandoverRecords :loanTransferRecord='loanTransferRecord'></ViewHandoverRecords>
+                    </el-tab-pane>
+                </el-tabs>
+            </div>
+        </el-drawer>
     </div>
 </template>
 
@@ -142,7 +159,9 @@ import LookReceiptDetail from './components/lookReceiptDetail'
 import FundsDialog from '@/views/crm/funds/components/fundsDialog'
 import * as Auths from '@/utils/auth_const'
 import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
-
+import LoanTransferContent from './components/LoanTransferContent'
+import ViewHandoverRecords from './components/ViewHandoverRecords'
+import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck } from './api/index'
 export default {
     name: 'payOrder',
     components: {
@@ -152,10 +171,15 @@ export default {
         LookPrevPaymentDialog,
         ConfirmReceiptDialog,
         LookReceiptDetail,
-        FundsDialog
+        FundsDialog,
+        LoanTransferContent,
+        ViewHandoverRecords
     },
     data () {
         return {
+            operateStatus: null,
+            activeName: 'LoanTransferContent',
+            loanTransferContentVisible: false,
             Auths,
             dealerList: [{ key: 1, value: '垫资代采' }, { key: 2, value: '代收代付' }],
             signList: [{ key: 1, value: '是' }, { key: 0, value: '否' }],
@@ -202,7 +226,10 @@ export default {
             paymentStatus: '',
             paymentParams: {}, // 公共
             fundsDialogDetail: {},
-            PaymentOrderDict
+            PaymentOrderDict,
+            paymentOrderId: '',
+            LoanTransferContent: '',
+            loanTransferRecord: ''
         }
     },
     computed: {
@@ -233,6 +260,40 @@ export default {
         }
     },
     methods: {
+        editorDrawerClose () {
+            this.loanTransferContentVisible = false
+            this.activeName = 'LoanTransferContent'
+            this.operateStatus = null
+        },
+        async handleClickTabs (tab, event) {
+            if (tab.name === 'ViewHandoverRecords') {
+                const { data } = await getLoanTransferRecord(this.paymentOrderId)
+                this.loanTransferRecord = data
+            }
+        },
+        onCloseLoanTransferContentVisible () {
+            this.findPaymentOrderList(this.queryParamsUseQuery)
+            this.loanTransferContentVisible = false
+            this.operateStatus = null
+        },
+        async getDetailAgain () {
+            const { data } = await getLoanTransferContent(this.paymentOrderId)
+            this.LoanTransferContent = data
+        },
+        async openLoanTransferContent (paymentOrderId, operateStatus) {
+            if (operateStatus == 1) {
+                await getLoanTransferCheck(paymentOrderId)
+            }
+            this.operateStatus = operateStatus
+            // this.operateStatus = 1
+            this.paymentOrderId = paymentOrderId
+            const { data } = await getLoanTransferContent(paymentOrderId)
+            this.loanTransferContentVisible = true
+            this.LoanTransferContent = data
+        },
+        onOpenDialog (val) {
+            this.openDialog = val
+        },
         onStartChange (val) {
             this.queryParams.startApplyDate = val
         },
@@ -347,8 +408,21 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang='scss' >
 .eltagtop {
     margin-bottom: 10px;
+}
+.paymentOrderLayout{
+    .editordrawerbox {
+        /deep/ .el-drawer__header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            font-size: 18px;
+            margin-bottom:10px;
+        }
+        .drawer-content{
+            padding:0 20px;
+        }
+    }
 }
 </style>

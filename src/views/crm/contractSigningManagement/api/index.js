@@ -21,3 +21,5 @@ export const submitApprove = (params) => axios.post('/project/api/contracts/subm
 export const getNoTempContracts = (params) => axios.get(`/project/api/contracts/contract-pics/${params}`)
 // 下载无模板合同
 export const downNoTempContracts = (params) => axios.get(`/project/api/contracts/download/${params}`)
+// 更新归档
+export const signContractarchive = (params) => axios.post(`/project/api/contract-signs/contract-archive`, params)
