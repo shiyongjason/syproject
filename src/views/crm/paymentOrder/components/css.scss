@@ -105,6 +105,7 @@
    .remark-infos{
        margin-top: 2px;
        color: #FF0000;
+       word-break: break-all;
    }
    .showCollapse{
        /deep/.el-collapse-item__header{
