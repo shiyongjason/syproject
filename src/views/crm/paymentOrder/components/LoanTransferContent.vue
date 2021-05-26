@@ -105,10 +105,10 @@
                         <div v-for="(obj,objIndex) in moreBillAmount" :key="objIndex+'table'">
                             <div class="info-layout" style="font-size: 14px;">
                                 <div class="info-layout-item">
-                                    <font style="flex: 0 0 85px;">{{objIndex==0?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
+                                    <font style="flex: 0 0 85px;">{{objIndex==moreBillAmount.length-1?'提交人：':'更新人：'}}</font><span>{{obj.billAmountCreateBy}}</span>
                                 </div>
                                 <div class="info-layout-item">
-                                    <font style="flex: 0 0 70px;">{{objIndex==0?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
+                                    <font style="flex: 0 0 70px;">{{objIndex==moreBillAmount.length-1?'提交时间：':'更新时间：'}}</font><span>{{obj.billAmountCreateTime|formatterTime}}</span>
                                 </div>
                             </div>
                             <div class='bill-table' v-if="moreBillAmount">
@@ -159,7 +159,7 @@
                     </div>
                     <el-form-item label="中登网质押编号：" prop='pledgeNo' style="marginLeft:-44px">
                         <!-- 长度为50位以内字母或数字。 -->
-                        <el-input placeholder="请输入" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
+                        <el-input placeholder="请输入中登网质押编号" v-model="reviewResolutionForm.pledgeNo" maxlength="50"></el-input>
                     </el-form-item>
                         <div class="reviewResolutionForm-title">
                             评审决议流程：
@@ -176,7 +176,7 @@
                             货款支付流程：
                         </div>
                         <el-form-item label="OA货款支付编号：" prop='oaNo' style="marginLeft:-38px">
-                            <el-input placeholder="请输入" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
+                            <el-input placeholder="请输入OA货款支付编号" v-model="reviewResolutionForm.oaNo" maxlength="50"></el-input>
                         </el-form-item>
                         <el-form-item label="OA货款支付流程状态：" prop='oaStatus' style="marginLeft:-10px;marginTop:20px" >
                             <el-select v-model="reviewResolutionForm.oaStatus" placeholder="请选择">
