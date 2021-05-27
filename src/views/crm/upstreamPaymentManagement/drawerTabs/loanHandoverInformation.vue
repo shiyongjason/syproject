@@ -154,7 +154,7 @@
         <transition name="slide-fade">
         <div v-if="isMoreBill">
             <div v-for="(item,index) in billData" :key="index">
-                <p class="info_box-txt">{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}} &nbsp; 更新时间：{{item.billAmountCreateTime|formatterTime}}</p>
+                <p class="info_box-txt"><font>{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}}</font><font> 更新时间：{{item.billAmountCreateTime|formatterTime}}</font></p>
                 <div class="info_box-table">
                     <div class="info_box-table--flex">
                         <div class="info_box-table--left">出票张数</div>

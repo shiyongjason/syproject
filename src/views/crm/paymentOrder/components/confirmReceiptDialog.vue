@@ -77,15 +77,15 @@ export default {
             },
             rules: {
                 goodsAmount: [
-                    { required: true, message: '请填写本次到货金额', trigger: 'blur' },
-                    {
-                        validator: (r, v, callback) => {
-                            if (+this.formData.goodsAmount == 0) {
-                                return callback(new Error('本次到货金额不能等于0'))
-                            }
-                            return callback()
-                        }
-                    }
+                    { required: true, message: '请填写本次到货金额', trigger: 'blur' }
+                    // {
+                    //     validator: (r, v, callback) => {
+                    //         if (+this.formData.goodsAmount == 0) {
+                    //             return callback(new Error('本次到货金额不能等于0'))
+                    //         }
+                    //         return callback()
+                    //     }
+                    // }
                 ],
                 reqAttachDocs: [
                     { required: true, message: '请上传到货验收单', trigger: 'blur' }
