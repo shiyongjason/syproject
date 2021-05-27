@@ -183,7 +183,7 @@
             </div>
         </el-drawer>
         <diffDialog ref="diffDialog" v-if="currentContent&&lastContent" :currentContent=currentContent :lastContent=lastContent></diffDialog>
-        <fileDialog ref='fileDialog'></fileDialog>
+        <fileDialog ref='fileDialog' @callBackFun=getList></fileDialog>
     </div>
 </template>
 <script>

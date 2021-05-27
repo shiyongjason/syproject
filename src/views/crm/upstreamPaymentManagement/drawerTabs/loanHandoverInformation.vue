@@ -84,6 +84,7 @@
          </div>
           <!-- 放款交接内容 -->
         <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|formatterTime}}</font></div>
+        <div style="margin-left:10px">
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
              <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|formatterTime}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
@@ -95,6 +96,7 @@
             </div>
         </div>
         </div>
+        <div class="info_box-stit"><h3>质押与终审决议信息</h3></div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>质押信息：{{data.pledgeNo}}</div>
         </div>
@@ -104,6 +106,7 @@
         <div class="info_box">
             <div class="info_box-icon"><i class="el-icon-s-claim"></i>货款支付流程：{{data.oaStatus==1?'已完结':'未完结'}}（{{data.oaNo}}）</div>
         </div>
+        <div class="info_box-stit"><h3>采购合同信息</h3></div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
              <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index+'L'">
@@ -129,7 +132,7 @@
             </div>
         </div>
         <div style="margin-top:20px" v-if="data.supplierPaymentType==2">
-         <div><h3>票面信息</h3></div>
+        <div class="info_box-stit"><h3>票面信息</h3></div>
          <div class="info_box-txt"><font>更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}}</font><font>更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</font></div>
         <div class="info_box-table">
             <div class="info_box-table--flex">
@@ -171,6 +174,7 @@
         </transition>
         </div>
          <div class="info_box-txt">备注信息：{{data.remark||'-'}}</div>
+        </div>
         </div>
         <div class="info_btnbot">
               <div>
