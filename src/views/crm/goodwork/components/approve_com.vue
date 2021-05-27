@@ -275,7 +275,8 @@ export default {
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
                 remainPaymentCycle: '',
-                remark: ''
+                remark: '',
+                reviewResolutionNo: ''
             },
             projectFinaleRules: {
                 result: [
@@ -402,7 +403,8 @@ export default {
                 transferBankRate: '',
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
-                remainPaymentCycle: ''
+                remainPaymentCycle: '',
+                reviewResolutionNo: ''
             }
         },
         finalConfirmDialogClose () {
@@ -533,7 +535,8 @@ export default {
                 maxPurchaseAmount: '',
                 advancePaymentRate: '',
                 remainPaymentCycle: '',
-                remark: ''
+                remark: '',
+                reviewResolutionNo: ''
             }
             this.projectFinaleVisible = false
         },
