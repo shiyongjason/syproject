@@ -105,6 +105,7 @@
    .remark-infos{
        margin-top: 2px;
        color: #FF0000;
+       word-break: break-all;
    }
    .showCollapse{
        /deep/.el-collapse-item__header{
@@ -122,6 +123,7 @@
         padding: 0;
         margin-left: 0;
     }
+   
 }
 .sure-sub-btn{
     padding: 5px;
@@ -240,4 +242,16 @@
         margin:0 0 0 10px
     }
     
+}
+.reviewResolutionForm-title{
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    color: #333;
+    em{
+        color:#F56C6C;font-style: normal;margin-right: 3px;
+    }
+}
+.reviewResolutionForm-reviewResolutionNo{
+    margin: 10px 0;
 }
