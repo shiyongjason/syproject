@@ -412,6 +412,7 @@ export default {
         },
         reset () {
             this.queryParams = JSON.parse(JSON.stringify(_queryParams))
+            this.archive = ''
             this.getList()
         },
         openDetail (item) {
