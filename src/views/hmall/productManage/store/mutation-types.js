@@ -1,0 +1,5 @@
+export const BRAND_DATA = 'BRAND_DATA'
+
+export const PRODUCT_SPU_DATA = 'PRODUCT_SPU_DATA'
+
+export const PRODUCT_SKU_DATA = 'PRODUCT_SKU_DATA'
