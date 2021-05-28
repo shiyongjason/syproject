@@ -98,7 +98,7 @@
                     <el-form-item label="活动范围：">
                         <!--目标范围(1,全部会员店 2,部分会员店 3,全部平台会员店)-->
                         <span v-if="activeDetails.targetRange === 1">全部归属会员店</span>
-                        <span v-if="activeDetails.targetRange === 2">部分会员店</span>
+                        <span v-if="activeDetails.targetRange === 2">指定会员店</span>
                         <span v-if="activeDetails.targetRange === 3">全部平台会员店</span>
                     </el-form-item>
                     <el-form-item label="活动名称：">
