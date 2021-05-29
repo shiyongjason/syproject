@@ -518,10 +518,11 @@ export default {
                         this.$message.error(`提示：合计票面金额应等于货款申请金额`)
                         return
                     }
-                    this.billAmountForm.billAmount.map(item => {
+                    this.billAmountForm.billAmount.map((item, index) => {
                         if (typeof item.amount === 'string' && item.amount.charAt(item.amount.length - 1) === '.') {
                             item.amount = item.amount.substr(0, item.amount.length - 1)
                         }
+                        item.number = index + 1
                     })
                     this.billAmountForm.createBy = this.userInfo.employeeName
                     this.billAmountForm.paymentOrderId = this.paymentOrderId

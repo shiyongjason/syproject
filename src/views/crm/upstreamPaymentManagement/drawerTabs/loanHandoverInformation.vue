@@ -259,9 +259,9 @@ export default class LoanHandoverInformation extends Vue {
                     console.log('22', this.title)
                     if (value === '') {
                         if (this.title == '驳回') {
-                            return callback(new Error('请请输入驳回原因'))
+                            return callback(new Error('请输入驳回原因'))
                         } else {
-                            return callback(new Error('请请输入交接备注'))
+                            return callback(new Error('请输入交接备注'))
                         }
                     } else {
                         callback()
