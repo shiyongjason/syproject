@@ -7,13 +7,13 @@
             <div class="query-cont-col">
                 <div class="query-col-title">方案名称：</div>
                 <div class="query-col-input">
-                    <el-input v-model="queryParams.planName" placeholder="请输入方案名称" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.schemeTitle" placeholder="请输入方案名称" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">创建人：</div>
                 <div class="query-col-input">
-                    <el-input v-model="queryParams.planUser" placeholder="请输入创建人" maxlength="50"></el-input>
+                    <el-input v-model="queryParams.operator" placeholder="请输入创建人" maxlength="50"></el-input>
                 </div>
             </div>
             <div class="query-cont-col">
@@ -27,6 +27,9 @@
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantShopList"
                         :pagination="cloudMerchantShopListPagination" :isAction="true"
                         @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+                <template slot="createBy" slot-scope="scope">
+                    {{ scope.data.row.createBy + ' ' + scope.data.row.createPhone }}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
                     <el-button class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
@@ -45,16 +48,16 @@ export default {
     data () {
         return {
             queryParams: {
-                planName: '',
-                planUser: '',
+                schemeTitle: '',
+                operator: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             tableLabel: [
-                { label: '工程方案标题', prop: 'categoryName' },
-                { label: '创建时间', prop: 'specificationName' },
-                { label: '创建人', prop: 'productName' },
-                { label: '生效时间', prop: 'memberSalePrice' },
+                { label: '工程方案标题', prop: 'schemeTitle' },
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
+                { label: '创建人', prop: 'createBy' },
+                { label: '生效时间', prop: 'effectiveTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' }]
         }
     },
@@ -76,7 +79,7 @@ export default {
             this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit' })
         },
         onEdit: function (data) {
-
+            this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit', query: { id: data.id } })
         },
         onDelete: function (data) {
 

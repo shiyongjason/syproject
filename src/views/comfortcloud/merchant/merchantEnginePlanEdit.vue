@@ -6,11 +6,11 @@
                     <h3>工程方案编辑</h3>
                 </div>
                 <el-form-item label="工程方案标题：" prop="title">
-                    <el-input v-model.trim="form.title" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
+                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
 
                 <el-form-item label="方案列表缩略图：" prop="iconUrl" ref="iconUrl">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.iconUrl" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
+                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.schemeImage" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
                     <div class="upload-tips">建议尺寸：993*993或1:1比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
@@ -20,10 +20,10 @@
 
                 <el-form-item label="商品视频：" prop="video" >
                     <el-row>
-                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="productVideoUrl"
+                        <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl"
                                        @back-event="videoUrl" :imgW="100" :imgH="100">
                         </SingleUpload>
-                        <h-button v-if="form.video"   type="primary" @click="palyVideo">视频预览</h-button>
+                        <h-button v-if="form.schemeVideo"   type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4格式, 大小不超过20MB
                             主图视频尺寸1:1，视频长度建议不超过60秒
@@ -34,8 +34,8 @@
                 <div class="page-body-title">
                     <h3>方案详细内容</h3>
                 </div>
-                <el-form-item label="详情：" prop="content">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @blur="$refs['form'].validateField('content')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.content"></RichEditor>
+                <el-form-item label="详情：" prop="schemeDetail">
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSaveAd()" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
@@ -43,6 +43,10 @@
                 </el-form-item>
             </el-form>
         </div>
+        <el-dialog width="600px" title="视频播放" @close="closePlayDialog" :visible.sync="innerVisible" append-to-body>
+            <Video ref="videoPlay" :src="this.form.schemeVideo" class="avatarVideo" controls="controls">您的浏览器不支持视频播放
+            </Video>
+        </el-dialog>
     </div>
 </template>
 
@@ -56,10 +60,11 @@ export default {
     data () {
         return {
             form: {
-                title: '',
-                iconUrl: '',
+                schemeTitle: '',
+                schemeImage: '',
                 effectiveTime: '',
-                content: ''
+                schemeDetail: '',
+                schemeVideo: ''
             },
             menus: [
                 'head', // 标题
@@ -98,8 +103,8 @@ export default {
                 ]
             },
             loading: false,
-            uploadedUrl: '',
-            videoimageUrl: ''
+            videoimageUrl: '',
+            innerVisible: false
         }
     },
     computed: {
@@ -107,9 +112,6 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            cloudMerchantAdDetail: 'cloudMerchantAdDetail',
-            cloudMerchantShopCategoryList: 'cloudMerchantShopCategoryList',
-            cloudMerchantShopCategoryTypeList: 'cloudMerchantShopCategoryTypeList' // 商品类型
         }),
         videoUpload () {
             return {
@@ -155,10 +157,6 @@ export default {
     },
     methods: {
         ...mapActions({
-            setNewTags: 'setNewTags',
-            getCloudMerchantAdDetail: 'getCloudMerchantAdDetail',
-            findCloudMerchantShopCategoryList: 'findCloudMerchantShopCategoryList',
-            findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
 
         async getDetail (id) {
@@ -172,7 +170,6 @@ export default {
             console.log(this.form)
         },
         onBack () {
-            this.setNewTags((this.$route.fullPath).split('?')[0])
             this.$router.go(-1)
         },
 
@@ -217,43 +214,20 @@ export default {
                 }
             })
         },
+        readUrl (val) {
+            this.form.schemeImage = val.imageUrl
+        },
         videoUrl (val) {
             this.$message.success('视频上传成功')
-            this.uploadedUrl = val.imageUrl
+            this.form.schemeVideo = val.imageUrl
             this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
         },
-        onAddvideo () {
-            this.uploadedUrl = ''
-            this.videoimageUrl = ''
-            this.dialogVisible = true
+        palyVideo () {
+            this.innerVisible = true
         },
-        handleClose () {
-            // console.log(this.$refs.editors.editor)
-            this.dialogVisible = false
-        },
-        onInsertVideo () {
-            this.$refs.editors.onInsertUrl(`</br><video src="${this.uploadedUrl}"  poster="" controls controlsList="nofullscreen nodownload noremote footbar" width="450" height="300" style="border:1px solid #f5f5f5;"></video></br>`)
-            this.dialogVisible = false
-        },
-        onAddCategory () {
-            this.form.categorys.push({ categoryId: '', specificationId: '' })
-            this.categoryTypes.push([])
-            this.$refs['form'].clearValidate(['categorys'])
-        },
-        async selectChanged (index) {
-            this.form.categorys[index].specificationId = ''
-            this.categoryTypes.splice(index, 1, [])
-            await this.findCloudMerchantShopCategoryTypeList({ categoryId: this.form.categorys[index].categoryId })
-            this.categoryTypes.splice(index, 1, this.cloudMerchantShopCategoryTypeList)
-        },
-        selectSpecificationIdChanged () {
-            for (let i = 0; i < this.form.categorys.length; i++) {
-                this.$refs['form'].validateField('categorys.' + i + '.specificationId')
-            }
-        },
-        onRemoveCategory (index) {
-            this.form.categorys.splice(index, 1)
-            this.categoryTypes.splice(index, 1)
+        closePlayDialog () {
+            console.log('closePlayDialog')
+            this.$refs['videoPlay'].pause()
         }
     }
 }
