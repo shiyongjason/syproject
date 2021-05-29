@@ -232,6 +232,59 @@
                     <h-button type="primary" @click="submitAddOrderForm" :loading="loading">确 定</h-button>
                 </div>
             </el-dialog>
+            <el-dialog title="填写发货信息" :visible.sync="deliverDialogVisible" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDeliverDialog">
+                <div class="el-dialog-div">
+                    <el-form :model="deliverForm" :rules="deliverRules" ref="deliverForm" label-width="140px">
+                        <el-form-item label="请选择发货方式：" prop="type">
+                            <el-radio-group v-model="deliverForm.type">
+                                <el-radio label="按订单合并发货：订单中的商品只需维护一次发货信息"></el-radio>
+                                <el-radio label="按商品分开发货：订单中部分产品发货，需按实际发货的商品维护发货信息"></el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                        <el-form-item label="发货商品">
+                            <el-checkbox :indeterminate="isDeliverIndeterminate" v-model="deliverCheckAll" @change="handleDeliverCheckAllChange">全选</el-checkbox>
+                            <el-checkbox-group v-model="deliverForm.products" @change="handleDeliverCheckedChange">
+                                <el-checkbox v-for="item in deliverProductOptions" :label="item.name" :key="item.name"></el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="单分享提货人：" prop="deliverPerson">
+                            <el-input v-model="addOrderForm.deliverPerson" maxlength="100" :rows="1" placeholder="请输入单分享提货人"/>
+                        </el-form-item>
+                        <el-form-item label="物流公司：" prop="deliverPerson">
+                            <el-input v-model="addOrderForm.deliverCompany" maxlength="100" :rows="1" placeholder="请输入物流公司"/>
+                        </el-form-item>
+                        <el-form-item label="快递单号：" prop="deliverPerson">
+                            <el-input v-model="addOrderForm.deliverNumber" maxlength="100" :rows="1" placeholder="请输入快递单号"/>
+                        </el-form-item>
+                        <el-form-item label="发货凭证：" prop="images" ref="image">
+                            <el-row :span="8">
+                                <el-upload
+                                    list-type="picture-card"
+                                    :action="imageUploadAction"
+                                    :data="imageUploadData"
+                                    accept='image/jpeg, image/jpg, image/png'
+                                    name='multiFile'
+                                    :file-list="deliverImgs"
+                                    :multiple='true'
+                                    :on-success="handleUploadDeliverImageSuccess"
+                                    :limit="2"
+                                    :on-exceed="uploadImageExceptMessage"
+                                    :before-upload="beforeImageUpload"
+                                    :on-remove="handleImageRemove">
+                                    <i class="el-icon-plus"></i>
+                                </el-upload>
+                                <div class="upload-tips">请上传发货凭证图，最多2张，支持jpeg,png和jpg格式</div>
+                            </el-row>
+                        </el-form-item>
+                        <div style="height : 20px"></div>
+                    </el-form>
+
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <h-button @click="cancelDeliverClick">取 消</h-button>
+                    <h-button type="primary" @click="submitDeliverForm" :loading="loading">确 定</h-button>
+                </div>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -393,7 +446,18 @@ export default {
                     { required: true, message: '请上传支付凭证', trigger: 'blur' }
                 ]
 
-            }
+            },
+            deliverDialogVisible: false,
+            deliverForm: {
+                type: '1',
+                images: [],
+                image: ''
+            },
+            deliverRules: {},
+            isDeliverIndeterminate: true,
+            deliverCheckAll: false,
+            deliverProductOptions: [],
+            deliverImgs: []
         }
     },
     computed: {
@@ -697,6 +761,32 @@ export default {
             this.addOrderDialogVisible = false
         },
         submitAddOrderForm () {
+
+        },
+        onCloseDeliverDialog () {
+            this.deliverDialogVisible = false
+        },
+        handleDeliverCheckAllChange (val) {
+            this.deliverForm.products = val ? this.deliverProductOptions : []
+            this.isDeliverIndeterminate = false
+        },
+        handleDeliverCheckedChange (value) {
+            let checkedCount = value.length
+            this.deliverCheckAll = checkedCount === this.deliverProductOptions.length
+            this.isDeliverIndeterminate = checkedCount > 0 && checkedCount < this.deliverProductOptions.length
+        },
+        handleUploadDeliverImageSuccess (response, file, fileList) {
+            if (response.code === 200) {
+                console.log(response.data.accessUrl)
+                this.deliverForm.images.push(response.data.accessUrl)
+            }
+
+            this.addOrderForm.image = this.addOrderForm.images[0]
+        },
+        cancelDeliverClick () {
+            this.deliverDialogVisible = false
+        },
+        submitDeliverForm () {
 
         }
     }
