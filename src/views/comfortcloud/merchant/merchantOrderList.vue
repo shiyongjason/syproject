@@ -177,7 +177,7 @@
                                     <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="销售金额：" label-width="120px" :prop="'products.' + index + '.money'" :rules="addOrderRules.money">
+                            <el-form-item label="销售金额：" label-width="100px" :prop="'products.' + index + '.money'" :rules="addOrderRules.money">
                                 <el-input style="width: 150px" v-model="productItem.money" maxlength="100" :rows="1" placeholder="请输入销售金额"/>
                             </el-form-item>
                             <el-form-item label="商品件数：" label-width="100px" :prop="'products.' + index + '.count'" :rules="addOrderRules.count">
