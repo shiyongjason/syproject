@@ -44,14 +44,14 @@
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">网银盾照片：</font>
                 <div class="info-layout-img" v-for="(item,index) in data.onlineBankingShields" :key="index">
-                    <a :href="item.fileUrl" target="_blank"><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
+                   <ImageAddToken :fileUrl="item.fileUrl" alt="" />
                 </div>
             </div>
         </div>
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">共管户截图：</font>
                 <div class="info-layout-img" v-for="(item,index) in data.screenshots" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
+                    <ImageAddToken :fileUrl="item.fileUrl" alt="" />
                 </div>
             </div>
         </div>
@@ -91,7 +91,7 @@
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
+                    <ImageAddToken :fileUrl="item.fileUrl" alt="" />
                 </div>
             </div>
         </div>

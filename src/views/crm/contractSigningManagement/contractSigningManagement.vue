@@ -47,7 +47,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">是否已归档：</div>
                     <div class="query-col__input">
-                        <el-select placeholder="请选择" v-model="archive" :clearable=true>
+                        <el-select placeholder="请选择" v-model="queryParams.archive" :clearable=true>
                             <el-option :label="item.label" :value="item.value" v-for="item in fileStatus" :key="item.label"></el-option>
                         </el-select>
                     </div>
@@ -280,7 +280,7 @@ export default {
             lastContent: '',
             fileDialog: false,
             archive: '',
-            fileStatus: [{ value: '', label: '全部' }, { value: 1, label: '是' }, { value: 2, label: '否' }]
+            fileStatus: [{ value: '', label: '全部' }, { value: true, label: '是' }, { value: false, label: '否' }]
         }
     },
     computed: {
@@ -470,7 +470,7 @@ export default {
             this.searchList()
         },
         async getList (val = '') {
-            this.queryParams.archive = this.archive == 1 ? true : this.archive == 2 ? false : ''
+            // this.queryParams.archive = this.archive
             this.queryParams.jobNumber = this.userInfo.jobNumber
             this.queryParams.authCode = sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
             if (val) {
