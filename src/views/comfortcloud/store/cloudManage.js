@@ -112,7 +112,8 @@ const state = {
     cloudMerchantmemberInvitationProjectData: {},
     cloudMerchantTaglist: [],
     cloudMerchantMemberCommunicationList: [],
-    cloudMerchantMemberCommunicationListPagination: {}
+    cloudMerchantMemberCommunicationListPagination: {},
+    cloudMerchantMemberDepartmentList: []
 }
 
 const getters = {
@@ -234,7 +235,8 @@ const getters = {
     cloudMerchantmemberInvitationProjectData: state => state.cloudMerchantmemberInvitationProjectData,
     cloudMerchantTaglist: state => state.cloudMerchantTaglist,
     cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
-    cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination
+    cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination,
+    cloudMerchantMemberDepartmentList: state => state.cloudMerchantMemberDepartmentList
 }
 
 const mutations = {
@@ -557,6 +559,9 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_MEMBER_COMMUNICATION_LIST_PAGINATION] (state, payload) {
         state.cloudMerchantMemberCommunicationListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MEMBER_DEPARTMENT_LIST] (state, payload) {
+        state.cloudMerchantMemberDepartmentList = payload
     }
 }
 
@@ -1034,6 +1039,10 @@ const actions = {
             pageSize: data.size,
             total: data.total
         })
+    },
+    async findCloudMerchantMemberDepartmentList ({ commit }, params) {
+        const { data } = await Api.findMerchantDep(params)
+        commit(cloud.GET_CLOUD_MERCHANT_MEMBER_DEPARTMENT_LIST, data)
     }
 }
 export default {

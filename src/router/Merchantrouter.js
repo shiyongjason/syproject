@@ -183,6 +183,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOutOrderList.vue')
+                    },
+                    {
+                        path: 'merchantDispatchManager',
+                        name: 'merchantDispatchManager',
+                        meta: {
+                            title: '营销物料',
+                            tagName: '营销物料',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantDispatchManager.vue')
                     }
                 ]
             },
