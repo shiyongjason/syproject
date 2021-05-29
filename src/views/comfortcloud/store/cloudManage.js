@@ -113,7 +113,8 @@ const state = {
     cloudMerchantTaglist: [],
     cloudMerchantMemberCommunicationList: [],
     cloudMerchantMemberCommunicationListPagination: {},
-    cloudMerchantMemberDepartmentList: []
+    cloudMerchantMemberDepartmentList: [],
+    cloudMerchantMaterialList: []
 }
 
 const getters = {
@@ -236,7 +237,8 @@ const getters = {
     cloudMerchantTaglist: state => state.cloudMerchantTaglist,
     cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
     cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination,
-    cloudMerchantMemberDepartmentList: state => state.cloudMerchantMemberDepartmentList
+    cloudMerchantMemberDepartmentList: state => state.cloudMerchantMemberDepartmentList,
+    cloudMerchantMaterialList: state => state.cloudMerchantMaterialList
 }
 
 const mutations = {
@@ -562,6 +564,9 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_MEMBER_DEPARTMENT_LIST] (state, payload) {
         state.cloudMerchantMemberDepartmentList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_MATERIAL_LIST] (state, payload) {
+        state.cloudMerchantMaterialList = payload
     }
 }
 
@@ -1043,6 +1048,10 @@ const actions = {
     async findCloudMerchantMemberDepartmentList ({ commit }, params) {
         const { data } = await Api.findMerchantDep(params)
         commit(cloud.GET_CLOUD_MERCHANT_MEMBER_DEPARTMENT_LIST, data)
+    },
+    async findCloudMerchantMaterialList ({ commit }, params) {
+        const { data } = await Api.getMarktingMaterial(params)
+        commit(cloud.GET_CLOUD_MERCHANT_MATERIAL_LIST, data)
     }
 }
 export default {
