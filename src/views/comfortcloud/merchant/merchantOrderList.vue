@@ -69,7 +69,15 @@
                 累计成交金额:{{cloudMerchantProductOrderTotal.totalOrderAmount}}元
             </el-tag>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOrderList" :isShowIndex='false' :pagination="cloudMerchantProductOrderPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel"
+                        :row-class-name="rowClassName"
+                        :tableData="cloudMerchantProductOrderList"
+                        :isShowIndex='false'
+                        :pagination="cloudMerchantProductOrderPagination"
+                        @onCurrentChange='onCurrentChange'
+                        @onSizeChange='onSizeChange'
+                        :isAction="true"
+                        :spanMethod="spanMethod">
                 <template slot="status" slot-scope="scope">
                     {{orderStatusDesc(scope.data.row.status)}}
                 </template>
@@ -354,12 +362,14 @@ export default {
                 { label: '收件人手机', prop: 'consigneePhone' },
                 { label: '订单实际支付金额', prop: 'payAmount', formatters: 'money' },
                 { label: '订单运费', prop: 'freight' },
+                { label: '商品名称', prop: 'productName' },
                 { label: '订单件数', prop: 'orderProductCount' },
                 { label: '支付方式', prop: 'payMethod' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '物流公司', prop: 'deliveryName' },
                 { label: '快递单号', prop: 'waybillId' }
             ],
+            spanArray: [],
             prouctDetailTableData: [],
             detailDialogVisible: false,
             focusDetailOrder: {},
@@ -558,7 +568,27 @@ export default {
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
         async onQuery () {
+            this.spanArray = []
             await this.findCloudMerchantProductOrderList(this.searchParams)
+        },
+        getSpanArray () {
+            this.spanArray = []
+            let pos = 0
+            for (let i = 0; i < this.cloudMerchantProductOrderList.length; i++) {
+                if (i === 0) {
+                    this.spanArray.push(1)
+                    pos = 0
+                } else {
+                    if (this.cloudMerchantProductOrderList[i].orderId === this.cloudMerchantProductOrderList[i - 1].orderId) {
+                        this.spanArray[pos] += 1
+                        this.spanArray.push(0)
+                    } else {
+                        this.spanArray.push(1)
+                        pos = i
+                    }
+                }
+            }
+            console.log(this.spanArray)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -571,6 +601,27 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
+        },
+        spanMethod ({ row, column, rowIndex, columnIndex }) {
+            if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2) {
+                if (this.spanArray.length === 0) {
+                    this.getSpanArray()
+                }
+
+                let _row = this.spanArray[rowIndex]
+
+                return {
+                    rowspan: _row,
+                    colspan: _row > 0 ? 1 : 0
+                }
+            }
+        },
+        rowClassName ({ row, rowIndex }) {
+            if (this.spanArray.length === 0) {
+                this.getSpanArray()
+            }
+
+            return 'order-row'
         },
         async onDetail (val) {
             this.focusDetailOrder = val
@@ -897,5 +948,8 @@ export default {
     .el-dialog-div {
         height: 80vh;
         overflow: auto;
+    }
+    /deep/ .el-table .order-row:not(.hover-row) td  {
+        background: white !important;
     }
 </style>
