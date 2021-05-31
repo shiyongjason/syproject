@@ -995,6 +995,9 @@ export const changeQuotationPermission = (params) => axios.put(iotUrl + '/mall/b
 // 删除外部订单
 export const deleteThirdOrder = params => axios.delete(iotUrl + '/mall/boss/order/third/' + params.orderId)
 
+// 获取营销物料
+export const getMarktingMaterial = params => axios.get(iotUrl + '/mall/boss/marketing-material', { params })
+
 // 新增修改营销物料
 export const addMarktingMaterial = params => axios.post(iotUrl + '/mall/boss/marketing-material', params)
 

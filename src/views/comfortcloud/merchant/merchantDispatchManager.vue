@@ -36,21 +36,20 @@
                 <div class="query-cont-col">
                     <div class="flex-wrap-title">发货状态：</div>
                     <div class="flex-wrap-cont">
-                        <el-select v-model="queryParams.role" style="width: 100%">
-                            <el-option label="选择" value=""></el-option>
-                            <el-option label="待发货" value=1></el-option>
-                            <el-option label="已发货" value=2></el-option>
-                            <el-option label="已回收" value=1></el-option>
+                        <el-select v-model="queryParams.status" style="width: 100%" clearable>
+                            <el-option label="待发货" value='0'></el-option>
+                            <el-option label="已发货" value='1'></el-option>
+                            <el-option label="已回收" value='2'></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">创建日期：</div>
                     <div class="query-col-input">
-                        <el-date-picker v-model="queryParams.startCreateTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
+                        <el-date-picker v-model="queryParams.startTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="开始日期" :picker-options="pickerOptionsStart" default-time="00:00:00">
                         </el-date-picker>
                         <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.endCreateTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
+                        <el-date-picker v-model="queryParams.endTime" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss' placeholder="结束日期" :picker-options="pickerOptionsEnd" default-time="23:59:59">
                         </el-date-picker>
                     </div>
                 </div>
@@ -63,7 +62,15 @@
             </div>
 
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
-
+                <template slot="action" slot-scope="scope">
+                    <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onEdit(scope.data.row)">回收入库</el-button>
+                    <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onOpration(scope.data.row)">发货</el-button>
+                    <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onOpration(scope.data.row)">删除</el-button>
+                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
+                </template>
+                <template slot="status" slot-scope="scope">
+                    {{statusString(scope.data.row.status)}}
+                </template>
             </basicTable>
             <el-dialog title="新增营销物料需求" :modal-append-to-body=false :append-to-body=false :visible.sync="addDialogVisible" width="50%">
                 <el-form :model="materialForm" :rules="rules" ref="materialForm" label-width="130px">
@@ -112,7 +119,7 @@
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
                     </el-form-item>
                     <el-form-item label-width="0px">
-                        <div v-for="(mera,index) in materialForm.details" :key="mera.materialName">
+                        <div v-for="(mera,index) in materialForm.details" :key="mera.key">
                             <el-col :span="12">
                                 <el-form-item label="物料/商品名称：" :prop="'details.'+index+'.materialName'" :rules="rules.materialName">
                                     <el-autocomplete class="inline-input" placeholder="输入物料名称" v-model="mera.materialName" :trigger-on-focus="false" @select="handleSelect" :fetch-suggestions="querySuggestions">
@@ -198,18 +205,20 @@ export default {
                 pageNumber: 1,
                 pageSize: 10,
                 receiverPhone: this.$route.query.receiverPhone ? this.$route.query.receiverPhone : '',
+                status: '',
                 receiverName: '',
                 provinceId: '',
                 cityId: '',
                 countryId: '',
-                startCreateTime: '',
-                endCreateTime: ''
+                startTime: '',
+                endTime: ''
             },
             searchParams: {},
             tableData: [],
             isSaving: false,
             isIndeterminate: true,
             checkAll: false,
+            detailsKey: 0,
             pagination: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -264,26 +273,24 @@ export default {
                     { required: true, message: '请输入物料件数', trigger: 'blur' }
                 ]
             },
-            detailsRules: {
-
-            },
             provinceList: [],
             cityList: [],
             tableLabel: [
-                { label: '需求单号', prop: 'companyName' },
-                { label: '物料名称', prop: 'phone' },
-                { label: '物料件数', prop: 'nickName' },
-                { label: '所属分部', prop: 'saleArea' },
-                { label: '收件人姓名', prop: 'brand' },
-                { label: '收件人电话', prop: 'category' },
-                { label: '收件人地址', prop: 'merchantType' },
-                { label: '发货状态', prop: 'createTime', formatters: 'dateTime' },
-                { label: '发货时间', prop: 'source' },
-                { label: '发货人', prop: 'invitePhone' },
-                { label: '物流公司', prop: 'inviteUuid' },
-                { label: '快递单号', prop: 'inviteUserName' },
-                { label: '发货凭证', prop: 'orderCount' },
-                { label: '备注', prop: 'orderAmount' }
+                { label: '需求单号', prop: 'materialId' },
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime', width: '140' },
+                { label: '物料名称', prop: 'materialName' },
+                { label: '物料件数', prop: 'materialCount' },
+                { label: '所属分部', prop: 'department' },
+                { label: '收件人姓名', prop: 'receiverName' },
+                { label: '收件人电话', prop: 'receiverPhone' },
+                { label: '收件人地址', prop: 'address' },
+                { label: '发货状态', prop: 'status' },
+                { label: '发货时间', prop: 'courierTime', formatters: 'dateTime', width: '140' },
+                { label: '发货人', prop: 'deliverer' },
+                { label: '物流公司', prop: 'logisticsCompany' },
+                { label: '快递单号', prop: 'courierNo' },
+                { label: '发货凭证', prop: 'proofPictures' },
+                { label: '备注', prop: 'remark' }
             ],
             addDialogVisible: false,
             dispatchDialogVisible: false,
@@ -295,8 +302,20 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
-            departmentList: 'cloudMerchantMemberDepartmentList'
+            departmentList: 'cloudMerchantMemberDepartmentList',
+            materialList: 'cloudMerchantMaterialList'
         }),
+        statusString () {
+            return status => {
+                if (status === 0) {
+                    return '待发货'
+                } else if (status === 1) {
+                    return '已发货'
+                } else if (status === 2) {
+                    return '已回收'
+                }
+            }
+        },
         getCity () {
             const province = this.provinceList.filter(item => item.provinceId === this.queryParams.provinceId)
             if (province.length > 0) {
@@ -343,35 +362,32 @@ export default {
     mounted () {
         this.onSearch()
         this.getAreacode()
+        this.getDepartment()
     },
     activated () {
         this.onQuery()
     },
     methods: {
         ...mapActions({
-            findCloudMerchantMemberDepartmentList: 'findCloudMerchantMemberDepartmentList'
+            findCloudMerchantMemberDepartmentList: 'findCloudMerchantMemberDepartmentList',
+            findCloudMerchantMaterialList: 'findCloudMerchantMaterialList'
         }),
         async onQuery () {
-            await this.findCloudMerchantMemberDepartmentList({
-                deptType: 'F',
-                pkDeptDoc: this.userInfo.pkDeptDoc,
-                jobNumber: this.userInfo.jobNumber,
-                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
-            })
-            console.log(this.departmentList, '分部列表')
-            // await this.findMerchantMembersituation(this.searchParams)
-            // await this.findMerchantMemberTotalsituation(this.searchParams)
-            // this.tableData = this.merchantmemberData.records
-            // this.pagination = {
-            //     pageNumber: this.merchantmemberData.current,
-            //     pageSize: this.merchantmemberData.size,
-            //     total: this.merchantmemberData.total
-            // }
+            await this.findCloudMerchantMaterialList(this.searchParams)
+            console.log(this.materialList, '列表数据')
+            this.tableData = this.materialList.records
+            this.pagination = {
+                pageNumber: this.materialList.current,
+                pageSize: this.materialList.size,
+                total: this.materialList.total
+            }
         },
         async querySuggestions (queryString, cb) {
             if (queryString.length > 0) {
-                const mainProductList = await getLikeMerchantList({ productName: queryString })
-                const options = mainProductList.data.map(item => item.productName)
+                const { data } = await getLikeMerchantList({ productName: queryString })
+                const options = data.map(item => ({
+                    value: item.productName
+                }))
                 console.log(options, '处理过的数据')
                 cb(options)
             }
@@ -433,7 +449,11 @@ export default {
                 params.countryName = country.length > 0 ? country[0].name : ''
             }
             console.log(params, '上传的数据')
-            // await addMarktingMaretial()
+            await addMarktingMaterial(params)
+        },
+        // 查看数据详情
+        onDetail (val) {
+            console.log(val, '数据详情')
         },
         handleSelect (item) {
             console.log(item, '数据选择')
@@ -445,15 +465,21 @@ export default {
             this.searchParams = { ...this.queryParams }
             this.onQuery()
         },
-        addMarktingMaretial () {
-
-        },
         addMaterial () {
-            this.materialForm.details.push({ materialName: '', materialCount: null })
+            this.detailsKey++
+            this.materialForm.details.push({ materialName: '', materialCount: null, key: this.detailsKey })
         },
         async getAreacode () {
             const { data } = await getChiness()
             this.provinceList = data
+        },
+        async getDepartment () {
+            await this.findCloudMerchantMemberDepartmentList({
+                deptType: 'F',
+                pkDeptDoc: this.userInfo.pkDeptDoc,
+                jobNumber: this.userInfo.jobNumber,
+                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : ''
+            })
         },
         onProvince (key) {
             this.queryParams.provinceId = key
