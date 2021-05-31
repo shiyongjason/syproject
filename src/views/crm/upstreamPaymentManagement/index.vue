@@ -94,7 +94,7 @@
                 <el-tag size="medium" class="tag_top">已筛选 {{page.total}} 项 <span v-if="totalAmount">累计金额：{{totalAmount|fundMoneyHasTail}}</span></el-tag>
             </div>
             <!-- end search bar -->
-            <hosJoyTable localName="V3.4.*" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
+            <hosJoyTable localName="V3.5.1" isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList" actionWidth='250' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange'>
                 <template #action="slotProps">
                     <h-button table v-if="hosAuthCheck(upstreamPayDetail)"  @click="viewDetail(slotProps.data.row.paymentOrderId)">查看详情</h-button>
                     <h-button table v-if="changeLoanTransferStatusAuthCheck(slotProps.data.row)"  @click="onShowChangeLoanTransferStatus(slotProps.data.row.loanTransferId)">变更交接状态</h-button>
