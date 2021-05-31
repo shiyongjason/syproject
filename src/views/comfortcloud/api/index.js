@@ -652,8 +652,19 @@ export function getHomeUser (params) {
 
 // 获取招商代理商列表
 export function getCloudMerchantList (params) {
-    return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
+    return axios.get(iotUrl + '/mall/boss/agent-sign', { params })
 }
+
+// 代理商代理详情
+export function getCloudMerchantDetailList (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-detail', { params })
+}
+
+// 获取代理商详情统计
+export function getCloudMerchantDetailStats (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-detail/statistics', { params })
+}
+
 // 获取用户方案
 export function getCloudMerchantCaseList (params) {
     return axios.get(iotUrl + '/mall/boss/customer-project', { params })
