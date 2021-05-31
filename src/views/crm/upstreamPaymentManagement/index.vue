@@ -69,7 +69,7 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">首付款确认时间：</div>
+                    <div class="query-col__label">运营确认时间：</div>
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartChangePaidTime" :end-change="onEndChangePaidTime" :options="optionsByPaid"></HDatePicker>
                     </div>
@@ -285,8 +285,8 @@ export default class UpstreamPaymentManagement extends Vue {
         paymentStatus: '',
         startNoPayAmount: '',
         endNoPayAmount: '',
-        startDownPaymentConfirmTime: '',
-        endDownPaymentConfirmTime: '',
+        startInitiateTime: '',
+        endInitiateTime: '',
         startExpectSupplierPaymentDate: '',
         endExpectSupplierPaymentDate: '',
         authCode: '',
@@ -382,8 +382,8 @@ export default class UpstreamPaymentManagement extends Vue {
             type: 'date',
             valueFormat: 'yyyy-MM-dd',
             format: 'yyyy-MM-dd',
-            startTime: this.queryParams.startDownPaymentConfirmTime,
-            endTime: this.queryParams.endDownPaymentConfirmTime
+            startTime: this.queryParams.startInitiateTime,
+            endTime: this.queryParams.endInitiateTime
         }
     }
 
@@ -420,7 +420,7 @@ export default class UpstreamPaymentManagement extends Vue {
             render: (h: CreateElement, scope:TableRenderParam): JSX.Element => this.onRenderPaidAmountLabel(h, scope)
         },
         { label: '剩余应支付金额（元）', prop: 'noPayAmount', width: '150', displayAs: 'money' },
-        { label: '首付款确认时间', prop: 'downPaymentConfirmTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
+        { label: '运营确认时间', prop: 'downPaymentConfirmTime', width: '160', sortable: 'custom', displayAs: 'YYYY-MM-DD HH:mm:ss' },
         { label: '期望上游支付日期', prop: 'expectSupplierPaymentDate', width: '160', displayAs: 'YYYY-MM-DD' },
         { label: '上游支付方式', prop: 'supplierPaymentType', width: '150', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] }
 
@@ -458,10 +458,10 @@ export default class UpstreamPaymentManagement extends Vue {
         this.queryParams.endExpectSupplierPaymentDate = val
     }
     onStartChangePaidTime (val) {
-        this.queryParams.startDownPaymentConfirmTime = val
+        this.queryParams.startInitiateTime = val
     }
     onEndChangePaidTime (val) {
-        this.queryParams.endDownPaymentConfirmTime = val
+        this.queryParams.endInitiateTime = val
     }
     handleTabClick (tab, event): void {
         this.onRequest()
