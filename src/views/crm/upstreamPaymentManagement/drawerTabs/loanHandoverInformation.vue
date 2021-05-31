@@ -44,14 +44,14 @@
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">网银盾照片：</font>
                 <div class="info-layout-img" v-for="(item,index) in data.onlineBankingShields" :key="index">
-                    <a :href="item.fileUrl" target="_blank"><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
+                   <ImageAddToken :fileUrl="item.fileUrl" alt="" />
                 </div>
             </div>
         </div>
         <div  class="info-layout">
             <div class="info-layout-item"><font style="flex: 0 0 100px">共管户截图：</font>
                 <div class="info-layout-img" v-for="(item,index) in data.screenshots" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
+                    <ImageAddToken :fileUrl="item.fileUrl" alt="" />
                 </div>
             </div>
         </div>
@@ -84,17 +84,19 @@
          </div>
           <!-- 放款交接内容 -->
         <div class="tab-layout-title"><span></span>放款交接内容：<font>申请人：{{data.initiateBy||'-'}}</font><font>申请时间：{{data.initiateTime|formatterTime}}</font></div>
+        <div style="margin-left:10px">
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>预付款到好享家账户</div>
              <div class="info_box-txt"><font>预付款金额：{{data.advancePaymentAmount|fundMoneyHasTail}}元</font><font> 确认到账时间：{{data.confirmArrivalTime|formatterTime}}</font><font>确认人：{{data.confirmArrivalBy}}</font></div>
             <div  class="info-layout">
             <div class="info-layout-item">
                 <div class="info-layout-img" v-for="(item,index) in data.advancePaymentVouchers" :key="index">
-                    <a :href="item.fileUrl" target="_blank" ><ImageAddToken :fileUrl="item.fileUrl" alt="" /></a>
+                    <ImageAddToken :fileUrl="item.fileUrl" alt="" />
                 </div>
             </div>
         </div>
         </div>
+        <div class="info_box-stit"><h3>质押与终审决议信息</h3></div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>质押信息：{{data.pledgeNo}}</div>
         </div>
@@ -104,6 +106,7 @@
         <div class="info_box">
             <div class="info_box-icon"><i class="el-icon-s-claim"></i>货款支付流程：{{data.oaStatus==1?'已完结':'未完结'}}（{{data.oaNo}}）</div>
         </div>
+        <div class="info_box-stit"><h3>采购合同信息</h3></div>
         <div class="info_box">
              <div class="info_box-icon"><i class="el-icon-s-claim"></i>上游采购合同</div>
              <div class="info_box-img" v-for="(item,index) in data.archiveContractFiles" :key="index+'L'">
@@ -129,7 +132,7 @@
             </div>
         </div>
         <div style="margin-top:20px" v-if="data.supplierPaymentType==2">
-         <div><h3>票面信息</h3></div>
+        <div class="info_box-stit"><h3>票面信息</h3></div>
          <div class="info_box-txt"><font>更新人：{{data.billAmountResponse.billAmountCreateBy||'-'}}</font><font>更新时间：{{data.billAmountResponse.billAmountCreateTime|formatterTime}}</font></div>
         <div class="info_box-table">
             <div class="info_box-table--flex">
@@ -137,7 +140,7 @@
                 <div class="info_box-table--left">票面金额（元）</div>
             </div>
              <div class="info_box-table--flex" v-for="(item,index) in data.billAmountResponse.billAmountDetail" :key="index">
-                <div class="info_box-table--left">第{{item.number}}张发票</div>
+                <div class="info_box-table--left">第{{item.number}}张票</div>
                 <div class="info_box-table--left">{{item.amount|fundMoneyHasTail}}</div>
             </div>
              <div class="info_box-table--flex">
@@ -151,14 +154,14 @@
         <transition name="slide-fade">
         <div v-if="isMoreBill">
             <div v-for="(item,index) in billData" :key="index">
-                <p class="info_box-txt">{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}} &nbsp; 更新时间：{{item.billAmountCreateTime|formatterTime}}</p>
+                <p class="info_box-txt"><font>{{index!=0?'更新人':'创建人'}}：{{item.billAmountCreateBy}}</font><font> {{index!=0?'更新时间':'提交时间'}}：{{item.billAmountCreateTime|formatterTime}}</font></p>
                 <div class="info_box-table">
                     <div class="info_box-table--flex">
                         <div class="info_box-table--left">出票张数</div>
                         <div class="info_box-table--left">票面金额（元）</div>
                     </div>
                     <div class="info_box-table--flex" v-for="(jtem,jndex) in item.billAmountDetail" :key="jndex">
-                        <div class="info_box-table--left">第{{item.number}}张发票</div>
+                        <div class="info_box-table--left">第{{jtem.number}}张票</div>
                         <div class="info_box-table--left">{{jtem.amount|fundMoneyHasTail}}</div>
                     </div>
                     <div class="info_box-table--flex">
@@ -171,6 +174,7 @@
         </transition>
         </div>
          <div class="info_box-txt">备注信息：{{data.remark||'-'}}</div>
+        </div>
         </div>
         <div class="info_btnbot">
               <div>
@@ -255,9 +259,9 @@ export default class LoanHandoverInformation extends Vue {
                     console.log('22', this.title)
                     if (value === '') {
                         if (this.title == '驳回') {
-                            return callback(new Error('请请输入驳回原因'))
+                            return callback(new Error('请输入驳回原因'))
                         } else {
-                            return callback(new Error('请请输入交接备注'))
+                            return callback(new Error('请输入交接备注'))
                         }
                     } else {
                         callback()
