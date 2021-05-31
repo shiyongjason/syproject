@@ -36,6 +36,24 @@ const actions = {
     async findProductSkuList ({ commit }, params) {
         const { data } = await instance.get('/product/boss/main-sku', { params })
         commit(types.PRODUCT_SKU_DATA, data)
+    },
+    async batchEffective ({ commit }, params) {
+        await instance.patch('/product/boss/main-spu/batch-enable', params)
+    },
+    async batchEfficacy ({ commit }, params) {
+        await instance.patch('/product/boss/main-spu/batch-disable', params)
+    },
+    async batchDelete ({ commit }, params) {
+        await instance.delete('/product/boss/main-spu', params)
+    },
+    async effectiveSKU ({ commit }, params) {
+        await instance.patch(`/product/boss/main-sku/${params.id}/enable`, params)
+    },
+    async efficacySKU ({ commit }, params) {
+        await instance.patch(`/product/boss/main-sku/${params.id}/disable`, params)
+    },
+    async deleteSKU ({ commit }, params) {
+        await instance.delete(`/product/boss/main-sku/${params.id}`, params)
     }
 }
 

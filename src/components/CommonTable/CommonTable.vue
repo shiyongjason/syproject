@@ -21,7 +21,7 @@
                 <el-table-column v-if="isMultiple" type="selection" align="center" :selectable="selectable"></el-table-column>
                 <el-table-column v-if="isShowIndex" type="index" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
                 <template v-for="item in tableLabel">
-                    <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:''" :show-overflow-tooltip="true"
+                    <el-table-column v-if="selectTh.indexOf(item.label)>-1 && !item.isHidden" :key="columnKey(item)" :label="item.label" :prop="item.prop" :sortable="item.sortable" :align="item.align?item.align:'center'" :min-width="item.width?item.width:'160'" :show-overflow-tooltip="true"
                         v-bind="item">
                         <template slot-scope="scope">
                             <slot v-if="item.formatters === 'money'" :name="item.prop" :data="scope">{{scope.row[item.prop] | money}}</slot>
@@ -52,7 +52,7 @@
                         </template>
                     </el-table-column>
                 </template>
-                <el-table-column label="操作" v-if="isAction" align="center" :fixed="isfiexd" :min-width="minWidth">
+                <el-table-column label="操作" v-if="isAction" align="center" :fixed="actionFixed" :min-width="minWidth">
                     <template slot-scope="scope">
                         <slot class="action" name="action" :data="scope"></slot>
                     </template>
@@ -163,7 +163,7 @@ export default {
             type: Function,
             default: () => ''
         },
-        isfiexd: {
+        actionFixed: {
             type: String,
             default: 'right'
         },
@@ -215,11 +215,6 @@ export default {
             },
             deep: true,
             immediate: true
-        },
-        actionMinWidth: {
-            handler (val) {
-                this.minWidth = val
-            }
         },
         selectTh () {
             this.changeThNum = this.changeThNum + 1
