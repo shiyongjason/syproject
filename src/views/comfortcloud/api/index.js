@@ -1000,11 +1000,23 @@ export const changeQuotationPermission = (params) => axios.put(iotUrl + '/mall/b
 // 删除外部订单
 export const deleteThirdOrder = params => axios.delete(iotUrl + '/mall/boss/order/third/' + params.orderId)
 
-// 获取营销物料
+// 获取营销物料列表
 export const getMarktingMaterial = params => axios.get(iotUrl + '/mall/boss/marketing-material', { params })
+
+// 获取营销物料详情
+export const getMarktingMaterialDetail = params => axios.get(iotUrl + '/mall/boss/marketing-material/' + params.materialId)
+
+// 获取待发货的营销物料列表
+export const getToDispatchList = params => axios.get(iotUrl + '/mall/boss/delivery-order/product-options', { params })
 
 // 新增修改营销物料
 export const addMarktingMaterial = params => axios.post(iotUrl + '/mall/boss/marketing-material', params)
+
+// 删除营销物料
+export const deleteMarktingMaterial = params => axios.delete(iotUrl + '/mall/boss/marketing-material/' + params.materialId)
+
+// 营销物料发货单
+export const addDispatchOrder = params => axios.post(iotUrl + '/mall/boss/delivery-order', params)
 
 // 获取分部列表
 export const findMerchantDep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
