@@ -61,17 +61,21 @@
                 </div>
             </div>
 
-            <basicTable :spanMethod="objectSpanMethod" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable ref="tableRef" :spanMethod="objectSpanMethod" :stripe="false" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onCecycle(scope.data.row)">回收入库</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
-                    <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
+                </template>
+                <template slot="materialId" slot-scope="scope">
+                    <span class="topColred" @click="onDetail(scope.data.row)">
+                        {{scope.data.row.materialId}}
+                    </span>
                 </template>
                 <template slot="remark" slot-scope="scope">
-                    <p class="remark">
+                    <div class="remark">
                         {{scope.data.row.remark}}
-                    </p>
+                    </div>
                 </template>
                 <template slot="status" slot-scope="scope">
                     {{statusString(scope.data.row.status)}}
@@ -79,7 +83,7 @@
                 <template slot="proofPictures" slot-scope="scope">
                     <div v-if="scope.data.row.proofPictures&&scope.data.row.proofPictures.length>0">
                         <div v-for="(url,index) in getProofPictures(scope.data.row.proofPictures)" :key="index">
-                            <img style="height:4rem;width:4rem" :src="url" alt="">
+                            <el-image style="width:4rem" ref="img" class="default-pre-view-image" fit="contain" :src="url" :preview-src-list="[url]"></el-image>
                         </div>
                     </div>
                 </template>
@@ -228,6 +232,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { interfaceUrl, iotUrl } from '@/api/config'
+import { deepCopy } from '@/utils/utils'
 import axios from 'axios'
 import {
     addMarktingMaterial,
@@ -300,8 +305,8 @@ export default {
                 pageSize: 10,
                 total: 0
             },
-            materialForm: JSON.parse(JSON.stringify(materialsParams)),
-            dispatchForm: JSON.parse(JSON.stringify(dispatchParams)),
+            materialForm: deepCopy(materialsParams),
+            dispatchForm: deepCopy(dispatchParams),
             uploadImages: [],
             rules: {
                 receiverName: [
@@ -357,7 +362,7 @@ export default {
                 { label: '物流公司', prop: 'logisticsCompany' },
                 { label: '快递单号', prop: 'courierNo' },
                 { label: '发货凭证', prop: 'proofPictures' },
-                { label: '备注', prop: 'remark' }
+                { label: '备注', prop: 'remark', width: '200' }
             ],
             addDialogVisible: false,
             dispatchDialogVisible: false,
@@ -502,6 +507,7 @@ export default {
                 total: this.materialList.total
             }
             let contactDot = 0
+            this.spanArr = []
             this.tableData.forEach((item, index) => {
                 // materialId
                 if (index === 0) {
@@ -514,6 +520,12 @@ export default {
                         this.spanArr.push(1)
                         contactDot = index
                     }
+                }
+            })
+            this.$nextTick(() => {
+                if (this.$refs['tableRef']) {
+                    console.log(this.$refs['tableRef'], '好对的')
+                    this.$refs['tableRef'].doLayout()
                 }
             })
         },
@@ -652,7 +664,8 @@ export default {
             }
             this.currentMaterial = val
             const { data } = await getToDispatchList(params)
-            this.materials = data
+            console.log(data)
+            this.materials = data.filter(item => item.status === 0)
             this.dispatchDialogVisible = true
         },
         handleSelect (item) {
@@ -761,7 +774,17 @@ export default {
                 this.$refs['materialForm'].clearValidate()
             }
             this.currentMaterial = null
-            this.dispatchForm = dispatchParams
+            this.dispatchForm = {
+                type: '2',
+                orderId: '',
+                source: 'material',
+                deliveryType: 1,
+                deliverer: '',
+                logisticsCompany: '',
+                courierNo: '',
+                proofPictureList: [],
+                productList: []
+            }
             this.materialForm = materialsParams
         },
         onCurrentChange (val) {
@@ -774,16 +797,19 @@ export default {
         },
         objectSpanMethod (val) {
             // console.log(val, '数据格式')
-            // const { columnIndex, rowIndex } = val
-            // const spanColumn = columnIndex === 0 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6 || columnIndex === 7 || columnIndex === 14
-            // if (spanColumn) {
-            //     const _row = this.spanArr[rowIndex]
-            //     const _col = _row > 0 ? 1 : 0
-            //     return {
-            //         rowspan: _row,
-            //         colspan: _col
-            //     }
-            // }
+            const { columnIndex, rowIndex } = val
+            const spanColumn = columnIndex === 0 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6 || columnIndex === 7 || columnIndex === 14
+            if (spanColumn) {
+                const _row = this.spanArr[rowIndex]
+                const _col = _row > 0 ? 1 : 0
+                return {
+                    rowspan: _row,
+                    colspan: _col
+                }
+            }
+        },
+        checkImage (val) {
+            window.open(val)
         }
     }
 }
@@ -824,8 +850,19 @@ export default {
     margin: 5px 0;
 }
 
+.topColred {
+    color: #ff7a45;
+    cursor: pointer;
+}
+
 .remark {
-    word-break: break-word;
+    display: -webkit-box;
+    white-space: normal;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .query-cont-col-area {
