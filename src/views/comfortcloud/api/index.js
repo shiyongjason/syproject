@@ -1013,5 +1013,8 @@ export const deleteMarktingMaterial = params => axios.delete(iotUrl + '/mall/bos
 // 营销物料发货单
 export const addDispatchOrder = params => axios.post(iotUrl + '/mall/boss/delivery-order', params)
 
+// 物料回收
+export const recycleMaterial = params => axios.put(iotUrl + '/mall/boss/marketing-material/recycle', params)
+
 // 获取分部列表
 export const findMerchantDep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
