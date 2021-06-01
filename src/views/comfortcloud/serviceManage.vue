@@ -81,22 +81,32 @@
             </div>
             <p class="detailLine">客户地址：{{detailData.customerAddress}}</p>
             <p class="detailLine">备注：{{detailData.remark==undefined?'无':detailData.remark}}</p>
-            <p class="detailLine">图片</p>
-            <div class="detailLine lastLine">
-                <viewer :images="detailData.picUlrs">
-                    <img v-for="(src,index) in detailData.picUlrs" :src="src" :key="src" :style="index===0?firstPic:pic">
-                </viewer>
-            </div>
+            <p class="detailLine">图片：</p>
+            <template v-if="detailData.picUlrs&&detailData.picUlrs.length>0">
+                <div class="detailLine lastLine" >
+                    <el-image
+                        v-for="(src,index) in detailData.picUlrs"  :key='index+"img"'
+                        :z-index='9999'
+                        fit='cover'
+                        style="width: 100px; height: 100px;marginLeft:10px"
+                        :src="src"
+                        :preview-src-list="detailData.picUlrs">
+                    </el-image>
+                    <!-- <viewer :images="detailData.picUlrs">
+                        <img v-for="(src,index) in detailData.picUlrs" :src="src" :key="src" :style="index===0?firstPic:pic">
+                    </viewer> -->
+                </div>
+            </template>
         </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
-import 'viewerjs/dist/viewer.css'
-import Viewer from 'v-viewer'
+// import 'viewerjs/dist/viewer.css'
+// import Viewer from 'v-viewer'
 import Vue from 'vue'
-Vue.use(Viewer, { defaultOptions: { zIndex: 9999 } })
+// Vue.use(Viewer, { defaultOptions: { zIndex: 9999 } })
 export default {
     name: 'serviceManage',
     data () {
