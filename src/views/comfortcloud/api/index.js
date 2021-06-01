@@ -885,7 +885,7 @@ export function getCloudMerchantProductOutOrderDetail (params) {
 
 // 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {
-    return axios.get(iotUrl + '/mall/boss/order/detail', { params })
+    return axios.get(iotUrl + '/mall/boss/order/detail/' + params.orderId, { params: { source: params.source } })
 }
 
 // 获取抢购活动信息
@@ -1023,3 +1023,15 @@ export const recycleMaterial = params => axios.put(iotUrl + '/mall/boss/marketin
 
 // 获取分部列表
 export const findMerchantDep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
+
+// 获取工程方案列表
+export const getCloudMerchantProjectSchemeList = params => axios.get(iotUrl + '/mall/boss/project-scheme', { params })
+
+// 获取工程方案详情
+export const getCloudMerchantProjectSchemeDetail = params => axios.get(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 新增修改工程方案
+export const addCloudMerchantProjectScheme = params => axios.post(iotUrl + '/mall/boss/project-scheme', params)
+
+// 删除工程方案
+export const deleteProjectScheme = params => axios.delete(iotUrl + '/mall/boss/project-scheme/' + params.id)

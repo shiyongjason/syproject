@@ -117,7 +117,10 @@ const state = {
     cloudMerchantMemberCommunicationList: [],
     cloudMerchantMemberCommunicationListPagination: {},
     cloudMerchantMemberDepartmentList: [],
-    cloudMerchantMaterialList: []
+    cloudMerchantMaterialList: [],
+    cloudMerchantProjectSchemeList: [],
+    cloudMerchantProjectSchemeListPagination: {},
+    cloudMerchantProjectSchemeDetail: {}
 }
 
 const getters = {
@@ -244,7 +247,10 @@ const getters = {
     cloudMerchantMemberCommunicationList: state => state.cloudMerchantMemberCommunicationList,
     cloudMerchantMemberCommunicationListPagination: state => state.cloudMerchantMemberCommunicationListPagination,
     cloudMerchantMemberDepartmentList: state => state.cloudMerchantMemberDepartmentList,
-    cloudMerchantMaterialList: state => state.cloudMerchantMaterialList
+    cloudMerchantMaterialList: state => state.cloudMerchantMaterialList,
+    cloudMerchantProjectSchemeList: state => state.cloudMerchantProjectSchemeList,
+    cloudMerchantProjectSchemeListPagination: state => state.cloudMerchantProjectSchemeListPagination,
+    cloudMerchantProjectSchemeDetail: state => state.cloudMerchantProjectSchemeDetail
 }
 
 const mutations = {
@@ -582,6 +588,15 @@ const mutations = {
     },
     [cloud.GET_CLOUD_MERCHANT_MATERIAL_LIST] (state, payload) {
         state.cloudMerchantMaterialList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST] (state, payload) {
+        state.cloudMerchantProjectSchemeList = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST_PAGINATION] (state, payload) {
+        state.cloudMerchantProjectSchemeListPagination = payload
+    },
+    [cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_DETAIL] (state, payload) {
+        state.cloudMerchantProjectSchemeDetail = payload
     }
 }
 
@@ -1080,6 +1095,19 @@ const actions = {
     async findCloudMerchantMaterialList ({ commit }, params) {
         const { data } = await Api.getMarktingMaterial(params)
         commit(cloud.GET_CLOUD_MERCHANT_MATERIAL_LIST, data)
+    },
+    async findCloudMerchanProjectSchemeList ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProjectSchemeList(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST, data.records)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST_PAGINATION, {
+            pageNumber: data.current,
+            pageSize: data.size,
+            total: data.total
+        })
+    },
+    async findCloudMerchanProjectSchemeDetail ({ commit }, params) {
+        const { data } = await Api.getCloudMerchantProjectSchemeDetail(params)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_DETAIL, data)
     }
 }
 export default {
