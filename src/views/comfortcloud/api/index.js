@@ -868,6 +868,11 @@ export function getCloudMerchantProductOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/order', { params })
 }
 
+// 添加订单
+export function addCloudMerchantProductOrder (params) {
+    return axios.post(iotUrl + '/mall/boss/order/add', params)
+}
+
 // 获取微信订单列表
 export function getCloudMerchantProductOutOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/out-order/page', { params })

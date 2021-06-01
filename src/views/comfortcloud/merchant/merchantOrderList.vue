@@ -43,7 +43,7 @@
                 </div>
                 <div class="query-cont-col">
                     <div class="query-col-title">订单状态： </div>
-                    <div class="query-col-input">
+                    <div class="query-1col-input">
                         <el-select v-model="queryParams.status" clearable>
                             <el-option v-for="item in statusOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
                         </el-select>
@@ -69,7 +69,15 @@
                 累计成交金额:{{cloudMerchantProductOrderTotal.totalOrderAmount}}元
             </el-tag>
             <!-- 表格使用老毕的组件 -->
-            <basicTable style="margin-top: 20px" :tableLabel="tableLabel" :tableData="cloudMerchantProductOrderList" :isShowIndex='false' :pagination="cloudMerchantProductOrderPagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable style="margin-top: 20px" :tableLabel="tableLabel"
+                        :row-class-name="rowClassName"
+                        :tableData="cloudMerchantProductOrderList"
+                        :isShowIndex='false'
+                        :pagination="cloudMerchantProductOrderPagination"
+                        @onCurrentChange='onCurrentChange'
+                        @onSizeChange='onSizeChange'
+                        :isAction="true"
+                        :spanMethod="spanMethod">
                 <template slot="status" slot-scope="scope">
                     {{orderStatusDesc(scope.data.row.status)}}
                 </template>
@@ -78,7 +86,8 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
-                    <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
+                    <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
+                    <el-button v-if="hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px">发货</el-button>
                 </template>
             </basicTable>
 
@@ -113,23 +122,23 @@
                     <el-form :model="addOrderForm" :rules="addOrderRules" ref="addOrderForm" label-width="140px">
                         <el-form-item label-width="0">
                             <el-col :span="7">
-                                <el-form-item label="客户手机号：" prop="phone">
-                                    <el-input v-model="addOrderForm.phone" maxlength="11" placeholder="请填写客户手机号"></el-input>
+                                <el-form-item label="客户手机号：" prop="consigneePhone">
+                                    <el-input v-model="addOrderForm.consigneePhone" maxlength="11" placeholder="请填写客户手机号"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="7">
-                                <el-form-item label="客户姓名：" prop="name">
-                                    <el-input v-model="addOrderForm.name" placeholder="请填写客户姓名"></el-input>
+                                <el-form-item label="客户姓名：" prop="consigneeName">
+                                    <el-input v-model="addOrderForm.consigneeName" placeholder="请填写客户姓名"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-form-item>
                         <el-form-item label="客户地址：">
                             <el-col :span="6">
-                                <el-form-item label-width="0" prop="provinceId">
-                                    <el-select v-model="addOrderForm.provinceId" placeholder="请选择省" @change="onProvince" class="selectInput">
+                                <el-form-item label-width="0" prop="consigneeProvinceName">
+                                    <el-select v-model="addOrderForm.consigneeProvinceName" placeholder="请选择省" @change="onProvince" class="selectInput">
                                         <el-option label="请选择" value=""></el-option>
                                         <template v-for="item in provinceList">
-                                            <el-option :key="item.provinceId" :label="item.name" :value="item.provinceId">
+                                            <el-option :key="item.provinceId" :label="item.name" :value="item.name">
                                             </el-option>
                                         </template>
                                     </el-select>
@@ -137,73 +146,75 @@
                             </el-col>
                             <el-col class="line" :span="1">-</el-col>
                             <el-col :span="6">
-                                <el-form-item label-width="0" prop="cityId">
-                                    <el-select v-model="addOrderForm.cityId" placeholder="请选择市" @change="onCity" class="selectInput">
+                                <el-form-item label-width="0" prop="consigneeCityName">
+                                    <el-select v-model="addOrderForm.consigneeCityName" placeholder="请选择市" @change="onCity" class="selectInput">
                                         <el-option label="请选择" value=""></el-option>
-                                        <el-option v-for="(item) in getCity" :key="item.cityId" :label="item.name" :value="item.cityId">
+                                        <el-option v-for="(item) in getCity" :key="item.cityId" :label="item.name" :value="item.name">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                             <el-col class="line" :span="1">-</el-col>
                             <el-col :span="6">
-                                <el-form-item label-width="0" prop="countryId">
-                                    <el-select v-model="addOrderForm.countryId" placeholder="请选择区" class="selectInput">
+                                <el-form-item label-width="0" prop="consigneeCountyName">
+                                    <el-select v-model="addOrderForm.consigneeCountyName" placeholder="请选择区" class="selectInput">
                                         <el-option label="请选择" value=""></el-option>
-                                        <el-option v-for="(item) in getCountry" :key="item.countryId" :label="item.name" :value="item.countryId">
+                                        <el-option v-for="(item) in getCountry" :key="item.countryId" :label="item.name" :value="item.name">
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
                             </el-col>
                         </el-form-item>
-                        <el-form-item  prop="address">
-                            <el-input style="width: 500px" v-model="addOrderForm.address" maxlength="200" :rows="1" placeholder="请输入详细地址"/>
+                        <el-form-item  prop="consigneeAddress">
+                            <el-input style="width: 500px" v-model="addOrderForm.consigneeAddress" maxlength="200" :rows="1" placeholder="请输入详细地址"/>
                         </el-form-item>
 
-                        <el-form-item label="商品明细：" prop="products">
+                        <el-form-item label="商品明细：" prop="productBOS">
                             <el-button type="primary" @click="onAddProduct">+添加商品</el-button>
                         </el-form-item>
 
-                        <div class="query-cont-row" v-for="(productItem,index) in addOrderForm.products" :key="index">
-                            <el-form-item label="品类：" :prop="'products.' + index + '.categoryId'" :rules="addOrderRules.categoryId">
-                                <el-select v-model="productItem.categoryId" @change="()=> { selectChanged(index) }" >
+                        <div class="query-cont-row" v-for="(productItem,index) in addOrderForm.productBOS" :key="index">
+                            <el-form-item label="品类：" :prop="'productBOS.' + index + '.productCategory'" :rules="addOrderRules.productCategory">
+                                <el-select v-model="productItem.productCategory" @change="()=> { selectChanged(index) }" >
                                     <el-option label="选择" value=""></el-option>
-                                    <el-option :label="item.categoryName" :value="item.categoryId" v-for="item in allCategorys" :key="item.categoryId"></el-option>
+                                    <el-option :label="item.categoryName" :value="item.categoryName" v-for="item in allCategorys" :key="item.categoryId"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="商品型号：" label-width="100px" :prop="'products.' + index + '.specificationId'" :rules="addOrderRules.specificationId">
-                                <el-select v-model="productItem.specificationId" @change="selectSpecificationIdChanged">
+                            <el-form-item label="商品型号：" label-width="100px" :prop="'productBOS.' + index + '.productSpecification'" :rules="addOrderRules.productSpecification">
+                                <el-select v-model="productItem.productSpecification" @change="selectSpecificationIdChanged">
                                     <el-option label="选择" value=""></el-option>
-                                    <el-option :label="item.specificationName" :value="item.specificationId" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
+                                    <el-option :label="item.specificationName" :value="item.specificationName" v-for="item in categoryTypes[index]" :key="item.specificationId"></el-option>
                                 </el-select>
                             </el-form-item>
-                            <el-form-item label="销售金额：" label-width="100px" :prop="'products.' + index + '.money'" :rules="addOrderRules.money">
-                                <el-input style="width: 150px" v-model="productItem.money" maxlength="100" :rows="1" placeholder="请输入销售金额"/>
+                            <el-form-item label="销售金额：" label-width="100px" :prop="'productBOS.' + index + '.productAmount'" :rules="addOrderRules.productAmount">
+                                <el-input style="width: 150px" v-model="productItem.productAmount" maxlength="100" :rows="1" placeholder="请输入销售金额"/>
                             </el-form-item>
-                            <el-form-item label="商品件数：" label-width="100px" :prop="'products.' + index + '.count'" :rules="addOrderRules.count">
-                                <el-input style="width: 150px" v-model="productItem.count" maxlength="100" :rows="1" placeholder="请输入商品件数"/>
+                            <el-form-item label="商品件数：" label-width="100px" :prop="'productBOS.' + index + '.productCount'" :rules="addOrderRules.productCount">
+                                <el-input style="width: 150px" v-model="productItem.productCount" maxlength="100" :rows="1" placeholder="请输入商品件数"/>
                             </el-form-item>
                             <el-button style="align-self: flex-start;margin-left: 20px;" type="primary" @click="()=> { onRemoveProduct(index) }">删除</el-button>
                         </div>
-
-                        <el-form-item label="支付方式：" prop="payType">
-                            <el-select v-model="addOrderForm.payType">
+                        <el-form-item label="商品总运费：" prop="freight">
+                            <el-input v-model="addOrderForm.freight" maxlength="100" :rows="1" placeholder="请输入商品总运费"/>
+                        </el-form-item>
+                        <el-form-item label="支付方式：" prop="payMethod">
+                            <el-select v-model="addOrderForm.payMethod">
                                 <el-option label="选择" value=""></el-option>
-                                <el-option label="支付宝转账" value="1"></el-option>
-                                <el-option label="银行转账" value="2"></el-option>
-                                <el-option label="微信转账" value="3"></el-option>
-                                <el-option label="现金支付" value="4"></el-option>
-                                <el-option label="其他" value="5"></el-option>
+                                <el-option label="支付宝转账" value="支付宝转账"></el-option>
+                                <el-option label="银行转账" value="银行转账"></el-option>
+                                <el-option label="微信转账" value="微信转账"></el-option>
+                                <el-option label="现金支付" value="现金支付"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="订单总金额：" prop="totalMoney">
-                            <el-input v-model="addOrderForm.totalMoney" maxlength="100" :rows="1" placeholder="请输入订单总金额"/>
+                        <el-form-item label="订单总金额：" prop="payAmount">
+                            <el-input v-model="addOrderForm.payAmount" maxlength="100" :rows="1" placeholder="请输入订单总金额"/>
                         </el-form-item>
                         <el-form-item label="支付时间：" prop="payTime">
-                            <el-date-picker v-model="addOrderForm.payTime" value-format="yyyy-MM-dd HH:mm:ss" type="datetime" placeholder="选择时间">
+                            <el-date-picker v-model="addOrderForm.payTime" value-format="yyyy-MM-dd HH:mm" type="datetime" placeholder="选择时间">
                             </el-date-picker>
                         </el-form-item>
-                        <el-form-item label="请上传支付凭证：" prop="payImgs" ref="payImgs">
+                        <el-form-item label="请上传支付凭证：" prop="certificate" :rules="addOrderRules.certificate" ref="payImgs">
                             <el-row :span="8">
                                 <el-upload
                                     list-type="picture-card"
@@ -291,13 +302,15 @@
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl, interfaceUrl } from '@/api/config'
-import { deleteThirdOrder } from '../api'
+import { AUTH_CLOUD_DELIVER_OPERATE } from '@/utils/auth_const'
+import { addCloudMerchantProductOrder, deleteThirdOrder } from '../api'
 import { getChiness } from '../../hmall/membership/api'
 
 export default {
     name: 'merchantOrderList',
     data () {
         return {
+            deliverOperateAuth: AUTH_CLOUD_DELIVER_OPERATE,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -349,12 +362,14 @@ export default {
                 { label: '收件人手机', prop: 'consigneePhone' },
                 { label: '订单实际支付金额', prop: 'payAmount', formatters: 'money' },
                 { label: '订单运费', prop: 'freight' },
+                { label: '商品名称', prop: 'productName' },
                 { label: '订单件数', prop: 'orderProductCount' },
                 { label: '支付方式', prop: 'payMethod' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '物流公司', prop: 'deliveryName' },
                 { label: '快递单号', prop: 'waybillId' }
             ],
+            spanArray: [],
             prouctDetailTableData: [],
             detailDialogVisible: false,
             focusDetailOrder: {},
@@ -370,7 +385,7 @@ export default {
                     AccessKeyId: '5ksbfewexbfc'
                 },
                 data: {
-                    operateUserName: ''
+                    creator: ''
                 }
             },
             fileList: [],
@@ -388,61 +403,67 @@ export default {
             provinceList: [],
             cityList: [],
             addOrderForm: {
-                provinceId: '',
-                cityId: '',
-                countryId: '',
-                address: '',
+                consigneeName: '',
+                consigneePhone: '',
+                consigneeProvinceName: '',
+                consigneeCityName: '',
+                consigneeCountyName: '',
+                consigneeAddress: '',
                 payTime: '',
-                totalMoney: '',
-                payType: '',
-                products: [],
-                payImage: '',
-                payImages: []
+                payAmount: '',
+                payMethod: '',
+                productBOS: [],
+                freight: '',
+                certificate: ''
             },
+            certificateUrls: [],
             addOrderRules: {
-                phone: [
+                consigneePhone: [
                     { required: true, message: '请输入客户手机号', trigger: 'blur' }
                 ],
-                name: [
+                consigneeName: [
                     { required: true, message: '请输入客户姓名', trigger: 'blur' }
                 ],
-                provinceId: [
+                consigneeProvinceName: [
                     { required: true, message: '请输入客户地址', trigger: 'change' }
                 ],
-                cityId: [
+                consigneeCityName: [
                     { required: true, message: '请输入客户地址', trigger: 'change' }
                 ],
-                countryId: [
+                consigneeCountyName: [
                     { required: true, message: '请输入客户地址', trigger: 'change' }
                 ],
-                address: [
+                consigneeAddress: [
                     { required: true, message: '请输入客户地址', trigger: 'blur' }
                 ],
-                products: [
+                productBOS: [
                     { required: true, message: '请添加商品', trigger: 'change' }
                 ],
-                categoryId: [
+                productCategory: [
                     { required: true, message: '请选择商品品类', trigger: 'change' }
                 ],
-                specificationId: [
+                productSpecification: [
                     { required: true, message: '请选择商品型号', trigger: 'change' }
                 ],
-                money: [
+                productAmount: [
                     { required: true, message: '请输入商品金额', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
-                count: [
+                productCount: [
                     { required: true, message: '请输入商品件数', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
-                payType: [
+                freight: [
+                    { required: true, message: '请输入商品总运费', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
+                ],
+                payMethod: [
                     { required: true, message: '请选择支付类型', trigger: 'change' }
                 ],
-                totalMoney: [
+                payAmount: [
                     { required: true, message: '请输入订单总金额', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
                 payTime: [
                     { required: true, message: '请选择支付时间', trigger: 'blur' }
                 ],
-                payImages: [
+                certificate: [
                     { required: true, message: '请上传支付凭证', trigger: 'blur' }
                 ]
 
@@ -510,14 +531,14 @@ export default {
             }
         },
         getCity () {
-            const province = this.provinceList.filter(item => item.provinceId === this.addOrderForm.provinceId)
+            const province = this.provinceList.filter(item => item.name === this.addOrderForm.consigneeProvinceName)
             if (province.length > 0) {
                 return province[0].cities
             }
             return []
         },
         getCountry () {
-            const city = this.getCity.filter(item => item.cityId === this.addOrderForm.cityId)
+            const city = this.getCity.filter(item => item.name === this.addOrderForm.consigneeCityName)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -547,7 +568,27 @@ export default {
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
         async onQuery () {
+            this.spanArray = []
             await this.findCloudMerchantProductOrderList(this.searchParams)
+        },
+        getSpanArray () {
+            this.spanArray = []
+            let pos = 0
+            for (let i = 0; i < this.cloudMerchantProductOrderList.length; i++) {
+                if (i === 0) {
+                    this.spanArray.push(1)
+                    pos = 0
+                } else {
+                    if (this.cloudMerchantProductOrderList[i].orderId === this.cloudMerchantProductOrderList[i - 1].orderId) {
+                        this.spanArray[pos] += 1
+                        this.spanArray.push(0)
+                    } else {
+                        this.spanArray.push(1)
+                        pos = i
+                    }
+                }
+            }
+            console.log(this.spanArray)
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -560,6 +601,27 @@ export default {
         onSizeChange (val) {
             this.searchParams.pageSize = val
             this.onQuery(this.searchParams)
+        },
+        spanMethod ({ row, column, rowIndex, columnIndex }) {
+            if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2) {
+                if (this.spanArray.length === 0) {
+                    this.getSpanArray()
+                }
+
+                let _row = this.spanArray[rowIndex]
+
+                return {
+                    rowspan: _row,
+                    colspan: _row > 0 ? 1 : 0
+                }
+            }
+        },
+        rowClassName ({ row, rowIndex }) {
+            if (this.spanArray.length === 0) {
+                this.getSpanArray()
+            }
+
+            return 'order-row'
         },
         async onDetail (val) {
             this.focusDetailOrder = val
@@ -616,7 +678,7 @@ export default {
             if (this.loading) return
             this.loading = true
             if (this.hasFile()) {
-                this.uploadData.data.operateUserName = this.userInfo.employeeName
+                this.uploadData.data.creator = this.userInfo.employeeName
                 try {
                     await this.$refs.upload.submit()
                 } catch (e) { }
@@ -687,7 +749,29 @@ export default {
             this.onQuery(this.searchParams)
             this.$message.success('上传成功')
         },
+        clearAddOrderForm () {
+            this.addOrderForm = {
+                consigneeName: '',
+                consigneePhone: '',
+                provinceId: '',
+                consigneeProvinceName: '',
+                cityId: '',
+                consigneeCityName: '',
+                countryId: '',
+                consigneeCountyName: '',
+                consigneeAddress: '',
+                payTime: '',
+                payAmount: '',
+                payMethod: '',
+                productBOS: [],
+                freight: '',
+                certificate: ''
+            }
+            this.certificateUrls = []
+            this.$refs['addOrderForm'].clearValidate()
+        },
         onCloseAddOrderDialog () {
+            this.clearAddOrderForm()
             this.addOrderDialogVisible = false
         },
         async getAreacode () {
@@ -695,44 +779,48 @@ export default {
             this.provinceList = data
         },
         onProvince (key) {
-            this.addOrderForm.provinceId = key
-            this.addOrderForm.cityId = ''
-            this.addOrderForm.countryId = ''
+            this.addOrderForm.consigneeProvinceName = key
+            this.addOrderForm.consigneeCityName = ''
+            this.addOrderForm.consigneeCountyName = ''
         },
         onCity (key) {
-            this.addOrderForm.cityId = key
-            this.addOrderForm.countryId = ''
+            this.addOrderForm.consigneeCityName = key
+            this.addOrderForm.consigneeCountyName = ''
         },
         onArea (key) {
-            this.addOrderForm.countryId = key
+            this.addOrderForm.consigneeCountyName = key
         },
         onAddProduct () {
-            this.addOrderForm.products.push({ categoryId: '', specificationId: '', money: '', count: '' })
+            this.addOrderForm.productBOS.push({ productCategory: '', productSpecification: '', productAmount: '', productCount: '' })
             this.categoryTypes.push([])
-            this.$refs['addOrderForm'].clearValidate(['products'])
+            this.$refs['addOrderForm'].clearValidate(['productBOS'])
+        },
+        categoryIdByName (name) {
+            console.log(this.allCategorys)
+            let categorys = this.allCategorys.filter((item) => item.categoryName === name)
+            return categorys[0].categoryId
         },
         async selectChanged (index) {
-            this.addOrderForm.products[index].specificationId = ''
+            this.addOrderForm.productBOS[index].productSpecification = ''
             this.categoryTypes.splice(index, 1, [])
-            await this.findCloudMerchantShopCategoryTypeList({ categoryId: this.addOrderForm.products[index].categoryId })
+            await this.findCloudMerchantShopCategoryTypeList({ categoryId: this.categoryIdByName(this.addOrderForm.productBOS[index].productCategory) })
             this.categoryTypes.splice(index, 1, this.cloudMerchantShopCategoryTypeList)
         },
         selectSpecificationIdChanged () {
-            for (let i = 0; i < this.addOrderForm.products.length; i++) {
-                this.$refs['addOrderForm'].validateField('products.' + i + '.specificationId')
+            for (let i = 0; i < this.addOrderForm.productBOS.length; i++) {
+                this.$refs['addOrderForm'].validateField('productBOS.' + i + '.productSpecification')
             }
         },
         onRemoveProduct (index) {
-            this.addOrderForm.products.splice(index, 1)
+            this.addOrderForm.productBOS.splice(index, 1)
             this.categoryTypes.splice(index, 1)
         },
         handleUploadImageSuccess (response, file, fileList) {
             if (response.code === 200) {
                 console.log(response.data.accessUrl)
-                this.addOrderForm.payImages.push(response.data.accessUrl)
+                this.certificateUrls.push(response.data.accessUrl)
+                this.addOrderForm.certificate = this.certificateUrls.join(',')
             }
-
-            this.addOrderForm.payImage = this.addOrderForm.payImages[0]
         },
         uploadImageExceptMessage (files, fileList) {
             this.$message({
@@ -753,15 +841,36 @@ export default {
             return isJPG || isJPEG || isPNG
         },
         handleImageRemove (file, fileList) {
-            console.log(file)
-            let index = this.addOrderForm.payImages.indexOf(file.url)
-            this.addOrderForm.payImages.splice(index, 1)
+            let index = this.certificateUrls.indexOf(file.response.data.accessUrl)
+            this.certificateUrls.splice(index, 1)
+            this.addOrderForm.certificate = this.certificateUrls.join(',')
         },
         cancelAddOrderClick () {
+            this.clearAddOrderForm()
             this.addOrderDialogVisible = false
         },
         submitAddOrderForm () {
-
+            this.addOrderForm.creator = this.userInfo.employeeName
+            this.loading = true
+            this.$refs['addOrderForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await addCloudMerchantProductOrder(this.addOrderForm)
+                        this.loading = false
+                        this.clearAddOrderForm()
+                        this.addOrderDialogVisible = false
+                        this.onQuery()
+                        this.$message({
+                            message: `添加成功`,
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        this.loading = false
+                    }
+                } else {
+                    this.loading = false
+                }
+            })
         },
         onCloseDeliverDialog () {
             this.deliverDialogVisible = false
@@ -835,5 +944,12 @@ export default {
     }
     /deep/.query-cont-row .el-select .el-input {
         width:150px;
+    }
+    .el-dialog-div {
+        height: 80vh;
+        overflow: auto;
+    }
+    /deep/ .el-table .order-row:not(.hover-row) td  {
+        background: white !important;
     }
 </style>
