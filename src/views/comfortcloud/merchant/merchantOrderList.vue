@@ -104,16 +104,17 @@
                 </basicTable>
                 <h1 style="padding-top: 20px">发货详情</h1>
                 <div v-if="cloudMerchantProductOrderDetail.deliveryDetails">
-                    <div style="line-height: 25px" v-for="item in cloudMerchantProductOrderDetail.deliveryDetails" :key="item.courierNo">
+                    <div class="deliver-info" v-for="item in cloudMerchantProductOrderDetail.deliveryDetails" :key="item.courierNo">
                         <p v-if="cloudMerchantProductOrderDetail.deliveryDetails.length > 1">发货商品: {{item.productNames}}</p>
-                        <p>物流公司 ￥{{item.logisticsCompany}} </p>
-                        <p>快递单号￥{{item.courierNo}}</p>
-                        <p>发货时间 {{item.deliveryTime}}</p>
-                        <p>发货凭证 --</p>
-                        <div v-for="(imageUrl, index) in proofPictureList" :key="index">
-                            <img :src="imageUrl" />
+                        <p v-if="focusDetailOrder.source === 'B2b'">单分享提货人: {{item.deliverer}} </p>
+                        <p v-else>物流公司: {{item.logisticsCompany}} </p>
+                        <p v-if="focusDetailOrder.source !== 'B2b'">快递单号: {{item.courierNo}}</p>
+                        <p>发货时间: {{item.deliveryTime}}</p>
+                        <p>发货凭证: <span v-if="focusDetailOrder.source === '微信小店'">--</span></p>
+                        <div >
+                            <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
                         </div>
-                        <p v-if="cloudMerchantProductOrderDetail.productBOS.source !== '微信小店'">发货人 {{item.deliverer}}</p>
+                        <p v-if="focusDetailOrder.source !== '微信小店'">发货人: {{item.creator}} {{item.createPhone}}</p>
                     </div>
                 </div>
                 <div style="margin: 20px 0"></div>
@@ -946,6 +947,7 @@ export default {
         onDeliveryTypeChange (val) {
             if (val === 1) {
                 this.deliverForm.productList = []
+                this.deliverCheckAll = false
             }
         },
         handleDeliverCheckAllChange (val) {
@@ -976,6 +978,8 @@ export default {
             this.$refs['deliverForm'].validate(async (valid) => {
                 if (valid) {
                     try {
+                        this.deliverForm.creator = this.userInfo.employeeName
+                        this.deliverForm.createPhone = this.userInfo.phoneNumber
                         await addDispatchOrder(this.deliverForm)
                         this.loading = false
                         this.clearDeliverForm()
@@ -1034,6 +1038,20 @@ export default {
     .radio {
         font-size: 12px;
         line-height: 40px;
+    }
+    .proof-img {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
+    }
+    .deliver-info {
+        line-height: 25px;
+        padding: 10px 0;
+        border-bottom: solid 1px #ccc;
+    }
+    .deliver-info:last-child {
+        border-bottom: none;
     }
     /deep/.el-dialog__body {
         padding-top: 10px;
