@@ -21,7 +21,7 @@
                             </el-option>
                         </el-select>
                         <span class="ml10 mr10">-</span>
-                        <el-select v-model="queryParams.countryId" placeholder="区" :clearable=true>
+                        <el-select v-model="queryParams.countryId" @change="onArea" placeholder="区" :clearable=true>
                             <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
                             </el-option>
                         </el-select>
@@ -63,7 +63,7 @@
 
             <basicTable :spanMethod="objectSpanMethod" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="action" slot-scope="scope">
-                    <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onEdit(scope.data.row)">回收入库</el-button>
+                    <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onCecycle(scope.data.row)">回收入库</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
@@ -76,39 +76,55 @@
                 <template slot="status" slot-scope="scope">
                     {{statusString(scope.data.row.status)}}
                 </template>
-            </basicTable>
-            <el-dialog :title="materialForm.id.length > 0 ? '营销物料需求详情':'新增营销物料需求'" :modal-append-to-body=false :append-to-body=false :visible.sync="addDialogVisible" width="1000px">
-                <el-form :model="materialForm" :rules="rules" ref="materialForm" label-width="130px">
-                    <div v-if="materialForm.id.length > 0">
-                        <div>
-                            <span>需求编号</span>
-                            <span>10001</span>
-                        </div>
-                        <div>需求详情</div>
-                        <div>
-                            <span>创建人</span>
-                            <span>姚稳</span>
-                        </div>
-                        <div>
-                            <span>创建时间</span>
-                            <span>20202020</span>
+                <template slot="proofPictures" slot-scope="scope">
+                    <div v-if="scope.data.row.proofPictures&&scope.data.row.proofPictures.length>0">
+                        <div v-for="(url,index) in getProofPictures(scope.data.row.proofPictures)" :key="index">
+                            <img style="height:4rem;width:4rem" :src="url" alt="">
                         </div>
                     </div>
-                    <el-form-item label="收货人手机号：" prop="receiverPhone">
-                        <el-input v-model="materialForm.receiverPhone" maxlength="11" placeholder="请输入收货人手机号"></el-input>
+                </template>
+            </basicTable>
+            <el-dialog :title="isDetail ? '营销物料需求详情':'新增营销物料需求'" :modal-append-to-body=false :append-to-body=false :visible.sync="addDialogVisible" width="1000px">
+                <el-form :model="materialForm" :rules="rules" ref="materialForm" label-width="130px">
+                    <div class="form-detail" v-if="isDetail">
+                        <div>
+                            <span class="header-title">需求编号</span>
+                            <span>{{materialForm.id}}</span>
+                        </div>
+                        <div class="header-title">需求详情</div>
+                        <div style="margin-left:20px">
+                            <span>创建人：</span>
+                            <span>{{materialForm.createBy}}</span>
+                        </div>
+                        <div style="margin-left:20px">
+                            <span>创建时间：</span>
+                            <span>{{materialForm.createTime}}</span>
+                        </div>
+                    </div>
+                    <el-form-item label-width="0" class="address">
+                        <el-col :span="7">
+                            <el-form-item label="收货人手机号：" prop="receiverPhone">
+                                <el-input v-model="materialForm.receiverPhone" :disabled="isDetail" maxlength="11" placeholder="请输入收货人手机号"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="7">
+                            <el-form-item label="收货人姓名：" prop="receiverName">
+                                <el-input v-model="materialForm.receiverName" :disabled="isDetail" maxlength="50" placeholder="请输入收货人姓名"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="7">
+                            <el-form-item label="所属分部：" prop="departmentId">
+                                <el-select v-model="materialForm.departmentId" :disabled="isDetail">
+                                    <el-option :label="item.deptName" :value="item.crmDeptCode" v-for="item in departmentList" :key="item.crmDeptCode"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                     </el-form-item>
-                    <el-form-item label="收货人姓名：" prop="receiverName">
-                        <el-input v-model="materialForm.receiverName" maxlength="50" placeholder="请输入收货人姓名"></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属分部：" prop="departmentId">
-                        <el-select v-model="materialForm.departmentId">
-                            <el-option :label="item.deptName" :value="item.crmDeptCode" v-for="item in departmentList" :key="item.crmDeptCode"></el-option>
-                        </el-select>
-                    </el-form-item>
+
                     <el-form-item class="address" label="收货人地址：" required>
                         <div class="city-area">
                             <el-form-item label-width="0px" prop="provinceId">
-                                <el-select v-model="materialForm.provinceId" @change="onProvince" placeholder="省" :clearable=true>
+                                <el-select v-model="materialForm.provinceId" :disabled="isDetail" @change="onProvinceAddress" placeholder="省" :clearable=true>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
                                 </el-select>
@@ -116,16 +132,16 @@
 
                             <span class="ml10 mr10">-</span>
                             <el-form-item label-width="0px" prop="cityId">
-                                <el-select v-model="materialForm.cityId" @change="onCity" placeholder="市" :clearable=true>
-                                    <el-option v-for="item in getCity" :key="item.id" :label="item.name" :value="item.cityId">
+                                <el-select v-model="materialForm.cityId" :disabled="isDetail" @change="onCityAddress" placeholder="市" :clearable=true>
+                                    <el-option v-for="item in getCityAddress" :key="item.id" :label="item.name" :value="item.cityId">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
 
                             <span class="ml10 mr10">-</span>
                             <el-form-item label-width="0px" prop="countryId">
-                                <el-select v-model="materialForm.countryId" placeholder="区" :clearable=true>
-                                    <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
+                                <el-select v-model="materialForm.countryId" :disabled="isDetail" @change="onCountryAddress" placeholder="区" :clearable=true>
+                                    <el-option v-for="item in getCountryAddress" :key="item.id" :label="item.name" :value="item.countryId">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
@@ -133,29 +149,29 @@
 
                     </el-form-item>
                     <el-form-item label="详细地址：" prop="address">
-                        <el-input v-model="materialForm.address" style='width:400px' maxlength="100" placeholder="请输入具体地址"></el-input>
+                        <el-input v-model="materialForm.address" :disabled="isDetail" style='width:400px' maxlength="100" placeholder="请输入具体地址"></el-input>
                     </el-form-item>
                     <el-form-item label="物料明细：" required>
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
                     </el-form-item>
                     <el-form-item label-width="0px">
-                        <div v-for="(mera,index) in materialForm.details" :key="mera.key">
+                        <div v-for="(mera,index) in materialForm.details" :key="mera.key" style="height:60px">
                             <el-col :span="10">
                                 <el-form-item label="物料/商品名称：" :prop="'details.'+index+'.materialName'" :rules="rules.materialName">
-                                    <el-autocomplete class="inline-input" placeholder="输入物料名称" v-model="mera.materialName" :trigger-on-focus="false" @select="handleSelect" :fetch-suggestions="querySuggestions">
+                                    <el-autocomplete class="inline-input" :disabled="!isCanDelelte(mera.status)" placeholder="输入物料名称" v-model="mera.materialName" :trigger-on-focus="false" @select="handleSelect" :fetch-suggestions="querySuggestions">
                                     </el-autocomplete>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
                                 <el-form-item label="物料件数：" :prop="'details.'+index+'.materialCount'" :rules="rules.materialCount">
-                                    <el-input placeholder="输入件数" v-model="mera.materialCount"></el-input>
+                                    <el-input placeholder="输入件数" :disabled="!isCanDelelte(mera.status)" v-model="mera.materialCount"></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="2" v-if="materialForm.id.length > 0">
-                                <p>已发货</p>
+                            <el-col :span="2" v-if="isDetail">
+                                <p>{{statusString(mera.status)}}</p>
                             </el-col>
                             <el-col :span="2">
-                                <el-button v-if="mera.status === undefined || mera.status === 0" type="danger" @click="deleteMaterial(mera)">删除</el-button>
+                                <el-button v-if="isCanDelelte(mera.status)" type="danger" @click="deleteMaterial(mera)">删除</el-button>
                             </el-col>
                         </div>
 
@@ -219,7 +235,8 @@ import {
     getMarktingMaterialDetail,
     deleteMarktingMaterial,
     addDispatchOrder,
-    getToDispatchList
+    getToDispatchList,
+    recycleMaterial
 } from '../api'
 import { getChiness } from '../../hmall/membership/api'
 
@@ -363,7 +380,31 @@ export default {
                     return '已发货'
                 } else if (status === 2) {
                     return '已回收'
+                } else {
+                    return ''
                 }
+            }
+        },
+        isDetail () {
+            if (this.materialForm.id > 0) {
+                return true
+            }
+            return false
+        },
+        isCanDelelte () {
+            return status => {
+                if (this.isDetail) {
+                    if (status === undefined || status === 0) {
+                        return true
+                    }
+                    return false
+                }
+                return true
+            }
+        },
+        getProofPictures () {
+            return pics => {
+                return pics.split(',')
             }
         },
         getCity () {
@@ -375,6 +416,20 @@ export default {
         },
         getCountry () {
             const city = this.cityList.filter(item => item.cityId === this.queryParams.cityId)
+            if (city.length > 0) {
+                return city[0].countries
+            }
+            return []
+        },
+        getCityAddress () {
+            const province = this.provinceList.filter(item => item.provinceId === this.materialForm.provinceId)
+            if (province.length > 0) {
+                return province[0].cities
+            }
+            return []
+        },
+        getCountryAddress () {
+            const city = this.cityList.filter(item => item.cityId === this.materialForm.cityId)
             if (city.length > 0) {
                 return city[0].countries
             }
@@ -413,6 +468,12 @@ export default {
     },
     watch: {
         getCity: {
+            deep: true,
+            handler: function (newVal) {
+                this.cityList = newVal
+            }
+        },
+        getCityAddress: {
             deep: true,
             handler: function (newVal) {
                 this.cityList = newVal
@@ -462,7 +523,6 @@ export default {
                 const options = data.map(item => ({
                     value: item.productName
                 }))
-                console.log(options, '处理过的数据')
                 cb(options)
             }
         },
@@ -515,13 +575,13 @@ export default {
                 params.provinceName = province.length > 0 ? province[0].name : ''
             }
             if (params.cityId.length > 0) {
-                const city = this.getCity.filter(item => {
+                const city = this.getCityAddress.filter(item => {
                     return item.cityId === params.cityId
                 })
                 params.cityName = city.length > 0 ? city[0].name : ''
             }
             if (params.countryId.length > 0) {
-                const country = this.getCountry.filter(item => {
+                const country = this.getCountryAddress.filter(item => {
                     return item.countryId === params.countryId
                 })
                 params.countryName = country.length > 0 ? country[0].name : ''
@@ -535,7 +595,10 @@ export default {
             let { ...params } = this.dispatchForm
             params.deliverer = this.userInfo.employeeName
             params.orderId = this.currentMaterial.materialId
-            console.log(params)
+            if (params.deliveryType === 1) {
+                params.productList = null
+            }
+            console.log(params, '发货参数')
             await addDispatchOrder(params)
             this.dispatchDialogVisible = false
             this.onQuery()
@@ -545,6 +608,15 @@ export default {
             const { data } = await getMarktingMaterialDetail(val)
             this.materialForm = data
             this.addDialogVisible = true
+            this.materialForm.details = data.details.map(item => {
+                this.detailsKey++
+                return {
+                    materialName: item.materialName,
+                    materialCount: item.materialCount,
+                    key: this.detailsKey,
+                    status: item.status
+                }
+            })
             console.log(this.materialForm, '数据详情')
         },
         // 删除营销物料
@@ -558,17 +630,29 @@ export default {
                 this.onQuery()
             })
         },
+        // 物料回收
+        onCecycle (val) {
+            this.$confirm('请确认前期发货的营销物料是否已全部回收入库？', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消'
+            }).then(async () => {
+                await recycleMaterial({
+                    materialId: val.materialId,
+                    materialProductId: val.id
+                })
+                this.onQuery()
+            })
+        },
         // 营销物料发货
         async onDispatch (val) {
+            this.clearData()
             const params = {
                 orderId: val.materialId,
                 source: 'material'
             }
             this.currentMaterial = val
             const { data } = await getToDispatchList(params)
-            console.log(data, '待发货列表')
             this.materials = data
-            this.clearData()
             this.dispatchDialogVisible = true
         },
         handleSelect (item) {
@@ -648,6 +732,18 @@ export default {
         onArea (key) {
             this.queryParams.countryId = key
         },
+        onProvinceAddress (key) {
+            this.materialForm.provinceId = key
+            this.materialForm.cityId = ''
+            this.materialForm.countryId = ''
+        },
+        onCityAddress (key) {
+            this.materialForm.cityId = key
+            this.materialForm.countryId = ''
+        },
+        onCountryAddress (key) {
+            this.materialForm.countryId = key
+        },
         addNewMetarial () {
             this.clearData()
             this.addDialogVisible = true
@@ -658,6 +754,12 @@ export default {
             this.clearData()
         },
         clearData () {
+            if (this.$refs['dispatchForm']) {
+                this.$refs['dispatchForm'].clearValidate()
+            }
+            if (this.$refs['materialForm']) {
+                this.$refs['materialForm'].clearValidate()
+            }
             this.currentMaterial = null
             this.dispatchForm = dispatchParams
             this.materialForm = materialsParams
@@ -705,6 +807,17 @@ export default {
         font-weight: 400;
         color: #666;
     }
+}
+
+.form-detail {
+    margin: 0 0 20px 20px;
+    line-height: 30px;
+}
+
+.header-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-right: 20px;
 }
 
 .orangeBtn {
