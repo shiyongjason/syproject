@@ -50,6 +50,7 @@
 <script>
 
 import { mapGetters, mapActions, mapState } from 'vuex'
+import { deleteProjectScheme } from '../api'
 
 export default {
     name: 'merchantEnginePlan',

@@ -180,7 +180,9 @@ export default {
         async getDetail (id) {
             await this.findCloudMerchanProjectSchemeDetail({ id })
             this.form = { ...this.cloudMerchantProjectSchemeDetail }
-            console.log(this.form)
+            if (this.form.schemeVideo) {
+                this.videoimageUrl = 'https://hosjoy-iot.oss-cn-hangzhou.aliyuncs.com/images/public/big/share_icon.png'
+            }
         },
         onBack () {
             this.setNewTags((this.$route.fullPath).split('?')[0])
@@ -193,7 +195,6 @@ export default {
             if (!this.$route.query.id) {
                 this.form.createPhone = this.userInfo.phoneNumber
             }
-            console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
@@ -227,7 +228,6 @@ export default {
             this.innerVisible = true
         },
         closePlayDialog () {
-            console.log('closePlayDialog')
             this.$refs['videoPlay'].pause()
         }
     }
