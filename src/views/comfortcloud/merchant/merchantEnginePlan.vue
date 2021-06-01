@@ -19,10 +19,6 @@
             <div class="query-cont-col">
                 <div class="query-col-title">
                     <h-button type="primary" class="ml20" @click="onSearch">查询</h-button>
-                </div>
-            </div>
-            <div class="query-cont-col">
-                <div class="query-col-title">
                     <h-button type="primary" class="ml20" @click="onCreatePlan">新建方案</h-button>
                 </div>
             </div>

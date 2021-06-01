@@ -274,13 +274,13 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="单分享提货人：" v-if="deliverForm.source === 'B2b'" prop="deliverer">
-                            <el-input v-model="addOrderForm.deliverer" maxlength="100" :rows="1" placeholder="请输入单分享提货人"/>
+                            <el-input v-model="deliverForm.deliverer" maxlength="100" :rows="1" placeholder="请输入单分享提货人"/>
                         </el-form-item>
                         <el-form-item label="物流公司：" v-if="deliverForm.source !== 'B2b'" prop="logisticsCompany">
-                            <el-input v-model="addOrderForm.logisticsCompany" maxlength="100" :rows="1" placeholder="请输入物流公司"/>
+                            <el-input v-model="deliverForm.logisticsCompany" maxlength="100" :rows="1" placeholder="请输入物流公司"/>
                         </el-form-item>
                         <el-form-item label="快递单号：" v-if="deliverForm.source !== 'B2b'" prop="courierNo">
-                            <el-input v-model="addOrderForm.courierNo" maxlength="100" :rows="1" placeholder="请输入快递单号"/>
+                            <el-input v-model="deliverForm.courierNo" maxlength="100" :rows="1" placeholder="请输入快递单号"/>
                         </el-form-item>
                         <el-form-item label="发货凭证：" ref="image">
                             <el-row :span="8">
@@ -318,7 +318,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl, interfaceUrl } from '@/api/config'
 import { AUTH_CLOUD_DELIVER_OPERATE } from '@/utils/auth_const'
-import { addCloudMerchantProductOrder, addDispatchOrder, deleteThirdOrder } from '../api'
+import { addCloudMerchantProductOrder, addDispatchOrder, deleteThirdOrder, getToDispatchList } from '../api'
 import { getChiness } from '../../hmall/membership/api'
 
 export default {
@@ -497,7 +497,7 @@ export default {
             },
             deliverRules: {
                 deliveryType: [{ required: true, message: '请选择发货类型', trigger: 'blur' }],
-                deliverer: [{ required: true, message: '请输入发货人', trigger: 'blur' }],
+                deliverer: [{ required: true, message: '请输入单分享提货人', trigger: 'blur' }],
                 logisticsCompany: [{ required: true, message: '请输入物流公司', trigger: 'blur' }],
                 courierNo: [{ required: true, message: '请输入快递单号', trigger: 'blur' }],
                 productList: [{ required: true, message: '请选择发货商品', trigger: 'change' }]
@@ -588,7 +588,7 @@ export default {
             return { updateUid: this.userInfo.employeeName }
         },
         canSelectDeliverType () { //  商品种类大于1 并且 所有商品都是未发货状态 可以选择全发和部分发货
-            let products = this.deliverProducts.filter(item => item.status != '20') // 已发货的商品
+            let products = this.deliverProducts.filter(item => item.status == 1) // 已发货的商品
             return this.deliverProducts.length > 1 && products.length === 0
         }
     },
@@ -908,13 +908,11 @@ export default {
             })
         },
         async onDeliverClick (val) {
-            // this.deliverProducts = [
-            //     { productId: 1, productName: 'yi', status: 20 },
-            //     { productId: 2, productName: 'er', status: 20 },
-            //     { productId: 3, productName: 'san', status: 20 }]
-            this.deliverProductOptions = this.deliverProducts.filter(item => item.status == '20') // 待发货商品列表
+            let { data } = await getToDispatchList({ orderId: val.orderId, source: val.source })
+            this.deliverProducts = data
+            this.deliverProductOptions = this.deliverProducts.filter(item => item.status == 0) // 待发货商品列表
 
-            let deliveredProducts = this.deliverProducts.filter(item => item.status != '20') // 已发货商品列表
+            let deliveredProducts = this.deliverProducts.filter(item => item.status == 1) // 已发货商品列表
             if (deliveredProducts.length === 0) { // 没有已发货的商品，则默认全发
                 this.deliverForm.deliveryType = 1
             } else { // 有已发货则是部分发货
@@ -1047,7 +1045,7 @@ export default {
         width:150px;
     }
     .el-dialog-div {
-        height: 80vh;
+        max-height: 80vh;
         overflow: auto;
     }
     /deep/ .el-table .order-row:not(.hover-row) td  {
