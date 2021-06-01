@@ -66,6 +66,9 @@ export default {
     },
     computed: {
         ...mapGetters({
+            cloudMerchantProjectSchemeList: 'cloudMerchantProjectSchemeList',
+            cloudMerchantProjectSchemeListPagination: 'cloudMerchantProjectSchemeListPagination',
+            cloudMerchantProjectSchemeDetail: 'cloudMerchantProjectSchemeDetail'
         }),
         ...mapState({
             userInfo: state => state.userInfo
@@ -74,7 +77,20 @@ export default {
     },
     methods: {
         ...mapActions({
+            findCloudMerchanProjectSchemeList: 'findCloudMerchanProjectSchemeList',
+            findCloudMerchanProjectSchemeDetail: 'findCloudMerchanProjectSchemeDetail'
         }),
+        queryList: function () {
+            this.findCloudMerchanProjectSchemeList(this.queryParams)
+        },
+        onCurrentChange: function (val) {
+            this.queryParams.pageNumber = val.pageNumber
+            this.queryList(this.queryParams)
+        },
+        onSizeChange: function (val) {
+            this.queryParams.pageSize = val
+            this.queryList(this.queryParams)
+        },
         onCreatePlan: function () {
             this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit' })
         },

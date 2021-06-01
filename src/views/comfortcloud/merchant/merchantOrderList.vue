@@ -71,7 +71,7 @@
             <!-- 表格使用老毕的组件 -->
             <basicTable style="margin-top: 20px" :tableLabel="tableLabel"
                         :row-class-name="rowClassName"
-                        :tableData="cloudMerchantProductOrderList"
+                        :tableData="productOrderList"
                         :isShowIndex='false'
                         :pagination="cloudMerchantProductOrderPagination"
                         @onCurrentChange='onCurrentChange'
@@ -87,7 +87,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                     <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
-                    <el-button v-if="hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px">发货</el-button>
+                    <el-button v-if="scope.data.row.source !=='微信小店' && scope.data.row.status == '20' && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
                 </template>
             </basicTable>
 
@@ -100,8 +100,23 @@
                     总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
                 </p>
                 <h1 style="padding-top: 20px">商品明细</h1>
-                <basicTable style="margin: 20px 0" :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail" :isShowIndex='false'>
+                <basicTable :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail.productBOS" :isShowIndex='false'>
                 </basicTable>
+                <h1 style="padding-top: 20px">发货详情</h1>
+                <div v-if="cloudMerchantProductOrderDetail.deliveryDetails">
+                    <div style="line-height: 25px" v-for="item in cloudMerchantProductOrderDetail.deliveryDetails" :key="item.courierNo">
+                        <p v-if="cloudMerchantProductOrderDetail.deliveryDetails.length > 1">发货商品: {{item.productNames}}</p>
+                        <p>物流公司 ￥{{item.logisticsCompany}} </p>
+                        <p>快递单号￥{{item.courierNo}}</p>
+                        <p>发货时间 {{item.deliveryTime}}</p>
+                        <p>发货凭证 --</p>
+                        <div v-for="(imageUrl, index) in proofPictureList" :key="index">
+                            <img :src="imageUrl" />
+                        </div>
+                        <p v-if="cloudMerchantProductOrderDetail.productBOS.source !== '微信小店'">发货人 {{item.deliverer}}</p>
+                    </div>
+                </div>
+                <div style="margin: 20px 0"></div>
             </el-dialog>
             <el-dialog title="导入第三方订单明细" :visible.sync="importDialogVisible" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseImprtDialog">
                 <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
@@ -246,28 +261,28 @@
             <el-dialog title="填写发货信息" :visible.sync="deliverDialogVisible" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseDeliverDialog">
                 <div class="el-dialog-div">
                     <el-form :model="deliverForm" :rules="deliverRules" ref="deliverForm" label-width="140px">
-                        <el-form-item label="请选择发货方式：" prop="type">
-                            <el-radio-group v-model="deliverForm.type">
-                                <el-radio label="按订单合并发货：订单中的商品只需维护一次发货信息"></el-radio>
-                                <el-radio label="按商品分开发货：订单中部分产品发货，需按实际发货的商品维护发货信息"></el-radio>
+                        <el-form-item v-if="canSelectDeliverType" label="请选择发货方式：" prop="deliveryType">
+                            <el-radio-group v-model="deliverForm.deliveryType" @change="onDeliveryTypeChange">
+                                <el-radio :label="1" class="radio" >按订单合并发货：订单中的商品只需维护一次发货信息</el-radio>
+                                <el-radio :label="2" class="radio" >按商品分开发货：订单中部分产品发货，需按实际发货的商品维护发货信息</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="发货商品">
-                            <el-checkbox :indeterminate="isDeliverIndeterminate" v-model="deliverCheckAll" @change="handleDeliverCheckAllChange">全选</el-checkbox>
-                            <el-checkbox-group v-model="deliverForm.products" @change="handleDeliverCheckedChange">
-                                <el-checkbox v-for="item in deliverProductOptions" :label="item.name" :key="item.name"></el-checkbox>
+                        <el-form-item v-if="deliverForm.deliveryType === 2" label="发货商品" prop="productList">
+                            <el-checkbox v-model="deliverCheckAll" @change="handleDeliverCheckAllChange">全选</el-checkbox>
+                            <el-checkbox-group v-model="deliverForm.productList" @change="handleDeliverCheckedChange">
+                                <el-checkbox v-for="item in deliverProductOptions" :label="item"  :key="item.productId">{{item.productName}}</el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
-                        <el-form-item label="单分享提货人：" prop="deliverPerson">
-                            <el-input v-model="addOrderForm.deliverPerson" maxlength="100" :rows="1" placeholder="请输入单分享提货人"/>
+                        <el-form-item label="单分享提货人：" v-if="deliverForm.source === 'B2b'" prop="deliverer">
+                            <el-input v-model="addOrderForm.deliverer" maxlength="100" :rows="1" placeholder="请输入单分享提货人"/>
                         </el-form-item>
-                        <el-form-item label="物流公司：" prop="deliverPerson">
-                            <el-input v-model="addOrderForm.deliverCompany" maxlength="100" :rows="1" placeholder="请输入物流公司"/>
+                        <el-form-item label="物流公司：" v-if="deliverForm.source !== 'B2b'" prop="logisticsCompany">
+                            <el-input v-model="addOrderForm.logisticsCompany" maxlength="100" :rows="1" placeholder="请输入物流公司"/>
                         </el-form-item>
-                        <el-form-item label="快递单号：" prop="deliverPerson">
-                            <el-input v-model="addOrderForm.deliverNumber" maxlength="100" :rows="1" placeholder="请输入快递单号"/>
+                        <el-form-item label="快递单号：" v-if="deliverForm.source !== 'B2b'" prop="courierNo">
+                            <el-input v-model="addOrderForm.courierNo" maxlength="100" :rows="1" placeholder="请输入快递单号"/>
                         </el-form-item>
-                        <el-form-item label="发货凭证：" prop="images" ref="image">
+                        <el-form-item label="发货凭证：" ref="image">
                             <el-row :span="8">
                                 <el-upload
                                     list-type="picture-card"
@@ -281,7 +296,7 @@
                                     :limit="2"
                                     :on-exceed="uploadImageExceptMessage"
                                     :before-upload="beforeImageUpload"
-                                    :on-remove="handleImageRemove">
+                                    :on-remove="handleUploadDeliverImageRemove">
                                     <i class="el-icon-plus"></i>
                                 </el-upload>
                                 <div class="upload-tips">请上传发货凭证图，最多2张，支持jpeg,png和jpg格式</div>
@@ -303,7 +318,7 @@
 import { mapState, mapGetters, mapActions } from 'vuex'
 import { iotUrl, interfaceUrl } from '@/api/config'
 import { AUTH_CLOUD_DELIVER_OPERATE } from '@/utils/auth_const'
-import { addCloudMerchantProductOrder, deleteThirdOrder } from '../api'
+import { addCloudMerchantProductOrder, addDispatchOrder, deleteThirdOrder } from '../api'
 import { getChiness } from '../../hmall/membership/api'
 
 export default {
@@ -369,6 +384,7 @@ export default {
                 { label: '物流公司', prop: 'deliveryName' },
                 { label: '快递单号', prop: 'waybillId' }
             ],
+            productOrderList: [],
             spanArray: [],
             prouctDetailTableData: [],
             detailDialogVisible: false,
@@ -399,7 +415,6 @@ export default {
             addOrderDialogVisible: false,
             categoryTypes: [],
             allCategorys: [],
-            imgs: [],
             provinceList: [],
             cityList: [],
             addOrderForm: {
@@ -416,6 +431,7 @@ export default {
                 freight: '',
                 certificate: ''
             },
+            imgs: [],
             certificateUrls: [],
             addOrderRules: {
                 consigneePhone: [
@@ -470,14 +486,25 @@ export default {
             },
             deliverDialogVisible: false,
             deliverForm: {
-                type: '1',
-                images: [],
-                image: ''
+                type: 1,
+                source: '',
+                deliveryType: 1,
+                deliverer: '',
+                logisticsCompany: '',
+                courierNo: '',
+                proofPictureList: [],
+                productList: []
             },
-            deliverRules: {},
-            isDeliverIndeterminate: true,
+            deliverRules: {
+                deliveryType: [{ required: true, message: '请选择发货类型', trigger: 'blur' }],
+                deliverer: [{ required: true, message: '请输入发货人', trigger: 'blur' }],
+                logisticsCompany: [{ required: true, message: '请输入物流公司', trigger: 'blur' }],
+                courierNo: [{ required: true, message: '请输入快递单号', trigger: 'blur' }],
+                productList: [{ required: true, message: '请选择发货商品', trigger: 'change' }]
+            },
             deliverCheckAll: false,
-            deliverProductOptions: [],
+            deliverProducts: [], // 待发货的商品列表
+            deliverProductOptions: [], // 可以发货的商品列表
             deliverImgs: []
         }
     },
@@ -518,13 +545,23 @@ export default {
                 return [
                     { label: '商品ID', prop: 'productId' },
                     { label: '商品名称', prop: 'productName' },
-                    { label: '商品规格', prop: 'wxSpecification' },
+                    { label: '商品规格', prop: 'productSpecification' },
                     { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品数量（件）', prop: 'productCount' }
+                ]
+            } else if (this.focusDetailOrder.source === 'B2b') {
+                return [
+                    { label: '商品编码', prop: 'productNo' },
+                    { label: '商品来源', prop: 'productSource' },
+                    { label: '品牌', prop: 'productBrand' },
+                    { label: '商品名称', prop: 'productName' },
+                    { label: '销售价格（元）', prop: 'productPrice' },
+                    { label: '实付金额（元）', prop: 'realAmount' },
                     { label: '商品数量（件）', prop: 'productCount' }
                 ]
             } else {
                 return [
-                    { label: '商品型号', prop: 'wxSpecification' },
+                    { label: '商品型号', prop: 'productSpecification' },
                     { label: '商品价格（元）', prop: 'productPrice' },
                     { label: '商品数量（件）', prop: 'productCount' }
                 ]
@@ -549,6 +586,10 @@ export default {
         },
         imageUploadData () {
             return { updateUid: this.userInfo.employeeName }
+        },
+        canSelectDeliverType () { //  商品种类大于1 并且 所有商品都是未发货状态 可以选择全发和部分发货
+            let products = this.deliverProducts.filter(item => item.status != '20') // 已发货的商品
+            return this.deliverProducts.length > 1 && products.length === 0
         }
     },
     async mounted () {
@@ -568,27 +609,28 @@ export default {
             findCloudMerchantShopCategoryTypeList: 'findCloudMerchantShopCategoryTypeList'
         }),
         async onQuery () {
-            this.spanArray = []
             await this.findCloudMerchantProductOrderList(this.searchParams)
+            this.spanArray = this.getSpanArray(this.cloudMerchantProductOrderList)
+            this.productOrderList = [...this.cloudMerchantProductOrderList]
         },
-        getSpanArray () {
-            this.spanArray = []
+        getSpanArray (list) {
+            let spans = []
             let pos = 0
-            for (let i = 0; i < this.cloudMerchantProductOrderList.length; i++) {
+            for (let i = 0; i < list.length; i++) {
                 if (i === 0) {
-                    this.spanArray.push(1)
+                    spans.push(1)
                     pos = 0
                 } else {
-                    if (this.cloudMerchantProductOrderList[i].orderId === this.cloudMerchantProductOrderList[i - 1].orderId) {
-                        this.spanArray[pos] += 1
-                        this.spanArray.push(0)
+                    if (list[i].orderId === list[i - 1].orderId) {
+                        spans[pos] += 1
+                        spans.push(0)
                     } else {
-                        this.spanArray.push(1)
+                        spans.push(1)
                         pos = i
                     }
                 }
             }
-            console.log(this.spanArray)
+            return spans
         },
         onSearch () {
             this.searchParams = { ...this.queryParams }
@@ -604,10 +646,6 @@ export default {
         },
         spanMethod ({ row, column, rowIndex, columnIndex }) {
             if (columnIndex === 0 || columnIndex === 1 || columnIndex === 2) {
-                if (this.spanArray.length === 0) {
-                    this.getSpanArray()
-                }
-
                 let _row = this.spanArray[rowIndex]
 
                 return {
@@ -617,15 +655,11 @@ export default {
             }
         },
         rowClassName ({ row, rowIndex }) {
-            if (this.spanArray.length === 0) {
-                this.getSpanArray()
-            }
-
             return 'order-row'
         },
         async onDetail (val) {
             this.focusDetailOrder = val
-            await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId })
+            await this.findCloudMerchantProductOrderDetail({ orderId: val.orderId, source: val.source })
             this.detailDialogVisible = true
         },
         onDelete (val) {
@@ -767,6 +801,7 @@ export default {
                 freight: '',
                 certificate: ''
             }
+            this.imgs = []
             this.certificateUrls = []
             this.$refs['addOrderForm'].clearValidate()
         },
@@ -872,31 +907,93 @@ export default {
                 }
             })
         },
+        async onDeliverClick (val) {
+            // this.deliverProducts = [
+            //     { productId: 1, productName: 'yi', status: 20 },
+            //     { productId: 2, productName: 'er', status: 20 },
+            //     { productId: 3, productName: 'san', status: 20 }]
+            this.deliverProductOptions = this.deliverProducts.filter(item => item.status == '20') // 待发货商品列表
+
+            let deliveredProducts = this.deliverProducts.filter(item => item.status != '20') // 已发货商品列表
+            if (deliveredProducts.length === 0) { // 没有已发货的商品，则默认全发
+                this.deliverForm.deliveryType = 1
+            } else { // 有已发货则是部分发货
+                this.deliverForm.deliveryType = 2
+            }
+            this.deliverForm.orderId = val.orderId
+            this.deliverForm.source = val.source
+
+            this.deliverDialogVisible = true
+        },
+        clearDeliverForm () {
+            this.deliverForm = {
+                type: 1,
+                source: '',
+                deliveryType: 1,
+                deliverer: '',
+                logisticsCompany: '',
+                courierNo: '',
+                proofPictureList: [],
+                productList: []
+            }
+            this.deliverImgs = []
+            this.deliverCheckAll = false
+            console.log(this.$refs)
+            this.$refs['deliverForm'].clearValidate()
+        },
         onCloseDeliverDialog () {
+            this.clearDeliverForm()
             this.deliverDialogVisible = false
         },
+        onDeliveryTypeChange (val) {
+            if (val === 1) {
+                this.deliverForm.productList = []
+            }
+        },
         handleDeliverCheckAllChange (val) {
-            this.deliverForm.products = val ? this.deliverProductOptions : []
-            this.isDeliverIndeterminate = false
+            this.deliverForm.productList = val ? this.deliverProductOptions : []
         },
         handleDeliverCheckedChange (value) {
+            console.log(value)
             let checkedCount = value.length
             this.deliverCheckAll = checkedCount === this.deliverProductOptions.length
-            this.isDeliverIndeterminate = checkedCount > 0 && checkedCount < this.deliverProductOptions.length
         },
         handleUploadDeliverImageSuccess (response, file, fileList) {
             if (response.code === 200) {
                 console.log(response.data.accessUrl)
-                this.deliverForm.images.push(response.data.accessUrl)
+                this.deliverForm.proofPictureList.push(response.data.accessUrl)
             }
-
-            this.addOrderForm.image = this.addOrderForm.images[0]
+        },
+        handleUploadDeliverImageRemove (file, fileList) {
+            let index = this.deliverForm.proofPictureList.indexOf(file.response.data.accessUrl)
+            this.deliverForm.proofPictureList.splice(index, 1)
         },
         cancelDeliverClick () {
+            this.clearDeliverForm()
             this.deliverDialogVisible = false
         },
         submitDeliverForm () {
-
+            console.log(this.deliverForm)
+            this.loading = true
+            this.$refs['deliverForm'].validate(async (valid) => {
+                if (valid) {
+                    try {
+                        await addDispatchOrder(this.deliverForm)
+                        this.loading = false
+                        this.clearDeliverForm()
+                        this.deliverDialogVisible = false
+                        this.onQuery()
+                        this.$message({
+                            message: `发货成功`,
+                            type: 'success'
+                        })
+                    } catch (e) {
+                        this.loading = false
+                    }
+                } else {
+                    this.loading = false
+                }
+            })
         }
     }
 }
@@ -935,6 +1032,10 @@ export default {
         align-items: center;
         height: 100px;
         padding-left: 10px;
+    }
+    .radio {
+        font-size: 12px;
+        line-height: 40px;
     }
     /deep/.el-dialog__body {
         padding-top: 10px;
