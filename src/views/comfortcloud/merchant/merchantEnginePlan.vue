@@ -18,17 +18,25 @@
             </div>
             <div class="query-cont-col">
                 <div class="query-col-title">
+                    <h-button type="primary" class="ml20" @click="onSearch">查询</h-button>
+                </div>
+            </div>
+            <div class="query-cont-col">
+                <div class="query-col-title">
                     <h-button type="primary" class="ml20" @click="onCreatePlan">新建方案</h-button>
                 </div>
             </div>
         </div>
 
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantShopList"
-                        :pagination="cloudMerchantShopListPagination" :isAction="true"
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantProjectSchemeList"
+                        :pagination="cloudMerchantProjectSchemeListPagination" :isAction="true"
                         @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
                 <template slot="createBy" slot-scope="scope">
                     {{ scope.data.row.createBy + ' ' + scope.data.row.createPhone }}
+                </template>
+                <template slot="status" slot-scope="scope">
+                    {{isEffective(scope.data.row) ? '已生效' : '未生效'}}
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onEdit(scope.data.row)">编辑</el-button>
@@ -67,8 +75,7 @@ export default {
     computed: {
         ...mapGetters({
             cloudMerchantProjectSchemeList: 'cloudMerchantProjectSchemeList',
-            cloudMerchantProjectSchemeListPagination: 'cloudMerchantProjectSchemeListPagination',
-            cloudMerchantProjectSchemeDetail: 'cloudMerchantProjectSchemeDetail'
+            cloudMerchantProjectSchemeListPagination: 'cloudMerchantProjectSchemeListPagination'
         }),
         ...mapState({
             userInfo: state => state.userInfo
@@ -77,19 +84,21 @@ export default {
     },
     methods: {
         ...mapActions({
-            findCloudMerchanProjectSchemeList: 'findCloudMerchanProjectSchemeList',
-            findCloudMerchanProjectSchemeDetail: 'findCloudMerchanProjectSchemeDetail'
+            findCloudMerchanProjectSchemeList: 'findCloudMerchanProjectSchemeList'
         }),
         queryList: function () {
             this.findCloudMerchanProjectSchemeList(this.queryParams)
         },
         onCurrentChange: function (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.queryList(this.queryParams)
+            this.queryList()
         },
         onSizeChange: function (val) {
             this.queryParams.pageSize = val
-            this.queryList(this.queryParams)
+            this.queryList()
+        },
+        onSearch: function () {
+            this.queryList()
         },
         onCreatePlan: function () {
             this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit' })
@@ -97,8 +106,23 @@ export default {
         onEdit: function (data) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit', query: { id: data.id } })
         },
+        isEffective (plan) {
+            return new Date().getTime() > new Date(plan.effectiveTime).getTime()
+        },
         onDelete: function (data) {
-
+            let isEffective = this.isEffective(data)
+            this.$confirm(isEffective ? '该方案在生效中，删除后小程序端无法查询，是否继续删除？' : '该方案还未生效，是否继续删除？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deleteProjectScheme({ id: data.id })
+                this.queryList()
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => { })
         }
     }
 }

@@ -1098,7 +1098,7 @@ const actions = {
     },
     async findCloudMerchanProjectSchemeList ({ commit }, params) {
         const { data } = await Api.getCloudMerchantProjectSchemeList(params)
-        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST, data)
+        commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST, data.records)
         commit(cloud.GET_CLOUD_MERCHANT_PROJECT_SCHEME_LIST_PAGINATION, {
             pageNumber: data.current,
             pageSize: data.size,

@@ -1029,3 +1029,9 @@ export const getCloudMerchantProjectSchemeList = params => axios.get(iotUrl + '/
 
 // 获取工程方案详情
 export const getCloudMerchantProjectSchemeDetail = params => axios.get(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 新增修改工程方案
+export const addCloudMerchantProjectScheme = params => axios.post(iotUrl + '/mall/boss/project-scheme', params)
+
+// 删除工程方案
+export const deleteProjectScheme = params => axios.delete(iotUrl + '/mall/boss/project-scheme/' + params.id)

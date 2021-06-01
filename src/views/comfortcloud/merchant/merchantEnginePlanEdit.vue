@@ -5,20 +5,26 @@
                 <div class="page-body-title">
                     <h3>工程方案编辑</h3>
                 </div>
-                <el-form-item label="工程方案标题：" prop="title">
+                <el-form-item label="工程方案标题：" prop="schemeTitle">
                     <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
 
-                <el-form-item label="方案列表缩略图：" prop="iconUrl" ref="iconUrl">
-                    <SingleUpload sizeLimit='1M' :upload="uploadInfo" :imageUrl="form.schemeImage" ref="uploadImg" @back-event="readUrl" :imgW="100" :imgH="100" />
+                <el-form-item label="方案列表缩略图：" prop="schemeImage" ref="schemeImage">
+                    <SingleUpload sizeLimit='1M'
+                                  :upload="uploadInfo"
+                                  :imageUrl="form.schemeImage"
+                                  ref="uploadImg"
+                                  @back-event="readUrl"
+                                  :imgW="100"
+                                  :imgH="100" />
                     <div class="upload-tips">建议尺寸：993*993或1:1比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
-                    <el-date-picker type="datetime" v-model="form.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-dd HH:mm:ss' :picker-options="pickerOptionsStart">
+                    <el-date-picker type="datetime" v-model="form.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-ddTHH:mm:ss' :picker-options="pickerOptionsStart">
                     </el-date-picker>
                 </el-form-item>
 
-                <el-form-item label="商品视频：" prop="video" >
+                <el-form-item label="商品视频：" prop="schemeVideo" >
                     <el-row>
                         <SingleUpload  sizeLimit='100M' :upload="videoUpload" :imageUrl="videoimageUrl"
                                        @back-event="videoUrl" :imgW="100" :imgH="100">
@@ -38,7 +44,7 @@
                     <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
-                    <el-button type="primary" @click="onSaveAd()" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
+                    <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
                     <el-button @click="onBack()">返回</el-button>
                 </el-form-item>
             </el-form>
@@ -52,7 +58,7 @@
 
 <script>
 import { interfaceUrl } from '@/api/config'
-import { saveCloudMerchantAd } from '../api'
+import { addCloudMerchantProjectScheme } from '../api'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
@@ -87,10 +93,19 @@ export default {
                 'redo' // 重复
             ],
             rules: {
-                title: [
+                schemeTitle: [
                     { required: true, message: '请输入标题', trigger: 'blur' }
                 ],
-                content: [
+                schemeImage: [
+                    { required: true, message: '请上传方案列表缩略图', trigger: 'change' }
+                ],
+                effectiveTime: [
+                    { required: true, message: '请选择生效时间', trigger: 'change' }
+                ],
+                schemeVideo: [
+                    { required: false, message: '请上传商品视频', trigger: 'change' }
+                ],
+                schemeDetail: [
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
@@ -112,6 +127,7 @@ export default {
             userInfo: state => state.userInfo
         }),
         ...mapGetters({
+            cloudMerchantProjectSchemeDetail: 'cloudMerchantProjectSchemeDetail'
         }),
         videoUpload () {
             return {
@@ -157,54 +173,39 @@ export default {
     },
     methods: {
         ...mapActions({
+            setNewTags: 'setNewTags',
+            findCloudMerchanProjectSchemeDetail: 'findCloudMerchanProjectSchemeDetail'
         }),
 
         async getDetail (id) {
-            await this.getCloudMerchantAdDetail(id)
-            this.form = {
-                title: this.cloudMerchantAdDetail.title,
-                categorys: categorys,
-                content: this.cloudMerchantAdDetail.content
-            }
-            this.categoryTypes = categoryTypes
+            await this.findCloudMerchanProjectSchemeDetail({ id })
+            this.form = { ...this.cloudMerchantProjectSchemeDetail }
             console.log(this.form)
         },
         onBack () {
-            this.$router.go(-1)
+            this.setNewTags((this.$route.fullPath).split('?')[0])
+            this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
         },
 
-        onSaveAd () {
+        onSave () {
             this.loading = true
+            this.form.operator = this.userInfo.employeeName
+            if (!this.$route.query.id) {
+                this.form.createPhone = this.userInfo.phoneNumber
+            }
             console.log(this.form)
             this.$refs['form'].validate(async (valid) => {
                 if (valid) {
                     try {
-                        let dic = {}
-                        this.form.categorys.map((item) => {
-                            if (dic[item.categoryId] == null) {
-                                dic[item.categoryId] = [item.specificationId]
-                            } else {
-                                dic[item.categoryId].push(item.specificationId)
-                            }
-                        })
-
-                        let params = {
-                            title: this.form.title,
-                            content: this.form.content,
-                            merchantsCategory: JSON.stringify(dic)
-                        }
-                        console.log(params)
-
+                        await addCloudMerchantProjectScheme(this.form)
                         if (this.$route.query.id) {
-                            params['id'] = this.$route.query.id
-                            await saveCloudMerchantAd(params)
-                            this.$message.success('广告修改成功')
+                            this.$message.success('修改成功')
                         } else {
-                            await saveCloudMerchantAd(params)
-                            this.$message.success('广告保存成功')
+                            this.$message.success('创建成功')
                         }
+
                         this.setNewTags((this.$route.fullPath).split('?')[0])
-                        this.$router.push('/comfortCloudMerchant/merchantManage/merchantAd')
+                        this.$router.push('/comfortCloudMerchant/merchantEngine/merchantEnginePlan')
                         this.loading = false
                     } catch (error) {
                         this.loading = false
