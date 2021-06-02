@@ -267,15 +267,15 @@
                                     <div class="row-filed">
                                         <p class="col-filed col-33">
                                             <span class="label">质押信息：</span>{{
-                                            paymentOrderDetail.payOrderDetail.pledgeNo
+                                            paymentOrderDetail.payOrderDetail.pledgeNo||'-'
                                         }}
                                         </p>
                                         <p class="col-filed col-33">
-                                            <span class="label" style="min-width:100px">OA货款支付编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo  }}
+                                            <span class="label" style="min-width:100px">OA货款支付编号：</span>{{paymentOrderDetail.payOrderDetail.oaNo||'-'  }}
                                         </p>
                                         <p class="col-filed">
                                             <span class="label">审核备注：</span>{{
-                                            paymentOrderDetail.payOrderDetail.approvalRemark
+                                            paymentOrderDetail.payOrderDetail.approvalRemark||'-'
                                         }}
                                         </p>
                                     </div>
