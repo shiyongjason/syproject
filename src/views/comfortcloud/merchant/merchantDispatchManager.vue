@@ -271,6 +271,8 @@ const dispatchParams = {
     deliverer: '',
     logisticsCompany: '',
     courierNo: '',
+    creator: '',
+    creatorPhone: '',
     proofPictureList: [],
     productList: []
 }
@@ -524,7 +526,6 @@ export default {
             })
             this.$nextTick(() => {
                 if (this.$refs['tableRef']) {
-                    console.log(this.$refs['tableRef'], '好对的')
                     this.$refs['tableRef'].doLayout()
                 }
             })
@@ -610,6 +611,8 @@ export default {
             if (params.deliveryType === 1) {
                 params.productList = null
             }
+            params.creator = this.userInfo.employeeName
+            params.creatorPhone = this.userInfo.phoneNumber
             console.log(params, '发货参数')
             await addDispatchOrder(params)
             this.dispatchDialogVisible = false
@@ -782,6 +785,8 @@ export default {
                 deliverer: '',
                 logisticsCompany: '',
                 courierNo: '',
+                creator: '',
+                creatorPhone: '',
                 proofPictureList: [],
                 productList: []
             }
