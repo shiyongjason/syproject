@@ -108,17 +108,17 @@
                     <el-form-item label-width="0" class="address">
                         <el-col :span="7">
                             <el-form-item label="收货人手机号：" prop="receiverPhone">
-                                <el-input v-model="materialForm.receiverPhone" :disabled="isDetail" maxlength="11" placeholder="请输入收货人手机号"></el-input>
+                                <el-input v-model="materialForm.receiverPhone" :disabled="isCanEdit" maxlength="11" placeholder="请输入收货人手机号"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
                             <el-form-item label="收货人姓名：" prop="receiverName">
-                                <el-input v-model="materialForm.receiverName" :disabled="isDetail" maxlength="50" placeholder="请输入收货人姓名"></el-input>
+                                <el-input v-model="materialForm.receiverName" :disabled="isCanEdit" maxlength="50" placeholder="请输入收货人姓名"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="7">
                             <el-form-item label="所属分部：" prop="departmentId">
-                                <el-select v-model="materialForm.departmentId" :disabled="isDetail">
+                                <el-select v-model="materialForm.departmentId" :disabled="isCanEdit">
                                     <el-option :label="item.deptName" :value="item.crmDeptCode" v-for="item in departmentList" :key="item.crmDeptCode"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -128,7 +128,7 @@
                     <el-form-item class="address" label="收货人地址：" required>
                         <div class="city-area">
                             <el-form-item label-width="0px" prop="provinceId">
-                                <el-select v-model="materialForm.provinceId" :disabled="isDetail" @change="onProvinceAddress" placeholder="省" :clearable=true>
+                                <el-select v-model="materialForm.provinceId" :disabled="isCanEdit" @change="onProvinceAddress" placeholder="省" :clearable=true>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
                                 </el-select>
@@ -136,7 +136,7 @@
 
                             <span class="ml10 mr10">-</span>
                             <el-form-item label-width="0px" prop="cityId">
-                                <el-select v-model="materialForm.cityId" :disabled="isDetail" @change="onCityAddress" placeholder="市" :clearable=true>
+                                <el-select v-model="materialForm.cityId" :disabled="isCanEdit" @change="onCityAddress" placeholder="市" :clearable=true>
                                     <el-option v-for="item in getCityAddress" :key="item.id" :label="item.name" :value="item.cityId">
                                     </el-option>
                                 </el-select>
@@ -144,7 +144,7 @@
 
                             <span class="ml10 mr10">-</span>
                             <el-form-item label-width="0px" prop="countryId">
-                                <el-select v-model="materialForm.countryId" :disabled="isDetail" @change="onCountryAddress" placeholder="区" :clearable=true>
+                                <el-select v-model="materialForm.countryId" :disabled="isCanEdit" @change="onCountryAddress" placeholder="区" :clearable=true>
                                     <el-option v-for="item in getCountryAddress" :key="item.id" :label="item.name" :value="item.countryId">
                                     </el-option>
                                 </el-select>
@@ -153,7 +153,7 @@
 
                     </el-form-item>
                     <el-form-item label="详细地址：" prop="address">
-                        <el-input v-model="materialForm.address" :disabled="isDetail" style='width:400px' maxlength="100" placeholder="请输入具体地址"></el-input>
+                        <el-input v-model="materialForm.address" :disabled="isCanEdit" style='width:400px' maxlength="100" placeholder="请输入具体地址"></el-input>
                     </el-form-item>
                     <el-form-item label="物料明细：" required>
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
@@ -408,6 +408,15 @@ export default {
                 }
                 return true
             }
+        },
+        isCanEdit () {
+            let canEdit = false
+            this.materialForm.details.forEach(item => {
+                if (item.status === 1 || item.status === 2) {
+                    canEdit = true
+                }
+            })
+            return canEdit
         },
         getProofPictures () {
             return pics => {
@@ -790,7 +799,23 @@ export default {
                 proofPictureList: [],
                 productList: []
             }
-            this.materialForm = materialsParams
+            this.materialForm = {
+                id: '',
+                department: '',
+                departmentId: '',
+                receiverName: '',
+                receiverPhone: '',
+                provinceId: '',
+                provinceName: '',
+                cityId: '',
+                cityName: '',
+                countryId: '',
+                countryName: '',
+                address: '',
+                remark: '',
+                operator: '',
+                details: []
+            }
         },
         onCurrentChange (val) {
             this.searchParams.pageNumber = val.pageNumber
