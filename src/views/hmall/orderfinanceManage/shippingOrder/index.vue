@@ -18,7 +18,7 @@
                     <div class="query-col__lable">运费订单状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.childOrderStatus">
-                            <el-option v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in orderStatusOptions" :label="item.value" :value="item.label" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -90,7 +90,7 @@
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180" :isAction="true">
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
-                    <h-button table @click="onSynchronous(scope.data.row)">资金同步</h-button>
+                    <!-- <h-button table @click="onSynchronous(scope.data.row)">资金同步</h-button> -->
                 </template>
             </basicTable>
         </div>
@@ -181,7 +181,7 @@ export default {
         onTab (value) { },
         // 查看操作
         onseeTask (val) {
-            this.$router.push({ path: '/b2b/orderfinanceManage/shippingorderDetail' })
+            this.$router.push({ path: '/b2b/orderfinanceManage/shippingorderDetail', query: { id: val.childOrderNo, state: val.childOrderStatus } })
         },
         // 资金同步操作
         onSynchronous () { },

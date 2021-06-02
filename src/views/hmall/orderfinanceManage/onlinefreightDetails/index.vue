@@ -41,8 +41,7 @@
 </template>
 
 <script>
-import { ORDER_STATUS_OPTIONS, ORDER_CHANNERL_OPTIONS, SELF_SUPPORT_OPTIONS, ORDER_STATUS_MAP, ORDER_CHANNERL_MAP, SELF_SUPPORT_MAP } from '../const'
-import { PAY_METHOD_OPTIONS, PAY_METHOD_MAP } from '@/utils/const'
+import { ORDER_STATUS_OPTIONS } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
@@ -50,13 +49,6 @@ export default {
     data () {
         return {
             orderStatusOptions: ORDER_STATUS_OPTIONS,
-            paymethodOptions: PAY_METHOD_OPTIONS,
-            orderChannelOptions: ORDER_CHANNERL_OPTIONS,
-            selfSupportOptions: SELF_SUPPORT_OPTIONS,
-            paymethodMap: PAY_METHOD_MAP,
-            orderStatusMap: ORDER_STATUS_MAP,
-            orderChannelMap: ORDER_CHANNERL_MAP,
-            selfSupportMap: SELF_SUPPORT_MAP,
             initParams: {},
             queryParams: {
                 childOrderNo: '',

@@ -3,15 +3,9 @@
         <div class="page-body-cont">
             <el-form label-width="150px" ref="form">
                 <div class="table-cont-title big-title">
-                    <span class="table-title-name">运费订单编号：{{basicInfo.childOrderNo}}</span>
+                    <span class="table-title-name">运费订单编号：{{childOrderNo}}</span>
                     <span class="flr">
-                        <span class="black-word" v-if="state == 10">待付款</span>
-                        <span class="black-word" v-if="state == 20">待完成发货</span>
-                        <span class="black-word" v-if="state == 30">待发货</span>
-                        <span class="black-word" v-if="state == 40">已完成发货</span>
-                        <span class="black-word" v-if="state == 50">已开票</span>
-                        <span class="black-word" v-if="state == 60">已退款</span>
-                        <span class="black-word" v-if="state == 70">已关闭</span>
+                        <span class="black-word">{{orderStatusMap.get(state)}}</span>
                     </span>
                 </div>
                 <div class="card-cont-row pb30">
@@ -50,7 +44,7 @@
                             <span class="card-cont-label">系统计算运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.totalAmount}}</span>
                         </div>
-                        <div class="card-cont">
+                        <div class="card-cont" v-if="basicInfo.discountAmount == ''">
                             <span class="card-cont-label">人工维护后运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.discountAmount}}</span>
                         </div>
@@ -90,7 +84,7 @@
                 </div>
                 <div class="pb20">
                     <basicTable :tableData="basicInfo.orderProducts" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :selectable="selectable" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
-                        <template slot="action" slot-scope="scope" v-if="state == '10'">
+                        <template slot="action" slot-scope="scope" v-if="state == 10">
                             <h-button table @click="onseeTask(scope.data.row)">编辑运费价格</h-button>
                         </template>
                     </basicTable>
@@ -124,11 +118,14 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
+import { ORDER_STATUS_MAP } from '../const'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
-            state: 20,
+            state: 10,
+            childOrderNo: '',
+            orderStatusMap: ORDER_STATUS_MAP,
             isAction: false,
             basicInfo: {},
             logInfo: [],
@@ -148,8 +145,8 @@ export default {
                 { label: '操作时间', prop: 'createTime' },
                 { label: '操作人', prop: 'displayOperator' },
                 { label: '操作动作', prop: 'operateMotionStr' },
-                { label: '内容', prop: 'operateContext' },
-                { label: '操作备注', prop: 'remark' }
+                { label: '状态', prop: 'type' },
+                { label: '内容', prop: 'operateContext' }
             ],
             form: {
                 count: '',
@@ -166,10 +163,16 @@ export default {
     methods: {
         async init () {
             this.gettableLabel()
+            this.state = Number(this.$route.query.state)
+            this.childOrderNo = this.$route.query.id
+            if (this.state == 10) {
+                this.isAction = true
+            } else {
+                this.isAction = false
+            }
         },
         gettableLabel () {
             if (this.state == 10) {
-                this.isAction = true
                 this.tableLabel = [
                     { label: 'sku编码', prop: 'productCode' },
                     { label: '商品名称', prop: 'productName' },
@@ -182,7 +185,6 @@ export default {
                     { label: '退款申请时间', prop: 'refundTime' }
                 ]
             } else {
-                this.isAction = false
                 this.tableLabel = [
                     { label: 'sku编码', prop: 'productCode' },
                     { label: '商品名称', prop: 'productName' },
@@ -207,6 +209,12 @@ export default {
         rowClassName () { },
         ...mapActions([
         ])
+    },
+    watch: {
+        $route () {
+            this.childOrderNo = this.$route.query.id
+            this.state = Number(this.$route.query.state)
+        }
     },
     mounted () {
         this.init()
