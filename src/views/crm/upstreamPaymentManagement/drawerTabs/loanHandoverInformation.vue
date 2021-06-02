@@ -116,7 +116,7 @@
                                                               :a-link-words="item.fileName"
                                                               is-type="main" />
              </div>
-            <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles">
+            <div class="info_box-img" v-if="data.archiveContractFiles.length==0||!data.archiveContractFiles"  style="color:#999999">
                  暂无数据
             </div>
             <p>单次采购明细附件</p>
