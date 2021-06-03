@@ -87,7 +87,7 @@
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
                     <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
-                    <el-button v-if="scope.data.row.source !=='微信小店' && scope.data.row.status == '20' && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
+                    <el-button v-if="scope.data.row.source !=='微信小店' && !scope.data.row.deliveryName && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
                 </template>
             </basicTable>
 
@@ -103,19 +103,34 @@
                 <basicTable :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail.productBOS" :isShowIndex='false'>
                 </basicTable>
                 <h1 style="padding-top: 20px">发货详情</h1>
-                <div v-if="cloudMerchantProductOrderDetail.deliveryDetails">
-                    <div class="deliver-info" v-for="item in cloudMerchantProductOrderDetail.deliveryDetails" :key="item.courierNo">
+                <div style="line-height: 25px" v-if="focusDetailOrder.source === '微信小店'">
+                    <p>物流公司: {{focusDetailOrder.deliveryName}}</p>
+                    <p>快递单号: {{focusDetailOrder.waybillId}}</p>
+                    <p>发货时间: --</p>
+                    <p>发货凭证: --</p>
+                </div>
+                <div style="line-height: 25px" v-else-if="focusDetailOrder.source === 'B2b' && cloudMerchantProductOrderDetail.deliveryDetails">
+                    <div class="deliver-info" v-for="(item,index) in cloudMerchantProductOrderDetail.deliveryDetails" :key="index">
                         <p v-if="cloudMerchantProductOrderDetail.deliveryDetails.length > 1">发货商品: {{item.productNames}}</p>
-                        <p v-if="focusDetailOrder.source === 'B2b'">单分享提货人: {{item.deliverer}} </p>
-                        <p v-else>物流公司: {{item.logisticsCompany}} </p>
-                        <p v-if="focusDetailOrder.source !== 'B2b'">快递单号: {{item.courierNo}}</p>
+                        <p>物流公司: {{item.deliverer}} </p>
                         <p>发货时间: {{item.deliveryTime}}</p>
-                        <p>发货凭证: <span v-if="focusDetailOrder.source === '微信小店'">--</span></p>
-                        <div >
+                        <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
+                        <div v-if="item.proofPictures">
                             <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
                         </div>
-                        <p v-if="focusDetailOrder.source !== '微信小店'">发货人: {{item.creator}} {{item.createPhone}}</p>
+                        <p>发货人: {{item.creator}} {{item.createPhone}}</p>
                     </div>
+                </div>
+                <div style="line-height: 25px" v-else-if="cloudMerchantProductOrderDetail.deliveryDetails">
+                    <p v-if="cloudMerchantProductOrderDetail.deliveryDetails.length > 1">发货商品: {{item.productNames}}</p>
+                    <p>物流公司: {{item.logisticsCompany}} </p>
+                    <p>快递单号: {{item.courierNo}}</p>
+                    <p>发货时间: {{item.deliveryTime}}</p>
+                    <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
+                    <div v-if="item.proofPictures">
+                        <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
+                    </div>
+                    <p>发货人: {{item.creator}} {{item.createPhone}}</p>
                 </div>
                 <div style="margin: 20px 0"></div>
             </el-dialog>
@@ -979,7 +994,7 @@ export default {
                 if (valid) {
                     try {
                         this.deliverForm.creator = this.userInfo.employeeName
-                        this.deliverForm.createPhone = this.userInfo.phoneNumber
+                        this.deliverForm.creatorPhone = this.userInfo.phoneNumber
                         await addDispatchOrder(this.deliverForm)
                         this.loading = false
                         this.clearDeliverForm()
