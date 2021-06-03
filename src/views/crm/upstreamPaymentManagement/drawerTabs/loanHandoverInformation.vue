@@ -227,7 +227,8 @@ import { downloadFile } from '@/utils'
 })
 export default class LoanHandoverInformation extends Vue {
     @Prop({ default: '' }) readonly data!:LoanTransferInfoResponse
-    @Prop({ default: '' }) readonly userInfo!:any
+    // @Prop({ default: '' }) readonly userInfo!:any  // fix Property 'userInfo' is used before its initialization 假数据开发的时候加了一个非空定义
+    @Prop({ type: Object, required: true, default: '' }) userInfo:any
     @Prop({ default: '' }) readonly paymentOrderId!:any
 
     $refs!: {
@@ -273,10 +274,11 @@ export default class LoanHandoverInformation extends Vue {
         }
         return rules
     }
+
     dialogFormData:ReqLoanTransferUpdate={
         loanTransferId: '',
         remark: '',
-        updateBy: this.userInfo.employeeName
+        updateBy: ''
     }
 
     async onArchiveDown () {
@@ -369,6 +371,10 @@ export default class LoanHandoverInformation extends Vue {
 
     async onSureInfo (id:any, checkBoxKey:number) {
         console.log('id: ', id)
+    }
+
+    mounted () {
+        this.dialogFormData.updateBy = this.userInfo.employeeName
     }
 }
 </script>
