@@ -2,7 +2,7 @@
 node_modules
 /dist
 /public/mock
-package-lock.json
+# package-lock.json
 src/api/config.js
 
 # local env files
