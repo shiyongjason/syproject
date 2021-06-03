@@ -92,27 +92,40 @@
             </basicTable>
 
             <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
-                <h1 style="padding-bottom: 10px">订单信息</h1>
-                <p style="line-height: 25px">商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
-                    订单运费 ￥{{focusDetailOrder.freight}}<br>
-                    优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
-                    商品改价 -￥{{focusDetailOrder.changePrice}}<br>
-                    总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
-                </p>
-                <h1 style="padding-top: 20px">商品明细</h1>
-                <basicTable :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail.productBOS" :isShowIndex='false'>
-                </basicTable>
-                <h1 style="padding-top: 20px">发货详情</h1>
-                <div style="line-height: 25px" v-if="focusDetailOrder.source === '微信小店'">
-                    <p>物流公司: {{focusDetailOrder.deliveryName}}</p>
-                    <p>快递单号: {{focusDetailOrder.waybillId}}</p>
-                    <p>发货时间: --</p>
-                    <p>发货凭证: --</p>
-                </div>
-                <div style="line-height: 25px" v-else-if="focusDetailOrder.source === 'B2b' && cloudMerchantProductOrderDetail.deliveryDetails">
-                    <div class="deliver-info" v-for="(item,index) in cloudMerchantProductOrderDetail.deliveryDetails" :key="index">
-                        <p v-if="cloudMerchantProductOrderDetail.deliveryDetails.length > 1">发货商品: {{item.productNames}}</p>
-                        <p>物流公司: {{item.deliverer}} </p>
+                <div class="el-dialog-div">
+                    <h1 style="padding-bottom: 10px">订单信息</h1>
+                    <p style="line-height: 25px">商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
+                        订单运费 ￥{{focusDetailOrder.freight}}<br>
+                        优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
+                        商品改价 -￥{{focusDetailOrder.changePrice}}<br>
+                        总{{focusDetailOrder.orderProductCount}}件，实付款￥{{focusDetailOrder.payAmount}}
+                    </p>
+                    <h1 style="padding-top: 20px">商品明细</h1>
+                    <basicTable :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail.productBOS" :isShowIndex='false'>
+                    </basicTable>
+                    <h1 style="padding-top: 20px">发货详情</h1>
+                    <div style="line-height: 25px" v-if="focusDetailOrder.source === '微信小店'">
+                        <p>物流公司: {{focusDetailOrder.deliveryName}}</p>
+                        <p>快递单号: {{focusDetailOrder.waybillId}}</p>
+                        <p>发货时间: --</p>
+                        <p>发货凭证: --</p>
+                    </div>
+                    <div style="line-height: 25px" v-else-if="focusDetailOrder.source === 'B2b' && cloudMerchantProductOrderDetail.deliveryDetails">
+                        <div class="deliver-info" v-for="(item,index) in cloudMerchantProductOrderDetail.deliveryDetails" :key="index">
+                            <p v-if="item.productNames">发货商品: {{item.productNames}}</p>
+                            <p>物流公司: {{item.deliverer}} </p>
+                            <p>发货时间: {{item.deliveryTime}}</p>
+                            <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
+                            <div v-if="item.proofPictures">
+                                <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
+                            </div>
+                            <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
+                        </div>
+                    </div>
+                    <div style="line-height: 25px" v-else-if="cloudMerchantProductOrderDetail.deliveryDetails">
+                        <p v-if="item.productNames">发货商品: {{item.productNames}}</p>
+                        <p>物流公司: {{item.logisticsCompany}} </p>
+                        <p>快递单号: {{item.courierNo}}</p>
                         <p>发货时间: {{item.deliveryTime}}</p>
                         <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
                         <div v-if="item.proofPictures">
@@ -120,19 +133,8 @@
                         </div>
                         <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
                     </div>
+                    <div style="margin: 20px 0"></div>
                 </div>
-                <div style="line-height: 25px" v-else-if="cloudMerchantProductOrderDetail.deliveryDetails">
-                    <p v-if="cloudMerchantProductOrderDetail.deliveryDetails.length > 1">发货商品: {{item.productNames}}</p>
-                    <p>物流公司: {{item.logisticsCompany}} </p>
-                    <p>快递单号: {{item.courierNo}}</p>
-                    <p>发货时间: {{item.deliveryTime}}</p>
-                    <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
-                    <div v-if="item.proofPictures">
-                        <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
-                    </div>
-                    <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
-                </div>
-                <div style="margin: 20px 0"></div>
             </el-dialog>
             <el-dialog title="导入第三方订单明细" :visible.sync="importDialogVisible" class="upload-show" width="800px" :close-on-click-modal="false" :before-close="onCloseImprtDialog">
                 <el-upload class="upload-fault" ref="upload" :file-list="fileList" :on-success="uploadSuccess" :on-error="uploadError" :before-upload="beforeAvatarUpload" v-bind="uploadData">
