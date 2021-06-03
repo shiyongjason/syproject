@@ -447,6 +447,7 @@ export default class UpstreamPaymentManagement extends Vue {
         this.paymentOrderId = paymentOrderId
         const { data } = await Api.getLoanHandoverInfoApi(paymentOrderId)
         this.loanHandoverInformation = data
+        console.log(' 🚗 🚕 🚙 🚌 🚎 userInfo', this.userInfo)
         this.editorDrawer = true
         this.isShowTabs()
     }
