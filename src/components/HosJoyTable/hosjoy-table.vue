@@ -264,7 +264,6 @@ export default {
                     }
                 }
             })
-            
             this.toggleTable = false
             this.$nextTick(() => {
                 this.toggleTable = true
