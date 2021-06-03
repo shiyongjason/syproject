@@ -61,7 +61,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">渠道：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.childOrderStatus">
+                        <el-select v-model="queryParams.childorder">
                             <el-option v-for="item in orderChannerlOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>

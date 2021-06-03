@@ -12,3 +12,5 @@ export const ORDER_LIST = 'ORDER_LIST'
 export const MARKETING_LIST = 'MARKETING_LIST'
 // 商品明细列表
 export const PRODUCTS_INFO = 'PRODUCTS_INFO'
+// 运费订单列表
+export const FREIGHT_ORDERS_LIST = 'FREIGHT_ORDERS_LIST'
