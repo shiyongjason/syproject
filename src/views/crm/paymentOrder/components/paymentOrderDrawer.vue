@@ -672,6 +672,8 @@ import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import * as Auths from '@/utils/auth_const'
 import imageAddToken from '@/components/imageAddToken'
 import moment from 'moment'
+import { downloadFile } from '@/utils'
+
 export default {
     name: 'paymentOrderDrawer',
     props: {
@@ -888,9 +890,11 @@ export default {
             // this.paymentOrderDetail = data
         },
         async onDownFile () {
-            const { data } = await downFile(this.paymentOrderDetail.payOrderDetail.id)
+            /* const { data } = await downFile(this.paymentOrderDetail.payOrderDetail.id)
             // window.location.href = data
-            window.open(data)
+            window.open(data) */
+            let apiUrl = `project/api/loan-transfers/boss/${this.paymentOrderDetail.payOrderDetail.id}/download`
+            downloadFile(apiUrl)
         }
     },
     watch: {
