@@ -248,14 +248,14 @@ export default {
                 }
                 if (value.children && !this.isSimpleTable) {
                     let number = 0
-                    let ID = ''
+                    let id = ''
                     if (value.prop && value.label) {
-                        ID += value.prop
+                        id += value.prop
                     } else if (value.label) {
-                        ID += value.label
+                        id += value.label
                     }
                     value.children.forEach(value1 => {
-                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
+                        let subId = id + (value1.uniqueLabel || value1.prop || value1.label)
                         value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
