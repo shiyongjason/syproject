@@ -63,7 +63,6 @@
         "element-ui": "^2.15.1",
         "eslint": "^5.16.0",
         "eslint-plugin-vue": "^5.2.2",
-        "hosjoy-ui": "^2.4.3",
         "node-sass": "^4.14.1",
         "sass-loader": "^7.1.0",
         "ts-loader": "^8.0.18",
