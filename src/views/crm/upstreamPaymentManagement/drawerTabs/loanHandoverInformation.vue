@@ -216,6 +216,7 @@ import { UPSTREAM_PAY_CONFIRM_EX, UPSTREAM_PAY_CONFIRM_LOAN, UPSTREAM_PAY_DOWN, 
 import { interfaceUrl } from '@/api/config'
 import ImageAddToken from '@/components/imageAddToken/index.vue'
 import downloadFileAddToken from '@/components/downloadFileAddToken/index.vue'
+import { downloadFile } from '@/utils'
 
 @Component({
     name: 'loanHandoverInformation',
@@ -284,8 +285,35 @@ export default class LoanHandoverInformation extends Vue {
     }
 
     async onLoanDown () {
-        const { data } = await downLoan(this.paymentOrderId)
-        window.open(data)
+        /* const { data } = await downLoan(this.paymentOrderId)
+        window.open(data) */
+        let apiUrl = `project/api/loan-transfers/boss/${this.paymentOrderId}/download`
+        downloadFile(apiUrl)
+    }
+
+    getBody = (xhr) => {
+        const text = xhr.responseText || xhr.response
+        if (!text) {
+            return text
+        }
+
+        try {
+            return JSON.parse(text)
+        } catch (e) {
+            return text
+        }
+    }
+
+    getError = (action, xhr) => {
+        let msg
+        if (xhr.response) {
+            msg = `${xhr.response.error || xhr.response}`
+        } else if (xhr.responseText) {
+            msg = `${xhr.responseText}`
+        } else {
+            msg = `fail to post ${action} ${xhr.status}`
+        }
+        return msg
     }
 
     async onExport () {
