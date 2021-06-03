@@ -118,14 +118,14 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import { ORDER_STATUS_MAP } from '../const'
+import { FREIGHT_STATUS_MAP } from '../const'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
             state: 10,
             childOrderNo: '',
-            orderStatusMap: ORDER_STATUS_MAP,
+            orderStatusMap: FREIGHT_STATUS_MAP,
             isAction: false,
             basicInfo: {},
             logInfo: [],

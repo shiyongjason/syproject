@@ -3,6 +3,26 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
+                    <div class="query-col__lable">运费订单编号：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">关联商品订单编号：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">运费订单状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.childOrderStatus">
+                            <el-option v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <div class="query-col__lable">支付时间：</div>
                     <div class="query-col__input">
                         <el-date-picker v-model="queryParams.startPayTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
@@ -13,15 +33,37 @@
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">状态：</div>
+                    <div class="query-col__lable">运费商品性质：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.childOrderStatus">
-                            <el-option v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in merchantTypeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__lable">商品归属商家名称：</div>
+                    <div class="query-col__lable">运费价格来源：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.childOrderStatus">
+                            <el-option v-for="item in sourcesPriceOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商品归属：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.merchantName" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">资金同步状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.childOrderStatus">
+                            <el-option v-for="item in synchromizedOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">客户名称：</div>
                     <div class="query-col__input">
                         <el-input v-model="queryParams.customerName" maxlength="50"></el-input>
                     </div>
@@ -31,24 +73,43 @@
                     <h-button @click="onReset">重置</h-button>
                 </div>
             </div>
+            <div class="table-cont-tabs">
+                <el-tabs type="card" v-model="tabName" @tab-click="onTab">
+                    <el-tab-pane v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value" :name="item.name"></el-tab-pane>
+                    <!-- <el-tab-pane label="全部" name="all"></el-tab-pane>
+                    <el-tab-pane label="待支付" name="unpaid"></el-tab-pane>
+                    <el-tab-pane label="待完成发货" name="pendingShipment"></el-tab-pane>
+                    <el-tab-pane label="已完成发货" name="makeInvoice"></el-tab-pane>
+                    <el-tab-pane label="已开票" name="haveMake"></el-tab-pane>
+                    <el-tab-pane label="已退款" name="refunded"></el-tab-pane>
+                    <el-tab-pane label="已关闭" name="closed"></el-tab-pane> -->
+                </el-tabs>
+            </div>
             <div class="table-cont-btn">
                 <h-button type='create' @click="onExport">批量导出</h-button>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180" :isAction="true">
+                <template slot="action" slot-scope="scope">
+                    <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
+                    <!-- <h-button table @click="onSynchronous(scope.data.row)">资金同步</h-button> -->
+                </template>
             </basicTable>
         </div>
     </div>
 </template>
 
 <script>
-import { ORDER_STATUS_OPTIONS } from '../const'
+import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
-    name: 'onlinefreightDetails',
+    name: 'shippingOrder',
     data () {
         return {
-            orderStatusOptions: ORDER_STATUS_OPTIONS,
+            orderStatusOptions: FREIGHT_STATUS_OPTIONS,
+            merchantTypeOptions: MERCHANT_TYPE_OPTIONS,
+            sourcesPriceOptions: SOURCES_PRICE_OPTIONS,
+            synchromizedOptions: SYNCHROMIZED_STATE_OPTIONS,
             initParams: {},
             queryParams: {
                 childOrderNo: '',
@@ -68,24 +129,15 @@ export default {
                 { label: '在线运费订单编号', prop: 'childOrderNo' },
                 { label: '关联商品运费订单编号', prop: 'childOrderNo' },
                 { label: '运费商品性质', prop: 'natureType' },
+                { label: '仓配城市', prop: 'city' },
                 { label: '订单生成时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
-                { label: 'sku编码', prop: 'skuCode' },
-                { label: '商品名称', prop: 'productName' },
-                { label: '商品性质', prop: 'product' },
-                { label: '商品归属商家', prop: ' businesses' },
-                { label: '仓配城市', prop: ' city' },
-                { label: '运费订单编码', prop: ' childOrderNo' },
                 { label: '状态', prop: 'childOrderStatus' },
-                { label: '数量', prop: 'quantity' },
-                { label: '单件运费', prop: 'pieceFreight' },
-                { label: '价格定义来源', prop: 'totalAmount' },
-                { label: '维护人', prop: 'customerName' },
-                { label: '运费合计', prop: 'sourceMerchantName' },
-                { label: '物流券抵扣金额', prop: 'supplyChainCouponAmount' },
-                { label: '实付运费金额', prop: 'finalTotalAmount', formatters: 'moneyShow' },
-                { label: '收货地址', prop: 'synchronous' },
-                { label: '客户名称', prop: 'merchantName' }
+                { label: '客户名称', prop: 'customerName' },
+                { label: '实付金额', prop: 'finalTotalAmount', formatters: 'moneyShow' },
+                { label: '运费价格来源', prop: 'sourceMerchantName' },
+                { label: 'MIS资金同步状态', prop: 'synchronous' },
+                { label: '商品归属商家', prop: 'merchantName' }
             ],
             tabName: 'all'
         }
@@ -127,13 +179,16 @@ export default {
     },
     methods: {
         // 切换状态
-        onTab (value) { },
+        onTab (value) {
+            this.queryParams = { ...this.initParams }
+            this.onQuery()
+        },
         // 查看操作
         onseeTask (val) {
-            this.$router.push({ path: '/b2b/orderfinanceManage/shippingorderDetail' })
+            this.$router.push({ path: '/b2b/finance/shippingorderDetail', query: { id: val.childOrderNo, state: val.childOrderStatus } })
         },
         // 资金同步操作
-        onSynchronous () { },
+        // onSynchronous () { },
         // 查询操作
         onQuery () {
             this.queryParams.pageNumber = 1

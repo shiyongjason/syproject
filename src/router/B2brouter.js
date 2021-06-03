@@ -280,7 +280,7 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
-                    }
+                    },
                     // {
                     //     path: 'orderRecord',
                     //     name: 'orderRecord',
@@ -292,6 +292,61 @@ export default [
                     //     },
                     //     component: () => import('@/views/hmall/order/order.vue')
                     // }
+                    {
+                        path: 'shippingOrder',
+                        name: 'shippingOrder',
+                        meta: {
+                            title: '运费订单',
+                            tagName: '运费订单',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingOrder/index')
+                    },
+                    {
+                        path: 'shippingorderDetail',
+                        name: 'shippingorderDetail',
+                        meta: {
+                            title: '订单查看',
+                            tagName: '订单查看',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/shippingorderDetail/index')
+                    },
+                    {
+                        path: 'onlinefreightDetails',
+                        name: 'onlinefreightDetails',
+                        meta: {
+                            title: '线上运费明细',
+                            tagName: '线上运费明细',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/onlinefreightDetails/index')
+                    },
+                    {
+                        path: 'freightDetails',
+                        name: 'freightDetails',
+                        meta: {
+                            title: '运费资金管理',
+                            tagName: '运费资金管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/freightDetails/index')
+                    },
+                    {
+                        path: 'withdrawalFreight',
+                        name: 'withdrawalFreight',
+                        meta: {
+                            title: '提现',
+                            tagName: '提现',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/withdrawalFreight/index')
+                    }
                 ]
             },
             {
@@ -473,52 +528,6 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/searchProject/searchSynonym.vue')
-                    }
-                ]
-            },
-            {
-                path: 'orderfinanceManage',
-                name: 'orderfinanceManage',
-                meta: {
-                    title: '订单&财务管理',
-                    tagName: '订单&财务管理',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: InterlayerContainer,
-                children: [
-                    {
-                        path: 'shippingOrder',
-                        name: 'shippingOrder',
-                        meta: {
-                            title: '运费订单',
-                            tagName: '运费订单',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/orderfinanceManage/shippingOrder/index')
-                    },
-                    {
-                        path: 'shippingorderDetail',
-                        name: 'shippingorderDetail',
-                        meta: {
-                            title: '订单查看',
-                            tagName: '订单查看',
-                            isMenu: false,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/orderfinanceManage/shippingorderDetail/index')
-                    },
-                    {
-                        path: 'onlinefreightDetails',
-                        name: 'onlinefreightDetails',
-                        meta: {
-                            title: '线上运费明细',
-                            tagName: '线上运费明细',
-                            isMenu: true,
-                            icon: ''
-                        },
-                        component: () => import('@/views/hmall/orderfinanceManage/onlinefreightDetails/index')
                     }
                 ]
             }
