@@ -118,7 +118,7 @@
                         <div v-if="item.proofPictures">
                             <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
                         </div>
-                        <p>发货人: {{item.creator}} {{item.createPhone}}</p>
+                        <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
                     </div>
                 </div>
                 <div style="line-height: 25px" v-else-if="cloudMerchantProductOrderDetail.deliveryDetails">
@@ -130,7 +130,7 @@
                     <div v-if="item.proofPictures">
                         <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
                     </div>
-                    <p>发货人: {{item.creator}} {{item.createPhone}}</p>
+                    <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
                 </div>
                 <div style="margin: 20px 0"></div>
             </el-dialog>
@@ -952,7 +952,6 @@ export default {
             }
             this.deliverImgs = []
             this.deliverCheckAll = false
-            console.log(this.$refs)
             this.$refs['deliverForm'].clearValidate()
         },
         onCloseDeliverDialog () {
