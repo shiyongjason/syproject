@@ -3,9 +3,9 @@
         <div class="page-body-cont">
             <el-form label-width="150px" ref="form">
                 <div class="table-cont-title big-title">
-                    <span class="table-title-name">运费订单编号：{{childOrderNo}}</span>
+                    <span class="table-title-name">运费订单编号：{{freightOrderNo}}</span>
                     <span class="flr">
-                        <span class="black-word">{{orderStatusMap.get(state)}}</span>
+                        <span class="black-word">{{orderStatusMap.get(basicInfo.status)}}</span>
                     </span>
                 </div>
                 <div class="card-cont-row pb30">
@@ -15,15 +15,15 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">关联商品订单编号：</span>
-                            <span class="card-cont-text">{{basicInfo.childOrder||'-'}}</span>
+                            <span class="card-cont-text">{{basicInfo.childOrderNo||'-'}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">商品性质：</span>
-                            <span class="card-cont-text">{{basicInfo.orderTime}}</span>
+                            <span class="card-cont-text">{{basicInfo.merchantType}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label is-wrap">商品归属：</span>
-                            <span class="card-cont-text is-wrap">{{basicInfo.cancelReason||'-'}}</span>
+                            <span class="card-cont-text is-wrap">{{basicInfo.merchantName||'-'}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">支付时间：</span>
@@ -32,7 +32,7 @@
                         <div class="card-cont">
                             <span class="card-cont-label">支付方式：</span>
                             <span class="card-cont-text">
-                                <span>{{ basicInfo.totalAmount }}</span>
+                                <span>{{ payWayMap.get(basicInfo.payMethod) }}</span>
                             </span>
                         </div>
                     </div>
@@ -44,7 +44,7 @@
                             <span class="card-cont-label">系统计算运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.totalAmount}}</span>
                         </div>
-                        <div class="card-cont" v-if="basicInfo.discountAmount == ''">
+                        <div class="card-cont" v-if="basicInfo.discountAmount != ''">
                             <span class="card-cont-label">人工维护后运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.discountAmount}}</span>
                         </div>
@@ -67,15 +67,15 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label is-wrap">收货人名称：</span>
-                            <span class="card-cont-text is-wrap">{{basicInfo.memberAddress?basicInfo.memberAddress.name:'-'}}</span>
+                            <span class="card-cont-text is-wrap">{{basicInfo.deliveryAddress?basicInfo.deliveryAddress.name:'-'}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">收货手机：</span>
-                            <span class="card-cont-text">{{basicInfo.memberAddress?basicInfo.memberAddress.phone:'-'}}</span>
+                            <span class="card-cont-text">{{basicInfo.deliveryAddress?basicInfo.deliveryAddress.phone:'-'}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">收货地址</span>
-                            <span class="card-cont-text is-wrap">{{basicInfo.memberAddress?basicInfo.memberAddress.fullAddress:'-'}}</span>
+                            <span class="card-cont-text is-wrap">{{basicInfo.deliveryAddress?basicInfo.deliveryAddress.address:'-'}}</span>
                         </div>
                     </div>
                 </div>
@@ -83,8 +83,8 @@
                     <span class="table-title-name">商品运费明细信息</span>
                 </div>
                 <div class="pb20">
-                    <basicTable :tableData="basicInfo.orderProducts" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :selectable="selectable" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
-                        <template slot="action" slot-scope="scope" v-if="state == 10">
+                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :selectable="selectable" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
+                        <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
                             <h-button table @click="onseeTask(scope.data.row)">编辑运费价格</h-button>
                         </template>
                     </basicTable>
@@ -92,7 +92,7 @@
                 <div class="table-cont-title">
                     <span class="table-title-name">日志信息</span>
                 </div>
-                <basicTable :tableData="logInfo" :tableLabel="logTableLabel" :isPagination="false" :maxHeight="505"></basicTable>
+                <basicTable :tableData="basicInfo.orderOperateLogList" :tableLabel="logTableLabel" :isPagination="false" :maxHeight="505"></basicTable>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont">
@@ -118,87 +118,62 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import { FREIGHT_STATUS_MAP } from '../const'
+import { FREIGHT_STATUS_MAP, PAY_WAY_MAP } from '../const'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
-            state: 10,
-            childOrderNo: '',
             orderStatusMap: FREIGHT_STATUS_MAP,
-            isAction: false,
+            payWayMap: PAY_WAY_MAP,
             basicInfo: {},
             logInfo: [],
             multiSelection: [],
             tableLabel: [
-                { label: 'sku编码', prop: 'productCode' },
-                { label: '商品名称', prop: 'productName' },
+                { label: 'sku编码', prop: 'skuCode' },
+                { label: '商品名称', prop: 'skuName' },
                 { label: '数量', prop: 'quantity' },
-                { label: '单件运费价格', prop: 'price' },
-                { label: '价格定义来源', prop: 'totalAmount' },
-                { label: '运费合计金额', prop: 'activityAmount' },
-                { label: '物流券抵扣金额', prop: 'supplyChainCouponAmount' },
+                { label: '单件运费价格', prop: 'originSingleAmount' },
+                { label: '价格定义来源', prop: 'freightSource' },
+                { label: '运费合计金额', prop: 'originTotalAmount' },
+                { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
-                { label: '退款申请时间', prop: 'refundTime' }
+                { label: '退款申请时间', prop: 'refundApplyTime' }
             ],
             logTableLabel: [
                 { label: '操作时间', prop: 'createTime' },
-                { label: '操作人', prop: 'displayOperator' },
-                { label: '操作动作', prop: 'operateMotionStr' },
-                { label: '状态', prop: 'type' },
-                { label: '内容', prop: 'operateContext' }
+                { label: '操作人', prop: 'operator' },
+                { label: '操作动作', prop: 'operateMotion' },
+                { label: '内容', prop: 'operatorContext' }
             ],
             form: {
                 count: '',
                 supplierName: '',
                 remark: ''
             },
-            closeOrderDialog: false
+            closeOrderDialog: false,
+            isAction: true,
+            freightOrderNo: ''
         }
     },
     computed: {
         ...mapState({
+            freightOrdersInfo: state => state.freightOrdersInfo
         })
     },
     methods: {
         async init () {
-            this.gettableLabel()
-            this.state = Number(this.$route.query.state)
-            this.childOrderNo = this.$route.query.id
-            if (this.state == 10) {
+            this.freightOrderNo = this.$route.query.id
+            if (this.$route.query.id) {
+                this.getfreightOrdersInfo()
+            }
+        },
+        async getfreightOrdersInfo () {
+            await this.findFreightInfo({ id: this.$route.query.id })
+            this.basicInfo = { ...this.freightOrdersInfo }
+            if (this.basicInfo.status == 10) {
                 this.isAction = true
             } else {
                 this.isAction = false
-            }
-        },
-        gettableLabel () {
-            if (this.state == 10) {
-                this.tableLabel = [
-                    { label: 'sku编码', prop: 'productCode' },
-                    { label: '商品名称', prop: 'productName' },
-                    { label: '数量', prop: 'quantity' },
-                    { label: '单件运费价格', prop: 'price' },
-                    { label: '价格定义来源', prop: 'totalAmount' },
-                    { label: '运费合计金额', prop: 'activityAmount' },
-                    { label: '物流券抵扣金额', prop: 'supplyChainCouponAmount' },
-                    { label: '实付运费金额', prop: 'finalTotalAmount' },
-                    { label: '退款申请时间', prop: 'refundTime' }
-                ]
-            } else {
-                this.tableLabel = [
-                    { label: 'sku编码', prop: 'productCode' },
-                    { label: '商品名称', prop: 'productName' },
-                    { label: '商品性质', prop: 'product' },
-                    { label: '归属商家', prop: ' businesses' },
-                    { label: '数量', prop: 'quantity' },
-                    { label: '单件运费价格', prop: 'price' },
-                    { label: '价格定义来源', prop: 'totalAmount' },
-                    { label: '运费合计金额', prop: 'activityAmount' },
-                    { label: '物流券抵扣金额', prop: 'supplyChainCouponAmount' },
-                    { label: '实付运费金额', prop: 'finalTotalAmount' },
-                    { label: '退款申请时间', prop: 'refundTime' },
-                    { label: '状态', prop: 'state' }
-                ]
             }
         },
         selectable (row) {
@@ -207,13 +182,13 @@ export default {
             this.$router.back()
         },
         rowClassName () { },
-        ...mapActions([
-        ])
+        ...mapActions({
+            findFreightInfo: 'finance/findFreightInfo'
+        })
     },
     watch: {
         $route () {
-            this.childOrderNo = this.$route.query.id
-            this.state = Number(this.$route.query.state)
+            this.freightOrderNo = this.$route.query.id
         }
     },
     mounted () {

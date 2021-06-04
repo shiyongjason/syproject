@@ -14,3 +14,5 @@ export const MARKETING_LIST = 'MARKETING_LIST'
 export const PRODUCTS_INFO = 'PRODUCTS_INFO'
 // 运费订单列表
 export const FREIGHT_ORDERS_LIST = 'FREIGHT_ORDERS_LIST'
+// 运费订单查看详情
+export const FREIGHT_ORDERS_INFO = 'FREIGHT_ORDERS_INFO'

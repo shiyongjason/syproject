@@ -44,3 +44,7 @@ export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categ
 export const findFreightOrders = (params) => {
     return axios.get(`${B2bUrl}order/boss/freight/order`, { params })
 }
+// 运费订单详情列表
+export const findFreightInfo = (params) => {
+    return axios.get(`${B2bUrl}order/boss/freight/order/${params.id}`, {})
+}

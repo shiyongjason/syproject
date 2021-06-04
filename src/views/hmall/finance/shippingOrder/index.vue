@@ -76,13 +76,6 @@
             <div class="table-cont-tabs">
                 <el-tabs type="card" v-model="tabName" @tab-click="onTab">
                     <el-tab-pane v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value" :name="item.value"></el-tab-pane>
-                    <!-- <el-tab-pane label="全部" name="all"></el-tab-pane>
-                    <el-tab-pane label="待支付" name="unpaid"></el-tab-pane>
-                    <el-tab-pane label="待完成发货" name="pendingShipment"></el-tab-pane>
-                    <el-tab-pane label="已完成发货" name="makeInvoice"></el-tab-pane>
-                    <el-tab-pane label="已开票" name="haveMake"></el-tab-pane>
-                    <el-tab-pane label="已退款" name="refunded"></el-tab-pane>
-                    <el-tab-pane label="已关闭" name="closed"></el-tab-pane> -->
                 </el-tabs>
             </div>
             <div class="table-cont-btn">
@@ -180,6 +173,7 @@ export default {
     methods: {
         // 切换状态
         onTab (value) {
+            this.queryParams = { ...this.initParams }
             this.queryParams.status = value.name
             this.onQuery()
         },
@@ -229,9 +223,3 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-.el-tabs__nav .is-active {
-    color: #fff !important;
-    background: #ff7a45 !important;
-}
-</style>

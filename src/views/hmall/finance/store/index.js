@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -20,7 +20,9 @@ const state = {
     // 商品明细列表信息
     productsInfo: {},
     // 运费订单列表
-    freightOrdersList: {}
+    freightOrdersList: {},
+    // 运费订单查看详情
+    freightOrdersInfo: {}
 }
 
 const getters = {
@@ -31,7 +33,8 @@ const getters = {
     orderList: state => state.orderList,
     marketingList: state => state.marketingList,
     productsInfo: state => state.productsInfo,
-    freightOrdersList: state => state.freightOrdersList
+    freightOrdersList: state => state.freightOrdersList,
+    freightOrdersInfo: state => state.freightOrdersInfo
 }
 
 const mutations = {
@@ -58,6 +61,9 @@ const mutations = {
     },
     [types.FREIGHT_ORDERS_LIST] (state, payload) {
         state.freightOrdersList = payload
+    },
+    [types.FREIGHT_ORDERS_INFO] (state, payload) {
+        state.freightOrdersInfo = payload
     }
 }
 
@@ -93,6 +99,10 @@ const actions = {
     async findFreightOrders ({ commit }, params) {
         const { data } = await findFreightOrders(params)
         commit(types.FREIGHT_ORDERS_LIST, data)
+    },
+    async findFreightInfo ({ commit }, params) {
+        const { data } = await findFreightInfo(params)
+        commit(types.FREIGHT_ORDERS_INFO, data)
     }
 }
 
