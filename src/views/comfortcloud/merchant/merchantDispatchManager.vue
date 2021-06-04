@@ -80,6 +80,9 @@
                 <template slot="status" slot-scope="scope">
                     {{statusString(scope.data.row.status)}}
                 </template>
+                <template slot="address" slot-scope="scope">
+                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName+scope.data.row.address}}
+                </template>
                 <template slot="proofPictures" slot-scope="scope">
                     <div v-if="scope.data.row.proofPictures&&scope.data.row.proofPictures.length>0">
                         <el-image style="width:3rem;height:3rem;" ref="img" class="default-pre-view-image" fit="cover" :src="getProofPictures(scope.data.row.proofPictures)[0]" :preview-src-list="getProofPictures(scope.data.row.proofPictures)"></el-image>
