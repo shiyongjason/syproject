@@ -530,6 +530,65 @@ export default [
                         component: () => import('@/views/hmall/searchProject/searchSynonym.vue')
                     }
                 ]
+            },
+            {
+                path: 'warehouse',
+                name: 'warehouse',
+                meta: {
+                    title: '仓配运费管理',
+                    tagName: '仓配运费管理',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'freightComputeRule',
+                        name: 'freightComputeRule',
+                        meta: {
+                            title: '运费计算规则',
+                            tagName: '运费计算规则',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/freightComputeRule/index.vue')
+                    },
+                    {
+                        path: 'warehouseProductList',
+                        name: 'warehouseProductList',
+                        meta: {
+                            title: '仓配商品管理',
+                            tagName: '仓配商品管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/index.vue')
+                    },
+                    {
+                        path: 'createWarehouse',
+                        name: 'createWarehouse',
+                        meta: {
+                            title: '批量添加仓配商品',
+                            tagName: '批量添加仓配商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/createWarehouse.vue')
+                    },
+                    {
+                        path: 'addWarehouseProducts',
+                        name: 'addWarehouseProducts',
+                        meta: {
+                            title: '选择商品',
+                            tagName: '选择商品',
+                            isMenu: false,
+                            icon: '',
+                            showMenuAs: '/b2b/warehouse/warehouseProductList'
+                        },
+                        component: () => import('@/views/hmall/warehouseManage/warehouseProduct/addWarehouseProducts.vue')
+                    }
+                ]
             }
         ]
     }
