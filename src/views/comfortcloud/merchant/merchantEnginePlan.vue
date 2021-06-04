@@ -25,7 +25,7 @@
         </div>
 
         <div class="page-body-cont">
-            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantProjectSchemeList"
+            <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantProjectSchemeList" :isShowIndex="true"
                         :pagination="cloudMerchantProjectSchemeListPagination" :isAction="true"
                         @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
                 <template slot="createBy" slot-scope="scope">
