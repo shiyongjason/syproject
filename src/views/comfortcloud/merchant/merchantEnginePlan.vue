@@ -115,8 +115,7 @@ export default {
             this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit', query: { id: data.id } })
         },
         onPreviewClick (val) {
-            // this.H5Preview = iotUrl + '/iot/merchantEnginePlanPreview?id=' + val.id
-            this.H5Preview = 'http://0.0.0.0:8081' + '/iot/merchantEnginePlanPreview?id=' + val.id
+            this.H5Preview = iotUrl + '/iot/merchantEnginePlanPreview?id=' + val.id
         },
         isEffective (plan) {
             return new Date().getTime() > new Date(plan.effectiveTime).getTime()
