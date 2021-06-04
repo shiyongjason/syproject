@@ -1,0 +1,1 @@
+export const FREIGHT_RULE_DATA = 'FREIGHT_RULE_DATA'
