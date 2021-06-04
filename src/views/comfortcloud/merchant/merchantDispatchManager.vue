@@ -338,7 +338,8 @@ export default {
                     { required: true, message: '请输入物料名称', trigger: 'blur' }
                 ],
                 materialCount: [
-                    { required: true, message: '请输入物料件数', trigger: 'blur' }
+                    { required: true, message: '请输入物料件数', trigger: 'blur' },
+                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ]
             },
             dispatchRules: {
