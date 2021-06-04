@@ -6,7 +6,7 @@
                     <h3>工程方案编辑</h3>
                 </div>
                 <el-form-item label="工程方案标题：" prop="schemeTitle">
-                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
+                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入工程方案标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
 
                 <el-form-item label="方案列表缩略图：" prop="schemeImage" ref="schemeImage">
@@ -41,7 +41,7 @@
                     <h3>方案详细内容</h3>
                 </div>
                 <el-form-item label="详情：" prop="schemeDetail">
-                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
+                    <RichEditor :height="500" :menus="menus" :uploadFileName="uploadImgName" :uploadImgParams="uploadImgParams" :uploadImgServer="uploadImgServer" @change="$refs['form'].validateField('schemeDetail')" @blur="$refs['form'].validateField('schemeDetail')" hidefocus="true" ref="editors" style="outline: 0;margin-bottom: 12px;width:100%" tabindex="0" v-model="form.schemeDetail"></RichEditor>
                 </el-form-item>
                 <el-form-item style="text-align: center">
                     <el-button type="primary" @click="onSave" :loading="loading">{{ loading ? '提交中 ...' : '确定' }}</el-button>
@@ -82,7 +82,6 @@ export default {
                 'strikeThrough', // 删除线
                 'foreColor', // 文字颜色
                 'backColor', // 背景颜色
-                'link', // 插入链接
                 'list', // 列表
                 'justify', // 对齐方式
                 'quote', // 引用
