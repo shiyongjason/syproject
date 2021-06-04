@@ -86,15 +86,23 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
-                    <el-button v-if="scope.data.row.source !=='微信小店'" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
-                    <el-button v-if="scope.data.row.source !=='微信小店' && !scope.data.row.deliveryName && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
+                    <el-button v-if="scope.data.row.source !== ORDER_SOURCE_WX" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
+                    <el-button v-if="scope.data.row.source !== ORDER_SOURCE_WX && !scope.data.row.deliveryName && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
                 </template>
             </basicTable>
 
             <el-dialog title="订单详情" :modal-append-to-body=false :append-to-body=false :visible.sync="detailDialogVisible" width="50%">
                 <div class="el-dialog-div">
                     <h1 style="padding-bottom: 10px">订单信息</h1>
-                    <p style="line-height: 25px">商品总价 ￥{{focusDetailOrder.orderProductAmount}} <br>
+                    <p style="line-height: 25px" v-if="focusDetailOrder.source === ORDER_SOURCE_B2B">
+                        订单原始总金额 ￥{{focusDetailOrder.totalAmount}} <br>
+                        折扣总金额 ￥{{focusDetailOrder.discountAmount}} <br>
+                        佣金总金额 ￥{{focusDetailOrder.commissionAmount}} <br>
+                        返利总金额 ￥{{focusDetailOrder.rebateAmount}} <br>
+                        总{{focusDetailOrder.orderProductCount}}件，实付金额￥{{focusDetailOrder.payAmount}}
+                    </p>
+                    <p style="line-height: 25px" v-else>
+                        商品总价 ￥{{focusDetailOrder.totalAmount}} <br>
                         订单运费 ￥{{focusDetailOrder.freight}}<br>
                         优惠金额 -￥{{focusDetailOrder.discountAmount}}<br>
                         商品改价 -￥{{focusDetailOrder.changePrice}}<br>
@@ -104,13 +112,13 @@
                     <basicTable :tableLabel="prouctDetailTableLabel" :tableData="cloudMerchantProductOrderDetail.productBOS" :isShowIndex='false'>
                     </basicTable>
                     <h1 style="padding-top: 20px">发货详情</h1>
-                    <div style="line-height: 25px" v-if="focusDetailOrder.source === '微信小店'">
+                    <div style="line-height: 25px" v-if="focusDetailOrder.source === ORDER_SOURCE_WX">
                         <p>物流公司: {{focusDetailOrder.deliveryName}}</p>
                         <p>快递单号: {{focusDetailOrder.waybillId}}</p>
                         <p>发货时间: --</p>
                         <p>发货凭证: --</p>
                     </div>
-                    <div style="line-height: 25px" v-else-if="focusDetailOrder.source === 'B2b' && cloudMerchantProductOrderDetail.deliveryDetails">
+                    <div style="line-height: 25px" v-else-if="focusDetailOrder.source === ORDER_SOURCE_B2B && cloudMerchantProductOrderDetail.deliveryDetails">
                         <div class="deliver-info" v-for="(item,index) in cloudMerchantProductOrderDetail.deliveryDetails" :key="index">
                             <p v-if="item.productNames">发货商品: {{item.productNames}}</p>
                             <p>物流公司: {{item.deliverer}} </p>
@@ -123,15 +131,17 @@
                         </div>
                     </div>
                     <div style="line-height: 25px" v-else-if="cloudMerchantProductOrderDetail.deliveryDetails">
-                        <p v-if="item.productNames">发货商品: {{item.productNames}}</p>
-                        <p>物流公司: {{item.logisticsCompany}} </p>
-                        <p>快递单号: {{item.courierNo}}</p>
-                        <p>发货时间: {{item.deliveryTime}}</p>
-                        <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
-                        <div v-if="item.proofPictures">
-                            <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
+                        <div class="deliver-info" v-for="(item,index) in cloudMerchantProductOrderDetail.deliveryDetails" :key="index">
+                            <p v-if="item.productNames">发货商品: {{item.productNames}}</p>
+                            <p>物流公司: {{item.logisticsCompany}} </p>
+                            <p>快递单号: {{item.courierNo}}</p>
+                            <p>发货时间: {{item.deliveryTime}}</p>
+                            <p>发货凭证: <span v-if="!item.proofPictures">--</span></p>
+                            <div v-if="item.proofPictures">
+                                <el-image :preview-src-list="item.proofPictures.split(',')" v-for="(imageUrl, index) in item.proofPictures.split(',')" :key="index" :src="imageUrl" class="proof-img" />
+                            </div>
+                            <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
                         </div>
-                        <p>发货人: {{item.creator}} {{item.creatorPhone}}</p>
                     </div>
                     <div style="margin: 20px 0"></div>
                 </div>
@@ -291,13 +301,13 @@
                                 <el-checkbox v-for="item in deliverProductOptions" :label="item"  :key="item.productId">{{item.productName}}</el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
-                        <el-form-item label="单分享提货人：" v-if="deliverForm.source === 'B2b'" prop="deliverer">
+                        <el-form-item label="单分享提货人：" v-if="deliverForm.source === ORDER_SOURCE_B2B" prop="deliverer">
                             <el-input v-model="deliverForm.deliverer" maxlength="100" :rows="1" placeholder="请输入单分享提货人"/>
                         </el-form-item>
-                        <el-form-item label="物流公司：" v-if="deliverForm.source !== 'B2b'" prop="logisticsCompany">
+                        <el-form-item label="物流公司：" v-if="deliverForm.source !== ORDER_SOURCE_B2B" prop="logisticsCompany">
                             <el-input v-model="deliverForm.logisticsCompany" maxlength="100" :rows="1" placeholder="请输入物流公司"/>
                         </el-form-item>
-                        <el-form-item label="快递单号：" v-if="deliverForm.source !== 'B2b'" prop="courierNo">
+                        <el-form-item label="快递单号：" v-if="deliverForm.source !== ORDER_SOURCE_B2B" prop="courierNo">
                             <el-input v-model="deliverForm.courierNo" maxlength="100" :rows="1" placeholder="请输入快递单号"/>
                         </el-form-item>
                         <el-form-item label="发货凭证：" ref="image">
@@ -339,10 +349,16 @@ import { AUTH_CLOUD_DELIVER_OPERATE } from '@/utils/auth_const'
 import { addCloudMerchantProductOrder, addDispatchOrder, deleteThirdOrder, getToDispatchList } from '../api'
 import { getChiness } from '../../hmall/membership/api'
 
+const ORDER_SOURCE_B2B = '单分享'
+const ORDER_SOURCE_WX = '微信小店'
+const ORDER_SOURCE_THIRD = '第三方渠道'
+
 export default {
     name: 'merchantOrderList',
     data () {
         return {
+            ORDER_SOURCE_B2B: ORDER_SOURCE_B2B,
+            ORDER_SOURCE_WX: ORDER_SOURCE_WX,
             deliverOperateAuth: AUTH_CLOUD_DELIVER_OPERATE,
             queryParams: {
                 pageNumber: 1,
@@ -395,7 +411,7 @@ export default {
                 { label: '收件人手机', prop: 'consigneePhone' },
                 { label: '订单实际支付金额', prop: 'payAmount', formatters: 'money' },
                 { label: '订单运费', prop: 'freight' },
-                { label: '商品名称', prop: 'productName' },
+                { label: '商品型号', prop: 'productSpecification' },
                 { label: '订单件数', prop: 'orderProductCount' },
                 { label: '支付方式', prop: 'payMethod' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
@@ -559,7 +575,7 @@ export default {
             }
         },
         prouctDetailTableLabel () {
-            if (this.focusDetailOrder.source === '微信小店') {
+            if (this.focusDetailOrder.source === this.ORDER_SOURCE_WX) {
                 return [
                     { label: '商品ID', prop: 'productId' },
                     { label: '商品名称', prop: 'productName' },
@@ -567,12 +583,13 @@ export default {
                     { label: '商品价格（元）', prop: 'productPrice' },
                     { label: '商品数量（件）', prop: 'productCount' }
                 ]
-            } else if (this.focusDetailOrder.source === 'B2b') {
+            } else if (this.focusDetailOrder.source === this.ORDER_SOURCE_B2B) {
                 return [
                     { label: '商品编码', prop: 'productNo' },
                     { label: '商品来源', prop: 'productSource' },
                     { label: '品牌', prop: 'productBrand' },
                     { label: '商品名称', prop: 'productName' },
+                    { label: '商品型号', prop: 'productSpecification' },
                     { label: '销售价格（元）', prop: 'productPrice' },
                     { label: '实付金额（元）', prop: 'realAmount' },
                     { label: '商品数量（件）', prop: 'productCount' }
