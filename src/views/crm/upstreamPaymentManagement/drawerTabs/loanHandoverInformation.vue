@@ -173,7 +173,7 @@
         </div>
         </transition>
         </div>
-         <div class="info_box-txt">备注信息：{{data.remark||'-'}}</div>
+         <div class="info_box-txt" style="word-break: break-word;">备注信息：{{data.remark||'-'}}</div>
         </div>
         </div>
         <div class="info_btnbot">
