@@ -7,12 +7,11 @@
             <div class="query-cont__row mb20">
                 <el-form :model="withdrawalForm" ref="withdrawalForm" label-width="80px" label-position="right" :rules="rules">
                     <el-form-item label="银行卡号">
-                        <!-- <span style="margin-left: 20px">{{bankCardInfo.bankAccountNumber}}</span> -->
-                        <span style="margin-left: 20px">{{bankCardInfo.bankAccountNumber}}</span>
+                        <span style="margin-left: 20px">{{freightBankCardInfo.bankAccountNumber}}</span>
                     </el-form-item>
                     <el-form-item label="提现金额" prop="amount">
                         <el-input v-model="withdrawalForm.amount" placeholder="请填写"></el-input>
-                        <span style="margin-left: 20px">可提现金额{{bankAccountInfo.totalBalance | moneyShow}}元</span>
+                        <span style="margin-left: 20px">可提现金额{{freightBankAccountInfo.totalBalance | moneyShow}}元</span>
                     </el-form-item>
                     <el-form-item label="验证码" prop="smsCode">
                         <el-input v-model="withdrawalForm.smsCode" placeholder="请填写" maxlength="6"></el-input>
@@ -66,7 +65,7 @@
 import { CASH_WITHDRAWAL_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
-import { getSmsCode, cashWithdrawal } from '../api/index'
+import { getFreightSmsCode, freightcashWithdrawal } from '../api/index'
 import { VerificationCode } from '@/utils/rules.js'
 export default {
     name: 'withdrawalFreight',
@@ -89,7 +88,7 @@ export default {
                             var Reg = /(^[1-9]([0-9]{1,12})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
                             if (value == 0) {
                                 return callback(new Error('提现金额不能为0'))
-                            } else if (Number(value) > Number(this.bankAccountInfo.totalBalance)) {
+                            } else if (Number(value) > Number(this.freightBankAccountInfo.totalBalance)) {
                                 return callback(new Error('提现金额超限'))
                             } else if (value && !(Reg.test(value))) {
                                 return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
@@ -123,32 +122,36 @@ export default {
     },
     computed: {
         ...mapGetters('finance', {
-            cashWithdrawalInfo: 'cashWithdrawalInfo',
-            bankAccountInfo: 'bankAccountInfo',
-            bankCardInfo: 'bankCardInfo'
+            freightWithdrawalInfo: 'freightWithdrawalInfo',
+            freightBankAccountInfo: 'freightBankAccountInfo',
+            freightBankCardInfo: 'freightBankCardInfo'
         }),
         phoneNumber () {
-            return this.bankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
+            if (this.freightBankCardInfo.bankPhoneNumber) {
+                return this.freightBankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
+            } else {
+                return this.freightBankCardInfo.bankPhoneNumber
+            }
         },
         reqWithdraw () {
             let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
             return {
                 ...this.withdrawalForm,
-                bankCardId: this.bankCardInfo.bankCardId,
-                mobile: this.bankCardInfo.bankPhoneNumber,
+                bankCardId: this.fireightBankCardInfo.bankCardId,
+                mobile: this.freightBankCardInfo.bankPhoneNumber,
                 operator: `${userInfo.employeeName}(${userInfo.phoneNumber})`,
                 receivedAmount: this.withdrawalForm.amount,
                 serviceFee: 0
             }
         },
         tableData () {
-            return this.cashWithdrawalInfo.records
+            return this.freightWithdrawalInfo.records
         },
         paginationInfo () {
             return {
-                pageNumber: this.cashWithdrawalInfo.current,
-                pageSize: this.cashWithdrawalInfo.size,
-                total: this.cashWithdrawalInfo.total
+                pageNumber: this.freightWithdrawalInfo.current,
+                pageSize: this.freightWithdrawalInfo.size,
+                total: this.freightWithdrawalInfo.total
             }
         },
         pickerOptionsStart () {
@@ -173,21 +176,21 @@ export default {
         }
     },
     mounted () {
-        this.findCashWithdrawalAction()
-        this.findBankAccountInfo()
-        // this.findBankCardInfo()
+        this.findFreightWithdrawalAction()
+        this.findFreightBankAccountInfo()
+        this.findFreightBankCardInfo()
     },
     methods: {
         ...mapActions('finance', {
-            findCashWithdrawal: 'findCashWithdrawal',
-            findBankAccountInfo: 'findBankAccountInfo'
-            // findBankCardInfo: 'findBankCardInfo'
+            findFreightWithdrawalInfo: 'findFreightWithdrawalInfo ',
+            findFreightBankAccountInfo: 'findFreightBankAccountInfo',
+            findFreightBankCardInfo: 'findFreightBankCardInfo'
         }),
 
         onMobileVerifica () {
             this.after = false
             this.content = '重新发送 ' + this.time
-            getSmsCode()
+            getFreightSmsCode()
             this.clock = setInterval(() => {
                 this.time--
                 this.content = '重新发送' + this.time
@@ -207,7 +210,7 @@ export default {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消'
                     }).then(async () => {
-                        await cashWithdrawal(this.reqWithdraw)
+                        await freightcashWithdrawal(this.reqWithdraw)
                         this.withdrawalSuccess()
                     })
                 }
@@ -216,9 +219,9 @@ export default {
 
         withdrawalSuccess () {
             this.$refs['withdrawalForm'].resetFields()
-            this.findCashWithdrawalAction()
-            this.findBankAccountInfo()
-            // this.findBankCardInfo()
+            this.findFreightWithdrawalAction()
+            this.findFreightBankAccountInfo()
+            this.findFreightBankCardInfo()
             clearInterval(this.clock)
             this.content = '获取验证码'
             this.time = 60
@@ -229,16 +232,16 @@ export default {
                 type: 'success'
             })
         },
-
+        // 取消
         onCancel () {
-            this.$router.push('/b2b/finance/charge')
+            this.$router.push('/b2b/finance/freightDetails')
         },
-
+        // 查询操作
         searchList () {
             this.queryParams.pageNumber = 1
-            this.findCashWithdrawalAction()
+            this.findFreightWithdrawalAction()
         },
-
+        // 重置操作
         onRest () {
             this.queryParams = {
                 operator: '',
@@ -247,24 +250,24 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             }
-            this.findCashWithdrawalAction()
+            this.findFreightWithdrawalAction()
         },
-
+        // 导出操作
         onExport () {
             let url = ''
             for (let key in this.queryParams) {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
             url += 'access_token=' + localStorage.getItem('token')
-            location.href = B2bUrl + 'payment/api/boss/service-fee/withdraws/export?' + url
+            location.href = B2bUrl + 'payment/api/boss/freight/withdraws/export?' + url
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findCashWithdrawalAction()
+            this.findFreightWithdrawalAction()
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findCashWithdrawalAction()
+            this.findFreightWithdrawalAction()
         },
 
         onSortChange (val) {
@@ -272,12 +275,10 @@ export default {
                 this.queryParams['sort.property'] = 'amount'
                 this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
             }
-            this.findCashWithdrawalAction()
+            this.findFreightWithdrawalAction()
         },
-
-        findCashWithdrawalAction () {
-            this.bankCardInfo.bankAccountNumber = 76480188009812157
-            this.findCashWithdrawal(this.queryParams)
+        findFreightWithdrawalAction () {
+            this.findFreightWithdrawalInfo(this.queryParams)
         }
     }
 }

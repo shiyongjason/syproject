@@ -14,7 +14,7 @@
                         <i class="icon iconfont hosjoy_money"></i>
                     </div>
                     <div class="balance-col-money">
-                        <p>{{bankAccountInfo.totalBalance | moneyShow}}</p>
+                        <p>{{freightBankAccountInfo.totalBalance | moneyShow}}</p>
                         <p>APP运费总资产<span>（元）</span></p>
                     </div>
 
@@ -25,23 +25,23 @@
                 </div>
             </div>
             <div class="title-cont">
-                <span class="title-cont__label">服务费收取明细</span>
+                <span class="title-cont__label">线上运费资金明细</span>
             </div>
             <div class="query-cont__row">
                 <div class="query-cont__col">
                     <div class="query-col__lable">时间范围：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.withdrawTimeStart" type="date" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.startTime" type="date" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.withdrawTimeEnd" type="date" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.endTime" type="date" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">类型：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.childOrderStatus">
+                        <el-select v-model="queryParams.type">
                             <el-option v-for="item in freightTypeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -49,19 +49,19 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">在线运费订单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.freightNo" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">客户名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.customerName" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">渠道：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.childorder">
+                        <el-select v-model="queryParams.source">
                             <el-option v-for="item in orderChannerlOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -84,6 +84,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 import { ORDER_CHANNERL_OPTIONS, FREIGHT_TYPE_OPTIONS } from '../const'
+import axios from 'axios'
 export default {
     name: 'freightDetails',
     data () {
@@ -91,41 +92,44 @@ export default {
             orderChannerlOptions: ORDER_CHANNERL_OPTIONS,
             freightTypeOptions: FREIGHT_TYPE_OPTIONS,
             queryParams: {
-                companyName: '',
-                withdrawTimeStart: '',
-                withdrawTimeEnd: '',
+                startTime: '',
+                endTime: '',
+                type: '',
+                freightNo: '',
+                customerName: '',
+                source: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             tableLabel: [
-                { label: '时间', prop: 'withdrawTime', formatters: 'dateTime' },
-                { label: '金额', prop: 'amount', formatters: 'moneyShow', sortable: true },
+                { label: '时间', prop: 'time', formatters: 'dateTime' },
+                { label: '金额', prop: 'freightAmount', formatters: 'moneyShow', sortable: true },
                 { label: '类型', prop: 'type' },
-                { label: '在线运费订单编号', prop: 'childOrderNo' },
-                { label: '客户名称', prop: 'companyName' },
-                { label: '渠道', prop: 'serviceFee' }
+                { label: '在线运费订单编号', prop: 'freightNo' },
+                { label: '客户名称', prop: 'customerName' },
+                { label: '渠道', prop: 'source' }
             ]
         }
     },
     computed: {
         ...mapGetters('finance', {
-            serviceChargeInfo: 'serviceChargeInfo',
-            bankAccountInfo: 'bankAccountInfo'
+            freightBankAccountInfo: 'freightBankAccountInfo',
+            freightList: 'freightList'
         }),
         tableData () {
-            return this.serviceChargeInfo.records
+            return this.freightList.records
         },
         paginationInfo () {
             return {
-                pageNumber: this.serviceChargeInfo.current,
-                pageSize: this.serviceChargeInfo.size,
-                total: this.serviceChargeInfo.total
+                pageNumber: this.freightList.current,
+                pageSize: this.freightList.size,
+                total: this.freightList.total
             }
         },
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let endDateVal = this.queryParams.withdrawTimeEnd
+                    let endDateVal = this.queryParams.endTime
                     if (endDateVal) {
                         return time.getTime() >= new Date(endDateVal).getTime()
                     }
@@ -135,7 +139,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.withdrawTimeStart
+                    let beginDateVal = this.queryParams.startTime
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -144,23 +148,23 @@ export default {
         }
     },
     mounted () {
-        this.findServiceChargeAction()
-        this.findBankAccountInfo()
+        this.findFreightList()
+        this.findFreightBankAccountInfo()
     },
     methods: {
         ...mapActions('finance', {
-            findServiceCharge: 'findServiceCharge',
-            findBankAccountInfo: 'findBankAccountInfo'
+            findFreightList: 'findFreightList',
+            findFreightBankAccountInfo: 'findFreightBankAccountInfo'
         }),
         onWithdrawal () {
             this.$router.push('/b2b/finance/withdrawalFreight')
         },
-
+        // 查询操作
         searchList () {
             this.queryParams.pageNumber = 1
-            this.findServiceChargeAction()
+            this.findFreightList(this.queryParams)
         },
-
+        // 重置操作
         onRest () {
             this.queryParams = {
                 companyName: '',
@@ -169,40 +173,50 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             }
-            this.findServiceChargeAction()
+            this.findFreightList()
         },
-
+        // 导出操作
         onExport () {
-            let url = ''
-            for (let key in this.queryParams) {
-                url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
-            }
-            url += 'access_token=' + localStorage.getItem('token')
-            location.href = B2bUrl + 'payment/api/boss/service-fee/withdraws/received/export?' + url
+            axios.defaults.responseType = 'blob'
+            axios.post(B2bUrl + 'order/boss/freight-orders/export', this.queryParams).then(function (response) {
+                try {
+                    const reader = new FileReader()
+                    reader.readAsDataURL(response.data)
+                    reader.onload = function (e) {
+                        const a = document.createElement('a')
+                        a.download = '线上运费资金明细.xlsx'
+                        a.href = e.target.result
+                        document.querySelector('body').appendChild(a)
+                        a.click()
+                        document.querySelector('body').removeChild(a)
+                    }
+                    axios.defaults.responseType = 'json'
+                } catch (e) {
+                    axios.defaults.responseType = 'json'
+                }
+            }).catch(function () {
+                axios.defaults.responseType = 'json'
+                console.log(error.response)
+            })
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findServiceChargeAction()
+            this.findFreightList(this.queryParams)
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findServiceChargeAction()
+            this.findFreightList(this.queryParams)
         },
-
         onSortChange (val) {
-            if (val.prop === 'amount') {
-                this.queryParams['sort.property'] = 'amount'
-                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
-            }
-            if (val.prop === 'serviceFee') {
-                this.queryParams['sort.property'] = 'service_fee'
-                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
-            }
-            this.findServiceChargeAction()
-        },
-
-        findServiceChargeAction () {
-            this.findServiceCharge(this.queryParams)
+            // if (val.prop === 'amount') {
+            //     this.queryParams['sort.property'] = 'amount'
+            //     this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
+            // }
+            // if (val.prop === 'serviceFee') {
+            //     this.queryParams['sort.property'] = 'service_fee'
+            //     this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
+            // }
+            this.findFreightList(this.queryParams)
         }
     }
 }

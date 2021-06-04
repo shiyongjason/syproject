@@ -112,8 +112,8 @@ export const SOURCES_PRICE_OPTIONS = [
     { label: '人工设置', value: '2' }
 ]
 export const SOURCES_PRICE_MAP = new Map([
-    [10, '系统'],
-    [20, '人工']
+    [10, '系统计算'],
+    [20, '人工设置']
 ])
 // 资金同步状态
 export const SYNCHROMIZED_STATE_OPTIONS = [
@@ -129,15 +129,15 @@ export const SYNCHROMIZED_STATE_MAP = new Map([
     [30, '处理失败'],
     [40, '处理成功']
 ])
-//  类型
+//  运费类型
 export const FREIGHT_TYPE_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '运费收款', value: '10' },
-    { label: '运费退款', value: '20' }
+    { label: '运费收款', value: '1' },
+    { label: '运费退款', value: '2' }
 ]
 export const FREIGHT_TYPE_MAP = new Map([
-    [10, '系统'],
-    [20, '人工']
+    [1, '运费收款'],
+    [2, '运费退款']
 ])
 // 支付方式
 export const PAY_WAY_OPTIONS = [

@@ -1,6 +1,6 @@
 
 import * as types from './mutation-types'
-import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo } from '../api'
+import { findServiceCharge, findCashWithdrawal, findBankAccountInfo, findBankCardInfo, findOrders, findMarketing, findProductsInfo, findFreightOrders, findFreightInfo, findFreightList, findFreightBankAccountInfo, findFreightWithdrawalInfo, findFreightBankCardInfo } from '../api'
 
 const state = {
     // 服务费收取明细
@@ -22,7 +22,17 @@ const state = {
     // 运费订单列表
     freightOrdersList: {},
     // 运费订单查看详情
-    freightOrdersInfo: {}
+    freightOrdersInfo: {},
+    // 运费资金管理明细
+    freightList: {},
+    // 运费资金管理账户明细
+    freightBankAccountInfo: {},
+    // 运费资金管理提现明细
+    freightWithdrawalInfo: {},
+    // 运费资金管理提现银行卡信息
+    freightBankCardInfo: {}
+    // // 线上运费明细
+    // findFreightDetails: {}
 }
 
 const getters = {
@@ -34,7 +44,12 @@ const getters = {
     marketingList: state => state.marketingList,
     productsInfo: state => state.productsInfo,
     freightOrdersList: state => state.freightOrdersList,
-    freightOrdersInfo: state => state.freightOrdersInfo
+    freightOrdersInfo: state => state.freightOrdersInfo,
+    freightList: state => state.freightList,
+    freightBankAccountInfo: state => state.freightBankAccountInfo,
+    freightWithdrawalInfo: state => state.freightWithdrawalInfo,
+    freightBankCardInfo: state => state.freightBankCardInfo
+    // onlinefreightInfo: state => state.onlinefreightInfo
 }
 
 const mutations = {
@@ -64,7 +79,22 @@ const mutations = {
     },
     [types.FREIGHT_ORDERS_INFO] (state, payload) {
         state.freightOrdersInfo = payload
+    },
+    [types.FREIGHT_LIST] (state, payload) {
+        state.freightList = payload
+    },
+    [types.FREIGHT_BANK_ACCOUNT_INFO] (state, payload) {
+        state.freightBankAccountInfo = payload
+    },
+    [types.FREIGHT_WITHDRAWAL_INFO] (state, payload) {
+        state.findFreightWithdrawalInfo = payload
+    },
+    [types.FREIGHT_BANK_CARD_INFO] (state, payload) {
+        state.findFreightBankCardInfo = payload
     }
+    // [types.ONLINE_FREIGHT_INFO] (state, payload) {
+    //     state.findOnlinefreightInfo = payload
+    // }
 }
 
 const actions = {
@@ -103,7 +133,27 @@ const actions = {
     async findFreightInfo ({ commit }, params) {
         const { data } = await findFreightInfo(params)
         commit(types.FREIGHT_ORDERS_INFO, data)
+    },
+    async findFreightList ({ commit }, params) {
+        const { data } = await findFreightList(params)
+        commit(types.FREIGHT_LIST, data)
+    },
+    async findFreightBankAccountInfo ({ commit }, params) {
+        const { data } = await findFreightBankAccountInfo(params)
+        commit(types.FREIGHT_BANK_ACCOUNT_INFO, data)
+    },
+    async findFreightWithdrawalInfo ({ commit }, params) {
+        const { data } = await findFreightWithdrawalInfo(params)
+        commit(types.FREIGHT_WITHDRAWAL_INFO, data)
+    },
+    async findFreightBankCardInfo ({ commit }, params) {
+        const { data } = await findFreightBankCardInfo(params)
+        commit(types.FREIGHT_BANK_CARD_INFO, data)
     }
+    // async findOnlinefreightInfo ({ commit }, params) {
+    //     const { data } = await findOnlinefreightInfo(params)
+    //     commit(types.ONLINE_FREIGHT_INFO, data)
+    // }
 }
 
 export default {
