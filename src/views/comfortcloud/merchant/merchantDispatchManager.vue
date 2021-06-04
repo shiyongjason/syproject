@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
+                    <div class="query-col-title">收件人地址：</div>
                     <div class="query-cont-col-area">
                         <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
                             <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
@@ -80,11 +80,12 @@
                 <template slot="status" slot-scope="scope">
                     {{statusString(scope.data.row.status)}}
                 </template>
+                <template slot="address" slot-scope="scope">
+                    {{scope.data.row.provinceName+scope.data.row.cityName+scope.data.row.countryName+scope.data.row.address}}
+                </template>
                 <template slot="proofPictures" slot-scope="scope">
                     <div v-if="scope.data.row.proofPictures&&scope.data.row.proofPictures.length>0">
-                        <div v-for="(url,index) in getProofPictures(scope.data.row.proofPictures)" :key="index">
-                            <el-image style="width:4rem" ref="img" class="default-pre-view-image" fit="contain" :src="url" :preview-src-list="[url]"></el-image>
-                        </div>
+                        <el-image style="width:3rem;height:3rem;" ref="img" class="default-pre-view-image" fit="cover" :src="getProofPictures(scope.data.row.proofPictures)[0]" :preview-src-list="getProofPictures(scope.data.row.proofPictures)"></el-image>
                     </div>
                 </template>
             </basicTable>
@@ -102,7 +103,7 @@
                         </div>
                         <div style="margin-left:20px">
                             <span>创建时间：</span>
-                            <span>{{materialForm.createTime}}</span>
+                            <span>{{materialForm.createTime | formatterTime}}</span>
                         </div>
                     </div>
                     <el-form-item label-width="0" class="address">
@@ -155,7 +156,7 @@
                     <el-form-item label="详细地址：" prop="address">
                         <el-input v-model="materialForm.address" :disabled="isCanEdit" style='width:400px' maxlength="100" placeholder="请输入具体地址"></el-input>
                     </el-form-item>
-                    <el-form-item label="物料明细：" required>
+                    <el-form-item label="物料明细：" v-if="noDispatchCount > 0" required>
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
                     </el-form-item>
                     <el-form-item label-width="0px">
@@ -181,7 +182,7 @@
 
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input v-model="materialForm.remark" maxlength="500" :rows="3" type="textarea" placeholder="输入推荐话术，将展示在推广商品列表中，不超过500字符" />
+                        <el-input v-model="materialForm.remark" maxlength="500" :rows="3" type="textarea" placeholder="如有其它特殊要求，可在此处备注" />
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -189,21 +190,21 @@
                     <el-button type="primary" @click="submitForm('materialForm')">确认</el-button>
                 </span>
             </el-dialog>
-            <el-dialog title="填写发货信息" :modal-append-to-body=false :append-to-body=false :visible.sync="dispatchDialogVisible" width="50%">
+            <el-dialog title="填写发货信息" :modal-append-to-body=false :append-to-body=false :visible.sync="dispatchDialogVisible" width="700px">
                 <el-form :model="dispatchForm" :rules="dispatchRules" ref="dispatchForm">
-                    <el-form-item class="wlname" label="请选择发货方式" required>
+                    <el-form-item class="wlname" label="请选择发货方式" v-if="canDispatchType !== 1" required>
                     </el-form-item>
-                    <div style="margin-left:30px">
+                    <div style="margin-left:30px" v-if="canDispatchType !== 1">
                         <div>该订单中含有多款商品，建议按订单合并发货</div>
                         <el-form-item label-width="0">
-                            <el-radio v-model="dispatchForm.deliveryType" :label="1">按订单合并发货：订单中的商品只需维护一次发货信息</el-radio>
+                            <el-radio v-if="canDispatchType !== 2" v-model="dispatchForm.deliveryType" :label="1">按订单合并发货：订单中的商品只需维护一次发货信息</el-radio>
                             <el-radio v-model="dispatchForm.deliveryType" :label="2">按商品分开发货：订单中部分产品发货，需按实际发货的商品维护发货信息</el-radio>
                         </el-form-item>
                         <div v-if="dispatchForm.deliveryType === 2" style="margin-bottom:30px">
                             <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
                             <div style="margin: 15px 0;"></div>
                             <el-checkbox-group v-model="dispatchForm.productList" @change="handleCheckedMaterialChange">
-                                <el-checkbox v-for="material in materials" :label="material" :key="material.productId">{{material.productName}}</el-checkbox>
+                                <el-checkbox style="display:block" v-for="material in materials" :label="material" :key="material.productId">{{material.productName}}</el-checkbox>
                             </el-checkbox-group>
                         </div>
                     </div>
@@ -299,7 +300,8 @@ export default {
             isSaving: false,
             isIndeterminate: false,
             checkAll: false,
-            materials: [],
+            materials: [], // 过滤的数据
+            allMaterials: [], // 没有过滤的数据
             currentMaterial: null,
             detailsKey: 0,
             pagination: {
@@ -336,7 +338,8 @@ export default {
                     { required: true, message: '请输入物料名称', trigger: 'blur' }
                 ],
                 materialCount: [
-                    { required: true, message: '请输入物料件数', trigger: 'blur' }
+                    { required: true, message: '请输入物料件数', trigger: 'blur' },
+                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ]
             },
             dispatchRules: {
@@ -351,13 +354,13 @@ export default {
             cityList: [],
             tableLabel: [
                 { label: '需求单号', prop: 'materialId' },
-                { label: '创建时间', prop: 'createTime', formatters: 'dateTime', width: '140' },
-                { label: '物料名称', prop: 'materialName' },
-                { label: '物料件数', prop: 'materialCount' },
                 { label: '所属分部', prop: 'department' },
                 { label: '收件人姓名', prop: 'receiverName' },
                 { label: '收件人电话', prop: 'receiverPhone' },
                 { label: '收件人地址', prop: 'address' },
+                { label: '创建时间', prop: 'createTime', formatters: 'dateTime', width: '140' },
+                { label: '物料名称', prop: 'materialName' },
+                { label: '物料件数', prop: 'materialCount' },
                 { label: '发货状态', prop: 'status' },
                 { label: '发货时间', prop: 'courierTime', formatters: 'dateTime', width: '140' },
                 { label: '发货人', prop: 'deliverer' },
@@ -417,6 +420,43 @@ export default {
                 }
             })
             return canEdit
+        },
+        noDispatchCount () {
+            if (this.materialForm.details.length === 0) {
+                return 1
+            }
+            let count = 0
+            this.materialForm.details.forEach(item => {
+                if (item.status === undefined || item.status === 0) {
+                    count++
+                }
+            })
+            return count
+        },
+        canDispatchType () {
+            console.log(this.allMaterials, '全部商品')
+            console.log(this.materials, '待发货商品')
+            let type = 1 // 1 表示不用选择 默认全部发货 2 表示不能选择全部，只能选择分批发 3表示正常的
+            let count = 0
+            let hasDispatch = false
+            this.allMaterials.forEach(item => {
+                if (item.status === undefined || item.status === 0) {
+                    count++
+                } else {
+                    hasDispatch = true
+                }
+            })
+            if (this.allMaterials.length === 1 && count === 1) {
+                type = 1
+            } else if (this.allMaterials.length > 1 && count > 0 && hasDispatch) {
+                type = 2
+            } else if (this.allMaterials.length > 1 && count > 0 && !hasDispatch) {
+                type = 3
+            } else {
+                type = 2
+            }
+            console.log(type, '应该选择的发货方式')
+            return type
         },
         getProofPictures () {
             return pics => {
@@ -533,16 +573,20 @@ export default {
                     }
                 }
             })
-            this.$nextTick(() => {
-                if (this.$refs['tableRef']) {
-                    this.$refs['tableRef'].doLayout()
-                }
-            })
         },
         async querySuggestions (queryString, cb) {
             if (queryString.length > 0) {
                 const { data } = await getLikeMerchantList({ productName: queryString })
-                const options = data.map(item => ({
+                const filterData = data.filter(item => {
+                    let same = false
+                    this.materialForm.details.forEach(entity => {
+                        if (item.productName === entity.materialName) {
+                            same = true
+                        }
+                    })
+                    return !same
+                })
+                const options = filterData.map(item => ({
                     value: item.productName
                 }))
                 cb(options)
@@ -608,6 +652,7 @@ export default {
                 })
                 params.countryName = country.length > 0 ? country[0].name : ''
             }
+            console.log(params)
             await addMarktingMaterial(params)
             this.addDialogVisible = false
             this.onQuery()
@@ -641,6 +686,9 @@ export default {
                     status: item.status
                 }
             })
+            if (this.$refs['materialForm']) {
+                this.$refs['materialForm'].clearValidate()
+            }
             console.log(this.materialForm, '数据详情')
         },
         // 删除营销物料
@@ -676,6 +724,11 @@ export default {
             }
             this.currentMaterial = val
             const { data } = await getToDispatchList(params)
+            this.allMaterials = data
+            const type = this.canDispatchType
+            if (type === 2) {
+                this.dispatchForm.deliveryType = 2
+            }
             console.log(data)
             this.materials = data.filter(item => item.status === 0)
             this.dispatchDialogVisible = true
@@ -786,6 +839,7 @@ export default {
                 this.$refs['materialForm'].clearValidate()
             }
             this.currentMaterial = null
+            this.uploadImages = []
             this.dispatchForm = {
                 type: '2',
                 orderId: '',
@@ -828,7 +882,7 @@ export default {
         objectSpanMethod (val) {
             // console.log(val, '数据格式')
             const { columnIndex, rowIndex } = val
-            const spanColumn = columnIndex === 0 || columnIndex === 4 || columnIndex === 5 || columnIndex === 6 || columnIndex === 7 || columnIndex === 14
+            const spanColumn = columnIndex === 0 || columnIndex === 1 || columnIndex === 2 || columnIndex === 3 || columnIndex === 4 || columnIndex === 14
             if (spanColumn) {
                 const _row = this.spanArr[rowIndex]
                 const _col = _row > 0 ? 1 : 0
