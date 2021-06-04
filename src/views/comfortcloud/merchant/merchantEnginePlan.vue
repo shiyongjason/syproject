@@ -28,6 +28,9 @@
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantProjectSchemeList" :isShowIndex="true"
                         :pagination="cloudMerchantProjectSchemeListPagination" :isAction="true"
                         @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'>
+                <template slot="schemeTitle" slot-scope="scope">
+                    <p @click="onPreviewClick(scope.data.row)" class="colred">{{scope.data.row.schemeTitle}}</p>
+                </template>
                 <template slot="createBy" slot-scope="scope">
                     {{ scope.data.row.createBy + ' ' + scope.data.row.createPhone }}
                 </template>
@@ -40,6 +43,7 @@
                 </template>
             </basicTable>
         </div>
+        <H5Preview :activeUrl="H5Preview" :loading="loading"  @hideLoading="loading =false" @clearUrl="H5Preview = ''"/>
     </div>
 </template>
 
@@ -47,9 +51,14 @@
 
 import { mapGetters, mapActions, mapState } from 'vuex'
 import { deleteProjectScheme } from '../api'
+import { iotUrl } from '../../../api/config'
+import H5Preview from '../../../components/h5Preview'
 
 export default {
     name: 'merchantEnginePlan',
+    components: {
+        H5Preview
+    },
     data () {
         return {
             queryParams: {
@@ -63,7 +72,9 @@ export default {
                 { label: '创建时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '创建人', prop: 'createBy' },
                 { label: '生效时间', prop: 'effectiveTime', formatters: 'dateTime' },
-                { label: '状态', prop: 'status' }]
+                { label: '状态', prop: 'status' }],
+            H5Preview: '',
+            loading: false
         }
     },
     mounted () {
@@ -103,6 +114,10 @@ export default {
         onEdit: function (data) {
             this.$router.push({ path: '/comfortCloudMerchant/merchantEngine/merchantEnginePlanEdit', query: { id: data.id } })
         },
+        onPreviewClick (val) {
+            // this.H5Preview = iotUrl + '/iot/merchantEnginePlanPreview?id=' + val.id
+            this.H5Preview = 'http://0.0.0.0:8081' + '/iot/merchantEnginePlanPreview?id=' + val.id
+        },
         isEffective (plan) {
             return new Date().getTime() > new Date(plan.effectiveTime).getTime()
         },
@@ -129,5 +144,12 @@ export default {
     .spanflex {
         font-size: 16px;
         padding-bottom: 10px;
+    }
+    .colred {
+        color: #ff7a45;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
