@@ -40,3 +40,7 @@ export const findProductsInfo = (params) => {
 }
 // 查询所有类目
 export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categories/tree', { params })
+// 运费订单列表
+export const findFreightOrders = (params) => {
+    return axios.get(`${B2bUrl}order/boss/freight/order`, { params })
+}

@@ -76,3 +76,78 @@ export const CASH_WITHDRAWAL_MAP = new Map([
     [30, '成功'],
     [40, '失败']
 ])
+
+// 运费订单状态
+export const FREIGHT_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '待付款', value: '10' },
+    { label: '待完成发货', value: '20' },
+    { label: '已完成发货', value: '30' },
+    { label: '已开票', value: '40' },
+    { label: '已退款', value: '50' },
+    { label: '已关闭', value: '60' }
+]
+export const FREIGHT_STATUS_MAP = new Map([
+    [10, '待付款'],
+    [20, '待完成发货'],
+    [30, '已完成发货'],
+    [40, '已开票'],
+    [50, '已退款'],
+    [60, '已关闭']
+])
+// 运费商品性质
+export const MERCHANT_TYPE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: 'POP', value: '1' },
+    { label: '自营', value: '2' }
+]
+export const MERCHANT_TYPE_MAP = new Map([
+    [10, 'POP'],
+    [20, '自营']
+])
+// 运费价格来源
+export const SOURCES_PRICE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '系统计算', value: '1' },
+    { label: '人工设置', value: '2' }
+]
+export const SOURCES_PRICE_MAP = new Map([
+    [10, '系统'],
+    [20, '人工']
+])
+// 资金同步状态
+export const SYNCHROMIZED_STATE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未处理', value: '10' },
+    { label: '处理中', value: '20' },
+    { label: '处理失败', value: '30' },
+    { label: '处理成功', value: '40' }
+]
+export const SYNCHROMIZED_STATE_MAP = new Map([
+    [10, '未处理'],
+    [20, '处理中'],
+    [30, '处理失败'],
+    [40, '处理成功']
+])
+//  类型
+export const FREIGHT_TYPE_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '运费收款', value: '10' },
+    { label: '运费退款', value: '20' }
+]
+export const FREIGHT_TYPE_MAP = new Map([
+    [10, '系统'],
+    [20, '人工']
+])
+// 支付方式
+export const PAY_WAY_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '到期支付', value: '1' },
+    { label: '线下支付', value: '2' },
+    { label: '在线支付', value: '3' }
+]
+export const PAY_WAY_MAP = new Map([
+    [1, '到期支付'],
+    [2, '线下支付'],
+    [3, '在线支付']
+])
