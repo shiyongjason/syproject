@@ -6,7 +6,7 @@
                     <h3>工程方案编辑</h3>
                 </div>
                 <el-form-item label="工程方案标题：" prop="schemeTitle">
-                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入广告标题" maxlength='50' class="newTitle"></el-input>
+                    <el-input v-model.trim="form.schemeTitle" show-word-limit placeholder="请输入工程方案标题" maxlength='50' class="newTitle"></el-input>
                 </el-form-item>
 
                 <el-form-item label="方案列表缩略图：" prop="schemeImage" ref="schemeImage">
