@@ -9,7 +9,7 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
-                    <div class="query-col-title">经营区域：</div>
+                    <div class="query-col-title">收件人地址：</div>
                     <div class="query-cont-col-area">
                         <el-select v-model="queryParams.provinceId" @change="onProvince" placeholder="省" :clearable=true>
                             <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
@@ -182,7 +182,7 @@
 
                     </el-form-item>
                     <el-form-item label="备注：">
-                        <el-input v-model="materialForm.remark" maxlength="500" :rows="3" type="textarea" placeholder="输入推荐话术，将展示在推广商品列表中，不超过500字符" />
+                        <el-input v-model="materialForm.remark" maxlength="500" :rows="3" type="textarea" placeholder="如有其它特殊要求，可在此处备注" />
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
