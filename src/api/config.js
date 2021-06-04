@@ -23,7 +23,7 @@ var env = process.env.NODE_ENV === 'development'
 
 switch (env) {
     case 'development':
-        interfaceUrl = 'https://hbp-test245.hosjoy.com/'
+        interfaceUrl = 'https://hbp-test.hosjoy.com/'
         ossUrl = 'https://route-test245.hosjoy.com/'
         iframeUrl = 'https://crm-test.hosjoy.com/'
         jinyun = 'https://jinyun.hosjoy.cn/wfsf/'
