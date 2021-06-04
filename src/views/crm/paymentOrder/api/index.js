@@ -29,3 +29,28 @@ export const updateServiceAmountAndTime = (params) => axios.post(`/project/api/f
 // 下载
 
 export const downFile = (params) => axios.get(`/project/api/supplier-payments/${params}/download`)
+
+// 放款交接内容信息
+export const getLoanTransferContent = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/info/${paymentOrderId}`)
+
+// 放款交接内容-质押与终审决议信息 - 编辑保存
+export const postPledgeResolution = (params) => axios.post(`/project/api/loan-transfers/boss/pledge-resolution`, params)
+
+// 支付单-票面金额保存
+export const postBillAmount = (params) => axios.post(`/project/api/bill-amount/boss`, params)
+
+// 支付单-更多票面金额记录
+export const getMoreBillAmount = (paymentOrderId) => axios.get(`/project/api/bill-amount/boss/${paymentOrderId}`)
+
+// 放款交接内容-采购合同信息 - 编辑查询
+export const getLoanTransferDoc = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/loan-transfer-doc/${paymentOrderId}`)
+// 放款交接内容-采购合同信息 - 编辑保存
+export const postLoanTransferDoc = (params) => axios.post(`/project/api/loan-transfers/boss/loan-transfer-doc`, params)
+// 确认并发起流程
+export const postLoanTransfersConfirm = (params) => axios.post(`/project/api/loan-transfers/boss/confirm-initiate`, params)
+//
+export const getLoanTransferRecord = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/${paymentOrderId}/record`)
+// 发起放款交接单前 - 校验
+export const getLoanTransferCheck = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/check/${paymentOrderId}`)
+// 放款交接-终审决议信息 - 查询
+export const getReviewResolution = (paymentOrderId) => axios.get(`/project/api/loan-transfers/boss/review-resolution/${paymentOrderId}`)

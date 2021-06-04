@@ -101,6 +101,12 @@
                                     <font>{{item.operationContent}}</font>
                                 </span>
                             </template>
+                            <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
+                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
+                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
+                                    <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
+                                </div>
+                            </template>
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
