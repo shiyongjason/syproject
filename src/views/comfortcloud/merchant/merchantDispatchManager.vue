@@ -573,7 +573,16 @@ export default {
         async querySuggestions (queryString, cb) {
             if (queryString.length > 0) {
                 const { data } = await getLikeMerchantList({ productName: queryString })
-                const options = data.map(item => ({
+                const filterData = data.filter(item => {
+                    let same = false
+                    this.materialForm.details.forEach(entity => {
+                        if (item.productName === entity.materialName) {
+                            same = true
+                        }
+                    })
+                    return !same
+                })
+                const options = filterData.map(item => ({
                     value: item.productName
                 }))
                 cb(options)
