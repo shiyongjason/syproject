@@ -74,7 +74,10 @@
             <div class="table-cont-btn">
                 <h-button type='create' @click="onExport">导出</h-button>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isShowIndex='true'>
+                <template slot="type" slot-scope="scope">
+                    {{ freightTypeMap.get(scope.data.row.type) || '-' }}
+                </template>
             </basicTable>
         </div>
     </div>
@@ -83,7 +86,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
-import { ORDER_CHANNERL_OPTIONS, FREIGHT_TYPE_OPTIONS } from '../const'
+import { ORDER_CHANNERL_OPTIONS, FREIGHT_TYPE_OPTIONS, FREIGHT_TYPE_MAP } from '../const'
 import axios from 'axios'
 export default {
     name: 'freightDetails',
@@ -91,6 +94,7 @@ export default {
         return {
             orderChannerlOptions: ORDER_CHANNERL_OPTIONS,
             freightTypeOptions: FREIGHT_TYPE_OPTIONS,
+            freightTypeMap: FREIGHT_TYPE_MAP,
             queryParams: {
                 startTime: '',
                 endTime: '',
@@ -108,7 +112,8 @@ export default {
                 { label: '在线运费订单编号', prop: 'freightNo' },
                 { label: '客户名称', prop: 'customerName' },
                 { label: '渠道', prop: 'source' }
-            ]
+            ],
+            initParams: {}
         }
     },
     computed: {
@@ -148,6 +153,7 @@ export default {
         }
     },
     mounted () {
+        this.initParams = { ...this.queryParams }
         this.findFreightList()
         this.findFreightBankAccountInfo()
     },
@@ -166,38 +172,36 @@ export default {
         },
         // 重置操作
         onRest () {
-            this.queryParams = {
-                companyName: '',
-                withdrawTimeStart: '',
-                withdrawTimeEnd: '',
-                pageNumber: 1,
-                pageSize: 10
-            }
+            this.queryParams = { ...initParams }
             this.findFreightList()
         },
         // 导出操作
         onExport () {
-            axios.defaults.responseType = 'blob'
-            axios.post(B2bUrl + 'order/boss/freight-orders/export', this.queryParams).then(function (response) {
-                try {
-                    const reader = new FileReader()
-                    reader.readAsDataURL(response.data)
-                    reader.onload = function (e) {
-                        const a = document.createElement('a')
-                        a.download = '线上运费资金明细.xlsx'
-                        a.href = e.target.result
-                        document.querySelector('body').appendChild(a)
-                        a.click()
-                        document.querySelector('body').removeChild(a)
+            if (this.tableData.length <= 0) {
+                this.$message.warning('无订单明细可导出！')
+            } else {
+                axios.defaults.responseType = 'blob'
+                axios.post(B2bUrl + 'order/boss/freight-orders/fund/export', this.queryParams).then(function (response) {
+                    try {
+                        const reader = new FileReader()
+                        reader.readAsDataURL(response.data)
+                        reader.onload = function (e) {
+                            const a = document.createElement('a')
+                            a.download = '线上运费资金明细.xlsx'
+                            a.href = e.target.result
+                            document.querySelector('body').appendChild(a)
+                            a.click()
+                            document.querySelector('body').removeChild(a)
+                        }
+                        axios.defaults.responseType = 'json'
+                    } catch (e) {
+                        axios.defaults.responseType = 'json'
                     }
+                }).catch(function () {
                     axios.defaults.responseType = 'json'
-                } catch (e) {
-                    axios.defaults.responseType = 'json'
-                }
-            }).catch(function () {
-                axios.defaults.responseType = 'json'
-                console.log(error.response)
-            })
+                    console.log(error.response)
+                })
+            }
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
@@ -205,17 +209,6 @@ export default {
         },
         handleSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findFreightList(this.queryParams)
-        },
-        onSortChange (val) {
-            // if (val.prop === 'amount') {
-            //     this.queryParams['sort.property'] = 'amount'
-            //     this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
-            // }
-            // if (val.prop === 'serviceFee') {
-            //     this.queryParams['sort.property'] = 'service_fee'
-            //     this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
-            // }
             this.findFreightList(this.queryParams)
         }
     }

@@ -82,6 +82,18 @@
                 <h-button type='create' @click="onExport">批量导出</h-button>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180" :isAction="true">
+                <template slot="status" slot-scope="scope">
+                    {{ freightStatusMap.get(scope.data.row.status) || '-' }}
+                </template>
+                <template slot="freightSource" slot-scope="scope">
+                    {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
+                </template>
+                <template slot="capitalSyncStatus" slot-scope="scope">
+                    {{ synchromizedMap.get(scope.data.row.capitalSyncStatus) || '-' }}
+                </template>
+                <template slot="payMethod" slot-scope="scope">
+                    {{ payWayMap.get(scope.data.row.payMethod) || '-' }}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <!-- <h-button table @click="onSynchronous(scope.data.row)">资金同步</h-button> -->
@@ -92,7 +104,7 @@
 </template>
 
 <script>
-import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS } from '../const'
+import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS, FREIGHT_STATUS_MAP, SOURCES_PRICE_MAP, SYNCHROMIZED_STATE_MAP, PAY_WAY_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
@@ -103,6 +115,10 @@ export default {
             merchantTypeOptions: MERCHANT_TYPE_OPTIONS,
             sourcesPriceOptions: SOURCES_PRICE_OPTIONS,
             synchromizedOptions: SYNCHROMIZED_STATE_OPTIONS,
+            freightStatusMap: FREIGHT_STATUS_MAP,
+            sourcesPriceMap: SOURCES_PRICE_MAP,
+            synchromizedMap: SYNCHROMIZED_STATE_MAP,
+            payWayMap: PAY_WAY_MAP,
             initParams: {},
             queryParams: {
                 freightOrderNo: '',
@@ -128,7 +144,7 @@ export default {
                 { label: '状态', prop: 'status' },
                 { label: '客户名称', prop: 'memberName' },
                 { label: '实付金额', prop: 'finalTotalAmount', formatters: 'moneyShow' },
-                { label: '运费价格来源', prop: 'totalAmount' },
+                { label: '运费价格来源', prop: 'freightSource' },
                 { label: 'MIS资金同步状态', prop: 'capitalSyncStatus' },
                 { label: '商品归属商家', prop: 'merchantName' }
             ],
@@ -202,7 +218,7 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/boss/child-orders/finance/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'order/boss/freight-orders/fund/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         onSizeChange (val) {

@@ -1,11 +1,11 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
-            <el-form label-width="150px" ref="form">
+            <el-form label-width="150px">
                 <div class="table-cont-title big-title">
                     <span class="table-title-name">运费订单编号：{{freightOrderNo}}</span>
                     <span class="flr">
-                        <span class="black-word">{{orderStatusMap.get(basicInfo.status)}}</span>
+                        <span class="black-word">{{freightStatusMap.get(basicInfo.status)}}</span>
                     </span>
                 </div>
                 <div class="card-cont-row pb30">
@@ -19,7 +19,7 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">商品性质：</span>
-                            <span class="card-cont-text">{{basicInfo.merchantType}}</span>
+                            <span class="card-cont-text">{{merchantTypeMap.get(basicInfo.merchantType)}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label is-wrap">商品归属：</span>
@@ -48,10 +48,10 @@
                             <span class="card-cont-label">人工维护后运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.discountAmount}}</span>
                         </div>
-                        <div class="card-cont">
+                        <!-- <div class="card-cont">
                             <span class="card-cont-label">物流优惠券抵扣金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.commissionAmount}}</span>
-                        </div>
+                        </div> -->
                         <div class="card-cont">
                             <span class="card-cont-label">实付金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.finalTotalAmount}}</span>
@@ -84,6 +84,12 @@
                 </div>
                 <div class="pb20">
                     <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :selectable="selectable" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
+                        <template slot="freightSource" slot-scope="scope">
+                            {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
+                        </template>
+                        <template slot="status" slot-scope="scope">
+                            {{ freightStatusMap.get(scope.data.row.status) || '-' }}
+                        </template>
                         <template slot="action" slot-scope="scope" v-if="basicInfo.status == 10">
                             <h-button table @click="onseeTask(scope.data.row)">编辑运费价格</h-button>
                         </template>
@@ -118,13 +124,15 @@
 </template>
 <script>
 import { mapState, mapActions } from 'vuex'
-import { FREIGHT_STATUS_MAP, PAY_WAY_MAP } from '../const'
+import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
-            orderStatusMap: FREIGHT_STATUS_MAP,
             payWayMap: PAY_WAY_MAP,
+            merchantTypeMap: MERCHANT_TYPE_MAP,
+            sourcesPriceMap: SOURCES_PRICE_MAP,
+            freightStatusMap: FREIGHT_STATUS_MAP,
             basicInfo: {},
             logInfo: [],
             multiSelection: [],
@@ -137,7 +145,8 @@ export default {
                 { label: '运费合计金额', prop: 'originTotalAmount' },
                 { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
-                { label: '退款申请时间', prop: 'refundApplyTime' }
+                { label: '退款申请时间', prop: 'refundApplyTime' },
+                { label: '状态', prop: 'statue' }
             ],
             logTableLabel: [
                 { label: '操作时间', prop: 'createTime' },
@@ -145,11 +154,6 @@ export default {
                 { label: '操作动作', prop: 'operateMotion' },
                 { label: '内容', prop: 'operatorContext' }
             ],
-            form: {
-                count: '',
-                supplierName: '',
-                remark: ''
-            },
             closeOrderDialog: false,
             isAction: true,
             freightOrderNo: ''

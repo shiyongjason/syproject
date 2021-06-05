@@ -98,12 +98,12 @@ export const FREIGHT_STATUS_MAP = new Map([
 // 运费商品性质
 export const MERCHANT_TYPE_OPTIONS = [
     { label: '全部', value: '' },
-    { label: 'POP', value: '1' },
-    { label: '自营', value: '2' }
+    { label: '自营', value: '1' },
+    { label: 'POP', value: '2' }
 ]
 export const MERCHANT_TYPE_MAP = new Map([
-    [10, 'POP'],
-    [20, '自营']
+    [1, '自营'],
+    [2, 'POP']
 ])
 // 运费价格来源
 export const SOURCES_PRICE_OPTIONS = [
@@ -112,10 +112,10 @@ export const SOURCES_PRICE_OPTIONS = [
     { label: '人工设置', value: '2' }
 ]
 export const SOURCES_PRICE_MAP = new Map([
-    [10, '系统计算'],
-    [20, '人工设置']
+    [1, '系统计算'],
+    [2, '人工设置']
 ])
-// 资金同步状态
+// MIS资金同步状态
 export const SYNCHROMIZED_STATE_OPTIONS = [
     { label: '全部', value: '' },
     { label: '未处理', value: '10' },
@@ -142,12 +142,12 @@ export const FREIGHT_TYPE_MAP = new Map([
 // 支付方式
 export const PAY_WAY_OPTIONS = [
     { label: '全部', value: '' },
-    { label: '到期支付', value: '1' },
+    { label: '帐期支付', value: '1' },
     { label: '线下支付', value: '2' },
     { label: '在线支付', value: '3' }
 ]
 export const PAY_WAY_MAP = new Map([
-    [1, '到期支付'],
+    [1, '帐期支付'],
     [2, '线下支付'],
     [3, '在线支付']
 ])

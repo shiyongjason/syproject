@@ -43,22 +43,22 @@ export const findAllCategory = (params) => axios.get(B2bUrl + 'product/api/categ
 // ================== finance 运费 ============================
 // 运费订单列表
 export const findFreightOrders = (params) => {
-    return axios.get(`${B2bUrl}order/boss/freight/order`, { params })
+    return axios.get(`${B2bUrl}order/boss/freight-orders`, { params })
 }
 // 运费订单详情列表
 export const findFreightInfo = (params) => {
-    return axios.get(`${B2bUrl}order/boss/freight/order/${params.id}`, {})
+    return axios.get(`${B2bUrl}order/boss/freight-orders/${params.id}`, {})
 }
 // 运费资金管理明细
 export const findFreightList = (params) => {
-    return axios.get(`${B2bUrl}order/boss/freight-orders/freight-detail`, { params })
+    return axios.get(`${B2bUrl}order/boss/freight-orders/fund`, { params })
 }
 // 运费资金管理账户明细
 export const findFreightBankAccountInfo = (params) => {
     return axios.get(`${B2bUrl}payment/api/boss/freight/user-info`, { params })
 }
 // 运费资金管理提现明细
-export const findFreightWithdrawalInfo = (params) => {
+export const findFreightWithdrawal = (params) => {
     return axios.get(`${B2bUrl}payment/api/boss/freight/withdraws`, { params })
 }
 // 运费资金管理提现
@@ -70,10 +70,10 @@ export const findFreightBankCardInfo = (params) => {
     return axios.get(`${B2bUrl}payment/api/boss/freight/bank-card`, { params })
 }
 // 运费资金管理提现 短信验证码
-export const getfreightSmsCode = () => {
+export const getFreightSmsCode = () => {
     return axios.post(`${B2bUrl}payment/api/boss/freight/withdraws/sms`, {})
 }
-// // 服务费收取明细
-// export const findOnlinefreightInfo = (params) => {
-//     return axios.get(`${B2bUrl}order/boss/freight-orders/freight-detail`, { params })
-// }
+// 线上运费明细列表
+export const findOnlinefreightList = (params) => {
+    return axios.get(`${B2bUrl}order/boss/freight-orders/detail`, { params })
+}

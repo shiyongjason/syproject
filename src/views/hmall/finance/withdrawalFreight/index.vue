@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" @onSortChange="onSortChange" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isShowIndex='true'>
                 <template slot-scope="scope" slot="status">
                     {{ cashWithdrawalMap.get(scope.data.row.status) }}
                 </template>
@@ -127,11 +127,7 @@ export default {
             freightBankCardInfo: 'freightBankCardInfo'
         }),
         phoneNumber () {
-            if (this.freightBankCardInfo.bankPhoneNumber) {
-                return this.freightBankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
-            } else {
-                return this.freightBankCardInfo.bankPhoneNumber
-            }
+            return this.freightBankCardInfo.bankPhoneNumber && this.freightBankCardInfo.bankPhoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1****$3')
         },
         reqWithdraw () {
             let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
@@ -181,10 +177,10 @@ export default {
         this.findFreightBankCardInfo()
     },
     methods: {
-        ...mapActions('finance', {
-            findFreightWithdrawalInfo: 'findFreightWithdrawalInfo ',
-            findFreightBankAccountInfo: 'findFreightBankAccountInfo',
-            findFreightBankCardInfo: 'findFreightBankCardInfo'
+        ...mapActions({
+            findFreightWithdrawal: 'finance/findFreightWithdrawal',
+            findFreightBankAccountInfo: 'finance/findFreightBankAccountInfo',
+            findFreightBankCardInfo: 'finance/findFreightBankCardInfo'
         }),
 
         onMobileVerifica () {
@@ -269,16 +265,8 @@ export default {
             this.queryParams.pageSize = val
             this.findFreightWithdrawalAction()
         },
-
-        onSortChange (val) {
-            if (val.prop === 'amount') {
-                this.queryParams['sort.property'] = 'amount'
-                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
-            }
-            this.findFreightWithdrawalAction()
-        },
         findFreightWithdrawalAction () {
-            this.findFreightWithdrawalInfo(this.queryParams)
+            this.findFreightWithdrawal(this.queryParams)
         }
     }
 }

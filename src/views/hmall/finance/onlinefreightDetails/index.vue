@@ -5,17 +5,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">支付时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.startPayTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
+                        <el-date-picker v-model="queryParams.payTimeStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
                         </el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.endPayTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
+                        <el-date-picker v-model="queryParams.payTimeEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
                         </el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.childOrderStatus">
+                        <el-select v-model="queryParams.status">
                             <el-option v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
@@ -23,7 +23,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">商品归属商家名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.customerName" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.merchantName" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -35,13 +35,22 @@
                 <h-button type='create' @click="onExport">批量导出</h-button>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180">
+                <template slot="merchantType" slot-scope="scope">
+                    {{ merchantTypeMap.get(scope.data.row.merchantType) || '-' }}
+                </template>
+                <template slot="status" slot-scope="scope">
+                    {{ freightStatusMap.get(scope.data.row.status) || '-' }}
+                </template>
+                <template slot="freightSource" slot-scope="scope">
+                    {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
+                </template>
             </basicTable>
         </div>
     </div>
 </template>
 
 <script>
-import { FREIGHT_STATUS_OPTIONS } from '../const'
+import { FREIGHT_STATUS_OPTIONS, FREIGHT_STATUS_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
@@ -49,52 +58,43 @@ export default {
     data () {
         return {
             orderStatusOptions: FREIGHT_STATUS_OPTIONS,
+            freightStatusMap: FREIGHT_STATUS_MAP,
+            merchantTypeMap: MERCHANT_TYPE_MAP,
+            sourcesPriceMap: SOURCES_PRICE_MAP,
             initParams: {},
             queryParams: {
-                childOrderNo: '',
-                customerName: '',
-                payWay: '',
-                childOrderStatus: '',
-                source: '',
-                startPayTime: '',
-                endPayTime: '',
-                own: '',
-                sourceMerchantName: '',
+                payTimeStart: '',
+                payTimeEnd: '',
+                status: '',
                 merchantName: '',
                 pageNumber: 1,
                 pageSize: 10
             },
             tableLabel: [
-                { label: '在线运费订单编号', prop: 'childOrderNo' },
-                { label: '关联商品运费订单编号', prop: 'childOrderNo' },
-                { label: '运费商品性质', prop: 'natureType' },
-                { label: '订单生成时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
-                { label: 'sku编码', prop: 'skuCode' },
+                { label: 'sku编码', prop: 'productCode' },
                 { label: '商品名称', prop: 'productName' },
-                { label: '商品性质', prop: 'product' },
-                { label: '商品归属商家', prop: ' businesses' },
-                { label: '仓配城市', prop: ' city' },
-                { label: '运费订单编码', prop: ' childOrderNo' },
-                { label: '状态', prop: 'childOrderStatus' },
+                { label: '商品性质', prop: 'merchantType' },
+                { label: '商品归属商家', prop: ' merchantName' },
+                { label: '仓配城市', prop: ' cityName' },
+                { label: '运费订单编码', prop: ' freightNo' },
+                { label: '状态', prop: 'status' },
                 { label: '数量', prop: 'quantity' },
-                { label: '单件运费', prop: 'pieceFreight' },
-                { label: '价格定义来源', prop: 'totalAmount' },
-                { label: '维护人', prop: 'customerName' },
-                { label: '运费合计', prop: 'sourceMerchantName' },
-                { label: '物流券抵扣金额', prop: 'supplyChainCouponAmount' },
+                { label: '单件运费', prop: 'finalSingleAmount', formatters: 'moneyShow' },
+                { label: '价格定义来源', prop: 'freightSource' },
+                { label: '维护人', prop: 'updateBy' },
+                { label: '运费合计', prop: 'finalTotalAmount', formatters: 'moneyShow' },
                 { label: '实付运费金额', prop: 'finalTotalAmount', formatters: 'moneyShow' },
-                { label: '收货地址', prop: 'synchronous' },
-                { label: '客户名称', prop: 'merchantName' }
-            ],
-            tabName: 'all'
+                { label: '收货地址', prop: 'shippingAddress' },
+                { label: '客户名称', prop: 'customerName' }
+            ]
         }
     },
     computed: {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.endPayTime
+                    let beginDateVal = this.queryParams.payTimeStart
                     if (beginDateVal) {
                         return time.getTime() >= new Date(beginDateVal).getTime()
                     }
@@ -104,7 +104,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.startPayTime
+                    let beginDateVal = this.queryParams.payTimeEnd
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -112,22 +112,20 @@ export default {
             }
         },
         tableData () {
-            return this.orderList.records
+            return this.onlinefreightList.records
         },
         paginationInfo () {
             return {
-                total: this.orderList.total,
-                pageNumber: this.orderList.current,
-                pageSize: this.orderList.size
+                total: this.onlinefreightList.total,
+                pageNumber: this.onlinefreightList.current,
+                pageSize: this.onlinefreightList.size
             }
         },
         ...mapGetters({
-            orderList: 'finance/orderList'
+            onlinefreightList: 'finance/onlinefreightList'
         })
     },
     methods: {
-        // 切换状态
-        onTab (value) { },
         // 查看操作
         onseeTask (val) {
             this.$router.push({ path: '/b2b/orderfinanceManage/shippingorderDetail' })
@@ -137,12 +135,12 @@ export default {
         // 查询操作
         onQuery () {
             this.queryParams.pageNumber = 1
-            this.findOrders(this.queryParams)
+            this.findOnlinefreightList(this.queryParams)
         },
         // 重置操作
         onReset () {
             this.queryParams = { ...this.initParams }
-            this.findOrders()
+            this.findOnlinefreightList()
         },
         // 批量导出操作
         onExport () {
@@ -153,24 +151,24 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/boss/child-orders/finance/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                location.href = B2bUrl + 'order/boss/freight-orders/detail/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
             }
         },
         onSizeChange (val) {
             this.queryParams.pageSize = val
-            this.findOrders(this.queryParams)
+            this.findOnlinefreightList(this.queryParams)
         },
         onCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber
-            this.findOrders(this.queryParams)
+            this.findOnlinefreightList(this.queryParams)
         },
         ...mapActions({
-            findOrders: 'finance/findOrders'
+            findOnlinefreightList: 'finance/findOnlinefreightList'
         })
     },
     mounted () {
         this.initParams = { ...this.queryParams }
-        this.findOrders()
+        this.findOnlinefreightList()
     }
 }
 </script>
