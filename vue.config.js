@@ -6,7 +6,7 @@ module.exports = {
     },
     configureWebpack: config => {
         // 是否生产和预发布
-        if (process.env.NODE_ENV === 'production' || process.env.VUE_APP_TITLE === 'preview') {
+        if (process.env.NODE_ENV === 'production') {
             config.plugins.push(
                 new SentryPlugin({
                     include: './dist',
