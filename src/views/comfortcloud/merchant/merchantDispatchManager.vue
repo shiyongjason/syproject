@@ -684,6 +684,7 @@ export default {
                 return {
                     materialName: item.materialName,
                     materialCount: item.materialCount,
+                    materialProductId: item.materialProductId,
                     key: this.detailsKey,
                     status: item.status
                 }
