@@ -339,7 +339,7 @@ export default {
                 ],
                 materialCount: [
                     { required: true, message: '请输入物料件数', trigger: 'blur' },
-                    { message: '请设置正确的价格', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
+                    { message: '请设置正确的数量', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ]
             },
             dispatchRules: {
@@ -654,6 +654,7 @@ export default {
             }
             console.log(params)
             await addMarktingMaterial(params)
+            this.clearData()
             this.addDialogVisible = false
             this.onQuery()
         },
@@ -669,6 +670,7 @@ export default {
             params.creatorPhone = this.userInfo.phoneNumber
             console.log(params, '发货参数')
             await addDispatchOrder(params)
+            this.clearData()
             this.dispatchDialogVisible = false
             this.onQuery()
         },
@@ -686,9 +688,11 @@ export default {
                     status: item.status
                 }
             })
-            if (this.$refs['materialForm']) {
-                this.$refs['materialForm'].clearValidate()
-            }
+            this.$nextTick(() => {
+                if (this.$refs['materialForm']) {
+                    this.$refs['materialForm'].clearValidate()
+                }
+            })
             console.log(this.materialForm, '数据详情')
         },
         // 删除营销物料
@@ -823,8 +827,8 @@ export default {
             this.materialForm.countryId = key
         },
         addNewMetarial () {
-            this.clearData()
             this.addDialogVisible = true
+            this.clearData()
         },
         cancelDialog () {
             this.addDialogVisible = false

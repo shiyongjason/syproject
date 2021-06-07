@@ -344,18 +344,18 @@ export default [
                 },
                 component: () => import('@/views/crm/caCertiManage/index.vue')
             },
-            {
-                path: 'bi',
-                name: 'bi',
-                meta: {
-                    title: '好橙工BI',
-                    tagName: '好橙工BI',
-                    parentName: '好橙工',
-                    isMenu: true,
-                    icon: ''
-                },
-                component: () => import('@/views/crm/bi/index.vue')
-            },
+            // {
+            //     path: 'bi',
+            //     name: 'bi',
+            //     meta: {
+            //         title: '好橙工BI',
+            //         tagName: '好橙工BI',
+            //         parentName: '好橙工',
+            //         isMenu: true,
+            //         icon: ''
+            //     },
+            //     component: () => import('@/views/crm/bi/index.vue')
+            // },
             {
                 path: 'fullcalendar',
                 name: 'fullcalendar',

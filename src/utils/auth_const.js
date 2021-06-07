@@ -236,6 +236,10 @@ export const CRM_FUNDS_ARREAR_FUND_SEE = 109520 // 尾款账单-查看凭证
 export const CRM_PURCHASE_ORDER_CONTRACT_SEE = 109521 // 采购单-查看合同
 export const CRM_PAYMENT_REVIEW_DETAIL = 109522 // 支付单-支付单审核
 export const CRM_PAYMENT_DATA_AND_SERVICE_AMOUNT = 109523 // 支付单- [日期修改,服务费修改]
+// 好橙工 采购单上传共管户信息 2021-05-19
+export const CRM_PURCHASE_CO_MANAGER = 109525
+// 采购单详情去归档按钮权限
+export const CRM_PURCHASE_DETAIL_FILE = 109526
 
 // 资金逾期
 export const BRANCH_OVERDUE_SUM_EXPORT = 110003
@@ -290,3 +294,21 @@ export const UPSTREAM_PAY_CONFIRM_LOAN = 500003
 export const UPSTREAM_PAY_DOWN = 500004
 // 支付
 export const UPSTREAM_PAY_MENT = 500005
+// 变更交接状态
+export const CHANGE_LOAN_TRANSFER_STATUS = 500006
+// 合同签署的归档
+export const CONTRACT_PLACE = 800201
+// 合同签署的更新归档
+export const CONTRACT_UPDATEPLACE = 800202
+// 上游支付下载采购合同
+export const UPSTREAM_DOWN_PURCHASE = 800203
+// 上游支付下载票面明细
+export const UPSTREAM_DOWN_BILLS = 800204
+// 上游支付驳回交接
+export const UPSTREAM_REJECT = 800205
+// 上游支付确认交接
+export const UPSTREAM_CONFIRM = 800206
+// 列表导出数据
+export const UPSTREAM_PAY_EXPORT = 800207
+// 支付单管理放款交接
+export const LENDER_HANDOVER = 800208

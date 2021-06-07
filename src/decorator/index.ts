@@ -37,6 +37,7 @@ export function handleSubmit (errorCb?: Function) {
 }
 /**
  * @Description 表单验证，跳到错误位置
+ * @param beforeFunc 校验前的处理函数，别写成箭头函数
  * @param errorCb 校验失败的回调函数，别写成箭头函数
  */
 export function validateForm (elFormName: string, beforeFunc?: Function, errorCb?: Function) {
