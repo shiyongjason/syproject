@@ -2,15 +2,9 @@
     <div class="page-body B2b">
         <div class="page-body-cont">
             <hosJoyTable :column="tableLabel" :data="tableDataFilter" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="pagination.total" @pagination="getFreightRuleList" collapseShow border stripe :showPagination='false' prevLocalName="V3.*" localName="V3.*.1">
-                <!-- <template slot="status" slot-scope="scope">
-                    <span>{{scope.data.row.startTime | formatterTime}}~{{scope.data.row.endTime | formatterTime}}</span>
-                </template> -->
-                <!-- <template slot="startTime" slot-scope="scope">
-                    <span>{{scope.data.row.startTime | formatterTime}}~{{scope.data.row.endTime | formatterTime}}</span>
+                <template slot="special">
+                    <span>一单一议</span>
                 </template>
-                <template slot="status" slot-scope="scope">
-                    {{arrayToMap(activityStatusOptions).get(scope.data.row.status)}}
-                </template> -->
             </hosJoyTable>
         </div>
     </div>
@@ -33,32 +27,32 @@ export default {
             tableLabel: [
                 { label: '省份', prop: 'provinceName', showOverflowTooltip: true },
                 { label: '城市', prop: 'cityName', showOverflowTooltip: true },
-                { label: '县区', prop: 'countryName', showOverflowTooltip: true },
+                { label: '县区', prop: 'countryNames', showOverflowTooltip: true },
                 {
                     label: '大件货运费价格',
                     children: [
-                        { label: '市区', prop: 'advancePaymentProportion' },
-                        { label: '县区', prop: 'deliveryPaymentProportion' }
+                        { label: '市区', prop: 'big_city' },
+                        { label: '县区', prop: 'big_country' }
                     ],
                     showOverflowTooltip: true
                 },
                 {
                     label: '中件货运费价格',
                     children: [
-                        { label: '市区', prop: 'advancePaymentProportion' },
-                        { label: '县区', prop: 'deliveryPaymentProportion' }
+                        { label: '市区', prop: 'middle_city' },
+                        { label: '县区', prop: 'middle_country' }
                     ],
                     showOverflowTooltip: true
                 },
                 {
                     label: '小件货运费价格',
                     children: [
-                        { label: '市区', prop: 'advancePaymentProportion' },
-                        { label: '县区', prop: 'deliveryPaymentProportion' }
+                        { label: '市区', prop: 'small_city' },
+                        { label: '县区', prop: 'small_country' }
                     ],
                     showOverflowTooltip: true
                 },
-                { label: '特殊件', prop: 'status', showOverflowTooltip: true }
+                { label: '特殊件', prop: 'special', slot: 'special', showOverflowTooltip: true }
             ],
             tableData: [],
             pagination: {}
@@ -70,14 +64,33 @@ export default {
             freightRuleData: state => state.hmall.warehouseManage.freightRuleData
         }),
         tableDataFilter () {
-            const tableData = this.freightRuleData.records
-            const result = this.tableData.filter((item, index) => item.provinceId == this.tableData[index].provinceId && item.cityId == this.tableData[index].cityId)
-            // .map(item => {
-            //     const countryArr = []
-            //     return { provinceName: item.provinceName, cityName: item.cityName, countryName: item.countryName, countryArr: countryArr.push(JSON.stringify(item.countryName)) }
-            // })
+            let resultMap = new Map()
+            let result = []
+            const PRICE_MAP = new Map([
+                ['1_1', 'big_city'],
+                ['1_2', 'middle_city'],
+                ['1_3', 'small_city'],
+                ['2_1', 'big_country'],
+                ['2_2', 'middle_country'],
+                ['2_3', 'small_country']
+            ])
+            this.tableData.forEach(item => {
+                const pcKey = item.provinceId + '_' + item.cityId
+                item[PRICE_MAP.get(item.regionType + '_' + item.goodsType)] = item.price
+                item.countryNames = new Set()
+                let obj = resultMap.get(pcKey) || { ...item }
+                if (item.regionType != 1) {
+                    obj.countryNames.add(item.countryName)
+                }
+                obj = { ...item, ...obj }
+                resultMap.set(pcKey, obj)
+            })
+            resultMap.forEach(value => {
+                value.countryNames = Array.from(value.countryNames).join(',')
+                result.push(value)
+            })
             console.log(result)
-            return tableData
+            return result
         }
     },
     methods: {
