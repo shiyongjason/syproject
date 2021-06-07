@@ -156,7 +156,7 @@
                     <el-form-item label="详细地址：" prop="address">
                         <el-input v-model="materialForm.address" :disabled="isCanEdit" style='width:400px' maxlength="100" placeholder="请输入具体地址"></el-input>
                     </el-form-item>
-                    <el-form-item label="物料明细：" v-if="noDispatchCount > 0" required>
+                    <el-form-item label="物料明细：" v-if="noDispatchCount > 0">
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
                     </el-form-item>
                     <el-form-item label-width="0px">
@@ -828,12 +828,14 @@ export default {
         },
         addNewMetarial () {
             this.addDialogVisible = true
-            this.clearData()
+            this.$nextTick(() => {
+                this.clearData()
+            })
         },
         cancelDialog () {
+            this.clearData()
             this.addDialogVisible = false
             this.dispatchDialogVisible = false
-            this.clearData()
         },
         clearData () {
             if (this.$refs['dispatchForm']) {
