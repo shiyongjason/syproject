@@ -173,7 +173,7 @@
                             </el-col>
                             <el-col :span="7">
                                 <el-form-item label="客户姓名：" prop="consigneeName">
-                                    <el-input v-model="addOrderForm.consigneeName" placeholder="请填写客户姓名"></el-input>
+                                    <el-input v-model="addOrderForm.consigneeName" maxlength="50" placeholder="请填写客户姓名"></el-input>
                                 </el-form-item>
                             </el-col>
                         </el-form-item>
@@ -471,7 +471,7 @@ export default {
             certificateUrls: [],
             addOrderRules: {
                 consigneePhone: [
-                    { required: true, message: '请输入客户手机号', trigger: 'blur' }
+                    { required: true, message: '请输入正确客户手机号', trigger: 'blur', pattern: /^[1][0-9]{10}$/ }
                 ],
                 consigneeName: [
                     { required: true, message: '请输入客户姓名', trigger: 'blur' }
