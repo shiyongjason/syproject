@@ -126,9 +126,9 @@
                         </el-col>
                     </el-form-item>
 
-                    <el-form-item class="address" label="收货人地址：" required>
+                    <el-form-item class="address" label-width="0px">
                         <div class="city-area">
-                            <el-form-item label-width="0px" prop="provinceId">
+                            <el-form-item label="收货人地址：" prop="provinceId">
                                 <el-select v-model="materialForm.provinceId" :disabled="isCanEdit" @change="onProvinceAddress" placeholder="省" :clearable=true>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
