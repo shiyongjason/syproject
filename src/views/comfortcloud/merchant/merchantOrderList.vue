@@ -361,6 +361,7 @@ export default {
         return {
             ORDER_SOURCE_B2B: ORDER_SOURCE_B2B,
             ORDER_SOURCE_WX: ORDER_SOURCE_WX,
+            ORDER_SOURCE_THIRD: ORDER_SOURCE_THIRD,
             deliverOperateAuth: AUTH_CLOUD_DELIVER_OPERATE,
             queryParams: {
                 pageNumber: 1,
