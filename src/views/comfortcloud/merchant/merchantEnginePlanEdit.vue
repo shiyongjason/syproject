@@ -108,7 +108,7 @@ export default {
                     {
                         validator: (rule, value, callback) => {
                             if (value.length <= 0 || value === '<p><br></p>') {
-                                return callback(new Error('请输入广告内容'))
+                                return callback(new Error('请输入方案详细内容'))
                             }
                             return callback()
                         },
