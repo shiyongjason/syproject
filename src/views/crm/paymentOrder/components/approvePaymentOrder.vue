@@ -276,6 +276,7 @@ export default {
                 this.formData.approvalRemark = ''
                 this.formData.supplierPaymentMethod = ''
             }
+            this.$refs.form.clearValidate()
         },
         openEdit () {
             this.formData.downPaymentAmount = this.downPaymentAmount
