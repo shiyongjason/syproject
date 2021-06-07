@@ -59,23 +59,23 @@ export const findFreightList = (params) => {
 }
 // 运费资金管理账户明细
 export const findFreightBankAccountInfo = (params) => {
-    return axios.get(`${B2bUrl}payment/api/boss/freight/user-info`, { params })
+    return axios.get(`${B2bUrl}payment/boss/freight/user-info`, { params })
 }
 // 运费资金管理提现明细
 export const findFreightWithdrawal = (params) => {
-    return axios.get(`${B2bUrl}payment/api/boss/freight/withdraws`, { params })
+    return axios.get(`${B2bUrl}payment/boss/freight/withdraws`, { params })
 }
 // 运费资金管理提现
 export const freightcashWithdrawal = (params) => {
-    return axios.post(`${B2bUrl}payment/api/boss/freight/withdraws`, params)
+    return axios.post(`${B2bUrl}payment/boss/freight/withdraws`, params)
 }
 // 运费资金管理银行卡信息
 export const findFreightBankCardInfo = (params) => {
-    return axios.get(`${B2bUrl}payment/api/boss/freight/bank-card`, { params })
+    return axios.get(`${B2bUrl}payment/boss/freight/bank-card`, { params })
 }
 // 运费资金管理提现 短信验证码
 export const getFreightSmsCode = () => {
-    return axios.post(`${B2bUrl}payment/api/boss/freight/withdraws/sms`, {})
+    return axios.post(`${B2bUrl}payment/boss/freight/withdraws/sms`, {})
 }
 // 线上运费明细列表
 export const findOnlinefreightList = (params) => {

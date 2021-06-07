@@ -25,11 +25,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">支付时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.payStartTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.payStartTime" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.payEndTime" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.payEndTime" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -155,7 +153,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.payEndTime
+                    let beginDateVal = this.queryParams.payStartTime
                     if (beginDateVal) {
                         return time.getTime() >= new Date(beginDateVal).getTime()
                     }
@@ -165,7 +163,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.payStartTime
+                    let beginDateVal = this.queryParams.payEndTime
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -195,7 +193,7 @@ export default {
         },
         // 查看操作
         onseeTask (val) {
-            this.$router.push({ path: '/b2b/finance/shippingorderDetail', query: { id: val.freightOrderNo } })
+            this.$router.push({ path: '/b2b/finance/shippingorderDetail', query: { id: val.id } })
         },
         // 资金同步操作
         // onSynchronous () { },

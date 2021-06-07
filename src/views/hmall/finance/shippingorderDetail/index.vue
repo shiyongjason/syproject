@@ -3,7 +3,7 @@
         <div class="page-body-cont">
             <el-form label-width="150px">
                 <div class="table-cont-title big-title">
-                    <span class="table-title-name">运费订单编号：{{freightOrderNo}}</span>
+                    <span class="table-title-name">运费订单编号：{{basicInfo.freightOrderNo}}</span>
                     <span class="flr">
                         <span class="black-word">{{freightStatusMap.get(basicInfo.status)}}</span>
                     </span>
@@ -27,12 +27,12 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">支付时间：</span>
-                            <span class="card-cont-text">{{basicInfo.payTime}}</span>
+                            <span class="card-cont-text">{{basicInfo.payTime || "-"}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">支付方式：</span>
                             <span class="card-cont-text">
-                                <span>{{ payWayMap.get(basicInfo.payMethod) }}</span>
+                                <span>{{ payWayMap.get(basicInfo.payMethod) || "-" }}</span>
                             </span>
                         </div>
                     </div>
@@ -42,9 +42,9 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">系统计算运费总金额：</span>
-                            <span class="card-cont-text">￥{{basicInfo.totalAmount}}</span>
+                            <span class="card-cont-text">￥{{basicInfo.totalAmount || "-" }}</span>
                         </div>
-                        <div class="card-cont" v-if="basicInfo.discountAmount != ''">
+                        <div class="card-cont" v-if="basicInfo.discountAmount != null">
                             <span class="card-cont-label">人工维护后运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.discountAmount}}</span>
                         </div>
@@ -54,7 +54,7 @@
                         </div> -->
                         <div class="card-cont">
                             <span class="card-cont-label">实付金额：</span>
-                            <span class="card-cont-text">￥{{basicInfo.finalTotalAmount}}</span>
+                            <span class="card-cont-text">￥{{basicInfo.finalTotalAmount || "-" }}</span>
                         </div>
                     </div>
                     <div class="card-cont-col">
@@ -74,7 +74,7 @@
                             <span class="card-cont-text">{{basicInfo.deliveryAddress?basicInfo.deliveryAddress.phone:'-'}}</span>
                         </div>
                         <div class="card-cont">
-                            <span class="card-cont-label">收货地址</span>
+                            <span class="card-cont-label">收货地址：</span>
                             <span class="card-cont-text is-wrap">{{basicInfo.deliveryAddress?basicInfo.deliveryAddress.address:'-'}}</span>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
                     <span class="table-title-name">商品运费明细信息</span>
                 </div>
                 <div class="pb20">
-                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
+                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :isPagination="false" :isShowIndex="true" :isAction="isAction">
                         <template slot="freightSource" slot-scope="scope">
                             {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
                         </template>
@@ -107,7 +107,7 @@
         <el-dialog title="编辑订单运费" width="560px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
             <el-form :model="createform" :rules="rules" ref="createform" label-width="130px" class="createPrice">
                 <el-form-item label="当前运费价格：">
-                    <span style="width:60%;display: inline-block;">{{ originSingleAmount }}</span>
+                    <span style="width:60%;display: inline-block;">{{ originSingleAmount || '-' }}</span>
                     <span style="padding: 0 0 0 10px;">元/件</span>
                 </el-form-item>
                 <el-form-item label="修改为：" prop="price" :rules="rules.price">
@@ -124,7 +124,7 @@
     </div>
 </template>
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
 import { withinDetail } from '@/utils/rules.js'
 import { putFreightPrice } from '../api/index'
@@ -146,7 +146,7 @@ export default {
                 { label: '单件运费价格', prop: 'originSingleAmount' },
                 { label: '价格定义来源', prop: 'freightSource' },
                 { label: '运费合计金额', prop: 'originTotalAmount' },
-                { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
+                // { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
                 { label: '退款申请时间', prop: 'refundApplyTime' },
                 { label: '状态', prop: 'status' }
@@ -159,7 +159,6 @@ export default {
             ],
             closeOrderDialog: false,
             isAction: true,
-            freightOrderNo: '',
             createform: {},
             originSingleAmount: '',
             rules: {
@@ -172,13 +171,14 @@ export default {
     },
     computed: {
         ...mapState({
-            freightOrdersInfo: state => state.freightOrdersInfo,
             userInfo: state => state.userInfo
+        }),
+        ...mapGetters({
+            freightOrdersInfo: 'finance/freightOrdersInfo'
         })
     },
     methods: {
         async init () {
-            this.freightOrderNo = this.$route.query.id
             if (this.$route.query.id) {
                 this.getfreightOrdersInfo()
             }
@@ -204,13 +204,12 @@ export default {
         onEdit (row) {
             this.$refs['createform'].validate(async (valid) => {
                 if (valid) {
-                    await putFreightPrice(this.createform)
                     this.closeOrderDialog = false
+                    await putFreightPrice(this.createform)
                     this.getfreightOrdersInfo()
                 }
             })
         },
-        rowClassName () { },
         ...mapActions({
             findFreightInfo: 'finance/findFreightInfo'
         })
@@ -221,6 +220,9 @@ export default {
         }
     },
     mounted () {
+        this.init()
+    },
+    activated () {
         this.init()
     }
 }

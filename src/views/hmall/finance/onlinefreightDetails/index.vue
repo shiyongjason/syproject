@@ -5,11 +5,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">支付时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.payTimeStart" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.payStartTime" type="date" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.payTimeEnd" type="date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker>
+                        <el-date-picker v-model="queryParams.payEndTime" type="date" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -75,9 +73,9 @@ export default {
                 { label: 'sku编码', prop: 'productCode' },
                 { label: '商品名称', prop: 'productName' },
                 { label: '商品性质', prop: 'merchantType' },
-                { label: '商品归属商家', prop: ' merchantName' },
-                { label: '仓配城市', prop: ' cityName' },
-                { label: '运费订单编码', prop: ' freightNo' },
+                { label: '商品归属商家', prop: 'merchantName' },
+                { label: '仓配城市', prop: 'cityName' },
+                { label: '运费订单编码', prop: 'freightNo' },
                 { label: '状态', prop: 'status' },
                 { label: '数量', prop: 'quantity' },
                 { label: '单件运费', prop: 'finalSingleAmount', formatters: 'moneyShow' },

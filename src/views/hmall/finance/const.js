@@ -144,10 +144,10 @@ export const PAY_WAY_OPTIONS = [
     { label: '全部', value: '' },
     { label: '帐期支付', value: '1' },
     { label: '线下支付', value: '2' },
-    { label: '在线支付', value: '3' }
+    { label: '在线支付', value: '4' }
 ]
 export const PAY_WAY_MAP = new Map([
     [1, '帐期支付'],
     [2, '线下支付'],
-    [3, '在线支付']
+    [4, '在线支付']
 ])
