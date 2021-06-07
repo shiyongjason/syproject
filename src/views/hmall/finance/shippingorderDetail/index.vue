@@ -63,7 +63,7 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">客户：</span>
-                            <span class="card-cont-text">{{basicInfo.customerName||'-'}}</span>
+                            <span class="card-cont-text">{{basicInfo.memberName||'-'}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label is-wrap">收货人名称：</span>
@@ -83,7 +83,7 @@
                     <span class="table-title-name">商品运费明细信息</span>
                 </div>
                 <div class="pb20">
-                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :selectable="selectable" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
+                    <basicTable :tableData="basicInfo.freightOrderSkuList" :tableLabel="tableLabel" :multiSelection.sync="multiSelection" :rowClassName="rowClassName" :isPagination="false" :isMultiple="true" :isShowIndex="true" :isAction="isAction">
                         <template slot="freightSource" slot-scope="scope">
                             {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
                         </template>
@@ -105,19 +105,20 @@
             <h-button @click="onBack">返回</h-button>
         </div>
         <el-dialog title="编辑订单运费" width="560px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
-            <div class="pt50 pl70">
-                <span style="width:25%;display: inline-block;">当前运费价格：</span>
-                <span style="width:40%;display: inline-block;">{{}}</span>
-                <span style="padding: 0 0 0 10px;">元/件</span>
-            </div>
-            <div class="pt50 pl70">
-                <span style="width:25%;display: inline-block;">修改为：</span>
-                <el-input type="text" value="" style="width:40%;display: inline-block;" />
-                <span style="padding: 0 0 0 10px;">元/件</span>
-            </div>
+            <el-form :model="createform" :rules="rules" ref="createform" label-width="130px" class="createPrice">
+                <el-form-item label="当前运费价格：">
+                    <span style="width:60%;display: inline-block;">{{ originSingleAmount }}</span>
+                    <span style="padding: 0 0 0 10px;">元/件</span>
+                </el-form-item>
+                <el-form-item label="修改为：" prop="price" :rules="rules.price">
+                    <el-input v-model="createform.price" placeholder="请输入金额" maxlength="25" style="width:60%;display: inline-block;">
+                    </el-input>
+                    <span style="padding: 0 0 0 10px;">元/件</span>
+                </el-form-item>
+            </el-form>
             <span slot="footer">
                 <h-button @click="closeOrderDialog = false">取消</h-button>
-                <h-button type="primary">确定</h-button>
+                <h-button type="primary" @click="onEdit()">确定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -125,6 +126,8 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
+import { withinDetail } from '@/utils/rules.js'
+import { putFreightPrice } from '../api/index'
 export default {
     name: 'shippingorderDetail',
     data () {
@@ -146,7 +149,7 @@ export default {
                 { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
                 { label: '退款申请时间', prop: 'refundApplyTime' },
-                { label: '状态', prop: 'statue' }
+                { label: '状态', prop: 'status' }
             ],
             logTableLabel: [
                 { label: '操作时间', prop: 'createTime' },
@@ -156,12 +159,21 @@ export default {
             ],
             closeOrderDialog: false,
             isAction: true,
-            freightOrderNo: ''
+            freightOrderNo: '',
+            createform: {},
+            originSingleAmount: '',
+            rules: {
+                price: [
+                    { required: true, message: '请输入999以内数字', trigger: 'blur' },
+                    { validator: withinDetail, trigger: 'blur' }
+                ]
+            }
         }
     },
     computed: {
         ...mapState({
-            freightOrdersInfo: state => state.freightOrdersInfo
+            freightOrdersInfo: state => state.freightOrdersInfo,
+            userInfo: state => state.userInfo
         })
     },
     methods: {
@@ -170,6 +182,7 @@ export default {
             if (this.$route.query.id) {
                 this.getfreightOrdersInfo()
             }
+            this.createform.operator = JSON.stringify(this.userInfo.employeeName)
         },
         async getfreightOrdersInfo () {
             await this.findFreightInfo({ id: this.$route.query.id })
@@ -180,10 +193,22 @@ export default {
                 this.isAction = false
             }
         },
-        selectable (row) {
+        onseeTask (row) {
+            this.closeOrderDialog = true
+            this.originSingleAmount = row.originSingleAmount
+            this.createform.id = row.id
         },
         onBack () {
             this.$router.back()
+        },
+        onEdit (row) {
+            this.$refs['createform'].validate(async (valid) => {
+                if (valid) {
+                    await putFreightPrice(this.createform)
+                    this.closeOrderDialog = false
+                    this.getfreightOrdersInfo()
+                }
+            })
         },
         rowClassName () { },
         ...mapActions({
@@ -244,5 +269,8 @@ export default {
 }
 .card-cont {
     padding: 10px 5px;
+}
+.createPrice {
+    padding: 50px 70px;
 }
 </style>

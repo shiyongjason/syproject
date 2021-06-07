@@ -49,6 +49,10 @@ export const findFreightOrders = (params) => {
 export const findFreightInfo = (params) => {
     return axios.get(`${B2bUrl}order/boss/freight-orders/${params.id}`, {})
 }
+// 运费订单待支付编辑运费价格
+export const putFreightPrice = (params) => {
+    return axios.put(`${B2bUrl}order/boss/freight-order-sku/update-price`, params)
+}
 // 运费资金管理明细
 export const findFreightList = (params) => {
     return axios.get(`${B2bUrl}order/boss/freight-orders/fund`, { params })
