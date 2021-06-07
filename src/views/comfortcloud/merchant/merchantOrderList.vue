@@ -87,8 +87,9 @@
                 </template>
                 <template slot="action" slot-scope="scope">
                     <el-button class="orangeBtn" @click="onDetail(scope.data.row)">查看详情</el-button>
-                    <el-button v-if="scope.data.row.source !== ORDER_SOURCE_WX" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
-                    <el-button v-if="scope.data.row.source !== ORDER_SOURCE_WX && !scope.data.row.deliveryName && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
+                    <el-button v-if="scope.data.row.source === ORDER_SOURCE_THIRD" class="orangeBtn" style="margin-top: 10px" @click="onDelete(scope.data.row)">删除</el-button>
+                    <!-- 非微信小店订单，待发货，没有物流公司信息，有权限时显示发货按钮 -->
+                    <el-button v-if="scope.data.row.source !== ORDER_SOURCE_WX && scope.data.row.status == 20  && !scope.data.row.deliveryName && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" style="margin-top: 10px" @click="onDeliverClick(scope.data.row)">发货</el-button>
                 </template>
             </basicTable>
 
