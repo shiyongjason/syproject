@@ -64,7 +64,7 @@
             <basicTable ref="tableRef" :spanMethod="objectSpanMethod" :stripe="false" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='150'>
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onCecycle(scope.data.row)">回收入库</el-button>
-                    <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
+                    <el-button v-if="scope.data.row.status === 0 && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
                 <template slot="materialId" slot-scope="scope">
@@ -245,6 +245,7 @@ import {
     recycleMaterial
 } from '../api'
 import { getChiness } from '../../hmall/membership/api'
+import { AUTH_CLOUD_DISPATCH_DELIVER_OPERATE } from '@/utils/auth_const'
 
 const materialsParams = {
     id: '',
@@ -282,6 +283,7 @@ export default {
     name: 'merchantDispatchManager',
     data () {
         return {
+            deliverOperateAuth: AUTH_CLOUD_DISPATCH_DELIVER_OPERATE,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
