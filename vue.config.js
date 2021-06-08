@@ -4,6 +4,7 @@ module.exports = {
     devServer: {
         // host: '192.168.27.33'
     },
+    productionSourceMap: false,
     configureWebpack: config => {
         // 是否生产和预发布
         if (process.env.NODE_ENV === 'production') {
@@ -18,6 +19,12 @@ module.exports = {
             )
         }
     },
+    // "webpack-bundle-analyzer": "^4.4.2" 添加到package.json
+    // chainWebpack: config => {
+    //     config
+    //         .plugin('webpack-bundle-analyzer')
+    //         .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin)
+    // },
     css: {
         loaderOptions: {
             sass: {
