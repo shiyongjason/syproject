@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">运费订单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantType" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.freightOrderNo" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">

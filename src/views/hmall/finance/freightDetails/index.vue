@@ -76,6 +76,9 @@
                 <template slot="type" slot-scope="scope">
                     {{ freightTypeMap.get(scope.data.row.type) || '-' }}
                 </template>
+                <template slot="source" slot-scope="scope">
+                    {{ orderChannerlMap.get(scope.data.row.source) || '-' }}
+                </template>
             </basicTable>
         </div>
     </div>
@@ -84,7 +87,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
-import { ORDER_CHANNERL_OPTIONS, FREIGHT_TYPE_OPTIONS, FREIGHT_TYPE_MAP } from '../const'
+import { ORDER_CHANNERL_OPTIONS, FREIGHT_TYPE_OPTIONS, FREIGHT_TYPE_MAP, ORDER_CHANNERL_MAP } from '../const'
 import axios from 'axios'
 export default {
     name: 'freightDetails',
@@ -93,6 +96,7 @@ export default {
             orderChannerlOptions: ORDER_CHANNERL_OPTIONS,
             freightTypeOptions: FREIGHT_TYPE_OPTIONS,
             freightTypeMap: FREIGHT_TYPE_MAP,
+            orderChannerlMap: ORDER_CHANNERL_MAP,
             queryParams: {
                 startTime: '',
                 endTime: '',
