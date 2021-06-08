@@ -269,7 +269,6 @@ export default class UpstreamPaymentManagement extends Vue {
     editorDrawer:boolean = false
     isOpen:boolean = false
     isOpenChangeStatus: boolean = false
-    isReady:boolean = false
     isTabs:boolean = false
     paymentOrderId:string = ''
     private _queryParams = {}
@@ -444,6 +443,14 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     async viewDetail (paymentOrderId) {
+        // 初始化数据
+        this.activeName = 'loanHandoverInformation'
+        if (this.loanHandoverInformation) {
+            this.loanHandoverInformation = '' as unknown as LoanTransferInfoResponse
+        }
+        if (this.upstreamPaymentInformation) {
+            this.upstreamPaymentInformation = '' as unknown as RespSupplier
+        }
         this.paymentOrderId = paymentOrderId
         const { data } = await Api.getLoanHandoverInfoApi(paymentOrderId)
         this.loanHandoverInformation = data
@@ -520,7 +527,6 @@ export default class UpstreamPaymentManagement extends Vue {
     }
 
     editorDrawerClose (done:Function): void {
-        this.isReady = false
         this.activeName = 'loanHandoverInformation'
         done()
     }
