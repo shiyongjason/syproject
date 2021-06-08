@@ -158,6 +158,7 @@
                     </el-form-item>
                     <el-form-item label="物料明细：" v-if="noDispatchCount > 0">
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
+                        <p class="tip">如是样品箱，请将样品箱和样品箱内的产品分行添加</p>
                     </el-form-item>
                     <el-form-item label-width="0px">
                         <div v-for="(mera,index) in materialForm.details" :key="mera.key" style="height:60px">
@@ -979,6 +980,11 @@ export default {
     justify-content: flex-start;
     align-items: center;
     margin-right: 24px;
+}
+
+.tip {
+    font-size: 12px;
+    color: #666;
 }
 
 /deep/ .el-dialog__body {
