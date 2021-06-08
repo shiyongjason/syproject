@@ -187,26 +187,6 @@ export default {
                 }
                 url += 'access_token=' + localStorage.getItem('token')
                 location.href = B2bUrl + 'order/boss/freight-orders/fund/export?' + url
-                // axios.defaults.responseType = 'blob'
-                // axios.post(B2bUrl + 'order/boss/freight-orders/fund/export', this.queryParams).then(function (response) {
-                //     try {
-                //         const reader = new FileReader()
-                //         reader.readAsDataURL(response.data)
-                //         reader.onload = function (e) {
-                //             const a = document.createElement('a')
-                //             a.download = '线上运费资金明细.xlsx'
-                //             a.href = e.target.result
-                //             document.querySelector('body').appendChild(a)
-                //             a.click()
-                //             document.querySelector('body').removeChild(a)
-                //         }
-                //         axios.defaults.responseType = 'json'
-                //     } catch (e) {
-                //         axios.defaults.responseType = 'json'
-                //     }
-                // }).catch(function () {
-                //     axios.defaults.responseType = 'json'
-                // })
             }
         },
         handleCurrentChange (val) {
