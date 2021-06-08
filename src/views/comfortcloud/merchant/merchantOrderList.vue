@@ -600,7 +600,7 @@ export default {
             } else {
                 return [
                     { label: '商品型号', prop: 'productSpecification' },
-                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品价格（元）', prop: 'productAmount' },
                     { label: '商品数量（件）', prop: 'productCount' }
                 ]
             }
