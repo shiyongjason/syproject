@@ -5,9 +5,9 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">支付时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.payStartTime" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.payTimeStart" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.payEndTime" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.payTimeEnd" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -21,18 +21,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">商品归属商家名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantName" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.merchantName" maxlength="50" placeholder="请输入商品归属商家名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
+
                 </div>
             </div>
-            <div class="table-cont-btn">
-                <h-button type='create' @click="onExport">批量导出</h-button>
-            </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :actionMinWidth="180">
                 <template slot="merchantType" slot-scope="scope">
                     {{ merchantTypeMap.get(scope.data.row.merchantType) || '-' }}
                 </template>
@@ -92,7 +91,7 @@ export default {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.payTimeStart
+                    let beginDateVal = this.queryParams.payTimeEnd
                     if (beginDateVal) {
                         return time.getTime() >= new Date(beginDateVal).getTime()
                     }
@@ -102,7 +101,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.payTimeEnd
+                    let beginDateVal = this.queryParams.payTimeStart
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }

@@ -5,16 +5,16 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">运费订单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.freightOrderNo" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.freightOrderNo" maxlength="50" placeholder="请输入运费订单编号"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">关联商品订单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.childOrderNo" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.childOrderNo" maxlength="50" placeholder="请输入关联商品订单编号"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col">
+                <div class="query-cont__col" v-if="tab">
                     <div class="query-col__lable">运费订单状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status">
@@ -49,7 +49,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">商品归属：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantName" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.merchantName" maxlength="50" placeholder="请输入商品归属"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -63,12 +63,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">客户名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.memberName" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.memberName" maxlength="50" placeholder="请输入客户名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <h-button type="primary" @click="onQuery">查询</h-button>
                     <h-button @click="onReset">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
                 </div>
             </div>
             <div class="table-cont-tabs">
@@ -76,10 +77,7 @@
                     <el-tab-pane v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value" :name="item.value"></el-tab-pane>
                 </el-tabs>
             </div>
-            <div class="table-cont-btn">
-                <h-button type='create' @click="onExport">批量导出</h-button>
-            </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :isMultiple="true" :actionMinWidth="180" :isAction="true">
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="onCurrentChange" @onSizeChange="onSizeChange" :actionMinWidth="180" :isAction="true">
                 <template slot="status" slot-scope="scope">
                     {{ freightStatusMap.get(scope.data.row.status) || '-' }}
                 </template>
@@ -108,6 +106,7 @@
 import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS, FREIGHT_STATUS_MAP, SOURCES_PRICE_MAP, SYNCHROMIZED_STATE_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
+import axios from 'axios'
 export default {
     name: 'shippingOrder',
     data () {
@@ -150,14 +149,15 @@ export default {
                 { label: 'MIS资金同步状态', prop: 'capitalSyncStatus' },
                 { label: '商品归属商家', prop: 'merchantName' }
             ],
-            tabName: ''
+            tabName: '',
+            tab: true
         }
     },
     computed: {
         pickerOptionsStart () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.payStartTime
+                    let beginDateVal = this.queryParams.payEndTime
                     if (beginDateVal) {
                         return time.getTime() >= new Date(beginDateVal).getTime()
                     }
@@ -167,7 +167,7 @@ export default {
         pickerOptionsEnd () {
             return {
                 disabledDate: (time) => {
-                    let beginDateVal = this.queryParams.payEndTime
+                    let beginDateVal = this.queryParams.payStartTime
                     if (beginDateVal) {
                         return time.getTime() <= new Date(beginDateVal).getTime() - 8.64e7
                     }
@@ -191,6 +191,11 @@ export default {
     methods: {
         // 切换状态
         onTab (value) {
+            if (!value.name) {
+                this.tab = true
+            } else {
+                this.tab = false
+            }
             this.queryParams = { ...this.initParams }
             this.queryParams.status = value.name
             this.onQuery()
@@ -220,7 +225,8 @@ export default {
                 for (let key in this.queryParams) {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
-                location.href = B2bUrl + 'order/boss/freight-orders/fund/export?access_token=' + localStorage.getItem('tokenB2b') + '&' + url
+                url += 'access_token=' + localStorage.getItem('token')
+                location.href = B2bUrl + 'order/boss/freight-orders/detail/export?' + url
             }
         },
         onSizeChange (val) {

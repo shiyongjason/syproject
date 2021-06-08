@@ -47,13 +47,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">在线运费订单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.freightNo" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.freightNo" maxlength="50" placeholder="请输入在线运费订单编号"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">客户名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.customerName" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.customerName" maxlength="50" placeholder="请输入客户名称"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -67,10 +67,9 @@
                 <div class="query-cont__col">
                     <h-button type="primary" @click="searchList()">查询</h-button>
                     <h-button class="ml20" @click="onRest()">重置</h-button>
+                    <h-button @click="onExport">导出</h-button>
+
                 </div>
-            </div>
-            <div class="table-cont-btn">
-                <h-button type='create' @click="onExport">导出</h-button>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isShowIndex='true'>
                 <template slot="type" slot-scope="scope">
@@ -182,27 +181,12 @@ export default {
             if (this.tableData.length <= 0) {
                 this.$message.warning('无订单明细可导出！')
             } else {
-                axios.defaults.responseType = 'blob'
-                axios.post(B2bUrl + 'order/boss/freight-orders/fund/export', this.queryParams).then(function (response) {
-                    try {
-                        const reader = new FileReader()
-                        reader.readAsDataURL(response.data)
-                        reader.onload = function (e) {
-                            const a = document.createElement('a')
-                            a.download = '线上运费资金明细.xlsx'
-                            a.href = e.target.result
-                            document.querySelector('body').appendChild(a)
-                            a.click()
-                            document.querySelector('body').removeChild(a)
-                        }
-                        axios.defaults.responseType = 'json'
-                    } catch (e) {
-                        axios.defaults.responseType = 'json'
-                    }
-                }).catch(function () {
-                    axios.defaults.responseType = 'json'
-                    console.log(error.response)
-                })
+                let url = ''
+                for (let key in this.queryParams) {
+                    url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
+                }
+                url += 'access_token=' + localStorage.getItem('token')
+                location.href = B2bUrl + 'order/boss/freight-orders/detail/export?' + url
             }
         },
         handleCurrentChange (val) {
