@@ -27,7 +27,7 @@
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">支付时间：</span>
-                            <span class="card-cont-text">{{basicInfo.payTime || "-"}}</span>
+                            <span class="card-cont-text">{{payTime || "-"}}</span>
                         </div>
                         <div class="card-cont">
                             <span class="card-cont-label">支付方式：</span>
@@ -98,7 +98,11 @@
                 <div class="table-cont-title">
                     <span class="table-title-name">日志信息</span>
                 </div>
-                <basicTable :tableData="basicInfo.orderOperateLogList" :tableLabel="logTableLabel" :isPagination="false" :maxHeight="505"></basicTable>
+                <basicTable :tableData="basicInfo.orderOperateLogList" :tableLabel="logTableLabel" :isPagination="false" :maxHeight="505">
+                    <template slot="operateMotion" slot-scope="scope">
+                        {{ operatonalMap.get(scope.data.row.operateMotion) || '-' }}
+                    </template>
+                </basicTable>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont">
@@ -125,7 +129,7 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
+import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP, OPERATIONAL_MAP } from '../const'
 import { withinDetail } from '@/utils/rules.js'
 import { putFreightPrice } from '../api/index'
 export default {
@@ -136,6 +140,7 @@ export default {
             merchantTypeMap: MERCHANT_TYPE_MAP,
             sourcesPriceMap: SOURCES_PRICE_MAP,
             freightStatusMap: FREIGHT_STATUS_MAP,
+            operatonalMap: OPERATIONAL_MAP,
             basicInfo: {},
             logInfo: [],
             multiSelection: [],
@@ -148,11 +153,11 @@ export default {
                 { label: '运费合计金额', prop: 'originTotalAmount' },
                 // { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
-                { label: '退款申请时间', prop: 'refundApplyTime' },
+                { label: '退款申请时间', prop: 'refundApplyTime', formatters: 'dateTime' },
                 { label: '状态', prop: 'status' }
             ],
             logTableLabel: [
-                { label: '操作时间', prop: 'createTime' },
+                { label: '操作时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '操作人', prop: 'operator' },
                 { label: '操作动作', prop: 'operateMotion' },
                 { label: '内容', prop: 'operatorContext' }
@@ -176,13 +181,15 @@ export default {
         }),
         ...mapGetters({
             freightOrdersInfo: 'finance/freightOrdersInfo'
-        })
+        }),
+        payTime () {
+            return this.basicInfo.payTime && this.basicInfo.payTime.replace('T', ' ')
+        }
     },
     methods: {
         async init () {
             if (this.$route.query.id) {
                 this.getfreightOrdersInfo()
-                this.createform.operator = this.userInfo.employeeName
             }
         },
         async getfreightOrdersInfo () {
@@ -196,12 +203,12 @@ export default {
         },
         onReset () {
             this.createform = { ...this.initform }
-            this.getfreightOrdersInfo()
         },
         onseeTask (row) {
             this.closeOrderDialog = true
             this.finalTotalAmount = row.finalTotalAmount
             this.createform.id = row.id
+            this.createform.operator = this.userInfo.employeeName
         },
         onBack () {
             this.$router.back()
@@ -211,14 +218,20 @@ export default {
             this.onReset()
         },
         onEdit () {
-            this.$refs['createform'].validate(async (valid) => {
-                if (valid) {
-                    this.closeOrderDialog = false
-                    this.createform.price = Number(this.createform.price)
-                    await putFreightPrice(this.createform)
-                    this.onReset()
-                }
-            })
+            if (this.createform.operator != '') {
+                this.$refs['createform'].validate(async (valid) => {
+                    if (valid) {
+                        this.closeOrderDialog = false
+                        this.createform.price = Number(this.createform.price)
+                        await putFreightPrice(this.createform)
+                        this.onReset()
+                        this.getfreightOrdersInfo()
+                    }
+                })
+            } else {
+                this.closeOrderDialog = false
+                this.onReset()
+            }
         },
         ...mapActions({
             findFreightInfo: 'finance/findFreightInfo'

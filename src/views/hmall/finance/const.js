@@ -151,3 +151,44 @@ export const PAY_WAY_MAP = new Map([
     [2, '线下支付'],
     [4, '在线支付']
 ])
+
+// 操作动作
+export const OPERATIONAL_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '订单创建', value: '1' },
+    { label: '订单支付', value: '5' },
+    { label: '发货', value: '6' },
+    { label: '发货取消', value: '7' },
+    { label: '订单关闭', value: '10' },
+    { label: '确认收货', value: '12' },
+    { label: '申请开票', value: '15' },
+    { label: '发票审核', value: '16' },
+    { label: '发票开具', value: '17' },
+    { label: '发票拒审', value: '18' },
+    { label: '退款申请', value: '20' },
+    { label: '退款审核', value: '25' },
+    { label: '退款撤销', value: '26' },
+    { label: '退款', value: '30' },
+    { label: '运费商品单分享全部发货', value: '31' },
+    { label: '关联商品订单关闭', value: '32' },
+    { label: '修改运费', value: '33' }
+]
+export const OPERATIONAL_MAP = new Map([
+    [1, '订单创建'],
+    [5, '订单支付'],
+    [6, '发货'],
+    [7, '发货取消'],
+    [10, '订单关闭'],
+    [12, '确认收货'],
+    [15, '申请开票'],
+    [16, '发票审核'],
+    [17, '发票开具'],
+    [18, '发票拒审'],
+    [20, '退款申请'],
+    [25, '退款审核'],
+    [26, '退款撤销'],
+    [30, '退款'],
+    [31, '运费商品单分享全部发货'],
+    [32, '关联商品订单关闭'],
+    [33, '修改运费']
+])
