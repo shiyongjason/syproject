@@ -133,11 +133,11 @@ export const SYNCHROMIZED_STATE_MAP = new Map([
 export const FREIGHT_TYPE_OPTIONS = [
     { label: '全部', value: '' },
     { label: '运费收款', value: '1' },
-    { label: '运费退款', value: '2' }
+    { label: '运费退款', value: '-1' }
 ]
 export const FREIGHT_TYPE_MAP = new Map([
     [1, '运费收款'],
-    [2, '运费退款']
+    [-1, '运费退款']
 ])
 // 支付方式
 export const PAY_WAY_OPTIONS = [

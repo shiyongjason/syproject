@@ -31,15 +31,15 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">提现时间：</div>
                     <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.withdrawTimeStart" type="datetime" placeholder="开始时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsStart"></el-date-picker>
+                        <el-date-picker v-model="queryParams.withdrawTimeStart" type="datetime" placeholder="开始时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsStart"></el-date-picker>
                         <span class="ml10 mr10">-</span>
-                        <el-date-picker v-model="queryParams.withdrawTimeEnd" type="datetime" placeholder="结束时间" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-ddTHH:mm:ss" :picker-options="pickerOptionsEnd"></el-date-picker>
+                        <el-date-picker v-model="queryParams.withdrawTimeEnd" type="datetime" placeholder="结束时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" :picker-options="pickerOptionsEnd"></el-date-picker>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">操作人：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.operator" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.operator" maxlength="50" placeholder="请输入操作人"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
