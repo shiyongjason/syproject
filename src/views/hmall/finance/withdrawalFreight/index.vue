@@ -131,7 +131,7 @@ export default {
             let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
             return {
                 ...this.withdrawalForm,
-                bankCardId: this.fireightBankCardInfo.bankCardId,
+                bankCardId: this.freightBankCardInfo.bankCardId,
                 mobile: this.freightBankCardInfo.bankPhoneNumber,
                 operator: `${userInfo.employeeName}(${userInfo.phoneNumber})`,
                 receivedAmount: this.withdrawalForm.amount,
@@ -253,7 +253,7 @@ export default {
                 url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
             }
             url += 'access_token=' + localStorage.getItem('token')
-            location.href = B2bUrl + 'payment/api/boss/freight/withdraws/export?' + url
+            location.href = B2bUrl + 'payment/boss/freight/withdraws/export?' + url
         },
         handleCurrentChange (val) {
             this.queryParams.pageNumber = val.pageNumber

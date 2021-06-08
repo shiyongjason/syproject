@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">运费订单编号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.freightOrderNo" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.merchantType" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -92,6 +92,9 @@
                 <template slot="payMethod" slot-scope="scope">
                     {{ payWayMap.get(scope.data.row.payMethod) || '-' }}
                 </template>
+                <template slot="merchantType" slot-scope="scope">
+                    {{ merchantTypeMap.get(scope.data.row.merchantType) || '-' }}
+                </template>
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <!-- <h-button table @click="onSynchronous(scope.data.row)">资金同步</h-button> -->
@@ -102,7 +105,7 @@
 </template>
 
 <script>
-import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS, FREIGHT_STATUS_MAP, SOURCES_PRICE_MAP, SYNCHROMIZED_STATE_MAP, PAY_WAY_MAP } from '../const'
+import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS, FREIGHT_STATUS_MAP, SOURCES_PRICE_MAP, SYNCHROMIZED_STATE_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
@@ -117,6 +120,7 @@ export default {
             sourcesPriceMap: SOURCES_PRICE_MAP,
             synchromizedMap: SYNCHROMIZED_STATE_MAP,
             payWayMap: PAY_WAY_MAP,
+            merchantTypeMap: MERCHANT_TYPE_MAP,
             initParams: {},
             queryParams: {
                 freightOrderNo: '',

@@ -107,7 +107,7 @@
         <el-dialog title="编辑订单运费" width="560px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
             <el-form :model="createform" :rules="rules" ref="createform" label-width="130px" class="createPrice">
                 <el-form-item label="当前运费价格：">
-                    <span style="width:60%;display: inline-block;">{{ originSingleAmount || '-' }}</span>
+                    <span style="width:60%;display: inline-block;">{{ finalTotalAmount || '-' }}</span>
                     <span style="padding: 0 0 0 10px;">元/件</span>
                 </el-form-item>
                 <el-form-item label="修改为：" prop="price" :rules="rules.price">
@@ -117,8 +117,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer">
-                <h-button @click="closeOrderDialog = false">取消</h-button>
-                <h-button type="primary" @click="onEdit()">确定</h-button>
+                <h-button @click="onCancel">取消</h-button>
+                <h-button type="primary" @click="onEdit">确定</h-button>
             </span>
         </el-dialog>
     </div>
@@ -160,7 +160,8 @@ export default {
             closeOrderDialog: false,
             isAction: true,
             createform: {},
-            originSingleAmount: '',
+            initform: {},
+            finalTotalAmount: '',
             rules: {
                 price: [
                     { required: true, message: '请输入999以内数字', trigger: 'blur' },
@@ -181,8 +182,8 @@ export default {
         async init () {
             if (this.$route.query.id) {
                 this.getfreightOrdersInfo()
+                this.createform.operator = this.userInfo.employeeName
             }
-            this.createform.operator = JSON.stringify(this.userInfo.employeeName)
         },
         async getfreightOrdersInfo () {
             await this.findFreightInfo({ id: this.$route.query.id })
@@ -193,20 +194,29 @@ export default {
                 this.isAction = false
             }
         },
+        onReset () {
+            this.createform = { ...this.initform }
+            this.getfreightOrdersInfo()
+        },
         onseeTask (row) {
             this.closeOrderDialog = true
-            this.originSingleAmount = row.originSingleAmount
+            this.finalTotalAmount = row.finalTotalAmount
             this.createform.id = row.id
         },
         onBack () {
             this.$router.back()
         },
-        onEdit (row) {
+        onCancel () {
+            this.closeOrderDialog = false
+            this.onReset()
+        },
+        onEdit () {
             this.$refs['createform'].validate(async (valid) => {
                 if (valid) {
                     this.closeOrderDialog = false
+                    this.createform.price = Number(this.createform.price)
                     await putFreightPrice(this.createform)
-                    this.getfreightOrdersInfo()
+                    this.onReset()
                 }
             })
         },
@@ -220,6 +230,7 @@ export default {
         }
     },
     mounted () {
+        this.initform = { ...this.createform }
         this.init()
     },
     activated () {
