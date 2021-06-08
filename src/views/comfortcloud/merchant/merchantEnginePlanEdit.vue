@@ -17,7 +17,7 @@
                                   @back-event="readUrl"
                                   :imgW="100"
                                   :imgH="100" />
-                    <div class="upload-tips">建议尺寸：993*993或1:1比例图片，1M以内，支持jpeg,png和jpg格式</div>
+                    <div class="upload-tips">建议尺寸：4:3比例图片，1M以内，支持jpeg,png和jpg格式</div>
                 </el-form-item>
                 <el-form-item label="生效时间：" prop="effectiveTime">
                     <el-date-picker type="datetime" v-model="form.effectiveTime" :clearable=false placeholder="生效时间" value-format='yyyy-MM-ddTHH:mm:ss' :picker-options="pickerOptionsStart">
@@ -32,7 +32,7 @@
                         <h-button v-if="form.schemeVideo"   type="primary" @click="palyVideo">视频预览</h-button>
                         <div class="upload-tips">
                             建议尺寸：支持 MP4格式, 大小不超过20MB
-                            主图视频尺寸1:1，视频长度建议不超过60秒
+                            视频尺寸16:9，视频长度建议不超过60秒
                         </div>
                     </el-row>
                 </el-form-item>
