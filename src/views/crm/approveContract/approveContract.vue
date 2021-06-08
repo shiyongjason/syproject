@@ -101,6 +101,12 @@
                                     <font>{{item.operationContent}}</font>
                                 </span>
                             </template>
+                            <div v-if="item.approvalRemark" style="color: #ff7a45;">备注：{{item.approvalRemark}}</div>
+                            <template v-if="item.attachDocs&&item.attachDocs.length>0">
+                                <div v-for="(obj,oindex) in item.attachDocs" :key="oindex" style="margin-top:6px;margin-left:10px">
+                                    <a style="color:#1068bf;" :href="obj.fileUrl" target='_blank'>{{obj.fileName}}</a>
+                                </div>
+                            </template>
                         </div>
                         <div class="history-css-right">{{item.operationTime | formatDate('YYYY年MM月DD日 HH时mm分ss秒')}}</div>
                     </div>
@@ -1388,8 +1394,9 @@ export default {
                 if (this.currentKey.paramValue === '分批采购' || this.currentKey.paramValue == 2) {
                     // console.log('我走了xxxx', this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src)
                     let firstChild = this.contractDocument.getElementsByClassName('purch_service_fee_form')[0]
-                    console.log('firstChild.tagName: ', firstChild.tagName)
-                    if (firstChild.tagName === 'DIV') {
+                    console.log('🚀 --- dealSaveContent --- firstChild', firstChild)
+                    // console.log('firstChild.tagName: ', firstChild.tagName)
+                    if (firstChild && firstChild.tagName === 'DIV') {
                         // 把表格修改成上传图片(图片是用div生成，图片是span包的img)
                         let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
                         Array.from(feeTableDom).map(table => {
