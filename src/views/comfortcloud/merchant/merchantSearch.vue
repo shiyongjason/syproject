@@ -54,7 +54,7 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{this.cloudMerchantListPagination.total}} 项；
-                累计代理商总数: {{this.statistics.totalCount}} 个；
+                累计独家代理商总数: {{this.statistics.totalCount}} 个；
                 累计品类一级代理总数: {{this.statistics.oneLevelCount}} 个；
                 累计品类二级代理总数:{{this.statistics.twoLevelCount}} 个；
             </el-tag>
@@ -185,6 +185,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            focusDetailAgent: null,
             progressTableLabel: [
                 { label: '年度提货额度', prop: 'totalPickGoodsCount' },
                 { label: '已提货', prop: 'alreadyPickGoodsCount' },
@@ -288,6 +289,7 @@ export default {
             console.log(key)
         },
         onShowDetail (val) {
+            this.focusDetailAgent = val
             this.detailTableQueryParams = {
                 unionId: val.unionId,
                 categoryId: '',
@@ -326,8 +328,9 @@ export default {
         },
 
         checkShopManager (val) {
+            console.log(val)
             this.$router.push({
-                name: `warehouseManagement`, params: { dealer: val.companyName }
+                name: `warehouseManagement`, params: { dealer: this.focusDetailAgent.companyName }
             })
         },
         queryDetailList (detailTableQueryParams) {
