@@ -679,12 +679,14 @@ export default {
             const { data } = await getMarktingMaterialDetail(val)
             this.materialForm = data
             this.addDialogVisible = true
-            if (this.$refs['dispatchForm']) {
-                this.$refs['dispatchForm'].clearValidate()
-            }
-            if (this.$refs['materialForm']) {
-                this.$refs['materialForm'].clearValidate()
-            }
+            this.$nextTick(() => {
+                if (this.$refs['dispatchForm']) {
+                    this.$refs['dispatchForm'].clearValidate()
+                }
+                if (this.$refs['materialForm']) {
+                    this.$refs['materialForm'].clearValidate()
+                }
+            })
             this.materialForm.details = data.details.map(item => {
                 this.detailsKey++
                 return {
@@ -723,6 +725,7 @@ export default {
         },
         // 营销物料发货
         async onDispatch (val) {
+            this.clearData()
             const params = {
                 orderId: val.materialId,
                 source: 'material'
@@ -737,12 +740,14 @@ export default {
             console.log(data)
             this.materials = data.filter(item => item.status === 0)
             this.dispatchDialogVisible = true
-            if (this.$refs['dispatchForm']) {
-                this.$refs['dispatchForm'].clearValidate()
-            }
-            if (this.$refs['materialForm']) {
-                this.$refs['materialForm'].clearValidate()
-            }
+            this.$nextTick(() => {
+                if (this.$refs['dispatchForm']) {
+                    this.$refs['dispatchForm'].clearValidate()
+                }
+                if (this.$refs['materialForm']) {
+                    this.$refs['materialForm'].clearValidate()
+                }
+            })
         },
         handleSelect (item) {
             console.log(item, '数据选择')
@@ -835,8 +840,8 @@ export default {
         },
         addNewMetarial () {
             this.addDialogVisible = true
+            this.clearData()
             this.$nextTick(() => {
-                this.clearData()
                 if (this.$refs['dispatchForm']) {
                     this.$refs['dispatchForm'].clearValidate()
                 }
@@ -852,6 +857,8 @@ export default {
         },
         clearData () {
             this.currentMaterial = null
+            this.isIndeterminate = false
+            this.checkAll = false
             this.uploadImages = []
             this.dispatchForm = {
                 type: '2',
