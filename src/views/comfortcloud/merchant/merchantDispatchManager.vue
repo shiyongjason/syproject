@@ -61,7 +61,7 @@
                 </div>
             </div>
 
-            <basicTable ref="tableRef" :spanMethod="objectSpanMethod" :stripe="false" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true">
+            <basicTable ref="tableRef" :spanMethod="objectSpanMethod" :stripe="false" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='150'>
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onCecycle(scope.data.row)">回收入库</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
@@ -126,9 +126,9 @@
                         </el-col>
                     </el-form-item>
 
-                    <el-form-item class="address" label="收货人地址：" required>
+                    <el-form-item class="address" label-width="0px">
                         <div class="city-area">
-                            <el-form-item label-width="0px" prop="provinceId">
+                            <el-form-item label="收货人地址：" prop="provinceId">
                                 <el-select v-model="materialForm.provinceId" :disabled="isCanEdit" @change="onProvinceAddress" placeholder="省" :clearable=true>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>

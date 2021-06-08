@@ -502,7 +502,7 @@ export default {
                     { required: true, message: '请输入商品金额', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ],
                 productCount: [
-                    { required: true, message: '请输入商品件数', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
+                    { required: true, message: '请输入商品件数', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)?$/ }
                 ],
                 freight: [
                     { required: true, message: '请输入商品总运费', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
