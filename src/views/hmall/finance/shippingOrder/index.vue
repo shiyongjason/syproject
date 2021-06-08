@@ -226,7 +226,7 @@ export default {
                     url += (key + '=' + (this.queryParams[key] ? this.queryParams[key] : '') + '&')
                 }
                 url += 'access_token=' + localStorage.getItem('token')
-                location.href = B2bUrl + 'order/boss/freight-orders/detail/export?' + url
+                location.href = B2bUrl + 'order/boss/freight-orders/export?' + url
             }
         },
         onSizeChange (val) {
