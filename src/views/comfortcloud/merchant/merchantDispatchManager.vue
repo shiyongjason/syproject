@@ -217,7 +217,7 @@
                     </el-form-item>
                     <div class="form-title">发货凭证<span>(请上传发货凭证图，最多2张，支持jpeg,png和jpg格式)</span></div>
                     <el-form-item label-width="0">
-                        <el-upload list-type="picture-card" v-bind="uploadInfo" :file-list="uploadImages" :multiple='true' accept=".jpg,.jpeg,.png" :on-success="handleSuccess" :limit="2" :on-exceed="pictureMessage" :before-upload="beforeAvatarUpload" :on-remove="handleRemove">
+                        <el-upload list-type="picture-card" v-bind="uploadInfo" :file-list="uploadImages" :multiple='false' accept=".jpg,.jpeg,.png" :on-success="handleSuccess" :limit="2" :on-exceed="pictureMessage" :before-upload="beforeAvatarUpload" :on-remove="handleRemove">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
@@ -317,7 +317,8 @@ export default {
                     { required: true, message: '请输入收货人名称', trigger: 'blur' }
                 ],
                 receiverPhone: [
-                    { required: true, message: '请输入收货人手机号', trigger: 'blur' }
+                    { required: true, message: '请输入收货人手机号', trigger: 'blur' },
+                    { message: '请输入正确手机号码', trigger: 'blur', pattern: /^[1][0-9]{10}$/ }
                 ],
                 departmentId: [
                     { required: true, message: '请输入收货人所在分部', trigger: 'change' }
@@ -339,7 +340,7 @@ export default {
                 ],
                 materialCount: [
                     { required: true, message: '请输入物料件数', trigger: 'blur' },
-                    { message: '请设置正确的数量', trigger: 'change', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
+                    { message: '请设置正确的数量', trigger: 'blur', pattern: /^(([1-9]\d{0,9})|0)(\.\d{0,2})?$/ }
                 ]
             },
             dispatchRules: {
@@ -768,7 +769,7 @@ export default {
             }
         },
         handleRemove (file, fileList) {
-            let index = this.uploadImages.indexOf(file.url)
+            let index = this.dispatchForm.proofPictureList.indexOf(file.response.data.accessUrl)
             this.dispatchForm.proofPictureList.splice(index, 1)
             this.uploadImages.splice(index, 1)
         },
