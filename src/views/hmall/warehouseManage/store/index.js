@@ -46,12 +46,6 @@ const mutations = {
     [types.EXIST_SPU_CATEGORY] (state, payload) {
         state.existSpuCategories = payload
     }
-    // [types.SELECT_SKU_DATA] (state, payload) {
-    //     state.selectSkuData = payload
-    // },
-    // [types.LIST_TRACK] (state, payload) {
-    //     state.listTrack = payload
-    // }
 }
 
 const actions = {
@@ -60,7 +54,7 @@ const actions = {
         commit(types.FREIGHT_RULE_DATA, data)
     },
     async findFreightRuleListByGoodsType ({ commit }, params) {
-        const { data } = await instance.get('/order/boss/freight-rules/list-by-goods-type', params)
+        const { data } = await instance.get('/order/boss/freight-rules/list-by-goods-type', { params })
         commit(types.FREIGHT_RULE_INFO, data)
     },
     async findWarahouseProductList ({ commit }, params) {
@@ -98,21 +92,6 @@ const actions = {
         const { data } = await instance.get('/product/open-api/exist-spu/category', { params })
         commit(types.EXIST_SPU_CATEGORY, data)
     }
-    // async findSeckillSkuList ({ commit }, params) {
-    //     const { data } = await instance.post('/product/api/market/spike/sku/page?pageNumber=' + params.pageNumber + '&pageSize=' + params.pageSize, params)
-    //     commit(types.SECKILL_SKU_DATA, data)
-    // },
-    // async findSelectSkuList ({ commit }, params) {
-    //     const { data } = await instance.post('/product/api/market/sku/select', params)
-    //     commit(types.SELECT_SKU_DATA, data)
-    // },
-    // async hoverTrack ({ commit }, params) {
-    //     const { data } = await axios.get('ets/api/b2b/activity/hover', { params })
-    //     commit(types.LIST_TRACK, data)
-    // },
-    // async addStock ({ commit }, params) {
-    //     await instance.patch('/ops/api/spike/add-stock', params)
-    // }
 }
 
 export default {
