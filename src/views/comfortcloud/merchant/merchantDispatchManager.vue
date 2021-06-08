@@ -64,7 +64,7 @@
             <basicTable ref="tableRef" :spanMethod="objectSpanMethod" :stripe="false" :tableLabel="tableLabel" :tableData="tableData" :isShowIndex='false' :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange' :isAction="true" :actionMinWidth='150'>
                 <template slot="action" slot-scope="scope">
                     <el-button v-if="scope.data.row.status === 1" class="orangeBtn" @click="onCecycle(scope.data.row)">回收入库</el-button>
-                    <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
+                    <el-button v-if="scope.data.row.status === 0 && hosAuthCheck(deliverOperateAuth)" class="orangeBtn" @click="onDispatch(scope.data.row)">发货</el-button>
                     <el-button v-if="scope.data.row.status === 0" class="orangeBtn" @click="onDelete(scope.data.row)">删除</el-button>
                 </template>
                 <template slot="materialId" slot-scope="scope">
@@ -158,6 +158,7 @@
                     </el-form-item>
                     <el-form-item label="物料明细：" v-if="noDispatchCount > 0">
                         <el-button type="primary" @click="addMaterial">+ 添加物料</el-button>
+                        <p class="tip">如是样品箱，请将样品箱和样品箱内的产品分行添加</p>
                     </el-form-item>
                     <el-form-item label-width="0px">
                         <div v-for="(mera,index) in materialForm.details" :key="mera.key" style="height:60px">
@@ -245,6 +246,7 @@ import {
     recycleMaterial
 } from '../api'
 import { getChiness } from '../../hmall/membership/api'
+import { AUTH_CLOUD_DISPATCH_DELIVER_OPERATE } from '@/utils/auth_const'
 
 const materialsParams = {
     id: '',
@@ -282,6 +284,7 @@ export default {
     name: 'merchantDispatchManager',
     data () {
         return {
+            deliverOperateAuth: AUTH_CLOUD_DISPATCH_DELIVER_OPERATE,
             queryParams: {
                 pageNumber: 1,
                 pageSize: 10,
@@ -977,6 +980,11 @@ export default {
     justify-content: flex-start;
     align-items: center;
     margin-right: 24px;
+}
+
+.tip {
+    font-size: 12px;
+    color: #666;
 }
 
 /deep/ .el-dialog__body {
