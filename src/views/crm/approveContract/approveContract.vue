@@ -1394,8 +1394,9 @@ export default {
                 if (this.currentKey.paramValue === '分批采购' || this.currentKey.paramValue == 2) {
                     // console.log('我走了xxxx', this.contractDocument.getElementsByClassName('purch_service_fee_form')[0].getElementsByTagName('img')[0].src)
                     let firstChild = this.contractDocument.getElementsByClassName('purch_service_fee_form')[0]
-                    console.log('firstChild.tagName: ', firstChild.tagName)
-                    if (firstChild.tagName === 'DIV') {
+                    console.log('🚀 --- dealSaveContent --- firstChild', firstChild)
+                    // console.log('firstChild.tagName: ', firstChild.tagName)
+                    if (firstChild && firstChild.tagName === 'DIV') {
                         // 把表格修改成上传图片(图片是用div生成，图片是span包的img)
                         let feeTableDom = this.contractDocument.getElementsByClassName('purch_service_fee_form')
                         Array.from(feeTableDom).map(table => {

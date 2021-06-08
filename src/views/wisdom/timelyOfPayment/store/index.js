@@ -1,6 +1,6 @@
 import * as types from './const'
 import * as Api from '../api'
-import { MathJS } from '../../../../utils/MathUtils'
+import precisionMethods from '@/utils/bignumber.js'
 
 const state = {
     backMoneyList: [],
@@ -14,15 +14,15 @@ const state = {
 const getters = {
     backMoneyList: state => {
         return state.backMoneyList.map(value => {
-            value.onTimeRate = value.onTimeRate !== null ? (MathJS.evaluate(`${value.onTimeRate} * 100`).toNumber()) + '%' : '-'
-            value.rebateRate = value.rebateRate !== null ? (MathJS.evaluate(`${value.rebateRate} * 100`).toNumber()) + '%' : '-'
+            value.onTimeRate = value.onTimeRate !== null ? precisionMethods.multipliedBy(value.onTimeRate, 100) + '%' : '-'
+            value.rebateRate = value.rebateRate !== null ? precisionMethods.multipliedBy(value.rebateRate, 100) + '%' : '-'
             return value
         })
     },
     backMoneyTotal: state => {
         for (const key in state.backMoneyTotal) {
             if (key === 'onTimeRate' || key === 'rebateRate') {
-                state.backMoneyTotal[key] = MathJS.evaluate(`${state.backMoneyTotal[key]} * 100`).toNumber() + '%'
+                state.backMoneyTotal[key] = precisionMethods.multipliedBy(state.backMoneyTotal[key], 100) + '%'
             }
         }
         return state.backMoneyTotal

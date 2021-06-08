@@ -2,7 +2,7 @@ import * as types from './const'
 import * as Api from '../api'
 import moment from 'moment'
 import filterUtil from '../../../../utils/filters'
-import { MathJS } from '@/utils/MathUtils'
+import precisionMethods from '@/utils/bignumber.js'
 
 const state = {
     planTotalList: [],
@@ -66,8 +66,8 @@ const getters = {
     planCreditList: state => {
         state.planCreditList.forEach(value => {
             value.annualTotalEffectiveRate = value.annualTotalEffectiveRate !== null ? (filterUtil.fundMoneyHaveSpot(value.annualTotalEffectiveRate)) : '-'
-            value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate !== null ? (MathJS.evaluate(`${value.annualTotalProfitAchieveRate} * 100`).toNumber()) + '%' : ''
-            value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate !== null ? (MathJS.evaluate(`${value.annualTotalSaleAchieveRate} * 100`).toNumber()) + '%' : ''
+            value.annualTotalProfitAchieveRate = value.annualTotalProfitAchieveRate !== null ? (precisionMethods.multipliedBy(value.annualTotalProfitAchieveRate, 100)) + '%' : ''
+            value.annualTotalSaleAchieveRate = value.annualTotalSaleAchieveRate !== null ? (precisionMethods.multipliedBy(value.annualTotalSaleAchieveRate, 100)) + '%' : ''
         })
         return state.planCreditList
     },
@@ -79,7 +79,7 @@ const getters = {
                     break
                 case 'annualTotalProfitAchieveRate':
                 case 'annualTotalSaleAchieveRate':
-                    state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? MathJS.evaluate(`${state.planCreditTotal[key]} * 100`).toNumber() + '%' : ''
+                    state.planCreditTotal[key] = state.planCreditTotal[key] !== null ? precisionMethods.multipliedBy(state.planCreditTotal[key], 100) + '%' : ''
                     break
                 default:
                     state.planCreditTotal[key] = filterUtil.fundMoney(state.planCreditTotal[key])
