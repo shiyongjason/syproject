@@ -79,6 +79,9 @@
                         @onSizeChange='onSizeChange'
                         :isAction="true"
                         :spanMethod="spanMethod">
+                <template slot="payAmount" slot-scope="scope">
+                    {{scope.data.row.productAmount * scope.data.row.productCount}}
+                </template>
                 <template slot="status" slot-scope="scope">
                     {{orderStatusDesc(scope.data.row.status)}}
                 </template>
@@ -415,7 +418,7 @@ export default {
                 { label: '订单实际支付金额', prop: 'payAmount', formatters: 'money' },
                 { label: '订单运费', prop: 'freight' },
                 { label: '商品型号', prop: 'productSpecification' },
-                { label: '订单件数', prop: 'orderProductCount' },
+                { label: '订单件数', prop: 'productCount' },
                 { label: '支付方式', prop: 'payMethod' },
                 { label: '支付时间', prop: 'payTime', formatters: 'dateTime' },
                 { label: '物流公司', prop: 'deliveryName' },
@@ -600,7 +603,7 @@ export default {
             } else {
                 return [
                     { label: '商品型号', prop: 'productSpecification' },
-                    { label: '商品价格（元）', prop: 'productPrice' },
+                    { label: '商品价格（元）', prop: 'productAmount' },
                     { label: '商品数量（件）', prop: 'productCount' }
                 ]
             }
