@@ -195,7 +195,7 @@
                     <el-form-item class="wlname" label="请选择发货方式" v-if="canDispatchType !== 1" required>
                     </el-form-item>
                     <div style="margin-left:30px" v-if="canDispatchType !== 1">
-                        <div>该订单中含有多款商品，建议按订单合并发货</div>
+                        <div v-if="canDispatchType !== 2">该订单中含有多款商品，建议按订单合并发货</div>
                         <el-form-item label-width="0">
                             <el-radio v-if="canDispatchType !== 2" v-model="dispatchForm.deliveryType" :label="1">按订单合并发货：订单中的商品只需维护一次发货信息</el-radio>
                             <el-radio v-model="dispatchForm.deliveryType" :label="2">按商品分开发货：订单中部分产品发货，需按实际发货的商品维护发货信息</el-radio>
@@ -607,9 +607,11 @@ export default {
                         }
                         this.isSaving = false
                     } catch (e) {
+                        console.log(e, '报错信息')
                         this.isSaving = false
                     }
                 } else {
+                    console.log(this.$refs[formName], valid, '校验失败')
                     this.isSaving = false
                 }
             })
@@ -654,7 +656,6 @@ export default {
             }
             console.log(params)
             await addMarktingMaterial(params)
-            this.clearData()
             this.addDialogVisible = false
             this.onQuery()
         },
@@ -670,7 +671,6 @@ export default {
             params.creatorPhone = this.userInfo.phoneNumber
             console.log(params, '发货参数')
             await addDispatchOrder(params)
-            this.clearData()
             this.dispatchDialogVisible = false
             this.onQuery()
         },
@@ -679,6 +679,14 @@ export default {
             const { data } = await getMarktingMaterialDetail(val)
             this.materialForm = data
             this.addDialogVisible = true
+            this.$nextTick(() => {
+                if (this.$refs['dispatchForm']) {
+                    this.$refs['dispatchForm'].clearValidate()
+                }
+                if (this.$refs['materialForm']) {
+                    this.$refs['materialForm'].clearValidate()
+                }
+            })
             this.materialForm.details = data.details.map(item => {
                 this.detailsKey++
                 return {
@@ -687,11 +695,6 @@ export default {
                     materialProductId: item.materialProductId,
                     key: this.detailsKey,
                     status: item.status
-                }
-            })
-            this.$nextTick(() => {
-                if (this.$refs['materialForm']) {
-                    this.$refs['materialForm'].clearValidate()
                 }
             })
             console.log(this.materialForm, '数据详情')
@@ -737,6 +740,14 @@ export default {
             console.log(data)
             this.materials = data.filter(item => item.status === 0)
             this.dispatchDialogVisible = true
+            this.$nextTick(() => {
+                if (this.$refs['dispatchForm']) {
+                    this.$refs['dispatchForm'].clearValidate()
+                }
+                if (this.$refs['materialForm']) {
+                    this.$refs['materialForm'].clearValidate()
+                }
+            })
         },
         handleSelect (item) {
             console.log(item, '数据选择')
@@ -829,8 +840,14 @@ export default {
         },
         addNewMetarial () {
             this.addDialogVisible = true
+            this.clearData()
             this.$nextTick(() => {
-                this.clearData()
+                if (this.$refs['dispatchForm']) {
+                    this.$refs['dispatchForm'].clearValidate()
+                }
+                if (this.$refs['materialForm']) {
+                    this.$refs['materialForm'].clearValidate()
+                }
             })
         },
         cancelDialog () {
@@ -839,13 +856,9 @@ export default {
             this.dispatchDialogVisible = false
         },
         clearData () {
-            if (this.$refs['dispatchForm']) {
-                this.$refs['dispatchForm'].clearValidate()
-            }
-            if (this.$refs['materialForm']) {
-                this.$refs['materialForm'].clearValidate()
-            }
             this.currentMaterial = null
+            this.isIndeterminate = false
+            this.checkAll = false
             this.uploadImages = []
             this.dispatchForm = {
                 type: '2',
