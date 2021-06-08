@@ -54,9 +54,9 @@
         <div class="page-body-cont">
             <el-tag size="medium" class="eltagtop">
                 已筛选 {{this.cloudMerchantListPagination.total}} 项；
-                累计独家代理商总数: {{this.statistics.totalCount}} 个；
-                累计品类一级代理总数: {{this.statistics.oneLevelCount}} 个；
-                累计品类二级代理总数:{{this.statistics.twoLevelCount}} 个；
+                累计一级（独家）代理商总数: {{this.statistics.totalCount}} 个；
+                商品型号一级代理总数: {{this.statistics.oneLevelCount}} 个；
+                商品型号二级代理总数:{{this.statistics.twoLevelCount}} 个；
             </el-tag>
             <basicTable :tableLabel="tableLabel" :tableData="cloudMerchantList" :pagination="cloudMerchantListPagination" @onCurrentChange='onCurrentChange' isShowIndex @onSizeChange='onSizeChange' :isAction="true">
                 <template slot="action" slot-scope="scope">
