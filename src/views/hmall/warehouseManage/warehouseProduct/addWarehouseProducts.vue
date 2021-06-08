@@ -11,7 +11,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">SKU编码：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.spikeName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.skuCode" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">

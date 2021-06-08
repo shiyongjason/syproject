@@ -37,7 +37,7 @@
             <div class="button-cont">
                 <h-button type="create" @click="onCreateWarehouse">批量添加</h-button>
             </div>
-            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :isShowIndex='true'>
+            <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="pagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :actionMinWidth="160" :isMultiple="false" :isAction="true" :isShowIndex='true'>
                 <template slot="goodsType" slot-scope="scope">
                     {{arrayToMap(productTypeOptions).get(scope.data.row.goodsType)}}
                 </template>
