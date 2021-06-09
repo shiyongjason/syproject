@@ -111,7 +111,7 @@
         <el-dialog title="编辑订单运费" width="560px" :visible.sync="closeOrderDialog" :close-on-click-modal=false>
             <el-form :model="createform" :rules="rules" ref="createform" label-width="130px" class="createPrice">
                 <el-form-item label="当前运费价格：">
-                    <span style="width:60%;display: inline-block;">{{ finalTotalAmount || '-' }}</span>
+                    <span style="width:60%;display: inline-block;">{{ finalSingleAmount || '-' }}</span>
                     <span style="padding: 0 0 0 10px;">元/件</span>
                 </el-form-item>
                 <el-form-item label="修改为：" prop="price" :rules="rules.price">
@@ -148,7 +148,7 @@ export default {
                 { label: 'sku编码', prop: 'skuCode' },
                 { label: '商品名称', prop: 'skuName' },
                 { label: '数量', prop: 'quantity' },
-                { label: '单件运费价格', prop: 'originSingleAmount' },
+                { label: '单件运费价格', prop: 'finalSingleAmount' },
                 { label: '价格定义来源', prop: 'freightSource' },
                 { label: '运费合计金额', prop: 'originTotalAmount' },
                 // { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
@@ -166,7 +166,7 @@ export default {
             isAction: true,
             createform: {},
             initform: {},
-            finalTotalAmount: '',
+            finalSingleAmount: '',
             rules: {
                 price: [
                     { required: true, message: '请输入999以内数字', trigger: 'blur' },
@@ -206,7 +206,7 @@ export default {
         },
         onseeTask (row) {
             this.closeOrderDialog = true
-            this.finalTotalAmount = row.finalTotalAmount
+            this.finalSingleAmount = row.finalSingleAmount
             this.createform.id = row.id
             this.createform.operator = this.userInfo.employeeName
         },

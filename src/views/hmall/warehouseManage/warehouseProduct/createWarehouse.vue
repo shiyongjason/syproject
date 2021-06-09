@@ -75,6 +75,12 @@ export default {
                     {
                         validator: (rule, value, callback) => {
                             const reg = /(^[1-9]([0-9]{1,2})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (value && value - 0 <= 0) {
+                                return callback(new Error('仅支持输入999以内两位小数正数'))
+                            }
+                            if (value && value - 0 > 999 - 0) {
+                                return callback(new Error('仅支持输入999以内两位小数正数'))
+                            }
                             if (value && !reg.test(value)) {
                                 return callback(new Error('仅支持输入999以内两位小数正数'))
                             }
@@ -88,6 +94,12 @@ export default {
                     {
                         validator: (rule, value, callback) => {
                             const reg = /(^[1-9]([0-9]{1,2})?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/
+                            if (value && value - 0 <= 0) {
+                                return callback(new Error('仅支持输入999以内两位小数正数'))
+                            }
+                            if (value && value - 0 > 999 - 0) {
+                                return callback(new Error('仅支持输入999以内两位小数正数'))
+                            }
                             if (value && !reg.test(value)) {
                                 return callback(new Error('仅支持输入999以内两位小数正数'))
                             }

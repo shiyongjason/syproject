@@ -113,7 +113,7 @@ export default {
             }
         },
         selectable (row) {
-            return !this.selectWarehouseProduct.filter(item => item.skuId == row.skuId).length
+            return !(this.selectWarehouseProduct.filter(item => item.skuId == row.skuId).length || row.exist)
         },
         // 品牌搜索建议处理
         async querySearchAsync (queryString, cb) {
