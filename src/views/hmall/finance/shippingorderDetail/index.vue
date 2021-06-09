@@ -160,7 +160,7 @@ export default {
                 { label: '操作时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '操作人', prop: 'operator' },
                 { label: '操作动作', prop: 'operateMotion' },
-                { label: '内容', prop: 'operatorContext' }
+                { label: '内容', prop: 'operateContext' }
             ],
             closeOrderDialog: false,
             isAction: true,
