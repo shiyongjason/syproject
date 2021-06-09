@@ -32,7 +32,7 @@
                         <div class="card-cont">
                             <span class="card-cont-label">支付方式：</span>
                             <span class="card-cont-text">
-                                <span>{{ payWayMap.get(basicInfo.payMethod) || "-" }}</span>
+                                <span>{{ basicInfo.payMethod || "-" }}</span>
                             </span>
                         </div>
                     </div>
@@ -129,14 +129,13 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP, OPERATIONAL_MAP } from '../const'
+import { FREIGHT_STATUS_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP, OPERATIONAL_MAP } from '../const'
 import { withinDetail } from '@/utils/rules.js'
 import { putFreightPrice } from '../api/index'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
-            payWayMap: PAY_WAY_MAP,
             merchantTypeMap: MERCHANT_TYPE_MAP,
             sourcesPriceMap: SOURCES_PRICE_MAP,
             freightStatusMap: FREIGHT_STATUS_MAP,
