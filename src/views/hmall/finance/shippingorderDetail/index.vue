@@ -44,9 +44,9 @@
                             <span class="card-cont-label">系统计算运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.totalAmount || "-" }}</span>
                         </div>
-                        <div class="card-cont" v-if="basicInfo.discountAmount != null">
+                        <div class="card-cont" v-if="sourceFreight">
                             <span class="card-cont-label">人工维护后运费总金额：</span>
-                            <span class="card-cont-text">￥{{basicInfo.discountAmount}}</span>
+                            <span class="card-cont-text">￥{{basicInfo.finalTotalAmount}}</span>
                         </div>
                         <!-- <div class="card-cont">
                             <span class="card-cont-label">物流优惠券抵扣金额：</span>
@@ -172,7 +172,8 @@ export default {
                     { required: true, message: '请输入999以内数字', trigger: 'blur' },
                     { validator: withinDetail, trigger: 'blur' }
                 ]
-            }
+            },
+            sourceFreight: false
         }
     },
     computed: {
@@ -200,6 +201,14 @@ export default {
             } else {
                 this.isAction = false
             }
+            const array = this.basicInfo.freightOrderSkuList
+            array.map(item => {
+                if (item.freightSource == 2) {
+                    this.sourceFreight = true
+                } else {
+                    this.sourceFreight = false
+                }
+            })
         },
         onReset () {
             this.createform = { ...this.initform }
