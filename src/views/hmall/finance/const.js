@@ -171,7 +171,8 @@ export const OPERATIONAL_OPTIONS = [
     { label: '退款', value: '30' },
     { label: '运费商品单分享全部发货', value: '31' },
     { label: '关联商品订单关闭', value: '32' },
-    { label: '修改运费', value: '33' }
+    { label: '修改运费', value: '33' },
+    { label: '支付运费', value: '34' }
 ]
 export const OPERATIONAL_MAP = new Map([
     [1, '订单创建'],
@@ -190,5 +191,6 @@ export const OPERATIONAL_MAP = new Map([
     [30, '退款'],
     [31, '运费商品单分享全部发货'],
     [32, '关联商品订单关闭'],
-    [33, '修改运费']
+    [33, '修改运费'],
+    [34, '支付运费']
 ])
