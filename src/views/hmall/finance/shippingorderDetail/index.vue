@@ -32,7 +32,7 @@
                         <div class="card-cont">
                             <span class="card-cont-label">支付方式：</span>
                             <span class="card-cont-text">
-                                <span>{{ payWayMap.get(basicInfo.payMethod) || "-" }}</span>
+                                <span>{{ basicInfo.payMethodDesc || "-" }}</span>
                             </span>
                         </div>
                     </div>
@@ -44,9 +44,9 @@
                             <span class="card-cont-label">系统计算运费总金额：</span>
                             <span class="card-cont-text">￥{{basicInfo.totalAmount || "-" }}</span>
                         </div>
-                        <div class="card-cont" v-if="basicInfo.discountAmount != null">
+                        <div class="card-cont" v-if="sourceFreight">
                             <span class="card-cont-label">人工维护后运费总金额：</span>
-                            <span class="card-cont-text">￥{{basicInfo.discountAmount}}</span>
+                            <span class="card-cont-text">￥{{basicInfo.finalTotalAmount}}</span>
                         </div>
                         <!-- <div class="card-cont">
                             <span class="card-cont-label">物流优惠券抵扣金额：</span>
@@ -129,14 +129,13 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { FREIGHT_STATUS_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP, OPERATIONAL_MAP } from '../const'
+import { FREIGHT_STATUS_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP, OPERATIONAL_MAP } from '../const'
 import { withinDetail } from '@/utils/rules.js'
 import { putFreightPrice } from '../api/index'
 export default {
     name: 'shippingorderDetail',
     data () {
         return {
-            payWayMap: PAY_WAY_MAP,
             merchantTypeMap: MERCHANT_TYPE_MAP,
             sourcesPriceMap: SOURCES_PRICE_MAP,
             freightStatusMap: FREIGHT_STATUS_MAP,
@@ -150,7 +149,7 @@ export default {
                 { label: '数量', prop: 'quantity' },
                 { label: '单件运费价格', prop: 'finalSingleAmount' },
                 { label: '价格定义来源', prop: 'freightSource' },
-                { label: '运费合计金额', prop: 'originTotalAmount' },
+                { label: '运费合计金额', prop: 'finalTotalAmount' },
                 // { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
                 { label: '退款申请时间', prop: 'refundApplyTime', formatters: 'dateTime' },
@@ -160,7 +159,7 @@ export default {
                 { label: '操作时间', prop: 'createTime', formatters: 'dateTime' },
                 { label: '操作人', prop: 'operator' },
                 { label: '操作动作', prop: 'operateMotion' },
-                { label: '内容', prop: 'operatorContext' }
+                { label: '内容', prop: 'operateContext' }
             ],
             closeOrderDialog: false,
             isAction: true,
@@ -172,7 +171,8 @@ export default {
                     { required: true, message: '请输入999以内数字', trigger: 'blur' },
                     { validator: withinDetail, trigger: 'blur' }
                 ]
-            }
+            },
+            sourceFreight: false
         }
     },
     computed: {
@@ -200,6 +200,14 @@ export default {
             } else {
                 this.isAction = false
             }
+            const array = this.basicInfo.freightOrderSkuList
+            array.map(item => {
+                if (item.freightSource == 2) {
+                    this.sourceFreight = true
+                } else {
+                    this.sourceFreight = false
+                }
+            })
         },
         onReset () {
             this.createform = { ...this.initform }

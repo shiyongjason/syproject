@@ -41,6 +41,7 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex'
+import { clearCache } from '@/utils/index'
 import { PRODUCT_TYPE } from '../const'
 export default {
     name: 'addWarehouseProducts',
