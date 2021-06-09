@@ -475,9 +475,6 @@ export default {
         },
         async memberInfo () {
             await this.findMerchantMembersituation({ 'phone': this.$route.query.phone })
-            if (this.merchantmemberData.records.length > 0) {
-                this.enterpriseInfoData = this.merchantmemberData.records[0]
-            }
             this.tagStringList = this.enterpriseInfoData.userTags ? this.enterpriseInfoData.userTags.split(',') : []
             this.showTagStringList = [...this.tagStringList]
         },
