@@ -150,7 +150,7 @@ export default {
                 { label: '数量', prop: 'quantity' },
                 { label: '单件运费价格', prop: 'finalSingleAmount' },
                 { label: '价格定义来源', prop: 'freightSource' },
-                { label: '运费合计金额', prop: 'originTotalAmount' },
+                { label: '运费合计金额', prop: 'finalTotalAmount' },
                 // { label: '物流券抵扣金额', prop: 'finalSingleAmount' },
                 { label: '实付运费金额', prop: 'finalTotalAmount' },
                 { label: '退款申请时间', prop: 'refundApplyTime', formatters: 'dateTime' },
