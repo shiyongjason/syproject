@@ -32,7 +32,7 @@
                         <div class="card-cont">
                             <span class="card-cont-label">支付方式：</span>
                             <span class="card-cont-text">
-                                <span>{{ basicInfo.payMethod || "-" }}</span>
+                                <span>{{ basicInfo.payMethodDesc || "-" }}</span>
                             </span>
                         </div>
                     </div>
