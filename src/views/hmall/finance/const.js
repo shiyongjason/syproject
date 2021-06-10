@@ -194,3 +194,17 @@ export const OPERATIONAL_MAP = new Map([
     [33, '修改运费'],
     [34, '支付运费']
 ])
+// 线上运费明细状态
+export const ONLINE_FREIGHT_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '待完成发货', value: '20' },
+    { label: '已完成发货', value: '30' },
+    { label: '已开票', value: '40' },
+    { label: '已退款', value: '50' }
+]
+export const ONLINE_FREIGHT_STATUS_MAP = new Map([
+    [20, '待完成发货'],
+    [30, '已完成发货'],
+    [40, '已开票'],
+    [50, '已退款']
+])
