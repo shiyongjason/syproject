@@ -204,8 +204,6 @@ export default {
             array.map(item => {
                 if (item.freightSource == 2) {
                     this.sourceFreight = true
-                } else {
-                    this.sourceFreight = false
                 }
             })
         },

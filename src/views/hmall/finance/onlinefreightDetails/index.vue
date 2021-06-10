@@ -14,7 +14,7 @@
                     <div class="query-col__lable">状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status">
-                            <el-option v-for="item in orderStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in onlineFreightOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                     {{ merchantTypeMap.get(scope.data.row.merchantType) || '-' }}
                 </template>
                 <template slot="status" slot-scope="scope">
-                    {{ freightStatusMap.get(scope.data.row.status) || '-' }}
+                    {{ onlineFreightStatusMap.get(scope.data.row.status) || '-' }}
                 </template>
                 <template slot="freightSource" slot-scope="scope">
                     {{ sourcesPriceMap.get(scope.data.row.freightSource) || '-' }}
@@ -47,15 +47,15 @@
 </template>
 
 <script>
-import { FREIGHT_STATUS_OPTIONS, FREIGHT_STATUS_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
+import { ONLINE_FREIGHT_STATUS_OPTIONS, ONLINE_FREIGHT_STATUS_MAP, MERCHANT_TYPE_MAP, SOURCES_PRICE_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
 export default {
     name: 'onlinefreightDetails',
     data () {
         return {
-            orderStatusOptions: FREIGHT_STATUS_OPTIONS,
-            freightStatusMap: FREIGHT_STATUS_MAP,
+            onlineFreightOptions: ONLINE_FREIGHT_STATUS_OPTIONS,
+            onlineFreightStatusMap: ONLINE_FREIGHT_STATUS_MAP,
             merchantTypeMap: MERCHANT_TYPE_MAP,
             sourcesPriceMap: SOURCES_PRICE_MAP,
             initParams: {},
