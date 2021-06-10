@@ -4,17 +4,14 @@
             <span>一键匹配智能辅材</span>
         </div>
 
-        <div class="page-body-cont query-cont" >
-            <el-popover
-                placement="right"
-                width="200"
-                trigger="hover">
+        <div class="page-body-cont query-cont">
+            <el-popover placement="right" width="200" trigger="hover">
                 <div class="popover-btn" @click="addClassifyByProduct">按主营产品</div>
                 <div class="popover-btn" @click="addClassifyByMember">按会员标签</div>
 
                 <div class="query-cont-col" slot="reference">
                     <div class="query-col-title">
-                        <el-button type="primary" class="ml20" >新增智能辅材匹配关系</el-button>
+                        <el-button type="primary" class="ml20">新增智能辅材匹配关系</el-button>
                     </div>
                 </div>
             </el-popover>
@@ -63,13 +60,13 @@
                 </el-form-item>
 
                 <el-form-item label="手动标签：">
-                    <el-select v-model="addByTagForm.manualTags" multiple >
+                    <el-select v-model="addByTagForm.manualTags" multiple>
                         <el-option-group v-for="group in cloudMerchantTaglist" :key="group.tagCategory" :label="group.tagCategory">
                             <el-option v-for="item in group.tagDetailBos" :key="item" :label="item" :value="item"></el-option>
                         </el-option-group>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="自动标签：" >
+                <el-form-item label="自动标签：">
                     <el-select v-model="addByTagForm.autoTags" value-key="tagId" multiple>
                         <el-option v-for="item in allAutoTags" :key="item.tagId" :label="item.tagName" :value="item"></el-option>
                     </el-select>
@@ -389,12 +386,14 @@ export default {
             }
         },
         async sendAddByTagClassify () {
-            let params = { operator: this.userInfo.employeeName,
+            let params = {
+                operator: this.userInfo.employeeName,
                 mainProductList: this.addByTagForm.mainProductList
             }
 
             let manualTags = this.addByTagForm.manualTags.map((v) => {
-                return { tagType: 2,
+                return {
+                    tagType: 2,
                     tagName: v,
                     tagId: 0
                 }
@@ -427,7 +426,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .spanflex {
     font-size: 16px;
     padding-bottom: 10px;
@@ -448,5 +446,4 @@ export default {
 /deep/.el-form .el-input:not(:first-child) {
     margin-left: 0px;
 }
-
 </style>
