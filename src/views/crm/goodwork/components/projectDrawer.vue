@@ -1,12 +1,9 @@
 <template>
     <div class="project-wrap">
-
-        <!-- <el-drawer title="项目详情" :visible.sync="drawer" :with-header="false" direction="rtl" size='45%' :before-close="handleClose" :wrapperClosable=false>
-             -->
-        <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='40%' :wrapperClosable="false">
+        <h-drawer title="项目详情" v-if="drawer" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='710px' :wrapperClosable="false">
             <template #connect>
                 <div class="fiextab">
-                    <el-tabs v-model="activeName" @tab-click="handleClick" type="card">
+                    <el-tabs v-model="activeName" @tab-click="handleClick">
                         <template v-for="item in tabs">
                             <template v-if='isShowTab(item.key,status)'>
                                 <el-tab-pane :label=item.value :name=item.key :key=item.key v-if="form.docAfterStatus!=1"></el-tab-pane>
@@ -17,7 +14,8 @@
                 <projectCom ref="projectCom" :projectForm=form @onBackLoad=onBackLoad @onCompsback=onCompsback v-if="activeName==='1'"></projectCom>
                 <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
                 <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
-                <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom>
+                <!-- <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom> -->
+                <finalApproval v-if="activeName==='4'"></finalApproval>
                 <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
 
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
@@ -64,6 +62,7 @@
 import projectCom from './project_com'
 import datacolCom from './datacollect_com'
 import approveCom from './approve_com'
+import finalApproval from './finalApproval'
 import ProjectOrderTab from './projectOrderTab'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import * as newAuth from '@/utils/auth_const'
@@ -82,7 +81,7 @@ export default {
         }
     },
     components: {
-        projectCom, datacolCom, approveCom, ProjectOrderTab
+        projectCom, datacolCom, approveCom, ProjectOrderTab, finalApproval
     },
     data () {
         return {
@@ -399,8 +398,12 @@ export default {
 }
 </script>
 <style  lang="scss" scoped>
+::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
 /deep/.drawer__content {
-    padding: 0 20px 0 20px;
+    padding: 0 20px 0 15px;
+    box-sizing: border-box;
 }
 /deep/.el-tabs__header {
     padding: 0 0 0 10px;
@@ -444,9 +447,9 @@ export default {
 .fiextab {
     position: fixed;
     background: #ffffff;
-    width: 100%;
+    width: 660px;
     z-index: 11;
-    top: 68px;
+    top: 66px;
 }
 .el-textarea /deep/.el-input__count {
     bottom: -45px;

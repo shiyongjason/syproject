@@ -8,20 +8,9 @@
                         <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont__col">
-                    <div class="query-col__label">项目编号1：</div>
-                    <div class="query-col__input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目编号" maxlength="50"></el-input>
-                    </div>
-                </div> -->
                 <div class="query-cont__col">
                     <div class="query-col__label">项目提交时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.minSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsStart">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxSubmitTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsEnd">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStartChange" :end-change="onEndChange" :options="options">
                         </HDatePicker>
                     </div>
@@ -38,25 +27,6 @@
                         <el-input v-model="queryParams.firstPartName" placeholder="请输入甲方名称" maxlength="50"></el-input>
                     </div>
                 </div>
-                <!-- <div class="query-cont__col">
-                    <div class="query-col__label">更新时间：</div>
-                    <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxUpdateTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxUpdateTime" type="datetime" value-format="yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minUpdateTime)">
-                        </el-date-picker>
-                    </div>
-                </div> -->
-                <!-- <div class="query-cont__col">
-                    <div class="query-col__label">项目类别：</div>
-                    <div class="query-col__input">
-                        <el-select v-model="typeArr" multiple collapse-tags placeholder="请选择">
-                            <el-option v-for="item in typeList" :key="item.key" :label="item.value" :value="item.key">
-                            </el-option>
-                        </el-select>
-                    </div>
-                </div> -->
                 <div class="query-cont__col">
                     <div class="query-col__label">合作进度：</div>
                     <div class="query-col__input">
@@ -95,13 +65,6 @@
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">预估借款时间：</div>
-                    <!-- <div class="query-col__input">
-                        <el-date-picker v-model="queryParams.minEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimatedLoanTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEstimatedLoanTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimatedLoanTime)">
-                        </el-date-picker>
-                    </div> -->
                     <div class="query-col__input">
                         <HDatePicker :start-change="onStartBorrow" :end-change="onEndBorrow" :options="borrowOptions">
                         </HDatePicker>
@@ -110,17 +73,17 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">预估签约时间：</div>
                     <div class="query-col__input">
-                        <!-- <el-date-picker v-model="queryParams.minEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="开始日期" :picker-options="pickerOptionsMax(queryParams.maxEstimateSignTime)">
-                        </el-date-picker>
-                        <span class="ml10">-</span>
-                        <el-date-picker v-model="queryParams.maxEstimateSignTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="结束日期" :picker-options="pickerOptionsMin(queryParams.minEstimateSignTime)">
-                        </el-date-picker> -->
                         <HDatePicker :start-change="onStarSign" :end-change="onEndSign" :options="signOptions">
                         </HDatePicker>
                     </div>
                 </div>
                 <div class="query-cont__col">
-
+                    <div class="query-col__label">项目提交人：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目提交人" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
                     <h-button type="primary" @click="searchList()">
                         查询
                     </h-button>
@@ -130,13 +93,12 @@
                     <h-button @click="onExport" v-if="hosAuthCheck(Auths.CRM_GOODWORK_IMPORT)">
                         导出
                     </h-button>
-
                 </div>
             </div>
 
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.1">
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.18">
                 <!--
                     Versions: V3.*.1
                     Time: 2020/10/22
@@ -258,7 +220,7 @@ export default {
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
-
+                { label: '项目提交人', prop: 'submitUser', width: '150', showOverflowTooltip: true },
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
                 { label: '预估签约时间', prop: 'estimateSignTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true },
@@ -366,26 +328,6 @@ export default {
                 endTime: this.queryParams.maxEstimateSignTime
             }
         },
-        // pickerOptionsStart () {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = this.queryParams.maxSubmitTime
-        //             if (beginDateVal) {
-        //                 return time.getTime() > new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
-        // pickerOptionsEnd () {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = this.queryParams.minSubmitTime
-        //             if (beginDateVal) {
-        //                 return time.getTime() < new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
         ...mapState({
             userInfo: state => state.userInfo
         }),
@@ -483,33 +425,12 @@ export default {
                 window.location = interfaceUrl + 'memeber/openapi/project/export?' + url
             }
         },
-        // pickerOptionsMax (val) {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = val
-        //             if (beginDateVal) {
-        //                 return time.getTime() > new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
-        // pickerOptionsMin (val) {
-        //     return {
-        //         disabledDate: (time) => {
-        //             let beginDateVal = val
-        //             if (beginDateVal) {
-        //                 return time.getTime() < new Date(beginDateVal).getTime()
-        //             }
-        //         }
-        //     }
-        // },
         getStatusList (key, docProgress) {
             const map = STATUS_LIST.reduce((res, item) => {
                 res[item.key] = item
                 return res
             }, {})
             if (key == 3) {
-                // let label = docProgress == null ? map[key].value : `${map[key].value}进度：${docProgress * 100}%`
                 let label = docProgress == null ? map[key].value : `${map[key].value}进度：${this.$multipliedBy(docProgress, 100)}%`
                 return { value: label }
             } else {
