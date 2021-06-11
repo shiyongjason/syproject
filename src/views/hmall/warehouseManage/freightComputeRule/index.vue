@@ -1,6 +1,9 @@
 <template>
     <div class="page-body B2b">
         <div class="page-body-cont">
+            <div class="title-cont">
+                <span class="title-cont__label">运费价格基础规则</span>
+            </div>
             <hosJoyTable :column="tableLabel" :data="tableDataFilter" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="pagination.total" @pagination="getFreightRuleList" collapseShow border stripe :showPagination='false' prevLocalName="V3.*" localName="V3.*.1">
                 <template slot="special">
                     <span>一单一议</span>
@@ -29,26 +32,26 @@ export default {
                 { label: '城市', prop: 'cityName', showOverflowTooltip: true },
                 { label: '县区', prop: 'countryNames', showOverflowTooltip: true },
                 {
-                    label: '大件货运费价格',
+                    label: '大件货运费基础价格',
                     children: [
-                        { label: '市区', prop: 'big_city' },
-                        { label: '县区', prop: 'big_country' }
+                        { label: '市区', prop: 'big_city', headerUnit: '', unit: '元/件' },
+                        { label: '县区', prop: 'big_country', headerUnit: '', unit: '元/件' }
                     ],
                     showOverflowTooltip: true
                 },
                 {
-                    label: '中件货运费价格',
+                    label: '中件货运费基础价格',
                     children: [
-                        { label: '市区', prop: 'middle_city' },
-                        { label: '县区', prop: 'middle_country' }
+                        { label: '市区', prop: 'middle_city', headerUnit: '', unit: '元/件' },
+                        { label: '县区', prop: 'middle_country', headerUnit: '', unit: '元/件' }
                     ],
                     showOverflowTooltip: true
                 },
                 {
-                    label: '小件货运费价格',
+                    label: '小件货运费基础价格',
                     children: [
-                        { label: '市区', prop: 'small_city' },
-                        { label: '县区', prop: 'small_country' }
+                        { label: '市区', prop: 'small_city', headerUnit: '', unit: '元/件' },
+                        { label: '县区', prop: 'small_country', headerUnit: '', unit: '元/件' }
                     ],
                     showOverflowTooltip: true
                 },

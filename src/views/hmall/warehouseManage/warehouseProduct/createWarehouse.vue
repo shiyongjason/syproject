@@ -20,10 +20,14 @@
                 </el-form-item>
                 <template v-if="!(form.goodsType == '' || form.goodsType == 4)">
                     <el-form-item label="市区运费价格：" prop="cityPrice">
-                        <el-input v-model.trim="form.cityPrice" placeholder="请输入" maxlength="6" clearable></el-input>
+                        <el-input v-model.trim="form.cityPrice" placeholder="请输入" maxlength="6">
+                            <template slot="suffix">元/件</template>
+                        </el-input>
                     </el-form-item>
                     <el-form-item label="县区运费价格：" prop="countryPrice">
-                        <el-input v-model.trim="form.countryPrice" placeholder="请输入" maxlength="6" clearable></el-input>
+                        <el-input v-model.trim="form.countryPrice" placeholder="请输入" maxlength="6">
+                            <template slot="suffix">元/件</template>
+                        </el-input>
                     </el-form-item>
                 </template>
                 <template v-if="!$route.query.id">
