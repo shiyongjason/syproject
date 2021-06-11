@@ -44,6 +44,9 @@
             </template>
             <template #btn>
                 <div class="drawer-button">
+                        <h-button >终审不通过</h-button>
+                        <h-button type="primary">发起评审决议审批流</h-button>
+
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
                         <h-button @click="onCallBack()">打回补充</h-button>
