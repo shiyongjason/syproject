@@ -115,7 +115,7 @@
                     <span style="padding: 0 0 0 10px;">元/件</span>
                 </el-form-item>
                 <el-form-item label="修改为：" prop="price" :rules="rules.price">
-                    <el-input v-model="createform.price" placeholder="请输入金额" maxlength="25" style="width:60%;display: inline-block;">
+                    <el-input v-model="createform.price" placeholder="请输入金额" maxlength="6" style="width:60%;display: inline-block;">
                     </el-input>
                     <span style="padding: 0 0 0 10px;">元/件</span>
                 </el-form-item>
