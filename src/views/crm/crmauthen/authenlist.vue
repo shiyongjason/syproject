@@ -92,6 +92,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">客户经理：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.userAccount" placeholder="请输入管理员账号" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <h-button type="primary" @click="()=>searchList(1)">
                         查询
                     </h-button>
@@ -176,6 +182,7 @@ export default {
                 { label: '企业类型', prop: 'companyType', width: '100' },
                 { label: '客户分类', prop: 'customerType', width: '100', sortable: 'custom' },
                 { label: '认证状态', prop: 'isAuthentication' },
+                { label: '客户经理', prop: 'isAuthentication' },
                 { label: '会员标签', prop: 'memberTag' },
                 { label: '创建时间', prop: 'createTime', width: '150', formatters: 'dateTimes', sortable: 'custom' },
                 { label: '关联认证时间', prop: 'authenticationTime', width: '150', formatters: 'dateTimes' }

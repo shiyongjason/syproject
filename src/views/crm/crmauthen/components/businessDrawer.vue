@@ -1,5 +1,5 @@
 <template>
-    <div class="drawer-wrap" v-if="drawer" >
+    <div class="drawer-wrap" v-if="drawer">
         <h-drawer v-if="drawer" title="企业详情" :visible.sync="drawer" :beforeClose="handleClose" direction='rtl' size='50%' :wrapperClosable="false">
             <template #connect>
                 <el-tabs v-model="activeName" @tab-click="handleTabClick">
@@ -17,6 +17,10 @@
                                 </el-form-item>
                                 <el-form-item label="管理员姓名：" :label-width="formLabelWidth">
                                     {{businessDetail.userName||'-'}}
+                                </el-form-item>
+                                <el-form-item label="客户经理：" :label-width="formLabelWidth">
+                                    {{businessDetail.userName||'-'}}
+                                    <el-button type="primary" size="mini" @click="onEditInfo">修改客户经理</el-button>
                                 </el-form-item>
                                 <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
                                     <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
@@ -245,43 +249,43 @@
                                     <span v-else>-</span>
 
                                 </el-form-item>
-<!--                                <el-form-item label="法人身份证：">-->
-<!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
-<!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
-<!--                                        </el-image>-->
-<!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
-<!--                                        </el-image>-->
-<!--                                    </div>-->
-<!--                                    <span v-else>-</span>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="认证结果：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="认证方式：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
-<!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="关联/认证时间：">-->
-<!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
-<!--                                    <p v-else>-</p>-->
-<!--                                </el-form-item>-->
-<!--                                <el-form-item label="关联/认证人：">-->
-<!--                                    <p>-->
-<!--                                        <span v-if="authenticationDetail.authenticationBy">-->
-<!--                                            {{authenticationDetail.authenticationBy}}-->
-<!--                                        </span>-->
-<!--                                        <span v-else>-</span>-->
-<!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
-<!--                                            ({{authenticationDetail.authenticationPhone}})-->
-<!--                                        </span>-->
-<!--                                        <span v-else>(-)</span>-->
-<!--                                    </p>-->
-<!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="法人身份证：">-->
+                                <!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
+                                <!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
+                                <!--                                        </el-image>-->
+                                <!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
+                                <!--                                        </el-image>-->
+                                <!--                                    </div>-->
+                                <!--                                    <span v-else>-</span>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="认证结果：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="认证方式：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
+                                <!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="关联/认证时间：">-->
+                                <!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
+                                <!--                                    <p v-else>-</p>-->
+                                <!--                                </el-form-item>-->
+                                <!--                                <el-form-item label="关联/认证人：">-->
+                                <!--                                    <p>-->
+                                <!--                                        <span v-if="authenticationDetail.authenticationBy">-->
+                                <!--                                            {{authenticationDetail.authenticationBy}}-->
+                                <!--                                        </span>-->
+                                <!--                                        <span v-else>-</span>-->
+                                <!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
+                                <!--                                            ({{authenticationDetail.authenticationPhone}})-->
+                                <!--                                        </span>-->
+                                <!--                                        <span v-else>(-)</span>-->
+                                <!--                                    </p>-->
+                                <!--                                </el-form-item>-->
                             </el-form>
 
                         </div>
@@ -329,7 +333,7 @@
                                 <h2>{{ businessDetail.companyName }}</h2>
                                 <h-button type="primary" @click="openTransferAdminDialog" v-if="hosAuthCheck(auth_transfer_admin)">转让管理员</h-button>
                             </div>
-<!--                            goodwork/authenlist  show-check-all-->
+                            <!--                            goodwork/authenlist  show-check-all-->
                             <basicTable :tableData="employeeTableData" :tableLabel="employeeTableLabel" :show-check-all="false" :is-pagination="false" :isMultiple="false" :actionMinWidth=120>
                                 <template slot="selfAction" slot-scope="scope">
                                     <img src="../../../../assets/images/edit.png" alt="" class="employee-edit" @click="openEmployeeRoleDialog(scope.data.row)">
@@ -407,9 +411,9 @@
                 <el-button type="primary" @click="qualificationDialogVisible = false">确 定</el-button>
             </span>
         </el-dialog>
-        <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList"/>
-        <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData"
-                       :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList"/>
+        <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList" />
+        <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData" :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList" />
+        <Searchdialog ref="searchdialog"></Searchdialog>
     </div>
 </template>
 <script>
@@ -417,6 +421,7 @@ import HAutocomplete from '@/components/autoComplete/HAutocomplete'
 import EditTargetEmployeeRoleDialog from './editTargetEmployeeRoleDialog'
 import TransferAdmin from './transferAdminDialog'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import Searchdialog from './searchDialog.vue'
 import {
     getBusinessAuthen,
     updateCrmauthen,
@@ -578,7 +583,8 @@ export default {
         elImageAddToken,
         inputAutocomplete,
         EditTargetEmployeeRoleDialog,
-        TransferAdmin
+        TransferAdmin,
+        Searchdialog
     },
     computed: {
         ...mapState({
@@ -962,6 +968,9 @@ export default {
                 this.companyContact.request.companyId = this.businessDetail.companyId
                 this.companyContact.response = data
             }
+        },
+        onEditInfo () {
+            this.$refs.searchdialog.onShowSearch()
         }
     },
     mounted () {
@@ -1199,5 +1208,4 @@ export default {
     justify-content: space-between;
     padding-bottom: 20px;
 }
-
 </style>

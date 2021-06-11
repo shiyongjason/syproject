@@ -254,6 +254,20 @@ export default [
                 component: () => import('@/views/crm/funds/funds.vue')
             },
             {
+                path: 'batchpay',
+                name: 'funds',
+                meta: {
+                    title: '批量支付',
+                    tagName: '批量支付',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/batchpay'
+
+                },
+                component: () => import('@/views/crm/funds/batchPay.vue')
+            },
+            {
                 path: 'contractlist',
                 name: 'contractlist',
                 meta: {

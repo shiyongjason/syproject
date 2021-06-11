@@ -24,6 +24,13 @@
                         <el-form-item label="采购单金额：">
                             {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
                         </el-form-item>
+                        <div class="mb20">
+                            <basicTable :tableData="paymentDetail.billAmountResponse.billAmountDetail" :tableLabel="tableLabel" :isPagination='false'>
+                                <template slot="number" slot-scope="scope">
+                                    第{{ scope.data.row.number }}张票
+                                </template>
+                            </basicTable>
+                        </div>
                         <el-form-item label="采购明细表：">
                             <div class="info-img-group content">
                                 <template v-if="paymentDetail.payOrderPoDetail && paymentDetail.payOrderPoDetail.poDetail">

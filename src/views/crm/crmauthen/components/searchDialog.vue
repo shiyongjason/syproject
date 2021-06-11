@@ -1,0 +1,94 @@
+<template>
+    <div>
+        <el-dialog title="修改客户经理" :visible.sync="dialogVisible" width="40%" :before-close="handleClose">
+            <div class="mb20">
+                <el-input placeholder="请输入" v-model="name">
+                    <template slot="append" ><el-button @click="onSearch">搜索</el-button></template>
+                </el-input>
+            </div>
+            <div class="search_scroll">
+            <HosJoyTable localName="V1.*" ref="hosjoyTable" align="center" isShowselection
+             :filterMultiplee="false" :column="tableLabel" :data="tableData"  filterMultiple=false
+              @select-all="dialogCheck" @select="dialogCheck" @selection-change="dialogCheckChange"
+              >
+            </HosJoyTable>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="handleClose">取 消</el-button>
+                <el-button type="primary" @click="onSureSearch">确 定</el-button>
+            </span>
+        </el-dialog>
+
+    </div>
+</template>
+<script>
+import HosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
+import { findEmployeeDept } from './../api/index'
+export default {
+    name: 'searchdialog',
+    components: { HosJoyTable },
+    data () {
+        return {
+            name: '',
+            dialogVisible: false,
+            queryParams: {
+                pageNumber: 1,
+                pageSize: 10
+            },
+            tableLabel: [
+                { label: '姓名', prop: 'psnname' },
+                { label: '手机号', prop: 'mobile' },
+                { label: '所属分部', prop: 'deptName' }
+            ],
+            tableData: [],
+            paginationInfo: {
+
+            },
+            selectioned: ''
+        }
+    },
+    methods: {
+        async onShowSearch () {
+            this.name = ''
+            this.dialogVisible = true
+            const { data } = await findEmployeeDept({ name: '' })
+            this.tableData = data
+        },
+        handleClose () {
+            this.name = ''
+            this.dialogVisible = false
+        },
+        async onSearch () {
+            const { data } = await findEmployeeDept({ name: this.name })
+            this.tableData = data
+        },
+        handleSelectionChange (row) {
+            console.log(1, row)
+        },
+        onSureSearch () {
+
+        },
+        dialogCheck (selection, row) {
+            this.$refs.hosjoyTable.clearSelection()
+            if (selection.length === 0) { // 判断selection是否有值存在
+                return
+            }
+            if (row) {
+                this.selectioned = row
+                this.$refs.hosjoyTable.toggleRowSelection(row, true)
+            }
+        },
+        dialogCheckChange (row) {
+            if (row.length === 0) {
+                this.selectioned = null
+            }
+        }
+    }
+}
+</script>
+<style lang="scss" scoped>
+.search_scroll{
+    height: 400px;
+    overflow-y: scroll;
+}
+</style>
