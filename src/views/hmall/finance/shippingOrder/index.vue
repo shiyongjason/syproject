@@ -14,7 +14,7 @@
                         <el-input v-model="queryParams.childOrderNo" maxlength="50" placeholder="请输入关联商品订单编号"></el-input>
                     </div>
                 </div>
-                <div class="query-cont__col" v-if="tab">
+                <div class="query-cont__col" v-if="tabName == '0'">
                     <div class="query-col__lable">运费订单状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.status">
@@ -119,7 +119,6 @@ export default {
             synchromizedMap: SYNCHROMIZED_STATE_MAP,
             payWayMap: PAY_WAY_MAP,
             merchantTypeMap: MERCHANT_TYPE_MAP,
-            initParams: {},
             queryParams: {
                 freightOrderNo: '',
                 childOrderNo: '',
@@ -134,6 +133,7 @@ export default {
                 pageNumber: 1,
                 pageSize: 10
             },
+            resetParams: {},
             tableLabel: [
                 { label: '在线运费订单编号', prop: 'freightOrderNo' },
                 { label: '关联商品运费订单编号', prop: 'childOrderNo' },
@@ -148,7 +148,7 @@ export default {
                 { label: 'MIS资金同步状态', prop: 'capitalSyncStatus' },
                 { label: '商品归属商家', prop: 'merchantName' }
             ],
-            tabName: '',
+            tabName: '0',
             tab: true
         }
     },
@@ -189,15 +189,15 @@ export default {
     },
     methods: {
         // 切换状态
+        // this.tabName == '0' ? this.queryParams.orderStatus = this.queryParams.orderStatus : this.queryParams.orderStatus = this.tabName
         onTab (value) {
-            if (!value.name) {
-                this.tab = true
-            } else {
-                this.tab = false
-            }
-            this.queryParams = { ...this.initParams }
-            this.queryParams.status = value.name
-            this.onQuery()
+            this.queryParams.pageNumber = 1
+            this.orderStatusOptions.map(item => {
+                if (value.name == item.value) {
+                    this.queryParams.status = item.value
+                }
+            })
+            this.findFreightOrders(this.queryParams)
         },
         // 查看操作
         onseeTask (val) {
@@ -208,12 +208,14 @@ export default {
         // 查询操作
         onQuery () {
             this.queryParams.pageNumber = 1
+            this.tabName == '0' ? this.queryParams.status = this.queryParams.status : this.queryParams.status = this.tabName
             this.findFreightOrders(this.queryParams)
         },
         // 重置操作
         onReset () {
-            this.queryParams = { ...this.initParams }
-            this.findFreightOrders()
+            this.queryParams = { ...this.resetParams }
+            this.tabName == '0' ? this.queryParams.status = '' : this.queryParams.status = this.tabName
+            this.findFreightOrders(this.queryParams)
         },
         // 批量导出操作
         onExport () {
@@ -241,8 +243,8 @@ export default {
         })
     },
     mounted () {
-        this.initParams = { ...this.queryParams }
-        this.findFreightOrders()
+        this.resetParams = { ...this.queryParams }
+        this.onQuery()
     },
     activated () {
         this.findFreightOrders()

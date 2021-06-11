@@ -81,7 +81,7 @@ export default {
                 { label: '价格定义来源', prop: 'freightSource' },
                 { label: '维护人', prop: 'updateBy' },
                 { label: '运费合计', prop: 'finalTotalAmount', formatters: 'moneyShow' },
-                { label: '实付运费金额', prop: 'finalTotalAmount', formatters: 'moneyShow' },
+                { label: '实付运费金额', prop: 'actualPaidAmount', formatters: 'moneyShow' },
                 { label: '收货地址', prop: 'shippingAddress' },
                 { label: '客户名称', prop: 'customerName' }
             ]
