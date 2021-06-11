@@ -106,7 +106,6 @@
 import { FREIGHT_STATUS_OPTIONS, MERCHANT_TYPE_OPTIONS, SOURCES_PRICE_OPTIONS, SYNCHROMIZED_STATE_OPTIONS, FREIGHT_STATUS_MAP, SOURCES_PRICE_MAP, SYNCHROMIZED_STATE_MAP, PAY_WAY_MAP, MERCHANT_TYPE_MAP } from '../const'
 import { mapGetters, mapActions } from 'vuex'
 import { B2bUrl } from '@/api/config'
-import axios from 'axios'
 export default {
     name: 'shippingOrder',
     data () {
@@ -243,6 +242,9 @@ export default {
     },
     mounted () {
         this.initParams = { ...this.queryParams }
+        this.findFreightOrders()
+    },
+    activated () {
         this.findFreightOrders()
     }
 }
