@@ -163,8 +163,11 @@ export default {
             ],
             closeOrderDialog: false,
             isAction: true,
-            createform: {},
-            initform: {},
+            createform: {
+                id: '',
+                price: '',
+                operator: ''
+            },
             finalSingleAmount: '',
             rules: {
                 price: [
@@ -207,11 +210,11 @@ export default {
                 }
             })
         },
-        onReset () {
-            this.createform = { ...this.initform }
-        },
         onseeTask (row) {
             this.closeOrderDialog = true
+            this.$nextTick(() => {
+                this.$refs['createform'].resetFields()
+            })
             this.finalSingleAmount = row.finalSingleAmount
             this.createform.id = row.id
             this.createform.operator = this.userInfo.employeeName
@@ -221,7 +224,6 @@ export default {
         },
         onCancel () {
             this.closeOrderDialog = false
-            this.onReset()
         },
         onEdit () {
             if (this.createform.operator != '') {
@@ -230,13 +232,11 @@ export default {
                         this.closeOrderDialog = false
                         this.createform.price = Number(this.createform.price)
                         await putFreightPrice(this.createform)
-                        this.onReset()
                         this.getfreightOrdersInfo()
                     }
                 })
             } else {
                 this.closeOrderDialog = false
-                this.onReset()
             }
         },
         ...mapActions({
@@ -249,7 +249,6 @@ export default {
         }
     },
     mounted () {
-        this.initform = { ...this.createform }
         this.init()
     },
     activated () {
