@@ -62,9 +62,6 @@
                         :tableData="cloudMerchantProductOutOrderList.records" :isShowIndex='false'
                         :pagination="pagination" @onCurrentChange='onCurrentChange' @onSizeChange='onSizeChange'
                         :isAction="true">
-                <template slot="source" slot-scope="scope">
-                    {{scope.data.row.source==='B2b'?'单分享':scope.data.row.source}}
-                </template>
                 <template slot="payMethod" slot-scope="scope">
                     {{orderPayDesc(scope.data.row.payMethod)}}
                 </template>

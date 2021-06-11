@@ -183,6 +183,18 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantOutOrderList.vue')
+                    },
+                    {
+                        path: 'merchantDispatchManager',
+                        name: 'merchantDispatchManager',
+                        meta: {
+                            title: '营销物料',
+                            tagName: '营销物料',
+                            parentName: '订单管理',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantDispatchManager.vue')
                     }
                 ]
             },
@@ -313,6 +325,41 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/comfortcloud/merchant/merchantPurchase.vue')
+                    }
+                ]
+            },
+            {
+                path: 'merchantEngine',
+                meta: {
+                    title: '工程方案',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'merchantEnginePlan',
+                        name: 'merchantEnginePlan',
+                        meta: {
+                            title: '工程方案',
+                            tagName: '工程方案',
+                            parentName: '工程方案',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantEnginePlan.vue')
+                    },
+                    {
+                        path: 'merchantEnginePlanEdit',
+                        name: 'merchantEnginePlanEdit',
+                        meta: {
+                            title: '工程方案编辑',
+                            tagName: '工程方案编辑',
+                            parentName: '工程方案',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/comfortcloud/merchant/merchantEnginePlanEdit.vue')
                     }
                 ]
             },
