@@ -1,0 +1,106 @@
+::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+.finalApproval{
+    margin-top: 50px;
+    padding: 0 10px 100px 0px;
+    box-sizing: border-box;
+    margin-left: 10px;
+
+    /deep/.el-radio-button__inner{
+        margin-top: 10px;
+        width: 310px;
+    }
+    /deep/.el-radio-button__orig-radio:checked+.el-radio-button__inner{
+        background-color:#716a6a;
+        border-color:#716a6a;
+        box-shadow:none;
+        transition:none;
+    }
+    // /deep/.is-active:hover {
+    //     color: #606266;
+    // }
+    .tab-layout {
+        // overflow-y: scroll;
+        // height: calc(100vh - 100px);
+        box-sizing: border-box;
+        .tab-layout-title {
+            background: #6e95bd1a;
+            padding: 8px 7px;
+            box-sizing: border-box;
+            width: 98%;
+            font-weight: bold;
+            color: #000;
+            font-size: 16px;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            span {
+                display: inline-block;
+                width: 5px;
+                height: 10px;
+                background: #ff7a45;
+                margin-right: 8px;
+                flex: 0 0 5px;
+            }
+            font {
+                font-size: 15px;
+                margin-left: 15px;
+            }
+            &-box{
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex: 1;
+            }
+        }
+        .status-title{
+            padding: 8px 7px;
+            font-size: 16px;
+            margin-top: 20px;
+            color: #000;
+            font-weight: bold;
+        }
+    }
+    .item{
+        .item-title{
+            margin-top: 15px;
+        }
+        .info-layout {
+            display: flex;
+            flex-wrap: wrap;
+            box-sizing: border-box;
+            padding-left: 20px;
+            &-item {
+                margin: 8px 10px 0 0;
+                flex: 1;
+                display: flex;
+            }
+            &-span {
+                flex: 1;
+                margin-top: 15px;
+            }
+            &-item {
+                span:nth-child(2) {
+                    word-break: break-all;
+                }
+                &-link{
+                    text-decoration: underline;
+                    cursor: pointer;
+                    color: #FF7A45;
+                }
+            }
+        }
+    }
+    .table{
+        margin-top: 10px;
+    }
+    .dialogbaseinfo{
+        margin-left: 35px;
+        display: flex;
+        &-item{
+            margin:15px 100px 0 0;
+        }
+    }
+}

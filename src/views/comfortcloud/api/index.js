@@ -652,8 +652,19 @@ export function getHomeUser (params) {
 
 // 获取招商代理商列表
 export function getCloudMerchantList (params) {
-    return axios.get(iotUrl + '/mall/boss/agent-sign/page', { params })
+    return axios.get(iotUrl + '/mall/boss/agent-sign', { params })
 }
+
+// 代理商代理详情
+export function getCloudMerchantDetailList (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-detail', { params })
+}
+
+// 获取代理商详情统计
+export function getCloudMerchantDetailStats (params) {
+    return axios.get(iotUrl + '/mall/boss/agent-sign/sign-detail/statistics', { params })
+}
+
 // 获取用户方案
 export function getCloudMerchantCaseList (params) {
     return axios.get(iotUrl + '/mall/boss/customer-project', { params })
@@ -857,6 +868,11 @@ export function getCloudMerchantProductOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/order', { params })
 }
 
+// 添加订单
+export function addCloudMerchantProductOrder (params) {
+    return axios.post(iotUrl + '/mall/boss/order/add', params)
+}
+
 // 获取微信订单列表
 export function getCloudMerchantProductOutOrderList (params) {
     return axios.get(iotUrl + '/mall/boss/out-order/page', { params })
@@ -869,7 +885,7 @@ export function getCloudMerchantProductOutOrderDetail (params) {
 
 // 获取外部订单详情
 export function getCloudMerchantProductOrderDetail (params) {
-    return axios.get(iotUrl + '/mall/boss/order/detail', { params })
+    return axios.get(iotUrl + '/mall/boss/order/detail/' + params.orderId, { params: { source: params.source } })
 }
 
 // 获取抢购活动信息
@@ -983,3 +999,39 @@ export const changeQuotationPermission = (params) => axios.put(iotUrl + '/mall/b
 
 // 删除外部订单
 export const deleteThirdOrder = params => axios.delete(iotUrl + '/mall/boss/order/third/' + params.orderId)
+
+// 获取营销物料列表
+export const getMarktingMaterial = params => axios.get(iotUrl + '/mall/boss/marketing-material', { params })
+
+// 获取营销物料详情
+export const getMarktingMaterialDetail = params => axios.get(iotUrl + '/mall/boss/marketing-material/' + params.materialId)
+
+// 获取待发货的营销物料列表
+export const getToDispatchList = params => axios.get(iotUrl + '/mall/boss/delivery-order/product-options', { params })
+
+// 新增修改营销物料
+export const addMarktingMaterial = params => axios.post(iotUrl + '/mall/boss/marketing-material', params)
+
+// 删除营销物料
+export const deleteMarktingMaterial = params => axios.delete(iotUrl + '/mall/boss/marketing-material/' + params.materialId)
+
+// 营销物料发货单
+export const addDispatchOrder = params => axios.post(iotUrl + '/mall/boss/delivery-order', params)
+
+// 物料回收
+export const recycleMaterial = params => axios.put(iotUrl + '/mall/boss/marketing-material/recycle', params)
+
+// 获取分部列表
+export const findMerchantDep = (params) => axios.get(`/uaa/department/general/${params.pkDeptDoc}/${params.deptType}/${params.jobNumber}/${params.authCode}`)
+
+// 获取工程方案列表
+export const getCloudMerchantProjectSchemeList = params => axios.get(iotUrl + '/mall/boss/project-scheme', { params })
+
+// 获取工程方案详情
+export const getCloudMerchantProjectSchemeDetail = params => axios.get(iotUrl + '/mall/boss/project-scheme/' + params.id)
+
+// 新增修改工程方案
+export const addCloudMerchantProjectScheme = params => axios.post(iotUrl + '/mall/boss/project-scheme', params)
+
+// 删除工程方案
+export const deleteProjectScheme = params => axios.delete(iotUrl + '/mall/boss/project-scheme/' + params.id)

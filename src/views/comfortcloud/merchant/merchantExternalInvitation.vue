@@ -61,6 +61,9 @@
                         <basicTable :tableLabel="tableBuyLabel" :tableData="tableBuyData" :isShowIndex='true'
                                     :pagination="pagination" @onCurrentChange='onCurrentChange'
                                     @onSizeChange='onSizeChange' :isAction="true">
+                            <template slot="action" slot-scope="scope">
+                                <el-button class="orangeBtn" @click="goToDetail(scope.data.row)">查看明细</el-button>
+                            </template>
                         </basicTable>
                     </div>
                 </el-tab-pane>

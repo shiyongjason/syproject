@@ -126,15 +126,7 @@
                 <el-form-item label-width="0">
                     <el-col :span="8">
                         <el-form-item label="经销商名称：" prop="dealer">
-                            <el-autocomplete
-                                class="inline-input"
-                                v-model="addRecord.dealer"
-                                :fetch-suggestions="dealerRequest"
-                                placeholder="请输入经销商名称"
-                                :trigger-on-focus="false"
-                                @select="dealerChanged"
-                                :disabled="isEditRecord"
-                            ></el-autocomplete>
+                            <el-autocomplete class="inline-input" v-model="addRecord.dealer" :fetch-suggestions="dealerRequest" placeholder="请输入经销商名称" :trigger-on-focus="false" @select="dealerChanged" :disabled="isEditRecord"></el-autocomplete>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8" :offset="2">

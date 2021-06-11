@@ -166,8 +166,11 @@ export const WISDOM_POINTSCREDIT_SHOW_LINE = 10860
 
 // 舒适云-智能玩法编辑 todo 舒适云目前没有添加权限按钮 编辑页面全部预留 key
 export const AUTH_CLOUD_SMART_PLAY_EDIT = 10680
-
 export const AUTH_CLOUD_SEND_MESSAGE_EDIT = 10681
+// 舒适云-订单管理-订单列表-发货
+export const AUTH_CLOUD_DELIVER_OPERATE = 10682
+// 舒适云-订单管理-营销物料-发货
+export const AUTH_CLOUD_DISPATCH_DELIVER_OPERATE = 10683
 
 // 好程工 权限功能  109000
 export const CRM_GOODWORK_DETAIL = 109111
