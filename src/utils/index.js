@@ -1,5 +1,6 @@
 import store from '@/store/index'
 import axios from 'axios'
+import { interfaceUrl } from '@/api/config'
 
 const clearCache = function (routerName) {
     store.commit('REMOVE_CACHED_INCLUDE', routerName)
@@ -11,11 +12,12 @@ const newCache = function (routerName) {
 }
 
 const downloadFile = function (apiUrl) {
-    // let apiUrl = `project/api/loan-transfers/boss/${this.paymentOrderId}/download`
-    // window.open(apiUrl, '_blank')
-    axios.get(apiUrl, {
+    apiUrl = interfaceUrl + apiUrl
+    window.open(apiUrl, '_blank')
+    /* axios.get(apiUrl, {
         responseType: 'blob' // 指定获取数据的类型为blob
     }).then(res => {
+        console.log('🚀 --- downloadFile --- res', res)
         let fileName = ''
         let disposition = res.headers['content-disposition']
         if (disposition && disposition.indexOf('attachment') !== -1) {
@@ -32,7 +34,7 @@ const downloadFile = function (apiUrl) {
         } else {
             console.error(' 让后端response的header里面设置Access-Control-Expose-Headers: Content-Disposition， 参考/goodwork/upstreamPaymentManagement onLoanDown的接口')
         }
-    })
+    }) */
 }
 
 export {
