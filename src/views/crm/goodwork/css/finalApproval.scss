@@ -1,21 +1,25 @@
 ::-webkit-scrollbar-thumb {
     background-color: #d6d1d1 !important;
 }
-.finalApproval{
+.finalApproval {
     margin-top: 50px;
     padding: 0 10px 100px 0px;
     box-sizing: border-box;
     margin-left: 10px;
+    .reviewResolution{
+        max-height: 500px;
+        overflow-y: scroll;
+    }
 
-    /deep/.el-radio-button__inner{
+    /deep/.el-radio-button__inner {
         margin-top: 10px;
         width: 310px;
     }
-    /deep/.el-radio-button__orig-radio:checked+.el-radio-button__inner{
-        background-color:#716a6a;
-        border-color:#716a6a;
-        box-shadow:none;
-        transition:none;
+    /deep/.el-radio-button__orig-radio:checked + .el-radio-button__inner {
+        background-color: #716a6a;
+        border-color: #716a6a;
+        box-shadow: none;
+        transition: none;
     }
     // /deep/.is-active:hover {
     //     color: #606266;
@@ -48,14 +52,14 @@
                 font-size: 15px;
                 margin-left: 15px;
             }
-            &-box{
+            &-box {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
                 flex: 1;
             }
         }
-        .status-title{
+        .status-title {
             padding: 8px 7px;
             font-size: 16px;
             margin-top: 20px;
@@ -63,8 +67,8 @@
             font-weight: bold;
         }
     }
-    .item{
-        .item-title{
+    .item {
+        .item-title {
             margin-top: 15px;
         }
         .info-layout {
@@ -85,22 +89,81 @@
                 span:nth-child(2) {
                     word-break: break-all;
                 }
-                &-link{
+                &-link {
                     text-decoration: underline;
                     cursor: pointer;
-                    color: #FF7A45;
+                    color: #ff7a45;
                 }
             }
         }
     }
-    .table{
+    .table {
         margin-top: 10px;
     }
-    .dialogbaseinfo{
+    .dialogbaseinfo {
         margin-left: 35px;
         display: flex;
-        &-item{
-            margin:15px 100px 0 0;
+        &-item {
+            margin: 15px 100px 0 0;
+        }
+    }
+    .purchaseConclusion {
+        .form-item {
+            display: flex;
+            .el-form-item {
+                flex: 1;
+            }
+        }
+        .form-table {
+            margin-top: 20px;
+        }
+        /deep/.hosjoy-table {
+            th.form-table-header .cell span:before {
+                content: '*';
+                color: #f56c6c;
+                margin-right: 4px;
+            }
+            .required-txt {
+                color: #f56c6c;
+                text-align: left;
+                margin-top: 5px;
+                margin-left: 10px;
+            }
+            .mini {
+                width: 180px;
+            }
+            .miniSelectSupplier{
+                .el-input{
+                    width: 180px;
+                }
+            }
+            .miniSelectCompany{
+                .el-input{
+                    width: 210px;
+                } 
+            }
+            .miniSelect{
+                width: 110px;
+                .el-input{
+                    width: 110px;
+                }
+            }
+            .categorymini{
+                width: 120px; 
+                .el-input{
+                    width: 120px;
+                }
+                
+            }
         }
     }
 }
+// /deep/.el-select-dropdown{
+//     color: #f00;
+//     .el-input--mini .el-input__inner{
+//         width: 120px;
+//     }
+// }
+// .el-select-dropdown__item.is-disabled{
+//     cursor: pointer;
+// }

@@ -44,3 +44,5 @@ export const getProjectLevels = (projectId) => axios.get(`/memeber/openapi/proje
 // 设置项目等级&项目服务费
 export const setProjectLevels = (params) => axios.put(`/memeber/openapi/project/levels`, params)
 export const downLoadZip = (params) => axios.get(`memeber/openapi/project/docs-download/${params.projectId}/${params.status}/${params.bizType}`)
+// 天眼查列表搜索
+export const getTYCList = (params) => axios.get(`/memeber/api/tianyancha/searches`, { params })
