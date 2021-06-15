@@ -262,7 +262,7 @@ export default class FinalApproval extends Vue {
         name: ''
     };
     editBaseInfoVisible: boolean = false;
-    purchaseConclusionVisible: boolean = false;
+    purchaseConclusionVisible: boolean = true;
     disabled: boolean = true;
     TYCList:any[]=[]
     tableForm: any[] = [
