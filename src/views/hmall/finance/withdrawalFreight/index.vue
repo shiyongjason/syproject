@@ -90,10 +90,9 @@ export default {
                                 return callback(new Error('提现金额超限'))
                             } else if (value && !(Reg.test(value))) {
                                 return callback(new Error('金额格式为小数点前十三位，小数点后两位'))
+                            } else if (value < 100) {
+                                return callback(new Error('提现金额最低100元'))
                             }
-                            // else if (value < 100) {
-                            //     return callback(new Error('提现金额最低100元'))
-                            // }
                             return callback()
                         }
                     }
