@@ -66,7 +66,13 @@ export default {
             console.log(1, row)
         },
         onSureSearch () {
-
+            if (!this.selectioned) {
+                this.$message({
+                    message: '请先选择客户经',
+                    type: 'warning'
+                })
+                return false
+            }
         },
         dialogCheck (selection, row) {
             this.$refs.hosjoyTable.clearSelection()

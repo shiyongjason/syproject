@@ -255,17 +255,31 @@ export default [
             },
             {
                 path: 'batchpay',
-                name: 'funds',
+                name: 'batchpay',
                 meta: {
                     title: '批量支付',
                     tagName: '批量支付',
                     parentName: '好橙工',
                     isMenu: true,
                     icon: '',
-                    showMenuAs: '/goodwork/batchpay'
+                    showMenuAs: '/goodwork/funds'
 
                 },
                 component: () => import('@/views/crm/funds/batchPay.vue')
+            },
+            {
+                path: 'batchpsubmit',
+                name: 'batchpsubmit',
+                meta: {
+                    title: '批量支付确认',
+                    tagName: '批量支付确认',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/funds/batchSubmit.vue')
             },
             {
                 path: 'contractlist',

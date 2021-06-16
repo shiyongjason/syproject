@@ -2,24 +2,20 @@
     <div class="page-body B2b">
         <div class="page-body-cont">
             <div class="batch">
-                <div class="batch_tit">批量支付账单</div>
+                <div class="batch_tit">批量确认账单</div>
                 <div class="batch_msg mb20"><i>*</i>经销商：四川宏力达机电安装工程有限公司</div>
-                <HosjoyTable localName="V1.*" ref="hosjoyTable" align="center" isShowselection :column="tableLabel"
-                @selection-change="handleSelectionChange" :data="tableData" :total="paginationInfo.total">
+                <HosjoyTable localName="V1.*" ref="hosjoyTable" align="center"  :column="tableLabel"
+                 :data="tableData" >
                 </HosjoyTable>
-                <div class="batch_msg"><i>*</i>对应账单的付款凭证：</div>
+                <div class="batch_msg">支付凭证：</div>
                 <p>（最多支持上传数量为20个文件，单个文件大小不超过20M，上传格式为JPG/JPEG/PNG等主流格式图片）</p>
-                <div class="batch_files" v-for="(item,index) in docPos" :key='index'>
-                    <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
-                    <em> <a :href="item.fileUrl" target="_blank">预览</a></em>
-                    <em @click="onDelete(item,index)">删除</em>
-                </div>
-                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :fileNum='20' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px">
-                    <el-button size="medium" type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
-                </HosJoyUpload>
+
                 <div class="batch_bot">
-                    <span>应支付总额(元)：20,000,000.00</span>
-                    <el-button type="primary" @click="onSubmit">确定并提交</el-button>
+                    <span>待确认总金额(元)：20,000,000.00</span>
+                    <div>
+                    <el-button type="primary" @click="onNoReceived">并未收到</el-button>
+                    <el-button type="primary" @click="onReceived">确认收到</el-button>
+                    </div>
                 </div>
             </div>
 
@@ -30,17 +26,12 @@
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { getFundsPayBatch, payVoucherBatch } from './api/index'
+import { getFundsPayBatch, payReceived, payNoReceived } from './api/index'
 export default {
     name: 'batchpay',
-    components: { HosjoyTable, HosJoyUpload },
+    components: { HosjoyTable },
     data () {
         return {
-            action: ccpBaseUrl + 'common/files/upload-old',
-            uploadParameters: {
-                updateUid: '',
-                reservedName: true
-            },
             fileDialog: false,
             docPos: [],
             tableLabel: [
@@ -64,8 +55,25 @@ export default {
             this.queryParams.companyId = ''
             const { data } = await getFundsPayBatch()
         },
-        async onSubmit () {
-            await payVoucherBatch()
+        onNoReceived () {
+            this.$confirm('确定后，当前页面所有账单的状态将置为「支付失败」，重新上传', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await payNoReceived()
+            }).catch(() => {
+            })
+        },
+        onReceived () {
+            this.$confirm('确定后，当前页面所有账单的状态将置为「已支付」，重新上传', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await payReceived()
+            }).catch(() => {
+            })
         }
     },
     mounted () {

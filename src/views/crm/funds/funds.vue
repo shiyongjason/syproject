@@ -102,8 +102,11 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                    <h-button table @click="onUploadPay()">
+                    <h-button table @click="onUploadPay(scope.data.row)">
                         上传支付凭证
+                    </h-button>
+                       <h-button table @click="onBatchSumbit(scope.data.row)">
+                        批量确认
                     </h-button>
                 </template>
             </basicTable>
@@ -216,9 +219,9 @@ export default {
         },
         queryParamsUseQuery () {
             return {
-                ...this.queryParams,
-                authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
-                jobNumber: this.userInfo.jobNumber
+                ...this.queryParams
+                // authCode: sessionStorage.getItem('authCode') ? JSON.parse(sessionStorage.getItem('authCode')) : '',
+                // jobNumber: this.userInfo.jobNumber
             }
         }
     },
@@ -320,8 +323,11 @@ export default {
                 this.totalLabelName = '剩余货款'
             }
         },
-        onUploadPay () {
-            this.$refs.uploaddialog.onDialogClick()
+        onUploadPay (val) {
+            this.$refs.uploaddialog.onDialogClick(val)
+        },
+        onBatchSumbit (val) {
+            this.$router.push({ path: '/goodwork/batchpsubmit' })
         },
         ...mapActions({
             findFundsList: 'crmFunds/findPurchaseList',
