@@ -93,7 +93,111 @@
             top: 79px;
             right: 198px;
         }
-        
-        
+        .pos7{
+            position: absolute;
+            top: 0px;
+            right: 144px;
+        }
+        .pos8{
+            position: absolute;
+            top: 79px;
+            right: 363px;
+        }
+        .follow-records{
+            margin-top: 10px;
+        }
+        .follow-cell {
+
+            .info {
+                display: flex;
+                flex-direction: row;
+    
+                .avatar {
+                    width: 36px;
+                    height: 36px;
+                    margin: 0px 10px 0 16px;
+    
+                }
+    
+                .name-container {
+                    flex: 1;
+    
+                    .follow-tag {
+                        height: 21px;
+                        font-size: 16px;
+                        font-weight: 400;
+                        color: #000000;
+                        line-height: 22px;
+                    }
+    
+                    .name {
+                        margin-top: 2px;
+                        width: 104px;
+                        height: 16px;
+                        font-size: 12px;
+                        font-weight: 400;
+                        color: #666666;
+                        line-height: 17px;
+                    }
+                }
+    
+                .time {
+                    align-self: flex-start;
+                    height: 16px;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #666666;
+                    line-height: 17px;
+                    margin-right: 16px;
+                }
+            }
+    
+            .content-container {
+                display: flex;
+                flex-direction: row;
+                margin: 11px 16px;
+    
+                .line {
+                    width: 1px;
+                    background: #E1E1E3;
+                    margin: 0 27px 0 18px;
+                }
+    
+                .content {
+                    flex: 1;
+    
+                    .title-tag {
+                        height: 21px;
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: #000000;
+                        line-height: 20px;
+                    }
+    
+                    .audio-player-container {
+                        margin: 8px 0;
+                    }
+    
+                    .watch-audio-text {
+                        margin: 8px 0;
+                        height: 16px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        color: #FF7A45;
+                        line-height: 18px;
+                    }
+    
+                    .desc {
+                        font-size: 13px;
+                        font-weight: 400;
+                        color: #666666;
+                        line-height: 18px;
+                        padding: 4px 0;
+                    }
+                }
+            }
+    
+    
+        }
     }
 }
