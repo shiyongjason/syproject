@@ -1,0 +1,99 @@
+/deep/::-webkit-scrollbar-thumb {
+    background-color: #d6d1d1 !important;
+}
+/deep/.ProjectList2Detail {
+    &-ctx {
+        margin-top: 20px;
+        .process{
+            // background-color: #f5f7fa;
+            margin-top: 5px;
+            position: relative;
+            box-sizing: border-box;
+            padding:10px 0;
+        }
+        .process-item{
+            line-height: 20px;
+            display: inline-block;
+            box-sizing: border-box;
+            padding:9px 0;
+            background-color: #cccccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            width: 125px;
+            text-align: center;
+        }
+        .step_arrow{
+            display: inline-block;
+            margin:0 20px;
+        }
+        .step_arrow:before {
+            top: 23px;
+            content: '';
+            display: inline-block;
+            position: absolute;
+            height: 15px;
+            width: 1px;
+            background: #908f8f;
+        }
+        .step_arrow:after {
+            top: 23px;
+            content: '';
+            display: inline-block;
+            position: absolute;
+            height: 15px;
+            width: 1px;
+            background: #908f8f; 
+        }
+        .step_arrow:before {
+            transform: rotate(-45deg) translateY(-4px);
+            transform-origin: 0 0;
+        }
+        .step_arrow:after {
+            transform: rotate(45deg) translateY(4px);
+            transform-origin: 100% 100%;
+        }
+        .down{
+            position: absolute;
+            top: 50px;
+            right: 75px;
+        }
+        .down:before {
+            top: 16px;
+            transform: rotate(130deg) translateY(-3px) !important;
+            transform-origin: 0 0 !important;
+        }
+        .down:after {
+            top: 6px;
+            transform: rotate(36deg) translateY(-2px);
+            transform-origin: 100% 100%;
+        }
+        .isActive{
+            background-color: #ff7a45;
+            color: #fff;
+        }
+        .pos5{
+            position: absolute;
+            top: 79px;
+            right: 35px;
+        }
+        .left:before {
+            top: 96px;
+            right: 180px;
+            transform: rotate(220deg) translateY(-3px) !important;
+            transform-origin: 0 0 !important;
+        }
+        .left:after {
+            top: 82px;
+            right: 185px;
+            transform: rotate(135deg) translateY(-2px);
+            transform-origin: 100% 100%;
+        }
+        .pos6{
+            position: absolute;
+            top: 79px;
+            right: 198px;
+        }
+        
+        
+    }
+}
