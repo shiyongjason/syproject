@@ -2,11 +2,11 @@
     <div class="drawer-wrap">
         <h-drawer :title="type==='merchant'?'商家详情':'会员详情'" :visible.sync="drawer" direction='rtl' size='50%' :beforeClose="handleClose">
             <template #connect>
-                <el-tabs v-model="activeName">
-                    <el-tab-pane label="功能管理" name="first"></el-tab-pane>
-                    <el-tab-pane label="开户信息" name="second"></el-tab-pane>
-                </el-tabs>
-                <el-form v-if="activeName=='first'" :model="bossDetail" :rules="rules" ref="ruleForm">
+                <!-- <el-tabs v-model="activeName"> -->
+                <!-- <el-tab-pane label="功能管理" name="first"></el-tab-pane> -->
+                <!-- <el-tab-pane label="开户信息" name="second"></el-tab-pane> -->
+                <!-- </el-tabs> -->
+                <el-form :model="bossDetail" :rules="rules" ref="ruleForm">
                     <el-form-item :label="type==='merchant'?'商家账号：':'会员账号：'" :label-width="formLabelWidth">
                         <span v-if="type==='merchant'">{{bossDetail.merchantAccount?bossDetail.merchantAccount:'-'}}</span>
                         <span v-if="type==='member'">{{bossDetail.memberAccount?bossDetail.memberAccount:'-'}}</span>
@@ -68,6 +68,9 @@
                         <el-form-item label="自动推送至店铺：" prop="resource" :label-width="formLabelWidth">
                             <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
                         </el-form-item>
+                        <el-form-item label="资金业务：" prop="resource" :label-width="formLabelWidth">
+                            <el-switch v-model="bossDetail.isAutoDispatch" :active-value=1 :inactive-value=0></el-switch>
+                        </el-form-item>
                         <el-form-item label="商家角色：" prop="type" :label-width="formLabelWidth">
                             <el-checkbox label="商品型" name="type" v-model="bossDetail.isCommodity" :true-label=1 :false-label=0></el-checkbox>
                             <el-checkbox label="运营型" name="type" v-model="bossDetail.isOperational" :true-label=1 :false-label=0></el-checkbox>
@@ -103,13 +106,13 @@
                         {{bossDetail.updateBy?bossDetail.updateBy:'-'}} {{bossDetail.updatePhone}}
                     </el-form-item>
                 </el-form>
-                <div class="drawer-footer" v-if="activeName=='first'">
+                <div class="drawer-footer">
                     <div class="drawer-button">
                         <h-button @click="cancelForm">取 消</h-button>
                         <h-button type="primary" @click="onSaveDetail()" :loading="loading">{{ loading ? '提交中 ...' : '保 存' }}</h-button>
                     </div>
                 </div>
-                <div class="" v-if="activeName=='second'&&!bossDetail.isAuthentication&&!bossDetail.authenticationTime">
+                <!-- <div class="" v-if="activeName=='second'&&!bossDetail.isAuthentication&&!bossDetail.authenticationTime">
                     暂无认证信息
                 </div>
                 <div class="" v-if="activeName=='second'&&bossDetail.authenticationTime">
@@ -118,7 +121,7 @@
                             {{bossDetail.companyName||'-'}}
                         </el-form-item>
                         <el-form-item label="企业类型：" :label-width="formLabelWidth">
-                            <!-- 11=个人，12=企业，13=个体工商户 -->
+                             11=个人，12=企业，13=个体工商户
                             {{bossDetail.userType?userType[bossDetail.userType]:'-'}}
                         </el-form-item>
                         <el-form-item label="统一社会信用代码：" :label-width="formLabelWidth">
@@ -233,14 +236,14 @@
                             }}
                         </el-form-item>
                         <el-form-item label="认证状态：" :label-width="formLabelWidth">
-                            <!-- 0：未认证 1：已认证 -->
+                            0：未认证 1：已认证
                             {{
                                 bossDetail.isAuthentication==0?'未认证':bossDetail.isAuthentication==1?"已认证":'-'
                             }}
                             <span v-if="bossDetail.authenticationFailureReason&&bossDetail.isAuthentication!=1">（{{bossDetail.authenticationFailureReason}}）</span>
                         </el-form-item>
                         <el-form-item label="认证方式：" :label-width="formLabelWidth">
-                            <!-- 1：e签宝-企业四要素/e签宝-个人二要素 2：中金-开户 -->
+                            1：e签宝-企业四要素/e签宝-个人二要素 2：中金-开户
                             {{
                                 bossDetail.authenticationType==1?'e签宝':bossDetail.authenticationType==2?"中金":'-'
                             }}
@@ -258,7 +261,7 @@
                             {{formatTime(bossDetail.openTime)}}
                         </el-form-item>
                     </el-form>
-                </div>
+                </div> -->
             </template>
         </h-drawer>
     </div>
@@ -287,7 +290,7 @@ export default {
             type: '',
             removeValue: true,
             merchantArr: [],
-            activeName: 'first',
+            // activeName: 'first',
             branchArr: [],
             formLabelWidth: '140px',
             loading: false,
@@ -396,7 +399,7 @@ export default {
                     this.$emit('backEvent')
                 })
             } else {
-                this.activeName = 'first'
+                // this.activeName = 'first'
                 this.$emit('backEvent')
             }
         },

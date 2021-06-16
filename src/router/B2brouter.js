@@ -475,6 +475,74 @@ export default [
                         component: () => import('@/views/hmall/searchProject/searchSynonym.vue')
                     }
                 ]
+            },
+            {
+                path: 'fundAudit',
+                name: 'fundAudit',
+                meta: {
+                    title: '资金审核',
+                    tagName: '资金审核',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: InterlayerContainer,
+                children: [
+                    {
+                        path: 'fundAuditList',
+                        name: 'fundAuditList',
+                        meta: {
+                            title: '资金审核列表',
+                            tagName: '资金审核列表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/fundAuditList.vue')
+                    },
+                    {
+                        path: 'auditFundList',
+                        name: 'auditFundList',
+                        meta: {
+                            title: '商家代采订单审核列表',
+                            tagName: '商家代采订单审核列表',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/auditFundList.vue')
+                    },
+                    {
+                        path: 'advancePayment',
+                        name: 'advancePayment',
+                        meta: {
+                            title: '商家代采订单预付款确认',
+                            tagName: '商家代采订单预付款确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/advancePayment.vue')
+                    },
+                    {
+                        path: 'auditFundStatus',
+                        name: 'auditFundStatus',
+                        meta: {
+                            title: '商家代采订单状态确认',
+                            tagName: '商家代采订单状态确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/auditFundStatus.vue')
+                    },
+                    {
+                        path: 'prepayment',
+                        name: 'prepayment',
+                        meta: {
+                            title: '商家提前还款确认',
+                            tagName: '商家提前还款确认',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/fundAudit/prepayment.vue')
+                    }
+                ]
             }
         ]
     }

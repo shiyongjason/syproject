@@ -5,7 +5,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">商家账号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.merchantAccount" placeholder="请输入账号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.merchantAccount" placeholder="请输入商家账号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -25,6 +25,14 @@
                 <!-- <div class="query-cont__col">
                     <el-checkbox v-model="queryParams.isEnabled" :true-label=1 :false-label=0>只看启用</el-checkbox>
                 </div> -->
+                <div class="query-cont__col">
+                    <div class="query-col__lable">商家角色：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.businessRole">
+                            <el-option v-for="item in businessRoleOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
+                    </div>
+                </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">商家类型：</div>
                     <div class="query-col__input">
@@ -71,7 +79,15 @@
                 <div class="query-cont__col">
                     <div class="query-col__lable">店铺名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.shopName" placeholder="请输入" maxlength="60"></el-input>
+                        <el-input v-model="queryParams.shopName" placeholder="请输入店铺名称" maxlength="60"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont__col">
+                    <div class="query-col__lable">资金业务开通状态：</div>
+                    <div class="query-col__input">
+                        <el-select v-model="queryParams.openingStatus">
+                            <el-option v-for="item in openingStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -95,7 +111,7 @@
                     {{scope.data.row.merchantType==1?'体系内':'体系外'}}
                 </template>
                 <template slot="merchantRolePermission" slot-scope="scope">
-                    {{merchantRole[scope.data.row.merchantRolePermission-1]}}
+                    {{ businessRoleMAP.get(scope.data.row.merchantRolePermission) || '-' }}
                 </template>
                 <template slot="isAutoDispatch" slot-scope="scope">
                     {{scope.data.row.isAutoDispatch==0?'已关闭':'已开启'}}
@@ -109,8 +125,11 @@
                 <template slot="authenticationTime" slot-scope="scope">
                     {{scope.data.row.authenticationTime | formatDate}}
                 </template>
+                <template slot="openingStatus" slot-scope="scope">
+                    {{openingStatusMap.get(scope.data.row.openingStatus)}}
+                </template>
                 <template slot="action" slot-scope="scope">
-                    <!-- <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button> -->
+                    <h-button table @click="onOperate(scope.data.row)">{{scope.data.row.isEnabled==1?'禁用':'启用'}}</h-button>
                     <h-button table @click="onFindInfo(scope.data.row.companyCode,'merchant')">查看详情</h-button>
                 </template>
             </basicTable>
@@ -123,10 +142,15 @@ import drawerCom from './drawerCom'
 import { mapState, mapActions, mapGetters } from 'vuex'
 import { deepCopy } from '@/utils/utils'
 import { changeState } from './api/index'
+import { BUSINESS_ROLE_OPTIONS, BUSINESS_ROLE_MAP, OPENING_STATUS_OPTIONS, OPENING_STATUS_MAP } from './const'
 export default {
     name: 'membershipBussinessmanage',
     data () {
         return {
+            openingStatusOptions: OPENING_STATUS_OPTIONS,
+            openingStatusMap: OPENING_STATUS_MAP,
+            businessRoleOptions: BUSINESS_ROLE_OPTIONS,
+            businessRoleMAP: BUSINESS_ROLE_MAP,
             queryParams: {
                 authenticationEndTime: '',
                 authenticationStartTime: '',
@@ -171,13 +195,13 @@ export default {
                 },
                 { label: '认证时间', prop: 'authenticationTime', sortable: true, width: '150px' },
                 { label: '商家角色权限', prop: 'merchantRolePermission', width: '120px' },
-                { label: '自动推送至店铺', prop: 'isAutoDispatch', width: '120px' }
-                // { label: '状态', prop: 'isEnabled' }
+                { label: '自动推送至店铺', prop: 'isAutoDispatch', width: '120px' },
+                { label: '资金业务', prop: 'openingStatus' },
+                { label: '状态', prop: 'isEnabled' }
             ],
             tableData: [],
             drawer: false,
             checked: false,
-            merchantRole: ['商品型', '运营型', '商品运营型', '无权限'],
             bossStatic: {},
             copyParams: {},
             branchArr: [],
