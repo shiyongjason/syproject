@@ -66,4 +66,7 @@ export const updateEmployeeInfo = (params) => axios.patch(`memeber/openapi/compa
 // 角色字典
 export const findRoleList = () => axios.get(`memeber/openapi/company/user/roles`)
 // 名称模糊搜索
-export const findEmployeeDept = (params) => axios.get(`uaa/employee/employee-dept/`, { params })
+export const findEmployeeDept = (params) => axios.get(`uaa/employee/employee-dept`, { params })
+
+// 修改客户经理
+export const updateCustomerAdmin = (params) => axios.post(`memeber/api/customer-manager`, params)

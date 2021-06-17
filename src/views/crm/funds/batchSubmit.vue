@@ -3,18 +3,20 @@
         <div class="page-body-cont">
             <div class="batch">
                 <div class="batch_tit">批量确认账单</div>
-                <div class="batch_msg mb20"><i>*</i>经销商：四川宏力达机电安装工程有限公司</div>
-                <HosjoyTable localName="V1.*" ref="hosjoyTable" align="center"  :column="tableLabel"
-                 :data="tableData" >
+                <div class="batch_msg mb20">经销商：{{payDetail.companyName}}</div>
+                <HosjoyTable localName="V1.*" ref="hosjoyTable" align="center" :column="tableLabel" :data="tableData">
                 </HosjoyTable>
                 <div class="batch_msg">支付凭证：</div>
-                <p>（最多支持上传数量为20个文件，单个文件大小不超过20M，上传格式为JPG/JPEG/PNG等主流格式图片）</p>
-
+                <div class="batch_img" v-for="(item,index) in payDetail.attachDocs" :key="index">
+                    <div class="batch_img-flex">
+                        <ImageAddToken :fileUrl="item.fileUrl" alt="" />
+                    </div>
+                </div>
                 <div class="batch_bot">
-                    <span>待确认总金额(元)：20,000,000.00</span>
+                    <span>待确认总金额(元)：{{payDetail.totalAmount|fundMoneyHasTail}}</span>
                     <div>
-                    <el-button type="primary" @click="onNoReceived">并未收到</el-button>
-                    <el-button type="primary" @click="onReceived">确认收到</el-button>
+                        <el-button type="primary" @click="onNoReceived">并未收到</el-button>
+                        <el-button type="primary" @click="onReceived">确认收到</el-button>
                     </div>
                 </div>
             </div>
@@ -25,53 +27,72 @@
 <script>
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
+import ImageAddToken from '@/components/imageAddToken/index.vue'
 import { ccpBaseUrl } from '@/api/config'
-import { getFundsPayBatch, payReceived, payNoReceived } from './api/index'
+import { fundMoneyHasTail } from '@/utils/filters'
+import { confirmPay, payReceived, payNoReceived } from './api/index'
 export default {
     name: 'batchpay',
-    components: { HosjoyTable },
+    components: { HosjoyTable, ImageAddToken },
     data () {
         return {
             fileDialog: false,
             docPos: [],
             tableLabel: [
-                { label: '姓名', prop: 'signerName' },
-                { label: '手机号', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                { label: '所属分部', prop: 'paramGroupName' }
+                { label: '项目名称', prop: 'companyName' },
+                { label: '账单流水号', prop: 'orderId' },
+                { label: '账单类型', prop: 'repaymentType', dicData: [{ value: 1, label: '首付款' }, { value: 2, label: '剩余货款' }, { value: 3, label: '服务费' }] },
+                { label: '金额(元)', prop: 'paymentAmount', displayAs: 'money' },
+                { label: '状态', prop: 'paymentFlag', dicData: [{ value: 0, label: '待支付' }, { value: 1, label: '支付待确认' }, { value: 2, label: '已支付' }, { value: 3, label: '支付失败' }, { value: 4, label: '已取消' }] },
+                { label: '应支付日期', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD' },
+                { label: '支付时间', prop: 'paidTime', displayAs: 'YYYY-MM-DD HH:mm' }
             ],
             tableData: [],
             queryParams: {
                 pageSize: 10,
                 pageNumber: 1,
-                companyId: ''
+                fundId: ''
             },
             paginationInfo: {
 
-            }
+            },
+            payDetail: {}
         }
     },
     methods: {
         async onGetList () {
-            this.queryParams.companyId = ''
-            const { data } = await getFundsPayBatch()
+            this.queryParams.fundId = this.$route.query.fundId
+            const { data } = await confirmPay(this.queryParams)
+            this.payDetail = data
+            this.tableData = data.batchFunds
         },
         onNoReceived () {
+            const fundId = []
+            this.tableData.map(item => {
+                fundId.push(item.id)
+            })
             this.$confirm('确定后，当前页面所有账单的状态将置为「支付失败」，重新上传', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await payNoReceived()
+                await payNoReceived({ fundId: fundId })
+                this.$router.push({ path: '/goodwork/funds' })
             }).catch(() => {
             })
         },
         onReceived () {
+            const fundId = []
+            this.tableData.map(item => {
+                fundId.push(item.id)
+            })
             this.$confirm('确定后，当前页面所有账单的状态将置为「已支付」，重新上传', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(async () => {
-                await payReceived()
+                await payReceived({ fundId: fundId })
+                this.$router.push({ path: '/goodwork/funds' })
             }).catch(() => {
             })
         }
@@ -125,9 +146,9 @@ export default {
         margin-top: 20px;
         display: flex;
         justify-content: space-between;
-        padding: 20px 0 ;
-        border-top:1px solid #e5e5e5;
-        span{
+        padding: 20px 0;
+        border-top: 1px solid #e5e5e5;
+        span {
             font-size: 25px;
         }
     }
@@ -137,5 +158,13 @@ export default {
     margin: 0 !important;
     line-height: 24px !important;
     color: #fff;
+}
+.batch_img{
+    display: flex;
+    &-flex{
+        width: 150px;
+        height: 150px;
+margin:10px
+    }
 }
 </style>

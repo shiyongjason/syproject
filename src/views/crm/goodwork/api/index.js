@@ -46,3 +46,15 @@ export const setProjectLevels = (params) => axios.put(`/memeber/openapi/project/
 export const downLoadZip = (params) => axios.get(`memeber/openapi/project/docs-download/${params.projectId}/${params.status}/${params.bizType}`)
 // 天眼查列表搜索
 export const getTYCList = (params) => axios.get(`/memeber/api/tianyancha/searches`, { params })
+
+// 评审决议详情
+export const getResolutions = (params) => axios.get(`/memeber/api/resolutions/boss/${params}`)
+
+// 保存客户信息
+export const resCustomer = (params) => axios.patch(`/memeber/api/resolutions/boss/customer`, params)
+
+// 保存 采购单
+export const resPurchase = (params) => axios.patch(`/memeber/api/resolutions/boss/purchase`, params)
+
+// 评议记录
+export const getRecordList = (params) => axios.get(`/memeber/api/resolutions/boss/${params}/record-list`)

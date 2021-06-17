@@ -1,15 +1,15 @@
 <template>
     <div class="finalApproval">
-        <el-radio-group v-model="radio1">
+        <el-radio-group v-model="radio1" @change="changeGroup">
             <el-radio-button label="评审决议内容"></el-radio-button>
             <el-radio-button label="决议修改记录"></el-radio-button>
         </el-radio-group>
-        <div class="tab-layout">
-            <div class="status-title">评审会决议【待提交】</div>
-            <div class="status-description">（待风控完善评审决议内容后，提交钉钉审批流程）</div>
+        <div class="tab-layout" v-if="radio1=='评审决议内容'">
+            <div class="status-title">评审会决议【{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].tit}}】</div>
+            <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
             <div class="tab-layout-title">
                 <span></span>
-                <div class="tab-layout-title-box">客户基本信息<h-button table>编辑</h-button>
+                <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer">编辑</h-button>
                 </div>
             </div>
             <div class="item">
@@ -17,27 +17,27 @@
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px">经销商：</font>
-                        <span>河南电力局设备工程公司</span>
+                        <span>{{resolutionDetail.companyName}}</span>
                     </div>
                     <div class="info-layout-item">
                         <font style="flex:0 0 150px">经销商客户经理：</font>
-                        <span>许攸(15025572771)</span>
+                        <span>{{resolutionDetail.userManager}}({{resolutionDetail.userManagerPhone||'-'}})</span>
                     </div>
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px">可代采购额度(元)：</font>
-                        <span>20,000,000.00</span>
+                        <span>{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</span>
                     </div>
                     <div class="info-layout-item">
                         <font style="flex:0 0 150px">剩余代采购额度(元)：</font>
-                        <span>20,000,000.00</span>
+                        <span>{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</span>
                     </div>
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px">经销商评级：</font>
-                        <span>B</span>
+                        <span>{{resolutionDetail.companyLevel}}</span>
                     </div>
 
                 </div>
@@ -47,17 +47,17 @@
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目名称：</font>
-                        <span>山东绿地泉事业部绿地溪山境一期空气源热水器新材料科技创意谷综合楼多联机空调系统设备</span>
+                        <span>{{resolutionDetail.projectName}}</span>
                     </div>
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目合同总额(元)：</font>
-                        <span>20,000,000.00</span>
+                        <span>{{resolutionDetail.contractAmount|fundMoneyHasTail}}</span>
                     </div>
                     <div class="info-layout-item">
                         <font><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目评级：</font>
-                        <span>B</span>
+                        <span>{{resolutionDetail.levels}}</span>
                     </div>
                 </div>
 
@@ -65,28 +65,28 @@
             <!--  -->
             <div class="tab-layout-title">
                 <span></span>
-                <div class="tab-layout-title-box">采购结论<h-button table>编辑</h-button>
+                <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur">编辑</h-button>
                 </div>
             </div>
             <div class="item">
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>申请代付金额(元)：</font>
-                        <span>20,000,000.00</span>
+                        <span>{{resolutionDetail.predictLoanAmount|fundMoneyHasTail}}</span>
                     </div>
                     <div class="info-layout-item">
                         <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                        <span>100%</span>
+                        <span>{{resolutionDetail.advancePaymentRate}}%</span>
                     </div>
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>设备总额(元)：</font>
-                        <span>20,000,000.00</span>
+                        <span>{{resolutionDetail.deviceAmount|fundMoneyHasTail}}</span>
                     </div>
                     <div class="info-layout-item">
                         <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
-                        <span>3个月</span>
+                        <span>{{resolutionDetail.remainPaymentCycle}}个月</span>
                     </div>
                 </div>
                 <div class="info-layout">
@@ -97,11 +97,11 @@
                 <div class="info-layout" style="margin-left:50px">
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
-                        <span>5</span>
+                        <span>{{resolutionDetail.acceptBankRate}}</span>
                     </div>
                     <div class="info-layout-item">
                         <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
-                        <span>6</span>
+                        <span>{{resolutionDetail.transferBankRate}}</span>
                     </div>
                 </div>
                 <div class="info-layout">
@@ -121,62 +121,62 @@
                 <div class="tab-textarea" style="margin:15px 0 0 15px">
                     <!-- <el-input  type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="500" rows="5" show-word-limit>
                     </el-input> -->
-                    <p>123</p>
+                    <p>{{resolutionDetail.remark}}</p>
                 </div>
             </div>
 
         </div>
-        <el-dialog title="质押与终审决议信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="()=>editBaseInfoVisible=false" :modal='false'>
+        <el-dialog title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
             <div class="dialog-ctx reviewResolution">
                 <div class="reviewResolutionForm-title" style="marginTop:0px">
                     企业信息：
                 </div>
                 <div class="dialogbaseinfo">
-                    <div class="dialogbaseinfo-item">经销商：河南电力局设备工程公司</div>
-                    <div class="dialogbaseinfo-item">经销商客户经理：许攸(15025572771)</div>
+                    <div class="dialogbaseinfo-item">经销商：{{resolutionDetail.companyName}}</div>
+                    <div class="dialogbaseinfo-item">经销商客户经理：{{resolutionDetail.userManager}}({{resolutionDetail.userManagerPhone||'-'}})</div>
                 </div>
                 <div class="dialogbaseinfo">
-                    <div class="dialogbaseinfo-item">可代采购额度(元)：2,000,000.00</div>
-                    <div class="dialogbaseinfo-item">剩余代采购额度(元)：2,000,000.00</div>
+                    <div class="dialogbaseinfo-item">可代采购额度(元)：{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</div>
+                    <div class="dialogbaseinfo-item">剩余代采购额度(元)：{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</div>
                 </div>
                 <el-form id='elform' :model="baseInfoForm" :rules="formRules" label-width="180px" label-position='right' ref="reviewResolutionForm">
                     <div class="reviewResolutionForm-title" style="marginTop:0px">
                         项目信息：
                     </div>
-                    <el-form-item label="项目名称：" prop='pledgeNo' style="marginLeft:-8px">
-                        <el-input placeholder="请输入" v-model="baseInfoForm.name" maxlength="50"></el-input>
+                    <el-form-item label="项目名称：" prop='projectName' style="marginLeft:-8px">
+                        <el-input placeholder="请输入" v-model="baseInfoForm.projectName" maxlength="50"></el-input>
                     </el-form-item>
-                    <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
-                        <el-select v-model="baseInfoForm.name" placeholder="请选择">
+                    <el-form-item label="项目评级：" prop='levels' style="marginLeft:-9px;marginTop:10px">
+                        <el-select v-model="baseInfoForm.levels" placeholder="请选择">
                             <el-option label="A" :value="1"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="项目合同总额：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
-                        <el-input placeholder="请输入" @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)">
+                    <el-form-item label="项目合同总额(元)：" prop='contractAmount' style="marginLeft:-9px;marginTop:10px">
+                        <el-input placeholder="请输入" @input="(val)=>inputChage(val,baseInfoForm,'contractAmount')" :value="money(baseInfoForm.contractAmount)">
                             <template slot="append">元</template>
                         </el-input>
                     </el-form-item>
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <h-button>取消</h-button>
-                <h-button type="primary">确定</h-button>
+                <h-button @click="handleHidden">取消</h-button>
+                <h-button type="primary" @click="onSaveCustomer">确定</h-button>
             </div>
         </el-dialog>
-        <!--  -->
-        <el-dialog title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="1080px" :before-close="()=>editBaseInfoVisible=false" :modal='false'>
+        <!-- 弹窗 -->
+        <el-dialog title="采购结论" :close-on-click-modal='false' :visible.sync="purchaseConclusionVisible" width="1080px" :before-close="handleClose" :modal='false'>
             <div class="dialog-ctx reviewResolution">
-                <el-form id='elform' :model="baseInfoForm" :rules="formRules" label-width="180px" label-position='right' ref="purchaseConclusionForm" class="purchaseConclusion">
+                <el-form id='elform' :model="purForm" :rules="purFormRules" label-width="180px" label-position='right' ref="purchaseConclusionForm" class="purchaseConclusion">
                     <div class="form-item">
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
-                        <el-form-item label="申请代付金额：" prop='pledgeNo'>
-                            <el-input v-isNum:2 v-inputMAX='100000000' placeholder="请输入" v-model="baseInfoForm.name" maxlength="50">
+                        <el-form-item label="申请代付金额：" prop='predictLoanAmount'>
+                            <el-input v-isNum:2 v-inputMAX='100000000' placeholder="请输入" v-model="purForm.predictLoanAmount" maxlength="50">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!-- 0-100,最多保留2位小数 -->
-                        <el-form-item label="经销商首付款比例" prop='reviewResolutionStatus'>
-                            <el-input placeholder="请输入" v-model="baseInfoForm.name" maxlength="50">
+                        <el-form-item label="经销商首付款比例" prop='advancePaymentRate'>
+                            <el-input placeholder="请输入" v-model="purForm.advancePaymentRate" maxlength="50">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -184,14 +184,14 @@
                     <div class="form-item">
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
-                        <el-form-item label="设备总额：" prop='reviewResolutionStatus'>
-                            <el-input placeholder="请输入"  v-isNum:2 v-inputMAX='100000000' v-model="baseInfoForm.name" :value="money(baseInfoForm.name)">
+                        <el-form-item label="设备总额：" prop='deviceAmount'>
+                            <el-input placeholder="请输入"  v-isNum:2 v-inputMAX='100000000' v-model="purForm.deviceAmount" :value="money(baseInfoForm.name)">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                         <!--  -->
-                        <el-form-item label="剩余货款支付周期：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
-                            <el-select v-model="baseInfoForm.name" placeholder="请选择">
+                        <el-form-item label="剩余货款支付周期：" prop='remainPaymentCycle' style="marginLeft:-9px;marginTop:10px">
+                            <el-select v-model="purForm.remainPaymentCycle" placeholder="请选择">
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
                                 <el-option label="3个月" :value="3"></el-option>
@@ -206,14 +206,14 @@
                     </div>
                     <div class="form-item">
                         <!-- 仅可输入数字，区间为（0，100），最多保留2位小数 -->
-                        <el-form-item label="银行转账：" prop='reviewResolutionStatus'>
-                            <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="baseInfoForm.name">
+                        <el-form-item label="银行转账：" prop='transferBankRate'>
+                            <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="purForm.transferBankRate">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
                         <!-- 仅可输入数字，区间为（0，100），最多保留2位小数 -->
-                        <el-form-item label="银行承兑：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
-                            <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="baseInfoForm.name">
+                        <el-form-item label="银行承兑：" prop='acceptBankRate' style="marginLeft:-9px;marginTop:10px">
+                            <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="purForm.acceptBankRate">
                                 <template slot="append">%</template>
                             </el-input>
                         </el-form-item>
@@ -232,11 +232,31 @@
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <h-button>取消</h-button>
+                <h-button @click="handleClose">取消</h-button>
                 <h-button type="primary" @click="submit">确定</h-button>
             </div>
         </el-dialog>
-
+        <!-- 1  -->
+        <div class="tab-layout" v-if="radio1=='决议修改记录'">
+            <div class="tab-layout-flex" v-for="(item,index) in Lists" :key="index">
+                <div class="flex-top">
+                    <span><i>{{item.createBy}}</i>{{item.recordTitle}}</span>
+                    <span>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
+                </div>
+                <div class="flex-cont">
+                    <div v-if="item.projectPurchaseList">
+                         <hosJoyTable ref="hosjoyTable" align="center"  border stripe  :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
+                        </hosJoyTable>
+                    </div>
+                    <div v-if="item.projectResolutionRecordDetailList&&item.projectResolutionRecordDetailList.length>0" class="flex-operate">
+                        <span></span>
+                    </div>
+                    <div v-if="item.dingId">
+                        <span>{{dingStatus[item.recordType]}}{{item.dingId}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -246,8 +266,9 @@ import { isNum } from '@/utils/validate/format'
 import utils from '@/utils/filters'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { CreateElement } from 'vue'
-import { getTYCList } from '../api/index'
+import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList } from '../api/index'
 import { useDebounce } from '@/decorator'
+import moment from 'moment'
 
 @Component({
     name: 'finalApproval',
@@ -256,74 +277,131 @@ import { useDebounce } from '@/decorator'
     }
 })
 export default class FinalApproval extends Vue {
+    @Prop({ default: '' }) readonly finalFormID!:any
+    moment:Function= moment;
     radio1: string = '评审决议内容';
     tableData: any[] = [];
+    Lists:any[] = [];
     baseInfoForm: any = {
-        name: ''
+        projectName: '',
+        contractAmount: '',
+        levels: '',
+        updateBy: '',
+        projectId: ''
     };
+    purForm:any = {
+        'acceptBankRate': '',
+        'advancePaymentRate': '',
+        'deviceAmount': '',
+        'predictLoanAmount': '',
+        'projectId': '',
+        'projectPurchaseList': [
+            {
+                'ascriptionId': '',
+                'deviceBrand': 'string',
+                'deviceCategory': '',
+                'id': '',
+                'upstreamPayType': '',
+                'upstreamSupplierName': '',
+                'upstreamSupplierType': ''
+            }
+        ],
+        'remainPaymentCycle': '',
+        'transferBankRate': '',
+        'updateBy': ''
+    }
     editBaseInfoVisible: boolean = false;
-    purchaseConclusionVisible: boolean = true;
+    purchaseConclusionVisible: boolean = false;
     disabled: boolean = true;
     TYCList:any[]=[]
     tableForm: any[] = [
-        {
-            name: '1'
-        },
-        {
-            name: '2'
-        }
+
     ];
+    dingStatus:Object={
+        1: '编辑', 2: '发起流程', 3: '钉钉流程节点', 4: '钉钉审批结果'
+    }
+
     category: any[] = [
-        { value: '空调' },
-        { value: '采暖' },
-        { value: '新风' },
-        { value: '净水' },
-        { value: '智能化' },
-        { value: '辅材' },
-        { value: '电梯' },
-        { value: '电器' },
-        { value: '热水器' }
+        { value: 1, name: '空调' },
+        { value: 2, name: '采暖' },
+        { value: 3, name: '新风' },
+        { value: 4, name: '净水' },
+        { value: 5, name: '智能化' },
+        { value: 6, name: '辅材' },
+        { value: 7, name: '电梯' },
+        { value: 8, name: '其他' },
+        { value: 9, name: '电器' },
+        { value: 10, name: '热水器' }
     ];
+
+    resStatus:Object={
+        1: { tit: '待提交', txt: '待风控完善评审决议内容后，提交钉钉审批流程' },
+        2: { tit: '审批中', txt: '评审决议审批中，可通过流程ID查询审批进度' },
+        3: { tit: '审批未通过', txt: '评审决议审批未通过，可重新发起审批流程' },
+        4: { tit: '审批通过', txt: '评审决议审批通过，可通过流程ID查询审批意见' },
+        5: { tit: '变更决议待发起', txt: '客户经理发起评审决议内容变更，但尚未发起钉钉审批流' },
+        6: { tit: '变更决议审批中', txt: '变更评审决议审批中，可通过流程ID查询审批进度' },
+        7: { tit: '变更决议审批未通过', txt: '变更评审决议审批未通过，可通过流程ID查询审批意见，当前页面信息展示为上一次评审决议审批通过时数据' },
+        8: { tit: '变更决议审批通过', txt: '变更评审决议审批通过' }
+    }
 
     otherCategory: any = {
         value: ''
     }
 
+    resolutionDetail :any={
+
+    }
+
     get formRules () {
         let rules = {
-            pledgeNo: [
-                {
-                    required: true,
-                    validator: (rule, value, callback) => {
-                        var Reg = /^[A-Za-z0-9]+$/
-                        if (value && !Reg.test(value)) {
-                            return callback(new Error('只能为数字或字母'))
-                        }
-                        if (!value) {
-                            return callback(new Error('请输入中登网质押编号'))
-                        }
-                        return callback()
-                    },
-                    trigger: 'blur'
-                }
-            ],
-            oaStatus: [{ required: true, message: '必填项不能为空' }]
+            // pledgeNo: [
+            //     {
+            //         required: true,
+            //         validator: (rule, value, callback) => {
+            //             var Reg = /^[A-Za-z0-9]+$/
+            //             if (value && !Reg.test(value)) {
+            //                 return callback(new Error('只能为数字或字母'))
+            //             }
+            //             if (!value) {
+            //                 return callback(new Error('请输入中登网质押编号'))
+            //             }
+            //             return callback()
+            //         },
+            //         trigger: 'blur'
+            //     }
+            // ],
+            projectName: [{ required: true, message: '项目名称必填' }],
+            levels: [{ required: true, message: '项目评级必选' }],
+            contractAmount: [{ required: true, message: '项目合同总额必填' }]
+        }
+        return rules
+    }
+
+    get purFormRules () {
+        let rules = {
+            predictLoanAmount: [{ required: true, message: '申请代付金额(元)必填' }],
+            advancePaymentRate: [{ required: true, message: '首付款比例必选' }],
+            deviceAmount: [{ required: true, message: '设备款总额必填' }],
+            remainPaymentCycle: [{ required: true, message: '剩余代采购额度必填' }],
+            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填' }],
+            transferBankRate: [{ required: true, message: '银行转账执行费率必填' }]
         }
         return rules
     }
 
     tableLabel: tableLabelProps = [
-        { label: '设备品牌', prop: 'purchaseOrderNo', width: '120' },
-        { label: '上游供应商', prop: 'poAmount', width: '120' },
-        { label: '上游供应商类型', prop: 'status', width: '150' },
-        { label: '上游支付方式', prop: 'createTime' },
-        { label: '设备品类', prop: 'updateTime' }
+        { label: '设备品牌', prop: 'deviceBrand', width: '120' },
+        { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
+        { label: '上游供应商类型', prop: 'upstreamSupplierType', width: '150', dicData: [{ value: 1, label: '厂商' }, { value: 2, label: '代理商' }, { value: 3, label: '经销商' }] },
+        { label: '上游支付方式', prop: 'upstreamPayType', dicData: [{ value: 1, label: '银行转账' }, { value: 2, label: '银行承兑' }] },
+        { label: '设备品类', prop: 'deviceCategory', dicData: [{ value: 1, label: '空调' }, { value: 2, label: '采暖' }, { value: 3, label: '新风' }, { value: 4, label: '净水' }, { value: 5, label: '智能化' }, { value: 6, label: '辅材' }, { value: 7, label: '电梯' }, { value: 8, label: '其他' }, { value: 9, label: '电器' }, { value: 10, label: '热水器' }] }
     ];
 
     formTableLabel: tableLabelProps = [
         {
             label: '设备品牌',
-            prop: 'name',
+            prop: 'deviceBrand',
             className: 'form-table-header',
             showOverflowTooltip: false,
             render: (h: CreateElement, scope: TableRenderParam) => {
@@ -346,7 +424,7 @@ export default class FinalApproval extends Vue {
         },
         {
             label: '上游供应商',
-            prop: 'name',
+            prop: 'upstreamSupplierName',
             width: '240',
             className: 'form-table-header',
             showOverflowTooltip: false,
@@ -374,7 +452,7 @@ export default class FinalApproval extends Vue {
         },
         {
             label: '上游供应商类型',
-            prop: 'name',
+            prop: 'upstreamSupplierType',
             width: '130',
             className: 'form-table-header',
             showOverflowTooltip: false,
@@ -390,9 +468,9 @@ export default class FinalApproval extends Vue {
                                 scope.row[scope.column.property] = val
                             }}
                         >
-                            <el-option key="厂商" value="厂商" label="厂商">厂商</el-option>
-                            <el-option key="代理商" value="代理商" label="代理商">代理商</el-option>
-                            <el-option key="经销商" value="经销商" label="经销商">经销商</el-option>
+                            <el-option key="1" value={1} label="厂商">厂商</el-option>
+                            <el-option key="2" value={2} label="代理商">代理商</el-option>
+                            <el-option key="3" value={3} label="经销商">经销商</el-option>
                         </el-select>
                         {/* <p class='required-txt'>222</p>**/}
                     </div>
@@ -401,7 +479,7 @@ export default class FinalApproval extends Vue {
         },
         {
             label: '上游支付方式',
-            prop: 'name',
+            prop: 'upstreamPayType',
             width: '130',
             className: 'form-table-header',
             showOverflowTooltip: false,
@@ -417,8 +495,8 @@ export default class FinalApproval extends Vue {
                                 scope.row[scope.column.property] = val
                             }}
                         >
-                            <el-option key="银行转账" value="银行转账" label="银行转账">银行转账</el-option>
-                            <el-option key="银行承兑" value="银行承兑" label="银行承兑">银行承兑</el-option>
+                            <el-option key="1" value={1} label="银行转账">银行转账</el-option>
+                            <el-option key="2" value={2} label="银行承兑">银行承兑</el-option>
                         </el-select>
                         {/* <p class='required-txt'>222</p>**/}
                     </div>
@@ -427,7 +505,7 @@ export default class FinalApproval extends Vue {
         },
         {
             label: '设备品类',
-            prop: 'name',
+            prop: 'deviceCategory',
             width: '200',
             className: 'form-table-header',
             showOverflowTooltip: false,
@@ -465,9 +543,9 @@ export default class FinalApproval extends Vue {
                         <el-option
                             key={index + 'option'}
                             value={item.value}
-                            label={item.value}
+                            label={item.name}
                         >
-                            {item.value}
+                            {item.name}
                         </el-option>
                     )
                 })}
@@ -559,6 +637,68 @@ export default class FinalApproval extends Vue {
 
     submit () {
         console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.tableForm)
+        resPurchase()
+    }
+
+    //
+    changeGroup (value) {
+        this.$forceUpdate()
+        if (value == '决议修改记录') {
+            this.onFindRecords()
+        } else {
+            this.onFindRes()
+        }
+    }
+
+    // 编辑客户信息
+    async onEditCustomer () {
+        this.editBaseInfoVisible = true
+        const { data } = await getResolutions(this.finalFormID)
+        this.resolutionDetail = data
+        this.baseInfoForm = {
+            contractAmount: data.contractAmount,
+            levels: data.levels,
+            projectId: this.finalFormID,
+            projectName: data.projectName
+        }
+    }
+
+    // 查询详情
+    async onFindRes () {
+        const { data } = await getResolutions(this.finalFormID)
+        this.resolutionDetail = data
+        this.tableData = data.resolutionPurchaseList
+    }
+
+    // 记录
+    async onFindRecords () {
+        const { data } = await getRecordList(this.finalFormID)
+        this.Lists = data
+    }
+
+    // 编辑采购单弹窗
+    async onEditPur () {
+        this.purchaseConclusionVisible = true
+        const { data } = await getResolutions(this.finalFormID)
+        this.purForm = { ...this.purForm, ...data }
+        this.tableForm = data.resolutionPurchaseList
+    }
+
+    handleClose () {
+        this.purchaseConclusionVisible = false
+    }
+    handleHidden () {
+        this.editBaseInfoVisible = false
+    }
+    async onSaveCustomer () {
+        this.baseInfoForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
+        await resCustomer(this.baseInfoForm)
+        this.editBaseInfoVisible = false
+        this.onFindRes()
+    }
+
+    mounted () {
+        this.onFindRes()
     }
 }
 </script>

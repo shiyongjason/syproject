@@ -100,12 +100,12 @@
                     {{emailStatus[scope.data.row.currDayEmailStatus]}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)">支付确认</h-button>
+                    <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                    <h-button table @click="onUploadPay(scope.data.row)">
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="scope.data.row.paymentFlag==0">
                         上传支付凭证
                     </h-button>
-                       <h-button table @click="onBatchSumbit(scope.data.row)">
+                    <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch">
                         批量确认
                     </h-button>
                 </template>
@@ -327,7 +327,7 @@ export default {
             this.$refs.uploaddialog.onDialogClick(val)
         },
         onBatchSumbit (val) {
-            this.$router.push({ path: '/goodwork/batchpsubmit' })
+            this.$router.push({ path: '/goodwork/batchpsubmit', query: { fundId: val.id } })
         },
         ...mapActions({
             findFundsList: 'crmFunds/findPurchaseList',
