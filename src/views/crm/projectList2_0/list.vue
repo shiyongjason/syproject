@@ -343,7 +343,7 @@
                 <h-button type="primary" @click="submitAddForm">确定</h-button>
             </div>
         </el-dialog>
-        <detail />
+        <detail :drawer='drawer' />
     </div>
 </template>
 <script lang='tsx'>
@@ -374,6 +374,7 @@ export default class ProjectList2 extends Vue {
     showSign:boolean = false
     showPayback:boolean = false
     checkboxChecked:boolean = false
+    drawer:boolean = false
     provinceList:any[] = []
     cityList:any[] = []
 
@@ -533,7 +534,7 @@ export default class ProjectList2 extends Vue {
     }
 
     viewDetail (id) {
-
+        this.drawer = true
     }
 
     @validateForm('signForm')
