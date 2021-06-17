@@ -377,7 +377,7 @@
         </el-dialog>
         <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList" />
         <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData" :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList" />
-        <Searchdialog ref="searchdialog" :businessDetail=businessDetail></Searchdialog>
+        <Searchdialog ref="searchdialog" @onEditCustomerInfo=onEditCustomerInfo></Searchdialog>
     </div>
 </template>
 <script>
@@ -482,15 +482,6 @@ export default {
                 provinceId: [
                     { required: true, message: '请选择省', trigger: 'change' }
                 ]
-                // relationCompanyCode: [
-                //     { required: true, message: '请选择关联公司' }
-                // ],
-                // developOnlineCompanyCode: [
-                //     { required: true, message: '请选择平台公司' }
-                // ],
-                // isRelated: [
-                //     { required: true, message: '请选择是否关联平台公司', trigger: 'change' }
-                // ]
             },
             targetObj: {
                 selectName: '',
@@ -935,6 +926,10 @@ export default {
         },
         onEditInfo () {
             this.$refs.searchdialog.onShowSearch({ companyId: this.businessDetail.companyId, deptDoc: this.businessDetail.subsectionCode, deptName: this.businessDetail.subsectionName })
+        },
+        onEditCustomerInfo (val) {
+            console.log(val)
+            this.$set(this.businessDetail, 'customerManager', val)
         }
     },
     mounted () {

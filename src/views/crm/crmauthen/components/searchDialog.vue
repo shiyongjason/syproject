@@ -97,7 +97,12 @@ export default {
                 return false
             }
             await updateCustomerAdmin(this.params)
-            this.$set(this.businessDetail, 'customerManager', this.selectioned.name)
+            this.dialogVisible = false
+            this.$message({
+                message: '修改成功',
+                type: 'success'
+            })
+            this.$emit('onEditCustomerInfo', this.selectioned.psnname)
         },
         dialogCheck (selection, row) {
             this.$refs.hosjoyTable.clearSelection()

@@ -110,8 +110,9 @@
                  <template slot="memberTag" slot-scope="scope">
                      {{memberTagArr[scope.data.row.memberTag-1].value}}
                 </template>
-                <template slot="memberTag" slot-scope="scope">
-                     {{memberTagArr[scope.data.row.memberTag-1].value}}
+                <template slot="customerManager" slot-scope="scope">
+                     <p>{{scope.data.row.customerManager||'-'}}</p>
+                     <p>{{scope.data.row.customerManagerPhone||'-'}}</p>
                 </template>
                 <template slot="userName" slot-scope="scope">
                     <span class="colblue" @click="onLinkship(scope.data.row.userName)"> {{scope.data.row.userName||'-'}}</span>
