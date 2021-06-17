@@ -2,8 +2,16 @@
     background-color: #d6d1d1 !important;
 }
 /deep/.ProjectList2Detail {
+    position: relative;
+    .radio-group{
+        // 
+    }
     &-ctx {
         margin-top: 20px;
+        position: fixed;
+        top: 120px;
+        width: 650px;
+        overflow-y: scroll;
         .process{
             // background-color: #f5f7fa;
             margin-top: 5px;
@@ -74,24 +82,24 @@
         .pos5{
             position: absolute;
             top: 79px;
-            right: 35px;
+            right: 22px;
         }
         .left:before {
             top: 96px;
-            right: 180px;
+            right: 167px;
             transform: rotate(220deg) translateY(-3px) !important;
             transform-origin: 0 0 !important;
         }
         .left:after {
             top: 82px;
-            right: 185px;
+            right: 172px;
             transform: rotate(135deg) translateY(-2px);
             transform-origin: 100% 100%;
         }
         .pos6{
             position: absolute;
             top: 79px;
-            right: 198px;
+            right: 185px;
         }
         .pos7{
             position: absolute;
@@ -101,7 +109,7 @@
         .pos8{
             position: absolute;
             top: 79px;
-            right: 363px;
+            right: 350px;
         }
         .follow-records{
             margin-top: 10px;
@@ -199,5 +207,17 @@
     
     
         }
+    }
+    .bottom-line{
+        position: fixed;
+        bottom: 63px;
+        width: 640px;
+        height: 1px;
+        background-color: #d3d4d6;
+    }
+    .fixed-btn{
+        position: fixed;
+        bottom: 12px;
+        right: 80px;
     }
 }
