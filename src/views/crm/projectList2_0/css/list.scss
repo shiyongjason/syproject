@@ -1,11 +1,27 @@
 /deep/::-webkit-scrollbar-thumb {
     background-color: #d6d1d1 !important;
 }
+.itemflex{
+    .el-form-item{
+        display: flex;
+    }
+}
 .list2_0{
     max-height: 600px;
     overflow-y: scroll;
+    .noctx{
+        .el-form-item{
+            margin-bottom: 5px;
+            display:inline-block !important;
+            width: 100%;
+        }
+        /deep/.el-form-item__error{
+            top: 30px;
+        }
+    }
     /deep/.form-item {
         margin-bottom: 20px;
+       
         .el-form-item__label{
             // font-size: 15px;
             // font-weight: bold;
@@ -89,4 +105,5 @@
             transition: none;
         }
     }
+    .eltagtop{margin-bottom: 15px;}
 }

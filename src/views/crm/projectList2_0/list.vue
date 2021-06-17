@@ -5,19 +5,19 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">客户手机号：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入客户手机号" maxlength="13"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入客户手机号" maxlength="13"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">客户姓名：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入客户姓名" maxlength="50"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入客户姓名" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">企业名称：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入企业名称" maxlength="50"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入企业名称" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -31,31 +31,31 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">客户经理：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入姓名/手机号" maxlength="50"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入姓名/手机号" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品类：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入主营品类" maxlength="50"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入主营品类" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品牌：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入主营品牌" maxlength="50"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入主营品牌" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input  placeholder="请输入项目名称" maxlength="200"></el-input>
+                        <el-input v-model="signForm.name" placeholder="请输入项目名称" maxlength="200"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">销售阶段：</div>
                     <div class="query-col__input">
-                        <el-select placeholder="请选择">
+                        <el-select v-model="signForm.name" placeholder="请选择">
                             <el-option :label="item.label" :value="item.value" :key='item.value' v-for="item in salesPhase"></el-option>
                         </el-select>
                     </div>
@@ -67,7 +67,7 @@
                     <h-button>
                         导出
                     </h-button>
-                    <h-button>
+                    <h-button @click="onAddProject">
                         新增
                     </h-button>
                 </div>
@@ -82,18 +82,18 @@
             </hosJoyTable>
         </div>
         <!-- 签约确认 -->
-        <!-- <el-dialog title="签约确认" :close-on-click-modal='false' :visible.sync="showSign" width="720px" :before-close="() => showSign = false" :modal='false'>
-            <div class="list2_0">
-                <el-form id='elform' :model="signForm" :rules="formRules"  label-width="115px"  label-position='left' ref="purchaseConclusionForm" class="purchaseConclusion">
+        <el-dialog title="签约确认" :close-on-click-modal='false' :visible.sync="showSign" width="720px" :before-close="() => closeSignForm()" :modal='false'>
+            <div class="list2_0 itemflex">
+                <el-form id='elform' :model="signForm" :rules="formRules"  label-position='left' ref="signForm" class="purchaseConclusion" :validate-on-rule-change=false>
                     <div class="form-item">
                         <el-form-item  prop='name' label="合同编号：">
                             <el-input  placeholder="请输入工程合同编号" v-model="signForm.name" maxlength="50"></el-input>
                         </el-form-item>
                     </div>
-                    <div class="form-item">
-                        <font style="color:#ff0000;font-style: normal;margin-right: 6px;font-size:14px;">*</font>
-                        <span>请上传签约合同附件：</span>
-                        <span class="txt">（上传合同附件，支持PDF格式，单个文件最大允许20M）</span>
+                    <div class="form-item noctx">
+                        <el-form-item  prop='name' label="请上传签约合同附件：">
+                            <span class="txt">（上传合同附件，支持PDF格式，单个文件最大允许20M）</span>
+                        </el-form-item>
                         <div>
                             <div>
                                 <div class="file_box" v-for="(item,index) in signForm.upload" :key="item.fileUrl">
@@ -102,7 +102,7 @@
                                     <em @click="()=>handleDelFile(index,signForm.upload)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView=false v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".pdf">
+                            <OssFileHosjoyUpload :showPreView=false v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".pdf">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -129,10 +129,10 @@
                             </el-select>
                         </el-form-item>
                     </div>
-                    <div class="form-item" v-if="checkboxChecked">
-                        <font style="color:#ff0000;font-style: normal;margin-right: 6px;font-size:14px;">*</font>
-                        <span>请上传支付凭证：</span>
-                        <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
+                    <div class="form-item noctx" v-if="checkboxChecked">
+                        <el-form-item  prop='name' label="请上传支付凭证：">
+                            <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
+                        </el-form-item>
                         <div>
                             <div>
                                 <div class="file_box" v-for="(item,index) in signForm.upload" :key="item.fileUrl">
@@ -141,7 +141,7 @@
                                     <em @click="()=>handleDelFile(index,signForm.upload)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView=false v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                            <OssFileHosjoyUpload :showPreView=false v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -151,14 +151,14 @@
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <h-button>取消</h-button>
-                <h-button type="primary" @click="submit">确定</h-button>
+                <h-button @click="() => closeSignForm()">取消</h-button>
+                <h-button type="primary" @click="submitSignForm">确定</h-button>
             </div>
-        </el-dialog> -->
+        </el-dialog>
         <!-- 回款确认 -->
-        <!-- <el-dialog title="回款确认" :close-on-click-modal='false' :visible.sync="showSign" width="720px" :before-close="() => showSign = false" :modal='false'>
-            <div class="list2_0">
-                <el-form id='elform' :model="signForm" :rules="formRules"  label-width="115px"  label-position='left' ref="purchaseConclusionForm" class="purchaseConclusion">
+        <el-dialog title="回款确认" :close-on-click-modal='false' :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()" :modal='false'>
+            <div class="list2_0 itemflex">
+                <el-form id='elform' :model="signForm" :rules="formRules"  label-width="115px"  label-position='left' ref="paybackForm" class="purchaseConclusion">
                     <div class="form-item">
                         <el-form-item  prop='fundMoneys' label="签约回款额：">
                             <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,signForm)" :value="fundMoneys(signForm.fundMoneys)">
@@ -173,10 +173,10 @@
                             </el-select>
                         </el-form-item>
                     </div>
-                    <div class="form-item">
-                        <font style="color:#ff0000;font-style: normal;margin-right: 6px;font-size:14px;">*</font>
-                        <span>请上传支付凭证：</span>
-                        <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
+                    <div class="form-item noctx">
+                        <el-form-item  prop='name' label="请上传支付凭证：">
+                            <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
+                        </el-form-item>
                         <div>
                             <div>
                                 <div class="file_box" v-for="(item,index) in signForm.upload" :key="item.fileUrl">
@@ -185,7 +185,7 @@
                                     <em @click="()=>handleDelFile(index,signForm.upload)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView=false v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                            <OssFileHosjoyUpload :showPreView=false v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -195,14 +195,14 @@
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <h-button>取消</h-button>
-                <h-button type="primary" @click="submit">确定</h-button>
+                <h-button @click="()=>closePayback()">取消</h-button>
+                <h-button type="primary" @click="submitPaybackForm">确定</h-button>
             </div>
-        </el-dialog> -->
-        <!--  -->
-        <el-dialog title="新增2.0项目" :close-on-click-modal='false' :visible.sync="showSign" width="1080px" :before-close="() => showSign = false" :modal='false'>
+        </el-dialog>
+        <!-- 新增2.0项目 -->
+        <el-dialog title="新增2.0项目" :close-on-click-modal='false' :visible.sync="showAddProject" width="1080px" :before-close="()=>closeAddProject()" :modal='false'>
             <div class="list2_0">
-                <el-form id='elform' :model="signForm" :rules="formRules"  label-width="150px"  label-position='right' ref="purchaseConclusionForm" class="list2">
+                <el-form id='elform' :model="signForm" :rules="formRules"  label-width="150px"  label-position='right' ref="addForm" class="list2">
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  prop='fundMoneys' label="企业名称：">
@@ -339,8 +339,8 @@
                 </el-form>
             </div>
             <div slot="footer" class="dialog-footer">
-                <h-button>取消</h-button>
-                <h-button type="primary" @click="submit">确定</h-button>
+                <h-button @click="()=>closeAddProject()">取消</h-button>
+                <h-button type="primary" @click="submitAddForm">确定</h-button>
             </div>
         </el-dialog>
         <detail />
@@ -358,6 +358,7 @@ import { isNum } from '@/utils/validate/format'
 import { PAYMENTMETHOD, SALESPHASE, BUILDINGTYPE, PROJECTROLE, ATTHESTAGE, PURCHASEPRODUCTS, INTELLIGENTDEMAND } from './const/index'
 import { getChiness } from './api/index'
 import detail from './detail.vue'
+import { handleSubmit, validateForm } from '@/decorator'
 @Component({
     name: 'ProjectList2',
     components: {
@@ -369,7 +370,9 @@ export default class ProjectList2 extends Vue {
     @Getter('crmmanage/crmdepList') crmdepList: Array<HCGCommonInterface.Branch>
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
 
-    showSign:boolean = true
+    showAddProject:boolean = false
+    showSign:boolean = false
+    showPayback:boolean = false
     checkboxChecked:boolean = false
     provinceList:any[] = []
     cityList:any[] = []
@@ -492,6 +495,10 @@ export default class ProjectList2 extends Vue {
         this.showSign = true
     }
 
+    onAddProject () {
+        this.showAddProject = true
+    }
+
     async getList () {
         // const { data: tableData } = await Api.getUpStreamPaymentApi(this.signForm)
         // this.tableData = tableData.records || []
@@ -529,13 +536,46 @@ export default class ProjectList2 extends Vue {
 
     }
 
-    submit () {
+    @validateForm('signForm')
+    submitAddForm () {
 
+    }
+
+    @validateForm('signForm')
+    @handleSubmit()
+    submitSignForm () {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 submitSignForm')
+    }
+
+    @validateForm('signForm')
+    @handleSubmit()
+    submitPaybackForm () {
+
+    }
+    // 关闭新增2.0项目
+    closeAddProject () {
+        const addForm:any = this.$refs['addForm']
+        addForm.resetFields()
+        this.showAddProject = false
+    }
+    // 关闭确认签约
+    closeSignForm () {
+        const signForm:any = this.$refs['signForm']
+        signForm.resetFields()
+        this.showSign = false
+        if (this.checkboxChecked) {
+            this.checkboxChecked = false
+        }
+    }
+    // 关闭回款
+    closePayback () {
+        const signForm:any = this.$refs['paybackForm']
+        signForm.resetFields()
     }
 
     async mounted () {
         this.getAreacode()
-        // await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
+    // await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
     }
 }
 </script>

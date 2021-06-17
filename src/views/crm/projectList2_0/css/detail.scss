@@ -220,4 +220,134 @@
         bottom: 12px;
         right: 80px;
     }
+    .record-dialog{
+        .tips{
+            margin:5px 0;
+            font-size: 12px;
+        }
+    }
+    .file-icon {
+        font-size: 18px;
+        margin: 0 3px 0 0  !important;
+        line-height: 24px !important;
+        color: #fff;
+    }
+    .file_box {
+        margin: 10px 0 0 0;
+        display: flex;
+        i {
+            font-size: 18px;
+            margin: 0 !important;
+            color: #ff6600;
+            padding-right: 5px;
+        }
+        span {
+            width: 450px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            color: #ff6600;
+
+        }
+        em {
+            display: block;
+            font-style: normal;
+            margin-left: 10px;
+            color: #169bd5;
+            cursor: pointer;
+
+        }
+    }
+    .record-layout{
+        max-height: 600px;
+        overflow-y: scroll;
+    }
+    .record-dialog-item{
+        margin-bottom: 20px;
+        .el-input:not(:first-child){
+            margin-left: 0;
+        }
+        .textarea{
+            .el-form-item__content{
+                display: flex;
+            }
+        }
+    }
+    
+}
+.contact{
+    max-height: 600px;
+    overflow-y: scroll;
+    .contact-item{
+        display: flex;
+        margin-bottom: 10px;
+    }
+    .checkbox-right{
+        margin-left: 10px;
+        width: 630px;
+        padding-bottom: 10px;
+        span{
+            float: right;
+        }
+        i{
+            font-style: normal;
+            margin-right: 8px;
+            color: #169bd5;
+        }
+    }
+    .iborder{
+        border-bottom: 1px solid #e5e5ea;
+    }
+    .contact-table{
+        display: flex;
+        &-item{
+            margin-right: 15px;
+            font{
+                margin-right: 3px;
+            }
+            &-input{
+                width: 100px;
+                margin-left: 10px;
+                /deep/.el-input--mini{
+                    width: 100px !important;
+                }
+            }
+        }
+    }
+}
+.innerHelp-layout{
+    .search-input{
+        /deep/.el-input{
+            width: 300px;
+        }
+    }
+    .autoflex {
+        display: flex;
+        justify-content: space-between;
+    }
+    .innerHelp-ctx{
+        .helper-list{
+            margin-top: 15px;
+            &-box{
+                // margin-left: 25px;
+                max-height: 190px;
+                overflow-y: scroll;
+            }
+        }
+        .user{
+            width: 385px;
+            margin-top: 8px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            .removeicon{
+                color: #ff0000cc;
+                margin-right: 5px;
+            }
+        }
+    }
+}
+.autoflex {
+    display: flex;
+    justify-content: space-between;
 }
