@@ -24,9 +24,11 @@ export const payVoucher = (params) => axios.post('/project/api/batch-funds/boss/
 export const getBnumber = (params) => axios.get('/project/api/batch-funds/boss/pay-batch-number', { params })
 // 查询未支付的账单列表
 export const getFundsPayBatch = (params) => axios.get('/project/api/batch-funds/boss/pay-batch', { params })
-// 查询未支付的账单列表
-export const payVoucherBatch = (params) => axios.get('/project/api​/batch-funds​/boss​/pay-voucher-batch', { params })
+// 批量保存支付
+export const payVoucherBatch = (params) => axios.post('/project/api/batch-funds/boss/pay-voucher-batch', params)
 // 批量收到
 export const payReceived = (params) => axios.patch('/project/api/batch-funds/boss/pay-receive-batch', params)
 // 批量未收到
-export const payNoReceived = (params) => axios.patch('/project/api/batch-funds/boss/pay-receive-batch', params)
+export const payNoReceived = (params) => axios.patch('/project/api/batch-funds/boss/pay-not-receive-batch', params)
+// 批量待确认
+export const confirmPay = (params) => axios.get('/project/api/batch-funds/boss/to-be-confirmed', { params })

@@ -314,3 +314,8 @@ export const UPSTREAM_CONFIRM = 800206
 export const UPSTREAM_PAY_EXPORT = 800207
 // 支付单管理放款交接
 export const LENDER_HANDOVER = 800208
+
+// 删除该企业
+export const CRM_AUTHEN_DELETE = 109601
+// 修改客户经理
+export const CRM_AUTHEN_EDITNAME = 109602

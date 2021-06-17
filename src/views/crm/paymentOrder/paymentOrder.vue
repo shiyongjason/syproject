@@ -89,7 +89,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
                 项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
             </el-tag>
-            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350 :isShowIndex='true'>
+            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
@@ -127,6 +127,7 @@
                                   scope.data.row.goodsConfirmFlag === 1
                               )">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)">上传支付凭证</h-button>
                 </template>
             </basicTable>
         </div>
@@ -152,6 +153,7 @@
                 </el-tabs>
             </div>
         </el-drawer>
+        <UploadPayDialog ref="uploadpaydialog"/>
     </div>
 </template>
 
@@ -169,6 +171,7 @@ import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck } from './api/index'
+import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 export default {
     name: 'payOrder',
     components: {
@@ -180,7 +183,8 @@ export default {
         LookReceiptDetail,
         FundsDialog,
         LoanTransferContent,
-        ViewHandoverRecords
+        ViewHandoverRecords,
+        UploadPayDialog
     },
     data () {
         return {
@@ -394,6 +398,9 @@ export default {
                 this.findPaymentOrderList(this.queryParamsUseQuery)
             }
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
+        },
+        onUploadPay (val) {
+            this.$refs.uploadpaydialog.onDialogClick(val)
         },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',

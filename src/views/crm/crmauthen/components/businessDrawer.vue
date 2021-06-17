@@ -19,7 +19,7 @@
                                     {{businessDetail.userName||'-'}}
                                 </el-form-item>
                                 <el-form-item label="客户经理：" :label-width="formLabelWidth">
-                                    {{businessDetail.userName||'-'}}
+                                    {{businessDetail.customerManager||'-'}}
                                     <el-button type="primary" size="mini" @click="onEditInfo">修改客户经理</el-button>
                                 </el-form-item>
                                 <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
@@ -249,43 +249,7 @@
                                     <span v-else>-</span>
 
                                 </el-form-item>
-                                <!--                                <el-form-item label="法人身份证：">-->
-                                <!--                                    <div class="people-id" v-if="authenticationDetail.certPhotoA && authenticationDetail.certPhotoB">-->
-                                <!--                                        <el-image style="width: 158px; height: 100px;margin-right: 20px" :src="authenticationDetail.certPhotoA" :preview-src-list="[authenticationDetail.certPhotoA]" v-if="authenticationDetail.certPhotoA">-->
-                                <!--                                        </el-image>-->
-                                <!--                                        <el-image style="width: 158px; height: 100px" :src="authenticationDetail.certPhotoB" :preview-src-list="[authenticationDetail.certPhotoB]" v-if="authenticationDetail.certPhotoB">-->
-                                <!--                                        </el-image>-->
-                                <!--                                    </div>-->
-                                <!--                                    <span v-else>-</span>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="认证结果：">-->
-                                <!--                                    <p v-if="authenticationDetail.authenticationStatus == 1">未认证</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 2">认证中</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 3">认证成功</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationStatus == 4">认证失败</p>-->
-                                <!--                                    <p v-else>-</p>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="认证方式：">-->
-                                <!--                                    <p v-if="authenticationDetail.authenticationType === 1">中金-开户</p>-->
-                                <!--                                    <p v-else-if="authenticationDetail.authenticationType === 2">e签宝-工商四要素</p>-->
-                                <!--                                    <p v-else>-</p>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="关联/认证时间：">-->
-                                <!--                                    <p v-if="authenticationDetail.authenticationTime"> {{authenticationDetail.authenticationTime | formatDate('YYYY-MM-DD HH:mm:ss')}}</p>-->
-                                <!--                                    <p v-else>-</p>-->
-                                <!--                                </el-form-item>-->
-                                <!--                                <el-form-item label="关联/认证人：">-->
-                                <!--                                    <p>-->
-                                <!--                                        <span v-if="authenticationDetail.authenticationBy">-->
-                                <!--                                            {{authenticationDetail.authenticationBy}}-->
-                                <!--                                        </span>-->
-                                <!--                                        <span v-else>-</span>-->
-                                <!--                                        <span v-if="authenticationDetail.authenticationPhone">-->
-                                <!--                                            ({{authenticationDetail.authenticationPhone}})-->
-                                <!--                                        </span>-->
-                                <!--                                        <span v-else>(-)</span>-->
-                                <!--                                    </p>-->
-                                <!--                                </el-form-item>-->
+
                             </el-form>
 
                         </div>
@@ -413,7 +377,7 @@
         </el-dialog>
         <EditTargetEmployeeRoleDialog :editEmployeeDialogVisible.sync="editEmployeeDialogVisible" :target-val="targetEmployeeData" :roleList="roleList" @updateTableList="getEmployeeList" />
         <TransferAdmin :transferAdminDialogVisible.sync="transferAdminDialogVisible" :adminData="adminData" :employeeTableData="employeeTableData" :companyCode="businessDetail.companyCode" @updateTableList="getEmployeeList" />
-        <Searchdialog ref="searchdialog"></Searchdialog>
+        <Searchdialog ref="searchdialog" :businessDetail=businessDetail></Searchdialog>
     </div>
 </template>
 <script>
@@ -970,7 +934,7 @@ export default {
             }
         },
         onEditInfo () {
-            this.$refs.searchdialog.onShowSearch()
+            this.$refs.searchdialog.onShowSearch({ companyId: this.businessDetail.companyId, deptDoc: this.businessDetail.subsectionCode, deptName: this.businessDetail.subsectionName })
         }
     },
     mounted () {

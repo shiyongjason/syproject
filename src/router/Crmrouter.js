@@ -272,7 +272,7 @@ export default [
                     title: '批量支付',
                     tagName: '批量支付',
                     parentName: '好橙工',
-                    isMenu: true,
+                    isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/funds'
 

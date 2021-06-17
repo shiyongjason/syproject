@@ -3,9 +3,9 @@
         <div class="page-body-cont">
             <div class="batch">
                 <div class="batch_tit">批量支付账单</div>
-                <div class="batch_msg mb20"><i>*</i>经销商：四川宏力达机电安装工程有限公司</div>
+                <div class="batch_msg mb20"><i>*</i>经销商：{{batchDetail.companyName}}</div>
                 <HosjoyTable localName="V1.*" ref="hosjoyTable" align="center" isShowselection :column="tableLabel"
-                @selection-change="handleSelectionChange" :data="tableData" :total="paginationInfo.total">
+                @selection-change="handleSelectionChange" :data="tableData">
                 </HosjoyTable>
                 <div class="batch_msg"><i>*</i>对应账单的付款凭证：</div>
                 <p>（最多支持上传数量为20个文件，单个文件大小不超过20M，上传格式为JPG/JPEG/PNG等主流格式图片）</p>
@@ -14,11 +14,11 @@
                     <em> <a :href="item.fileUrl" target="_blank">预览</a></em>
                     <em @click="onDelete(item,index)">删除</em>
                 </div>
-                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :fileNum='20' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px">
+                <HosJoyUpload v-model="docPos" :showPreView=false :fileSize=20 :action='action' :fileNum='20' :uploadParameters='uploadParameters' accept='.jpg,.png,.jpeg' style="margin:10px 0 0 5px">
                     <el-button size="medium" type="primary"><i class="el-icon-upload file-icon"></i>上 传 文 件</el-button>
                 </HosJoyUpload>
                 <div class="batch_bot">
-                    <span>应支付总额(元)：20,000,000.00</span>
+                    <span>应支付总额(元)：{{batchDetail.totalAmount|fundMoneyHasTail}}</span>
                     <el-button type="primary" @click="onSubmit">确定并提交</el-button>
                 </div>
             </div>
@@ -30,6 +30,8 @@
 import HosjoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
 import HosJoyUpload from '@/components/HosJoyUpload/HosJoyUpload.vue'
 import { ccpBaseUrl } from '@/api/config'
+import { fundMoneyHasTail } from '@/utils/filters'
+
 import { getFundsPayBatch, payVoucherBatch } from './api/index'
 export default {
     name: 'batchpay',
@@ -44,9 +46,13 @@ export default {
             fileDialog: false,
             docPos: [],
             tableLabel: [
-                { label: '姓名', prop: 'signerName' },
-                { label: '手机号', prop: 'signerType', dicData: [{ value: 1, label: '企业' }, { value: 2, label: '个人' }] },
-                { label: '所属分部', prop: 'paramGroupName' }
+                { label: '项目名称', prop: 'companyName' },
+                { label: '账单流水号', prop: 'orderId' },
+                { label: '账单类型', prop: 'repaymentType', dicData: [{ value: 1, label: '首付款' }, { value: 2, label: '剩余货款' }, { value: 3, label: '服务费' }] },
+                { label: '金额(元)', prop: 'paymentAmount', displayAs: 'money' },
+                { label: '状态', prop: 'paymentFlag', dicData: [{ value: 0, label: '待支付' }, { value: 1, label: '支付待确认' }, { value: 2, label: '已支付' }, { value: 3, label: '支付失败' }, { value: 4, label: '已取消' }] },
+                { label: '应支付日期', prop: 'schedulePaymentDate', displayAs: 'YYYY-MM-DD' },
+                { label: '支付时间', prop: 'paidTime', displayAs: 'YYYY-MM-DD HH:mm' }
             ],
             tableData: [],
             queryParams: {
@@ -56,16 +62,52 @@ export default {
             },
             paginationInfo: {
 
-            }
+            },
+            batchDetail: {},
+            fundId: []
         }
     },
     methods: {
+        handleSelectionChange (row) {
+            console.log(row)
+            this.fundId = []
+            row && row.map(item => {
+                this.fundId.push(item.id)
+            })
+        },
         async onGetList () {
-            this.queryParams.companyId = ''
-            const { data } = await getFundsPayBatch()
+            this.queryParams.companyId = this.$route.query.companyId
+            const { data } = await getFundsPayBatch(this.queryParams)
+            this.batchDetail = data
+            this.tableData = data.batchFunds
         },
         async onSubmit () {
-            await payVoucherBatch()
+            const params = {
+                fundId: this.fundId,
+                attachDocs: this.docPos,
+                companyId: this.$route.query.companyId
+            }
+            if (this.fundId.length == 0) {
+                this.$message({
+                    message: '请选择要支付的账单~',
+                    type: 'warning'
+                })
+                return
+            }
+            if (this.docPos == 0) {
+                this.$message({
+                    message: '请至少上传一张支付凭证~',
+                    type: 'warning'
+                })
+                return
+            }
+            await payVoucherBatch(params)
+            this.$alert('支付凭证已上传，请待后台审核确认', '凭证上传成功', {
+                confirmButtonText: '确定',
+                callback: action => {
+                    this.$router.push({ path: '/goodwork/funds' })
+                }
+            })
         }
     },
     mounted () {

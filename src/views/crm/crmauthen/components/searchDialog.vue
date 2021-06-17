@@ -23,10 +23,16 @@
 </template>
 <script>
 import HosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue'
-import { findEmployeeDept } from './../api/index'
+import { findEmployeeDept, updateCustomerAdmin } from './../api/index'
 export default {
     name: 'searchdialog',
     components: { HosJoyTable },
+    props: {
+        businessDetail: {
+            type: Object,
+            default: () => {}
+        }
+    },
     data () {
         return {
             name: '',
@@ -44,15 +50,24 @@ export default {
             paginationInfo: {
 
             },
-            selectioned: ''
+            selectioned: '',
+            params: {
+                'companyId': '',
+                'deptDoc': '',
+                'deptName': '',
+                'name': '',
+                'phone': '',
+                'userCode': ''
+            }
         }
     },
     methods: {
-        async onShowSearch () {
+        async onShowSearch (val) {
             this.name = ''
             this.dialogVisible = true
             const { data } = await findEmployeeDept({ name: '' })
             this.tableData = data
+            this.params.companyId = val.companyId
         },
         handleClose () {
             this.name = ''
@@ -65,7 +80,15 @@ export default {
         handleSelectionChange (row) {
             console.log(1, row)
         },
-        onSureSearch () {
+        async onSureSearch () {
+            this.params = {
+                ...this.params,
+                userCode: this.selectioned.psncode,
+                phone: this.selectioned.mobile,
+                name: this.selectioned.psnname,
+                deptName: this.selectioned.deptName,
+                deptDoc: this.selectioned.pkDeptDoc
+            }
             if (!this.selectioned) {
                 this.$message({
                     message: '请先选择客户经',
@@ -73,6 +96,8 @@ export default {
                 })
                 return false
             }
+            await updateCustomerAdmin(this.params)
+            this.$set(this.businessDetail, 'customerManager', this.selectioned.name)
         },
         dialogCheck (selection, row) {
             this.$refs.hosjoyTable.clearSelection()

@@ -33,15 +33,17 @@ export default {
                 reservedName: true
             },
             attachDocs: [],
-            fundId: ''
+            fundId: '',
+            companyId: ''
         }
     },
     methods: {
         async onDialogClick (val) {
             console.log(val)
-            // const { data } = await getBnumber({ companyId: val.companyId })
+            const { data } = await getBnumber({ companyId: val.companyId })
             this.dialogVisible = true
             this.fundId = val.id
+            this.companyId = val.companyId
         },
         handleClose () {
             this.dialogVisible = false
@@ -51,8 +53,7 @@ export default {
 
         },
         onAllPay () {
-            console.log(111)
-            this.$router.push({ path: '/goodwork/batchpay', query: {} })
+            this.$router.push({ path: '/goodwork/batchpay', query: { companyId: this.companyId } })
         },
         async onSavePay () {
             const params = {
