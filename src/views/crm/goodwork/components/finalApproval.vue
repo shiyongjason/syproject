@@ -46,17 +46,17 @@
                 <div class="item-title">项目信息：</div>
                 <div class="info-layout">
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>项目名称：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目名称：</font>
                         <span>山东绿地泉事业部绿地溪山境一期空气源热水器新材料科技创意谷综合楼多联机空调系统设备</span>
                     </div>
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>项目合同总额(元)：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目合同总额(元)：</font>
                         <span>20,000,000.00</span>
                     </div>
                     <div class="info-layout-item">
-                        <font><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>项目评级：</font>
+                        <font><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目评级：</font>
                         <span>B</span>
                     </div>
                 </div>
@@ -71,21 +71,21 @@
             <div class="item">
                 <div class="info-layout">
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>申请代付金额(元)：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>申请代付金额(元)：</font>
                         <span>20,000,000.00</span>
                     </div>
                     <div class="info-layout-item">
-                        <font style="flex:0 0 165px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>经销商首付款比例(%)：</font>
+                        <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
                         <span>100%</span>
                     </div>
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>设备总额(元)：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>设备总额(元)：</font>
                         <span>20,000,000.00</span>
                     </div>
                     <div class="info-layout-item">
-                        <font style="flex:0 0 165px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>剩余货款支付周期：</font>
+                        <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
                         <span>3个月</span>
                     </div>
                 </div>
@@ -96,11 +96,11 @@
                 </div>
                 <div class="info-layout" style="margin-left:50px">
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>银行承兑：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
                         <span>5</span>
                     </div>
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>银行转账：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
                         <span>6</span>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                 </div>
                 <div class="info-layout">
                     <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000font-style: normalmargin-right: 3px">*</em>备注信息：</font>
+                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>备注信息：</font>
                     </div>
                 </div>
                 <div class="tab-textarea" style="margin:15px 0 0 15px">
@@ -146,12 +146,12 @@
                     <el-form-item label="项目名称：" prop='pledgeNo' style="marginLeft:-8px">
                         <el-input placeholder="请输入" v-model="baseInfoForm.name" maxlength="50"></el-input>
                     </el-form-item>
-                    <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-9pxmarginTop:10px">
+                    <el-form-item label="评审决议流程状态：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
                         <el-select v-model="baseInfoForm.name" placeholder="请选择">
                             <el-option label="A" :value="1"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="项目合同总额：" prop='reviewResolutionStatus' style="marginLeft:-9pxmarginTop:10px">
+                    <el-form-item label="项目合同总额：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
                         <el-input placeholder="请输入" @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)">
                             <template slot="append">元</template>
                         </el-input>
@@ -190,7 +190,7 @@
                             </el-input>
                         </el-form-item>
                         <!--  -->
-                        <el-form-item label="剩余货款支付周期：" prop='reviewResolutionStatus' style="marginLeft:-9pxmarginTop:10px">
+                        <el-form-item label="剩余货款支付周期：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
                             <el-select v-model="baseInfoForm.name" placeholder="请选择">
                                 <el-option label="1个月" :value="1"></el-option>
                                 <el-option label="2个月" :value="2"></el-option>
@@ -212,7 +212,7 @@
                             </el-input>
                         </el-form-item>
                         <!-- 仅可输入数字，区间为（0，100），最多保留2位小数 -->
-                        <el-form-item label="银行承兑：" prop='reviewResolutionStatus' style="marginLeft:-9pxmarginTop:10px">
+                        <el-form-item label="银行承兑：" prop='reviewResolutionStatus' style="marginLeft:-9px;marginTop:10px">
                             <el-input v-isNum:2 v-inputMAX='100' placeholder="请输入" v-model="baseInfoForm.name">
                                 <template slot="append">%</template>
                             </el-input>
