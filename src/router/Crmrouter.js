@@ -286,7 +286,7 @@ export default [
                     title: '批量支付确认',
                     tagName: '批量支付确认',
                     parentName: '好橙工',
-                    isMenu: true,
+                    isMenu: false,
                     icon: '',
                     showMenuAs: '/goodwork/funds'
 
