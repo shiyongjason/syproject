@@ -65,3 +65,15 @@ export const INTELLIGENTDEMAND: { label: string; value: number; }[] = [
     { label: '需智控面板', value: 4 },
     { label: '其他', value: 5 }
 ]
+// 主营品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他
+export const MAINCATEGORY: { key: string; value: string | ''; }[] = [
+    { value: '全部', key: '' },
+    { value: '空调', key: '1' },
+    { value: '采暖', key: '2' },
+    { value: '新风', key: '3' },
+    { value: '净水', key: '4' },
+    { value: '智能化', key: '5' },
+    { value: '辅材', key: '6' },
+    { value: '电梯', key: '7' },
+    { value: '其他', key: '8' }
+]

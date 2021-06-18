@@ -33,7 +33,7 @@ import creditManage from '@/views/crm/creditmanage/store/creditManage'
 import vipApply from '@/views/crm/vipapplication/store/vipApplication'
 import wxMember from '@/views/crm/wechatcustomer/store/wxMember'
 import contractTemp from '@/views/crm/contractTemp/store/index'
-
+import projectStore from '@/views/crm/projectList2_0/store/index'
 Vue.use(Vuex)
 
 const token = localStorage.getItem('token')
@@ -93,7 +93,8 @@ const store = new Vuex.Store({
         crmPurchaseOrder,
         crmPaymentOrder,
         crmFunds,
-        contractTemp
+        contractTemp,
+        projectStore
     }
 })
 export default store

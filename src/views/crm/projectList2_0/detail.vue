@@ -48,7 +48,7 @@
                                     <div class="audio-player-container">
                                         <div class="crm-audio-player" >
                                             <audio controls>
-                                                <source src="https://chattovideofile-1256749994.cos.ap-chengdu.myqcloud.com/ctv202012002498abf1f447dd840e5dcaeb9855212.mp3" type="audio/mpeg">
+                                                <source src="https://hosjoy-oss-test.oss-cn-hangzhou.aliyuncs.com/files/temp/2021-06-17/14288512729326857274_1623833656365_external5072153392980475027.amr" type="audio/mpeg">
                                                 您的浏览器不支持 音频 插件，请使用谷歌浏览器。
                                             </audio>
                                         </div>
