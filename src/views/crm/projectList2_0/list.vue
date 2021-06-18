@@ -3,27 +3,27 @@
         <div class="page-body-cont">
             <div class="query-cont__row">
                 <div class="query-cont__col">
-                    <div class="query-col__label">客户手机号：</div>
+                    <div class="query-col__label">管理员机号：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入客户手机号" maxlength="13"></el-input>
+                        <el-input v-model="queryParams.adminPhoneNumber" placeholder="请输入管理员手机号" maxlength="13" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <div class="query-col__label">客户姓名：</div>
+                    <div class="query-col__label">管理员姓名：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入客户姓名" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.adminUserName" placeholder="请输入管理员姓名" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">企业名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入企业名称" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">所属分部：</div>
                     <div class="query-col__input">
-                        <el-select v-model="signForm.countryId" placeholder="请选择" :clearable=true>
+                        <el-select v-model="queryParams.subsectionCode" placeholder="请选择" clearable>
                             <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                         </el-select>
                     </div>
@@ -31,37 +31,39 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">客户经理：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入姓名/手机号" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.customer" placeholder="请输入姓名/手机号" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品类：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入主营品类" maxlength="50"></el-input>
+                        <el-select v-model="queryParams.deviceCategories" placeholder="请选择" clearable>
+                            <el-option :label="item.value" :value="item.key" v-for="item in maincategory" :key="item.key"></el-option>
+                        </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入主营品牌" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.deviceBrand" placeholder="请输入主营品牌" maxlength="50" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">项目名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="signForm.name" placeholder="请输入项目名称" maxlength="200"></el-input>
+                        <el-input v-model="queryParams.projectName" placeholder="请输入项目名称" maxlength="200" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">销售阶段：</div>
                     <div class="query-col__input">
-                        <el-select v-model="signForm.name" placeholder="请选择">
-                            <el-option :label="item.label" :value="item.value" :key='item.value' v-for="item in salesPhase"></el-option>
+                        <el-select v-model="queryParams.flowUpProcess" placeholder="请选择" clearable>
+                            <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in [{key: '',value: '全部'},...projectStep]"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
-                    <h-button type="primary">
+                    <h-button type="primary" @click="()=>getList()">
                         查询
                     </h-button>
                     <h-button>
@@ -72,7 +74,7 @@
                     </h-button>
                 </div>
             </div>
-            <el-tag size="medium" class="eltagtop">已筛选 1 项, 项目数 25 个；已签约 25 个；已回款 25 个， 已回款金额 {{fundMoneys(223333)}} 元 </el-tag>
+            <el-tag size="medium" class="eltagtop">已筛选 {{statistics.totalProjectNum}} 项, 项目数 {{statistics.totalProjectNum}} 个；已签约 {{statistics.totalSignedNum}} 个；已回款 {{statistics.totalRefundNum}} 个， 已回款金额 {{fundMoneys(statistics.totalRefundAmount)}} 元 </el-tag>
             <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
                 actionWidth='200' isAction :isActionFixed='tableData&&tableData.length>0' >
                 <template #action="slotProps">
@@ -125,7 +127,7 @@
                     <div class="form-item" v-if="checkboxChecked">
                         <el-form-item  prop='select' label="支付方式：">
                             <el-select v-model="signForm.select" placeholder="请选择">
-                                <el-option :label="item.label" :value="item.value" :key='item.value' v-for="item in paymentMethod"></el-option>
+                                <el-option :label="item.key" :value="item.value" :key='item.value' v-for="item in paymentMethod"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -169,7 +171,7 @@
                     <div class="form-item">
                         <el-form-item  prop='select' label="支付方式：">
                             <el-select v-model="signForm.select" placeholder="请选择">
-                                <el-option :label="item.label" :value="item.value" :key='item.value' v-for="item in paymentMethod"></el-option>
+                                <el-option :label="item.key" :value="item.value" :key='item.value' v-for="item in paymentMethod"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
@@ -219,7 +221,7 @@
                         </div>
                         <div class="form-item">
                             <el-form-item  prop='select' label="所属分部：">
-                                <el-select v-model="signForm.countryId" placeholder="请选择" :clearable=true>
+                                <el-select v-model="signForm.countryId" placeholder="请选择" clearable>
                                     <el-option :label="item.deptName" :value="item.pkDeptDoc" v-for="item in crmdepList" :key="item.pkDeptDoc"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -251,17 +253,17 @@
                     <div class="flex-item">
                         <el-form-item  label="项目地址：">
                             <div class="query-cont-col-area">
-                                <el-select v-model="signForm.provinceId" @change="onProvince" placeholder="省" :clearable=true>
+                                <el-select v-model="signForm.provinceId" @change="onProvince" placeholder="省" clearable>
                                     <el-option v-for="item in provinceList" :key="item.id" :label="item.name" :value="item.provinceId">
                                     </el-option>
                                 </el-select>
                                 <span class="ml10 mr10">-</span>
-                                <el-select v-model="signForm.cityId" @change="onCity" placeholder="市" :clearable=true>
+                                <el-select v-model="signForm.cityId" @change="onCity" placeholder="市" clearable>
                                     <el-option v-for="item in getCity" :key="item.id" :label="item.name" :value="item.cityId">
                                     </el-option>
                                 </el-select>
                                 <span class="ml10 mr10">-</span>
-                                <el-select v-model="signForm.countryId" placeholder="区"  @change="onArea" :clearable=true>
+                                <el-select v-model="signForm.countryId" placeholder="区"  @change="onArea" clearable>
                                     <el-option v-for="item in getCountry" :key="item.id" :label="item.name" :value="item.countryId">
                                     </el-option>
                                 </el-select>
@@ -280,7 +282,7 @@
                             <el-form-item  label="">
                                 <div slot="label" style="line-height: 20px;">项目建筑类型<br/>（可多选）：</div>
                                 <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in buildingType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in buildingType" :key="item.value" :label="item.key" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -288,7 +290,7 @@
                             <el-form-item  label="">
                                 <div slot="label" style="line-height: 20px;"><font style="padding-right:10px">项目角色</font><br/>（可多选）：</div>
                                 <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in role" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in role" :key="item.value" :label="item.key" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -298,7 +300,7 @@
                             <el-form-item  label="">
                                 <div slot="label">项目所处的阶段：</div>
                                 <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in atthestage" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in atthestage" :key="item.value" :label="item.key" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -306,7 +308,7 @@
                             <el-form-item  label="">
                                 <div slot="label" style="line-height: 20px;"><font>可从总部采购产品</font><br/>（可多选）：</div>
                                 <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in purchaseproducts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in purchaseproducts" :key="item.value" :label="item.key" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -316,7 +318,7 @@
                             <el-form-item  label="">
                                 <div slot="label" style="line-height: 20px;"><font>工程项目智能化需求</font><br/>（可多选）：</div>
                                 <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in intelligentdemand" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in intelligentdemand" :key="item.value" :label="item.key" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
@@ -355,10 +357,11 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { isNum } from '@/utils/validate/format'
-import { PAYMENTMETHOD, SALESPHASE, BUILDINGTYPE, PROJECTROLE, ATTHESTAGE, PURCHASEPRODUCTS, INTELLIGENTDEMAND } from './const/index'
-import { getChiness } from './api/index'
+import { PAYMENTMETHOD, SALESPHASE, BUILDINGTYPE, PROJECTROLE, ATTHESTAGE, PURCHASEPRODUCTS, INTELLIGENTDEMAND, MAINCATEGORY } from './const/index'
+import { DictionaryList, getChiness, SearchByItem, getProjectList } from './api/index'
 import detail from './detail.vue'
 import { handleSubmit, validateForm } from '@/decorator'
+import { RespBossProjectSupply } from '@/interface/hbp-member'
 @Component({
     name: 'ProjectList2',
     components: {
@@ -368,7 +371,14 @@ import { handleSubmit, validateForm } from '@/decorator'
 export default class ProjectList2 extends Vue {
     @State('userInfo') userInfo: any
     @Getter('crmmanage/crmdepList') crmdepList: Array<HCGCommonInterface.Branch>
+    @Getter('projectStore/projectIntelligentNeeds') projectIntelligentNeeds: DictionaryList
+    @Getter('projectStore/projectBuildingType') projectBuildingType: DictionaryList
+    @Getter('projectStore/projectStep') projectStep: DictionaryList
+    @Getter('projectStore/projectRole') projectRole: DictionaryList
+    @Getter('projectStore/generalGoods') generalGoods: DictionaryList
+    @Getter('projectStore/refundPayType') refundPayType: DictionaryList
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
+    @Action('projectStore/findDictionaryList') findDictionaryList:(p:SearchByItem) => Promise<any>
 
     showAddProject:boolean = false
     showSign:boolean = false
@@ -377,6 +387,8 @@ export default class ProjectList2 extends Vue {
     drawer:boolean = false
     provinceList:any[] = []
     cityList:any[] = []
+    // 表格上放统计
+    statistics:any = ''
 
     paymentMethod = PAYMENTMETHOD
     salesPhase = SALESPHASE
@@ -385,6 +397,7 @@ export default class ProjectList2 extends Vue {
     atthestage = ATTHESTAGE
     purchaseproducts = PURCHASEPRODUCTS
     intelligentdemand = INTELLIGENTDEMAND
+    maincategory = MAINCATEGORY
 
     action = ccpBaseUrl + 'common/files/upload-old'
 
@@ -392,12 +405,17 @@ export default class ProjectList2 extends Vue {
         sizes: [10, 20, 50, 100],
         total: 0
     }
-    tableData:any[] | [] = [
-        {
-            paymentOrderNo: 'xxxx'
-        }
-    ]
+    tableData:RespBossProjectSupply[] = []
     queryParams: any = {
+        adminPhoneNumber: '',
+        adminUserName: '',
+        companyName: '',
+        customer: '',
+        deviceBrand: '',
+        deviceCategories: '',
+        flowUpProcess: '',
+        projectName: '',
+        subsectionCode: '',
         pageNumber: 1,
         pageSize: 10
     }
@@ -417,25 +435,25 @@ export default class ProjectList2 extends Vue {
 
     tableLabel:tableLabelProps = [
         // 点击公司跳转到好橙工——【企业管理】已输入该企业名称的查询结果
-        { label: '公司全称', prop: 'paymentOrderNo', width: '200' },
-        { label: '管理员姓名', prop: 'paymentOrderNo', width: '120' },
-        { label: '管理员手机号', prop: 'paymentOrderNo', width: '120' },
-        { label: '主营品类', prop: 'paymentOrderNo', width: '120' },
-        { label: '主营品牌', prop: 'paymentOrderNo', width: '120' },
-        { label: '所属分部', prop: 'paymentOrderNo', width: '120' },
-        { label: '客户经理', prop: 'paymentOrderNo', width: '120' },
-        { label: '甲方名称', prop: 'paymentOrderNo', width: '200' },
-        { label: '项目名称', prop: 'paymentOrderNo', width: '230' },
-        { label: '项目地址', prop: 'paymentOrderNo', width: '300' },
-        { label: '项目建筑类型', prop: 'paymentOrderNo', width: '120' },
-        { label: '项目角色', prop: 'paymentOrderNo', width: '120' },
-        { label: '项目所处的阶段', prop: 'paymentOrderNo', width: '120' },
-        { label: '可从总部采购产品', prop: 'paymentOrderNo', width: '120' },
-        { label: '工程项目智能化需求', prop: 'paymentOrderNo', width: '150' },
-        { label: '项目预计交付时间', prop: 'paymentOrderNo', width: '120', displayAs: 'YYYY-MM-DD' },
-        { label: '项目预估签约额', prop: 'paymentOrderNo', width: '120', displayAs: 'money' },
-        { label: '销售阶段', prop: 'paymentOrderNo', width: '120' },
-        { label: '签约回款额', prop: 'paymentOrderNo', width: '120', displayAs: 'money' }
+        { label: '公司全称', prop: 'companyName', width: '200' },
+        { label: '管理员姓名', prop: 'adminUserName', width: '120' },
+        { label: '管理员手机号', prop: 'adminPhoneNumber', width: '120' },
+        { label: '主营品类', prop: 'deviceCategoryName', width: '120' },
+        { label: '主营品牌', prop: 'deviceBrand', width: '120' },
+        { label: '所属分部', prop: 'subsectionName', width: '120' },
+        { label: '客户经理', prop: 'customerName', width: '120' },
+        { label: '甲方名称', prop: 'firstPartName', width: '200' },
+        { label: '项目名称', prop: 'projectName', width: '230' },
+        { label: '项目地址', prop: 'address', width: '300' },
+        { label: '项目建筑类型', prop: 'projectBuildingTypeNames', width: '120' },
+        { label: '项目角色', prop: 'projectRoleNames', width: '120' },
+        { label: '项目所处的阶段', prop: 'projectStepString', width: '130' },
+        { label: '可从总部采购产品', prop: 'generalGoodsNames', width: '120' },
+        { label: '工程项目智能化需求', prop: 'projectIntelligentNeedsNames', width: '150' },
+        { label: '项目预计交付时间', prop: 'estimatedDeliverTimeString', width: '120', displayAs: 'YYYY-MM-DD' },
+        { label: '项目预估签约额', prop: 'estimatedSignAmount', width: '120', displayAs: 'money' },
+        { label: '销售阶段', prop: 'flowUpProcessString', width: '120' },
+        { label: '签约回款额', prop: 'refundAmont', width: '120', displayAs: 'money' }
 
     ]
 
@@ -501,11 +519,20 @@ export default class ProjectList2 extends Vue {
     }
 
     async getList () {
-        // const { data: tableData } = await Api.getUpStreamPaymentApi(this.signForm)
-        // this.tableData = tableData.records || []
-        // this.page.total = tableData.total as number
-        // const { data: totalAmountData } = await Api.getUpStreamPaymentTotalAmountApi(this.signForm)
-
+        const { data: { projectPage, ...restStatistics } } = await getProjectList(this.queryParams)
+        console.log('🚀 --- getList --- projectPage', projectPage)
+        this.tableData = projectPage.records
+        this.statistics = {
+            /** 已筛选&项目数 */
+            totalProjectNum: restStatistics.totalProjectNum,
+            /** 已回款金额 */
+            totalRefundAmount: restStatistics.totalRefundAmount,
+            /** 已回款 */
+            totalRefundNum: restStatistics.totalRefundNum,
+            /** 已签约 */
+            totalSignedNum: restStatistics.totalSignedNum
+        }
+        this.page.total = projectPage.total
     }
 
     onProvince (key) {
@@ -576,6 +603,18 @@ export default class ProjectList2 extends Vue {
 
     async mounted () {
         this.getAreacode()
+        let p = []
+        const api = ['project_intelligent_needs', 'project_building_type', 'project_step', 'project_role', 'general_goods', 'refund_pay_type']
+        api.map((i:any) => {
+            p.push(
+                this.findDictionaryList({ item: i })
+            )
+        })
+        await Promise.all([p, this.getList()])
+
+        // this.findDictionaryList({
+        //     item: 'project_intelligent_needs'
+        // })
     // await this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
     }
 }
