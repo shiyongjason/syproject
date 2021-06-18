@@ -33,7 +33,7 @@
                 <div class="table-cont-title">
                     <span class="table-title-name">采购商品清单</span>
                 </div>
-                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'" show-summary class="mt20 mb20">
+                <basicTable :tableData="tableData" :tableLabel="tableLabel" :isMultiple="false" :isShowIndex='true' :isfiexd="'right'" show-summary class="mt20 mb20">
                 </basicTable>
                 <el-form-item label="代采订单总金额：" prop="remark">
                     <el-input class="form-input_big" v-model="form.parameter2" maxlength="100" disabled></el-input>
@@ -51,11 +51,11 @@
                     <el-input type="textarea" v-model="form.remark" maxlength="50" disabled>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="订单最终回款日期：" prop="authenticationStartTime">
+                <el-form-item v-if="pageType == 'auditFundList'" label="订单最终回款日期：" prop="authenticationStartTime">
                     <el-date-picker v-model="form.authenticationStartTime" type="date" value-format="yyyy-MM-dd" format="yyyy-MM-dd" placeholder="订单最终回款日期">
                     </el-date-picker>
                 </el-form-item>
-                <div style="display:flex;">
+                <div style="display:flex;" v-if="pageType == 'auditFundList'">
                     <el-form-item label="审核：" prop="type">
                         <el-radio-group v-model="form.merchantType">
                             <el-radio :label="1">通过</el-radio>
@@ -66,20 +66,23 @@
                         <el-input v-model="form.shopName" maxLength="60" prop='' placeholder="请输入原因"></el-input>
                     </el-form-item>
                 </div>
+                <basicTable :tableData="tableDataLog" :tableLabel="tableLabelLog" :isMultiple="false" class="mt20 mb20" v-if="pageType == 'auditFundStatus'">
+                </basicTable>
             </el-form>
         </div>
         <div class="page-body-cont btn-cont fr">
             <h-button @click="onCancel()">取消</h-button>
-            <h-button type='primary' @click="onSave()">确定</h-button>
+            <h-button type='primary' @click="onSave()" v-if="pageType == 'auditFundList'">确定</h-button>
         </div>
     </div>
 </template>
 <script>
 import { mapActions, mapState } from 'vuex'
 export default {
-    name: 'auditFundInfo',
+    name: 'fundInfo',
     data () {
         return {
+            pageType: '',
             entrepotList: {},
             brandOption: [],
             templateOption: [],
@@ -107,7 +110,13 @@ export default {
                 { label: '含税单价', prop: 'attachmentCount' },
                 { label: '含税金额', prop: 'isShared' }
             ],
-            tableData: []
+            tableData: [],
+            tableLabelLog: [
+                { label: '时间', prop: 'spuCode' },
+                { label: '操作人', prop: 'spuName' },
+                { label: '操作内容', prop: 'brandName' }
+            ],
+            tableDataLog: []
         }
     },
     computed: {
@@ -116,6 +125,7 @@ export default {
     },
     methods: {
         init () {
+            this.pageType = this.$route.query.pageType
         },
         onSave () {
         },

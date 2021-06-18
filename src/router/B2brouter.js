@@ -510,15 +510,15 @@ export default [
                         component: () => import('@/views/hmall/fundAudit/auditFundList.vue')
                     },
                     {
-                        path: 'auditFundInfo',
-                        name: 'auditFundInfo',
+                        path: 'fundInfo',
+                        name: 'fundInfo',
                         meta: {
                             title: '查看',
                             tagName: '查看',
                             isMenu: false,
                             icon: ''
                         },
-                        component: () => import('@/views/hmall/fundAudit/auditFundInfo.vue')
+                        component: () => import('@/views/hmall/fundAudit/fundInfo.vue')
                     },
                     {
                         path: 'advancePayment',

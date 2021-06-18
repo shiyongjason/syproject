@@ -76,7 +76,17 @@ export const ORDER_STATUS_MAP = new Map([
     [1, '开启'],
     [2, '关闭']
 ])
-// 同步状态
+// 订单同步状态
+export const ORDER_SYNCHRONOUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '已同步', value: '1' },
+    { label: '未同步', value: '2' }
+]
+export const ORDER_SYNCHRONOUS_MAP = new Map([
+    [1, '已同步'],
+    [2, '未同步']
+])
+// 资金同步状态
 export const SYNCHRONOUS_OPTIONS = [
     { label: '全部', value: '' },
     { label: '已同步', value: '1' },
@@ -85,4 +95,34 @@ export const SYNCHRONOUS_OPTIONS = [
 export const SYNCHRONOUS_MAP = new Map([
     [1, '已同步'],
     [2, '未同步']
+])
+// 出款状态
+export const PARAGRAPH_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未采购', value: '1' },
+    { label: '已采购', value: '2' }
+]
+export const PARAGRAPH_STATUS_MAP = new Map([
+    [1, '未采购'],
+    [2, '已采购']
+])
+// 资金状态
+export const FUND_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '已使用', value: '1' },
+    { label: '未使用', value: '2' }
+]
+export const FUND_STATUS_MAP = new Map([
+    [1, '已使用'],
+    [2, '未使用']
+])
+// 货物状态
+export const GOODS_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '未入仓', value: '1' },
+    { label: '已入仓', value: '2' }
+]
+export const GOODS_STATUS_MAP = new Map([
+    [1, '未入仓'],
+    [2, '已入仓']
 ])

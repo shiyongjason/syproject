@@ -244,10 +244,10 @@ export default {
             // this.branchArr = this.branchList
         },
         onseeTask (val) {
-            this.$router.push({ path: '/goods/editSku', query: { id: val, audit: false } })
+            this.$router.push({ path: '/fundAudit/fundInfo', query: { id: val, audit: false, pageType: auditFundList } })
         },
         onAudit (val) {
-            this.$router.push({ path: '/goods/editSku', query: { id: val, audit: true } })
+            this.$router.push({ path: '/fundAudit/fundInfo', query: { id: val, audit: true, pageType: auditFundList } })
         }
     }
 }

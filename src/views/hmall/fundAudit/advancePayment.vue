@@ -24,7 +24,7 @@
                     <div class="query-col__lable">预付款状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.isAuthentication">
-                            <el-option v-for="item in auditStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in paymentStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -59,15 +59,15 @@
                     <div class="query-col__lable">订单状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.merchantType">
-                            <el-option v-for="item in businessTypeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in ordrerStatusOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__lable">订单同步状态：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.merchantType">
-                            <el-option v-for="item in businessTypeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                        <el-select v-model="queryParams.merchantTypes">
+                            <el-option v-for="item in orderSynchronousOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                     <div class="query-col__lable">资金同步状态：</div>
                     <div class="query-col__input">
                         <el-select v-model="queryParams.merchantType">
-                            <el-option v-for="item in businessTypeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                            <el-option v-for="item in synchronousOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -89,20 +89,20 @@
                 </div>
             </div>
             <basicTable :tableData="tableData" :tableLabel="tableLabel" :pagination="paginationInfo" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=250 :isShowIndex='true' :isfiexd="'right'">
-                <template slot="subsectionName" slot-scope="scope">
-                    {{scope.data.row.subsectionName || '无'}}
-                </template>
                 <template slot="merchantType" slot-scope="scope">
-                    {{businessTypeMap.get(scope.data.row.merchantType) || '-'}}
+                    {{paymentStatusMap.get(scope.data.row.merchantType) || '-'}}
                 </template>
                 <template slot="isAuthentication" slot-scope="scope">
-                    <span>{{auditStatusMap.get(scope.data.row.isAuthentication)}}}</span>
+                    <span>{{orderStatusMap.get(scope.data.row.isAuthentication)}}}</span>
                 </template>
                 <template slot="openingStatus" slot-scope="scope">
-                    {{deadlineMap.get(scope.data.row.openingStatus)}}
+                    {{orderSynchronousMap.get(scope.data.row.openingStatus)}}
+                </template>
+                <template slot="openingStatus" slot-scope="scope">
+                    {{synchronousMap.get(scope.data.row.openingStatus)}}
                 </template>
                 <template slot="action" slot-scope="scope">
-                    <h-button table @click="onSure(scope.data.row)">确认</h-button>
+                    <h-button table v-if="scope.data.row.isAuthentication == 2" @click="onSure(scope.data.row)">确认</h-button>
                     <h-button table @click="onseeTask(scope.data.row)">查看</h-button>
                     <h-button table @click="onClose(scope.data.row)">关闭</h-button>
                     <h-button table @click="onAudit(scope.data.row)">订单同步资金同步</h-button>
@@ -113,18 +113,19 @@
 </template>
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex'
-import { BUSINESS_TYPE_OPTIONS, BUSINESS_TYPE_MAP, AUDITLIST_STATUS_OPTIONS, AUDITLIST_STATUS_MAP, DEADLINE_OPTIONS, DEADLINE_MAP, AUDIT_TAB_OPTIONS } from './const'
+import { PAYMENT_STATUS_OPTIONS, PAYMENT_STATUS_MAP, ORDER_STATUS_OPTIONS, ORDER_STATUS_MAP, ORDER_SYNCHRONOUS_OPTIONS, ORDER_SYNCHRONOUS_MAP, SYNCHRONOUS_OPTIONS, SYNCHRONOUS_MAP } from './const'
 export default {
     name: 'advancePayment',
     data () {
         return {
-            businessTypeOptions: BUSINESS_TYPE_OPTIONS,
-            businessTypeMap: BUSINESS_TYPE_MAP,
-            auditStatusOptions: AUDITLIST_STATUS_OPTIONS,
-            auditStatusMap: AUDITLIST_STATUS_MAP,
-            deadlineOptions: DEADLINE_OPTIONS,
-            deadlineMap: DEADLINE_MAP,
-            auditTabOptions: AUDIT_TAB_OPTIONS,
+            paymentStatusOptions: PAYMENT_STATUS_OPTIONS,
+            paymentStatusMap: PAYMENT_STATUS_MAP,
+            ordrerStatusOptions: ORDER_STATUS_OPTIONS,
+            orderStatusMap: ORDER_STATUS_MAP,
+            orderSynchronousOptions: ORDER_SYNCHRONOUS_OPTIONS,
+            orderSynchronousMap: ORDER_SYNCHRONOUS_MAP,
+            synchronousOptions: SYNCHRONOUS_OPTIONS,
+            synchronousMap: SYNCHRONOUS_MAP,
             queryParams: {
                 authenticationEndTime: '',
                 authenticationStartTime: '',
@@ -133,6 +134,7 @@ export default {
                 isEnabled: '',
                 merchantAccount: '',
                 merchantType: '',
+                merchantTypes: '',
                 pageNumber: 1,
                 pageSize: 10,
                 registrationEndTime: '',
@@ -245,11 +247,9 @@ export default {
             // this.branchArr = this.branchList
         },
         onseeTask (val) {
-            this.$router.push({ path: '/goods/editSku', query: { id: val, audit: false } })
+            this.$router.push({ path: '/fundAudit/fundInfo', query: { id: val, pageType: advancePayment } })
         },
-        onAudit (val) {
-            this.$router.push({ path: '/goods/editSku', query: { id: val, audit: true } })
-        },
+        onAudit () { },
         onSure () { },
         onClose () { }
     }
