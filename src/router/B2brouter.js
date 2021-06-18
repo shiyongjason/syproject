@@ -280,18 +280,29 @@ export default [
                             icon: ''
                         },
                         component: () => import('@/views/hmall/finance/withdrawal.vue')
+                    },
+                    {
+                        path: 'merchantsDetail',
+                        name: 'financeMerchantsDetail',
+                        meta: {
+                            title: '代采资金管理',
+                            tagName: '代采资金管理提现',
+                            isMenu: true,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantsDetail.vue')
+                    },
+                    {
+                        path: 'merchantBehalf',
+                        name: 'financeMerchantBehalf',
+                        meta: {
+                            title: '商家详情',
+                            tagName: '商家详情',
+                            isMenu: false,
+                            icon: ''
+                        },
+                        component: () => import('@/views/hmall/finance/miningManage/merchantBehalf.vue')
                     }
-                    // {
-                    //     path: 'orderRecord',
-                    //     name: 'orderRecord',
-                    //     meta: {
-                    //         title: '订单／收款记录查询',
-                    //         tagName: '订单／收款记录查询',
-                    //         isMenu: true,
-                    //         icon: ''
-                    //     },
-                    //     component: () => import('@/views/hmall/order/order.vue')
-                    // }
                 ]
             },
             {
