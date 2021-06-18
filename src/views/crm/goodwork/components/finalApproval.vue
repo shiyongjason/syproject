@@ -5,126 +5,133 @@
             <el-radio-button label="决议修改记录"></el-radio-button>
         </el-radio-group>
         <div class="tab-layout" v-if="radio1=='评审决议内容'">
-            <div class="status-title">评审会决议【{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].tit}}】</div>
-            <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
-            <div class="tab-layout-title">
-                <span></span>
-                <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer">编辑</h-button>
-                </div>
-            </div>
-            <div class="item">
-                <div class="item-title">企业信息：</div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px">经销商：</font>
-                        <span>{{resolutionDetail.companyName}}</span>
-                    </div>
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 150px">经销商客户经理：</font>
-                        <span>{{resolutionDetail.userManager}}({{resolutionDetail.userManagerPhone||'-'}})</span>
+            <template v-if="resolutionDetail.status!=14">
+                <div class="status-title">评审会决议【{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].tit}}】</div>
+                <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
+                <div class="tab-layout-title">
+                    <span></span>
+                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer">编辑</h-button>
                     </div>
                 </div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px">可代采购额度(元)：</font>
-                        <span>{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</span>
+                <div class="item">
+                    <div class="item-title">企业信息：</div>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px">经销商：</font>
+                            <span>{{resolutionDetail.companyName}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 150px">经销商客户经理：</font>
+                            <span>{{resolutionDetail.userManager}}({{resolutionDetail.userManagerPhone||'-'}})</span>
+                        </div>
                     </div>
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 150px">剩余代采购额度(元)：</font>
-                        <span>{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</span>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px">可代采购额度(元)：</font>
+                            <span>{{resolutionDetail.purchaseQuota|fundMoneyHasTail}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 150px">剩余代采购额度(元)：</font>
+                            <span>{{resolutionDetail.purchaseBalance|fundMoneyHasTail}}</span>
+                        </div>
+                    </div>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px">经销商评级：</font>
+                            <span>{{resolutionDetail.companyLevel}}</span>
+                        </div>
+
                     </div>
                 </div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px">经销商评级：</font>
-                        <span>{{resolutionDetail.companyLevel}}</span>
+                <div class="item">
+                    <div class="item-title">项目信息：</div>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目名称：</font>
+                            <span>{{resolutionDetail.projectName}}</span>
+                        </div>
+                    </div>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目合同总额(元)：</font>
+                            <span>{{resolutionDetail.contractAmount|fundMoneyHasTail}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目评级：</font>
+                            <span>{{resolutionDetail.levels}}</span>
+                        </div>
                     </div>
 
                 </div>
-            </div>
-            <div class="item">
-                <div class="item-title">项目信息：</div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目名称：</font>
-                        <span>{{resolutionDetail.projectName}}</span>
+                <!--  -->
+                <div class="tab-layout-title">
+                    <span></span>
+                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur">编辑</h-button>
                     </div>
                 </div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目合同总额(元)：</font>
-                        <span>{{resolutionDetail.contractAmount|fundMoneyHasTail}}</span>
+                <div class="item">
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>申请代付金额(元)：</font>
+                            <span>{{resolutionDetail.predictLoanAmount|fundMoneyHasTail}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
+                            <span>{{resolutionDetail.advancePaymentRate}}%</span>
+                        </div>
                     </div>
-                    <div class="info-layout-item">
-                        <font><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>项目评级：</font>
-                        <span>{{resolutionDetail.levels}}</span>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>设备总额(元)：</font>
+                            <span>{{resolutionDetail.deviceAmount|fundMoneyHasTail}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
+                            <span>{{resolutionDetail.remainPaymentCycle}}个月</span>
+                        </div>
                     </div>
-                </div>
-
-            </div>
-            <!--  -->
-            <div class="tab-layout-title">
-                <span></span>
-                <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur">编辑</h-button>
-                </div>
-            </div>
-            <div class="item">
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>申请代付金额(元)：</font>
-                        <span>{{resolutionDetail.predictLoanAmount|fundMoneyHasTail}}</span>
+                    <div class="info-layout">
+                        <div class="info-layout-item" style="margin-left:10px">
+                            <font style="flex:0 0 135px">执行费率(%)：</font>
+                        </div>
                     </div>
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>经销商首付款比例(%)：</font>
-                        <span>{{resolutionDetail.advancePaymentRate}}%</span>
+                    <div class="info-layout" style="margin-left:50px">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
+                            <span>{{resolutionDetail.acceptBankRate}}</span>
+                        </div>
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
+                            <span>{{resolutionDetail.transferBankRate}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>设备总额(元)：</font>
-                        <span>{{resolutionDetail.deviceAmount|fundMoneyHasTail}}</span>
+                    <div class="info-layout">
+                        <div class="info-layout-item" style="margin-left:10pxmargin-top:20px">
+                            <font style="flex:0 0 135px">采购信息：</font>
+                        </div>
                     </div>
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 165px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>剩余货款支付周期：</font>
-                        <span>{{resolutionDetail.remainPaymentCycle}}个月</span>
+                    <div class="table">
+                        <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="tableData" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
+                        </hosJoyTable>
                     </div>
-                </div>
-                <div class="info-layout">
-                    <div class="info-layout-item" style="margin-left:10px">
-                        <font style="flex:0 0 135px">执行费率(%)：</font>
+                    <div class="info-layout">
+                        <div class="info-layout-item">
+                            <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>备注信息：</font>
+                        </div>
                     </div>
-                </div>
-                <div class="info-layout" style="margin-left:50px">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行承兑：</font>
-                        <span>{{resolutionDetail.acceptBankRate}}</span>
-                    </div>
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>银行转账：</font>
-                        <span>{{resolutionDetail.transferBankRate}}</span>
-                    </div>
-                </div>
-                <div class="info-layout">
-                    <div class="info-layout-item" style="margin-left:10pxmargin-top:20px">
-                        <font style="flex:0 0 135px">采购信息：</font>
-                    </div>
-                </div>
-                <div class="table">
-                    <hosJoyTable ref="hosjoyTable" align="center"  border stripe showPagination :column="tableLabel" :data="tableData" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
-                    </hosJoyTable>
-                </div>
-                <div class="info-layout">
-                    <div class="info-layout-item">
-                        <font style="flex:0 0 135px"><em style="color:#ff0000;font-style: normal;margin-right: 3px">*</em>备注信息：</font>
-                    </div>
-                </div>
-                <div class="tab-textarea" style="margin:15px 0 0 15px">
-                    <!-- <el-input  type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="500" rows="5" show-word-limit>
+                    <div class="tab-textarea" style="margin:15px 0 0 15px">
+                        <!-- <el-input  type="textarea" placeholder="可在此填写放款交接中的注意事项等" v-model="loanTransfersConfirm.remark" maxlength="500" rows="5" show-word-limit>
                     </el-input> -->
-                    <p>{{resolutionDetail.remark}}</p>
+                        <p>{{resolutionDetail.remark}}</p>
+                    </div>
                 </div>
-            </div>
-
+            </template>
+            <template v-if="resolutionDetail.status==14">
+                <div class="info-finallNo">
+                    <h3>终审结果：不通过</h3>
+                    <p>备注信息：{{resolutionDetail.remark}}</p>
+                </div>
+            </template>
         </div>
         <el-dialog title="客户基本信息" :close-on-click-modal='false' :visible.sync="editBaseInfoVisible" width="750px" :before-close="handleHidden" :modal='false'>
             <div class="dialog-ctx reviewResolution">
@@ -148,7 +155,12 @@
                     </el-form-item>
                     <el-form-item label="项目评级：" prop='levels' style="marginLeft:-9px;marginTop:10px">
                         <el-select v-model="baseInfoForm.levels" placeholder="请选择">
-                            <el-option label="A" :value="1"></el-option>
+                            <el-option label="A+" value="A+"></el-option>
+                            <el-option label="A" value="A"></el-option>
+                            <el-option label="B+" value="B+"></el-option>
+                            <el-option label="B" value="B"></el-option>
+                            <el-option label="C+" value="C+"></el-option>
+                            <el-option label="C" value="C"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="项目合同总额(元)：" prop='contractAmount' style="marginLeft:-9px;marginTop:10px">
@@ -185,7 +197,7 @@
                         <!-- 仅可输入数字，区间为（0，100000000），最多保留2位小数。 -->
                         <!-- @input="(val)=>inputChage(val,baseInfoForm.name)" :value="money(baseInfoForm.name)" -->
                         <el-form-item label="设备总额：" prop='deviceAmount'>
-                            <el-input placeholder="请输入"  v-isNum:2 v-inputMAX='100000000' v-model="purForm.deviceAmount" :value="money(baseInfoForm.name)">
+                            <el-input placeholder="请输入" v-isNum:2 v-inputMAX='100000000' v-model="purForm.deviceAmount" :value="money(baseInfoForm.name)">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
@@ -244,19 +256,38 @@
                     <span>{{moment(item.createTime).format('YYYY-MM-DD HH:mm:ss')}}</span>
                 </div>
                 <div class="flex-cont">
+                    <!-- 采购单 -->
                     <div v-if="item.projectPurchaseList">
-                         <hosJoyTable ref="hosjoyTable" align="center"  border stripe  :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
+                        <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
                         </hosJoyTable>
                     </div>
+                    <!-- 操作 -->
                     <div v-if="item.projectResolutionRecordDetailList&&item.projectResolutionRecordDetailList.length>0" class="flex-operate">
-                        <span></span>
+                        <p v-for="(jtem,jndex) in item.projectResolutionRecordDetailList" :key="jndex">
+                            <span>{{jtem.changeName}}</span>由“<i>{{jtem.contentBeforeChange}}</i>”变更为“<i>{{jtem.contentAfterChange}}</i>”
+                        </p>
                     </div>
                     <div v-if="item.dingId">
-                        <span>{{dingStatus[item.recordType]}}{{item.dingId}}</span>
+                        <span v-if="item.recordType==2||item.recordType==5">{{dingStatus[item.recordType]}}：{{item.dingId}}</span>
+                        <div class="dingBg" v-if="item.recordType==4||item.recordType==7">
+                            {{dingStatus[item.recordType]}}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <el-dialog title="终审" :close-on-click-modal='false' :visible.sync="lastDialog" width="25%" :before-close="handleCloseLast" :modal='false'>
+            <el-form :model="lastForm" :rules="lastFormRules" ref="lastForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="备注信息：" prop="remark">
+                    <el-input type='textarea' v-model="lastForm.remark" maxlength="500"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="handleCloseLast">取 消</el-button>
+                <el-button type="primary" @click="onSubmitLast">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -266,7 +297,7 @@ import { isNum } from '@/utils/validate/format'
 import utils from '@/utils/filters'
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { CreateElement } from 'vue'
-import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList } from '../api/index'
+import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList, initiateDing, finalApproveNo, getProjectLevels } from '../api/index'
 import { useDebounce } from '@/decorator'
 import moment from 'moment'
 
@@ -282,12 +313,17 @@ export default class FinalApproval extends Vue {
     radio1: string = '评审决议内容';
     tableData: any[] = [];
     Lists:any[] = [];
+    lastDialog:boolean = false;
+    type:number = 1;
     baseInfoForm: any = {
         projectName: '',
         contractAmount: '',
         levels: '',
         updateBy: '',
         projectId: ''
+    };
+    lastForm:any={
+        remark: ''
     };
     purForm:any = {
         'acceptBankRate': '',
@@ -318,7 +354,13 @@ export default class FinalApproval extends Vue {
 
     ];
     dingStatus:Object={
-        1: '编辑', 2: '发起流程', 3: '钉钉流程节点', 4: '钉钉审批结果'
+        1: '编辑',
+        2: '发起评审决议流程',
+        3: '评审决议钉钉流程节点审批',
+        4: '评审决议钉钉审批结果',
+        5: '发起评审决议变更流程',
+        6: '评审决议变更钉钉流程节点审批',
+        7: '评审决议变更钉钉审批结果'
     }
 
     category: any[] = [
@@ -353,6 +395,9 @@ export default class FinalApproval extends Vue {
 
     }
 
+    $refs!: {
+        form: HTMLFormElement
+    }
     get formRules () {
         let rules = {
             // pledgeNo: [
@@ -371,25 +416,30 @@ export default class FinalApproval extends Vue {
             //         trigger: 'blur'
             //     }
             // ],
-            projectName: [{ required: true, message: '项目名称必填' }],
+            projectName: [{ required: true, message: '项目名称必填', trigger: 'blur' }],
             levels: [{ required: true, message: '项目评级必选' }],
-            contractAmount: [{ required: true, message: '项目合同总额必填' }]
+            contractAmount: [{ required: true, message: '项目合同总额必填', trigger: 'blur' }]
         }
         return rules
     }
 
     get purFormRules () {
         let rules = {
-            predictLoanAmount: [{ required: true, message: '申请代付金额(元)必填' }],
-            advancePaymentRate: [{ required: true, message: '首付款比例必选' }],
-            deviceAmount: [{ required: true, message: '设备款总额必填' }],
-            remainPaymentCycle: [{ required: true, message: '剩余代采购额度必填' }],
-            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填' }],
-            transferBankRate: [{ required: true, message: '银行转账执行费率必填' }]
+            predictLoanAmount: [{ required: true, message: '申请代付金额(元)必填', trigger: 'blur' }],
+            advancePaymentRate: [{ required: true, message: '首付款比例必选', trigger: 'blur' }],
+            deviceAmount: [{ required: true, message: '设备款总额必填', trigger: 'blur' }],
+            remainPaymentCycle: [{ required: true, message: '剩余代采购额度必填', trigger: 'blur' }],
+            acceptBankRate: [{ required: true, message: '银行承兑执行费率必填', trigger: 'blur' }],
+            transferBankRate: [{ required: true, message: '银行转账执行费率必填', trigger: 'blur' }]
         }
         return rules
     }
-
+    get lastFormRules () {
+        let rules = {
+            remark: [{ required: true, message: '备注信息', trigger: 'blur' }]
+        }
+        return rules
+    }
     tableLabel: tableLabelProps = [
         { label: '设备品牌', prop: 'deviceBrand', width: '120' },
         { label: '上游供应商', prop: 'upstreamSupplierName', width: '120' },
@@ -575,7 +625,8 @@ export default class FinalApproval extends Vue {
 
     @useDebounce(1000)
     async querySearch (queryString: string, callback: (arg: any) => void) {
-        if (!queryString) return
+        console.log('queryString', queryString)
+        // if (!queryString) return
         // 天眼查查询
         const { data } = await getTYCList({ word: queryString })
         if (data) {
@@ -634,10 +685,14 @@ export default class FinalApproval extends Vue {
             this.disabled = true
         }, 0)
     }
-
+    // 保存采购结论
     submit () {
         console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.tableForm)
-        resPurchase()
+        this.$refs['purchaseConclusionForm'].validate(async (valid) => {
+            if (valid) {
+                await resPurchase()
+            }
+        })
     }
 
     //
@@ -691,12 +746,50 @@ export default class FinalApproval extends Vue {
         this.editBaseInfoVisible = false
     }
     async onSaveCustomer () {
-        this.baseInfoForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
-        await resCustomer(this.baseInfoForm)
-        this.editBaseInfoVisible = false
-        this.onFindRes()
+        this.$refs['reviewResolutionForm'].validate(async (valid) => {
+            if (valid) {
+                this.baseInfoForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
+                await resCustomer(this.baseInfoForm)
+
+                this.editBaseInfoVisible = false
+                this.onFindRes()
+            }
+        })
     }
 
+    async _finalApprove (val) {
+        this.lastDialog = true
+        this.type = val
+    }
+    // 保存结果
+    async onSubmitLast () {
+        this.$refs['lastForm'].validate(async (valid) => {
+            if (valid) {
+                if (this.type == 1) {
+                    await finalApproveNo({ projectId: this.finalFormID,
+                        remark: this.lastForm.remark,
+                        updateBy: JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName,
+                        updateByMobile: JSON.parse(sessionStorage.getItem('userInfo') || '').phoneNumber
+                    })
+                    this.$emit('onCompsback')
+                    this.$emit('onBackLoad', false)
+                } else {
+                    await initiateDing({ projectId: this.finalFormID,
+                        remark: this.lastForm.remark,
+                        updateBy: JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName,
+                        updateByMobile: JSON.parse(sessionStorage.getItem('userInfo') || '').phoneNumber
+                    })
+                    this.$emit('onCompsback')
+                    this.$emit('onBackLoad', false)
+                }
+            }
+        })
+    }
+
+    handleCloseLast () {
+        this.lastDialog = false
+        this.lastForm.remark = ''
+    }
     mounted () {
         this.onFindRes()
     }

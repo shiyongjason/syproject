@@ -102,7 +102,7 @@
                 <template slot="action" slot-scope="scope">
                     <h-button table @click="onPayEnter(scope.data.row)" v-if="scope.data.row.paymentFlag === PaymentOrderDict.paymentFlag.list[1].key &&  hasPayEnterAuth(queryParams.repaymentTypeArrays)&&!scope.data.row.payBatch">支付确认</h-button>
                     <h-button table @click="seePayEnter(scope.data.row)" v-if="hasSeePayEnterAuth(queryParams.repaymentTypeArrays)">查看凭证</h-button>
-                    <h-button table @click="onUploadPay(scope.data.row)" v-if="scope.data.row.paymentFlag==0">
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="scope.data.row.paymentFlag==0&&hosAuthCheck(this.Auths.CRM_FUNDS_DOWN_UPLOAD)">
                         上传支付凭证
                     </h-button>
                     <h-button table @click="onBatchSumbit(scope.data.row)" v-if="scope.data.row.payBatch">

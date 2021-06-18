@@ -24,10 +24,10 @@
                         <el-form-item label="采购单金额：">
                             {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
                         </el-form-item>
-                        <div class="mb20">
-                            <basicTable :tableData="paymentDetail.billAmountResponse.billAmountDetail" :tableLabel="tableLabel" :isPagination='false'>
-                                <template slot="number" slot-scope="scope">
-                                    第{{ scope.data.row.number }}张票
+                        <div class="mb20"  style="height:250px; overflow-y: scroll;">
+                            <basicTable :tableData="paymentDetail.payOrderPoDetail.paymentOrderInfos" :tableLabel="orderLabel" :isPagination='false'>
+                                <template slot="status" slot-scope="scope">
+                                    {{orderStatus[scope.data.row.status] }}
                                 </template>
                             </basicTable>
                         </div>
@@ -248,7 +248,13 @@ export default {
             tableLabel: [
                 { label: '出票张数', prop: 'number' },
                 { label: '出票金额（元）', prop: 'amount', formatters: 'moneyShow' }
-            ]
+            ],
+            orderLabel: [
+                { label: '支付单编号', prop: 'paymentOrderNo' },
+                { label: '支付单金额(元)', prop: 'applyAmount', formatters: 'moneyShow' },
+                { label: '支付单状态', prop: 'status' }
+            ],
+            orderStatus: { 0: '支付单待审核', 1: '首付款待支付', 2: '首付款待确认', 3: '上游支付确认中', 4: '上游支付中', 5: '待出票', 6: '正在出票', 7: '待发货', 8: '待收货', 9: '剩余货款待支付', 10: '剩余货款待确认', 11: '支付单完成', 12: '支付单关闭' }
         }
     },
     watch: {
@@ -339,17 +345,35 @@ export default {
             this.$emit('onClose')
         },
         onReceived () {
-            this.$refs.form.validate(async (value, rules) => {
+            this.$refs.form.validate((value, rules) => {
                 if (value) {
                     this.formData.downPaymentAmount = this.downPaymentAmount
                     this.formData.updateTime = this.paymentDetail.payOrderPoDetail.updateTime
                     if (this.formData.checkPass === 'pass') {
-                        await updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
+                        // 二次确认 通过
+                        this.$confirm('确定对当前支付单给予审核通过吗？', '再次确认', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(async () => {
+                            await updatePaymentOrderStatusPass(this.paymentDetail.payOrderDetail.id, this.formData)
+                            this.clearForm()
+                            this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
+                        }).catch(() => {
+                        })
                     } else if (this.formData.checkPass === 'noPass') {
-                        await updatePaymentOrderStatusNoPass(this.paymentDetail.payOrderDetail.id, this.formData)
+                        // 二次确认 不通过
+                        this.$confirm('确定对当前支付单给予审核不通过吗？', '再次确认', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(async () => {
+                            await updatePaymentOrderStatusNoPass(this.paymentDetail.payOrderDetail.id, this.formData)
+                            this.clearForm()
+                            this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
+                        }).catch(() => {
+                        })
                     }
-                    this.clearForm()
-                    this.$emit('onCloseDialogAndQuery', 'approvePaymentVisible')
                 } else {
                     // console.log(object)
                     // const needTip = Object.keys(rules)

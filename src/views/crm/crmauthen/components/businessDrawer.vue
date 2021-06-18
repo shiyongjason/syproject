@@ -20,7 +20,7 @@
                                 </el-form-item>
                                 <el-form-item label="客户经理：" :label-width="formLabelWidth">
                                     {{businessDetail.customerManager||'-'}}
-                                    <el-button type="primary" size="mini" @click="onEditInfo">修改客户经理</el-button>
+                                    <el-button type="primary" size="mini" @click="onEditInfo" v-if="hosAuthCheck(Auths.CRM_AUTHEN_EDITNAME )">修改客户经理</el-button>
                                 </el-form-item>
                                 <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
                                     <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
@@ -191,7 +191,7 @@
                                 </el-form-item>
                                 <el-form-item label="最近维护人：" :label-width="formLabelWidth">
                                     {{businessDetail.updateBy?businessDetail.updateBy:'-'}} ({{businessDetail.updatePhone}})
-                                    <span class="delcompany" @click="onRemove">删除该企业</span>
+                                    <span class="delcompany" @click="onRemove" v-if="hosAuthCheck(Auths.CRM_AUTHEN_DELETE)">删除该企业</span>
                                 </el-form-item>
                             </el-form>
 
