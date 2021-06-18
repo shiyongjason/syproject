@@ -27,7 +27,7 @@
                 </template>
             </el-table-column>
             <el-table-column v-if="isShowIndex" type="index" class-name="allowDrag" label="序号" :index="indexMethod" align="center" width="60"></el-table-column>
-            <template v-for="(item, index) in getColumn">
+            <template v-for="(item, index) in realColumn">
                 <el-table-column :label="item.label" :align="item.align? item.align: 'center'" :prop="item.prop" :key='item.label + item.prop' :width="item.width" :min-width="item.minWidth" :class-name="item.className" :fixed="item.fixed && data.length > 0" :show-overflow-tooltip="item.showOverflowTooltip || true"
                     v-if="item.slot && !item.isHidden && !item.selfSettingHidden">
                     <template slot-scope="scope">
@@ -134,7 +134,7 @@ export default {
             selectedColumn: [],
             columnRender: [],
             emptyTxtLeft: '',
-            getColumn: []
+            realColumn: []
         }
     },
     created () {
@@ -248,14 +248,14 @@ export default {
                 }
                 if (value.children && !this.isSimpleTable) {
                     let number = 0
-                    let ID = ''
+                    let id = ''
                     if (value.prop && value.label) {
-                        ID += value.prop
+                        id += value.prop
                     } else if (value.label) {
-                        ID += value.label
+                        id += value.label
                     }
                     value.children.forEach(value1 => {
-                        let subId = ID + (value1.uniqueLabel || value1.prop || value1.label)
+                        let subId = id + (value1.uniqueLabel || value1.prop || value1.label)
                         value1.isHidden = showColumnLabel.indexOf(subId) === -1
                         if (!value1.isHidden) number++
                     })
@@ -449,10 +449,10 @@ export default {
                 if (this.collapseShow) {
                     this.columnRender = this.deepCopy(val)
                     this.dealUpdateLabel(this.columnRender)
-                    this.$set(this, 'getColumn', this.columnRender)
+                    this.$set(this, 'realColumn', this.columnRender)
                 } else {
                     this.toggleTable = false
-                    this.$set(this, 'getColumn', val)
+                    this.$set(this, 'realColumn', val)
                     this.$nextTick(() => {
                         this.toggleTable = true
                     })

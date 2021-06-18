@@ -143,6 +143,10 @@ export default {
             type: Object,
             default: () => ({})
         },
+        spanMethod: {
+            type: Function,
+            defalut: () => { }
+        },
         rowKey: {
             type: String,
             default: ''
@@ -232,6 +236,10 @@ export default {
         handleCurrentChange (val) {
             this.paginationInfo.pageNumber = val
             this.$emit('onCurrentChange', this.paginationInfo)
+        },
+        doLayout () {
+            console.log('重新布局', this.$refs.basicTable)
+            this.$refs.basicTable && this.$refs.basicTable.doLayout()
         },
         handleSizeChange (val) {
             this.$emit('onSizeChange', val)

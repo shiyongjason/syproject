@@ -1,41 +1,15 @@
 <template>
-    <el-table-column
-        v-if="column && !column.isHidden && !column.selfSettingHidden"
-        v-bind="$attrs"
-        v-on="$listeners"
-        :prop="column.prop"
-        :label="getLabel(column.label)"
-        :type="column.type"
-        :index="column.index"
-        :column-key="column.columnKey"
-        :width="column.width"
-        :min-width="column.minWidth"
-        :fixed="column.fixed && data && data.length > 0"
-        :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader"
-        :sortable="column.sortable || false"
-        :sort-method="column.sortMethod"
-        :sort-by="column.sortBy"
-        :sort-orders="column.sortOrders"
-        :resizable="column.resizable || true"
-        :formatter="column.formatter"
-        :show-overflow-tooltip="column.showOverflowTooltip || true"
-        :align="column.align || align || 'center'"
-        :header-align="column.headerAlign || headerAlign || column.align || align || 'center'"
-        :class-name="column.className"
-        :label-class-name="column.labelClassName"
-        :selectable="column.selectable"
-        :reserve-selection="column.reserveSelection || false"
-        :filters="column.filters"
-        :filter-placement="column.filterPlacement"
-        :filter-multiple="column.filterMultiple"
-        :filter-method="column.filterMethod"
-        :filtered-value="column.filteredValue"
-    >
+    <el-table-column v-if="column && !column.isHidden && !column.selfSettingHidden" v-bind="$attrs" v-on="$listeners" :prop="column.prop" :label="getLabel(column.label)" :type="column.type" :index="column.index" :column-key="column.columnKey" :width="column.width" :min-width="column.minWidth"
+        :fixed="column.fixed && data && data.length > 0" :render-header="column.isUseCommonRenderHeader ? renderHeader : column.renderHeader" :sortable="column.sortable || false" :sort-method="column.sortMethod" :sort-by="column.sortBy" :sort-orders="column.sortOrders"
+        :resizable="column.resizable || true" :formatter="column.formatter" :show-overflow-tooltip="column.showOverflowTooltip || true" :align="column.align || align || 'center'" :header-align="column.headerAlign || headerAlign || column.align || align || 'center'" :class-name="column.className"
+        :label-class-name="column.labelClassName" :selectable="column.selectable" :reserve-selection="column.reserveSelection || false" :filters="column.filters" :filter-placement="column.filterPlacement" :filter-multiple="column.filterMultiple" :filter-method="column.filterMethod"
+        :filtered-value="column.filteredValue">
 
         <template slot="header" slot-scope="scope">
             <hosjoy-render v-if="column.renderHeader" :scope="scope" :render="column.renderHeader">
             </hosjoy-render>
-            <span v-if='(column.displayAs || column.unit) && !column.isTHNoTranslate'>{{ dealHeader(scope.column.label, column) }}</span>
+            <span v-else-if='column.headerUnit!=null && !column.isTHNoTranslate'>{{ dealHeaderUnit(scope.column.label, column) }}</span>
+            <span v-else-if='(column.displayAs || column.unit) && !column.isTHNoTranslate'>{{ dealHeader(scope.column.label, column) }}</span>
             <span v-else>{{ scope.column.label }}</span>
         </template>
 
@@ -155,7 +129,7 @@ export default {
                     if (this.column.displayAs) {
                         return (
                             <span>
-                                {this.filterMethods(this.column.displayAs, scope.row[scope.column.property])}
+                                {this.filterMethods(this.column.displayAs, scope.row[scope.column.property]) + unit}
                             </span>
                         )
                     }
@@ -204,6 +178,19 @@ export default {
             }
             let unit = childItem.unit ? childItem.unit : '' // 添加单位unit
             return res === '-' ? res : res + unit
+        },
+        dealHeaderUnit (label, column) {
+            if (!column.displayAs && !column.headerUnit) return label
+            let res = '-'
+            if (column.displayAs && (column.displayAs in this.functions)) {
+                if (label || label == 0) {
+                    res = this.filterMethods(column.displayAs, label)
+                }
+            } else {
+                res = label
+            }
+            let headerUnit = column.headerUnit ? column.headerUnit : '' // 头部单位headerUnit区别列表单元格单位展示
+            return res === '-' ? res : res + headerUnit
         }
     },
     watch: {

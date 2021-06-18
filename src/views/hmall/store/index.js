@@ -10,15 +10,7 @@ import searchProject from '@/views/hmall/searchProject/store/index'
 
 import marketManage from '@/views/hmall/marketManage/store/index'
 import productManage from '@/views/hmall/productManage/store/index'
-
-const state = {
-    userInfo: {},
-    categoryList: []
-}
-
-const getters = {
-
-}
+import warehouseManage from '@/views/hmall/warehouseManage/store/index'
 
 export default {
     state,
@@ -28,6 +20,7 @@ export default {
     modules: {
         marketManage,
         productManage,
+        warehouseManage,
         finance,
         brand,
         category,

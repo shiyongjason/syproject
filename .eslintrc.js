@@ -11,16 +11,16 @@ module.exports = {
     // ],
     extends: ['plugin:vue/essential', '@vue/standard', '@vue/typescript'],
     rules: {
-        'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-        'indent': ['error', 4, {
-            'SwitchCase': 1,
-            'VariableDeclarator': 1,
-            'outerIIFEBody': 1,
-            'MemberExpression': 1,
-            'FunctionDeclaration': {
-                'parameters': 1,
-                'body': 1
+        'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        "indent": ["error", 4, {
+            "SwitchCase": 1,
+            "VariableDeclarator": 1,
+            "outerIIFEBody": 1,
+            "MemberExpression": 1,
+            "FunctionDeclaration": {
+                "parameters": 1,
+                "body": 1
             },
             'FunctionExpression': {
                 'parameters': 1,
