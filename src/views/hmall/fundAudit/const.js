@@ -126,3 +126,15 @@ export const GOODS_STATUS_MAP = new Map([
     [1, '未入仓'],
     [2, '已入仓']
 ])
+// 平台确认状态
+export const PLATFORM_STATUS_OPTIONS = [
+    { label: '全部', value: '' },
+    { label: '已确认', value: '1' },
+    { label: '未确认', value: '2' },
+    { label: '确认不通过', value: '3' }
+]
+export const PLATFORM_STATUS_MAP = new Map([
+    [1, '已确认'],
+    [2, '未确认'],
+    [3, '确认不通过']
+])

@@ -145,7 +145,6 @@ export default {
                 { label: '货物状态', prop: 'openingStatus' }
             ],
             tableData: [],
-            drawer: false,
             copyParams: {},
             closeOrderDialog: false,
             createform: {

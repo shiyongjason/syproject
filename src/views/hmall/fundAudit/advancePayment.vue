@@ -162,9 +162,7 @@ export default {
                 { label: '资金同步状态', prop: 'openingStatus' }
             ],
             tableData: [],
-            drawer: false,
-            copyParams: {},
-            tabName: 0
+            copyParams: {}
         }
     },
     computed: {

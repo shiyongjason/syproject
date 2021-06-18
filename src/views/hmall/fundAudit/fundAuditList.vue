@@ -199,7 +199,7 @@ export default {
             branchArr: [],
             companyCode: '',
             bossDetail: {},
-            brandDrawer: true,
+            brandDrawer: false,
             formLabelWidth: '140px',
             rules: {}
         }
