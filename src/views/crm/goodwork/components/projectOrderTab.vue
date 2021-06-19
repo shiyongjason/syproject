@@ -1,7 +1,7 @@
 <template>
     <div class="collect-wrap">
         <div></div>
-        <el-button type="primary" @click="onAddPurchase" class="mb20">新增采购单</el-button>
+        <el-button type="primary" @click="onAddPurchase" class="mb20" v-if="hosAuthCheck(Auths.CRM_WORK_FINAL_ADDPUR)">新增采购单</el-button>
         <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
             <template slot="poAmount" slot-scope="scope">
                 <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
@@ -13,7 +13,7 @@
                 <span class="colblue"> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
             </template>
             <template slot="action" slot-scope="scope">
-                <h-button table @click="onDeletePurchase(scope.data.row)">删除</h-button>
+                <h-button table @click="onDeletePurchase(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_WORK_FINAL_DELETEPUR)">删除</h-button>
 
             </template>
         </basicTable>
@@ -24,6 +24,7 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
 import { addEmptyPurchase, deletePurchase } from '../api/index'
+import * as Auths from '@/utils/auth_const'
 export default {
     name: 'projectOrderTab',
     props: ['id'],

@@ -326,4 +326,15 @@ export const CRM_AUTHEN_DELETE = 109601
 // 修改客户经理
 export const CRM_AUTHEN_EDITNAME = 109602
 
-//
+// 好橙工项目 编辑客户
+export const CRM_WORK_FINAL_EDITCUS = 100701
+// 好橙工项目 编辑采购单
+export const CRM_WORK_FINAL_EDITPUR = 100702
+// 好橙工项目 终审不通过
+export const CRM_WORK_FINAL_NOPASS = 100703
+// 好橙工项目 发起决议
+export const CRM_WORK_FINAL_PASS = 100704
+// 好橙工项目 新增采购单
+export const CRM_WORK_FINAL_ADDPUR = 100705
+// 好橙工项目 删除采购单
+export const CRM_WORK_FINAL_DELETEPUR = 100706

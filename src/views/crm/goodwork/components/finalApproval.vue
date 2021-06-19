@@ -10,7 +10,7 @@
                 <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer"  v-if="resolutionDetail.resolutionStatus==1">编辑</h-button>
+                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer"  v-if="resolutionDetail.resolutionStatus==1&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITCUS)">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -66,7 +66,7 @@
                 <!--  -->
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="resolutionDetail.resolutionStatus==1">编辑</h-button>
+                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="resolutionDetail.resolutionStatus==1&&hosAuthCheck(Auths.CRM_WORK_FINAL_EDITPUR)">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -299,6 +299,7 @@ import { Vue, Component, Prop } from 'vue-property-decorator'
 import { CreateElement } from 'vue'
 import { getTYCList, getResolutions, resCustomer, resPurchase, getRecordList, initiateDing, finalApproveNo, getProjectLevels } from '../api/index'
 import { useDebounce } from '@/decorator'
+import * as Auths from '@/utils/auth_const'
 import moment from 'moment'
 
 @Component({
