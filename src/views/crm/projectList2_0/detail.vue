@@ -1,5 +1,5 @@
 <template>
-    <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' size='680px'>
+    <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' size='680px' >
         <div class="ProjectList2Detail">
             <div class="radio-group">
                 <el-radio-group v-model="radio">
@@ -7,6 +7,7 @@
                     <el-radio-button label="项目信息"></el-radio-button>
                 </el-radio-group>
             </div>
+            <!--  -->
             <div class="ProjectList2Detail-ctx" :style="radio=='跟进记录'?'bottom:0':'bottom:60px'">
                 <div v-if="radio=='跟进记录'">
                     <div>
@@ -89,74 +90,74 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="radio=='项目信息'">
-                    <el-form id='elform' :model="signForm" :rules="formRules"  label-width="140px"  label-position='right' ref="purchaseConclusionForm" class="list2">
+                <div v-if="radio=='项目信息'" class="project-information">
+                    <el-form id='elform' :model="projectDetail" :rules="formRules"  label-width="140px"  label-position='right' ref="projectDetailForm" class="list2">
                         <div class="project-detail-item">
-                            <el-form-item  prop='fundMoneys' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='signForm.name'></el-input>
+                            <el-form-item  prop='firstPartName' label="甲方名称：">
+                                <el-input  placeholder="请输入甲方名称" v-model='projectDetail.firstPartName'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item  prop='fundMoneys' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='signForm.name'></el-input>
+                            <el-form-item  prop='projectName' label="项目名称：">
+                                <el-input  placeholder="请输入项目名称" v-model='projectDetail.projectName'></el-input>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item  label="">
+                            <el-form-item prop='projectBuildingTypeList' label="">
                                 <div slot="label" style="line-height: 20px;">项目建筑类型<br/>（可多选）：</div>
-                                <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in buildingType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-select v-model="projectDetail.projectBuildingTypeList" multiple placeholder="请选择">
+                                    <el-option v-for="item in projectBuildingType" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item  label="">
+                            <el-form-item prop='projectRoleList' label="">
                                 <div slot="label" style="line-height: 20px;"><font style="padding-right:10px">项目角色</font><br/>（可多选）：</div>
-                                <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in role" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-select v-model="projectDetail.projectRoleList" multiple placeholder="请选择">
+                                    <el-option v-for="item in projectRole" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
-                            <el-form-item  label="">
+                            <el-form-item prop='projectStep' label="">
                                 <div slot="label">项目所处的阶段：</div>
-                                <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in atthestage" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-select v-model="projectDetail.projectStep" placeholder="请选择">
+                                    <el-option v-for="item in projectStep" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item  label="">
                                 <div slot="label" style="line-height: 20px;"><font>可从总部采购产品</font><br/>（可多选）：</div>
-                                <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in purchaseproducts" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-select v-model="projectDetail.generalGoodsList" multiple placeholder="请选择">
+                                    <el-option v-for="item in generalGoods" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="project-detail-item">
                             <el-form-item  label="">
                                 <div slot="label" style="line-height: 20px;"><font>工程项目智能化需求</font><br/>（可多选）：</div>
-                                <el-select v-model="signForm.name" multiple placeholder="请选择">
-                                    <el-option v-for="item in intelligentdemand" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-select v-model="projectDetail.projectIntelligentNeedsList" multiple placeholder="请选择">
+                                    <el-option v-for="item in projectIntelligentNeeds" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                                 </el-select>
                             </el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item  prop='name' label="项目预计交付时间：">
-                                <el-date-picker v-model="signForm.name" type="date" placeholder="选择日期"></el-date-picker>
+                            <el-form-item  label="项目预计交付时间：">
+                                <el-date-picker v-model="projectDetail.estimatedDeliverTime" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
                             </el-form-item>
                         </div>
                     </el-form>
-                    <div style="color:#606266;line-height:23px">创建时间：2020年02月03日 00:00:00</div>
-                    <div style="color:#606266;line-height:23px">创建人：赵娟（15134214045</div>
-                    <div style="color:#606266;line-height:23px">最近维护时间：2021-06-03 09:22:23</div>
-                    <div style="color:#606266;line-height:23px">最近维护人：李磊 (15950469951)</div>
+                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建时间：</font>{{projectDetail.createTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">创建人：</font>{{projectDetail.createBy}}（-------）</div>
+                    <div style="color:#606266;line-height:40px"><font class="project-detail-others">最近维护时间：</font>{{projectDetail.updateTime | formatDate('YYYY年MM月DD日 HH:mm:ss')}}</div>
+                    <div style="color:#606266;line-height:40px;margin-bottom:20px"><font class="project-detail-others">最近维护人：</font>{{projectDetail.updateBy || '-'}} (-------)</div>
                 </div>
 
             </div>
             <div class="bottom-line" v-if="radio=='项目信息'"></div>
-            <div class="fixed-btn" v-if="radio=='项目信息'"><h-button type="primary" >保存</h-button></div>
-            <!--  -->
+            <div class="fixed-btn" v-if="radio=='项目信息'"><h-button type="primary" @click="onUpDateProjectDetail">保存</h-button></div>
+            <!-- 添加跟进记录 -->
             <el-dialog title="添加跟进记录" class="record-dialog" :visible.sync="addRecord" :modal='false' width="800px">
                 <div class="record-layout">
                     <div class="header-title">
@@ -171,7 +172,7 @@
                             <div class="record-dialog-item" v-if="radioRecord==='当面拜访'">
                                 <el-form-item  prop='name' label="上传现场图片："></el-form-item>
                                 <div style="margin-top:-20px">
-                                    <OssFileHosjoyUpload :showPreView=true  v-model="signForm.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView=true  v-model="projectDetail.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -185,20 +186,20 @@
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item  prop='name' label="跟进节点 ：  "  class="textarea">
-                                    <el-select v-model="signForm.name" multiple placeholder="请选择">
+                                    <el-select v-model="projectDetail.name" multiple placeholder="请选择">
                                         <el-option v-for="item in intelligentdemand" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                     </el-select>
-                                    <el-input v-model="signForm.name" placeholder="请输入无需更进原因" style="width:380px;margin-left:17px" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                    <el-input v-model="projectDetail.name" placeholder="请输入无需更进原因" style="width:380px;margin-left:17px" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item  prop='name' label="跟进内容："  class="textarea">
-                                    <el-input v-model="signForm.name" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
+                                    <el-input v-model="projectDetail.name" placeholder="请输入此次跟进结果/下次跟进事项" style="width:380px;" type="textarea" maxlength="200" show-word-limit rows='2'></el-input>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
                                 <el-form-item  label="下次跟进时间："  class="textarea">
-                                    <el-date-picker v-model="signForm.name" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss'  placeholder="选择日期"></el-date-picker>
+                                    <el-date-picker v-model="projectDetail.name" type="datetime" value-format='yyyy-MM-ddTHH:mm:ss'  placeholder="选择日期"></el-date-picker>
                                 </el-form-item>
                             </div>
                             <div class="record-dialog-item">
@@ -215,7 +216,7 @@
                             <div class="record-dialog-item" v-if="radioRecord!=='当面拜访'">
                                 <el-form-item  prop='name' label="附件（不超过8个）："></el-form-item>
                                 <div style="margin-top:-20px">
-                                    <OssFileHosjoyUpload :showPreView=true  v-model="signForm.upload" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
+                                    <OssFileHosjoyUpload :showPreView=true  v-model="projectDetail.upload" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px" accept=".jpg,.jpeg,.png">
                                     <div class="a-line">
                                         <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                                     </div>
@@ -256,14 +257,14 @@
                             <div class="checkbox-right">
                                 <div class="contact-table">
                                     <div class="contact-table-item">
-                                        <font style="color:#ff0000;">*</font>客户姓名<el-input placeholder="请输入" v-model='signForm.name' size="mini" class="contact-table-item-input"></el-input>
+                                        <font style="color:#ff0000;">*</font>客户姓名<el-input placeholder="请输入" v-model='projectDetail.name' size="mini" class="contact-table-item-input"></el-input>
                                     </div>
                                     <div class="contact-table-item">
-                                        <font style="color:#ff0000;">*</font>手机号<el-input placeholder="请输入" v-model='signForm.name' size="mini" class="contact-table-item-input" style="width:110px"></el-input>
+                                        <font style="color:#ff0000;">*</font>手机号<el-input placeholder="请输入" v-model='projectDetail.name' size="mini" class="contact-table-item-input" style="width:110px"></el-input>
                                     </div>
                                     <div class="contact-table-item">
                                         <font style="color:#ff0000;">*</font>角色
-                                        <el-select v-model="signForm.name" multiple placeholder="请选择" class="contact-table-item-input" size="mini">
+                                        <el-select v-model="projectDetail.name" multiple placeholder="请选择" class="contact-table-item-input" size="mini">
                                             <el-option v-for="item in buildingType" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                         </el-select>
                                     </div>
@@ -329,15 +330,27 @@ import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyU
 import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { Action, Getter } from 'vuex-class'
+import { ReqProjectSupply } from '@/interface/hbp-member'
+import { DictionaryList, upDateProjectDetail } from './api'
+import { validateForm } from '@/decorator'
 
 @Component({
     name: 'ProjectList2Detail',
     components: { OssFileHosjoyUpload }
 })
 export default class ProjectList2Detail extends Vue {
-    @Prop({ type: Boolean, required: true, default: false }) drawer: any;
+    @Prop({ type: Boolean, required: true, default: false }) drawer: boolean;
+    @Prop({ type: Object, required: true }) projectDetail: ReqProjectSupply;
+    @Prop({ type: Object, required: true }) formRules: any;
+
     @Action('vipApply/findContract') findContract: Function
     @Getter('vipApply/contracts') contracts: any
+    @Getter('projectStore/projectIntelligentNeeds') projectIntelligentNeeds: DictionaryList
+    @Getter('projectStore/projectBuildingType') projectBuildingType: DictionaryList
+    @Getter('projectStore/projectStep') projectStep: DictionaryList
+    @Getter('projectStore/projectRole') projectRole: DictionaryList
+    @Getter('projectStore/generalGoods') generalGoods: DictionaryList
+    @Getter('projectStore/refundPayType') refundPayType: DictionaryList
 
     action = ccpBaseUrl + 'common/files/upload-old'
     uploadParameters = {
@@ -360,28 +373,22 @@ export default class ProjectList2Detail extends Vue {
         'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
         'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg'
     ]
-    signForm = {
-        name: '',
-        upload: [
 
-        ]
-    }
     queryParams = {
         keyWord: ''
     }
     timeout = null
-    get formRules () {
-        let rules = {
-            name: [{ required: true, message: '必填项不能为空', trigger: 'blur' }]
-        }
-        return rules
-    }
+
     change (val) {
         console.log('🚀 --- change --- val', val)
     }
 
     handleClose () {
-        this.$emit('backEvent')
+        let projectDetailForm:any = this.$refs['projectDetailForm']
+        if (projectDetailForm) {
+            projectDetailForm.resetFields()
+        }
+        this.$emit('handleClose')
     }
     add () {
         this.addRecord = true
@@ -439,6 +446,17 @@ export default class ProjectList2Detail extends Vue {
 
     findOrganizationEmployee () {
         console.log(' 🚗 🚕 🚙 🚌 🚎 findOrganizationEmployee')
+    }
+
+    @validateForm('projectDetailForm')
+    async onUpDateProjectDetail () {
+        await upDateProjectDetail(this.projectDetail)
+        this.$message.success('保存成功')
+        this.$emit('getDetail', this.projectDetail.id)
+    }
+
+    mounted () {
+        console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.projectDetail)
     }
 }
 </script>

@@ -67,7 +67,6 @@ export const INTELLIGENTDEMAND: { label: string; value: number; }[] = [
 ]
 // 主营品类 1：空调 2：采暖 3：新风 4：净水 5：智能化 6：辅材 7：电梯 8：其他
 export const MAINCATEGORY: { key: string; value: string | ''; }[] = [
-    { value: '全部', key: '' },
     { value: '空调', key: '1' },
     { value: '采暖', key: '2' },
     { value: '新风', key: '3' },
