@@ -37,8 +37,8 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品类：</div>
                     <div class="query-col__input">
-                        <el-select v-model="queryParams.deviceCategories" placeholder="请选择" clearable>
-                            <el-option :label="item.value" :value="item.key" v-for="item in maincategory" :key="item.key"></el-option>
+                        <el-select v-model="queryParams.deviceCategories" multiple placeholder="请选择" clearable>
+                            <el-option v-for="item in maincategory" :key="item.value" :label="item.value" :value="Number(item.key)"></el-option>
                         </el-select>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                     <h-button type="primary" @click="()=>getList()">
                         查询
                     </h-button>
-                    <h-button>
+                    <h-button @click="onExport">
                         导出
                     </h-button>
                     <h-button @click="onAddProject">
@@ -78,7 +78,7 @@
             <hosJoyTable ref="hosjoyTable" align="center" border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="page.total" @pagination="getList"
                 actionWidth='200' isAction :isActionFixed='tableData&&tableData.length>0' >
                 <template #action="slotProps">
-                    <h-button table  @click="viewDetail(slotProps.data.row.id)">查看详情</h-button>
+                    <h-button table  @click="viewDetail(slotProps.data.row.projectId)">查看详情</h-button>
                     <h-button table  @click="signAContract">签约</h-button>
                 </template>
             </hosJoyTable>
@@ -348,7 +348,7 @@
                 <h-button type="primary" @click="submitAddForm">确定</h-button>
             </div>
         </el-dialog>
-        <detail :drawer='drawer' v-if="drawer" />
+        <detail :drawer='drawer' :projectDetail = 'projectDetail' :formRules='formRules' @getDetail = 'viewDetail' @handleClose="()=>drawer = false" v-if="drawer" />
     </div>
 </template>
 <script lang='tsx'>
@@ -357,11 +357,11 @@ import { State, namespace, Getter, Action } from 'vuex-class'
 import hosJoyTable from '@/components/HosJoyTable/hosjoy-table.vue' // 组件导入需要 .vue 补上，Ts 不认识vue文件
 import filters from '@/utils/filters'
 import OssFileHosjoyUpload from '@/components/OssFileHosjoyUpload/OssFileHosjoyUpload.vue'
-import { ccpBaseUrl, ossAliyun, ossOldBucket } from '@/api/config'
+import { ccpBaseUrl, interfaceUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { isNum } from '@/utils/validate/format'
 import { MAINCATEGORY } from './const/index'
-import { DictionaryList, getChiness, SearchByItem, getProjectList, addProject, getcompanyByName, getCompanyUserById } from './api/index'
+import { DictionaryList, getChiness, SearchByItem, getProjectList, addProject, getcompanyByName, getCompanyUserById, getProjectDetail, getListExport } from './api/index'
 import detail from './detail.vue'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
@@ -404,6 +404,7 @@ export default class ProjectList2 extends Vue {
     // 表格上放统计
     statistics:any = ''
     optionsCompany:any[] = []
+    projectDetail:ReqProjectSupply = {}
 
     maincategory = MAINCATEGORY
 
@@ -509,7 +510,6 @@ export default class ProjectList2 extends Vue {
 
     @Watch('getCity', { immediate: true })
     onValueChange (newVal) {
-        console.log('🚀 --- onValueChange --- newVal', newVal)
         this.cityList = newVal
     }
 
@@ -545,7 +545,6 @@ export default class ProjectList2 extends Vue {
 
     async getList () {
         const { data: { projectPage, ...restStatistics } } = await getProjectList(this.queryParams)
-        console.log('🚀 --- getList --- projectPage', projectPage)
         this.tableData = projectPage.records
         this.statistics = {
             /** 已筛选&项目数 */
@@ -569,11 +568,9 @@ export default class ProjectList2 extends Vue {
         this.reqProjectSupply = { ...this.reqProjectSupply, ...data }
         this.reqProjectSupply.deptName = this.reqProjectSupply.subsectionName
         this.reqProjectSupply.customerMobile = this.reqProjectSupply.customerPhone
-        console.log(' 🚗 🚕 🚙 🚌 🚎 this', this.reqProjectSupply)
     }
 
     async remoteMethod (query) {
-        console.log('🚀 --- remoteMethod --- query', query)
         if (query !== '') {
             const merchantList = await getcompanyByName({ companyName: query })
             this.optionsCompany = merchantList.data
@@ -619,11 +616,9 @@ export default class ProjectList2 extends Vue {
             return item.countryId === key
         })
         this.reqProjectSupply.countryName = res[0].name
-        console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.reqProjectSupply)
     }
 
     inputChage (val, item) {
-        console.log('🚀 --- inputChage --- item', item)
         let num = isNum(val, 2)
         if (num == '.' || !num) {
             num = ''
@@ -632,7 +627,29 @@ export default class ProjectList2 extends Vue {
         item.estimatedSignAmount = num
     }
 
-    viewDetail (id) {
+    onExport () {
+        if (this.tableData.length <= 0) {
+            this.$message.warning('无数据可导出！')
+            return
+        }
+        let url = ''
+        for (const key in this.queryParams) {
+            if (this.queryParams[key] !== '') {
+                if (key !== 'deviceCategories') {
+                    url += (`${key}=${this.queryParams[key]}&`)
+                } else {
+                    this.queryParams[key].map(item => {
+                        url += (`${key}=${item}&`)
+                    })
+                }
+            }
+        }
+        window.open(interfaceUrl + 'memeber/api/project-supply/export?' + url)
+    }
+
+    async viewDetail (projectId) {
+        const { data: detail } = await getProjectDetail({ projectId })
+        this.projectDetail = detail
         this.drawer = true
     }
 

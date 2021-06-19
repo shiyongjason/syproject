@@ -275,6 +275,22 @@
     }
     
 }
+.project-information{
+    /deep/.el-form-item__label{
+        display: flex;
+        justify-content: flex-end;
+        align-items: baseline;
+    }
+    /deep/.el-input{
+        margin-left: 0;
+    }
+    .project-detail-others{
+        display: inline-block;
+        width: 129px;
+        text-align: right;
+        margin-right: 13px;
+    }
+}
 .contact{
     max-height: 600px;
     overflow-y: scroll;

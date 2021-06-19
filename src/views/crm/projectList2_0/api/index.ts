@@ -33,6 +33,11 @@ export const getProjectList: (params: any) => AxiosPromise<any> = (params) => {
     return axios.get('memeber/api/project-supply', { params })
 }
 
+/** BOSS-2.0项目导出 */
+export const getListExport: (params: any) => AxiosPromise<any> = (params) => {
+    return axios.get('memeber/api/project-supply/export', { params })
+}
+
 /** BOSS-2.0项目新增 */
 export const addProject: (params: ReqProjectSupply) => AxiosPromise<any> = (params: any) => axios.post(`memeber/api/project-supply`, params)
 
@@ -46,6 +51,10 @@ export const getCompanyUserById: (params: any) => AxiosPromise<any> = (params) =
     return axios.get('memeber/api/crm/company/project-info', { params })
 }
 /** BOSS-2.0项目详情 */
-export const getProjectDetail: (params: any) => AxiosPromise<any> = (params) => {
+export const getProjectDetail: (params: any) => AxiosPromise<ReqProjectSupply> = (params) => {
     return axios.get('memeber/api/project-supply/detail', { params })
+}
+/** BOSS-2.0项目详情 */
+export const upDateProjectDetail: (params: ReqProjectSupply) => AxiosPromise<any> = (params) => {
+    return axios.put('memeber/api/project-supply', params)
 }
