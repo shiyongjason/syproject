@@ -44,7 +44,7 @@
             </template>
             <template #btn>
                 <div class="drawer-button">
-                    <template v-if="activeName==='4'">
+                    <template v-if="activeName==='4'&&status == 11">
                         <h-button @click="onFinalApprove(1)">终审不通过</h-button>
                         <h-button type="primary" @click="onFinalApprove(2)">发起评审决议审批流</h-button>
                     </template>
