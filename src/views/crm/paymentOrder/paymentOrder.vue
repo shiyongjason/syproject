@@ -74,7 +74,7 @@
                 <div class="query-cont-col">
                     <div class="query-col__label">申请人：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.purchaseOrderName" placeholder="请输入" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.applyName" placeholder="请输入" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont-col">
@@ -105,6 +105,11 @@
                 <template slot="sign" slot-scope="scope">
                     <span>{{ scope.data.row.sign?'是':'否'}}</span>
                 </template>
+                <template slot="applyName" slot-scope="scope">
+                    <p>{{scope.data.row.applyName}}</p>
+                    <p>{{scope.data.row.applyPhone}}</p>
+
+                </template>
                 <template slot="dealerCooperationMethod" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
@@ -127,7 +132,7 @@
                                   scope.data.row.goodsConfirmFlag === 1
                               )">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
-                    <h-button table @click="onUploadPay(scope.data.row)">上传支付凭证</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)">上传支付凭证</h-button>
                 </template>
             </basicTable>
         </div>
@@ -207,7 +212,8 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 'sort.property': null,
-                'sort.direction': null
+                'sort.direction': null,
+                applyName: ''
             },
             tableLabel: [
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
@@ -219,7 +225,7 @@ export default {
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '是否签署确认函', prop: 'sign', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
-                { label: '申请人', prop: 'dealerCooperationMethod', width: '150' },
+                { label: '申请人', prop: 'applyName', width: '150' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'

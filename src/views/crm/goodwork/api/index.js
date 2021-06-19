@@ -58,3 +58,12 @@ export const resPurchase = (params) => axios.patch(`/memeber/api/resolutions/bos
 
 // 评议记录
 export const getRecordList = (params) => axios.get(`/memeber/api/resolutions/boss/${params}/record-list`)
+
+// 评审决议通过 钉钉回调
+export const initiateDing = (params) => axios.post(`/memeber/api/resolutions/boss/initiate-ding`, params)
+// 评审决议不通过
+export const finalApproveNo = (params) => axios.put(`/memeber/api/resolutions/boss/final-approve-not-pass`, params)
+// 新增空采购单
+export const addEmptyPurchase = (params) => axios.post(`/project/api/purchase-orders/boss-save`, params)
+// 删除采购单
+export const deletePurchase = (params) => axios.delete(`/project/api/purchase-orders/boss/${params}`)

@@ -15,7 +15,7 @@
                 <datacolCom ref="datacolCom" :colForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='2'" :showPacking='showPacking'></datacolCom>
                 <approveCom ref="approveCom" :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip v-if="activeName==='3'" :showPacking='showPacking'></approveCom>
                 <!-- <approveCom ref="finalCom" :projectForm=form :approveForm=colForm :activeName=activeName :status=status @onBackLoad=onBackLoad @onCompsback=onCompsback @onBackDownzip=onDownZip @refreshDetail="refreshFinalDetail" v-if="activeName==='4'" :showPacking='showPacking'></approveCom> -->
-                <finalApproval v-if="activeName==='4'" :finalFormID=projectId ></finalApproval>
+                <finalApproval ref="finalApproval" v-if="activeName==='4'" @onCompsback=onCompsback @onBackLoad=onBackLoad :finalFormID=projectId></finalApproval>
                 <ProjectOrderTab v-if="activeName==='5'" @onBackLoad=onBackLoad @onCompsback=onCompsback :id="projectId"></ProjectOrderTab>
 
                 <el-dialog :title="aduitTitle" :visible.sync="dialogVisible" width="30%" :before-close="()=>dialogVisible = false" :modal=false :close-on-click-modal=false>
@@ -44,9 +44,10 @@
             </template>
             <template #btn>
                 <div class="drawer-button">
-                        <h-button >终审不通过</h-button>
-                        <h-button type="primary">发起评审决议审批流</h-button>
-
+                    <template v-if="activeName==='4'">
+                        <h-button @click="onFinalApprove(1)">终审不通过</h-button>
+                        <h-button type="primary" @click="onFinalApprove(2)">发起评审决议审批流</h-button>
+                    </template>
                     <!-- 这里的权限有后台配置的  还有根据项目的状态  还有 tab切的权限 -->
                     <template v-if="hosAuthCheck(newAuth.CRM_GOODWORK_BACKUP)&&activeName==='2'&&status==12">
                         <h-button @click="onCallBack()">打回补充</h-button>
@@ -147,10 +148,10 @@ export default {
                     name: '立项结果提交',
                     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_XINSHEN) && this.status == 4 && this.activeName === '3'
                 },
-                {
-                    name: '终审结果提交',
-                    isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_FINAL) && this.status == 11 && this.activeName === '4'
-                },
+                // {
+                //     name: '终审结果提交',
+                //     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_FINAL) && this.status == 11 && this.activeName === '4'
+                // },
                 {
                     name: '审核未通过',
                     isShow: this.hosAuthCheck(newAuth.CRM_GOODWORK_CLOSE) && this.status == 3
@@ -396,7 +397,11 @@ export default {
         },
         onBackLoad (val) {
             this.loading = val
+        },
+        onFinalApprove (val) {
+            this.$refs.finalApproval._finalApprove(val)
         }
+
     }
 }
 </script>

@@ -80,7 +80,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">项目提交人：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.projectNo" placeholder="请输入项目提交人" maxlength="50"></el-input>
+                        <el-input v-model="queryParams.projectSubmitName" placeholder="请输入项目提交人" maxlength="50"></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -98,7 +98,7 @@
 
             <el-tag size="medium" class="eltagtop">已筛选 {{projectData.total}} 项, 赊销总金额 {{loanData.totalLoanAmount?fundMoneys(loanData.totalLoanAmount):0}}, 设备款总额 {{loanData.totalDeviceAmount?fundMoneys(loanData.totalDeviceAmount):0}} 元 </el-tag>
             <hosJoyTable isShowIndex ref="hosjoyTable" align="center" collapseShow border stripe showPagination :column="tableLabel" :data="tableData" :pageNumber.sync="queryParams.pageNumber" :pageSize.sync="queryParams.pageSize" :total="paginationInfo.total" @pagination="searchList"
-                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V3.*" localName="V3.*.18">
+                actionWidth='375' isAction :isActionFixed='tableData&&tableData.length>0' @sort-change='sortChange' prevLocalName="V4.*" localName="V3.*.18">
                 <!--
                     Versions: V3.*.1
                     Time: 2020/10/22
@@ -109,6 +109,10 @@
                 </template>
                 <template slot="progress" slot-scope="scope">
                     {{onFiterStates(scope.data.row.status).length>0?onFiterStates(scope.data.row.status)[0].value:'-'}}
+                </template>
+                <template slot="projectSubmitName" slot-scope="scope">
+                    <p>{{scope.data.row.projectSubmitName}}</p>
+                    <p>{{scope.data.row.projectSubmitPhone}}</p>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- 1：待提交2：初审中 3：资料收集中 12：资料待审核 4：待立项 5：审核未通过 11：待终审 6：待签约 7：待放款 8：贷中 9：合作完成 10:信息待完善 -->
@@ -206,8 +210,11 @@ export default {
                 deptDoc: '',
                 jobNumber: '',
                 authCode: '',
-                field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
-                isAsc: ''// 排序方式 是否升序 true：是 false：否
+                'sort.direction': null,
+                'sort.property': null,
+                projectSubmitName: ''
+                // field: '', // 排序字段 赊销总额：predict_loan_amount 项目合同总额：contract_amount 设备总额：device_amount 预估借款时间：estimated_loan_time 提交时间：submit_time 更新时间：update_time
+                // isAsc: ''// 排序方式 是否升序 true：是 false：否
             },
             status: [],
             typeArr: [],
@@ -220,7 +227,7 @@ export default {
                 { label: '项目地址', prop: 'address', width: '150', showOverflowTooltip: true },
                 { label: '项目编号', prop: 'projectNo', width: '150', showOverflowTooltip: true },
                 { label: '所属分部', prop: 'deptName', width: '150', showOverflowTooltip: true },
-                { label: '项目提交人', prop: 'submitUser', width: '150', showOverflowTooltip: true },
+                { label: '项目提交人', prop: 'projectSubmitName', width: '150' },
                 { label: '经销商', prop: 'companyName', width: '180', showOverflowTooltip: true },
                 { label: '甲方名称', prop: 'firstPartName', width: '180', showOverflowTooltip: true },
                 { label: '预估签约时间', prop: 'estimateSignTime', width: '150', displayAs: 'YYYY-MM-DD', showOverflowTooltip: true },
@@ -437,30 +444,39 @@ export default {
                 return map[key] || { value: '-' }
             }
         },
-        sortChange (e) {
-            console.log('e: ', e)
-            if (e.order == null) {
-                this.queryParams.field = ''
-                this.queryParams.isAsc = null
-                console.log('this.queryParams: ', this.queryParams)
-            } else if (e.prop == 'predictLoanAmount') {
-                this.queryParams.field = 'predict_loan_amount'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'contractAmount') {
-                this.queryParams.field = 'contract_amount'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'deviceAmount') {
-                this.queryParams.field = 'device_amount'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'estimatedLoanTime') {
-                this.queryParams.field = 'estimated_loan_time'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'submitTime') {
-                this.queryParams.field = 'submit_time'
-                this.queryParams.isAsc = e.order === 'ascending'
-            } else if (e.prop == 'updateTime') {
-                this.queryParams.field = 'update_time'
-                this.queryParams.isAsc = e.order === 'ascending'
+        onSortChange (val) {
+
+        },
+        sortChange (val) {
+            // if (e.order == null) {
+            //     this.queryParams.field = ''
+            //     this.queryParams.isAsc = null
+            //     console.log('this.queryParams: ', this.queryParams)
+            // } else if (e.prop == 'predictLoanAmount') {
+            //     this.queryParams.field = 'predict_loan_amount'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'contractAmount') {
+            //     this.queryParams.field = 'contract_amount'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'deviceAmount') {
+            //     this.queryParams.field = 'device_amount'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'estimatedLoanTime') {
+            //     this.queryParams.field = 'estimated_loan_time'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'submitTime') {
+            //     this.queryParams.field = 'submit_time'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // } else if (e.prop == 'updateTime') {
+            //     this.queryParams.field = 'update_time'
+            //     this.queryParams.isAsc = e.order === 'ascending'
+            // }
+            if (val.order) {
+                this.queryParams['sort.direction'] = val.order === 'descending' ? 'DESC' : 'ASC'
+                this.queryParams['sort.property'] = val.prop
+            } else {
+                delete this.queryParams['sort.direction']
+                delete this.queryParams['sort.property']
             }
             this.searchList()
         },

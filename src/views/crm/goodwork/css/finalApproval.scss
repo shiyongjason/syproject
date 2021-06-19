@@ -6,7 +6,7 @@
     padding: 0 10px 100px 0px;
     box-sizing: border-box;
     margin-left: 10px;
-    .reviewResolution{
+    .reviewResolution {
         max-height: 500px;
         overflow-y: scroll;
     }
@@ -66,14 +66,14 @@
             color: #000;
             font-weight: bold;
         }
-        &-flex{
+        &-flex {
             margin: 10px;
         }
-        .flex-top{
+        .flex-top {
             display: flex;
             justify-content: space-between;
-            span{
-                i{
+            span {
+                i {
                     font-style: normal;
                     padding-right: 10px;
                     color: skyblue;
@@ -146,31 +146,55 @@
             .mini {
                 width: 180px;
             }
-            .miniSelectSupplier{
-                .el-input{
+            .miniSelectSupplier {
+                .el-input {
                     width: 180px;
                 }
             }
-            .miniSelectCompany{
-                .el-input{
+            .miniSelectCompany {
+                .el-input {
                     width: 210px;
-                } 
+                }
             }
-            .miniSelect{
+            .miniSelect {
                 width: 110px;
-                .el-input{
+                .el-input {
                     width: 110px;
                 }
             }
-            .categorymini{
-                width: 120px; 
-                .el-input{
+            .categorymini {
+                width: 120px;
+                .el-input {
                     width: 120px;
                 }
-                
             }
         }
     }
+}
+.info-finallNo {
+    h3 {
+        padding: 10px;
+    }
+    p {
+        padding: 10px;
+    }
+}
+.flex-operate {
+    p {
+        padding: 10px 0 0 10px;
+    }
+    i {
+        font-style: normal;
+        color: #ff7a45;
+    }
+    span{
+        color: red;
+    }
+}
+.dingBg{
+    background: #e5e5e5;
+    color: red;
+    padding:8px;
 }
 // /deep/.el-select-dropdown{
 //     color: #f00;

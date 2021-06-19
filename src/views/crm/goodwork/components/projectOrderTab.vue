@@ -1,26 +1,29 @@
 <template>
-<div class="collect-wrap">
-    <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination"
-                @onCurrentChange="handleCurrentChange"
-                @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="false"
-                :isShowIndex='true'>
-        <template slot="poAmount" slot-scope="scope">
-            <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
-        </template>
-        <template slot="purchaseOrderNo" slot-scope="scope">
-            <span class="blue" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
-        </template>
-        <template slot="status" slot-scope="scope">
-            <span class="colblue"> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
-        </template>
-    </basicTable>
-</div>
+    <div class="collect-wrap">
+        <div></div>
+        <el-button type="primary" @click="onAddPurchase" class="mb20">新增采购单</el-button>
+        <basicTable :tableData="purchaseOrderList" :tableLabel="tableLabel" :pagination="purchaseOrderPagination" @onCurrentChange="handleCurrentChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=120 :isShowIndex='true'>
+            <template slot="poAmount" slot-scope="scope">
+                <span> {{ scope.data.row.poAmount | fundMoneyHasTail }}</span>
+            </template>
+            <template slot="purchaseOrderNo" slot-scope="scope">
+                <span class="blue" @click="goPurchaseOrderNo(scope.data.row.purchaseOrderNo)"> {{ scope.data.row.purchaseOrderNo}}</span>
+            </template>
+            <template slot="status" slot-scope="scope">
+                <span class="colblue"> {{ scope.data.row.status | attributeComputed(PurchaseOrderDict.status.list) }}</span>
+            </template>
+            <template slot="action" slot-scope="scope">
+                <h-button table @click="onDeletePurchase(scope.data.row)">删除</h-button>
+
+            </template>
+        </basicTable>
+    </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex'
 import PurchaseOrderDict from '@/views/crm/purchaseOrder/purchaseOrderDict'
-
+import { addEmptyPurchase, deletePurchase } from '../api/index'
 export default {
     name: 'projectOrderTab',
     props: ['id'],
@@ -79,7 +82,31 @@ export default {
         },
         ...mapActions({
             findPurchaseList: 'crmPurchaseOrder/findPurchaseList'
-        })
+        }),
+        onAddPurchase () {
+            this.$confirm('定对当前项目新增一条采购单吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await addEmptyPurchase({ projectId: this.id })
+                this.findPurchaseList(this.queryParamsUseQuery)
+            }).catch(() => {
+
+            })
+        },
+        onDeletePurchase (val) {
+            this.$confirm('确定删除当前采购单吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(async () => {
+                await deletePurchase(val.id)
+                this.findPurchaseList(this.queryParamsUseQuery)
+            }).catch(() => {
+
+            })
+        }
     },
     mounted () {
         this.findPurchaseList(this.queryParamsUseQuery)
