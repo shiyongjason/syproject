@@ -24,7 +24,7 @@
                         <el-form-item label="采购单金额：">
                             {{ paymentDetail.payOrderPoDetail.poAmount | fundMoneyHasTail }}元
                         </el-form-item>
-                        <div class="mb20"  style="height:250px; overflow-y: scroll;">
+                        <div class="mb20"  style="max-height:250px; overflow-y: scroll;">
                             <basicTable :tableData="paymentDetail.payOrderPoDetail.paymentOrderInfos" :tableLabel="orderLabel" :isPagination='false'>
                                 <template slot="status" slot-scope="scope">
                                     {{orderStatus[scope.data.row.status] }}
