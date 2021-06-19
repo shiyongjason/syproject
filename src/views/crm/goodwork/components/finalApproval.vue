@@ -10,7 +10,7 @@
                 <div class="status-description">（{{resStatus[resolutionDetail.resolutionStatus]&&resStatus[resolutionDetail.resolutionStatus].txt}}）</div>
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer">编辑</h-button>
+                    <div class="tab-layout-title-box">客户基本信息<h-button table @click="onEditCustomer"  v-if="resolutionDetail.resolutionStatus==1">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -66,7 +66,7 @@
                 <!--  -->
                 <div class="tab-layout-title">
                     <span></span>
-                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur">编辑</h-button>
+                    <div class="tab-layout-title-box">采购结论<h-button table @click="onEditPur" v-if="resolutionDetail.resolutionStatus==1">编辑</h-button>
                     </div>
                 </div>
                 <div class="item">
@@ -257,7 +257,7 @@
                 </div>
                 <div class="flex-cont">
                     <!-- 采购单 -->
-                    <div v-if="item.projectPurchaseList">
+                    <div v-if="item.projectPurchaseList" class="mt20">
                         <hosJoyTable ref="hosjoyTable" align="center" border stripe :column="tableLabel" :data="item.projectPurchaseList" actionWidth='375' prevLocalName="V3.*" localName="V3.*.18">
                         </hosJoyTable>
                     </div>
@@ -267,7 +267,7 @@
                             <span>{{jtem.changeName}}</span>由“<i>{{jtem.contentBeforeChange}}</i>”变更为“<i>{{jtem.contentAfterChange}}</i>”
                         </p>
                     </div>
-                    <div v-if="item.dingId">
+                    <div v-if="item.dingId"  class="mt20">
                         <span v-if="item.recordType==2||item.recordType==5">{{dingStatus[item.recordType]}}：{{item.dingId}}</span>
                         <div class="dingBg" v-if="item.recordType==4||item.recordType==7">
                             {{dingStatus[item.recordType]}}
@@ -334,7 +334,7 @@ export default class FinalApproval extends Vue {
         'projectPurchaseList': [
             {
                 'ascriptionId': '',
-                'deviceBrand': 'string',
+                'deviceBrand': '',
                 'deviceCategory': '',
                 'id': '',
                 'upstreamPayType': '',
@@ -436,7 +436,7 @@ export default class FinalApproval extends Vue {
     }
     get lastFormRules () {
         let rules = {
-            remark: [{ required: true, message: '备注信息', trigger: 'blur' }]
+            remark: [{ required: true, message: '备注信息必填', trigger: 'blur' }]
         }
         return rules
     }
@@ -661,7 +661,12 @@ export default class FinalApproval extends Vue {
 
     // 添加采购信息
     onAddItem () {
-        let _temp = { name: '' }
+        let _temp = {
+            'deviceBrand': '',
+            'deviceCategory': '',
+            'upstreamPayType': '',
+            'upstreamSupplierName': '',
+            'upstreamSupplierType': '' }
         this.tableForm.push(_temp)
         console.log(' 🚗 🚕 🚙 🚌 🚎 add', this.tableForm)
     }
@@ -685,12 +690,31 @@ export default class FinalApproval extends Vue {
             this.disabled = true
         }, 0)
     }
+    // 校验表格
+    onValidTable (tables) {
+        let flag = true
+        tables.forEach(element => {
+            for (var key in element) {
+                if (element[key] != '0' && !element[key]) {
+                    this.$message.warning('请完善表格的必填项数据!')
+                    flag = false // 终止程序
+                    return
+                }
+            }
+        })
+        return flag
+    }
     // 保存采购结论
     submit () {
+        this.purForm.projectPurchaseList = [...this.tableForm]
+        this.purForm.updateBy = JSON.parse(sessionStorage.getItem('userInfo') || '').employeeName
         console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.tableForm)
         this.$refs['purchaseConclusionForm'].validate(async (valid) => {
             if (valid) {
-                await resPurchase()
+                if (this.onValidTable(this.tableForm)) {
+                    await resPurchase(this.purForm)
+                    this.onFindRes()
+                }
             }
         })
     }
