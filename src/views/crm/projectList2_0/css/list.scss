@@ -23,9 +23,9 @@
         margin-bottom: 20px;
        
         .el-form-item__label{
-            // font-size: 15px;
-            // font-weight: bold;
-            // color: #000;
+            display: flex;
+            justify-content: flex-end;
+            align-items: baseline;
         }
         .txt{
             font-size: 13px;
