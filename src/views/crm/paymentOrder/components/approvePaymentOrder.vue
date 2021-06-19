@@ -1,6 +1,6 @@
 <template>
     <div class="payment-audit-content">
-        <el-dialog v-if="isOpen" ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="70%" :before-close="()=> $emit('onClose')" class="payment-dialog">
+        <el-dialog v-if="isOpen" ref="paymentDetail" :close-on-click-modal=false title="支付单审核" :visible.sync="isOpen" width="70%" :before-close="onCancel" class="payment-dialog">
             <el-form class="info-content" v-if="paymentDetail" :model="formData" :rules="rules" ref="form" label-width="150px">
                 <div class="row-filed">
                     <div class="col-filed">
