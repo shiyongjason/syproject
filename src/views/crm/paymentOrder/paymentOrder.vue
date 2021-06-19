@@ -107,8 +107,7 @@
                 </template>
                 <template slot="applyName" slot-scope="scope">
                     <p>{{scope.data.row.applyName}}</p>
-                    <p>{{scope.data.row.applyPhone}}</p>
-
+                    <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
                 </template>
                 <template slot="dealerCooperationMethod" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
