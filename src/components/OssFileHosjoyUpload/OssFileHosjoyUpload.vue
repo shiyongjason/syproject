@@ -22,8 +22,7 @@
                     <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
-                    <!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
-                    <elImageAddToken v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
+                    <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl" :preview-src-list="previewSrcList"></el-image>
                 </div>
             </template>
         </template>
@@ -71,7 +70,6 @@
 
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
-import elImageAddToken from '@/components/elImageAddToken'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
     name: 'OssFileHosjoyUpload',
@@ -92,7 +90,7 @@ export default {
         showUpload: { type: Boolean, default: true } // 是否显示上传按钮
 
     },
-    components: { elImageAddToken, downloadFileAddToken },
+    components: { downloadFileAddToken },
     data () {
         return {
             successFileTemp: {},
@@ -144,11 +142,17 @@ export default {
                 } else {
                     this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
                 }
+                //
+                this.fileList.map(async (tempArrElement, index) => {
+                    let tempUrl = await OssFileUtils.getUrl(tempArrElement.fileUrl)
+                    this.$set(this.fileList, index, Object.assign(tempArrElement, { tokenUrl: tempUrl }))
+                })
                 this.uploadPercent = 100
                 this.progressFlag = false
                 this.loading = false
                 this.$emit('successCb')
                 this.$emit('successArg', obj)
+                this.$forceUpdate()
             }, 500)
         },
         // 校验大小
@@ -202,20 +206,31 @@ export default {
                 return false
             }
         },
+        async tofileUrl () {
+            this.tokenUrl = await OssFileUtils.getUrl(this.fileUrl)
+            return this.tokenUrl
+        },
         async open (index, item = null) {
             if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
-                for (let tempArrElement of tempArr) {
-                    tempArrElement = await OssFileUtils.getUrl(tempArrElement.fileUrl)
-                }
-                this.previewSrcList = tempArr
-                const pre = this.$refs[`preview_${index}`]
-                if (pre && pre[0]) {
-                    pre[0].clickHandler()
-                }
+                tempArr = tempArr.filter(item => {
+                    if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
+                        return item
+                    }
+                })
+                this.previewSrcList = tempArr.map(item => {
+                    return item.tokenUrl
+                })
+                this.$nextTick(() => {
+                    const pre = this.$refs[`preview_${index}`]
+                    if (pre && pre[0]) {
+                        console.log(pre)
+                        pre[0].clickHandler()
+                    }
+                })
             } else {
                 let url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)
