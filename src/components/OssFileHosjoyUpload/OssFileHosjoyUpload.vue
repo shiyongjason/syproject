@@ -157,7 +157,7 @@ export default {
         },
         // 校验大小
         _checkPicType (item, typePic) {
-            if (item && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
+            if (item && item.fileUrl && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
                 return true
             }
             return false

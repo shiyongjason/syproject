@@ -40,7 +40,7 @@
                     </div>
                     <div v-if="!recordsData.length" style="width: 600px;margin: 10px auto;"><el-divider>暂无跟进动态</el-divider></div>
                     <div v-else class="follow-records" ref='records'>
-                        <div class="follow-cell" v-for="(item,index) in recordsData" :key="item.id">
+                        <div class="follow-cell" v-for="item in recordsData" :key="item.id">
                             <div class="info"><img :src="userDefault" class="avatar">
                                 <div class="name-container">
                                     <div class="follow-tag">跟进人</div>
@@ -83,7 +83,7 @@
                                     <div class="title-tag" >{{item.type ==1?'当面拜访':'电话/微信沟通/邮件等'}}</div>
                                     <div class="audio-player-container">
                                         <div class="crm-audio-player" >
-                                            <OssFileHosjoyUpload :showUpload='false' :showPreView='true'  v-model="recordsDataPics[index]" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px"/>
+                                            <OssFileHosjoyUpload :showUpload='false' :showPreView='true'  v-model="item.picUrls" :fileNum=8 :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:10px 0 0 5px"/>
                                         </div>
                                     </div>
                                     <template v-if="item.projectSupplyFlowUp">
@@ -799,9 +799,9 @@ export default class ProjectList2Detail extends Vue {
                     tokenUrl: o
                 })
             })
-            this.recordsDataPics[index] = obj
+            // this.recordsDataPics[index] = obj
+            item.picUrls = obj
         })
-        console.log(' 🚗 🚕 🚙 🚌 🚎 this.recordsDataPics', this.recordsDataPics)
     }
 
     recordsScroll (event) {
