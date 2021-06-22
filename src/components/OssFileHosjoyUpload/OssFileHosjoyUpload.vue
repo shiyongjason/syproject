@@ -6,7 +6,7 @@
                     <div class="default-pre-view-warp">
                         <div class="default-pre-view-mask">
                             <i class="el-icon-zoom-in" style="color:#fff" @click="open(index,item)"></i>
-                            <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
+                            <i v-if="showUpload" class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
                         </div>
                     </div>
                     <!-- TODO: 这块功能还未涉及到，已经更新了对应代码 没有场景用到，可能会有bug-->
@@ -40,7 +40,7 @@
                 </template>
             </span>
         </template>
-        <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
+        <div v-if="showUpload" class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
             <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
                 :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
                 <!-- 默认插槽 -->
@@ -86,7 +86,9 @@ export default {
         showAsFileName: { type: Boolean, default: false }, // 文件名形式显示
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
-        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' } // 上传的类型
+        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' }, // 上传的类型
+        showUpload: { type: Boolean, default: true } // 是否显示上传按钮
+
     },
     components: { downloadFileAddToken },
     data () {
