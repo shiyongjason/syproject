@@ -2,12 +2,12 @@
     <div>
         <el-dialog title="上传支付凭证" :visible.sync="dialogVisible" width="45%" :before-close="handleClose">
             <div class="uploadpay">
-                <p>应支付金额：120,000 元</p>
+                <p>应支付金额：{{payMoney|fundMoneyHasTail}} 元</p>
                 <p class="uploadpay_second"><i>*</i>支付凭证：</p>
                 <p class="uploadpay_third">（请上传JPG/PNG/JPEG等主流图片格式，最多上传9张，单张大小不得超过20M）</p>
                 <HosJoyUpload v-model="attachDocs" :showPreView=true :fileSize=20 :action='action' :fileNum='9' :uploadParameters='uploadParameters' @successCb="()=>{handleSuccessCb()}" accept='.jpg,.png,jpeg' style="margin:10px 0 0 5px">
                 </HosJoyUpload>
-                <div class="uploadpay_bot">当前经销商还有3条待支付账单，你可能想<b @click="onAllPay">“批量支付”</b>？</div>
+                <div class="uploadpay_bot">当前经销商还有{{batchNumber}}条待支付账单，你可能想<b @click="onAllPay">“批量支付”</b>？</div>
             </div>
 
             <span slot="footer" class="dialog-footer">
@@ -34,16 +34,20 @@ export default {
             },
             attachDocs: [],
             fundId: '',
-            companyId: ''
+            companyId: '',
+            batchNumber: '',
+            payMoney: 0
         }
     },
     methods: {
         async onDialogClick (val) {
             console.log(val)
             const { data } = await getBnumber({ companyId: val.companyId })
+            this.batchNumber = data
             this.dialogVisible = true
             this.fundId = val.id
             this.companyId = val.companyId
+            this.payMoney = val.applyAmount
         },
         handleClose () {
             this.dialogVisible = false
@@ -56,6 +60,10 @@ export default {
             this.$router.push({ path: '/goodwork/batchpay', query: { companyId: this.companyId } })
         },
         async onSavePay () {
+            if (this.attachDocs.length == 0) {
+                this.$message.warning('请上传支付凭证！')
+                return
+            }
             const params = {
                 fundId: this.fundId,
                 attachDocs: this.attachDocs

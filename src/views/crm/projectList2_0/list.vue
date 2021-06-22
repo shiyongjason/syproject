@@ -11,13 +11,13 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">管理员姓名：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.adminUserName" placeholder="请输入管理员姓名" maxlength="50" clearable></el-input>
+                        <el-input v-model="queryParams.adminUserName" placeholder="请输入管理员姓名" maxlength="200" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
                     <div class="query-col__label">企业名称：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="50" clearable></el-input>
+                        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" maxlength="200" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -31,7 +31,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">客户经理：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.customer" placeholder="请输入姓名/手机号" maxlength="50" clearable></el-input>
+                        <el-input v-model="queryParams.customer" placeholder="请输入姓名/手机号" maxlength="200" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -45,7 +45,7 @@
                 <div class="query-cont__col">
                     <div class="query-col__label">主营品牌：</div>
                     <div class="query-col__input">
-                        <el-input v-model="queryParams.deviceBrand" placeholder="请输入主营品牌" maxlength="50" clearable></el-input>
+                        <el-input v-model="queryParams.deviceBrand" placeholder="请输入主营品牌" maxlength="200" clearable></el-input>
                     </div>
                 </div>
                 <div class="query-cont__col">
@@ -79,32 +79,34 @@
                 actionWidth='200' isAction :isActionFixed='tableData&&tableData.length>0' >
                 <template #action="slotProps">
                     <h-button table  @click="viewDetail(slotProps.data.row.projectId)">查看详情</h-button>
-                    <h-button table  @click="signAContract">签约</h-button>
+                    <!-- // 0不展示 ，1签约，2回款 -->
+                    <h-button table v-if="slotProps.data.row.flowUpProcess==1"  @click="signAContract(slotProps.data.row.projectId)">签约</h-button>
+                    <h-button table v-if="slotProps.data.row.flowUpProcess==2"  @click="onShowPayback(slotProps.data.row.projectId)">回款</h-button>
                 </template>
             </hosJoyTable>
         </div>
         <!-- 签约确认 -->
-        <el-dialog title="签约确认" :close-on-click-modal='false' :visible.sync="showSign" width="720px" :before-close="() => closereqProjectSupply()" :modal='false'>
+        <el-dialog title="签约确认" :close-on-click-modal='false' v-if="showSign" :visible.sync="showSign" width="720px" :before-close="() => closereqProjectSupply()" :modal='false'>
             <div class="list2_0 itemflex">
-                <el-form id='elform' :model="reqProjectSupply" :rules="formRules"  label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change=false>
+                <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="reqProjectSupply" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
-                        <el-form-item  prop='name' label="合同编号：">
-                            <el-input  placeholder="请输入工程合同编号" v-model="reqProjectSupply.name" maxlength="50"></el-input>
+                        <el-form-item  prop='contractNo' label="合同编号：">
+                            <el-input  placeholder="请输入工程合同编号" v-model="reqBossProjectRefund.contractNo" maxlength="200"></el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx">
-                        <el-form-item  prop='name' label="请上传签约合同附件：">
+                        <el-form-item  prop='contractAttachments' label="请上传签约合同附件：">
                             <span class="txt">（上传合同附件，支持PDF格式，单个文件最大允许20M）</span>
                         </el-form-item>
                         <div>
                             <div>
-                                <div class="file_box" v-for="(item,index) in reqProjectSupply.upload" :key="item.fileUrl">
+                                <div class="file_box" v-for="(item,index) in reqBossProjectRefund.contractAttachments" :key="item.fileUrl">
                                     <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                                     <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
-                                    <em @click="()=>handleDelFile(index,reqProjectSupply.upload)">删除</em>
+                                    <em @click="()=>handleDelFile(index,reqBossProjectRefund.contractAttachments)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView=false v-model="reqProjectSupply.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".pdf">
+                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.contractAttachments" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".pdf">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -112,38 +114,38 @@
                         </div>
                     </div>
                     <div class="form-item">
-                        <el-checkbox v-model="checkboxChecked">
+                        <el-checkbox v-model="reqBossProjectRefund.hasRefunded" :true-label='1' :false-label='0' >
                             <span>已回款：</span>
                             <span class="txt" style="font-size:15px;">如已收到签约回款额，请输入回款信息</span>
                         </el-checkbox>
                     </div>
-                    <div class="form-item" v-if="checkboxChecked">
-                        <el-form-item  prop='fundMoneys' label="签约回款额：">
-                            <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqProjectSupply)" :value="fundMoneys(reqProjectSupply.estimatedSignAmount)">
+                    <div class="form-item" v-if="!!reqBossProjectRefund.hasRefunded">
+                        <el-form-item  prop='refundAmount' label="签约回款额：">
+                            <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqBossProjectRefund,'refundAmount')" :value="fundMoneys(reqBossProjectRefund.refundAmount)" >
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </div>
-                    <div class="form-item" v-if="checkboxChecked">
-                        <el-form-item  prop='select' label="支付方式：">
-                            <el-select v-model="reqProjectSupply.select" placeholder="请选择">
-                                <el-option :label="item.key" :value="item.value" :key='item.value' v-for="item in refundPayType"></el-option>
+                    <div class="form-item" v-if="!!reqBossProjectRefund.hasRefunded">
+                        <el-form-item  prop='refundPayType' label="支付方式：">
+                            <el-select v-model="reqBossProjectRefund.refundPayType" placeholder="请选择">
+                                <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in refundPayType"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
-                    <div class="form-item noctx" v-if="checkboxChecked">
-                        <el-form-item  prop='name' label="请上传支付凭证：">
+                    <div class="form-item noctx" v-if="!!reqBossProjectRefund.hasRefunded">
+                        <el-form-item  prop='refundPics' label="请上传支付凭证：">
                             <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
                         </el-form-item>
                         <div>
                             <div>
-                                <div class="file_box" v-for="(item,index) in reqProjectSupply.upload" :key="item.fileUrl">
+                                <div class="file_box" v-for="(item,index) in reqBossProjectRefund.refundPics" :key="item.fileUrl">
                                     <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                                     <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
-                                    <em @click="()=>handleDelFile(index,reqProjectSupply.upload)">删除</em>
+                                    <em @click="()=>handleDelFile(index,reqBossProjectRefund.refundPics)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView=false v-model="reqProjectSupply.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
+                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -158,36 +160,36 @@
             </div>
         </el-dialog>
         <!-- 回款确认 -->
-        <el-dialog title="回款确认" :close-on-click-modal='false' :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()" :modal='false'>
+        <el-dialog title="回款确认" :close-on-click-modal='false' v-if="showPayback" :visible.sync="showPayback" width="720px" :before-close="()=>closePayback()" :modal='false'>
             <div class="list2_0 itemflex">
-                <el-form id='elform' :model="reqProjectSupply" :rules="formRules"  label-width="115px"  label-position='left' ref="paybackForm" class="purchaseConclusion">
+                <el-form id='elform' :model="reqBossProjectRefund" :rules="formRulesReqBossProjectRefund"  label-position='left' ref="paybackForm" class="purchaseConclusion" :validate-on-rule-change='false'>
                     <div class="form-item">
-                        <el-form-item  prop='fundMoneys' label="签约回款额：">
-                            <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqProjectSupply)" :value="fundMoneys(reqProjectSupply.estimatedSignAmount)">
+                        <el-form-item  prop='refundAmount' label="签约回款额：">
+                            <el-input  placeholder="请输入签约回款额" @input="(val)=>inputChage(val,reqBossProjectRefund,'refundAmount')" :value="fundMoneys(reqBossProjectRefund.refundAmount)">
                                 <template slot="append">元</template>
                             </el-input>
                         </el-form-item>
                     </div>
                     <div class="form-item">
-                        <el-form-item  prop='select' label="支付方式：">
-                            <el-select v-model="reqProjectSupply.select" placeholder="请选择">
-                                <el-option :label="item.key" :value="item.value" :key='item.value' v-for="item in refundPayType"></el-option>
+                        <el-form-item  prop='refundPayType' label="支付方式：">
+                            <el-select v-model="reqBossProjectRefund.refundPayType" placeholder="请选择">
+                                <el-option :label="item.value" :value="item.key" :key='item.value' v-for="item in refundPayType"></el-option>
                             </el-select>
                         </el-form-item>
                     </div>
                     <div class="form-item noctx">
-                        <el-form-item  prop='name' label="请上传支付凭证：">
+                        <el-form-item  prop='refundPics' label="请上传支付凭证：">
                             <span class="txt">（上传1-2张经销商的付款截图或银行到账截图，支持jpeg,png和jpg格式）</span>
                         </el-form-item>
                         <div>
                             <div>
-                                <div class="file_box" v-for="(item,index) in reqProjectSupply.upload" :key="item.fileUrl">
+                                <div class="file_box" v-for="(item,index) in reqBossProjectRefund.refundPics" :key="item.fileUrl">
                                     <i class="el-icon-paperclip"></i><span>{{item.fileName}}</span>
                                     <em> <a @click="()=>handleLink(item.fileUrl)" target="_blank" style="color:#167cd5">预览</a></em>
-                                    <em @click="()=>handleDelFile(index,reqProjectSupply.upload)">删除</em>
+                                    <em @click="()=>handleDelFile(index,reqBossProjectRefund.refundPics)">删除</em>
                                 </div>
                             </div>
-                            <OssFileHosjoyUpload :showPreView=false v-model="reqProjectSupply.upload" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
+                            <OssFileHosjoyUpload :showPreView='false' v-model="reqBossProjectRefund.refundPics" :fileSize=20 :action='action' :uploadParameters='uploadParameters' style="margin:0 0 0 5px" accept=".jpg,.jpeg,.png">
                             <div class="a-line">
                                 <el-button type="primary" size="mini"><i class="el-icon-upload file-icon"></i> 上传文件</el-button>
                             </div>
@@ -233,7 +235,7 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  label="客户经理：">
-                                <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName'></el-input>
+                                <el-input  placeholder="请输入客户经理" v-model='reqProjectSupply.customerName' maxlength="200"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
@@ -244,12 +246,12 @@
                     <div class="flex-item">
                         <div class="form-item">
                             <el-form-item  prop='firstPartName' label="甲方名称：">
-                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName'></el-input>
+                                <el-input  placeholder="请输入甲方名称" v-model='reqProjectSupply.firstPartName' maxlength="200"></el-input>
                             </el-form-item>
                         </div>
                         <div class="form-item">
                             <el-form-item  prop='projectName' label="项目名称：">
-                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName'></el-input>
+                                <el-input  placeholder="请输入项目名称" v-model='reqProjectSupply.projectName' maxlength="200"></el-input>
                             </el-form-item>
                         </div>
                     </div>
@@ -326,8 +328,8 @@
                             </el-form-item>
                         </div>
                         <div class="form-item">
-                            <el-form-item  label="项目预估签约额：">
-                                <el-input  placeholder="请输入项目预估签约额" @input="(val)=>inputChage(val,reqProjectSupply)" :value="fundMoneys(reqProjectSupply.estimatedSignAmount)">
+                            <el-form-item prop="estimatedSignAmount"  label="项目预估签约额：">
+                                <el-input  placeholder="请输入项目预估签约额" @input="(val)=>inputChage(val,reqProjectSupply,'estimatedSignAmount')" :value="fundMoneys(reqProjectSupply.estimatedSignAmount)">
                                     <template slot="append">元</template>
                                 </el-input>
                             </el-form-item>
@@ -348,7 +350,7 @@
                 <h-button type="primary" @click="submitAddForm">确定</h-button>
             </div>
         </el-dialog>
-        <detail :drawer='drawer' :projectDetail = 'projectDetail' :formRules='formRules' @getDetail = 'viewDetail' @handleClose="()=>drawer = false" v-if="drawer" />
+        <detail :drawer='drawer' :projectDetail = 'projectDetail' :formRules='formRules' :projectId='projectId' @getDetail = 'viewDetail' @handleClose="()=>drawer = false" v-if="drawer" />
     </div>
 </template>
 <script lang='tsx'>
@@ -361,10 +363,13 @@ import { ccpBaseUrl, interfaceUrl, ossAliyun, ossOldBucket } from '@/api/config'
 import OssFileUtils from '@/utils/OssFileUtils'
 import { isNum } from '@/utils/validate/format'
 import { MAINCATEGORY } from './const/index'
-import { DictionaryList, getChiness, SearchByItem, getProjectList, addProject, getcompanyByName, getCompanyUserById, getProjectDetail, getListExport } from './api/index'
+import { DictionaryList, getChiness, SearchByItem, getProjectList, addProject, getcompanyByName, getCompanyUserById, getProjectDetail, projectSign, projectRefund, getFlowUp } from './api/index'
 import detail from './detail.vue'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
+import { ReqBossProjectRefund } from './interface'
+import { CreateElement } from 'vue'
+
 interface companyObj {
         adminUserName: string,
         adminUserPhone: string,
@@ -391,9 +396,10 @@ export default class ProjectList2 extends Vue {
     @Getter('projectStore/projectRole') projectRole: DictionaryList
     @Getter('projectStore/generalGoods') generalGoods: DictionaryList
     @Getter('projectStore/refundPayType') refundPayType: DictionaryList
+    @Getter('projectStore/flowUpProcess') flowUpProcess: DictionaryList
     @Action('crmmanage/findCrmdeplist') findCrmdeplist: Function
     @Action('projectStore/findDictionaryList') findDictionaryList:(p:SearchByItem) => Promise<any>
-
+    projectId:any = ''
     showAddProject:boolean = false
     showSign:boolean = false
     showPayback:boolean = false
@@ -415,6 +421,17 @@ export default class ProjectList2 extends Vue {
         total: 0
     }
     tableData:RespBossProjectSupply[] = []
+    reqBossProjectRefund:ReqBossProjectRefund = {
+        contractAttachments: [],
+        contractNo: '',
+        hasRefunded: 0,
+        operatorName: '',
+        operatorPhone: '',
+        projectId: '',
+        refundAmount: '',
+        refundPayType: '',
+        refundPics: []
+    }
     queryParams: any = {
         adminPhoneNumber: '',
         adminUserName: '',
@@ -442,9 +459,6 @@ export default class ProjectList2 extends Vue {
         cityId: '',
         countryId: '',
         estimatedSignAmount: ''
-        // upload: [],
-        // fundMoneys: '',
-        // select: ''
     }
      uploadParameters = {
          updateUid: '',
@@ -453,7 +467,15 @@ export default class ProjectList2 extends Vue {
 
     tableLabel:tableLabelProps = [
         // 点击公司跳转到好橙工——【企业管理】已输入该企业名称的查询结果
-        { label: '公司全称', prop: 'companyName', width: '200' },
+        { label: '公司全称',
+            prop: 'companyName',
+            width: '200',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return (
+                    <span onClick={() => this.onClickLink(scope)} style="color:skyBlue">{scope.row.companyName}</span>
+                )
+            }
+        },
         { label: '管理员姓名', prop: 'adminUserName', width: '120' },
         { label: '管理员手机号', prop: 'adminPhoneNumber', width: '120' },
         { label: '主营品类', prop: 'deviceCategoryName', width: '120' },
@@ -484,11 +506,51 @@ export default class ProjectList2 extends Vue {
             projectRoleList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             projectStep: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
             generalGoodsList: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            //
-            name: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            oaStatus: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
-            fundMoneys: [{ required: this.checkboxChecked, message: '必填项不能为空', trigger: 'blur' }],
-            select: [{ required: this.checkboxChecked, message: '必填项不能为空' }]
+            estimatedSignAmount: [
+                {
+                    required: false,
+                    trigger: 'blur',
+                    validator: (rule, value, callback) => {
+                        console.log('🚀 --- getformRulesReqBossProjectRefund --- value', value)
+                        if (value && value == 0) {
+                            return callback(new Error('不能为 0'))
+                        }
+                        if (value > 10000000000000) {
+                            return callback(new Error('最大不能超过10万亿'))
+                        }
+                        return callback()
+                    }
+                }
+            ]
+        }
+        return rules
+    }
+
+    get formRulesReqBossProjectRefund () {
+        let rules = {
+            contractNo: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            contractAttachments: [{ required: true, message: '必填项不能为空' }],
+            refundPayType: [{ required: true, message: '必填项不能为空', trigger: 'blur' }],
+            refundPics: [{ required: true, message: '必填项不能为空' }],
+            refundAmount: [
+                {
+                    required: true,
+                    trigger: 'blur',
+                    validator: (rule, value, callback) => {
+                        console.log('🚀 --- getformRulesReqBossProjectRefund --- value', value)
+                        if (value && value == 0) {
+                            return callback(new Error('不能为 0'))
+                        }
+                        if (value > 10000000000000) {
+                            return callback(new Error('最大不能超过10万亿'))
+                        }
+                        if (!value) {
+                            return callback(new Error('必填项不能为空.'))
+                        }
+                        return callback()
+                    }
+                }
+            ]
         }
         return rules
     }
@@ -527,6 +589,11 @@ export default class ProjectList2 extends Vue {
         window.open(tokenUrl)
     }
 
+    // 点击跳转企业详情
+    onClickLink (val) {
+        this.$router.push({ path: '/goodwork/authenlist', query: { name: val.row.companyName } })
+    }
+
     handleDelFile (index, fileList) {
         fileList.splice(index, 1)
     }
@@ -535,8 +602,16 @@ export default class ProjectList2 extends Vue {
         return filters.money(val)
     }
 
-    signAContract () {
+    // 显示签约
+    signAContract (projectId) {
+        this.projectId = projectId
         this.showSign = true
+    }
+
+    // 显示回款
+    onShowPayback (projectId) {
+        this.projectId = projectId
+        this.showPayback = true
     }
 
     onAddProject () {
@@ -557,6 +632,9 @@ export default class ProjectList2 extends Vue {
             totalSignedNum: restStatistics.totalSignedNum
         }
         this.page.total = projectPage.total
+        this.reqBossProjectRefund.operatorName = this.userInfo.employeeName
+        this.reqBossProjectRefund.operatorPhone = this.userInfo.phoneNumber
+        this.reqBossProjectRefund.projectId = this.projectId
     }
 
     async selectItem (item) {
@@ -618,13 +696,13 @@ export default class ProjectList2 extends Vue {
         this.reqProjectSupply.countryName = res[0].name
     }
 
-    inputChage (val, item) {
+    inputChage (val, item, key) {
         let num = isNum(val, 2)
         if (num == '.' || !num) {
             num = ''
         }
 
-        item.estimatedSignAmount = num
+        item[key] = num
     }
 
     onExport () {
@@ -648,6 +726,7 @@ export default class ProjectList2 extends Vue {
     }
 
     async viewDetail (projectId) {
+        this.projectId = projectId
         const { data: detail } = await getProjectDetail({ projectId })
         this.projectDetail = detail
         this.drawer = true
@@ -655,24 +734,55 @@ export default class ProjectList2 extends Vue {
 
     @validateForm('addForm')
     async submitAddForm () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 ', this.reqProjectSupply)
-        // delete this.reqProjectSupply.companyName
-        // delete this.reqProjectSupply.companyCode
+        this.reqProjectSupply.operateUserName = this.userInfo.employeeName
+        this.reqProjectSupply.operateUserPhone = this.userInfo.phoneNumber
         await addProject(this.reqProjectSupply)
         this.closeAddProject()
         this.getList()
     }
 
+    // 签约
     @validateForm('reqProjectSupply')
     @handleSubmit()
-    submitreqProjectSupply () {
-        console.log(' 🚗 🚕 🚙 🚌 🚎 submitreqProjectSupply')
+    async submitreqProjectSupply () {
+        let refundPics = []
+        let contractAttachments = []
+        this.reqBossProjectRefund.contractAttachments.map(item => {
+            contractAttachments.push(item.fileUrl)
+        })
+        this.reqBossProjectRefund.refundPics.map(item => {
+            refundPics.push(item.fileUrl)
+        })
+        let query = JSON.parse(JSON.stringify(this.reqBossProjectRefund))
+        query.refundPics = refundPics
+        query.contractAttachments = contractAttachments
+        query.projectId = this.projectId
+        await projectSign(query)
+        this.getList()
+        this.$message.success('签约成功')
+        this.closereqProjectSupply()
     }
 
-    @validateForm('reqProjectSupply')
+    // 回款
+    @validateForm('paybackForm')
     @handleSubmit()
-    submitPaybackForm () {
-
+    async submitPaybackForm () {
+        let refundPics = []
+        let contractAttachments = []
+        this.reqBossProjectRefund.contractAttachments.map(item => {
+            contractAttachments.push(item.fileUrl)
+        })
+        this.reqBossProjectRefund.refundPics.map(item => {
+            refundPics.push(item.fileUrl)
+        })
+        let query = JSON.parse(JSON.stringify(this.reqBossProjectRefund))
+        query.refundPics = refundPics
+        query.contractAttachments = contractAttachments
+        query.projectId = this.projectId
+        await projectRefund(query)
+        this.getList()
+        this.$message.success('回款成功')
+        this.closePayback()
     }
     // 关闭新增2.0项目
     closeAddProject () {
@@ -700,12 +810,25 @@ export default class ProjectList2 extends Vue {
         const reqProjectSupply:any = this.$refs['reqProjectSupply']
         reqProjectSupply.resetFields()
         this.showSign = false
-        if (this.checkboxChecked) {
-            this.checkboxChecked = false
+
+        if (this.reqBossProjectRefund.hasRefunded == 1) {
+            this.reqBossProjectRefund.hasRefunded = 0
         }
     }
     // 关闭回款
     closePayback () {
+        this.showPayback = false
+        this.reqBossProjectRefund = {
+            contractAttachments: [],
+            contractNo: '',
+            hasRefunded: 0,
+            operatorName: '',
+            operatorPhone: '',
+            projectId: '',
+            refundAmount: '',
+            refundPayType: '',
+            refundPics: []
+        }
         const reqProjectSupply:any = this.$refs['paybackForm']
         reqProjectSupply.resetFields()
     }
@@ -715,7 +838,7 @@ export default class ProjectList2 extends Vue {
         this.findCrmdeplist({ deptType: 'F', pkDeptDoc: this.userInfo.pkDeptDoc, jobNumber: this.userInfo.jobNumber, authCode: JSON.parse(sessionStorage.getItem('authCode')) })
 
         let p = []
-        const api = ['project_intelligent_needs', 'project_building_type', 'project_step', 'project_role', 'general_goods', 'refund_pay_type']
+        const api = ['project_intelligent_needs', 'project_building_type', 'project_step', 'project_role', 'general_goods', 'refund_pay_type', 'flow_up_process']
         api.map((i:any) => {
             p.push(
                 this.findDictionaryList({ item: i })

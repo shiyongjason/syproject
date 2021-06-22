@@ -8,7 +8,8 @@ enum ItemKey {
     'project_step' = 'PROJECT_STEP',
     'project_role' = 'PROJECT_ROLE',
     'general_goods' = 'GENERAL_GOODS',
-    'refund_pay_type' = 'REFUND_PAY_TYPE'
+    'refund_pay_type' = 'REFUND_PAY_TYPE',
+    'flow_up_process' = 'FLOW_UP_PROCESS'
 }
 
 interface IState {
@@ -24,6 +25,7 @@ interface IState {
     generalGoods: DictionaryList
     /** 回款支付方式 */
     refundPayType: DictionaryList
+    flowUpProcess: DictionaryList
 }
 
 const state: IState = {
@@ -32,7 +34,8 @@ const state: IState = {
     projectStep: [],
     projectRole: [],
     generalGoods: [],
-    refundPayType: []
+    refundPayType: [],
+    flowUpProcess: []
 }
 const getters = {
     projectIntelligentNeeds: (state: IState) => state.projectIntelligentNeeds,
@@ -40,7 +43,8 @@ const getters = {
     projectStep: (state: IState) => state.projectStep,
     projectRole: (state: IState) => state.projectRole,
     generalGoods: (state: IState) => state.generalGoods,
-    refundPayType: (state: IState) => state.refundPayType
+    refundPayType: (state: IState) => state.refundPayType,
+    flowUpProcess: (state: IState) => state.flowUpProcess
 }
 const mutations = {
     [ItemKey.project_intelligent_needs] (state: IState, payload) {
@@ -63,6 +67,9 @@ const mutations = {
     },
     [ItemKey.refund_pay_type] (state: IState, payload) {
         state.refundPayType = payload
+    },
+    [ItemKey.flow_up_process] (state: IState, payload) {
+        state.flowUpProcess = payload
     }
 }
 

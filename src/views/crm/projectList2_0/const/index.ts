@@ -8,14 +8,14 @@ export const PAYMENTMETHOD: { label: string; value: number; }[] = [
     { label: '其他', value: 6 }
 ]
 /** 销售阶段 */
-export const SALESPHASE: { label: string; value: number; }[] = [
-    { label: '首次接触', value: 1 },
-    { label: '需求确认', value: 2 },
-    { label: '提供方案/报价', value: 3 },
-    { label: '商务洽谈，待签约', value: 4 },
-    { label: '已签约', value: 5 },
-    { label: '已回款', value: 6 },
-    { label: '无需跟进', value: 7 }
+export const SALESPHASE: { value: string; key: number; }[] = [
+    { value: '首次沟通', key: 1 },
+    { value: '需求确认', key: 2 },
+    { value: '提供方案/报价', key: 3 },
+    { value: '商务洽谈，待签约', key: 4 },
+    // { value: '已签约', key: 5 },
+    // { value: '已回款', key: 6 },
+    { value: '无需跟进', key: 7 }
 ]
 /** 建筑类型 */
 export const BUILDINGTYPE: { label: string; value: number; }[] = [
@@ -76,3 +76,13 @@ export const MAINCATEGORY: { key: string; value: string | ''; }[] = [
     { value: '电梯', key: '7' },
     { value: '其他', key: '8' }
 ]
+/** 角色 1：老板 2：操盘手 3：业务 4：财务 5：仓管 6：普通员工 */
+export const ROLE: { value: string; key: number; }[] = [
+    { value: '老板', key: 1 },
+    { value: '操盘手', key: 2 },
+    { value: '业务', key: 3 },
+    { value: '财务', key: 4 },
+    { value: '仓管', key: 5 },
+    { value: '普通员工', key: 6 }
+]
+export const USER_DEFAULT = 'https://hosjoy-hbp.oss-cn-hangzhou.aliyuncs.com/application/crm_wxapp/user-default.png'

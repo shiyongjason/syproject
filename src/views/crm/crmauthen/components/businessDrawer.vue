@@ -20,7 +20,7 @@
                                 </el-form-item>
                                 <el-form-item label="客户经理：" :label-width="formLabelWidth">
                                     {{businessDetail.customerManager||'-'}}
-                                    <el-button type="primary" size="mini" @click="onEditInfo" v-if="hosAuthCheck(Auths.CRM_AUTHEN_EDITNAME )">修改客户经理</el-button>
+                                    <el-button type="primary" size="mini" @click="onEditInfo" v-if="hosAuthCheck(Auths.CRM_AUTHEN_EDITNAME)">修改客户经理</el-button>
                                 </el-form-item>
                                 <el-form-item label="所属分部：" :label-width="formLabelWidth" prop="pkDeptDoc">
                                     <el-select v-model="businessDetail.pkDeptDoc" placeholder="请选择" :clearable=true>
@@ -416,6 +416,7 @@ export default {
     },
     data () {
         return {
+            Auths,
             memberTagArr: [{ key: 1, value: '一般会员' }, { key: 2, value: '认证会员' }, { key: 3, value: '评级会员' }, { key: 4, value: '签约会员' }, { key: 5, value: '交易会员' }],
             editorShow: {
                 email: false,
@@ -673,7 +674,7 @@ export default {
             })
         },
         onClearV () {
-            this.$refs['ruleForm'].clearValidate()
+            // this.$refs['ruleForm'].clearValidate()
         },
         onClearType () {
             this.targetObj.selectCode = ''

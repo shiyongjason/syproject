@@ -12,6 +12,14 @@
         top: 120px;
         width: 650px;
         overflow-y: scroll;
+        .flowup-count{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #ff7a45;
+            box-sizing: border-box;
+            padding-right: 25px;
+        }
         .process{
             // background-color: #f5f7fa;
             margin-top: 5px;
@@ -168,7 +176,7 @@
                 .line {
                     width: 1px;
                     background: #E1E1E3;
-                    margin: 0 27px 0 18px;
+                    margin: 0 50px 0 18px;
                 }
     
                 .content {
@@ -180,6 +188,7 @@
                         font-weight: 400;
                         color: #000000;
                         line-height: 20px;
+                        margin-top: 10px;
                     }
     
                     .audio-player-container {
@@ -290,6 +299,15 @@
         text-align: right;
         margin-right: 13px;
     }
+    /deep/.el-form .el-input{
+        width: 400px;
+    }
+    /deep/.el-form .el-select{
+        width: 400px;
+    }
+    /deep/.el-input__inner{
+        width: 400px;
+    }
 }
 .contact{
     max-height: 600px;
@@ -297,10 +315,13 @@
     .contact-item{
         display: flex;
         margin-bottom: 10px;
+        .el-form{
+            padding-top:0
+        }
     }
     .checkbox-right{
         margin-left: 10px;
-        width: 630px;
+        width: 730px;
         padding-bottom: 10px;
         span{
             float: right;
@@ -316,16 +337,34 @@
     }
     .contact-table{
         display: flex;
+        align-items: center;
         &-item{
             margin-right: 15px;
+            /deep/.el-form-item__content{
+                display: flex;
+            }
+            /deep/.el-form-item__label{
+                padding-right: 0;
+            }
             font{
                 margin-right: 3px;
             }
             &-input{
-                width: 100px;
+                width: 130px;
                 margin-left: 10px;
                 /deep/.el-input--mini{
-                    width: 100px !important;
+                    width: 130px;
+                    margin-left: 0;
+                }
+                
+            }
+            /deep/.el-select--mini{
+                .el-input__inner{
+                    width: 160px !important;
+                    margin-left: 0;
+                }
+                .el-input--mini{
+                    width: 160px;
                 }
             }
         }
@@ -334,7 +373,7 @@
 .innerHelp-layout{
     .search-input{
         /deep/.el-input{
-            width: 300px;
+            width: 400px;
         }
     }
     .autoflex {

@@ -313,10 +313,10 @@ export default {
                 this.$message.error('经销商预付款不能为空')
                 return
             }
-            if (this.formData.downPaymentAmount == 0) {
-                this.$message.error('经销商预付款不能为0')
-                return
-            }
+            // if (this.formData.downPaymentAmount == 0) {
+            //     this.$message.error('经销商预付款不能为0')
+            //     return
+            // }
             if (this.formData.downPaymentAmount == this.paymentDetail.payOrderDetail.applyAmount) {
                 this.$message.error('首付款金额最大不可超过申请支付金额')
                 return
