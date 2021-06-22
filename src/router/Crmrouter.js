@@ -35,6 +35,18 @@ export default [
                 component: () => import('@/views/crm/projectList2_0/list.vue')
             },
             {
+                path: 'thread',
+                name: 'thread',
+                meta: {
+                    title: '客户线索',
+                    tagName: '客户线索',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/thread/list.vue')
+            },
+            {
                 path: 'authenlist',
                 name: 'authenlist',
                 meta: {
