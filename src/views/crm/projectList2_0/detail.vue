@@ -2,7 +2,7 @@
     <el-drawer title="项目详情" :visible.sync="drawer" :before-close="handleClose" :modal-append-to-body='false' size='680px' v-if="projectDetail.companyId" >
         <div class="ProjectList2Detail">
             <div class="radio-group">
-                <el-radio-group v-model="radio">
+                <el-radio-group v-model="radio" @change="()=>onTabRadio()">
                     <el-radio-button label="跟进记录"></el-radio-button>
                     <el-radio-button label="项目信息"></el-radio-button>
                 </el-radio-group>
@@ -479,7 +479,6 @@ export default class ProjectList2Detail extends Vue {
     }
 
     isActive (key) {
-        // TODO 新增完更新process数据
         if (this.process.length == 0) {
             return ''
         }
@@ -585,6 +584,12 @@ export default class ProjectList2Detail extends Vue {
                     i.clearValidate()
                 }
             })
+        }
+    }
+
+    onTabRadio (val) {
+        if (this.radio === '跟进记录') {
+            this.$emit('getDetail', this.projectDetail.id)
         }
     }
 
@@ -769,6 +774,7 @@ export default class ProjectList2Detail extends Vue {
         fileList.splice(index, 1)
     }
 
+    // 跟进记录
     async getRecords () {
         if (this.recordsPagination && Number(this.recordsQuery.pageNumber) > Number(this.recordsPagination)) {
             this.isNoMore = true
@@ -777,19 +783,31 @@ export default class ProjectList2Detail extends Vue {
         const { data: flowUp } = await getFlowUp(this.recordsQuery)
         this.recordsPagination = flowUp.pages
         this.recordsData = [...this.recordsData, ...flowUp.records]
-        this.recordsData.map((item, index) => {
-            let obj = []
+        this.recordsData.map(async (item, index) => {
+            let api:any = []
+            let url = ''
             item.picUrls.map(jtem => {
+                url = jtem
+                api.push(OssFileUtils.getUrl(jtem))
+            })
+            const res = await Promise.all(api)
+            let obj = []
+            res.map(o => {
                 obj.push({
-                    fileUrl: jtem,
-                    fileName: jtem
+                    fileUrl: url,
+                    fileName: o,
+                    tokenUrl: o
                 })
             })
             this.recordsDataPics[index] = obj
         })
+        console.log(' 🚗 🚕 🚙 🚌 🚎 this.recordsDataPics', this.recordsDataPics)
     }
 
     recordsScroll (event) {
+        if (this.radio === '项目信息') {
+            return
+        }
         // 滚动距离scrollTop+元素的高clientHeight=文档的高scrollHeight
         const { scrollTop, clientHeight, scrollHeight } = event.target
         // console.log('%O', event.target)
