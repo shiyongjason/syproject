@@ -591,7 +591,6 @@ export default class ProjectList2 extends Vue {
 
     // 点击跳转企业详情
     onClickLink (val) {
-        console.log(val)
         this.$router.push({ path: '/goodwork/authenlist', query: { name: val.row.companyName } })
     }
 
