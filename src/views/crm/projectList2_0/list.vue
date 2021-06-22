@@ -368,6 +368,8 @@ import detail from './detail.vue'
 import { handleSubmit, validateForm } from '@/decorator'
 import { ReqProjectSupply, RespBossProjectSupply } from '@/interface/hbp-member'
 import { ReqBossProjectRefund } from './interface'
+import { CreateElement } from 'vue'
+
 interface companyObj {
         adminUserName: string,
         adminUserPhone: string,
@@ -465,7 +467,15 @@ export default class ProjectList2 extends Vue {
 
     tableLabel:tableLabelProps = [
         // 点击公司跳转到好橙工——【企业管理】已输入该企业名称的查询结果
-        { label: '公司全称', prop: 'companyName', width: '200' },
+        { label: '公司全称',
+            prop: 'companyName',
+            width: '200',
+            render: (h: CreateElement, scope: TableRenderParam): JSX.Element => {
+                return (
+                    <span onClick={() => this.onClickLink(scope)} style="color:skyBlue">{scope.row.companyName}</span>
+                )
+            }
+        },
         { label: '管理员姓名', prop: 'adminUserName', width: '120' },
         { label: '管理员手机号', prop: 'adminPhoneNumber', width: '120' },
         { label: '主营品类', prop: 'deviceCategoryName', width: '120' },
@@ -577,6 +587,12 @@ export default class ProjectList2 extends Vue {
             tokenUrl = ossAliyun + tokenUrl.replace(OssFileUtils.hostReg, '')
         }
         window.open(tokenUrl)
+    }
+
+    // 点击跳转企业详情
+    onClickLink (val) {
+        console.log(val)
+        this.$router.push({ path: '/goodwork/authenlist', query: { name: val.row.companyName } })
     }
 
     handleDelFile (index, fileList) {
