@@ -72,6 +72,12 @@
                     </div>
                 </div>
                 <div class="query-cont-col">
+                    <div class="query-col__label">申请人：</div>
+                    <div class="query-col__input">
+                        <el-input v-model="queryParams.applyName" placeholder="请输入" maxlength="50"></el-input>
+                    </div>
+                </div>
+                <div class="query-cont-col">
                     <h-button type="primary" @click="findPaymentOrderList({...queryParamsUseQuery, pageNumber: 1})">
                         查询
                     </h-button>
@@ -83,7 +89,7 @@
             <el-tag size="medium" class="eltagtop">已筛选 {{ paymentOrderPagination.total }}
                 项,支付单总金额：<b>{{ paymentOrderPagination.amount | fundMoneyHasTail }}</b>元;
             </el-tag>
-            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=350 :isShowIndex='true'>
+            <basicTable :tableData="paymentOrderList" :tableLabel="tableLabel" :pagination="paymentOrderPagination" @onCurrentChange="handleCurrentChange" @onSortChange="onSortChange" @onSizeChange="handleSizeChange" :isMultiple="false" :isAction="true" :actionMinWidth=450 :isShowIndex='true'>
                 <template slot="applyAmount" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.applyAmount | fundMoneyHasTail }}</span>
                 </template>
@@ -99,12 +105,16 @@
                 <template slot="sign" slot-scope="scope">
                     <span>{{ scope.data.row.sign?'是':'否'}}</span>
                 </template>
+                <template slot="applyName" slot-scope="scope">
+                    <p>{{scope.data.row.applyName}}</p>
+                    <p v-if="scope.data.row.applyPhone">({{scope.data.row.applyPhone}})</p>
+                </template>
                 <template slot="dealerCooperationMethod" slot-scope="scope">
                     <span class="colblue">{{ scope.data.row.dealerCooperationMethod==1?'垫资代采':scope.data.row.dealerCooperationMethod==2?'代收代付':'-'}}</span>
                 </template>
                 <template slot="action" slot-scope="scope">
                     <!-- operateStatus 操作按钮 1.发起放款交接 2.查看放款交接  3.null不展示-->
-                    <h-button v-if="scope.data.row.operateStatus&&hosAuthCheck(Auths.LENDER_HANDOVER)" table @click="()=>openLoanTransferContent(scope.data.row.id,scope.data.row.operateStatus)"  >
+                    <h-button v-if="scope.data.row.operateStatus&&hosAuthCheck(Auths.LENDER_HANDOVER)" table @click="()=>openLoanTransferContent(scope.data.row.id,scope.data.row.operateStatus)">
                         {{scope.data.row.operateStatus===1?'发起放款交接':'查看放款交接'}}
                     </h-button>
                     <h-button table @click="$refs.paymentOrderDrawer.tableOpenApproveDialog(scope.data.row.id)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_REVIEW) && PaymentOrderDict.status.list[0].key === scope.data.row.status">审核</h-button>
@@ -121,6 +131,7 @@
                                   scope.data.row.goodsConfirmFlag === 1
                               )">确认收货</h-button>
                     <h-button table @click="openDrawer(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_DETAIL)">查看详情</h-button>
+                    <h-button table @click="onUploadPay(scope.data.row)" v-if="hosAuthCheck(Auths.CRM_PAYMENT_UPLOADPAY)">上传支付凭证</h-button>
                 </template>
             </basicTable>
         </div>
@@ -133,11 +144,12 @@
         <LookReceiptDetail :params="paymentParams" :is-open="lookReceiptVisible" @onClose="lookReceiptVisible = false"></LookReceiptDetail>
         <FundsDialog :detail="fundsDialogDetail" :status="paymentStatus" :is-open="fundsDialogVisible" @onClose="fundsDialogClose"></FundsDialog>
         <!-- 查看放款交接 -->
-        <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="operateStatus==1?'发起放款交接':'查看放款交接'"  :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false' :before-close='editorDrawerClose'>
+        <el-drawer v-if="loanTransferContentVisible" class="editordrawerbox" :title="operateStatus==1?'发起放款交接':'查看放款交接'" :visible.sync="loanTransferContentVisible" size='650px' :modal-append-to-body="false" :wrapperClosable='false' :before-close='editorDrawerClose'>
             <div class="drawer-content">
-                 <el-tabs v-model="activeName" @tab-click="handleClickTabs" >
+                <el-tabs v-model="activeName" @tab-click="handleClickTabs">
                     <el-tab-pane label="放款交接内容" name="LoanTransferContent">
-                        <LoanTransferContent v-if="LoanTransferContent" :LoanTransferContent = 'LoanTransferContent' :paymentOrderId='paymentOrderId' @getDetailAgain='getDetailAgain' @closeLoanTransferContentVisible ='onCloseLoanTransferContentVisible' :operateStatus='operateStatus'></LoanTransferContent>
+                        <LoanTransferContent v-if="LoanTransferContent" :LoanTransferContent='LoanTransferContent' :paymentOrderId='paymentOrderId' @getDetailAgain='getDetailAgain' @closeLoanTransferContentVisible='onCloseLoanTransferContentVisible' :operateStatus='operateStatus'>
+                        </LoanTransferContent>
                     </el-tab-pane>
                     <el-tab-pane label="查看交接记录" name="ViewHandoverRecords">
                         <ViewHandoverRecords :loanTransferRecord='loanTransferRecord'></ViewHandoverRecords>
@@ -145,6 +157,7 @@
                 </el-tabs>
             </div>
         </el-drawer>
+        <UploadPayDialog ref="uploadpaydialog"/>
     </div>
 </template>
 
@@ -162,6 +175,7 @@ import PaymentOrderDict from '@/views/crm/paymentOrder/paymentOrderDict'
 import LoanTransferContent from './components/LoanTransferContent'
 import ViewHandoverRecords from './components/ViewHandoverRecords'
 import { getLoanTransferContent, getLoanTransferRecord, getLoanTransferCheck } from './api/index'
+import UploadPayDialog from '../funds/components/uploadPayDialog.vue'
 export default {
     name: 'payOrder',
     components: {
@@ -173,7 +187,8 @@ export default {
         LookReceiptDetail,
         FundsDialog,
         LoanTransferContent,
-        ViewHandoverRecords
+        ViewHandoverRecords,
+        UploadPayDialog
     },
     data () {
         return {
@@ -196,7 +211,8 @@ export default {
                 pageSize: 10,
                 pageNumber: 1,
                 'sort.property': null,
-                'sort.direction': null
+                'sort.direction': null,
+                applyName: ''
             },
             tableLabel: [
                 { label: '支付单编号', prop: 'paymentOrderNo', width: '150' },
@@ -208,6 +224,7 @@ export default {
                 { label: '状态', prop: 'status', width: '150' },
                 { label: '是否签署确认函', prop: 'sign', width: '150' },
                 { label: '合作方式', prop: 'dealerCooperationMethod', width: '150' },
+                { label: '申请人', prop: 'applyName', width: '150' },
                 { label: '申请时间', prop: 'applyDate', width: '150', formatters: 'dateTimes', sortable: 'applyDate' },
                 {
                     label: '更新时间', prop: 'updateTime', width: '150', formatters: 'dateTimes', sortable: 'updateTime'
@@ -387,6 +404,9 @@ export default {
             }
             // this.drawer && this.$refs.paymentOrderDrawer.getPaymentOrderDetail()
         },
+        onUploadPay (val) {
+            this.$refs.uploadpaydialog.onDialogClick(val)
+        },
         ...mapActions({
             findPaymentOrderList: 'crmPaymentOrder/getPaymentOrderList',
             findCrmdeplist: 'crmmanage/findCrmdeplist'
@@ -412,16 +432,16 @@ export default {
 .eltagtop {
     margin-bottom: 10px;
 }
-.paymentOrderLayout{
+.paymentOrderLayout {
     .editordrawerbox {
         /deep/ .el-drawer__header {
             border-bottom: 1px solid #eee;
             padding-bottom: 15px;
             font-size: 18px;
-            margin-bottom:10px;
+            margin-bottom: 10px;
         }
-        .drawer-content{
-            padding:0 20px;
+        .drawer-content {
+            padding: 0 20px;
         }
     }
 }

@@ -6,7 +6,7 @@
                     <div class="default-pre-view-warp">
                         <div class="default-pre-view-mask">
                             <i class="el-icon-zoom-in" style="color:#fff" @click="open(index,item)"></i>
-                            <i class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
+                            <i v-if="showUpload" class="el-icon-delete-solid" style="color:#fff" @click="remove(index)"></i>
                         </div>
                     </div>
                     <!-- TODO: 这块功能还未涉及到，已经更新了对应代码 没有场景用到，可能会有bug-->
@@ -22,8 +22,7 @@
                     <div class="pdfimg" v-else-if="_checkPicType(item,['.doc','.docx','.word'])">
                         <img :src="worldbase">
                     </div>
-                    <!--                    <el-image fit="contain" :src="item.fileUrl" :preview-src-list="[item.fileUrl]"></el-image>-->
-                    <elImageAddToken v-else :ref="`preview_${index}`" :fileUrl="item.fileUrl" :fit="'contain'"></elImageAddToken>
+                    <el-image v-else :ref="`preview_${index}`" class="default-pre-view-image" fit="contain" :src="item.tokenUrl" :preview-src-list="previewSrcList"></el-image>
                 </div>
             </template>
         </template>
@@ -41,7 +40,7 @@
                 </template>
             </span>
         </template>
-        <div class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
+        <div v-if="showUpload" class="elupload" v-loading='loading' :class="haveslot?'haveslot':''">
             <el-upload v-if="fileList.length<fileNum" v-bind="$attrs" v-on="$listeners" drag ref="elUpload" :multiple='multiple' name='multiFile' :data='uploadParameters' :showFileList='showFileList' :disabled='disabled' action='action' :limit='limit' :on-exceed="onExceed" :on-remove="handleRemove"
                 :on-success="handleSuccess" :on-change="handleCheckedSize" :before-upload="beforeAvatarUpload" :on-progress="uploadProcess" :accept='accept' :on-error='handleError' :http-request="uploadFile">
                 <!-- 默认插槽 -->
@@ -71,7 +70,6 @@
 
 <script>
 import OssFileUtils from '@/utils/OssFileUtils'
-import elImageAddToken from '@/components/elImageAddToken'
 import downloadFileAddToken from '@/components/downloadFileAddToken'
 export default {
     name: 'OssFileHosjoyUpload',
@@ -88,9 +86,11 @@ export default {
         showAsFileName: { type: Boolean, default: false }, // 文件名形式显示
         showProgress: { type: Boolean, default: false },
         fileNum: { type: Number, default: 100 }, // 限制文件总数
-        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' } // 上传的类型
+        accept: { type: String, default: '.jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.zip,.rar' }, // 上传的类型
+        showUpload: { type: Boolean, default: true } // 是否显示上传按钮
+
     },
-    components: { elImageAddToken, downloadFileAddToken },
+    components: { downloadFileAddToken },
     data () {
         return {
             successFileTemp: {},
@@ -142,16 +142,22 @@ export default {
                 } else {
                     this.$message.error(`上传数量超出限制！最大个数：${this.fileNum}`)
                 }
+                //
+                this.fileList.map(async (tempArrElement, index) => {
+                    let tempUrl = await OssFileUtils.getUrl(tempArrElement.fileUrl)
+                    this.$set(this.fileList, index, Object.assign(tempArrElement, { tokenUrl: tempUrl }))
+                })
                 this.uploadPercent = 100
                 this.progressFlag = false
                 this.loading = false
                 this.$emit('successCb')
                 this.$emit('successArg', obj)
+                this.$forceUpdate()
             }, 500)
         },
         // 校验大小
         _checkPicType (item, typePic) {
-            if (item && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
+            if (item && item.fileUrl && typePic.indexOf(item.fileUrl.slice(item.fileUrl.lastIndexOf('.')).toLowerCase()) > -1) {
                 return true
             }
             return false
@@ -200,20 +206,31 @@ export default {
                 return false
             }
         },
+        async tofileUrl () {
+            this.tokenUrl = await OssFileUtils.getUrl(this.fileUrl)
+            return this.tokenUrl
+        },
         async open (index, item = null) {
             if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
                 let temp = this.fileList[index]
                 let tempArr = JSON.parse(JSON.stringify(this.fileList))
                 tempArr.splice(index, 1)
                 tempArr.unshift(temp)
-                for (let tempArrElement of tempArr) {
-                    tempArrElement = await OssFileUtils.getUrl(tempArrElement.fileUrl)
-                }
-                this.previewSrcList = tempArr
-                const pre = this.$refs[`preview_${index}`]
-                if (pre && pre[0]) {
-                    pre[0].clickHandler()
-                }
+                tempArr = tempArr.filter(item => {
+                    if ((item.fileName).toLowerCase().indexOf('.png') > -1 || (item.fileName).toLowerCase().indexOf('.jpg') > -1 || (item.fileName).toLowerCase().indexOf('.jpeg') > -1) {
+                        return item
+                    }
+                })
+                this.previewSrcList = tempArr.map(item => {
+                    return item.tokenUrl
+                })
+                this.$nextTick(() => {
+                    const pre = this.$refs[`preview_${index}`]
+                    if (pre && pre[0]) {
+                        console.log(pre)
+                        pre[0].clickHandler()
+                    }
+                })
             } else {
                 let url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)

@@ -23,6 +23,18 @@ export default [
                 component: () => import('@/views/crm/goodwork/projectlist')
             },
             {
+                path: 'projectList2_0',
+                name: 'projectList2_0',
+                meta: {
+                    title: '2.0项目列表',
+                    tagName: '2.0项目列表',
+                    parentName: '好橙工',
+                    isMenu: true,
+                    icon: ''
+                },
+                component: () => import('@/views/crm/projectList2_0/list.vue')
+            },
+            {
                 path: 'authenlist',
                 name: 'authenlist',
                 meta: {
@@ -252,6 +264,34 @@ export default [
 
                 },
                 component: () => import('@/views/crm/funds/funds.vue')
+            },
+            {
+                path: 'batchpay',
+                name: 'batchpay',
+                meta: {
+                    title: '批量支付',
+                    tagName: '批量支付',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/funds/batchPay.vue')
+            },
+            {
+                path: 'batchpsubmit',
+                name: 'batchpsubmit',
+                meta: {
+                    title: '批量支付确认',
+                    tagName: '批量支付确认',
+                    parentName: '好橙工',
+                    isMenu: false,
+                    icon: '',
+                    showMenuAs: '/goodwork/funds'
+
+                },
+                component: () => import('@/views/crm/funds/batchSubmit.vue')
             },
             {
                 path: 'contractlist',
