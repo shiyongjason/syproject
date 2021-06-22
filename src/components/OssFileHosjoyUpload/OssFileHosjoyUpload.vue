@@ -224,12 +224,13 @@ export default {
                 this.previewSrcList = tempArr.map(item => {
                     return item.tokenUrl
                 })
-                console.log(this.previewSrcList)
-                const pre = this.$refs[`preview_${index}`]
-                if (pre && pre[0]) {
-                    console.log(111122333)
-                    pre[0].clickHandler()
-                }
+                this.$nextTick(() => {
+                    const pre = this.$refs[`preview_${index}`]
+                    if (pre && pre[0]) {
+                        console.log(pre)
+                        pre[0].clickHandler()
+                    }
+                })
             } else {
                 let url = await OssFileUtils.getUrl(item.fileUrl)
                 window.open(url)
